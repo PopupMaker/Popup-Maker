@@ -16,8 +16,8 @@ const useSettings = () => {
 					hasUnsavedChanges: storeSelect.hasUnsavedChanges(),
 					currentSettings: storeSelect.getSettings(),
 					isSaving:
-						storeSelect.isDispatching( 'updateSettings' ) ||
-						storeSelect.isDispatching( 'saveSettings' ),
+						storeSelect.isResolving( 'updateSettings' ) ||
+						storeSelect.isResolving( 'saveSettings' ),
 				};
 			},
 			// TODO REVIEW: Should this have any dependencies to refresh the data?

@@ -1,9 +1,9 @@
 import { createReduxStore } from '@wordpress/data';
 
 import reducer from './reducer';
-import * as actions from './actions';
-import * as resolvers from './resolvers';
-import * as selectors from './selectors';
+import actions from './actions';
+import resolvers from './resolvers';
+import selectors from './selectors';
 import { initialState, STORE_NAME } from './constants';
 
 import type { StoreActions, StoreSelectors, StoreState } from './types';

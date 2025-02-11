@@ -1,190 +1,209 @@
-import { DispatchStatus } from '../constants';
-import { defaultValues } from './constants';
 import { createSelector } from '@wordpress/data';
 
+import { DispatchStatus } from '../constants';
+import { defaultValues } from './constants';
+
 import type { State } from './reducer';
-import type { Settings, StoreActionNames } from './types';
+import type { Settings } from './types';
 
-/**
- * Get setting by name.
- *
- * @param {State} state The state.
- *
- * @return {Settings} The settings.
- */
-export const getSettings = ( state: State ): Settings => state.settings;
-
-/**
- * Get setting by name.
- *
- * @param {State} state        The state.
- * @param {K}     name         The setting name.
- * @param {D}     defaultValue The default value.
- *
- * @return {Settings[K] | D} The setting value.
- */
-export const getSetting = <
-	K extends keyof Settings,
-	D extends Settings[ K ] | undefined | false,
->(
-	state: State,
+const settingsSelectors = {
 	/**
-	 * Setting name.
+	 * Get setting by name.
+	 *
+	 * @param {State} state The state.
+	 *
+	 * @return {Settings} The settings.
 	 */
-	name: K,
+	getSettings: createSelector(
+		( state: State ) => state.settings,
+		( state: State ) => [ state.settings ]
+	),
+
 	/**
-	 * Default value if not already set.
+	 * Get setting by name.
+	 *
+	 * @param {State} state        The state.
+	 * @param {K}     name         The setting name.
+	 * @param {D}     defaultValue The default value.
+	 *
+	 * @return {Settings[K] | D} The setting value.
 	 */
-	defaultValue: D
-): Settings[ K ] | D => {
-	const settings = getSettings( state );
+	getSetting: createSelector(
+		<
+			K extends keyof Settings,
+			D extends Settings[ K ] | undefined | false,
+		>(
+			state: State,
+			name: K,
+			defaultValue: D
+		) => {
+			const settings = settingsSelectors.getSettings( state );
 
-	return settings[ name ] ?? defaultValue;
-};
+			return settings[ name ] ?? defaultValue;
+		},
+		<
+			K extends keyof Settings,
+			D extends Settings[ K ] | undefined | false,
+		>(
+			state: State,
+			name: K,
+			defaultValue: D
+		) => [ state.settings, name, defaultValue ]
+	),
 
-/**
- * Gets object of unsaved settings changes.
- *
- * @param {State} state The state.
- *
- * @return {State[ 'unsavedChanges' ]} The unsaved changes.
- */
-export const getUnsavedChanges = (
-	state: State
-): State[ 'unsavedChanges' ] => {
-	return state?.unsavedChanges ?? {};
-};
-
-/**
- * Check if there are any unsaved changes.
- */
-export const hasUnsavedChanges = createSelector(
-	( state: State ): boolean => {
-		return Object.keys( state?.unsavedChanges ?? {} ).length > 0;
-	},
-	( state: State ) => [ state.unsavedChanges ]
-);
-
-/**
- * Get required cap/permission for given capability.
- */
-export const getReqPermission = createSelector(
-	< T extends keyof Settings[ 'permissions' ] >(
-		state: State,
-		/**
-		 * Capability to check for.
-		 */
-		cap: T
-	): string => {
-		const permissions = getSetting(
-			state,
-			'permissions',
-			defaultValues.permissions
-		);
-
-		const defaultPermission = 'manage_options';
-
-		const permission = permissions[ cap ];
-
-		return typeof permission === 'string' ? permission : defaultPermission;
-	},
-	( state: State, cap: keyof Settings[ 'permissions' ] ) => [
-		state.settings.permissions,
-		cap,
-	]
-);
-
-/**
- * Get current status for dispatched action.
- *
- * @param {State}            state      The state.
- * @param {StoreActionNames} actionName The action name.
- *
- * @return {string | undefined} The status.
- */
-export const getDispatchStatus = (
-	state: State,
 	/**
-	 * Action name to check.
+	 * Gets object of unsaved settings changes.
+	 *
+	 * @param {State} state The state.
+	 *
+	 * @return {State[ 'unsavedChanges' ]} The unsaved changes.
 	 */
-	actionName: StoreActionNames
-): string | undefined => state?.dispatchStatus?.[ actionName ]?.status;
+	getUnsavedChanges: createSelector(
+		( state: State ) => state.unsavedChanges,
+		( state: State ) => [ state.unsavedChanges ]
+	),
 
-/**
- * Check if action is dispatching.
- */
-export const isDispatching = createSelector(
-	(
-		state: State,
-		/**
-		 * Action name or array of names to check.
-		 */
-		actionNames: StoreActionNames | StoreActionNames[]
-	): boolean => {
-		if ( ! Array.isArray( actionNames ) ) {
-			return (
-				getDispatchStatus( state, actionNames ) ===
-				DispatchStatus.Resolving
+	/**
+	 * Check if there are any unsaved changes.
+	 */
+	hasUnsavedChanges: createSelector(
+		( state: State ): boolean => {
+			return Object.keys( state?.unsavedChanges ?? {} ).length > 0;
+		},
+		( state: State ) => [ state.unsavedChanges ]
+	),
+
+	/**
+	 * Get required cap/permission for given capability.
+	 */
+	getReqPermission: createSelector(
+		< T extends keyof Settings[ 'permissions' ] >(
+			state: State,
+			/**
+			 * Capability to check for.
+			 */
+			cap: T
+		): string => {
+			const permissions = settingsSelectors.getSetting(
+				state,
+				'permissions',
+				defaultValues.permissions
 			);
-		}
 
-		let dispatching = false;
+			const defaultPermission = 'manage_options';
 
-		for ( let i = 0; actionNames.length > i; i++ ) {
-			dispatching =
-				getDispatchStatus( state, actionNames[ i ] ) ===
-				DispatchStatus.Resolving;
+			const permission = permissions[ cap ];
 
-			if ( dispatching ) {
-				return true;
-			}
-		}
-
-		return dispatching;
-	},
-	( state: State, actionNames: StoreActionNames | StoreActionNames[] ) => [
-		state.dispatchStatus,
-		actionNames,
-	]
-);
-
-/**
- * Check if action has finished dispatching.
- *
- * @param {State}            state      The state.
- * @param {StoreActionNames} actionName The action name.
- *
- * @return {boolean} Whether the action has finished dispatching.
- */
-export const hasDispatched = (
-	state: State,
-	/**
-	 * Action name to check.
-	 */
-	actionName: StoreActionNames
-): boolean => {
-	const status = getDispatchStatus( state, actionName );
-
-	return !! (
-		status &&
-		(
-			[ DispatchStatus.Success, DispatchStatus.Error ] as string[]
-		 ).indexOf( status ) >= 0
-	);
+			return typeof permission === 'string'
+				? permission
+				: defaultPermission;
+		},
+		( state: State, cap: keyof Settings[ 'permissions' ] ) => [
+			state.settings.permissions,
+			cap,
+		]
+	),
 };
 
-/**
- * Get dispatch action error if esists.
- *
- * @param {State}                        state      Current state.
- * @param {SettingsStore['ActionNames']} actionName Action name to check.
- *
- * @return {string|undefined} Current error message.
- */
-export const getDispatchError = (
-	state: State,
+/*****************************************************
+ * SECTION: Resolution state selectors
+ *****************************************************/
+const resolutionSelectors = {
 	/**
-	 * Action name to check.
+	 * Get resolution state for a specific entity.
 	 */
-	actionName: StoreActionNames
-): string | undefined => state?.dispatchStatus?.[ actionName ]?.error;
+	getResolutionState: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = state.resolutionState?.[ id ];
+
+			// If no resolution state exists, return idle
+			if ( ! resolutionState ) {
+				return {
+					status: DispatchStatus.Idle,
+				};
+			}
+
+			return resolutionState;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Check if a resolution is idle.
+	 */
+	isIdle: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.status === DispatchStatus.Idle;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Check if an entity is currently being resolved.
+	 */
+	isResolving: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.status === DispatchStatus.Resolving;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Check if an entity resolution has completed successfully.
+	 */
+	hasResolved: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.status === DispatchStatus.Success;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Check if an entity resolution has failed.
+	 */
+	hasFailed: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.status === DispatchStatus.Error;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+
+	/**
+	 * Get the error for a failed resolution.
+	 */
+	getResolutionError: createSelector(
+		( state: State, id: number | string ) => {
+			const resolutionState = resolutionSelectors.getResolutionState(
+				state,
+				id
+			);
+			return resolutionState.error;
+		},
+		( _state: State, id: number | string ) => [ id ]
+	),
+};
+
+const selectors = {
+	// Settings selectors
+	...settingsSelectors,
+	// Resolution state selectors
+	...resolutionSelectors,
+};
+
+export default selectors;

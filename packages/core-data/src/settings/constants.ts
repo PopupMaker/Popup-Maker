@@ -10,6 +10,7 @@ export const STAGE_CHANGES = 'STAGE_CHANGES';
 export const SAVE_CHANGES = 'SAVE_CHANGES';
 export const HYDRATE = 'HYDRATE';
 export const CHANGE_ACTION_STATUS = 'CHANGE_ACTION_STATUS';
+export const INVALIDATE_RESOLUTION = 'INVALIDATE_RESOLUTION';
 export const SETTINGS_FETCH_ERROR = 'SETTINGS_FETCH_ERROR';
 
 export const ACTION_TYPES: {
@@ -18,6 +19,7 @@ export const ACTION_TYPES: {
 	SAVE_CHANGES: typeof SAVE_CHANGES;
 	HYDRATE: typeof HYDRATE;
 	CHANGE_ACTION_STATUS: typeof CHANGE_ACTION_STATUS;
+	INVALIDATE_RESOLUTION: typeof INVALIDATE_RESOLUTION;
 	SETTINGS_FETCH_ERROR: typeof SETTINGS_FETCH_ERROR;
 } = {
 	UPDATE,
@@ -25,6 +27,7 @@ export const ACTION_TYPES: {
 	SAVE_CHANGES,
 	HYDRATE,
 	CHANGE_ACTION_STATUS,
+	INVALIDATE_RESOLUTION,
 	SETTINGS_FETCH_ERROR,
 };
 
@@ -62,4 +65,5 @@ const { currentSettings = defaultValues } = popupMakerCoreData ?? {};
 export const initialState: State = {
 	settings: currentSettings,
 	unsavedChanges: {},
+	resolutionState: {},
 };

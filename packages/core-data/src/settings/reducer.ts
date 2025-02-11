@@ -1,7 +1,7 @@
 import { ACTION_TYPES, initialState } from './constants';
 
-import type { DispatchStatuses } from '../constants';
-import type { Settings, StoreActionNames } from './types';
+import type { DispatchStatuses, ResolutionState } from '../constants';
+import type { Settings } from './types';
 
 const {
 	UPDATE,
@@ -10,119 +10,176 @@ const {
 	HYDRATE,
 	CHANGE_ACTION_STATUS,
 	SETTINGS_FETCH_ERROR,
+	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
 
 export type State = {
+	/**
+	 * The settings.
+	 */
 	settings: Settings;
+
+	/**
+	 * The unsaved changes.
+	 */
 	unsavedChanges?: Partial< Settings >;
-	// Boilerplate
-	dispatchStatus?: {
-		[ Property in StoreActionNames ]?: {
-			status: string;
-			error: string;
-		};
-	};
-	error?: string;
+
+	/**
+	 * The resolution state for each operation.
+	 */
+	resolutionState: Record< string | number, ResolutionState >;
 };
 
-type BaseAction = {
+export type BaseAction = {
 	type: keyof typeof ACTION_TYPES;
 };
 
-type HydrateAction = BaseAction & {
+export type HydrateAction = BaseAction & {
 	type: typeof HYDRATE;
-	settings: Settings;
+	payload: {
+		settings: Settings;
+	};
 };
 
-type UpdateSettingsAction = BaseAction & {
+export type UpdateSettingsAction = BaseAction & {
 	type: typeof UPDATE;
-	settings: Settings;
+	payload: {
+		settings: Settings;
+	};
 };
 
-type StageChangesAction = BaseAction & {
+export type StageChangesAction = BaseAction & {
 	type: typeof STAGE_CHANGES;
-	settings: Settings;
+	payload: {
+		settings: Settings;
+	};
 };
 
-type SaveChangesAction = BaseAction & {
+export type SaveChangesAction = BaseAction & {
 	type: typeof SAVE_CHANGES;
-	settings: Settings;
+	payload: {
+		settings: Settings;
+	};
 };
 
-type FetchSettingsErrorAction = BaseAction & {
+export type FetchSettingsErrorAction = BaseAction & {
 	type: typeof SETTINGS_FETCH_ERROR;
-	message: string;
+	payload: {
+		message: string;
+	};
 };
 
-type ChangeActionStatusAction = BaseAction & {
+export type ChangeActionStatusAction = BaseAction & {
 	type: typeof CHANGE_ACTION_STATUS;
-	actionName: StoreActionNames;
-	status: DispatchStatuses;
-	message: string;
+	payload: {
+		actionName: string;
+		status: DispatchStatuses;
+		message?: string;
+	};
+};
+
+export type InvalidateResolutionAction = BaseAction & {
+	type: typeof INVALIDATE_RESOLUTION;
+	payload: {
+		id: number | string;
+		operation: string;
+	};
 };
 
 export type ReducerAction =
 	| HydrateAction
 	| UpdateSettingsAction
-	| ChangeActionStatusAction
 	| FetchSettingsErrorAction
 	| StageChangesAction
-	| SaveChangesAction;
+	| SaveChangesAction
+	| ChangeActionStatusAction
+	| InvalidateResolutionAction;
 
 const reducer = ( state: State = initialState, action: ReducerAction ) => {
 	switch ( action.type ) {
-		case HYDRATE:
+		case HYDRATE: {
+			const { settings } = action.payload;
+
 			return {
 				...state,
-				settings: action.settings,
+				settings,
 			};
+		}
 
-		case SETTINGS_FETCH_ERROR:
+		case SETTINGS_FETCH_ERROR: {
+			const { message } = action.payload;
+
 			return {
 				...state,
-				error: action.message,
+				error: message,
 			};
+		}
 
-		case STAGE_CHANGES:
+		case STAGE_CHANGES: {
+			const { settings } = action.payload;
+
 			return {
 				...state,
 				unsavedChanges: {
 					...( state.unsavedChanges ?? {} ),
-					...action.settings,
+					...settings,
 				},
 			};
+		}
 
-		case SAVE_CHANGES:
+		case SAVE_CHANGES: {
+			const { settings } = action.payload;
+
 			return {
 				...state,
 				settings: {
 					...state.settings,
-					...action.settings,
+					...settings,
 				},
 				unsavedChanges: {},
 			};
+		}
 
-		case UPDATE:
+		case UPDATE: {
+			const { settings } = action.payload;
 			return {
 				...state,
 				settings: {
 					...state.settings,
-					...action.settings,
+					...settings,
 				},
 			};
+		}
 
-		case CHANGE_ACTION_STATUS:
+		case CHANGE_ACTION_STATUS: {
+			const { actionName, status, message } = action.payload;
+
 			return {
 				...state,
-				dispatchStatus: {
-					...state.dispatchStatus,
-					[ action.actionName ]: {
-						...state?.dispatchStatus?.[ action.actionName ],
-						status: action.status,
-						error: action.message,
+				resolutionState: {
+					...state.resolutionState,
+					[ actionName ]: {
+						status,
+						error: message,
 					},
 				},
 			};
+		}
+
+		case INVALIDATE_RESOLUTION: {
+			const { id, operation } = action.payload;
+
+			return {
+				...state,
+				resolutionState: {
+					...state.resolutionState,
+					[ operation ]: {
+						...state.resolutionState?.[ operation ],
+						[ id ]: undefined,
+					},
+				},
+			};
+		}
 
 		default:
 			return state;

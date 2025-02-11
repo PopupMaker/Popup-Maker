@@ -4,9 +4,9 @@ import type {
 } from '@wordpress/data/src/types';
 
 import type reducer from '../reducer';
-import type * as actions from '../actions';
-import type * as selectors from '../selectors';
-import type * as resolvers from '../resolvers';
+import type actions from '../actions';
+import type selectors from '../selectors';
+import type resolvers from '../resolvers';
 import type { STORE_NAME } from '../constants';
 
 import type { StoreThunkContext } from '../../types';
@@ -26,11 +26,6 @@ export type StoreActions = typeof actions;
  * Resolvers object is `typeof resolvers` (your `./resolvers.ts`).
  */
 export type StoreResolvers = typeof resolvers;
-
-/**
- * Action names.
- */
-export type StoreActionNames = keyof StoreActions;
 
 /**
  * Selectors object is `typeof selectors` (your `./selectors.ts`).
