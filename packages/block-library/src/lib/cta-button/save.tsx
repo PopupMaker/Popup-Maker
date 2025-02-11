@@ -10,13 +10,18 @@ import React from 'react';
 import {
 	RichText,
 	useBlockProps,
-	// @ts-ignore Experimental.
+	getTypographyClassesAndStyles,
+	// @ts-expect-error
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalGetBorderClassesAndStyles as getBorderClassesAndStyles,
-	// @ts-ignore Experimental.
+	// @ts-expect-error
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalGetColorClassesAndStyles as getColorClassesAndStyles,
-	// @ts-ignore Experimental.
+	// @ts-expect-error
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalGetSpacingClassesAndStyles as getSpacingClassesAndStyles,
-	// @ts-ignore Experimental.
+	// @ts-expect-error
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalGetShadowClassesAndStyles as getShadowClassesAndStyles,
 } from '@wordpress/block-editor';
 
@@ -42,15 +47,20 @@ export default function save( { attributes, className } ) {
 	const colorProps = getColorClassesAndStyles( attributes );
 	const spacingProps = getSpacingClassesAndStyles( attributes );
 	const shadowProps = getShadowClassesAndStyles( attributes );
+	// @ts-expect-error
+	const typographyProps = getTypographyClassesAndStyles( attributes );
+
 	const buttonClasses = clsx(
 		'wp-block-popup-maker-cta-button__link',
 		colorProps.className,
 		borderProps.className,
+		typographyProps.className,
 		{
 			[ `has-text-align-${ textAlign }` ]: textAlign,
 			// For backwards compatibility add style that isn't provided via
 			// block support.
 			'no-border-radius': style?.border?.radius === 0,
+			[ `has-custom-font-size` ]: fontSize || style?.typography?.fontSize,
 		}
 		// __experimentalGetElementClassName( 'button' )
 	);
@@ -59,6 +69,8 @@ export default function save( { attributes, className } ) {
 		...colorProps.style,
 		...spacingProps.style,
 		...shadowProps.style,
+		...typographyProps.style,
+		writingMode: undefined,
 	};
 
 	// The use of a `title` attribute here is soft-deprecated, but still applied
@@ -67,8 +79,7 @@ export default function save( { attributes, className } ) {
 
 	const wrapperClasses = clsx( className, {
 		[ `has-custom-width wp-block-popup-maker-cta-button__width-${ width }` ]:
-			width,
-		[ `has-custom-font-size` ]: fontSize || style?.typography?.fontSize,
+			Boolean( width ),
 	} );
 
 	return (

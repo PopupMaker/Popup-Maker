@@ -58,8 +58,10 @@ const entityActions = {
 				// dispatch.startResolution( action, operation );
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Resolving,
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Resolving,
+					},
 				} );
 
 				const { id, ...newCta } = callToAction;
@@ -70,9 +72,11 @@ const entityActions = {
 					if ( true !== validation ) {
 						dispatch( {
 							type: CHANGE_ACTION_STATUS,
-							actionName: action,
-							status: DispatchStatus.Error,
-							message: validation.message,
+							payload: {
+								actionName: action,
+								status: DispatchStatus.Error,
+								message: validation.message,
+							},
 						} );
 						if ( withNotices ) {
 							await dispatch.createErrorNotice(
@@ -100,8 +104,10 @@ const entityActions = {
 						// dispatch.finishResolution( action, operation );
 						dispatch( {
 							type: CHANGE_ACTION_STATUS,
-							actionName: action,
-							status: DispatchStatus.Success,
+							payload: {
+								actionName: action,
+								status: DispatchStatus.Success,
+							},
 						} );
 
 						if ( withNotices ) {
@@ -133,21 +139,25 @@ const entityActions = {
 
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Error,
-					message: __(
-						'An error occurred, call to action was not saved.',
-						'popup-maker'
-					),
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: __(
+							'An error occurred, call to action was not saved.',
+							'popup-maker'
+						),
+					},
 				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Error,
-					message: errorMessage,
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: errorMessage,
+					},
 				} );
 
 				if ( withNotices ) {
@@ -182,8 +192,10 @@ const entityActions = {
 				// dispatch.startResolution( action, operation );
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Resolving,
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Resolving,
+					},
 				} );
 
 				if ( validate ) {
@@ -192,9 +204,11 @@ const entityActions = {
 					if ( true !== validation ) {
 						dispatch( {
 							type: CHANGE_ACTION_STATUS,
-							actionName: action,
-							status: DispatchStatus.Error,
-							message: validation.message,
+							payload: {
+								actionName: action,
+								status: DispatchStatus.Error,
+								message: validation.message,
+							},
 						} );
 
 						if ( withNotices ) {
@@ -217,12 +231,14 @@ const entityActions = {
 				if ( ! canonicalCallToAction ) {
 					dispatch( {
 						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Error,
-						message: __(
-							'Call to action not found',
-							'popup-maker'
-						),
+						payload: {
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: __(
+								'Call to action not found',
+								'popup-maker'
+							),
+						},
 					} );
 
 					return false;
@@ -241,8 +257,10 @@ const entityActions = {
 						// dispatch.finishResolution( action, operation );
 						dispatch( {
 							type: CHANGE_ACTION_STATUS,
-							actionName: action,
-							status: DispatchStatus.Success,
+							payload: {
+								actionName: action,
+								status: DispatchStatus.Success,
+							},
 						} );
 
 						if ( withNotices ) {
@@ -274,21 +292,25 @@ const entityActions = {
 
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Error,
-					message: __(
-						'An error occurred, call to action was not saved.',
-						'popup-maker'
-					),
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: __(
+							'An error occurred, call to action was not saved.',
+							'popup-maker'
+						),
+					},
 				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Error,
-					message: errorMessage,
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: errorMessage,
+					},
 				} );
 
 				if ( withNotices ) {
@@ -322,8 +344,10 @@ const entityActions = {
 			try {
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Resolving,
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Resolving,
+					},
 				} );
 
 				// Get the canonical directly from server to verify it exists.
@@ -334,12 +358,14 @@ const entityActions = {
 				if ( ! canonicalCallToAction ) {
 					dispatch( {
 						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Error,
-						message: __(
-							'Call to action not found',
-							'popup-maker'
-						),
+						payload: {
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: __(
+								'Call to action not found',
+								'popup-maker'
+							),
+						},
 					} );
 
 					return false;
@@ -358,8 +384,10 @@ const entityActions = {
 					registry.batch( () => {
 						dispatch( {
 							type: CHANGE_ACTION_STATUS,
-							actionName: action,
-							status: DispatchStatus.Success,
+							payload: {
+								actionName: action,
+								status: DispatchStatus.Success,
+							},
 						} );
 
 						if ( withNotices ) {
@@ -404,9 +432,11 @@ const entityActions = {
 				// await dispatch.failResolution( action, operation );
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Error,
-					message: __( 'Failed to delete entity', 'popup-maker' ),
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Error,
+						message: __( 'Failed to delete entity', 'popup-maker' ),
+					},
 				} );
 
 				if ( withNotices ) {
@@ -519,16 +549,20 @@ const editorActions = {
 			try {
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
-					actionName: action,
-					status: DispatchStatus.Resolving,
+					payload: {
+						actionName: action,
+						status: DispatchStatus.Resolving,
+					},
 				} );
 
 				if ( ! select.hasEdits( id ) ) {
 					dispatch( {
 						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Error,
-						message: __( 'No edits to save', 'popup-maker' ),
+						payload: {
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: __( 'No edits to save', 'popup-maker' ),
+						},
 					} );
 
 					return false;
@@ -540,9 +574,11 @@ const editorActions = {
 				if ( ! editedCallToAction ) {
 					dispatch( {
 						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Error,
-						message: __( 'No edits to save', 'popup-maker' ),
+						payload: {
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: __( 'No edits to save', 'popup-maker' ),
+						},
 					} );
 
 					return false;
@@ -556,9 +592,11 @@ const editorActions = {
 						registry.batch( async () => {
 							dispatch( {
 								type: CHANGE_ACTION_STATUS,
-								actionName: action,
-								status: DispatchStatus.Error,
-								message: validation.message,
+								payload: {
+									actionName: action,
+									status: DispatchStatus.Error,
+									message: validation.message,
+								},
 							} );
 
 							if ( withNotices ) {
@@ -585,8 +623,10 @@ const editorActions = {
 					registry.batch( () => {
 						dispatch( {
 							type: CHANGE_ACTION_STATUS,
-							actionName: action,
-							status: DispatchStatus.Success,
+							payload: {
+								actionName: action,
+								status: DispatchStatus.Success,
+							},
 						} );
 
 						if ( withNotices ) {
@@ -632,9 +672,11 @@ const editorActions = {
 
 					dispatch( {
 						type: CHANGE_ACTION_STATUS,
-						actionName: action,
-						status: DispatchStatus.Error,
-						message: errorMessage,
+						payload: {
+							actionName: action,
+							status: DispatchStatus.Error,
+							message: errorMessage,
+						},
 					} );
 				} );
 
@@ -981,9 +1023,11 @@ const resolutionActions = {
 
 			dispatch( {
 				type: CHANGE_ACTION_STATUS,
-				actionName,
-				status,
-				message,
+				payload: {
+					actionName,
+					status,
+					message,
+				},
 			} );
 		},
 

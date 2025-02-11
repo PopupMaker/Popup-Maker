@@ -1,3 +1,4 @@
+/* eslint-disable @wordpress/i18n-text-domain */
 import clsx from 'clsx';
 import React from 'react';
 
@@ -8,16 +9,23 @@ import {
 	InspectorControls,
 	// @ts-ignore - Experimental components
 	AlignmentControl,
-	// @ts-ignore - Experimental components
-	__experimentalGetElementClassName,
-	// @ts-ignore - Experimental components
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	// __experimentalGetElementClassName as getElementClassName,
+	// @ts-expect-error
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalUseColorProps as useColorProps,
-	// @ts-ignore - Experimental components
+	// @ts-expect-error
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalUseBorderProps as useBorderProps,
-	// @ts-ignore - Experimental components
+	// @ts-expect-error
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalGetShadowClassesAndStyles as useShadowProps,
-	// @ts-ignore - Experimental components
+	// @ts-expect-error
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalGetSpacingClassesAndStyles as useSpacingProps,
+	getTypographyClassesAndStyles as useTypographyProps,
+	// @ts-expect-error
+	useSettings,
 	store as blockEditorStore,
 	// @ts-ignore - Experimental components
 	useBlockEditingMode,
@@ -35,9 +43,13 @@ import {
 	TextControl,
 	ToolbarButton,
 	ToggleControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToolsPanel as ToolsPanel,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToolsPanelItem as ToolsPanelItem,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControl as ToggleGroupControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
@@ -177,13 +189,13 @@ function WidthPanel( { selectedWidth, setAttributes }: WidthPanelProps ) {
 
 	return (
 		<ToolsPanel
-			label={ __( 'Settings' ) }
+			label={ __( 'Settings', 'default' ) }
 			resetAll={ () => setAttributes( { width: undefined } ) }
 			dropdownMenuProps={ dropdownMenuProps }
 			// as="div"
 		>
 			<ToolsPanelItem
-				label={ __( 'Button width' ) }
+				label={ __( 'Button width', 'default' ) }
 				isShownByDefault
 				hasValue={ () => !! selectedWidth }
 				onDeselect={ () => setAttributes( { width: undefined } ) }
@@ -192,7 +204,7 @@ function WidthPanel( { selectedWidth, setAttributes }: WidthPanelProps ) {
 				__nextHasNoMarginBottom
 			>
 				<ToggleGroupControl
-					label={ __( 'Button width' ) }
+					label={ __( 'Button width', 'default' ) }
 					value={ selectedWidth }
 					onChange={ ( newWidth ) =>
 						setAttributes( { width: Number( newWidth ) } )
@@ -372,7 +384,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 	const showPopover =
 		isLinkTag && isSelected && ( !! ctaId || isExplicitlyEditing );
 
-	const [ forceRefresh, setForceRefresh ] = useState( 0 );
+	const [ _forceRefresh, setForceRefresh ] = useState( 0 );
 
 	// If a new CTA is created, don't show the popover
 	useEffect( () => {
@@ -399,6 +411,21 @@ function ButtonEdit( props: ButtonEditProps ) {
 		createNewCTA();
 	}, [ newCta, createCallToAction ] );
 
+	const [ fluidTypographySettings, layout ] = useSettings(
+		'typography.fluid',
+		'layout'
+	);
+
+	const typographyProps = useTypographyProps( attributes, {
+		// @ts-expect-error
+		typography: {
+			fluid: fluidTypographySettings,
+		},
+		layout: {
+			wideSize: layout?.wideSize,
+		},
+	} );
+
 	return (
 		<>
 			<div
@@ -411,8 +438,8 @@ function ButtonEdit( props: ButtonEditProps ) {
 			>
 				<RichText
 					ref={ mergedRef }
-					aria-label={ __( 'Button text' ) }
-					placeholder={ placeholder || __( 'Add text…' ) }
+					aria-label={ __( 'Button text', 'default' ) }
+					placeholder={ placeholder || __( 'Add text…', 'default' ) }
 					value={ text }
 					onChange={ ( value ) =>
 						setAttributes( {
@@ -426,20 +453,23 @@ function ButtonEdit( props: ButtonEditProps ) {
 						'wp-block-popup-maker-cta-button__link',
 						colorProps.className,
 						borderProps.className,
+						typographyProps.className,
 						{
 							[ `has-text-align-${ textAlign }` ]: textAlign,
 							// For backwards compatibility add style that isn't
 							// provided via block support.
 							'no-border-radius': style?.border?.radius === 0,
+							[ `has-custom-font-size` ]:
+								blockProps.style.fontSize,
 						}
-						// REVIEW: Review this.
-						// __experimentalGetElementClassName( 'button' )
 					) }
 					style={ {
 						...borderProps.style,
 						...colorProps.style,
 						...spacingProps.style,
 						...shadowProps.style,
+						...typographyProps.style,
+						writingMode: undefined,
 					} }
 					onReplace={ onReplace }
 					onMerge={ mergeBlocks }
@@ -516,7 +546,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 											entityKind="postType"
 											entityType="pum_cta"
 											placeholder={ __(
-												'Search or create CTA...',
+												'Search or create CTA…',
 												'popup-maker'
 											) }
 											multiple={ false }
@@ -652,7 +682,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 					<TextControl
 						__next40pxDefaultSize
 						__nextHasNoMarginBottom
-						label={ __( 'Link rel' ) }
+						label={ __( 'Link rel', 'default' ) }
 						value={ rel || '' }
 						onChange={ ( newRel ) =>
 							setAttributes( { rel: newRel } )
