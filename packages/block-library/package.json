@@ -27,6 +27,7 @@
 	"dependencies": {
 		"@popup-maker/core-data": "*",
 		"@popup-maker/components": "*",
+		"@popup-maker/cta-editor": "*",
 		"@popup-maker/i18n": "*",
 		"@wordpress/block-editor": "^14.10.1",
 		"@wordpress/block-library": "^9.15.1",
