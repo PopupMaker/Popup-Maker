@@ -9,10 +9,142 @@ declare const popupMakerAdminBar:
 	  }
 	| undefined;
 
-interface ModalElements {
-	container: HTMLElement;
-	closeButton: JQuery;
-	copyButton: JQuery;
+interface ModalOptions {
+	title: string;
+	content: string;
+	closeText?: string;
+	actions?: {
+		primary?: {
+			text: string;
+			onClick: () => void;
+		};
+		secondary?: {
+			text: string;
+			onClick: () => void;
+		};
+	};
+}
+
+function createModal( options: ModalOptions ): HTMLElement {
+	const container = document.createElement( 'div' );
+	const actionsHtml = options.actions
+		? `
+		<div class="pum-modal-actions">
+			${
+				options.actions.primary
+					? `
+				<button class="button button-primary pum-modal-proceed">
+					${ options.actions.primary.text }
+				</button>
+			`
+					: ''
+			}
+			${
+				options.actions.secondary
+					? `
+				<button class="button button-secondary pum-modal-cancel">
+					${ options.actions.secondary.text }
+				</button>
+			`
+					: ''
+			}
+		</div>
+	`
+		: '';
+
+	container.innerHTML = `<div class="pum-modal pum-modal-overlay">
+		<div class="pum-modal-content">
+			<div class="pum-modal-header">
+				<div class="pum-logo"></div>
+				<h4>${ options.title }</h4>
+				<button class="pum-modal-close">
+					<span class="dashicons dashicons-no-alt"></span>
+					<span class="screen-reader-text">${
+						options.closeText || __( 'Close', 'popup-maker' )
+					}</span>
+				</button>
+			</div>
+			<div class="pum-modal-body">
+				${ options.content }
+				${ actionsHtml }
+			</div>
+		</div>
+	</div>`;
+
+	document.body.appendChild( container );
+
+	// Setup close handlers
+	const close = () => {
+		// Remove all event listeners
+		$( document ).off( 'keydown', handleEscKey );
+		$( document ).off( 'mousedown', handleClickOutside );
+		$( '.pum-modal-close, .pum-modal-cancel', container ).off(
+			'click',
+			close
+		);
+		$( '.pum-modal-proceed', container ).off(
+			'click',
+			handlePrimaryAction
+		);
+		$( '.pum-modal-cancel', container ).off(
+			'click',
+			handleSecondaryAction
+		);
+
+		// Fade out and remove
+		$( container ).fadeOut( 200, () => {
+			container.remove();
+		} );
+	};
+
+	// Handle ESC key
+	const handleEscKey = ( event: JQuery.KeyDownEvent ) => {
+		if ( event.key === 'Escape' ) {
+			close();
+		}
+	};
+
+	// Handle click outside
+	const handleClickOutside = ( event: JQuery.MouseDownEvent ) => {
+		const $target = $( event.target );
+		if ( $target.hasClass( 'pum-modal-overlay' ) ) {
+			close();
+		}
+	};
+
+	// Handle primary action
+	const handlePrimaryAction = () => {
+		if ( options.actions?.primary?.onClick ) {
+			options.actions.primary.onClick();
+		}
+		close();
+	};
+
+	// Handle secondary action
+	const handleSecondaryAction = () => {
+		if ( options.actions?.secondary?.onClick ) {
+			options.actions.secondary.onClick();
+		}
+		close();
+	};
+
+	// Bind all event handlers
+	$( document ).on( 'keydown', handleEscKey );
+	$( document ).on( 'mousedown', handleClickOutside );
+	$( '.pum-modal-close, .pum-modal-cancel', container ).on( 'click', close );
+
+	if ( options.actions?.primary ) {
+		$( '.pum-modal-proceed', container ).on( 'click', handlePrimaryAction );
+	}
+
+	if ( options.actions?.secondary ) {
+		$( '.pum-modal-cancel', container ).on(
+			'click',
+			handleSecondaryAction
+		);
+	}
+
+	return container;
 }
 
 export class AdminBar {
@@ -66,39 +198,6 @@ export class AdminBar {
 		}
 	}
 
-	private createModal( selector: string ): ModalElements {
-		const container = document.createElement( 'div' );
-		container.innerHTML = `<div class="pum-modal">
-			<div class="pum-modal-content">
-				<div class="pum-modal-header">
-					<div class="pum-logo"></div>
-					<h4>${ this.text.results }</h4>
-					<button class="pum-modal-close">
-						<span class="dashicons dashicons-no-alt"></span>
-						<span class="screen-reader-text">${ this.text.close }</span>
-					</button>
-				</div>
-				<div class="pum-modal-body">
-					<div class="pum-modal-copy">
-						<p>${ selector }</p>
-						<button class="copy-clipboard button button-secondary">
-							<span class="dashicons dashicons-clipboard"></span>
-							<span class="screen-reader-text">${ this.text.copy }</span>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>`;
-
-		document.body.appendChild( container );
-
-		return {
-			container,
-			closeButton: $( '.pum-modal-close', container ),
-			copyButton: $( '.copy-clipboard', container ),
-		};
-	}
-
 	private showCopiedNotice( modalBody: JQuery ): void {
 		const notice = document.createElement( 'div' );
 		notice.classList.add( 'notice', 'notice-success' );
@@ -118,21 +217,29 @@ export class AdminBar {
 		event.preventDefault();
 		event.stopPropagation();
 
-		const selector = finder( event.target );
-		const modal = this.createModal( selector );
-
-		modal.closeButton.on( 'click', () => {
-			$( modal.container ).fadeOut( 200, () => {
-				modal.container.remove();
-			} );
+		const selector = finder( event.target, {
+			seedMinLength: 3,
+			// optimizedMinLength: 2,
+		} );
+		const container = createModal( {
+			title: this.text.results,
+			content: `
+				<div class="pum-modal-copy">
+					<p>${ selector }</p>
+					<button class="copy-clipboard button button-secondary">
+						<span class="dashicons dashicons-clipboard"></span>
+						<span class="screen-reader-text">${ this.text.copy }</span>
+					</button>
+				</div>
+			`,
+			closeText: this.text.close,
 		} );
 
-		modal.copyButton.on( 'click', async () => {
+		// Setup copy handler
+		$( '.copy-clipboard', container ).on( 'click', async () => {
 			const success = await this.copyToClipboard( selector );
 			if ( success ) {
-				this.showCopiedNotice(
-					$( '.pum-modal-body', modal.container )
-				);
+				this.showCopiedNotice( $( '.pum-modal-body', container ) );
 			}
 		} );
 	};
@@ -144,15 +251,32 @@ export class AdminBar {
 			'click',
 			'#wp-admin-bar-pum-get-selector',
 			( event: JQuery.ClickEvent ) => {
-				// eslint-disable-next-line no-restricted-globals, no-alert
-				if ( ! confirm( this.text.instructions ) ) {
-					return;
-				}
-
 				event.preventDefault();
 				event.stopPropagation();
 
-				$( document ).one( 'click', this.handleSelectorClick );
+				createModal( {
+					title: __( 'Get Element Selector', 'popup-maker' ),
+					content: this.text.instructions,
+					closeText: this.text.close,
+					actions: {
+						primary: {
+							text: __( 'Start Selection', 'popup-maker' ),
+							onClick: () => {
+								// Add small delay to prevent immediate trigger
+								setTimeout( () => {
+									$( document ).one(
+										'click',
+										this.handleSelectorClick
+									);
+								}, 250 );
+							},
+						},
+						secondary: {
+							text: __( 'Cancel', 'popup-maker' ),
+							onClick: () => {}, // No-op since close is handled automatically
+						},
+					},
+				} );
 			}
 		);
 
@@ -181,17 +305,28 @@ export class AdminBar {
 						PUM.close( popupId );
 						break;
 					case 'check-conditions':
-						// eslint-disable-next-line no-alert
-						alert(
-							PUM.checkConditions( popupId )
-								? __( 'Pass', 'popup-maker' )
-								: __( 'Fail', 'popup-maker' )
-						);
+						createModal( {
+							title: __( 'Conditions Check', 'popup-maker' ),
+							content: PUM.checkConditions( popupId )
+								? __(
+										'The conditions were met.',
+										'popup-maker'
+								  )
+								: __(
+										'The conditions were not met.',
+										'popup-maker'
+								  ),
+						} );
 						break;
 					case 'reset-cookies':
 						PUM.clearCookies( popupId );
-						// eslint-disable-next-line no-alert
-						alert( __( 'Success', 'popup-maker' ) );
+						createModal( {
+							title: __( 'Cookies Reset', 'popup-maker' ),
+							content: __(
+								'The cookies were reset successfully.',
+								'popup-maker'
+							),
+						} );
 						break;
 				}
 			}

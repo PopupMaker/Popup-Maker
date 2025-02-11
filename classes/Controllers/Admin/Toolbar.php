@@ -192,7 +192,7 @@ class Toolbar extends Controller {
 			$wp_admin_bar->add_node(
 				[
 					'id'     => 'no-popups-loaded',
-					'title'  => $popup_labels->no_items,
+					'title'  => __( 'No Popups Loaded', 'popup-maker' ) . '<strong style="color:#fff; margin-left: 5px;">?</strong>',
 					'href'   => 'https://wppopupmaker.com/docs/problem-solving/troubleshooting-your-first-popup/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-admin-bar&utm_content=no-popups-loaded',
 					'parent' => 'popups',
 					'meta'   => [
