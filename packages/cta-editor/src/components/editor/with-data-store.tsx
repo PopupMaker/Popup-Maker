@@ -7,7 +7,7 @@ import {
 } from '@popup-maker/core-data';
 import { Notice } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useEffect, useState, useRef } from '@wordpress/element';
+import { useEffect, useState, useRef, useMemo } from '@wordpress/element';
 
 import type { ComponentType } from 'react';
 import type { EditorId, EditableCta } from '@popup-maker/core-data';
@@ -36,8 +36,10 @@ export interface EditorWithDataStoreProps
 
 	/**
 	 * The default values for the editor, only applicable when creating a new call to action.
+	 *
+	 * Does not use PartialEditableCta because it requires an id.
 	 */
-	defaultValues?: Editable | undefined;
+	defaultValues?: Partial< EditableCta > | undefined;
 
 	/**
 	 * Callback to run when the CallToAction is saved.
@@ -88,8 +90,16 @@ export const withDataStore = (
 		const [ triedSaving, setTriedSaving ] = useState< boolean >( false );
 		const saveHandledRef = useRef( false );
 
+		const fullDefaultValues = useMemo( () => {
+			return {
+				...defaultCtaValues,
+				...defaultValues,
+				id,
+			};
+		}, [ defaultValues, id ] );
+
 		const {
-			values = defaultValues,
+			values = fullDefaultValues,
 			isEditorActive,
 			isSaving,
 			savedSuccessfully,
@@ -152,7 +162,7 @@ export const withDataStore = (
 				setTriedSaving( false );
 				// Get the latest CTA from the store after save
 				const latestCta = getEditorValues( values.id );
-				onSave?.( latestCta || values );
+				onSave?.( latestCta || ( values as Editable ) );
 			}
 		}, [
 			onSave,
