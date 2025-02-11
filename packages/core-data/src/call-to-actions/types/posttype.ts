@@ -81,7 +81,7 @@ export type CallToActionSettings =
 /**
  * The editable call to action with an ID.
  */
-export type EditableCta = Updatable< CallToAction< 'edit' > >;
+export type EditableCta = Updatable< Omit< CallToAction< 'edit' >, 'stats' > >;
 
 /**
  * The partial editable call to action with a required ID.

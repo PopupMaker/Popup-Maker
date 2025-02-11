@@ -173,9 +173,11 @@ export type SaveEditedRecordAction = BaseAction & {
 
 export type ChangeActionStatusAction = BaseAction & {
 	type: typeof CHANGE_ACTION_STATUS;
-	actionName: string;
-	status: DispatchStatuses;
-	message?: string;
+	payload: {
+		actionName: string;
+		status: DispatchStatuses;
+		message?: string;
+	};
 };
 
 // export type StartResolutionAction = BaseAction & {
@@ -478,7 +480,7 @@ export const reducer = (
 		}
 
 		case CHANGE_ACTION_STATUS: {
-			const { actionName, status, message } = action;
+			const { actionName, status, message } = action.payload;
 
 			return {
 				...state,
