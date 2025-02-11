@@ -80,6 +80,8 @@ export type StoreDispatch< S extends StoreDescriptor< any > | string > =
 				| ( () => Promise< any > | any ) // Thunk: () => window.fetch(...)
 		) => Promise< any > );
 
+type BatchCallback = () => void | Promise< void >;
+
 /**
  * Context for a store's thunk.
  */
@@ -94,7 +96,7 @@ export type StoreThunkContext< S extends StoreDescriptor< any > | string > = {
 				storeNameOrDescriptor: T
 			) => PromiseReturnMethods< ReturnType< typeof wpSelect > > );
 		dispatch: typeof wpDispatch & DispatchAny;
-		batch: ( callback: () => Promise< void > ) => Promise< void >;
+		batch: < C extends BatchCallback >( callback: C ) => ReturnType< C >;
 	} & DataRegistry;
 };
 
