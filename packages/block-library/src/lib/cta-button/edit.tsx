@@ -60,7 +60,7 @@ import { useEffect, useState, useRef } from '@wordpress/element';
 import { displayShortcut, isKeyboardEvent, ENTER } from '@wordpress/keycodes';
 import { linkOff, megaphone, edit, chevronDown, check } from '@wordpress/icons';
 
-import { EntitySelectControl } from '@popup-maker/components';
+import { CallToActionSelectControl } from '@popup-maker/components';
 import { callToActionStore } from '@popup-maker/core-data';
 import { Editor as BaseEditor, withModal } from '@popup-maker/cta-editor';
 
@@ -528,7 +528,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 							<Flex direction="column">
 								<Flex align="center" justify="space-between">
 									<FlexItem style={ { flexGrow: 1 } }>
-										<EntitySelectControl
+										<CallToActionSelectControl
 											value={ ctaId || 0 }
 											onChange={ async (
 												newId: number | string
@@ -642,7 +642,6 @@ function ButtonEdit( props: ButtonEditProps ) {
 											flexShrink: 0,
 										} }
 									>
-										{ /* TODO: Add conversion metrics here when available */ }
 										{ `${ selectedCTA?.title?.rendered } (#${ selectedCTA?.id })` }
 									</FlexItem>
 									<Flex justify="flex-end">
