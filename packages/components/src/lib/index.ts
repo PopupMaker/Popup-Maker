@@ -1,3 +1,4 @@
+export { default as CallToActionSelectControl } from './cta-select-control';
 export { default as ConfirmDialogue } from './confirm-dialogue';
 export { default as ControlledTabPanel } from './controlled-tab-panel';
 export { default as DeviceToggle } from './device-toggle';
