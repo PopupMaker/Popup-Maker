@@ -69,7 +69,7 @@ import { NEW_TAB_TARGET, NOFOLLOW_REL } from './constants';
 
 import type { BlockInstance } from '@wordpress/blocks';
 
-export const Editor = withModal( BaseEditor );
+const Editor = withModal( BaseEditor );
 
 interface ButtonAttributes {
 	tagName: string;
@@ -702,6 +702,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 							ctaId: values.id,
 						} );
 					} }
+					closeOnSave={ true }
 					onClose={ () => {
 						setNewCta( false );
 					} }
