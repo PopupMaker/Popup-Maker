@@ -130,8 +130,16 @@ export const withDataStore = (
 			[ id ]
 		);
 
-		const { editRecord, resetRecordEdits } =
+		const { id: valuesId } = values;
+
+		const { editRecord, resetRecordEdits, changeEditorId } =
 			useDispatch( callToActionStore );
+
+		useEffect( () => {
+			if ( ( ! isEditorActive && id ) || id !== valuesId ) {
+				changeEditorId( id );
+			}
+		}, [ id, valuesId, isEditorActive, changeEditorId ] );
 
 		/**
 		 * Listen for errors and set the error message.
@@ -172,8 +180,6 @@ export const withDataStore = (
 			values,
 			isSaving,
 		] );
-
-		const { id: valuesId } = values;
 
 		const hasEdits = useSelect(
 			( select ) => select( callToActionStore ).hasEdits( valuesId ),
