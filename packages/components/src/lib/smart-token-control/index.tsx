@@ -502,7 +502,9 @@ const SmartTokenControl = < T extends Token = string >(
 									...state,
 									isFocused: true,
 									popoverOpen:
-										inputText.length >= minQueryLength,
+										inputText.length >= minQueryLength ||
+										( extraOptions.length > 0 &&
+											suggestions.length === 0 ),
 								} );
 							} }
 							onClick={ () => {
