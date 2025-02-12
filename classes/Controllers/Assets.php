@@ -55,7 +55,7 @@ class Assets extends Controller {
 		}
 
 		$packages = [
-			'admin-bar'       => [
+			'admin-bar'        => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-admin-bar',
 				'styles'   => true,
@@ -71,11 +71,11 @@ class Assets extends Controller {
 					],
 				],
 			],
-			'admin-marketing' => [
+			'admin-marketing'  => [
 				'handle' => 'popup-maker-admin-marketing',
 				'styles' => true,
 			],
-			'block-editor'    => [
+			'block-editor'     => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-block-editor',
 				'styles'   => true,
@@ -96,15 +96,15 @@ class Assets extends Controller {
 					),
 				],
 			],
-			'block-library'   => [
+			'block-library'    => [
 				'bundled'      => false,
 				'handle'       => 'popup-maker-block-library',
 				'styles'       => true,
 				'block_styles' => true,
-				'varsName'     => 'popupMakerBlockLibrary',
-				'vars'         => [],
+				// 'varsName'     => 'popupMakerBlockLibrary',
+				// 'vars'         => [],
 			],
-			'components'      => [
+			'components'       => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-components',
 				'styles'   => true,
@@ -115,7 +115,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'core-data'       => [
+			'core-data'        => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-core-data',
 				'styles'   => false,
@@ -130,7 +130,18 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'cta-editor'      => [
+			'cta-admin'        => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-cta-admin',
+				'styles'   => true,
+				'varsName' => 'popupMakerCtaAdmin',
+				'vars'     => function () {
+					return [
+						'cta_types' => $this->container->get( 'cta_types' )->get_as_array(),
+					];
+				},
+			],
+			'cta-editor'       => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-cta-editor',
 				'styles'   => true,
@@ -140,51 +151,65 @@ class Assets extends Controller {
 						'cta_types' => $this->container->get( 'cta_types' )->get_as_array(),
 					];
 				},
-				// 'head'     => true,
+					// 'head'     => true,
 			],
-			'data'            => [
-				'bundled'  => false,
-				'handle'   => 'popup-maker-data',
-				'styles'   => false,
-				'varsName' => 'popupMakerData',
-				'vars'     => [],
+			'data'             => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-data',
+				'styles'  => false,
+				// 'varsName' => 'popupMakerData',
+				// 'vars'     => [],
 			],
-			'fields'          => [
-				'bundled'  => false,
-				'handle'   => 'popup-maker-fields',
-				'styles'   => false,
-				'varsName' => 'popupMakerFields',
-				'vars'     => [],
+			'fields'           => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-fields',
+				'styles'  => false,
+				// 'varsName' => 'popupMakerFields',
+				// 'vars'     => [],
 			],
-			'i18n'            => [
-				'bundled'  => false,
-				'handle'   => 'popup-maker-i18n',
-				'styles'   => false,
-				'varsName' => 'popupMakerI18n',
-				'vars'     => [],
+			'i18n'             => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-i18n',
+				'styles'  => false,
+				// 'varsName' => 'popupMakerI18n',
+				// 'vars'     => [],
 			],
-			'icons'           => [
-				'bundled'  => false,
-				'handle'   => 'popup-maker-icons',
-				'styles'   => true,
-				'varsName' => 'popupMakerIcons',
-				'vars'     => [],
+			'icons'            => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-icons',
+				'styles'  => true,
+				// 'varsName' => 'popupMakerIcons',
+				// 'vars'     => [],
 			],
-			'utils'           => [
-				'bundled'  => false,
-				'handle'   => 'popup-maker-utils',
-				'styles'   => false,
-				'varsName' => 'popupMakerUtils',
-				'vars'     => [],
+			'registry'         => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-registry',
+				'styles'  => false,
+				// 'varsName' => 'popupMakerRegistry',
+				// 'vars'     => [],
+			],
+			'use-query-params' => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-use-query-params',
+				'styles'  => false,
+				// 'varsName' => 'popupMakerUseQueryParams',
+				// 'vars'     => [],
+			],
+			'utils'            => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-utils',
+				'styles'  => false,
+				// 'varsName' => 'popupMakerUtils',
+				// 'vars'     => [],
 			],
 		];
 
 		return $packages;
 	}
 
-	/**
-	 * Register all package scripts & styles.
-	 */
+		/**
+		 * Register all package scripts & styles.
+		 */
 	public function register_scripts() {
 		static $registered;
 
@@ -209,25 +234,25 @@ class Assets extends Controller {
 			! isset( $packages_meta[ "$package.js" ] )
 			) {
 				// Skip packages that don't have a handle or meta.
-				continue;
+					continue;
 			}
 
-			$handle       = $package_data['handle'];
-			$package_data = wp_parse_args( $package_data, [
-				'bundled' => true,
-			] );
+				$handle       = $package_data['handle'];
+				$package_data = wp_parse_args( $package_data, [
+					'bundled' => true,
+				] );
 
-			$bundled = (bool) $package_data['bundled'];
+				$bundled = (bool) $package_data['bundled'];
 
-			$meta = $packages_meta[ "$package.js" ];
+				$meta = $packages_meta[ "$package.js" ];
 
-			$js_file = $this->container->get_url( "$path/$package.js" );
-			$js_deps = array_merge(
-				// Automated dependency registration.
-				$meta['dependencies'],
-				// Manual dependency registration.
-				isset( $package_data['deps'] ) ? $package_data['deps'] : []
-			);
+				$js_file = $this->container->get_url( "$path/$package.js" );
+				$js_deps = array_merge(
+					// Automated dependency registration.
+					$meta['dependencies'],
+					// Manual dependency registration.
+					isset( $package_data['deps'] ) ? $package_data['deps'] : []
+				);
 
 			if ( 'block-editor' === $package ) {
 				if ( is_admin() && 'widgets' !== $screen->id ) {
@@ -235,7 +260,7 @@ class Assets extends Controller {
 				}
 			}
 
-			$footer = $package_data['head'] ?? true;
+				$footer = $package_data['head'] ?? true;
 
 			if ( $bundled ) {
 				pum_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
@@ -267,22 +292,22 @@ class Assets extends Controller {
 				}
 			}
 
-			/**
-			 * TODO Create pum_set_script_translations() function.
-			 *
-			 * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
-			 * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
-			 * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
-			 */
-			wp_set_script_translations( $handle, 'popup-maker' );
+				/**
+				 * TODO Create pum_set_script_translations() function.
+				 *
+				 * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
+				 * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
+				 * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
+				 */
+				wp_set_script_translations( $handle, 'popup-maker' );
 		}
 	}
 
-	/**
-	 * Get global vars.
-	 *
-	 * @return array
-	 */
+		/**
+		 * Get global vars.
+		 *
+		 * @return array
+		 */
 	private function get_global_vars() {
 		$additional_global_vars = is_admin() ?
 		$this->get_admin_global_vars() :
@@ -302,11 +327,11 @@ class Assets extends Controller {
 		);
 	}
 
-	/**
-	 * Get admin-onlyglobal vars.
-	 *
-	 * @return array
-	 */
+		/**
+		 * Get admin-onlyglobal vars.
+		 *
+		 * @return array
+		 */
 	private function get_admin_global_vars() {
 		$wp_version = get_bloginfo( 'version' );
 		// Strip last number from version as they won't be breaking changes.
@@ -328,20 +353,20 @@ class Assets extends Controller {
 		);
 	}
 
-	/**
-	 * Get frontend-only global vars.
-	 *
-	 * @return array
-	 */
+		/**
+		 * Get frontend-only global vars.
+		 *
+		 * @return array
+		 */
 	private function get_frontend_global_vars() {
 		return apply_filters( 'popup_maker/frontend_global_vars', [] );
 	}
 
-	/**
-	 * Print global vars.
-	 *
-	 * @return void
-	 */
+		/**
+		 * Print global vars.
+		 *
+		 * @return void
+		 */
 	public function print_global_vars() {
 		static $printed;
 
@@ -358,12 +383,12 @@ class Assets extends Controller {
 		window.popupMaker = window.popupMaker || {};
 		window.popupMaker.globalVars = <?php echo wp_json_encode( $global_vars ); ?>;
 		</script>
-		<?php
+			<?php
 	}
 
-	/**
-	 * Auto load styles if scripts are enqueued.
-	 */
+		/**
+		 * Auto load styles if scripts are enqueued.
+		 */
 	public function autoload_styles_for_scripts() {
 		$packages = $this->get_packages();
 
@@ -401,8 +426,8 @@ class Assets extends Controller {
 
 				if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) ) {
 					$localized_vars = is_callable( $package_data['vars'] ) ?
-						call_user_func( $package_data['vars'] ) :
-						$package_data['vars'];
+					call_user_func( $package_data['vars'] ) :
+					$package_data['vars'];
 
 					$localized_vars = apply_filters( "popup_maker/{$package}_localized_vars", $localized_vars );
 
@@ -417,11 +442,11 @@ class Assets extends Controller {
 		}
 	}
 
-	/**
-	 * Fix old handles that might be enqueueed and not loaded, load their replacements.
-	 *
-	 * @return void
-	 */
+		/**
+		 * Fix old handles that might be enqueueed and not loaded, load their replacements.
+		 *
+		 * @return void
+		 */
 	public function fix_old_handles() {
 	}
 }

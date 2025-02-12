@@ -26,6 +26,9 @@
 			"path": "./packages/core-data"
 		},
 		{
+			"path": "./packages/cta-admin"
+		},
+		{
 			"path": "./packages/cta-editor"
 		},
 		{
@@ -39,6 +42,15 @@
 		},
 		{
 			"path": "./packages/icons"
+		},
+		{
+			"path": "./packages/registry"
+		},
+		{
+			"path": "./packages/types"
+		},
+		{
+			"path": "./packages/use-query-params"
 		},
 		{
 			"path": "./packages/utils"

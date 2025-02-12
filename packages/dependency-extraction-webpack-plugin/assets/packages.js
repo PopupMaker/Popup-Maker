@@ -5,10 +5,13 @@ module.exports = [
 	'@popup-maker/block-library',
 	'@popup-maker/components',
 	'@popup-maker/core-data',
+	'@popup-maker/cta-admin',
 	'@popup-maker/cta-editor',
 	'@popup-maker/data',
 	'@popup-maker/fields',
 	'@popup-maker/i18n',
 	'@popup-maker/icons',
+	'@popup-maker/registry',
+	'@popup-maker/use-query-params',
 	'@popup-maker/utils',
 ];

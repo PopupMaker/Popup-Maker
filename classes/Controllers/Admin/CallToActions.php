@@ -73,7 +73,7 @@ class CallToActions extends Controller {
 		}
 
 		// wp_enqueue_editor();
-		wp_enqueue_script( 'popup-maker-cta-editor' );
+		wp_enqueue_script( 'popup-maker-cta-admin' );
 	}
 
 	/**

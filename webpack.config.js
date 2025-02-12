@@ -16,11 +16,14 @@ const packages = {
 	'block-library': 'packages/block-library',
 	components: 'packages/components',
 	'core-data': 'packages/core-data',
+	'cta-admin': 'packages/cta-admin',
 	'cta-editor': 'packages/cta-editor',
 	data: 'packages/data',
 	fields: 'packages/fields',
 	i18n: 'packages/i18n',
 	icons: 'packages/icons',
+	registry: 'packages/registry',
+	'use-query-params': 'packages/use-query-params',
 	utils: 'packages/utils',
 };
 
