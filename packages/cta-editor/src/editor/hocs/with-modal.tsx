@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { __ } from '@popup-maker/i18n';
 import { ConfirmDialogue } from '@popup-maker/components';
-import { callToActionStore } from '@popup-maker/core-data';
+import { callToActionStore, type EditableCta } from '@popup-maker/core-data';
 import { close, link } from '@wordpress/icons';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { Button, Modal, Spinner } from '@wordpress/components';
@@ -167,6 +167,9 @@ export const withModal = (
 				try {
 					// Save to the database
 					await saveEditorValues();
+
+					// Call the onSave callback if it exists
+					componentProps?.onSave?.( values );
 
 					const hasRemainingEdits = getHasEdits( values.id );
 					// Handle modal closing if needed
