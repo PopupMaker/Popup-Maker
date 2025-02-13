@@ -9,6 +9,7 @@ const {
 	RECEIVE_RECORD,
 	RECEIVE_RECORDS,
 	RECEIVE_QUERY_RECORDS,
+	RECEIVE_ERROR,
 	PURGE_RECORD,
 	PURGE_RECORDS,
 	EDITOR_CHANGE_ID,
@@ -72,6 +73,14 @@ export type State = {
 	 * The notices for the call to actions.
 	 */
 	notices: Record< string, Notice >;
+
+	/**
+	 * The errors for the call to actions.
+	 */
+	errors: {
+		global: string | null;
+		byId: { [ id: number ]: string };
+	};
 };
 
 type BaseAction = {
@@ -90,6 +99,14 @@ export type RecieveRecordsAction = BaseAction & {
 	type: typeof RECEIVE_RECORDS;
 	payload: {
 		records: CallToAction< 'edit' >[];
+	};
+};
+
+export type RecieveErrorAction = BaseAction & {
+	type: typeof RECEIVE_ERROR;
+	payload: {
+		id?: number;
+		error: string;
 	};
 };
 
@@ -218,6 +235,7 @@ export type ReducerAction =
 	| RecieveRecordAction
 	| RecieveRecordsAction
 	| RecieveQueryRecordsAction
+	| RecieveErrorAction
 	| PurgeRecordAction
 	| PurgeRecordsAction
 	| ChangeEditorAction
@@ -282,6 +300,26 @@ export const reducer = (
 							),
 					  }
 					: state.queries,
+			};
+		}
+
+		case RECEIVE_ERROR: {
+			const { error, id = false } = action.payload;
+			// Ensure existing errors state or initialize if undefined
+			const prevErrors = state.errors || { global: null, byId: {} };
+			const newById = { ...prevErrors.byId };
+			if ( id ) {
+				newById[ id ] = error;
+			} else {
+				// No id provided, set the global error
+				prevErrors.global = error;
+			}
+			return {
+				...state,
+				errors: {
+					global: id ? prevErrors.global : error,
+					byId: newById,
+				},
 			};
 		}
 

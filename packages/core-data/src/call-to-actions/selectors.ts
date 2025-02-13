@@ -42,6 +42,19 @@ const entitySelectors = {
 	),
 
 	/**
+	 * Get the error for a specific entity.
+	 */
+	getFetchError: createSelector(
+		( state: State, id?: number ) => {
+			if ( typeof id === 'number' ) {
+				return state.errors.byId[ id ];
+			}
+			return state.errors.global;
+		},
+		( state: State, id: number | string ) => [ state.errors, id ]
+	),
+
+	/**
 	 * Get filtered entities.
 	 *
 	 * @param {State}    state         The state.

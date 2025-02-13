@@ -8,6 +8,7 @@ export const NOTICE_CONTEXT = 'pum-cta-editor';
 export const RECEIVE_RECORD = 'RECEIVE_RECORD';
 export const RECEIVE_RECORDS = 'RECEIVE_RECORDS';
 export const RECEIVE_QUERY_RECORDS = 'RECEIVE_QUERY_RECORDS';
+export const RECEIVE_ERROR = 'RECEIVE_ERROR';
 export const PURGE_RECORD = 'PURGE_RECORD';
 export const PURGE_RECORDS = 'PURGE_RECORDS';
 
@@ -33,6 +34,7 @@ export const ACTION_TYPES: {
 	RECEIVE_RECORD: typeof RECEIVE_RECORD;
 	RECEIVE_RECORDS: typeof RECEIVE_RECORDS;
 	RECEIVE_QUERY_RECORDS: typeof RECEIVE_QUERY_RECORDS;
+	RECEIVE_ERROR: typeof RECEIVE_ERROR;
 	PURGE_RECORD: typeof PURGE_RECORD;
 	PURGE_RECORDS: typeof PURGE_RECORDS;
 
@@ -54,6 +56,7 @@ export const ACTION_TYPES: {
 	RECEIVE_RECORD,
 	RECEIVE_RECORDS,
 	RECEIVE_QUERY_RECORDS,
+	RECEIVE_ERROR,
 	PURGE_RECORD,
 	PURGE_RECORDS,
 	EDITOR_CHANGE_ID,
@@ -83,6 +86,10 @@ export const initialState: State = {
 	editHistoryIndex: {},
 	resolutionState: {},
 	notices: {},
+	errors: {
+		global: null,
+		byId: {},
+	},
 };
 
 /**

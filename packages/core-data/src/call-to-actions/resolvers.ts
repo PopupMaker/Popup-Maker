@@ -1,5 +1,6 @@
 import { appendUrlParams, fetchFromApi } from '../utils';
-import { RECEIVE_RECORDS, RECEIVE_RECORD } from './constants';
+import { RECEIVE_RECORDS, RECEIVE_RECORD, RECEIVE_ERROR } from './constants';
+import type { ReducerAction } from './reducer';
 
 import type { CallToAction, ThunkAction } from './types';
 
@@ -31,11 +32,17 @@ const entityResolvers = {
 								( { _links, ...record } ) => record
 							),
 						},
-					} );
+					} as ReducerAction );
 				}
 			} catch ( error: any ) {
 				// eslint-disable-next-line no-console
 				console.error( error );
+				dispatch( {
+					type: RECEIVE_ERROR,
+					payload: {
+						error: error.message,
+					},
+				} as ReducerAction );
 			}
 		},
 
@@ -58,10 +65,17 @@ const entityResolvers = {
 					payload: {
 						record,
 					},
-				} );
+				} as ReducerAction );
 			} catch ( error: any ) {
 				// eslint-disable-next-line no-console
 				console.error( error );
+				dispatch( {
+					type: RECEIVE_ERROR,
+					payload: {
+						error: error.message,
+						id,
+					},
+				} as ReducerAction );
 			}
 		},
 };

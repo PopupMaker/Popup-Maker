@@ -51,6 +51,7 @@ import {
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	Notice,
 } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
@@ -358,14 +359,24 @@ function ButtonEdit( props: ButtonEditProps ) {
 
 	// Update URL when CTA changes
 	useEffect( () => {
-		if ( ctaId && selectedCTA ) {
-			setAttributes( {
-				url: `?cta=${ selectedCTA.uuid }`,
-				linkTarget: selectedCTA.settings.opensInNewTab
-					? NEW_TAB_TARGET
-					: undefined,
-				rel: selectedCTA.settings.nofollow ? NOFOLLOW_REL : undefined,
-			} );
+		if ( ctaId ) {
+			if ( selectedCTA ) {
+				setAttributes( {
+					url: `?cta=${ selectedCTA.uuid }`,
+					linkTarget: selectedCTA.settings.opensInNewTab
+						? NEW_TAB_TARGET
+						: undefined,
+					rel: selectedCTA.settings.nofollow
+						? NOFOLLOW_REL
+						: undefined,
+				} );
+			} else {
+				setAttributes( {
+					url: undefined,
+					linkTarget: undefined,
+					rel: undefined,
+				} );
+			}
 		}
 	}, [ ctaId, selectedCTA ] );
 
@@ -428,6 +439,23 @@ function ButtonEdit( props: ButtonEditProps ) {
 		},
 	} );
 
+	const ctaErrorFromStore = useSelect(
+		( select ) => {
+			const state = select( callToActionStore );
+			const message = ctaId
+				? state.getFetchError( ctaId ) || null
+				: state.getFetchError() || null;
+
+			return message === null
+				? null
+				: message.replace(
+						'Invalid post ID.',
+						__( 'Call to action not found.', 'popup-maker' )
+				  );
+		},
+		[ ctaId ]
+	);
+
 	return (
 		<>
 			<div
@@ -437,6 +465,10 @@ function ButtonEdit( props: ButtonEditProps ) {
 						width,
 					[ `has-custom-font-size` ]: blockProps.style.fontSize,
 				} ) }
+				style={ {
+					...blockProps.style,
+					border: ctaErrorFromStore ? '2px solid red' : undefined,
+				} }
 			>
 				<RichText
 					ref={ mergedRef }
@@ -526,18 +558,28 @@ function ButtonEdit( props: ButtonEditProps ) {
 					className="block-editor-link-control"
 				>
 					<div style={ { width: '350px', padding: '10px' } }>
-						{ isExplicitlyEditing ? (
+						{ ctaErrorFromStore && (
+							<div className="pum-cta-error-notice">
+								<Notice status="error" isDismissible={ false }>
+									{ ctaErrorFromStore }
+								</Notice>
+							</div>
+						) }
+						{ isExplicitlyEditing || ctaErrorFromStore ? (
 							<Flex direction="column">
 								<Flex align="center" justify="space-between">
 									<FlexItem style={ { flexGrow: 1 } }>
 										<CallToActionSelectControl
-											value={ ctaId || 0 }
+											value={
+												ctaId && ! ctaErrorFromStore
+													? ctaId
+													: 0
+											}
 											onChange={ async (
 												newId: number | string
 											) => {
 												if ( newId === 'create_new' ) {
 													setNewCta( true );
-
 													return;
 												}
 												setAttributes( {
@@ -559,7 +601,6 @@ function ButtonEdit( props: ButtonEditProps ) {
 													),
 												},
 											] }
-											// forceRefresh={ forceRefresh }
 										/>
 									</FlexItem>
 									<FlexItem>
@@ -603,13 +644,10 @@ function ButtonEdit( props: ButtonEditProps ) {
 													) }
 													checked={ opensInNewTab }
 													onChange={ ( value ) => {
-														const newLinkTarget =
-															value
-																? NEW_TAB_TARGET
-																: undefined;
 														setAttributes( {
-															linkTarget:
-																newLinkTarget,
+															linkTarget: value
+																? NEW_TAB_TARGET
+																: undefined,
 														} );
 													} }
 													__nextHasNoMarginBottom
