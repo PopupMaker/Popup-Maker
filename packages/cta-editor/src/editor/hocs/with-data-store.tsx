@@ -136,9 +136,15 @@ export const withDataStore = (
 			useDispatch( callToActionStore );
 
 		useEffect( () => {
-			if ( ( ! isEditorActive && id ) || id !== valuesId ) {
+			if ( ! isEditorActive && id ) {
 				changeEditorId( id );
 			}
+
+			return () => {
+				if ( valuesId && isEditorActive ) {
+					changeEditorId( undefined );
+				}
+			};
 		}, [ id, valuesId, isEditorActive, changeEditorId ] );
 
 		/**

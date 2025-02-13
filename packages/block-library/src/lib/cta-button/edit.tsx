@@ -319,7 +319,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 	const isLinkTag = 'a' === TagName;
 
 	// Get available CTAs from the store
-	const { ctas, selectedCTA } = useSelect(
+	const { selectedCTA } = useSelect(
 		( select ) => ( {
 			ctas: select( callToActionStore ).getCallToActions(),
 			selectedCTA: ctaId
@@ -333,7 +333,8 @@ function ButtonEdit( props: ButtonEditProps ) {
 		[ ctaId ]
 	);
 
-	const { createCallToAction } = useDispatch( callToActionStore );
+	const { createCallToAction, changeEditorId } =
+		useDispatch( callToActionStore );
 
 	function startEditing() {
 		setIsExplicitlyEditing( true );
@@ -400,6 +401,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 				} );
 
 				if ( createdCta ) {
+					changeEditorId( createdCta.id );
 					setNewCta( createdCta.id );
 				}
 			}
@@ -409,7 +411,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 		}
 
 		createNewCTA();
-	}, [ newCta, createCallToAction ] );
+	}, [ newCta, createCallToAction, changeEditorId ] );
 
 	const [ fluidTypographySettings, layout ] = useSettings(
 		'typography.fluid',
@@ -543,8 +545,6 @@ function ButtonEdit( props: ButtonEditProps ) {
 												} );
 											} }
 											hideLabelFromVision
-											entityKind="postType"
-											entityType="pum_cta"
 											placeholder={ __(
 												'Search or create CTA…',
 												'popup-maker'
@@ -692,14 +692,11 @@ function ButtonEdit( props: ButtonEditProps ) {
 
 			{ typeof newCta === 'number' && newCta > 0 && (
 				<Editor
+					key={ newCta }
 					id={ newCta }
-					defaultValues={ {
-						status: 'publish',
-					} }
+					defaultValues={ { status: 'publish' } }
 					onSave={ ( values ) => {
-						setAttributes( {
-							ctaId: values.id,
-						} );
+						setAttributes( { ctaId: values.id } );
 					} }
 					closeOnSave={ true }
 					onClose={ () => {
