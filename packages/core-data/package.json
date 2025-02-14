@@ -20,14 +20,13 @@
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
 	"main": "build/index.js",
-	"module": "src/index.js",
 	"types": "build-types/index.d.ts",
 	"wpScript": true,
 	"sideEffects": false,
 	"dependencies": {
 		"@popup-maker/i18n": "*",
 		"@wordpress/api-fetch": "^7.16.0",
-		"@wordpress/data": "^10.16.0",
+		"@wordpress/data": "^10.14.0",
 		"@wordpress/data-controls": "^4.16.0",
 		"@wordpress/core-data": "^7.16.0",
 		"@wordpress/notices": "^5.16.0",

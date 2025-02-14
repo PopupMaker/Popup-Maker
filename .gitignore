@@ -56,3 +56,9 @@ strauss.phar
 repomix-output.md
 repomix-output.json
 repomix-output.txt
+
+.cursorrules
+
+
+.nx/cache
+.nx/workspace-data
