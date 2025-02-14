@@ -4,7 +4,6 @@
 		"rootDir": "src",
 		"outDir": "build",
 		"declarationDir": "build-types",
-		"resolveJsonModule": true
 	},
 	"include": [ "./src/**/*.ts|tsx|js|json" ],
 	"types": [ "jquery" ],

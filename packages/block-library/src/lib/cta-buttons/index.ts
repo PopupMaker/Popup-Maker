@@ -34,11 +34,11 @@ export const settings = {
 		innerBlocks: [
 			{
 				name: 'popup-maker/cta-button',
-				attributes: { text: __( 'Buy now' ) },
+				attributes: { text: __( 'Buy now', 'popup-maker' ) },
 			},
 			{
 				name: 'popup-maker/cta-button',
-				attributes: { text: __( 'Contact us' ) },
+				attributes: { text: __( 'Contact us', 'popup-maker' ) },
 			},
 		],
 	},
