@@ -1,0 +1,5 @@
+---
+description: No comment removal
+globs: **/*.*
+---
+DO NOT REMOVE EXISTING COMMENTS
