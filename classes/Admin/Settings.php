@@ -427,7 +427,7 @@ class PUM_Admin_Settings {
 									'}}'
 								) : '',
 								'type'         => 'text',
-								'std'          => __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ),
+								'std'          => __( 'If you opt in above, we use this information to send related content, discounts, and other special offers.', 'popup-maker' ),
 								'dependencies' => [
 									'privacy_consent_always_enabled' => 'yes',
 								],
