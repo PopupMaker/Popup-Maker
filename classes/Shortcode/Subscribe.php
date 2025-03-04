@@ -434,7 +434,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'type'  => 'checkbox',
 						],
 						'openpopup_id' => [
-							'label'        => __( 'Popup ID', 'popup-maker' ),
+							'label'        => __( 'Popup Name', 'popup-maker' ),
 							'type'         => 'select',
 							'options'      => [
 								0 => __( 'Select a popup', 'popup-maker' ),
