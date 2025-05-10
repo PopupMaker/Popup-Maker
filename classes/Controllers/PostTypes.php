@@ -141,6 +141,15 @@ class PostTypes extends Controller {
 		 */
 		$popup_args = apply_filters( 'popup_maker/popup_post_type_args', $popup_args );
 
+		/**
+		 * Filter: popmake_popup_post_type_args
+		 *
+		 * @param array<string,mixed> $args Popup post type args.
+		 *`
+		 * @deprecated X.X.X
+		 */
+		$popup_args = apply_filters( 'popmake_popup_post_type_args', $popup_args );
+
 		register_post_type( $this->get_type_key( 'popup' ), $popup_args );
 	}
 
@@ -209,6 +218,15 @@ class PostTypes extends Controller {
 		 * @since X.X.X
 		 */
 		$popup_theme_args = apply_filters( 'popup_maker/popup_theme_post_type_args', $popup_theme_args );
+
+		/**
+		 * Filter: popmake_popup_theme_post_type_args
+		 *
+		 * @param array<string,mixed> $args Popup theme post type args.
+		 *`
+		 * @deprecated X.X.X
+		 */
+		$popup_theme_args = apply_filters( 'popmake_popup_theme_post_type_args', $popup_theme_args );
 
 		register_post_type( $this->get_type_key( 'popup_theme' ), $popup_theme_args );
 	}
@@ -306,6 +324,15 @@ class PostTypes extends Controller {
 		 */
 		$category_args = apply_filters( 'popup_maker/popup_category_tax_args', $category_args );
 
+		/**
+		 * Filter: popmake_popup_category_tax_args
+		 *
+		 * @param array<string,mixed> $category_args Popup category taxonomy args.
+		 *`
+		 * @deprecated X.X.X
+		 */
+		$category_args = apply_filters( 'popmake_category_args', $category_args );
+
 		register_taxonomy( $this->get_type_key( 'popup_category' ), [ $this->get_type_key( 'popup' ), $this->get_type_key( 'popup_theme' ) ], $category_args );
 		register_taxonomy_for_object_type( $this->get_type_key( 'popup_category' ), $this->get_type_key( 'popup' ) );
 		register_taxonomy_for_object_type( $this->get_type_key( 'popup_category' ), $this->get_type_key( 'popup_theme' ) );
@@ -341,6 +368,15 @@ class PostTypes extends Controller {
 		 * @since X.X.X
 		 */
 		$tag_args = apply_filters( 'popup_maker/popup_tag_tax_args', $tag_args );
+
+		/**
+		 * Filter: popmake_tag_args
+		 *
+		 * @param array<string,mixed> $tag_args Popup tag taxonomy args.
+		 *`
+		 * @deprecated X.X.X
+		 */
+		$tag_args = apply_filters( 'popmake_tag_args', $tag_args );
 
 		register_taxonomy( $this->get_type_key( 'popup_tag' ), [ $this->get_type_key( 'popup' ), $this->get_type_key( 'popup_theme' ) ], $tag_args );
 		register_taxonomy_for_object_type( $this->get_type_key( 'popup_tag' ), $this->get_type_key( 'popup' ) );

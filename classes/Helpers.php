@@ -32,7 +32,7 @@ class PUM_Helpers {
 	/**
 	 * Get all shortcodes from given content.
 	 *
-	 * @deprecated X.X.X Use PUM_Utils_Shortcodes::get_shortcodes_from_content
+	 * @deprecated 1.14
 	 *
 	 * @param string $content Content potentially containing shortcodes.
 	 *
