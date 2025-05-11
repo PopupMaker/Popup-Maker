@@ -59,12 +59,12 @@ class Container extends \PopupMaker\Base\Container {
 	/**
 	 * Register controllers.
 	 *
-	 * @param array<string,Controller> $controllers Array of controllers.
+	 * @param array<string,\PopupMaker\Interfaces\Controller> $controllers Array of controllers.
 	 * @return void
 	 */
 	public function register_controllers( $controllers = [] ) {
 		foreach ( $controllers as $name => $controller ) {
-			if ( $controller instanceof \PopupMaker\Base\Controller ) {
+			if ( $controller instanceof \PopupMaker\Interfaces\Controller ) {
 				if ( $controller->controller_enabled() ) {
 					$controller->init();
 				}
