@@ -72,8 +72,9 @@ class Assets extends Controller {
 				],
 			],
 			'admin-marketing'  => [
-				'handle' => 'popup-maker-admin-marketing',
-				'styles' => true,
+				'bundled' => false,
+				'handle'  => 'popup-maker-admin-marketing',
+				'styles'  => true,
 			],
 			'block-editor'     => [
 				'bundled'  => false,
