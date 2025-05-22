@@ -506,10 +506,13 @@ var PUM;
                 });
 
             if (settings.close_on_esc_press || settings.close_on_f4_press) {
-                // TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
+                // Use a popup specific namespace so closing one popup doesn't
+                // remove listeners for another that is still open.
+                var keyupNamespace = 'keyup.popmake-' + settings.id;
+
                 $(window)
-                    .off('keyup.popmake')
-                    .on('keyup.popmake', function (e) {
+                    .off(keyupNamespace)
+                    .on(keyupNamespace, function (e) {
                         if (e.keyCode === 27 && settings.close_on_esc_press) {
                             $.fn.popmake.last_close_trigger = 'ESC Key';
                             $popup.popmake('close');
@@ -584,7 +587,8 @@ var PUM;
                         /**
                          * Clear global event spaces.
                          */
-                        $(window).off('keyup.popmake');
+                        var keyupNamespace = 'keyup.popmake-' + settings.id;
+                        $(window).off(keyupNamespace);
                         $popup.off('click.popmake');
                         $close.off('click.popmake');
 
