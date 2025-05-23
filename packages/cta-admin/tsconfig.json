@@ -28,6 +28,9 @@
 			"path": "../icons"
 		},
 		{
+			"path": "../registry"
+		},
+		{
 			"path": "../utils"
 		}
 	]

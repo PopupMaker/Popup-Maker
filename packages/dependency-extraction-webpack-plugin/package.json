@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/dependency-extraction-webpack-plugin",
-	"version": "5.9.1",
+	"version": "6.23.0",
 	"description": "Popup Maker Dependency Extraction Webpack Plugin",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -19,7 +19,7 @@
 	},
 	"main": "src/index",
 	"dependencies": {
-		"@wordpress/dependency-extraction-webpack-plugin": "5.9.0"
+		"@wordpress/dependency-extraction-webpack-plugin": "6.23.0"
 	},
 	"scripts": {
 		"lint": "wp-scripts lint-js .",
