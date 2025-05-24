@@ -27,8 +27,7 @@ declare global {
 /**
  * Initialize the editor.
  */
-initEditor();
-
+// initEditor();
 domReady( () => {
 	initEditor();
 	doAction( 'popupMaker.ctaEditor.init' );
