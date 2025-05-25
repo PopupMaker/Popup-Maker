@@ -689,9 +689,8 @@ function ButtonEdit( props: ButtonEditProps ) {
 												'Edit',
 												'popup-maker'
 											) }
-											onClick={ () =>
-												setIsExplicitlyEditing( true )
-											}
+											href={ `edit.php?post_type=popup&page=popup-maker-call-to-actions&edit=${ selectedCTA.id }` }
+											target="_blank"
 										/>
 										<Button
 											icon={ linkOff }
@@ -700,6 +699,20 @@ function ButtonEdit( props: ButtonEditProps ) {
 												'popup-maker'
 											) }
 											onClick={ unlink }
+										/>
+										<Button
+											icon={
+												showAdvancedSettings
+													? chevronUp
+													: chevronDown
+											}
+											label={ __(
+												'Edit Settings',
+												'popup-maker'
+											) }
+											onClick={ () =>
+												setIsExplicitlyEditing( true )
+											}
 										/>
 									</Flex>
 								</Flex>
