@@ -54,6 +54,7 @@ import {
 	Notice,
 	Panel,
 	PanelBody,
+	Icon,
 } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
@@ -69,7 +70,7 @@ import {
 	check,
 	chevronUp,
 	external,
-	chain,
+	settings,
 } from '@wordpress/icons';
 
 import { CallToActionSelectControl } from '@popup-maker/components';
@@ -291,7 +292,9 @@ function ButtonEdit( props: ButtonEditProps ) {
 	 * REVIEW: Use internal state instead of a ref to make sure that the component \
 	 * REVIEW: re-renders when the popover's anchor updates.
 	 */
-	const [ popoverAnchor, setPopoverAnchor ] = useState< HTMLElement >();
+	const [ popoverAnchor, setPopoverAnchor ] = useState< HTMLElement | null >(
+		null
+	);
 
 	/**
 	 * Function: Handle keydown events.
@@ -404,8 +407,12 @@ function ButtonEdit( props: ButtonEditProps ) {
 	// 2. Either:
 	//    a. A CTA is selected (showing view mode) OR
 	//    b. User is explicitly editing (showing edit mode)
+	// 3. We have a valid anchor element
 	const showPopover =
-		isLinkTag && isSelected && ( !! ctaId || isExplicitlyEditing );
+		isLinkTag &&
+		isSelected &&
+		( !! ctaId || isExplicitlyEditing ) &&
+		!! popoverAnchor;
 
 	const [ _forceRefresh, setForceRefresh ] = useState( 0 );
 
@@ -425,11 +432,18 @@ function ButtonEdit( props: ButtonEditProps ) {
 				if ( createdCta ) {
 					changeEditorId( createdCta.id );
 					setNewCta( createdCta.id );
+					// Set editing state after the CTA is created, not before
+					setIsExplicitlyEditing( true );
+				} else {
+					// Reset if creation failed
+					setNewCta( false );
 				}
+			} else if ( typeof newCta === 'number' && newCta > 0 ) {
+				// CTA was already created, just ensure editing state
+				setIsExplicitlyEditing( true );
 			}
 
 			setForceRefresh( ( prev ) => prev + 1 );
-			setIsExplicitlyEditing( true );
 		}
 
 		createNewCTA();
@@ -568,7 +582,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 					shift
 					className="block-editor-link-control"
 				>
-					<div style={ { width: '350px', padding: '10px' } }>
+					<div style={ { width: '300px', padding: '10px' } }>
 						{ ctaErrorFromStore && (
 							<div className="pum-cta-error-notice">
 								<Notice status="error" isDismissible={ false }>
@@ -596,6 +610,8 @@ function ButtonEdit( props: ButtonEditProps ) {
 												setAttributes( {
 													ctaId: Number( newId ),
 												} );
+												// Close editing mode after selection
+												setIsExplicitlyEditing( false );
 											} }
 											hideLabelFromVision
 											placeholder={ __(
@@ -627,116 +643,199 @@ function ButtonEdit( props: ButtonEditProps ) {
 										/>
 									</FlexItem>
 								</Flex>
-
-								{ !! ctaId && (
-									<>
-										<Flex justify="flex-start">
-											<Button
-												icon={ chevronDown }
-												onClick={ () =>
-													setShowAdvancedSettings(
-														! showAdvancedSettings
-													)
-												}
-											>
-												{ __(
-													'Advanced',
-													'popup-maker'
-												) }
-											</Button>
-										</Flex>
-
-										{ showAdvancedSettings && (
-											<Flex direction="column" gap={ 2 }>
-												<ToggleControl
-													label={ __(
-														'Open in new tab',
-														'popup-maker'
-													) }
-													checked={ opensInNewTab }
-													onChange={ ( value ) => {
-														setAttributes( {
-															linkTarget: value
-																? NEW_TAB_TARGET
-																: undefined,
-														} );
-													} }
-													__nextHasNoMarginBottom
-												/>
-												<ToggleControl
-													label={ __(
-														'Add rel="nofollow"',
-														'popup-maker'
-													) }
-													checked={ nofollow }
-													onChange={ ( value ) => {
-														setAttributes( {
-															rel: value
-																? NOFOLLOW_REL
-																: undefined,
-														} );
-													} }
-													__nextHasNoMarginBottom
-												/>
-											</Flex>
-										) }
-									</>
-								) }
 							</Flex>
 						) : (
 							selectedCTA && (
-								<Flex align="center">
-									<FlexItem
-										style={ {
-											flexShrink: 0,
-										} }
+								<Flex direction="column" gap={ 3 }>
+									{ /* Header with title and ID badge */ }
+									<Flex
+										justify="space-between"
+										align="center"
 									>
-										{ `${ selectedCTA?.title?.rendered } (#${ selectedCTA?.id })` }
-									</FlexItem>
-									<Flex justify="flex-end">
-										<Button
-											icon={ external }
-											label={ __(
-												'Preview',
-												'popup-maker'
-											) }
-											/* Preview link with tracking bypass */
-											href={ `/?cta=${ selectedCTA.uuid }&notrack=1` }
-											target="_blank"
-											rel="noopener noreferrer"
-										/>
-										<Button
-											icon={ edit }
-											label={ __(
-												'Edit',
-												'popup-maker'
-											) }
-											href={ `edit.php?post_type=popup&page=popup-maker-call-to-actions&edit=${ selectedCTA.id }` }
-											target="_blank"
-										/>
+										<div
+											style={ {
+												fontSize: '16px',
+												fontWeight: '500',
+												color: '#1e1e1e',
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+												whiteSpace: 'nowrap',
+											} }
+											title={
+												selectedCTA?.title?.rendered
+											}
+										>
+											{ selectedCTA?.title?.rendered }
+										</div>
+
 										<Button
 											icon={ linkOff }
+											variant="link"
+											size="small"
+											style={ {
+												textDecoration: 'none',
+												// color: '#1e1e1e',
+											} }
+											isDestructive={ true }
+											onClick={ unlink }
 											label={ __(
 												'Remove',
 												'popup-maker'
 											) }
-											onClick={ unlink }
-										/>
+										></Button>
+									</Flex>
+									{ /* Action buttons */ }
+									<Flex
+										justify="space-between"
+										align="center"
+										style={ {
+											color: '#1e1e1e',
+										} }
+									>
+										<div
+											style={ {
+												fontSize: '12px',
+												color: '#666',
+												backgroundColor: '#f0f0f0',
+												padding: '2px 8px',
+												borderRadius: '12px',
+												fontWeight: '500',
+												flexGrow: 0.5,
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+												whiteSpace: 'nowrap',
+											} }
+										>
+											ID: { selectedCTA?.id }
+										</div>
 										<Button
+											icon={ external }
+											variant="tertiary"
+											style={ {
+												borderRadius: '6px',
+												textDecoration: 'none',
+												color: '#1e1e1e',
+												padding: '.25rem 0.75rem',
+												// boxShadow:
+												// 	'inset 0 0 0 1px #e4e4e7,0 0 0 currentColor',
+												flexGrow: 1,
+											} }
+											/* Preview link with tracking bypass */
+											href={ `/?cta=${ selectedCTA.uuid }&notrack=1` }
+											target="_blank"
+											rel="noopener noreferrer"
+											showTooltip={ true }
+											label={ __(
+												'Preview Call To Action',
+												'popup-maker'
+											) }
+										>
+											{ __( 'Preview', 'popup-maker' ) }
+										</Button>
+										<Button
+											icon={ edit }
+											variant="tertiary"
+											style={ {
+												borderRadius: '6px',
+
+												textDecoration: 'none',
+												color: '#1e1e1e',
+												padding: '.25rem 0.75rem',
+												// boxShadow:
+												// 	'inset 0 0 0 1px #e4e4e7,0 0 0 currentColor',
+												flexGrow: 1,
+											} }
+											href={ `edit.php?post_type=popup&page=popup-maker-call-to-actions&edit=${ selectedCTA.id }` }
+											target="_blank"
+											label={ __(
+												'Edit Call to Action',
+												'popup-maker'
+											) }
+											showTooltip={ true }
+										>
+											{ __( 'Edit', 'popup-maker' ) }
+										</Button>
+									</Flex>
+
+									{ /* Advanced settings toggle */ }
+									<Button
+										icon={ settings }
+										variant="secondary"
+										onClick={ () =>
+											setShowAdvancedSettings(
+												! showAdvancedSettings
+											)
+										}
+										style={ {
+											width: '100%',
+											justifyContent: 'space-between',
+											border: '1px solid #ddd',
+											borderRadius: '6px',
+											padding: '8px 12px',
+										} }
+										showTooltip={ true }
+										label={ __(
+											'Advanced Options',
+											'popup-maker'
+										) }
+									>
+										{ __(
+											'Advanced Options',
+											'popup-maker'
+										) }
+										<Icon
 											icon={
 												showAdvancedSettings
 													? chevronUp
 													: chevronDown
 											}
-											label={ __(
-												'Edit Settings',
-												'popup-maker'
-											) }
-											onClick={ () =>
-												setIsExplicitlyEditing( true )
-											}
 										/>
-									</Flex>
+									</Button>
+
+									{ /* Advanced settings panel */ }
+									{ showAdvancedSettings && (
+										<Flex direction="column" gap={ 3 }>
+											<ToggleControl
+												label={ __(
+													'Open in new window',
+													'popup-maker'
+												) }
+												checked={ opensInNewTab }
+												onChange={ ( value ) => {
+													setAttributes( {
+														linkTarget: value
+															? NEW_TAB_TARGET
+															: undefined,
+													} );
+												} }
+												__nextHasNoMarginBottom
+											/>
+											<ToggleControl
+												label={ __(
+													'Add rel="nofollow"',
+													'popup-maker'
+												) }
+												checked={ nofollow }
+												onChange={ ( value ) => {
+													setAttributes( {
+														rel: value
+															? NOFOLLOW_REL
+															: undefined,
+													} );
+												} }
+												__nextHasNoMarginBottom
+											/>
+											{ /* <ToggleControl
+												label={ __(
+													'Track clicks',
+													'popup-maker'
+												) }
+												checked={ true }
+												onChange={ () => {} }
+												__nextHasNoMarginBottom
+											/> */ }
+										</Flex>
+									) }
 								</Flex>
 							)
 						) }
@@ -765,6 +864,8 @@ function ButtonEdit( props: ButtonEditProps ) {
 								setAttributes( {
 									ctaId: Number( newId ),
 								} );
+								// Ensure editing state is closed after selection from inspector
+								setIsExplicitlyEditing( false );
 							} }
 							extraOptions={ [
 								{
@@ -818,3 +919,4 @@ function ButtonEdit( props: ButtonEditProps ) {
 }
 
 export default ButtonEdit;
+/* eslint-enable @wordpress/i18n-text-domain */

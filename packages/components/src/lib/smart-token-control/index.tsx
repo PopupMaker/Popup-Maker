@@ -218,6 +218,7 @@ const SmartTokenControl = < T extends Token = string >(
 		setState( {
 			...state,
 			inputText: '',
+			selectedSuggestion: -1,
 			popoverOpen: closeOnSelect ? false : popoverOpen,
 		} );
 	}
@@ -249,7 +250,10 @@ const SmartTokenControl = < T extends Token = string >(
 		setState( {
 			...state,
 			inputText: text,
-			popoverOpen: text.length >= minQueryLength,
+			selectedSuggestion: -1,
+			popoverOpen:
+				text.length >= minQueryLength ||
+				( extraOptions.length > 0 && text.length === 0 ),
 		} );
 
 		onInputChange( text );
@@ -400,6 +404,12 @@ const SmartTokenControl = < T extends Token = string >(
 		addNewToken( suggestion );
 	};
 
+	// Only show popover if we have a valid anchor and content to show
+	const shouldShowPopover =
+		popoverOpen &&
+		inputRef.current &&
+		( mergedSuggestions.length > 0 || extraOptions.length > 0 );
+
 	return (
 		<KeyboardShortcuts shortcuts={ keyboardShortcuts }>
 			<div
@@ -423,7 +433,7 @@ const SmartTokenControl = < T extends Token = string >(
 					// If the blur event is coming from the popover, don't close it.
 					if ( event.relatedTarget ) {
 						const popover = event.relatedTarget as HTMLElement;
-						if ( popover.classList.contains( elClasses.popover ) ) {
+						if ( popover.closest( `.${ elClasses.popover }` ) ) {
 							return;
 						}
 					}
@@ -432,6 +442,7 @@ const SmartTokenControl = < T extends Token = string >(
 						...state,
 						isFocused: false,
 						popoverOpen: false,
+						selectedSuggestion: -1,
 					} );
 				} }
 			>
@@ -504,14 +515,19 @@ const SmartTokenControl = < T extends Token = string >(
 									popoverOpen:
 										inputText.length >= minQueryLength ||
 										( extraOptions.length > 0 &&
-											suggestions.length === 0 ),
+											( suggestions.length === 0 ||
+												inputText.length === 0 ) ),
 								} );
 							} }
 							onClick={ () => {
-								if ( ! popoverOpen ) {
+								if (
+									! popoverOpen &&
+									( suggestions.length > 0 ||
+										extraOptions.length > 0 )
+								) {
 									setState( {
 										...state,
-										popoverOpen: suggestions.length > 0,
+										popoverOpen: true,
 									} );
 								}
 							} }
@@ -521,9 +537,7 @@ const SmartTokenControl = < T extends Token = string >(
 									event.relatedTarget as HTMLElement;
 								if (
 									popover &&
-									popover.classList.contains(
-										elClasses.popover
-									)
+									popover.closest( `.${ elClasses.popover }` )
 								) {
 									return;
 								}
@@ -532,15 +546,22 @@ const SmartTokenControl = < T extends Token = string >(
 									...state,
 									isFocused: false,
 									popoverOpen: false,
+									selectedSuggestion: -1,
 								} );
 							} }
 						/>
 					</div>
 				</BaseControl>
-				{ popoverOpen && (
+				{ shouldShowPopover && (
 					<Popover
 						focusOnMount={ false }
-						onClose={ () => setSelectedSuggestion( -1 ) }
+						onClose={ () => {
+							setState( {
+								...state,
+								popoverOpen: false,
+								selectedSuggestion: -1,
+							} );
+						} }
 						position="bottom right"
 						anchor={ inputRef.current }
 						className={ elClasses.popover }
