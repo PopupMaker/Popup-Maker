@@ -52,6 +52,8 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	Notice,
+	Panel,
+	PanelBody,
 } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
@@ -59,7 +61,16 @@ import { useSelect, useDispatch } from '@wordpress/data';
 import { useMergeRefs, useRefEffect } from '@wordpress/compose';
 import { useEffect, useState, useRef } from '@wordpress/element';
 import { displayShortcut, isKeyboardEvent, ENTER } from '@wordpress/keycodes';
-import { linkOff, megaphone, edit, chevronDown, check } from '@wordpress/icons';
+import {
+	linkOff,
+	megaphone,
+	edit,
+	chevronDown,
+	check,
+	chevronUp,
+	external,
+	chain,
+} from '@wordpress/icons';
 
 import { CallToActionSelectControl } from '@popup-maker/components';
 import { callToActionStore } from '@popup-maker/core-data';
@@ -684,6 +695,17 @@ function ButtonEdit( props: ButtonEditProps ) {
 									</FlexItem>
 									<Flex justify="flex-end">
 										<Button
+											icon={ external }
+											label={ __(
+												'Preview',
+												'popup-maker'
+											) }
+											/* Preview link with tracking bypass */
+											href={ `/?cta=${ selectedCTA.uuid }&notrack=1` }
+											target="_blank"
+											rel="noopener noreferrer"
+										/>
+										<Button
 											icon={ edit }
 											label={ __(
 												'Edit',
@@ -721,6 +743,42 @@ function ButtonEdit( props: ButtonEditProps ) {
 					</div>
 				</Popover>
 			) }
+			{ /* TODO Add a panel for the CTA settings, including option to select the CTA to be used.	 */ }
+			<InspectorControls group="settings">
+				<Panel header={ __( 'CTA Settings', 'popup-maker' ) }>
+					<PanelBody>
+						<CallToActionSelectControl
+							label={ __(
+								'Choose a Call to Action',
+								'popup-maker'
+							) }
+							value={ ctaId }
+							placeholder={ __(
+								'Search or create CTA…',
+								'popup-maker'
+							) }
+							onChange={ async ( newId: number | string ) => {
+								if ( newId === 'create_new' ) {
+									setNewCta( true );
+									return;
+								}
+								setAttributes( {
+									ctaId: Number( newId ),
+								} );
+							} }
+							extraOptions={ [
+								{
+									value: 'create_new',
+									label: __(
+										'+ Create new CTA',
+										'popup-maker'
+									),
+								},
+							] }
+						/>
+					</PanelBody>
+				</Panel>
+			</InspectorControls>
 			<InspectorControls>
 				<WidthPanel
 					selectedWidth={ width }

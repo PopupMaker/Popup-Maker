@@ -37,6 +37,7 @@ class CallToActions extends Controller {
 		/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
 		$cta_uuid = ! empty( $_GET['cta'] ) ? sanitize_text_field( wp_unslash( $_GET['cta'] ) ) : '';
 		$popup_id = ! empty( $_GET['pid'] ) ? absint( $_GET['pid'] ) : null;
+		$notrack  = (bool) ( ! empty( $_GET['notrack'] ) ? sanitize_text_field( wp_unslash( $_GET['notrack'] ) ) : false );
 		/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 
 		if ( empty( $cta_uuid ) ) {
@@ -55,7 +56,9 @@ class CallToActions extends Controller {
 		}
 
 		// Basic conversion tracking.
-		\pum_track_conversion_event( $popup_id );
+		if ( ! $notrack ) {
+			\pum_track_conversion_event( $popup_id );
+		}
 
 		/**
 		 * Allow extensions to handle their own CTA types.
@@ -82,7 +85,9 @@ class CallToActions extends Controller {
 		}
 
 		$extra_args = [
+			'cta_uuid' => $cta_uuid,
 			'popup_id' => $popup_id,
+			'notrack'  => $notrack,
 		];
 
 		$cta_type_handler = $this->container->get( 'cta_types' )->get( $cta_type );
@@ -99,7 +104,9 @@ class CallToActions extends Controller {
 			// Default to current URL without CTA parameters.
 			$url = remove_query_arg( $cta_args );
 
-			$call_to_action->increase_event_count( 'conversion' );
+			if ( ! $notrack ) {
+				$call_to_action->increase_event_count( 'conversion' );
+			}
 
 			wp_safe_redirect( esc_url_raw( $url ) );
 			exit;
