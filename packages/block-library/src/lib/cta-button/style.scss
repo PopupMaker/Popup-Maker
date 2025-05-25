@@ -112,6 +112,13 @@ $blocks-block__margin: 0.5em;
 		border-color: var(--wp--preset--color--contrast);
 	}
 
+	/* Hover styles for default (fill) button - works with theme colors */
+	:where(.wp-block-popup-maker-cta-button:not(.is-style-outline))>.wp-block-popup-maker-cta-button__link:not(.is-style-outline):hover {
+		background-color: color-mix(in srgb, var(--wp--preset--color--contrast) 85%, transparent);
+		border-color: transparent;
+		color: var(--wp--preset--color--base);
+	}
+
 	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link),
 	:where(.wp-block-popup-maker-cta-button .wp-block-popup-maker-cta-button__link.is-style-outline) {
 		border: 1px solid currentColor;
@@ -127,6 +134,40 @@ $blocks-block__margin: 0.5em;
 	:where(.wp-block-popup-maker-cta-button .wp-block-popup-maker-cta-button__link.is-style-outline:not(.has-background)) {
 		background-color: transparent;
 		background-image: none;
+	}
+
+	/* Hover styles for outline button - works with theme colors */
+	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link.wp-block-popup-maker-cta-button__link:not(.has-background):hover) {
+		background-color: color-mix(in srgb, var(--wp--preset--color--contrast) 5%, transparent);
+	}
+}
+
+// Universal hover styles that work with custom colors set by users
+.wp-block-popup-maker-cta-button__link:hover {
+	// For buttons with custom background colors (inline styles)
+	&[style*="background-color"]:not(.is-style-outline) {
+		filter: brightness(0.85);
+	}
+	
+	// For buttons with custom background colors using CSS classes
+	&.has-background:not(.is-style-outline):hover {
+		filter: brightness(0.85);
+	}
+	
+	// For outline buttons with custom colors
+	&.is-style-outline:hover {
+		filter: brightness(1.05);
+	}
+}
+
+// Fallback hover styles for browsers that don't support color-mix
+@supports not (background-color: color-mix(in srgb, red 50%, blue)) {
+	:where(.wp-block-popup-maker-cta-button:not(.is-style-outline))>.wp-block-popup-maker-cta-button__link:not(.is-style-outline):hover {
+		filter: brightness(0.85);
+	}
+	
+	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link.wp-block-popup-maker-cta-button__link:not(.has-background):hover) {
+		filter: brightness(1.05);
 	}
 }
 
