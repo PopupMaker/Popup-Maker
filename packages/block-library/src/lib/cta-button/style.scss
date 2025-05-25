@@ -26,7 +26,7 @@ $blocks-block__margin: 0.5em;
 :where(.wp-block-popup-maker-cta-button__link) {
 	border-radius: 9999px;
 	box-shadow: none;
-	padding: calc(.667em + 2px) calc(1.333em + 2px);
+	padding: 1rem 2.25rem;
 	text-decoration: none;
 }
 
@@ -36,9 +36,10 @@ $blocks-block__margin: 0.5em;
 }
 
 // Width controls - updated for our namespace
-.wp-block-popup-maker-cta-buttons > .wp-block-popup-maker-cta-button {
+.wp-block-popup-maker-cta-buttons>.wp-block-popup-maker-cta-button {
 	&.has-custom-width {
 		max-width: none;
+
 		.wp-block-popup-maker-cta-button__link {
 			width: 100%;
 		}
@@ -69,7 +70,7 @@ $blocks-block__margin: 0.5em;
 }
 
 // Vertical buttons layout
-.wp-block-popup-maker-cta-buttons.is-vertical > .wp-block-popup-maker-cta-button {
+.wp-block-popup-maker-cta-buttons.is-vertical>.wp-block-popup-maker-cta-button {
 	&.wp-block-popup-maker-cta-button__width-25 {
 		width: 25%;
 	}
@@ -96,10 +97,25 @@ $blocks-block__margin: 0.5em;
 
 // Outline style variation with global styles compatibility
 :root {
+
+	:where(.wp-block-popup-maker-cta-button) {
+		font-family: inherit;
+		font-size: var(--wp--preset--font-size--medium);
+		font-style: normal;
+		line-height: inherit;
+	}
+
+	/* Default button styles where not another style is applied */
+	:where(.wp-block-popup-maker-cta-button:not(.is-style-outline))>.wp-block-popup-maker-cta-button__link:not(.is-style-outline) {
+		background-color: var(--wp--preset--color--contrast);
+		color: var(--wp--preset--color--base);
+		border-color: var(--wp--preset--color--contrast);
+	}
+
 	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link),
 	:where(.wp-block-popup-maker-cta-button .wp-block-popup-maker-cta-button__link.is-style-outline) {
-		border: 2px solid currentColor;
-		padding: 0.667em 1.333em;
+		border: 1px solid currentColor;
+		padding: calc(1rem - 1px) calc(2.25rem - 1px);
 	}
 
 	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link:not(.has-text-color)),
@@ -112,19 +128,6 @@ $blocks-block__margin: 0.5em;
 		background-color: transparent;
 		background-image: none;
 	}
-}
-
-// Our CTA-specific overrides
-:root :where(.wp-block-popup-maker-cta-button__link) {
-	background-color: var(--wp--preset--color--contrast);
-	color: var(--wp--preset--color--base);
-	font-family: inherit;
-	font-size: var(--wp--preset--font-size--medium);
-	// font-style: normal;
-	// font-weight: 500;
-	line-height: inherit;
-	// border-color: var(--wp--preset--color--contrast);
-	border-width: 0;
 }
 
 .wp-block-popup-maker-cta-button {
