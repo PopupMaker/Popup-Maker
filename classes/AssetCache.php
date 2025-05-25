@@ -800,6 +800,31 @@ class PUM_AssetCache {
 		}
 	}
 
+
+	/**
+	 * Retrieve asset contents while ignoring SSL verification errors.
+	 *
+	 * @param string $src URL or path to the asset.
+	 *
+	 * @return string|false Asset contents on success, false on failure.
+	 *
+	 * @since X.X.X
+	 */
+	private static function get_asset_contents( $src ) {
+		$scheme = wp_parse_url( $src, PHP_URL_SCHEME );
+
+		if ( in_array( $scheme, [ 'http', 'https' ], true ) ) {
+				$response = wp_remote_get( $src, [ 'sslverify' => false ] );
+
+			if ( ! is_wp_error( $response ) ) {
+					return wp_remote_retrieve_body( $response );
+			}
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		return file_get_contents( $src );
+	}
+
 	/**
 	 * Stores registered scripts.
 	 *
@@ -873,7 +898,7 @@ class PUM_AssetCache {
 		} else {
 			add_filter( 'pum_generated_js', function ( $js = [] ) use ( $handle, $src ): array {
 				$js[ $handle ] = [
-					'content'  => file_get_contents( $src ),
+					'content'  => self::get_asset_contents( $src ),
 					'priority' => 5,
 				];
 
@@ -912,7 +937,7 @@ class PUM_AssetCache {
 		} else {
 			add_filter( 'pum_generated_css', function ( $css = [] ) use ( $handle, $src ): array {
 				$css[ $handle ] = [
-					'content'  => file_get_contents( $src ),
+					'content'  => self::get_asset_contents( $src ),
 					'priority' => 5,
 				];
 
