@@ -44,7 +44,6 @@ override(\PopupMaker\Plugin\Core::get(0), map([
     'popups'       => \PopupMaker\Services\Repository\Popups::class,
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
-    'popuploader'  => \PopupMaker\Services\Collector\PopupLoader::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     
     // Config Values
@@ -62,7 +61,6 @@ override(\PopupMaker\plugin(0), map([
     'popups'       => \PopupMaker\Services\Repository\Popups::class,
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
-    'popuploader'  => \PopupMaker\Services\Collector\PopupLoader::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     
     // Config Values
@@ -80,7 +78,6 @@ override( \PopupMaker\Plugin\Container::get(0), map([
     'popups'       => \PopupMaker\Services\Repository\Popups::class,
     'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
-    'popuploader'  => \PopupMaker\Services\Collector\PopupLoader::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     
     // Config Values

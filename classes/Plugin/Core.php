@@ -289,18 +289,6 @@ final class Core extends \PopupMaker\Plugin\Container {
 			}
 		);
 
-		$this->set(
-			'popuploader',
-			/**
-			 * Get plugin popup loader.
-			 *
-			 * @return \PopupMaker\Services\PopupLoader
-			 */
-			function ( $container ) {
-				return new \PopupMaker\Services\PopupLoader( $container );
-			}
-		);
-
 		do_action( 'popup_maker/register_services', $this );
 	}
 
