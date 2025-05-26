@@ -1,6 +1,6 @@
 /* eslint-disable @wordpress/i18n-text-domain */
 import clsx from 'clsx';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import {
 	RichText,
@@ -58,6 +58,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { store as editorStore } from '@wordpress/editor';
 
 import { useMergeRefs, useRefEffect } from '@wordpress/compose';
 import { useEffect, useState, useRef } from '@wordpress/element';
@@ -348,6 +349,48 @@ function ButtonEdit( props: ButtonEditProps ) {
 		[ ctaId ]
 	);
 
+	// Get current post information to conditionally add post ID to URL
+	const { currentPostId, currentPostType } = useSelect(
+		( select ) => ( {
+			currentPostId: select( editorStore ).getCurrentPostId(),
+			currentPostType: select( editorStore ).getCurrentPostType(),
+		} ),
+		[]
+	);
+
+	// Get localized home URL
+	const homeUrl = window.popupMakerBlockLibrary?.homeUrl || '/';
+
+	/**
+	 * Helper function to generate CTA URLs with proper base URL and conditional parameters.
+	 * Has direct access to component scope variables.
+	 *
+	 * @param {string}  ctaUuid - The CTA UUID
+	 * @param {boolean} notrack - Whether to add notrack parameter
+	 * @return {string} The generated CTA URL
+	 */
+	const generateCtaUrl = useCallback(
+		( ctaUuid: string, notrack = false ): string => {
+			const params = new URLSearchParams();
+			params.set( 'cta', ctaUuid );
+
+			// Add post ID if editing a popup
+			if ( currentPostType === 'popup' && currentPostId ) {
+				params.set( 'pid', currentPostId.toString() );
+			}
+
+			// Add notrack parameter if requested
+			if ( notrack ) {
+				params.set( 'notrack', '1' );
+			}
+
+			// Remove trailing slash from home URL and add query parameters
+			const baseUrl = homeUrl.replace( /\/$/, '' );
+			return `${ baseUrl }/?${ params.toString() }`;
+		},
+		[ currentPostId, currentPostType, homeUrl ]
+	);
+
 	const { createCallToAction, changeEditorId } =
 		useDispatch( callToActionStore );
 
@@ -375,8 +418,11 @@ function ButtonEdit( props: ButtonEditProps ) {
 	useEffect( () => {
 		if ( ctaId ) {
 			if ( selectedCTA ) {
+				// Generate CTA URL using helper function
+				const ctaUrl = generateCtaUrl( selectedCTA.uuid );
+
 				setAttributes( {
-					url: `?cta=${ selectedCTA.uuid }`,
+					url: ctaUrl,
 					linkTarget: selectedCTA.settings.opensInNewTab
 						? NEW_TAB_TARGET
 						: undefined,
@@ -392,7 +438,15 @@ function ButtonEdit( props: ButtonEditProps ) {
 				} );
 			}
 		}
-	}, [ ctaId, selectedCTA ] );
+	}, [
+		ctaId,
+		selectedCTA,
+		currentPostType,
+		currentPostId,
+		homeUrl,
+		setAttributes,
+		generateCtaUrl,
+	] );
 
 	const useEnterRef = useEnter( { content: text, clientId } );
 	const mergedRef = useMergeRefs( [
@@ -721,7 +775,10 @@ function ButtonEdit( props: ButtonEditProps ) {
 												flexGrow: 1,
 											} }
 											/* Preview link with tracking bypass */
-											href={ `/?cta=${ selectedCTA.uuid }&notrack=1` }
+											href={ generateCtaUrl(
+												selectedCTA.uuid,
+												true
+											) }
 											target="_blank"
 											rel="noopener noreferrer"
 											showTooltip={ true }

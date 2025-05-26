@@ -33,6 +33,7 @@
 		"@wordpress/block-library": "^9.15.1",
 		"@wordpress/blocks": "^14.4.1",
 		"@wordpress/components": "^29.1.1",
+		"@wordpress/editor": "^14.24.0",
 		"@wordpress/element": "^6.15.1",
 		"@wordpress/icons": "^10.15.1",
 		"@wordpress/data": "^10.15.1",
