@@ -102,8 +102,12 @@ class Assets extends Controller {
 				'handle'       => 'popup-maker-block-library',
 				'styles'       => true,
 				'block_styles' => true,
-				// 'varsName'     => 'popupMakerBlockLibrary',
-				// 'vars'         => [],
+				'varsName'     => 'popupMakerBlockLibrary',
+				'vars'         => function () {
+					return [
+						'homeUrl' => home_url(),
+					];
+				},
 			],
 			'components'       => [
 				'bundled'  => false,

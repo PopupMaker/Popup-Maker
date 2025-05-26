@@ -4,6 +4,14 @@ import domReady from '@wordpress/dom-ready';
 
 import * as blocks from './lib';
 
+declare global {
+	interface Window {
+		popupMakerBlockLibrary: {
+			homeUrl: string;
+		};
+	}
+}
+
 domReady( () => {
 	Object.values( blocks ).forEach( ( { init } ) => {
 		init();
