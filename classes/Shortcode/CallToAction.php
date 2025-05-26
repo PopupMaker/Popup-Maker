@@ -245,7 +245,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		$popup_id = pum_get_popup_id();
 
 		$url = $cta->generate_url('', [
-			'pid' => $popup_id,
+			'pid' => $popup_id ? $popup_id : null,
 		]);
 
 		$wrapper_classes = [
@@ -254,21 +254,6 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			'is-style-' . $style,
 			'text-only' === $atts['style'] ? 'pum-cta--button' : null,
 		];
-
-		/**
-		 * If url is not a hash url, use redirect to accurately track conversions.
-		 *
-		 * Note this does not apply if links are #hash based or open in a new window.
-		 * In those cases JavaScript async methods of tracking will be used.
-		 */
-		// if ( $url && ! $target && strpos( $url, '#' ) !== 0 ) {
-		// $url = add_query_arg(
-		// [
-		// 'pid'  => pum_get_popup_id(),
-		// 'uuid' => $uuid,
-		// ]
-		// );
-		// }
 
 		$call_to_action_type_handler = \PopupMaker\plugin( 'cta_types' )->get( $type );
 
