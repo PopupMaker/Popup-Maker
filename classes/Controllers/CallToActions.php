@@ -55,9 +55,16 @@ class CallToActions extends Controller {
 			return;
 		}
 
+		$extra_args = [
+			'cta_uuid'   => $cta_uuid,
+			'popup_id'   => $popup_id,
+			'notrack'    => $notrack,
+			'source_url' => wp_get_raw_referer(),
+		];
+
 		// Basic conversion tracking.
 		if ( ! $notrack ) {
-			\pum_track_conversion_event( $popup_id );
+			\pum_track_conversion_event( $popup_id, $extra_args );
 		}
 
 		/**
@@ -68,11 +75,11 @@ class CallToActions extends Controller {
 		 * @param array $args {
 		 *     @type int    $popup_id The popup ID if any
 		 *     @type string $cta_uuid The CTA UUID
+		 *     @type string $source_url The source URL
+		 *     @type bool   $notrack Whether to not track the conversion
 		 * }
 		 */
-		$actioned = apply_filters( 'popup_maker/cta_action', false, $call_to_action, [
-			'popup_id' => $popup_id,
-		] );
+		$actioned = apply_filters( 'popup_maker/cta_action', false, $call_to_action, $extra_args );
 
 		if ( false !== $actioned ) {
 			return;
@@ -83,12 +90,6 @@ class CallToActions extends Controller {
 		if ( empty( $cta_type ) ) {
 			return;
 		}
-
-		$extra_args = [
-			'cta_uuid' => $cta_uuid,
-			'popup_id' => $popup_id,
-			'notrack'  => $notrack,
-		];
 
 		$cta_type_handler = $this->container->get( 'cta_types' )->get( $cta_type );
 
