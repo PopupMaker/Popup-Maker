@@ -21,7 +21,6 @@
 		"node": "^18.0.0 || >=20.10.0"
 	},
 	"files": [
-		"index.php",
 		"assets/**/index.php",
 		"assets/css/*.css",
 		"assets/images/**/*",
