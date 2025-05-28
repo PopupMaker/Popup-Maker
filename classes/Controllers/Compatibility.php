@@ -27,7 +27,7 @@ class Compatibility extends Controller {
 	 */
 	public function init() {
 		$this->container->register_controllers( [
-			'Compatibility\Backcompat\Filters' => new \PopupMaker\Controllers\Compatibility\BackCompat\Filters( $this->container ),
+			'Compatibility\Backcompat\Filters' => new \PopupMaker\Controllers\Compatibility\Backcompat\Filters( $this->container ),
 			'Compatibility\SEO\Yoast'          => new \PopupMaker\Controllers\Compatibility\SEO\Yoast( $this->container ),
 		] );
 	}
