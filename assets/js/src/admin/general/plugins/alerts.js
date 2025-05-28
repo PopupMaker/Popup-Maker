@@ -10,19 +10,24 @@
 
 	function dismissAlert( $alert, alertAction ) {
 		var dismissible = $alert.data( 'dismissible' ),
-			expires =
-				typeof $alert.data( 'expires' ) !== 'undefined'
-					? $alert.data( 'expires' )
-					: dismissible === '1' ||
-					  dismissible === 1 ||
-					  dismissible === true
-					? null
-					: dismissible + ' days';
+			expires;
+
+		if ( typeof $alert.data( 'expires' ) !== 'undefined' ) {
+			expires = $alert.data( 'expires' );
+		} else if (
+			dismissible === '1' ||
+			dismissible === 1 ||
+			dismissible === true
+		) {
+			expires = null;
+		} else {
+			expires = dismissible + ' days';
+		}
 
 		$.ajax( {
 			method: 'POST',
 			dataType: 'json',
-			url: ajaxurl,
+			url: window.ajaxurl,
 			data: {
 				action: 'pum_alerts_action',
 				nonce: window.pum_alerts_nonce,
@@ -37,7 +42,7 @@
 		$.ajax( {
 			method: 'POST',
 			dataType: 'json',
-			url: ajaxurl,
+			url: window.ajaxurl,
 			data: {
 				action: 'pum_review_action',
 				nonce: window.pum_review_nonce,

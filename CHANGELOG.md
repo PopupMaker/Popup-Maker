@@ -10,10 +10,11 @@
 -   Better grouping of Popup Maker extensions in the Plugins page.
 -   Updated build processes to rely on @wordpress/scripts & Webpack, as well as improved developer tooling. This should result in smaller JS & CSS file sizes, more reliable builds, and faster development cycles.
 -   Updated all branding to use SVGs and new marks/logos.
+-   Improve reliability of admin notice dismissals.
 
 **Developers**
 
-Updating frontend JavaScript to use hooks/filters system instead of global variables.
+Updating frontend JavaScript to use hooks/filters system instead of global variables over time.
 
 -   Added new JS `popupMaker.triggers` filter to allow adding custom triggers.
 -   Added new helper methods for registering Popup Maker custom scripts & styles that will be bundled with our plugin JS/CSS files automatically via AssetCache API.
