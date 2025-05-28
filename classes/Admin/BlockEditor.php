@@ -40,7 +40,10 @@ class PUM_Admin_BlockEditor {
 	 * @since 1.10.0
 	 */
 	public static function register_editor_assets( $hook ) {
-		wp_enqueue_script( 'popup-maker-block-library' );
+		if ( self::load_block_library() ) {
+			wp_enqueue_script( 'popup-maker-block-library' );
+		}
+
 		wp_enqueue_script( 'popup-maker-block-editor' );
 	}
 
@@ -50,8 +53,20 @@ class PUM_Admin_BlockEditor {
 	 * @param string $hook Current page hook.
 	 */
 	public static function register_block_assets( $hook ) {
-		wp_enqueue_script( 'popup-maker-block-library' );
+		if ( self::load_block_library() ) {
+			wp_enqueue_script( 'popup-maker-block-library' );
+		}
+
 		wp_enqueue_style( 'popup-maker-block-library-style' );
+	}
+
+	/**
+	 * Check if the block library should be loaded.
+	 *
+	 * @return bool
+	 */
+	private static function load_block_library() {
+		return apply_filters( 'popup_maker/block_editor/load_block_library', pum_is_popup_editor() || ! is_admin() );
 	}
 
 	/**

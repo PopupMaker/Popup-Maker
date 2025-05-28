@@ -80,9 +80,7 @@ class Assets extends Controller {
 				'bundled'  => false,
 				'handle'   => 'popup-maker-block-editor',
 				'styles'   => true,
-				'deps'     => [
-					'popup-maker-block-library',
-				],
+				'deps'     => [],
 				'varsName' => 'popupMakerBlockEditor',
 				'vars'     => [
 					'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),

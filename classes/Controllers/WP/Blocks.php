@@ -24,11 +24,11 @@ class Blocks extends Controller {
 	 * Initializes this module.
 	 */
 	public function init() {
-		add_action( 'init', [ $this, 'register_blocks' ]);
+		add_action( 'init', [ $this, 'register_blocks' ] );
 	}
 
 	/**
-	 * Internationalization.
+	 * Register Popup Maker blocks.
 	 *
 	 * @return void
 	 */
@@ -37,7 +37,7 @@ class Blocks extends Controller {
 			'dist/blocks/cta-buttons.block.json' => [],
 			'dist/blocks/cta-button.block.json' => [],
 		];
-		
+
 		foreach( $blocks as $block => $args ) {
 			register_block_type_from_metadata(
 				$this->container->get_path( $block ),
