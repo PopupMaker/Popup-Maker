@@ -169,7 +169,6 @@ class PluginsPage extends Controller {
                         titleStrong.addEventListener('click', (e) => {
                             e.stopPropagation();
                             const isCollapsed = icon.classList.toggle('dashicons-arrow-up-alt2');
-                            console.log(isCollapsed);
                             icon.classList.toggle('dashicons-arrow-down-alt2', !isCollapsed);
                             
                             const display = isCollapsed ? 'none' : 'table-row';
