@@ -57,6 +57,10 @@ class Logging extends Service {
 	public function __construct( $container ) {
 		parent::__construct( $container );
 
+		if ( ! $this->enabled() ) {
+			return;
+		}
+
 		$this->init();
 
 		$this->register_hooks();
@@ -73,44 +77,20 @@ class Logging extends Service {
 	}
 
 	/**
-	 * Gets the Uploads directory
+	 * Check if logging is disabled.
 	 *
-	 * @return bool|array{path: string, url: string, subdir: string, basedir: string, baseurl: string, error: string|false} An associated array with baseurl and basedir or false on failure
+	 * @return bool
 	 */
-	public function get_upload_dir() {
-		// Used if you only need to fetch data, not create missing folders.
-		$wp_upload_dir = wp_get_upload_dir();
-
-		// phpcs:ignore Squiz.PHP.CommentedOutCode.Found
-		// $wp_upload_dir = wp_upload_dir(); // Disable this on IS_WPCOM if used.
-
-		if ( isset( $wp_upload_dir['error'] ) && false !== $wp_upload_dir['error'] ) {
-			return false;
-		} else {
-			return $wp_upload_dir;
+	public function disabled() {
+		// Disable logging by adding define( 'PUM_DISABLE_LOGGING', true );.
+		if (
+			( defined( '\PUM_DISABLE_LOGGING' ) && \PUM_DISABLE_LOGGING ) ||
+			( defined( '\POPUP_MAKER_DISABLE_LOGGING' ) && \POPUP_MAKER_DISABLE_LOGGING )
+		) {
+			return true;
 		}
-	}
 
-	/**
-	 * Gets the uploads directory URL
-	 *
-	 * @param string $path A path to append to end of upload directory URL.
-	 * @return bool|string The uploads directory URL or false on failure
-	 */
-	public function get_upload_dir_url( $path = '' ) {
-		$upload_dir = $this->get_upload_dir();
-		if ( false !== $upload_dir && isset( $upload_dir['baseurl'] ) ) {
-			$url = preg_replace( '/^https?:/', '', $upload_dir['baseurl'] );
-			if ( null === $url ) {
-				return false;
-			}
-			if ( ! empty( $path ) ) {
-				$url = trailingslashit( $url ) . $path;
-			}
-			return $url;
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -119,9 +99,7 @@ class Logging extends Service {
 	 * @return bool
 	 */
 	public function enabled() {
-		$disabled = defined( '\POPUP_MAKER_DISABLE_LOGGING' ) && true === \POPUP_MAKER_DISABLE_LOGGING;
-
-		return ! $disabled && $this->is_writable();
+		return ! $this->disabled() && $this->is_writable();
 	}
 
 	/**
@@ -171,7 +149,7 @@ class Logging extends Service {
 
 		$this->is_writable = 'direct' === $file_system->method;
 
-		$upload_dir = $this->get_upload_dir();
+		$upload_dir = \PopupMaker\get_upload_dir();
 
 		if ( ! $file_system->is_writable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
@@ -186,7 +164,7 @@ class Logging extends Service {
 	 * @return void
 	 */
 	public function init() {
-		$upload_dir  = $this->get_upload_dir();
+		$upload_dir  = \PopupMaker\get_upload_dir();
 		$file_system = $this->fs();
 
 		if ( false === $upload_dir || false === $file_system ) {
@@ -204,6 +182,9 @@ class Logging extends Service {
 		$this->filename = $this->container->get( 'slug' ) . "-debug-{$file_token}.log"; // ex. popup-maker-debug-5c2f6a9b9b5a3.log.
 		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
 
+		// If the old log file exists, migrate it to the new location.
+		$this->migrate_old_log_file();
+
 		if ( ! $file_system->exists( $this->file ) ) {
 			$this->setup_new_log();
 		} else {
@@ -213,6 +194,36 @@ class Logging extends Service {
 		// Truncate long log files.
 		if ( $file_system->exists( $this->file ) && $file_system->size( $this->file ) >= 1048576 ) {
 			$this->truncate_log();
+		}
+	}
+
+	/**
+	 * Migrate the old log file to the new location.
+	 *
+	 * @return void
+	 */
+	private function migrate_old_log_file() {
+		$upload_dir  = \PopupMaker\get_upload_dir();
+		$file_system = $this->fs();
+
+		if ( false === $upload_dir || false === $file_system ) {
+			return;
+		}
+
+		$old_file = trailingslashit( $upload_dir['basedir'] ) . 'pum-debug.log';
+		if ( $file_system->exists( $old_file ) ) {
+			$old_content = $this->get_file( $old_file );
+			$this->set_log_content( $old_content, true );
+
+			// Move old log file to new obfuscated location() .
+			$this->log_unique( 'Renaming log file.' );
+
+			// Move old file to new location.
+			$this->fs->move( $old_file, $this->file );
+
+			if ( $this->fs->exists( $old_file ) ) {
+				$this->fs->delete( $old_file );
+			}
 		}
 	}
 
@@ -235,7 +246,7 @@ class Logging extends Service {
 			return false;
 		}
 
-		return $this->get_upload_dir_url( $this->filename );
+		return \PopupMaker\get_upload_dir_url( $this->filename );
 	}
 
 	/**

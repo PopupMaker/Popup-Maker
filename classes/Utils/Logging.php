@@ -10,6 +10,7 @@
  * Class PUM_Utils_Logging
  *
  * @since 1.8.0
+ * @deprecated X.X.X Use \PopupMaker\logging() instead.
  */
 class PUM_Utils_Logging {
 
@@ -58,14 +59,12 @@ class PUM_Utils_Logging {
 	/**
 	 * Get instance.
 	 *
-	 * @return PUM_Utils_Logging
+	 * @deprecated X.X.X Use \PopupMaker\plugin()->get( 'logging' ) instead.
+	 *
+	 * @return \PopupMaker\Services\Logging
 	 */
 	public static function instance() {
-		if ( ! isset( self::$instance ) ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
+		return \PopupMaker\plugin()->get( 'logging' );
 	}
 
 	/**
@@ -86,11 +85,12 @@ class PUM_Utils_Logging {
 	/**
 	 * Check if logging is disabled.
 	 *
+	 * @deprecated X.X.X Use \PopupMaker\logging()->disabled() instead.
+	 *
 	 * @return bool
 	 */
 	public function disabled() {
-		// Disable logging by adding define( 'PUM_DISABLE_LOGGING', true );.
-		return defined( 'PUM_DISABLE_LOGGING' ) && PUM_DISABLE_LOGGING;
+		return \PopupMaker\logging()->disabled();
 	}
 
 	/**
@@ -179,7 +179,7 @@ class PUM_Utils_Logging {
 			return;
 		}
 
-		$upload_dir = PUM_Helpers::get_upload_dir();
+		$upload_dir = \PopupMaker\get_upload_dir();
 
 		$file_token = get_option( 'pum_debug_log_token' );
 		if ( false === $file_token ) {
@@ -224,7 +224,7 @@ class PUM_Utils_Logging {
 	 * @since 1.12.0
 	 */
 	public function get_file_url() {
-		return PUM_Helpers::get_upload_dir_url( $this->filename );
+		return \PopupMaker\get_upload_dir_url( $this->filename );
 	}
 
 	/**

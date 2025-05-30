@@ -24,3 +24,14 @@ function get_default_permissions() {
 		'manage_settings' => 'manage_options',
 	];
 }
+
+/**
+ * Get logging service.
+ *
+ * @since X.X.X
+ *
+ * @return \PopupMaker\Services\Logging
+ */
+function logging() {
+	return \PopupMaker\plugin()->get( 'logging' );
+}
