@@ -56,7 +56,13 @@
          * If there are forms in the popup add a hidden field for use in retriggering the popup on reload.
          */
         if ($forms.length) {
-            $forms.append('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
+            var $hiddenField = $('<input>', {
+                type: 'hidden',
+                name: 'pum_form_popup_id',
+                value: popupID
+            });
+            
+            $forms.append($hiddenField);
         }
     })
     .on( 'pumAfterClose', window.PUM.actions.stopIframeVideosPlaying );

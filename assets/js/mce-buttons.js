@@ -90,30 +90,27 @@
 /***/ (function(module, exports) {
 
 (function ($, tinymce) {
-  "use strict"; // Failsafe in case variables were not properly declared on page.
+  "use strict";
 
+  // Failsafe in case variables were not properly declared on page.
   if (typeof pum_shortcode_ui_vars === 'undefined') {
     return;
   }
-
   tinymce.PluginManager.add('pum_shortcodes', function (editor) {
     var shortcodes = pum_shortcode_ui_vars.shortcodes || {},
-        menuItems = [];
-
+      menuItems = [];
     _.each(shortcodes, function (args, tag) {
       menuItems.push({
         text: args.label,
         value: tag,
         onclick: function onclick() {
           var values = {},
-              shortcode,
-              text = "[" + tag + "]",
-              options = {};
-
+            shortcode,
+            text = "[" + tag + "]",
+            options = {};
           if (args.has_content) {
             text += editor.selection.getContent() + "[/" + tag + "]";
           }
-
           shortcode = wp.mce.views.get(tag);
           options.text = text;
           options.encodedText = encodeURIComponent(text);
@@ -124,7 +121,6 @@
         }
       });
     });
-
     editor.addButton('pum_shortcodes', {
       type: 'menubutton',
       icon: 'pum_shortcodes',

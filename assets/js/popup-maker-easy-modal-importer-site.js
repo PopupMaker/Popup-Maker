@@ -94,10 +94,9 @@
 
   jQuery(document).on('pumInit', '.pum', function (event) {
     var $this = jQuery(this),
-        settings = $this.data('popmake'),
-        emodal_id = settings.old_easy_modal_id,
-        emodal_trigger = '.eModal-' + emodal_id;
-
+      settings = $this.data('popmake'),
+      emodal_id = settings.old_easy_modal_id,
+      emodal_trigger = '.eModal-' + emodal_id;
     if (emodal_id !== undefined) {
       jQuery(emodal_trigger).css({
         cursor: "pointer"

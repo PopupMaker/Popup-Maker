@@ -873,7 +873,13 @@ var PUM;
          * If there are forms in the popup add a hidden field for use in retriggering the popup on reload.
          */
         if ($forms.length) {
-            $forms.append('<input type="hidden" name="pum_form_popup_id" value="' + popupID + '" />');
+            var $hiddenField = $('<input>', {
+                type: 'hidden',
+                name: 'pum_form_popup_id',
+                value: popupID
+            });
+            
+            $forms.append($hiddenField);
         }
     })
     .on( 'pumAfterClose', window.PUM.actions.stopIframeVideosPlaying );
@@ -4290,94 +4296,80 @@ var pum_debug_mode = false,
 /***/ (function(module, exports, __webpack_require__) {
 
 var arrayWithHoles = __webpack_require__(2);
-
 var iterableToArrayLimit = __webpack_require__(3);
-
 var unsupportedIterableToArray = __webpack_require__(4);
-
 var nonIterableRest = __webpack_require__(6);
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+function _slicedToArray(r, e) {
+  return arrayWithHoles(r) || iterableToArrayLimit(r, e) || unsupportedIterableToArray(r, e) || nonIterableRest();
 }
-
-module.exports = _slicedToArray;
+module.exports = _slicedToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
+function _arrayWithHoles(r) {
+  if (Array.isArray(r)) return r;
 }
-
-module.exports = _arrayWithHoles;
+module.exports = _arrayWithHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
     try {
-      if (!_n && _i["return"] != null) _i["return"]();
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
     } finally {
-      if (_d) throw _e;
+      try {
+        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
     }
+    return a;
   }
-
-  return _arr;
 }
-
-module.exports = _iterableToArrayLimit;
+module.exports = _iterableToArrayLimit, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var arrayLikeToArray = __webpack_require__(5);
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? arrayLikeToArray(r, a) : void 0;
+  }
 }
-
-module.exports = _unsupportedIterableToArray;
+module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
 }
-
-module.exports = _arrayLikeToArray;
+module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 6 */
@@ -4386,8 +4378,7 @@ module.exports = _arrayLikeToArray;
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-
-module.exports = _nonIterableRest;
+module.exports = _nonIterableRest, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 7 */
@@ -4398,37 +4389,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
 
-
 /*******************************************************************************
  * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
+
 {
   var formProvider = 'calderaforms';
   var $ = window.jQuery;
   var $form;
+
   /**
    * This function is run before every CF Ajax call to store the form being submitted.
    *
    * @param event
    * @param obj
    */
-
   var beforeAjax = function beforeAjax(event, obj) {
     return $form = obj.$form;
   };
-
-  $(document).on('cf.ajax.request', beforeAjax) // After all requests
+  $(document).on('cf.ajax.request', beforeAjax)
+  // After all requests
   .on('cf.submission', function (event, obj) {
     // Only if status of request is complete|success.
     if ('complete' === obj.data.status || 'success' === obj.data.status) {
       //get the form that is submiting's ID attribute
       var _$form$attr$split = $form.attr('id').split('_'),
-          _$form$attr$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_$form$attr$split, 2),
-          formId = _$form$attr$split2[0],
-          _$form$attr$split2$ = _$form$attr$split2[1],
-          formInstanceId = _$form$attr$split2$ === void 0 ? null : _$form$attr$split2$; // All the magic happens here.
+        _$form$attr$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_$form$attr$split, 2),
+        formId = _$form$attr$split2[0],
+        _$form$attr$split2$ = _$form$attr$split2[1],
+        formInstanceId = _$form$attr$split2$ === void 0 ? null : _$form$attr$split2$;
 
-
+      // All the magic happens here.
       window.PUM.integrations.formSubmission($form, {
         formProvider: formProvider,
         formId: formId,
@@ -4534,23 +4525,16 @@ __webpack_require__.r(__webpack_exports__);
 /***/ 0:
 /***/ (function(module, exports) {
 
-function _typeof(obj) {
+function _typeof(o) {
   "@babel/helpers - typeof";
 
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
+  return module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports, _typeof(o);
 }
-
-module.exports = _typeof;
+module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -4562,23 +4546,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
 
-
 /**************************************
  * Copyright (c) 2020, Popup Maker
  *************************************/
+
 {
   var formProvider = "contactform7";
   var $ = window.jQuery;
   $(document).on("wpcf7mailsent", function (event, details) {
     var formId = event.detail.contactFormId,
-        $form = $(event.target),
-        identifier = event.detail.id || event.detail.unitTag,
-        // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
-    // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
-    // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
-    // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
-    formInstanceId = identifier.split("-").pop().replace("o", ""); // All the magic happens here.
+      $form = $(event.target),
+      identifier = event.detail.id || event.detail.unitTag,
+      // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
+      // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
+      // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
+      // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
+      formInstanceId = identifier.split("-").pop().replace("o", "");
 
+    // All the magic happens here.
     window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,
       formId: formId,
@@ -4587,6 +4572,7 @@ __webpack_require__.r(__webpack_exports__);
         details: details
       }
     });
+
     /**
      * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
      *
@@ -4594,16 +4580,14 @@ __webpack_require__.r(__webpack_exports__);
      *
      * This is here for backward compatibility with form actions prior to v1.9.
      */
-
     var $settings = $form.find("input.wpcf7-pum"),
-        settings = $settings.length ? JSON.parse($settings.val()) : false;
-
+      settings = $settings.length ? JSON.parse($settings.val()) : false;
     if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
       settings.closedelay = settings.closedelay / 1000;
-    } // Nothing should happen if older action settings not applied
+    }
+
+    // Nothing should happen if older action settings not applied
     // except triggering of pumFormSuccess event for old cookie method.
-
-
     window.PUM.forms.success($form, settings);
   });
 }
@@ -4711,13 +4695,11 @@ __webpack_require__.r(__webpack_exports__);
   $(document).on('fluentform_submission_success', function (event, formDetails) {
     // Extract necessary form details from the event.
     var formEl = formDetails.form; // The form element
-
     var formConfig = formDetails.config; // The form configuration (contains formId, etc.)
-
     var formId = formConfig.id;
     var formInstanceId = formEl.data('form_instance');
-    console.log(formId, formDetails); // All the magic happens here.
-
+    console.log(formId, formDetails);
+    // All the magic happens here.
     window.PUM.integrations.formSubmission($(formEl), {
       formProvider: formProvider,
       formId: formId,
@@ -4823,14 +4805,16 @@ __webpack_require__.r(__webpack_exports__);
 /***********************************
  * Copyright (c) 2020, Popup Maker
  **********************************/
+
 {
   var formProvider = "formidableforms";
   var $ = window.jQuery;
   $(document).on("frmFormComplete", function (event, form, response) {
     var $form = $(form);
     var formId = $form.find('input[name="form_id"]').val();
-    var $popup = PUM.getPopup($form.find('input[name="pum_form_popup_id"]').val()); // All the magic happens here.
+    var $popup = PUM.getPopup($form.find('input[name="pum_form_popup_id"]').val());
 
+    // All the magic happens here.
     window.PUM.integrations.formSubmission($form, {
       popup: $popup,
       formProvider: formProvider,
@@ -4936,23 +4920,16 @@ __webpack_require__.r(__webpack_exports__);
 /***/ 0:
 /***/ (function(module, exports) {
 
-function _typeof(obj) {
+function _typeof(o) {
   "@babel/helpers - typeof";
 
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
+  return module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports, _typeof(o);
 }
-
-module.exports = _typeof;
+module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -4964,21 +4941,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
 
-
 /***************************************
  * Copyright (c) 2020, Popup Maker
  ***************************************/
+
 {
   var formProvider = "gravityforms";
   var $ = window.jQuery;
   var gFormSettings = {};
   $(document).on("gform_confirmation_loaded", function (event, formId) {
-    var $form = $("#gform_confirmation_wrapper_" + formId + ",#gforms_confirmation_message_" + formId)[0]; // All the magic happens here.
+    var $form = $("#gform_confirmation_wrapper_" + formId + ",#gforms_confirmation_message_" + formId)[0];
 
+    // All the magic happens here.
     window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,
       formId: formId
     });
+
     /**
      * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
      *
@@ -4988,9 +4967,9 @@ __webpack_require__.r(__webpack_exports__);
      */
     // Nothing should happen if older action settings not applied
     // except triggering of pumFormSuccess event for old cookie method.
-
     window.PUM.forms.success($form, gFormSettings[formId] || {});
   });
+
   /**
    * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
    *
@@ -4998,22 +4977,18 @@ __webpack_require__.r(__webpack_exports__);
    *
    * This is here for backward compatibility with form actions prior to v1.9.
    */
-
   $(function () {
     $(".gform_wrapper > form").each(function () {
       var $form = $(this),
-          formId = $form.attr("id").replace("gform_", ""),
-          $settings = $form.find("input.gforms-pum"),
-          settings = $settings.length ? JSON.parse($settings.val()) : false;
-
+        formId = $form.attr("id").replace("gform_", ""),
+        $settings = $form.find("input.gforms-pum"),
+        settings = $settings.length ? JSON.parse($settings.val()) : false;
       if (!settings || _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) !== "object") {
         return;
       }
-
       if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
         settings.closedelay = settings.closedelay / 1000;
       }
-
       gFormSettings[formId] = settings;
     });
   });
@@ -5116,17 +5091,20 @@ __webpack_require__.r(__webpack_exports__);
 /*******************************************************************************
  * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
+
 {
   var formProvider = 'mc4wp';
-  var $ = window.jQuery; // Initiate when ready.
+  var $ = window.jQuery;
 
+  // Initiate when ready.
   $(function () {
     if (typeof mc4wp !== 'undefined') {
       mc4wp.forms.on('success', function (form, data) {
         var $form = $(form.element),
-            formId = form.id,
-            formInstanceId = $('.mc4wp-form-' + form.id).index($form) + 1; // All the magic happens here.
+          formId = form.id,
+          formInstanceId = $('.mc4wp-form-' + form.id).index($form) + 1;
 
+        // All the magic happens here.
         window.PUM.integrations.formSubmission($form, {
           formProvider: formProvider,
           formId: formId,
@@ -5236,94 +5214,80 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 var arrayWithHoles = __webpack_require__(2);
-
 var iterableToArrayLimit = __webpack_require__(3);
-
 var unsupportedIterableToArray = __webpack_require__(4);
-
 var nonIterableRest = __webpack_require__(6);
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+function _slicedToArray(r, e) {
+  return arrayWithHoles(r) || iterableToArrayLimit(r, e) || unsupportedIterableToArray(r, e) || nonIterableRest();
 }
-
-module.exports = _slicedToArray;
+module.exports = _slicedToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
+function _arrayWithHoles(r) {
+  if (Array.isArray(r)) return r;
 }
-
-module.exports = _arrayWithHoles;
+module.exports = _arrayWithHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
     try {
-      if (!_n && _i["return"] != null) _i["return"]();
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
     } finally {
-      if (_d) throw _e;
+      try {
+        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
     }
+    return a;
   }
-
-  return _arr;
 }
-
-module.exports = _iterableToArrayLimit;
+module.exports = _iterableToArrayLimit, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var arrayLikeToArray = __webpack_require__(5);
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? arrayLikeToArray(r, a) : void 0;
+  }
 }
-
-module.exports = _unsupportedIterableToArray;
+module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports) {
 
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
 }
-
-module.exports = _arrayLikeToArray;
+module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 6 */
@@ -5332,8 +5296,7 @@ module.exports = _arrayLikeToArray;
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-
-module.exports = _nonIterableRest;
+module.exports = _nonIterableRest, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 /* 7 */,
@@ -5350,15 +5313,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
 
-
 /*******************************************************************************
  * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
+
 {
   var formProvider = 'ninjaforms';
   var $ = window.jQuery;
   var pumNFController = false;
-
   var initialize_nf_support = function initialize_nf_support() {
     /** Ninja Forms Support */
     if (typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined' && false === pumNFController) {
@@ -5368,19 +5330,19 @@ __webpack_require__.r(__webpack_exports__);
         },
         popupMaker: function popupMaker(response, textStatus, jqXHR, formIdentifier) {
           var $form = $('#nf-form-' + formIdentifier + '-cont'),
-              _formIdentifier$split = formIdentifier.split('_'),
-              _formIdentifier$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_formIdentifier$split, 2),
-              formId = _formIdentifier$split2[0],
-              _formIdentifier$split3 = _formIdentifier$split2[1],
-              formInstanceId = _formIdentifier$split3 === void 0 ? null : _formIdentifier$split3,
-              settings = {}; // Bail if submission failed.
+            _formIdentifier$split = formIdentifier.split('_'),
+            _formIdentifier$split2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_formIdentifier$split, 2),
+            formId = _formIdentifier$split2[0],
+            _formIdentifier$split3 = _formIdentifier$split2[1],
+            formInstanceId = _formIdentifier$split3 === void 0 ? null : _formIdentifier$split3,
+            settings = {};
 
-
+          // Bail if submission failed.
           if (response.errors && response.errors.length) {
             return;
-          } // All the magic happens here.
+          }
 
-
+          // All the magic happens here.
           window.PUM.integrations.formSubmission($form, {
             formProvider: formProvider,
             formId: formId,
@@ -5389,6 +5351,7 @@ __webpack_require__.r(__webpack_exports__);
               response: response
             }
           });
+
           /**
            * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
            *
@@ -5396,29 +5359,28 @@ __webpack_require__.r(__webpack_exports__);
            *
            * This is here for backward compatibility with form actions prior to v1.9.
            */
-
           if (response.data && response.data.actions) {
             settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
             settings.openpopup_id = settings.openpopup ? parseInt(response.data.actions.openpopup) : 0;
             settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
             settings.closedelay = settings.closepopup ? parseInt(response.data.actions.closepopup) : 0;
-
             if (settings.closepopup && response.data.actions.closedelay) {
               settings.closedelay = parseInt(response.data.actions.closedelay);
             }
-          } // Nothing should happen if older action settings not applied
+          }
+
+          // Nothing should happen if older action settings not applied
           // except triggering of pumFormSuccess event for old cookie method.
-
-
           window.PUM.forms.success($form, settings);
         }
-      }); // Initialize it.
+      });
 
+      // Initialize it.
       new pumNFController();
     }
-  }; // Initiate when ready.
+  };
 
-
+  // Initiate when ready.
   $(initialize_nf_support);
 }
 
@@ -5518,14 +5480,16 @@ __webpack_require__.r(__webpack_exports__);
 /*******************************************************************************
  * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
+
 {
   var formProvider = 'wpforms';
   var $ = window.jQuery;
   $(document).on('wpformsAjaxSubmitSuccess', '.wpforms-ajax-form', function (event, details) {
     var $form = $(this),
-        formId = $form.data('formid'),
-        formInstanceId = $('form#' + $form.attr('id')).index($form) + 1; // All the magic happens here.
+      formId = $form.data('formid'),
+      formInstanceId = $('form#' + $form.attr('id')).index($form) + 1;
 
+    // All the magic happens here.
     window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,
       formId: formId,
@@ -5631,6 +5595,7 @@ __webpack_require__.r(__webpack_exports__);
 /*******************************************************************************
  * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
+
 {
   var formProvider = 'wsforms';
   var $ = window.jQuery;

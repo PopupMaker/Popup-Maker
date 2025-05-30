@@ -92,14 +92,16 @@
 /***********************************
  * Copyright (c) 2020, Popup Maker
  **********************************/
+
 {
   var formProvider = "formidableforms";
   var $ = window.jQuery;
   $(document).on("frmFormComplete", function (event, form, response) {
     var $form = $(form);
     var formId = $form.find('input[name="form_id"]').val();
-    var $popup = PUM.getPopup($form.find('input[name="pum_form_popup_id"]').val()); // All the magic happens here.
+    var $popup = PUM.getPopup($form.find('input[name="pum_form_popup_id"]').val());
 
+    // All the magic happens here.
     window.PUM.integrations.formSubmission($form, {
       popup: $popup,
       formProvider: formProvider,
