@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+This update begins the process of modernizing our codebase while polishing existing stuff & adding new features.
+
+**Minimum Requirements Change**
+
+-   PHP: 7.4+
+-   WordPress: 6.5+
+
 **Improvements**
 
 -   Optimized popup `open` functions to improve browser animation reliability and consistent user experience. This update aims to eliminate visual inconsistencies and resolve issues where popups occasionally failed to display.
@@ -11,19 +18,21 @@
 -   Updated build processes to rely on @wordpress/scripts & Webpack, as well as improved developer tooling. This should result in smaller JS & CSS file sizes, more reliable builds, and faster development cycles.
 -   Updated all branding to use SVGs and new marks/logos.
 -   Improve reliability of admin notice dismissals.
+-   Better handling of version changes & migration processing during plugin updates.
 
 **Developers**
 
-Updating frontend JavaScript to use hooks/filters system instead of global variables over time.
-
--   Added new JS `popupMaker.triggers` filter to allow adding custom triggers.
+-   Optimized plugin loading & activation mechanisms.
+-   First stage of modernizing & reorganizing to use PHP namespaces & other PHP 7.4 optimizations.
+-   Updating frontend JavaScript to use hooks/filters system instead of global variables over time.
+    -   Added new JS `popupMaker.triggers` filter to allow adding custom triggers.
 -   Added new helper methods for registering Popup Maker custom scripts & styles that will be bundled with our plugin JS/CSS files automatically via AssetCache API.
 -   Lots of WPCS & TypeScript/PHP Type enforcement fixes.
 
 ## v1.20.4 - 2025-01-29
 
-- Tweak: Updated documentation links to use new docs site.
-- Fix: Popup title aria-labelledby attribute was being double-quoted. Thanks  to the [Equalize Digital](https://equalizedigital.com/) team.
+-   Tweak: Updated documentation links to use new docs site.
+-   Fix: Popup title aria-labelledby attribute was being double-quoted. Thanks to the [Equalize Digital](https://equalizedigital.com/) team.
 
 ## v1.20.3 - 2024-11-27
 
