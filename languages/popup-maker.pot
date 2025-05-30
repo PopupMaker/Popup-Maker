@@ -7,6 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Popup Maker <support@wppopupmaker.com>\n"
+"POT-Creation-Date: 2025-05-30 19:12+0000\n"
 "Report-Msgid-Bugs-To: https://wppopupmaker.com/support/\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -93,8 +94,6 @@ msgctxt "condition: post type plural label ie. Posts: Selected"
 msgid "%s: Selected"
 msgstr ""
 
-#. translators: 1. Post type plural label.
-#. translators: 1. Post type plural label.
 #. translators: 1. Post type plural label.
 #: classes/Conditions.php:263, classes/Conditions.php:308, classes/Conditions.php:331
 msgctxt "condition: post type plural label ie. Select Posts"
@@ -715,7 +714,6 @@ msgid "No %2$s found in Trash"
 msgstr ""
 
 #. translators: %1$s: Post Type Singular: Popup, Theme
-#. translators: %1$s: Post Type Singular: Popup, Theme
 #: classes/Types.php:198, classes/Types.php:200
 msgctxt "Post Type Singular: Popup, Theme"
 msgid "%1$s updated."
@@ -1205,7 +1203,6 @@ msgstr ""
 
 #. translators: 1. URL to view troubleshooting guide. 2. Closing HTML tag.
 #. translators: 1. URL to troubleshooting guide. 2. Closing tag.
-#. translators: 1. URL to troubleshooting guide. 2. Closing tag.
 #: classes/Admin/Popups.php:262, classes/Admin/Settings.php:662, classes/Admin/Themes.php:151
 msgid "If you are seeing this, the page is still loading or there are Javascript errors on this page. %1$sView troubleshooting guide%2$s"
 msgstr ""
@@ -1430,13 +1427,6 @@ msgstr ""
 msgid "Choose where the popup will be displayed."
 msgstr ""
 
-#. translators: 1. Screen Edge: top, bottom.
-#. translators: 1. Screen Edge: top, bottom.
-#. translators: 1. Screen Edge: top, bottom.
-#. translators: 1. Screen Edge: top, bottom.
-#. translators: 1. Screen Edge: top, bottom.
-#. translators: 1. Screen Edge: top, bottom.
-#. translators: 1. Screen Edge: top, bottom.
 #. translators: 1. Screen Edge: top, bottom.
 #: classes/Admin/Popups.php:736, classes/Admin/Popups.php:754, classes/Admin/Popups.php:772, classes/Admin/Popups.php:790, classes/Shortcode/Popup.php:176, classes/Shortcode/Popup.php:191, classes/Shortcode/Popup.php:206, classes/Shortcode/Popup.php:221
 msgctxt "Screen Edge: top, bottom"
@@ -1802,7 +1792,6 @@ msgid "Consent Usage Text"
 msgstr ""
 
 #. translators: 1. opening tag, 2. closing tag.
-#. translators: 1. opening tag, 2. closing tag.
 #: classes/Admin/Settings.php:425, classes/Shortcode/Subscribe.php:404
 msgid "You can use %1$s%2$s to insert a link to your privacy policy. To customize the link text use %1$s:Link Text%2$s"
 msgstr ""
@@ -2044,8 +2033,6 @@ msgstr ""
 msgid "Add New Trigger"
 msgstr ""
 
-#. translators: 1. contextual help link text.
-#. translators: 1. contextual help link text.
 #. translators: 1. contextual help link text.
 #: classes/Admin/Templates.php:411, classes/Admin/Templates.php:576, classes/Admin/Templates.php:684
 msgid "Learn more about %s"
@@ -2448,7 +2435,6 @@ msgstr ""
 msgid "Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please %1$srenew your license%2$s."
 msgstr ""
 
-#. translators: 1. opening link text, 2. closing link text
 #. translators: 1. opening link text, 2. closing link text
 #: classes/Extension/License.php:475, classes/Extension/License.php:515
 msgid "You have invalid or expired license keys for Popup Maker. Please go to the %1$sLicenses page%2$s to correct this issue."

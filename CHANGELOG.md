@@ -29,6 +29,10 @@ This update begins the process of modernizing our codebase while polishing exist
 -   Added new helper methods for registering Popup Maker custom scripts & styles that will be bundled with our plugin JS/CSS files automatically via AssetCache API.
 -   Lots of WPCS & TypeScript/PHP Type enforcement fixes.
 
+## v1.20.5 - 2025-05-30
+
+-   Security: Fix potential XSS for custom HTML based popups.
+
 ## v1.20.4 - 2025-01-29
 
 -   Tweak: Updated documentation links to use new docs site.
