@@ -92,17 +92,20 @@
 /*******************************************************************************
  * Copyright (c) 2020, WP Popup Maker
  ******************************************************************************/
+
 {
   var formProvider = 'mc4wp';
-  var $ = window.jQuery; // Initiate when ready.
+  var $ = window.jQuery;
 
+  // Initiate when ready.
   $(function () {
     if (typeof mc4wp !== 'undefined') {
       mc4wp.forms.on('success', function (form, data) {
         var $form = $(form.element),
-            formId = form.id,
-            formInstanceId = $('.mc4wp-form-' + form.id).index($form) + 1; // All the magic happens here.
+          formId = form.id,
+          formInstanceId = $('.mc4wp-form-' + form.id).index($form) + 1;
 
+        // All the magic happens here.
         window.PUM.integrations.formSubmission($form, {
           formProvider: formProvider,
           formId: formId,

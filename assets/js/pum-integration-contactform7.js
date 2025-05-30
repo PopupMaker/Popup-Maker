@@ -89,23 +89,16 @@
 /***/ 0:
 /***/ (function(module, exports) {
 
-function _typeof(obj) {
+function _typeof(o) {
   "@babel/helpers - typeof";
 
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return typeof obj;
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
-  }
-
-  return _typeof(obj);
+  return module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports, _typeof(o);
 }
-
-module.exports = _typeof;
+module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
 
@@ -117,23 +110,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
 /* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0__);
 
-
 /**************************************
  * Copyright (c) 2020, Popup Maker
  *************************************/
+
 {
   var formProvider = "contactform7";
   var $ = window.jQuery;
   $(document).on("wpcf7mailsent", function (event, details) {
     var formId = event.detail.contactFormId,
-        $form = $(event.target),
-        identifier = event.detail.id || event.detail.unitTag,
-        // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
-    // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
-    // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
-    // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
-    formInstanceId = identifier.split("-").pop().replace("o", ""); // All the magic happens here.
+      $form = $(event.target),
+      identifier = event.detail.id || event.detail.unitTag,
+      // Converts string like wpcf7-f190-p2-o11 and reduces it to simply 11, the last o11 is the instance ID.
+      // More accurate way of doing it in case things change in the future, this version filters out all but the o param.
+      // formInstanceId = .split('-').filter((string) => string.indexOf('o') === 0)[0].replace('o','');
+      // Simpler version that simply splits and pops the last item in the array. This requires it always be the last.
+      formInstanceId = identifier.split("-").pop().replace("o", "");
 
+    // All the magic happens here.
     window.PUM.integrations.formSubmission($form, {
       formProvider: formProvider,
       formId: formId,
@@ -142,6 +136,7 @@ __webpack_require__.r(__webpack_exports__);
         details: details
       }
     });
+
     /**
      * TODO - Move this to a backward compatiblilty file, hook it into the pum.integration.form.success action.
      *
@@ -149,16 +144,14 @@ __webpack_require__.r(__webpack_exports__);
      *
      * This is here for backward compatibility with form actions prior to v1.9.
      */
-
     var $settings = $form.find("input.wpcf7-pum"),
-        settings = $settings.length ? JSON.parse($settings.val()) : false;
-
+      settings = $settings.length ? JSON.parse($settings.val()) : false;
     if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_0___default()(settings) === "object" && settings.closedelay !== undefined && settings.closedelay.toString().length >= 3) {
       settings.closedelay = settings.closedelay / 1000;
-    } // Nothing should happen if older action settings not applied
+    }
+
+    // Nothing should happen if older action settings not applied
     // except triggering of pumFormSuccess event for old cookie method.
-
-
     window.PUM.forms.success($form, settings);
   });
 }

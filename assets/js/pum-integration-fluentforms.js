@@ -98,13 +98,11 @@
   $(document).on('fluentform_submission_success', function (event, formDetails) {
     // Extract necessary form details from the event.
     var formEl = formDetails.form; // The form element
-
     var formConfig = formDetails.config; // The form configuration (contains formId, etc.)
-
     var formId = formConfig.id;
     var formInstanceId = formEl.data('form_instance');
-    console.log(formId, formDetails); // All the magic happens here.
-
+    console.log(formId, formDetails);
+    // All the magic happens here.
     window.PUM.integrations.formSubmission($(formEl), {
       formProvider: formProvider,
       formId: formId,
