@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## v1.20.5 - 2025-05-30
+
+*  Security: Fix potential XSS for custom HTML based popups.
+
 ## 1.20.4 - 2025-01-29
 
 - Tweak: Updated documentation links to use new docs site.
