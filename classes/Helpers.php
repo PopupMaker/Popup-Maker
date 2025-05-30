@@ -65,7 +65,7 @@ class PUM_Helpers {
 	 * @return bool|string
 	 */
 	public static function get_cache_dir_url() {
-		$upload_dir = self::get_upload_dir_url();
+		$upload_dir = \PopupMaker\get_upload_dir_url();
 		if ( false === $upload_dir ) {
 			return false;
 		}
@@ -81,79 +81,45 @@ class PUM_Helpers {
 	 * Gets the uploads directory path
 	 *
 	 * @since 1.10
+	 * @deprecated X.X.X Use \PopupMaker\get_upload_dir_path instead.
+	 *
 	 * @param string $path A path to append to end of upload directory URL.
 	 * @return bool|string The uploads directory path or false on failure
 	 */
 	public static function get_upload_dir_path( $path = '' ) {
-		$upload_dir = self::get_upload_dir();
-		if ( false !== $upload_dir && isset( $upload_dir['basedir'] ) ) {
-			$dir = $upload_dir['basedir'];
-			if ( ! empty( $path ) ) {
-				$dir = trailingslashit( $dir ) . $path;
-			}
-			return $dir;
-		} else {
-			return false;
-		}
+		return \PopupMaker\get_upload_dir_path( $path );
 	}
 
 	/**
 	 * Gets the uploads directory URL
 	 *
 	 * @since 1.10
+	 * @deprecated X.X.X Use \PopupMaker\get_upload_dir_url instead.
+	 *
 	 * @param string $path A path to append to end of upload directory URL.
 	 * @return bool|string The uploads directory URL or false on failure
 	 */
 	public static function get_upload_dir_url( $path = '' ) {
-		$upload_dir = self::get_upload_dir();
-		if ( false !== $upload_dir && isset( $upload_dir['baseurl'] ) ) {
-			$url = preg_replace( '/^https?:/', '', $upload_dir['baseurl'] );
-			if ( null === $url ) {
-				return false;
-			}
-			if ( ! empty( $path ) ) {
-				$url = trailingslashit( $url ) . $path;
-			}
-			return $url;
-		} else {
-			return false;
-		}
+		return \PopupMaker\get_upload_dir_url( $path );
 	}
 
 	/**
 	 * Gets the Uploads directory
 	 *
-	 * @since 1.10
+	 * @since 1.10.0
+	 * @deprecated X.X.X Use \PopupMaker\get_upload_dir instead.
+	 *
 	 * @return bool|array An associated array with baseurl and basedir or false on failure
 	 */
 	public static function get_upload_dir() {
-		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-			$wp_upload_dir = wp_get_upload_dir();
-		} else {
-			$wp_upload_dir = wp_upload_dir();
-		}
-
-		if ( isset( $wp_upload_dir['error'] ) && false !== $wp_upload_dir['error'] ) {
-			pum_log_message( sprintf( 'Getting uploads directory failed. Error given: %s', esc_html( $wp_upload_dir['error'] ) ) );
-			return false;
-		} else {
-			return $wp_upload_dir;
-		}
+		return \PopupMaker\get_upload_dir();
 	}
 
 	/**
-	 * @deprecated Use get_upload_dir_url instead.
+	 * @deprecated 1.10.0 Use \PopupMaker\get_upload_dir_url instead.
 	 */
 	public static function upload_dir_url( $path = '' ) {
-		$upload_dir = wp_upload_dir();
-		$upload_dir = $upload_dir['baseurl'];
-		$upload_dir = preg_replace( '/^https?:/', '', $upload_dir );
-
-		if ( ! empty( $path ) ) {
-			$upload_dir = trailingslashit( $upload_dir ) . $path;
-		}
-
-		return $upload_dir;
+		return \PopupMaker\get_upload_dir_url( $path );
 	}
 
 	/**
