@@ -24,10 +24,12 @@ use function apply_filters;
 function current_data_versions() {
 	// TODO: Add current data versions.
 	return apply_filters( 'popup_maker/current_data_versions', [
-		'settings'     => 2,
-		'restrictions' => 2,
-		'plugin_meta'  => 2,
-		'user_meta'    => 2,
+		'ctas'         => 1,
+		'popups'       => 3,
+		'popup_themes' => 3,
+		'settings'     => 3,
+		'plugin_meta'  => 3,
+		'user_meta'    => 3,
 	] );
 }
 
