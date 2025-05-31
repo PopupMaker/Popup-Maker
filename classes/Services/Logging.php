@@ -9,6 +9,7 @@
 namespace PopupMaker\Services;
 
 use PopupMaker\Base\Service;
+use function PopupMaker\get_fs;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,13 +37,6 @@ class Logging extends Service {
 	 * @var string
 	 */
 	private $file = '';
-
-	/**
-	 * File system API.
-	 *
-	 * @var \WP_Filesystem_Base|null
-	 */
-	private $fs;
 
 	/**
 	 * Log file content.
@@ -103,34 +97,6 @@ class Logging extends Service {
 	}
 
 	/**
-	 * Get working WP Filesystem instance
-	 *
-	 * @return \WP_Filesystem_Base|false
-	 */
-	public function fs() {
-		if ( isset( $this->fs ) ) {
-			return $this->fs;
-		}
-
-		global $wp_filesystem;
-
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-
-		// If for some reason the include doesn't work as expected just return false.
-		if ( ! function_exists( 'WP_Filesystem' ) ) {
-			return false;
-		}
-
-		$writable = WP_Filesystem( false, '', true );
-
-		// We consider the directory as writable if it uses the direct transport,
-		// otherwise credentials would be needed.
-		$this->fs = ( $writable && 'direct' === $wp_filesystem->method ) ? $wp_filesystem : false;
-
-		return $this->fs;
-	}
-
-	/**
 	 * Check if the log file is writable.
 	 *
 	 * @return boolean
@@ -140,7 +106,7 @@ class Logging extends Service {
 			return $this->is_writable;
 		}
 
-		$file_system = $this->fs();
+		$file_system = get_fs();
 
 		if ( false === $file_system ) {
 			$this->is_writable = false;
@@ -165,7 +131,7 @@ class Logging extends Service {
 	 */
 	public function init() {
 		$upload_dir  = \PopupMaker\get_upload_dir();
-		$file_system = $this->fs();
+		$file_system = get_fs();
 
 		if ( false === $upload_dir || false === $file_system ) {
 			return;
@@ -204,7 +170,7 @@ class Logging extends Service {
 	 */
 	private function migrate_old_log_file() {
 		$upload_dir  = \PopupMaker\get_upload_dir();
-		$file_system = $this->fs();
+		$file_system = get_fs();
 
 		if ( false === $upload_dir || false === $file_system ) {
 			return;
@@ -219,10 +185,10 @@ class Logging extends Service {
 			$this->log_unique( 'Renaming log file.' );
 
 			// Move old file to new location.
-			$this->fs->move( $old_file, $this->file );
+			$file_system->move( $old_file, $this->file );
 
-			if ( $this->fs->exists( $old_file ) ) {
-				$this->fs->delete( $old_file );
+			if ( $file_system->exists( $old_file ) ) {
+				$file_system->delete( $old_file );
 			}
 		}
 	}
@@ -264,7 +230,7 @@ class Logging extends Service {
 	 * @return void
 	 */
 	public function delete_logs() {
-		$file_system = $this->fs();
+		$file_system = get_fs();
 
 		if ( false === $file_system ) {
 			return;
@@ -343,7 +309,7 @@ class Logging extends Service {
 	protected function get_file( $file = false ) {
 		$file = $file ? $file : $this->file;
 
-		$file_system = $this->fs();
+		$file_system = get_fs();
 
 		if ( false === $file_system || ! $this->enabled() ) {
 			return '';
@@ -386,7 +352,7 @@ class Logging extends Service {
 	 * @return void
 	 */
 	public function save_logs() {
-		$file_system = $this->fs();
+		$file_system = get_fs();
 
 		if ( false === $file_system || ! $this->enabled() ) {
 			return;
@@ -435,7 +401,7 @@ class Logging extends Service {
 	 * @return void
 	 */
 	public function clear_log() {
-		$file_system = $this->fs();
+		$file_system = get_fs();
 
 		if ( false === $file_system ) {
 			return;
