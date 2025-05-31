@@ -13,10 +13,10 @@ use PopupMaker\Base\Service;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * License management.
+ * Pro license management.
  *
  * NOTE: For wordpress.org admins: This is only used if:
- * - The user explicitly entered a license key.
+ * - The user explicitly entered a Pro license key.
  *
  * @package PopupMaker
  */
@@ -97,7 +97,7 @@ class License extends Service {
 	 */
 	public function schedule_crons() {
 		if ( ! wp_next_scheduled( 'popup_maker_license_status_check' ) ) {
-			wp_schedule_event( time(), 'daily', 'popup_maker_license_status_check' );
+			wp_schedule_event( time(), 'weekly', 'popup_maker_license_status_check' );
 		}
 	}
 
