@@ -22,14 +22,18 @@ use function apply_filters;
  * @since X.X.X
  */
 function current_data_versions() {
-	// TODO: Add current data versions.
 	return apply_filters( 'popup_maker/current_data_versions', [
-		'ctas'         => 1,
+		// CTA data has never had a dedicated migration.
+		'pum_ctas'     => 1,
+		// Popups were migrated to version 3 in v1.7.0.
 		'popups'       => 3,
+		// Popup themes reached version 3 in v1.8.0.
 		'popup_themes' => 3,
-		'settings'     => 3,
-		'plugin_meta'  => 3,
-		'user_meta'    => 3,
+		// Global settings were consolidated in version 3.
+		'settings'     => 2, // 3 once we've migrated all settings to JS based camelCase keys to new popup_maker_settings option name.
+		// Plugin meta & user meta currently only have one schema.
+		'plugin_meta'  => 1,
+		'user_meta'    => 1,
 	] );
 }
 
@@ -93,40 +97,80 @@ function set_data_versions( $versioning ) {
 function get_data_version( $key ) {
 	$versioning = get_data_versions();
 
-	switch ( $key ) {
-		// Fallthrough.
-		case 'popups':
-			// If set to v1 and there are no v1 popups, set to v2.
-			if ( 1 === $versioning[ $key ] ) {
-				// TODO check for v1 popups (and v2, v3, etc) this is mocked.
-				$v1_popups = [];
+	$current  = isset( $versioning[ $key ] ) ? (int) $versioning[ $key ] : 0;
+	$detected = $current;
 
-				if ( false === $v1_popups ) {
-					$versioning[ $key ] = 2;
-					set_data_versions( $versioning );
-					return 2;
+	switch ( $key ) {
+		case 'popups':
+				$query = get_posts( [
+					'post_type'      => 'popup',
+					'post_status'    => 'any',
+					'posts_per_page' => 1,
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'meta_key'       => 'popup_settings',
+				] );
+			if ( ! empty( $query ) ) {
+				$detected = 3;
+			} else {
+					$query = get_posts( [
+						'post_type'      => 'popup',
+						'post_status'    => 'any',
+						'posts_per_page' => 1,
+						// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+						'meta_key'       => 'popup_display',
+					] );
+				if ( ! empty( $query ) ) {
+					$detected = 2;
+				} elseif ( pum_count_popups() > 0 ) {
+						$detected = 1;
 				}
 			}
+			break;
 
+		case 'popup_themes':
+				$query = get_posts( [
+					'post_type'      => 'popup_theme',
+					'post_status'    => 'any',
+					'posts_per_page' => 1,
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					'meta_key'       => 'popup_theme_settings',
+				] );
+			if ( ! empty( $query ) ) {
+				$detected = 3;
+			} else {
+					$query = get_posts( [
+						'post_type'      => 'popup_theme',
+						'post_status'    => 'any',
+						'posts_per_page' => 1,
+						// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+						'meta_key'       => 'popup_theme_overlay',
+					] );
+				if ( ! empty( $query ) ) {
+					$detected = 2;
+				} elseif ( pum_count_themes() > 0 ) {
+						$detected = 1;
+				}
+			}
 			break;
 
 		case 'settings':
-			// If set to v1 and there are no v1 settings, set to v2.
-			if ( 1 === $versioning[ $key ] ) {
-				// TODO check for v1 settings (and v2, v3, etc) this is mocked.
-				$v1_settings = get_option( 'popup_maker_settings', [] );
-
-				if ( empty( $v1_settings ) ) {
-					$versioning[ $key ] = 2;
-					set_data_versions( $versioning );
-					return 2;
-				}
+			// if ( get_option( 'popup_maker_settings', false ) !== false ) {
+			// $detected = 3;
+			// } else {
+			if ( get_option( 'pum_settings', false ) !== false ) {
+					$detected = 2;
+			} elseif ( get_option( 'popmake_settings', false ) !== false ) {
+				$detected = 1;
 			}
-
 			break;
 	}
 
-	return isset( $versioning[ $key ] ) ? $versioning[ $key ] : false;
+	if ( 0 === $current || $detected !== $current ) {
+			$versioning[ $key ] = $detected;
+			set_data_versions( $versioning );
+	}
+
+	return $detected;
 }
 
 /**
