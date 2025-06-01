@@ -4,8 +4,6 @@
 
 -   [ ] Add proper current_data_versions() versioning.
 
--   [ ] Move \PopupMaker\Plugin\Core to simply \PopupMaker\Core as there is no need for the Plugin namespace.
-
 -   [ ] In core add new Go Pro page?
         -- popup-maker/classes/Services/Upgrader.php:70 - Update this to point to the correct upgrade page url.
         -- popup-maker/classes/Services/Connect.php:168 - Update this to point to the correct upgrade page url.
