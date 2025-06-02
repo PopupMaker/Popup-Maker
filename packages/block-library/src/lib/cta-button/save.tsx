@@ -52,6 +52,8 @@ export default function save( { attributes, className } ) {
 
 	const buttonClasses = clsx(
 		'wp-block-popup-maker-cta-button__link',
+		// Themes like Twenty Twenty-Three use these classes to style buttons.
+		'wp-element-button',
 		colorProps.className,
 		borderProps.className,
 		typographyProps.className,
