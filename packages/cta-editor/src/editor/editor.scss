@@ -66,8 +66,8 @@ $gap4: $gap * 4;
 }
 
 .call-to-action-editor {
-	.modal-actions,
-	.editor-actions {
+	+ .modal-actions,
+	+ .editor-actions {
 		position: absolute;
 		height: $gap4;
 		box-sizing: border-box;
