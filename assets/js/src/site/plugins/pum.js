@@ -580,9 +580,13 @@
 
 			if ( settings.close_on_esc_press || settings.close_on_f4_press ) {
 				// TODO: Move to a global $(document).on type bind. Possibly look for a class to succeed on.
+				// Use a popup specific namespace so closing one popup doesn't
+				// remove listeners for another that is still open.
+				const keyupNamespace = `keyup.popmake-${ settings.id }`;
+
 				$( window )
-					.off( 'keyup.popmake' )
-					.on( 'keyup.popmake', function ( e ) {
+					.off( keyupNamespace )
+					.on( keyupNamespace, function ( e ) {
 						if ( e.keyCode === 27 && settings.close_on_esc_press ) {
 							$.fn.popmake.last_close_trigger = 'ESC Key';
 							$popup.popmake( 'close' );
@@ -596,19 +600,25 @@
 
 			if ( settings.close_on_overlay_click ) {
 				$popup.on( 'pumAfterOpen', function () {
-					$( document ).on( 'click.pumCloseOverlay', function ( e ) {
-						var $target = $( e.target ),
-							$container = $target.closest( '.pum-container' );
+					$( document ).on(
+						`click.popmake-${ settings.id }`,
+						function ( e ) {
+							var $target = $( e.target ),
+								$container = $target.closest(
+									'.pum-container'
+								);
 
-						if ( ! $container.length ) {
-							$.fn.popmake.last_close_trigger = 'Overlay Click';
-							$popup.popmake( 'close' );
+							if ( ! $container.length ) {
+								$.fn.popmake.last_close_trigger =
+									'Overlay Click';
+								$popup.popmake( 'close' );
+							}
 						}
-					} );
+					);
 				} );
 
 				$popup.on( 'pumAfterClose', function () {
-					$( document ).off( 'click.pumCloseOverlay' );
+					$( document ).off( `click.popmake-${ settings.id }` );
 				} );
 			}
 
@@ -637,7 +647,8 @@
 			return this.each( function () {
 				var $popup = PUM.getPopup( this ),
 					$container = $popup.popmake( 'getContainer' ),
-					$close = $popup.popmake( 'getClose' );
+					$close = $popup.popmake( 'getClose' ),
+					settings = $popup.popmake( 'getSettings' );
 
 				$close = $close.add(
 					$( '.popmake-close, .pum-close', $popup ).not( $close )
@@ -664,7 +675,8 @@
 					/**
 					 * Clear global event spaces.
 					 */
-					$( window ).off( 'keyup.popmake' );
+					$( window ).off( `keyup.popmake-${ settings.id }` );
+
 					$popup.off( 'click.popmake' );
 					$close.off( 'click.popmake' );
 
