@@ -406,7 +406,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 								'}}'
 							) : '',
 							'type'         => 'text',
-							'std'          => pum_get_option( 'default_privacy_usage_text', __( 'If you opt in above we use this information send related content, discounts and other special offers.', 'popup-maker' ) ),
+							'std'          => pum_get_option( 'default_privacy_usage_text', __( 'If you opt in above, we use this information to send related content, discounts, and other special offers.', 'popup-maker' ) ),
 							'dependencies' => $privacy_enabled_dependency,
 						],
 					],
@@ -434,7 +434,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 							'type'  => 'checkbox',
 						],
 						'openpopup_id' => [
-							'label'        => __( 'Popup ID', 'popup-maker' ),
+							'label'        => __( 'Popup Name', 'popup-maker' ),
 							'type'         => 'select',
 							'options'      => [
 								0 => __( 'Select a popup', 'popup-maker' ),
