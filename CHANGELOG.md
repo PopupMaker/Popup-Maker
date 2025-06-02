@@ -9,6 +9,17 @@ This update begins the process of modernizing our codebase while polishing exist
 -   PHP: 7.4+
 -   WordPress: 6.5+
 
+**Features**
+
+-   Trackable Call to Actions
+    -   Create as many as you need.
+    -   Track results, per link & per popup.
+    -   Redirect to any page or url.
+    -   Call To Action Button blocks for gutenberg to easily insert trackable links with style.
+    -   CTA Shortcode to insert them without Gutenberg.
+    -   Works with premium Popup Analytics.
+    -   Upgrade to Popup Maker Pro or Pro+ to use them outside popups, for quick import/export, or to create WooCommerce add to cart & apply discount buttons.
+
 **Improvements**
 
 -   Optimized popup `open` functions to improve browser animation reliability and consistent user experience. This update aims to eliminate visual inconsistencies and resolve issues where popups occasionally failed to display.
@@ -19,6 +30,10 @@ This update begins the process of modernizing our codebase while polishing exist
 -   Updated all branding to use SVGs and new marks/logos.
 -   Improve reliability of admin notice dismissals.
 -   Better handling of version changes & migration processing during plugin updates.
+
+**Fixes**
+
+-   `Close on overlay click` & `Close on ESC press` stopped working if 2 popups were open and one closed.
 
 **Developers**
 
