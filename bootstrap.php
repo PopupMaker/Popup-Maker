@@ -63,7 +63,7 @@ function config( $key = null ) {
  */
 require_once __DIR__ . '/vendor-prefixed/code-atlantic/wp-autoloader/src/Autoloader.php';
 
-if ( ! \PopupMaker\Vendor\CodeAtlantic\Autoloader\Autoloader::init( config( 'name' ), config( 'path' ) ) ) {
+if ( ! \PopupMaker\Vendor\CodeAtlantic\Autoloader\Autoloader::init( config( 'name' ), config( 'path' ) . '/vendor-prefixed/autoload.php' ) ) {
 	return;
 }
 
