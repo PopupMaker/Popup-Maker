@@ -1199,22 +1199,14 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @param array $a Array with `timestamp` key for comparison.
 	 * @param array $b Array with `timestamp` key for comparison.
 	 *
-	 * @return bool
+	 * @return int
 	 */
 	public function compare_resets( $a, $b ) {
 		$a = (float) $a['timestamp'];
 		$b = (float) $b['timestamp'];
 
-		// TODO Replace this with PHP 7.4 `<=>` operator once we drop support for PHP 5.6.
-		// return (float) $a['timestamp'] <=> (float) $b['timestamp'];
-
-		if ( $a < $b ) {
-			return -1;
-		} elseif ( $a > $b ) {
-			return 1;
-		} else {
-			return 0;
-		}
+		// Sort in descending order (newest first) to get the most recent reset
+		return (float) $b['timestamp'] <=> (float) $a['timestamp'];
 	}
 
 	/**
