@@ -3,6 +3,7 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@popup-maker/i18n';
 import { useDebounce } from '@wordpress/compose';
 import { store as coreDataStore } from '@wordpress/core-data';
+import { decodeEntities } from '@wordpress/html-entities';
 
 import SmartTokenControl from '../smart-token-control';
 
@@ -183,7 +184,10 @@ const EntitySelectControl = <
 					}
 
 					return 'postType' === entityKind
-						? suggestion.title.rendered ?? suggestion.title.raw
+						? decodeEntities(
+								suggestion.title.rendered ??
+									suggestion.title.raw
+						  )
 						: suggestion.name;
 				} }
 				renderSuggestion={ ( item ) => {
@@ -195,8 +199,10 @@ const EntitySelectControl = <
 					return (
 						<>
 							{ 'postType' === entityKind
-								? suggestion.title.rendered ??
-								  suggestion.title.raw
+								? decodeEntities(
+										suggestion.title.rendered ??
+											suggestion.title.raw
+								  )
 								: suggestion.name }
 						</>
 					);

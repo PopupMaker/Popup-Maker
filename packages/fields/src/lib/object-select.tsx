@@ -2,6 +2,7 @@ import { useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@popup-maker/i18n';
 import { useDebounce } from '@wordpress/compose';
+import { decodeEntities } from '@wordpress/html-entities';
 import { store as coreDataStore } from '@wordpress/core-data';
 import { SmartTokenControl } from '@popup-maker/components';
 
@@ -193,7 +194,7 @@ const ObjectSelectField = ( {
 					}
 
 					return 'postType' === entityKind
-						? suggestion.title.rendered
+						? decodeEntities( suggestion.title.rendered )
 						: suggestion.name;
 				} }
 				renderSuggestion={ ( item ) => {
@@ -205,8 +206,10 @@ const ObjectSelectField = ( {
 					return (
 						<>
 							{ 'postType' === entityKind
-								? suggestion.title.rendered ??
-								  suggestion.title.raw
+								? decodeEntities(
+									suggestion.title.rendered ??
+									suggestion.title.raw
+								)
 								: suggestion.name }
 						</>
 					);

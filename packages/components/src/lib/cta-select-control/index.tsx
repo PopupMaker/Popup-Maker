@@ -1,6 +1,7 @@
 import { useSelect } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
 import { useDebounce } from '@wordpress/compose';
+import { decodeEntities } from '@wordpress/html-entities';
 import { __, sprintf } from '@popup-maker/i18n';
 import { callToActionStore } from '@popup-maker/core-data';
 
@@ -130,9 +131,10 @@ const CallToActionSelectControl = <
 					if ( ! suggestion ) {
 						return getTokenValue( token );
 					}
-					return (
+					return decodeEntities(
 						suggestion.title.rendered ??
-						( suggestion.title.raw || suggestion.title.rendered )
+							( suggestion.title.raw ||
+								suggestion.title.rendered )
 					);
 				} }
 				renderSuggestion={ ( item ) => {
@@ -142,9 +144,11 @@ const CallToActionSelectControl = <
 					}
 					return (
 						<>
-							{ suggestion.title.rendered ??
-								( suggestion.title.raw ||
-									suggestion.title.rendered ) }
+							{ decodeEntities(
+								suggestion.title.rendered ??
+									( suggestion.title.raw ||
+										suggestion.title.rendered )
+							) }
 						</>
 					);
 				} }

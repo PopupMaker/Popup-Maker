@@ -1,7 +1,9 @@
 import clsx from 'clsx';
 
-import { __, sprintf } from '@popup-maker/i18n';
 import { Button } from '@wordpress/components';
+import { decodeEntities } from '@wordpress/html-entities';
+
+import { __, sprintf } from '@popup-maker/i18n';
 
 const { popups = [] } = window.popupMakerBlockEditor;
 
@@ -30,7 +32,7 @@ function PopupView( {
 		? /* translators: %s = popup title */
 		  sprintf(
 				__( 'Open "%s" popup', 'popup-maker' ),
-				popup.title.rendered
+				decodeEntities( popup.title.rendered )
 		  )
 		: '';
 

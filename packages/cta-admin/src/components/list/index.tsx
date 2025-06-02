@@ -8,6 +8,7 @@ import {
 } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { info, search, trash } from '@wordpress/icons';
+import { decodeEntities } from '@wordpress/html-entities';
 
 import { __ } from '@popup-maker/i18n';
 import { noop } from '@popup-maker/utils';
@@ -250,8 +251,10 @@ const List = () => {
 														}
 													>
 														{
-															callToAction.title
-																.rendered
+															decodeEntities(
+																callToAction.title
+																	.rendered
+															)
 														}
 													</Button>
 
