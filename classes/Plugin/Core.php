@@ -8,7 +8,7 @@
 
 namespace PopupMaker\Plugin;
 
-use PopupMaker\Base\Container;
+use PopupMaker\Plugin\Container;
 use PopupMaker\Interfaces\Controller;
 
 defined( 'ABSPATH' ) || exit;
@@ -18,23 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since X.X.X
  */
-class Core {
-
-	/**
-	 * Exposed container.
-	 *
-	 * @var Container
-	 */
-	public $container;
-
-	/**
-	 * Array of controllers.
-	 *
-	 * Useful to unhook actions/filters from global space.
-	 *
-	 * @var Container
-	 */
-	public $controllers;
+final class Core extends \PopupMaker\Plugin\Container {
 
 	/**
 	 * Initiate the plugin.
@@ -42,34 +26,32 @@ class Core {
 	 * @param array<string,string|bool> $config Configuration variables passed from main plugin file.
 	 */
 	public function __construct( $config ) {
-		$this->container   = new Container( $config );
-		$this->controllers = new Container();
-
-		$this->register_services();
-		$this->define_paths();
-		$this->initiate_controllers();
+		parent::__construct( $config );
 
 		$this->check_version();
-
-		add_action( 'init', [ $this, 'load_textdomain' ] );
 	}
 
 	/**
-	 * Check if this is the core plugin or an extension.
+	 * Update & track version info.
 	 *
-	 * @return bool
+	 * @return array<string,\PopupMaker\Base\Controller>
 	 */
-	public function is_core_plugin() {
-		return get_called_class() === __CLASS__;
-	}
-
-	/**
-	 * Check if this is the core plugin or an extension.
-	 *
-	 * @return bool
-	 */
-	public function is_addon_plugin() {
-		return ! $this->is_core_plugin();
+	protected function registered_controllers() {
+		return [
+			'Admin'         => new \PopupMaker\Controllers\Admin( $this ),
+			'Assets'        => new \PopupMaker\Controllers\Assets( $this ),
+			'CallToActions' => new \PopupMaker\Controllers\CallToActions( $this ),
+			'Compatibility' => new \PopupMaker\Controllers\Compatibility( $this ),
+			'Debug'         => new \PopupMaker\Controllers\Debug( $this ),
+			'PostTypes'     => new \PopupMaker\Controllers\PostTypes( $this ),
+			'RestAPI'       => new \PopupMaker\Controllers\RestAPI( $this ),
+			'WP'            => new \PopupMaker\Controllers\WP( $this ),
+			'Frontend'      => new \PopupMaker\Controllers\Frontend( $this ),
+			// 'BlockEditor'            => new \PopupMaker\Controllers\BlockEditor( $this ),
+			// 'Frontend'               => new \PopupMaker\Controllers\Frontend( $this ),
+			// 'Shortcodes'             => new \PopupMaker\Controllers\Shortcodes( $this ),
+			// 'TrustedLoginController' => new \PopupMaker\Controllers\TrustedLogin( $this ),
+		];
 	}
 
 	/**
@@ -154,31 +136,20 @@ class Core {
 	protected function process_version_data_migration( $data ) {
 		// This class can be extended for addons, only do the following if this is core and not an extended class.
 		// If the current instance is not an extended class, check if old settings exist.
-		if ( $this->is_core_plugin() ) {
-			$version         = \PopupMaker\detect_previous_install_version();
-			$initial_version = \PopupMaker\detect_initial_install_version();
-			$installed_on    = \PopupMaker\detect_initial_install_date();
-			$upgraded_from   = get_option( 'pum_ver_upgraded_from', null );
+		$version         = \PopupMaker\detect_previous_install_version();
+		$initial_version = \PopupMaker\detect_initial_install_version();
+		$installed_on    = \PopupMaker\detect_initial_install_date();
+		$upgraded_from   = get_option( 'pum_ver_upgraded_from', null );
 
-			$data = [
-				// Setting to 0.0.0 if not set forces a "migration" to run.
-				'version'         => $version ? $version : '0.0.0',
-				'upgraded_from'   => $upgraded_from ? (string) $upgraded_from : null,
-				'initial_version' => $initial_version ? $initial_version : $version,
-				'installed_on'    => $installed_on,
-			];
-		}
+		$data = [
+			// Setting to 0.0.0 if not set forces a "migration" to run.
+			'version'         => $version ? $version : '0.0.0',
+			'upgraded_from'   => $upgraded_from ? (string) $upgraded_from : null,
+			'initial_version' => $initial_version ? $initial_version : $version,
+			'installed_on'    => $installed_on,
+		];
 
 		return $data;
-	}
-
-	/**
-	 * Internationalization.
-	 *
-	 * @return void
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain( $this->container['text_domain'], false, $this->get_path( 'languages' ) );
 	}
 
 	/**
@@ -186,16 +157,11 @@ class Core {
 	 *
 	 * @return void
 	 */
-	public function register_services() {
-		/**
-		 * Self reference for deep DI lookup.
-		 */
-		$this->container['plugin'] = $this;
-
+	protected function register_services() {
 		/**
 		 * Attach our container to the global.
 		 */
-		$GLOBALS[ $this->get( 'option_prefix' ) ] = $this->container;
+		$GLOBALS[ $this->get( 'option_prefix' ) ] = $this;
 
 		/**
 		 * Check if this is the core plugin.
@@ -203,232 +169,137 @@ class Core {
 		 * Because extensions extend this class for access to services,
 		 * we only want to load the core services if this is the core plugin.
 		 */
-		if ( $this->is_core_plugin() ) {
-			$this->container['options'] =
-				/**
-				 * Get plugin options.
-				 *
-				 * @return \PopupMaker\Services\Options
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Options( $container );
-				};
-
-			$this->container['connect'] =
-				/**
-				 * Get plugin connect.
-				 *
-				 * @return Connect
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Connect( $container );
-				};
-
-			$this->container['license'] =
-				/**
-				 * Get plugin license.
-				 *
-				 * @return License
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\License( $container );
-				};
-
-			$this->container['logging'] =
-				/**
-				 * Get plugin logging.
-				 *
-				 * @return Logging
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Logging( $container );
-				};
-
-			$this->container['upgrader'] =
-				/**
-				 * Get plugin upgrader.
-				 *
-				 * @return Upgrader
-				 */
-				function ( $container ) {
-					return new \PopupMaker\Services\Upgrader( $container );
-				};
-
-			// $this->container['rules'] =
-				/**
-				 * Get plugin rules.
-				 *
-				 * @return \PopupMaker\RuleEngine\Rules
-				 */
-				// function () {
-				// return new \PopupMaker\RuleEngine\Rules();
-				// };
-
-			// $this->container['restrictions'] =
-				/**
-				 * Get plugin restrictions.
-				 *
-				 * @return \PopupMaker\Services\Restrictions
-				 */
-				// function () {
-				// return new \PopupMaker\Services\Restrictions();
-				// };
-
-			// $this->container['globals'] =
-				/**
-				 * Get plugin global manager.
-				 *
-				 * @return \PopupMaker\Services\Globals
-				 */
-				// function () {
-				// return new \PopupMaker\Services\Globals();
-				// };
-		}
-
-		apply_filters( "{$this->get( 'option_prefix' )}/register_services", $this->container, $this );
-	}
-
-	/**
-	 * Update & track version info.
-	 *
-	 * @return array<string,\PopupMaker\Base\Controller>
-	 */
-	protected function registered_controllers() {
-		return [
-			// 'PostTypes'     => new \PopupMaker\Controllers\PostTypes( $this ),
-			'Assets' => new \PopupMaker\Controllers\Assets( $this ),
-			'Admin'  => new \PopupMaker\Controllers\Admin( $this ),
-			// 'Compatibility' => new \PopupMaker\Controllers\Compatibility( $this ),
-			// 'RestAPI'                => new \PopupMaker\Controllers\RestAPI( $this ),
-			// 'BlockEditor'            => new \PopupMaker\Controllers\BlockEditor( $this ),
-			// 'Frontend'               => new \PopupMaker\Controllers\Frontend( $this ),
-			// 'Shortcodes'             => new \PopupMaker\Controllers\Shortcodes( $this ),
-			// 'TrustedLoginController' => new \PopupMaker\Controllers\TrustedLogin( $this ),
-		];
-	}
-
-	/**
-	 * Initiate internal components.
-	 *
-	 * @return void
-	 */
-	protected function initiate_controllers() {
-		$this->register_controllers( $this->registered_controllers() );
-	}
-
-	/**
-	 * Register controllers.
-	 *
-	 * @param array<string,Controller> $controllers Array of controllers.
-	 * @return void
-	 */
-	public function register_controllers( $controllers = [] ) {
-		foreach ( $controllers as $name => $controller ) {
-			if ( $controller instanceof Controller ) {
-				if ( $controller->controller_enabled() ) {
-					$controller->init();
-				}
-				$this->controllers->set( $name, $controller );
+		$this->set(
+			'options',
+			/**
+			 * Get plugin options.
+			 *
+			 * @return \PopupMaker\Services\Options
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Options( $container );
 			}
-		}
-	}
+		);
 
-	/**
-	 * Get a controller.
-	 *
-	 * @param string $name Controller name.
-	 *
-	 * @return Controller|null
-	 */
-	public function get_controller( $name ) {
-		$controller = $this->controllers->get( $name );
-
-		if ( $controller instanceof Controller ) {
-			return $controller;
-		}
-
-		return null;
-	}
-
-	/**
-	 * Initiate internal paths.
-	 *
-	 * @return void
-	 */
-	protected function define_paths() {
-		/**
-		 * Attach utility functions.
-		 */
-		$this->container['get_path'] = [ $this, 'get_path' ];
-		$this->container['get_url']  = [ $this, 'get_url' ];
-
-		// Define paths.
-		$this->container['dist_path'] = $this->get_path( 'dist' ) . '/';
-	}
-
-	/**
-	 * Utility method to get a path.
-	 *
-	 * @param string $path Subpath to return.
-	 * @return string
-	 */
-	public function get_path( $path = '' ) {
-		return $this->container['path'] . $path;
-	}
-
-	/**
-	 * Utility method to get a url.
-	 *
-	 * @param string $path Sub url to return.
-	 * @return string
-	 */
-	public function get_url( $path = '' ) {
-		return $this->container['url'] . $path;
-	}
-
-	/**
-	 * Get item from container
-	 *
-	 * @param string $id Key for the item.
-	 *
-	 * @return mixed Current value of the item.
-	 */
-	public function get( $id ) {
-		// 1. Check if the item exists in the container.
-		if ( $this->container->offsetExists( $id ) ) {
-			return $this->container->get( $id );
-		}
-
-		// 2. Check if the item exists in the controllers container.
-		if ( $this->controllers->offsetExists( $id ) ) {
-			return $this->controllers->get( $id );
-		}
-
-		// 3. Check if the item exists in the global space.
-		if ( $this->is_addon_plugin() ) {
-			// If this is an addon, check if the service exists in the core plugin.
-			// Get core plugin container and see if the service exists there.
-			$plugin_service = \PopupMaker\plugin( $id );
-
-			if ( $plugin_service ) {
-				return $plugin_service;
+		$this->set(
+			'connect',
+			/**
+			 * Get plugin connect.
+			 *
+			 * @return Connect
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Connect( $container );
 			}
-		}
+		);
 
-		// 5. Return null, item not found.
-		return null;
+		$this->set(
+			'license',
+			/**
+			 * Get plugin license.
+			 *
+			 * @return License
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\License( $container );
+			}
+		);
+
+		$this->set(
+			'logging',
+			/**
+			 * Get plugin logging.
+			 *
+			 * @return Logging
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Logging( $container );
+			}
+		);
+
+		$this->set(
+			'upgrader',
+			/**
+			 * Get plugin upgrader.
+			 *
+			 * @return Upgrader
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Upgrader( $container );
+			}
+		);
+
+		$this->set(
+			'popups',
+			/**
+			 * Get user popups from the database.
+			 *
+			 * @return \PopupMaker\Services\Repository\Popups
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Repository\Popups( $container );
+			}
+		);
+
+		$this->set(
+			'ctas',
+			/**
+			 * Get user call to actions from the database.
+			 *
+			 * @return \PopupMaker\Services\Repository\CallToActions
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Repository\CallToActions( $container );
+			}
+		);
+
+		$this->set(
+			'cta_types',
+			/**
+			 * Get registered call to actions types.
+			 *
+			 * @return \PopupMaker\Services\Collector\CallToActionTypes
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Collector\CallToActionTypes( $container );
+			}
+		);
+
+		// $this->set(
+		// 'rules',
+			/**
+			 * Get plugin rules.
+			 *
+			 * @return \PopupMaker\RuleEngine\Rules
+			 */
+			// function () {
+			// return new \PopupMaker\RuleEngine\Rules();
+			// }
+		// );
+
+		$this->set(
+			'globals',
+			/**
+			 * Get plugin global manager.
+			 *
+			 * @return \PopupMaker\Services\Globals
+			 */
+			function () {
+				return new \PopupMaker\Services\Globals();
+			}
+		);
+
+		do_action( 'popup_maker/register_services', $this );
 	}
 
 	/**
-	 * Set item in container
+	 * Get the options service.
 	 *
-	 * @param string $id Key for the item.
-	 * @param mixed  $value Value to set.
-	 *
-	 * @return void
+	 * @return \PopupMaker\Services\Options
+	 * @throws \PopupMaker\Vendor\Pimple\Exception\UnknownIdentifierException
 	 */
-	public function set( $id, $value ) {
-		$this->container->set( $id, $value );
+	public function options() {
+		return $this->get( 'options' );
 	}
 
 	/**
@@ -447,7 +318,7 @@ class Core {
 			return \PUM_Utils_Options::get( $key, $default_value );
 		}
 
-		return $this->get( 'options' )->get( $key, $default_value );
+		return $this->options()->get( $key, $default_value );
 	}
 
 	/**
@@ -458,7 +329,7 @@ class Core {
 	public function get_permissions() {
 		$permissions = \PopupMaker\get_default_permissions();
 
-		$user_permisions = $this->get( 'options' )->get( 'permissions', [] );
+		$user_permisions = $this->options()->get( 'permissions', [] );
 
 		if ( ! empty( $user_permisions ) ) {
 			foreach ( $user_permisions as $cap => $user_permission ) {

@@ -3816,7 +3816,7 @@
 									if (
 										! results ||
 										! results.results ||
-										! $.isArray( results.results )
+										! Array.isArray( results.results )
 									) {
 										console.error(
 											'Select2: The AJAX results did not return an array in the ' +
@@ -3873,7 +3873,7 @@
 
 				decorated.call( this, $element, options );
 
-				if ( $.isArray( tags ) ) {
+				if ( Array.isArray( tags ) ) {
 					for ( var t = 0; t < tags.length; t++ ) {
 						var tag = tags[ t ];
 						var item = this._normalizeItem( tag );
@@ -5260,7 +5260,7 @@
 						}
 					}
 
-					if ( $.isArray( options.language ) ) {
+					if ( Array.isArray( options.language ) ) {
 						var languages = new Translation();
 						options.language.push( 'en' );
 
@@ -6123,7 +6123,7 @@
 
 					var newVal = args[ 0 ];
 
-					if ( $.isArray( newVal ) ) {
+					if ( Array.isArray( newVal ) ) {
 						newVal = $.map( newVal, function ( obj ) {
 							return obj.toString();
 						} );
@@ -6425,7 +6425,7 @@
 						function ( data ) {
 							self._isInitialized = true;
 
-							if ( ! $.isArray( data ) ) {
+							if ( ! Array.isArray( data ) ) {
 								data = [ data ];
 							}
 
@@ -6797,10 +6797,16 @@
 				setup: function () {
 					if ( this.addEventListener ) {
 						for ( var i = toBind.length; i;  ) {
+							// Add passive option for wheel events
+							var options =
+								toBind[ --i ] === 'wheel'
+									? { passive: true }
+									: false;
+
 							this.addEventListener(
-								toBind[ --i ],
+								toBind[ i ],
 								handler,
-								false
+								options
 							);
 						}
 					} else {

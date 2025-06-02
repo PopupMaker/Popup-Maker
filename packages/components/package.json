@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/components",
-	"version": "1.0.0",
+	"version": "1.0.0-beta.2",
 	"description": "Popup Maker Components",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
@@ -11,16 +11,19 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/components/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/components"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "build/index",
-	"types": "build-types",
+	"main": "build/index.js",
+	"module": "src/index.js",
+	"types": "build-types/index.d.ts",
+	"wpScript": true,
 	"dependencies": {
 		"@popup-maker/core-data": "*",
+		"@popup-maker/i18n": "*",
 		"@popup-maker/utils": "*",
 		"@wordpress/base-styles": "^5.14.0",
 		"@wordpress/components": "^29.0.0",
@@ -28,7 +31,6 @@
 		"@wordpress/core-data": "^7.14.0",
 		"@wordpress/data": "^10.14.0",
 		"@wordpress/element": "^6.14.0",
-		"@wordpress/i18n": "^5.14.0",
 		"@wordpress/icons": "^10.14.0",
 		"@wordpress/keycodes": "^4.14.0",
 		"@wordpress/url": "^4.14.0",
@@ -43,9 +45,21 @@
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
 		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",
 		"packages-update": "wp-scripts packages-update"
-	}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
 }

@@ -1,34 +1,38 @@
 import { useMemo } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 
-import { settingsStore } from '../settings/index';
+import { settingsStore } from '../settings';
 
 import type { Settings } from '../settings/types';
 
 const useSettings = () => {
 	// Fetch needed data from the @popup-paker/core-data & @wordpress/data stores.
 	const { currentSettings, unsavedChanges, hasUnsavedChanges, isSaving } =
-		useSelect( ( select ) => {
-			const storeSelect = select( settingsStore );
-			return {
-				unsavedChanges: storeSelect.getUnsavedChanges(),
-				hasUnsavedChanges: storeSelect.hasUnsavedChanges(),
-				currentSettings: storeSelect.getSettings(),
-				isSaving:
-					storeSelect.isDispatching( 'updateSettings' ) ||
-					storeSelect.isDispatching( 'saveSettings' ),
-			};
-		}, [] );
+		useSelect(
+			( select ) => {
+				const storeSelect = select( settingsStore );
+				return {
+					unsavedChanges: storeSelect.getUnsavedChanges(),
+					hasUnsavedChanges: storeSelect.hasUnsavedChanges(),
+					currentSettings: storeSelect.getSettings(),
+					isSaving:
+						storeSelect.isResolving( 'updateSettings' ) ||
+						storeSelect.isResolving( 'saveSettings' ),
+				};
+			},
+			// TODO REVIEW: Should this have any dependencies to refresh the data?
+			[]
+		);
 
 	// Grab needed action dispatchers.
 	const { updateSettings, saveSettings, stageUnsavedChanges } =
 		useDispatch( settingsStore );
 
 	// Merge current & unsaved changes.
-	const settings = useMemo(
+	const settings = useMemo< Settings >(
 		() => ( { ...currentSettings, ...unsavedChanges } ),
 		[ currentSettings, unsavedChanges ]
-	) as Settings;
+	);
 
 	/**
 	 * Get setting by name.

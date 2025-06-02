@@ -5,7 +5,7 @@
 		"paths": {}
 	},
 	"include": [ "src/**/*" ],
-	"exclude": [ "**/node_modules/**" ],
+
 	"references": [
 		{
 			"path": "./packages/admin-bar"
@@ -26,13 +26,31 @@
 			"path": "./packages/core-data"
 		},
 		{
+			"path": "./packages/cta-admin"
+		},
+		{
+			"path": "./packages/cta-editor"
+		},
+		{
 			"path": "./packages/data"
 		},
 		{
 			"path": "./packages/fields"
 		},
 		{
+			"path": "./packages/i18n"
+		},
+		{
 			"path": "./packages/icons"
+		},
+		{
+			"path": "./packages/registry"
+		},
+		{
+			"path": "./packages/types"
+		},
+		{
+			"path": "./packages/use-query-params"
 		},
 		{
 			"path": "./packages/utils"

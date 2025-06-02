@@ -27,6 +27,7 @@ class PUM_Admin_BlockEditor {
 		// TODO Test if this is needed in core or not.
 		add_action( 'enqueue_block_editor_assets', [ 'PUM_Site_Assets', 'register_styles' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
+		add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
 		add_action( 'wp_loaded', [ __CLASS__, 'add_attributes_to_registered_blocks' ], 999 );
 	}
 
@@ -39,7 +40,33 @@ class PUM_Admin_BlockEditor {
 	 * @since 1.10.0
 	 */
 	public static function register_editor_assets( $hook ) {
+		if ( self::load_block_library() ) {
+			wp_enqueue_script( 'popup-maker-block-library' );
+		}
+
 		wp_enqueue_script( 'popup-maker-block-editor' );
+	}
+
+	/**
+	 * Register block assets.
+	 *
+	 * @param string $hook Current page hook.
+	 */
+	public static function register_block_assets( $hook ) {
+		if ( self::load_block_library() ) {
+			wp_enqueue_script( 'popup-maker-block-library' );
+		}
+
+		wp_enqueue_style( 'popup-maker-block-library-style' );
+	}
+
+	/**
+	 * Check if the block library should be loaded.
+	 *
+	 * @return bool
+	 */
+	private static function load_block_library() {
+		return apply_filters( 'popup_maker/block_editor/load_block_library', pum_is_popup_editor() || ! is_admin() );
 	}
 
 	/**

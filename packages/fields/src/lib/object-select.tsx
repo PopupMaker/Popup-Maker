@@ -1,6 +1,6 @@
 import { useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@popup-maker/i18n';
 import { useDebounce } from '@wordpress/compose';
 import { store as coreDataStore } from '@wordpress/core-data';
 import { SmartTokenControl } from '@popup-maker/components';

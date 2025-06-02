@@ -8,8 +8,8 @@
 
 namespace PopupMaker\Controllers\Admin;
 
-use Popup_Maker;
 use PUM_Site_Popups;
+use PopupMaker\Plugin\Controller;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since X.X.X
  */
-class Toolbar extends \PopupMaker\Controllers\Admin {
+class Toolbar extends Controller {
 
 	/**
 	 * Initializes this module.
@@ -131,9 +131,9 @@ class Toolbar extends \PopupMaker\Controllers\Admin {
 						'id'     => $node_id . '-open',
 						'title'  => __( 'Open Popup', 'popup-maker' ),
 						'meta'   => [
-							'onclick' => 'PUM.open(' . $popup->ID . '); return false;',
+							'class' => 'pum-toolbar-action',
 						],
-						'href'   => '#popup-maker-open-popup-' . $popup->ID,
+						'href'   => '#pum-toolbar-action__open--' . $popup->ID,
 						'parent' => $node_id,
 					]
 				);
@@ -143,9 +143,9 @@ class Toolbar extends \PopupMaker\Controllers\Admin {
 						'id'     => $node_id . '-close',
 						'title'  => __( 'Close Popup', 'popup-maker' ),
 						'meta'   => [
-							'onclick' => 'PUM.close(' . $popup->ID . '); return false;',
+							'class' => 'pum-toolbar-action',
 						],
-						'href'   => '#popup-maker-close-popup-' . $popup->ID,
+						'href'   => '#pum-toolbar-action__close--' . $popup->ID,
 						'parent' => $node_id,
 					]
 				);
@@ -156,9 +156,9 @@ class Toolbar extends \PopupMaker\Controllers\Admin {
 							'id'     => $node_id . '-conditions',
 							'title'  => __( 'Check Conditions', 'popup-maker' ),
 							'meta'   => [
-								'onclick' => 'alert(PUM.checkConditions(' . $popup->ID . ') ? "Pass" : "Fail"); return false;',
+								'class' => 'pum-toolbar-action',
 							],
-							'href'   => '#popup-maker-check-conditions-popup-' . $popup->ID,
+							'href'   => '#pum-toolbar-action__check-conditions--' . $popup->ID,
 							'parent' => $node_id,
 						]
 					);
@@ -169,9 +169,9 @@ class Toolbar extends \PopupMaker\Controllers\Admin {
 						'id'     => $node_id . '-reset-cookies',
 						'title'  => __( 'Reset Cookies', 'popup-maker' ),
 						'meta'   => [
-							'onclick' => 'PUM.clearCookies(' . $popup->ID . '); alert("' . __( 'Success', 'popup-maker' ) . '"); return false;',
+							'class' => 'pum-toolbar-action',
 						],
-						'href'   => '#popup-maker-reset-cookies-popup-' . $popup->ID,
+						'href'   => '#pum-toolbar-action__reset-cookies--' . $popup->ID,
 						'parent' => $node_id,
 					]
 				);
@@ -192,7 +192,7 @@ class Toolbar extends \PopupMaker\Controllers\Admin {
 			$wp_admin_bar->add_node(
 				[
 					'id'     => 'no-popups-loaded',
-					'title'  => $popup_labels->no_items,
+					'title'  => __( 'No Popups Loaded', 'popup-maker' ) . '<strong style="color:#fff; margin-left: 5px;">?</strong>',
 					'href'   => 'https://wppopupmaker.com/docs/problem-solving/troubleshooting-your-first-popup/?utm_campaign=contextual-help&utm_medium=inline-doclink&utm_source=plugin-admin-bar&utm_content=no-popups-loaded',
 					'parent' => 'popups',
 					'meta'   => [
@@ -278,8 +278,7 @@ class Toolbar extends \PopupMaker\Controllers\Admin {
 		static $popups;
 
 		if ( ! isset( $popups ) ) {
-			$loaded = PUM_Site_Popups::get_loaded_popups();
-			$popups = $loaded->posts;
+			$popups = $this->container->get_controller( 'Frontend\Popups' )->get_loaded_popups();
 		}
 
 		return $popups;

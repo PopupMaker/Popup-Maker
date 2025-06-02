@@ -13,13 +13,13 @@ const eslintConfig = {
 	env: {
 		jquery: true,
 	},
-	// parserOptions: {
-	// 	requireConfigFile: false,
-	// 	babelOptions: {
-	// 		presets: [ require.resolve( '@wordpress/babel-preset-default' ) ],
-	// 	},
-	// },
 	rules: {
+		'@wordpress/i18n-text-domain': [
+			'error',
+			{
+				allowedTextDomain: [ 'popup-maker' ],
+			},
+		],
 		'import/no-unresolved': [
 			'error',
 			{

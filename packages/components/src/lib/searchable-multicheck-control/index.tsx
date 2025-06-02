@@ -10,7 +10,7 @@ import {
 } from '@wordpress/components';
 import { useInstanceId } from '@wordpress/compose';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { chevronDown, chevronUp } from '@wordpress/icons';
 
 import type { IconType } from '@wordpress/components';
@@ -75,6 +75,7 @@ const SearchableMulticheckControl = < T extends string | number >( {
 				'component-searchable-multicheck-control',
 				className,
 			] ) }
+			__nextHasNoMarginBottom
 		>
 			<div className="select-actions">
 				<Button
@@ -173,6 +174,7 @@ const SearchableMulticheckControl = < T extends string | number >( {
 										onChange={ () =>
 											toggleOption( optValue )
 										}
+										__nextHasNoMarginBottom
 									/>
 								</th>
 							</tr>

@@ -7,5 +7,15 @@
 	},
 	"include": [ "./src/**/*" ],
 	"types": [ "jquery" ],
-	"references": []
+	"references": [
+		{
+			"path": "../components"
+		},
+		{
+			"path": "../core-data"
+		},
+		{
+			"path": "../icons"
+		}
+	]
 }

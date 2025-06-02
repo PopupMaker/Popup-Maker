@@ -1,3 +1,19 @@
-import { registerBlockType } from '@wordpress/blocks';
+import domReady from '@wordpress/dom-ready';
 
-[].forEach( ( { name, settings } ) => registerBlockType( name, settings ) );
+// import './lib/call-to-action';
+
+import * as blocks from './lib';
+
+declare global {
+	interface Window {
+		popupMakerBlockLibrary: {
+			homeUrl: string;
+		};
+	}
+}
+
+domReady( () => {
+	Object.values( blocks ).forEach( ( { init } ) => {
+		init();
+	} );
+} );

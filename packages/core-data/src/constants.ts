@@ -1,8 +1,15 @@
-export enum Status {
+export enum DispatchStatus {
 	Idle = 'IDLE',
 	Resolving = 'RESOLVING',
 	Error = 'ERROR',
 	Success = 'SUCCESS',
 }
 
-export type Statuses = ( typeof Status )[ keyof typeof Status ];
+export type DispatchStatuses =
+	( typeof DispatchStatus )[ keyof typeof DispatchStatus ];
+
+export type ResolutionState = {
+	status: DispatchStatuses;
+	error?: string;
+	timestamp?: number;
+};

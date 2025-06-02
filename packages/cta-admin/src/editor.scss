@@ -1,0 +1,97 @@
+#wpcontent {
+	padding: 0;
+}
+
+.popup-maker-call-to-actions-page {
+	.popup-maker-call-to-actions-page__header {
+		background-color: #fff;
+		border-bottom: 1px solid #ddd;
+		padding-right: 20px;
+
+		display: flex;
+		align-items: center;
+		gap: 20px;
+
+		.branding {
+			margin: 0 30px;
+
+			a {
+				display: flex;
+				align-items: center;
+				color: inherit;
+				text-decoration: none;
+			}
+
+			img {
+				margin-right: 10px;
+				max-height: 1.25em;
+			}
+		}
+
+		.tabs {
+			flex-grow: 1;
+		}
+
+		.components-tab-panel__tabs-item {
+			font-size: 1.125em;
+			height: 60px;
+			color: #1e1e1e;
+			text-decoration: none;
+
+			&.is-active {
+				box-shadow:
+					inset 0 0 0 var(--wp-admin-border-width-focus) #0000,
+					inset 0 -4px 0 0 var(--wp-admin-theme-color);
+			}
+
+			&:hover {
+				color: var(--wp-admin-theme-color);
+			}
+		}
+
+		.components-tab-panel__tabs-item {
+			&.upgrade {
+				margin-left: auto;
+
+				svg {
+					margin-right: 5px;
+				}
+
+				&:hover {
+					svg path {
+						fill: var(--wp-admin-theme-color);
+					}
+				}
+			}
+
+			&.support-link {
+				margin-left: auto;
+			}
+		}
+	}
+	.popup-maker-call-to-actions-page__content {
+		padding: 20px;
+	}
+
+	.components-base-control__label,
+	.components-input-control__label,
+	.components-toggle-control__label,
+	.components-checkbox-control__label {
+		text-transform: none !important;
+		font-weight: 500 !important;
+		font-size: 13px !important;
+	}
+}
+
+.branding-pro-tag {
+	background-color: #007cba;
+	border-radius: 1em;
+	color: #fff;
+	font-size: 13px;
+	display: inline-block;
+	line-height: 1;
+	padding: 5px 8px;
+	vertical-align: middle;
+	text-align: center;
+	margin: 0 10px;
+}

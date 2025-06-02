@@ -2,7 +2,7 @@ import './editor.scss';
 
 import clsx from 'clsx';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { BaseControl } from '@wordpress/components';
 import { useEffect, useRef } from '@wordpress/element';
 import { F10, isKeyboardEvent } from '@wordpress/keycodes';
@@ -34,6 +34,7 @@ declare global {
 				initialize: ( id: string, settings: any ) => void;
 				remove: ( id: string ) => void;
 			};
+			blocks?: unknown;
 		};
 	}
 }
@@ -268,6 +269,7 @@ const FreeFormEditControl = < T extends string >( props: Props< T > ) => {
 				'component-freeform-edit-control',
 				className,
 			] ) }
+			__nextHasNoMarginBottom
 		>
 			<div
 				key="toolbar"

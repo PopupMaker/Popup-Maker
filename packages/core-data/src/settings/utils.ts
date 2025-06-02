@@ -1,1 +1,1 @@
-export const getResourcePath = () => 'popup-paker/v2/settings';
+export const apiPath = () => 'popup-maker/v2/settings';

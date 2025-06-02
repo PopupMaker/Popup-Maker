@@ -4,6 +4,7 @@
 	"description": "Popup Maker Admin Bar",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
+	"private": true,
 	"keywords": [
 		"wordpress",
 		"popup-maker"
@@ -11,16 +12,20 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/admin-bar/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git"
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/admin-bar"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"publishConfig": {
+		"access": "restricted"
 	},
 	"main": "build/index",
 	"types": "build-types",
 	"dependencies": {
 		"@medv/finder": "^3.2.0",
-		"@wordpress/i18n": "^5.13.0"
+		"@popup-maker/i18n": "*"
 	},
 	"devDependencies": {
 		"@types/jquery": "^3.5.32"
@@ -28,6 +33,7 @@
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
 		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",

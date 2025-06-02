@@ -75,8 +75,8 @@ const SelectField = ( {
 					: value
 			}
 			onChange={ onChange }
-			/* @ts-ignore - This exists on all controls, but is not fully typed. */
-			__nextHasNoMarginBottom={ true }
+			__next40pxDefaultSize
+			__nextHasNoMarginBottom
 		>
 			{ hasOptGroups( options ) ? (
 				<OptGroups optGroups={ options } />

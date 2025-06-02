@@ -1,29 +1,34 @@
-import { Status } from '../constants';
+import { createSelector } from '@wordpress/data';
+
+import { DispatchStatus } from '../constants';
 import { licenseStatusDefaults } from './constants';
 
+import type { State } from './reducer';
 import type {
 	License,
 	LicenseKey,
 	LicenseStatus,
-	LicenseState,
-	LicenseStore,
 	LicenseConnect,
+	StoreActionNames,
 } from './types';
 
 /**
+ * Get license
  *
- * @param {LicenseState} state Current state.
- * @return {License}           License data.
+ * @param {State} state State.
+ *
+ * @return {License} License.
  */
-export const getLicenseData = ( state: LicenseState ): License => state.license;
+export const getLicenseData = ( state: State ): License => state.license;
 
 /**
  * Get license key.
  *
- * @param {LicenseState} state Current state.
- * @return {LicenseKey} Current license key.
+ * @param {State} state State.
+ *
+ * @return {LicenseKey} License key.
  */
-export const getLicenseKey = ( state: LicenseState ): LicenseKey => {
+export const getLicenseKey = ( state: State ): LicenseKey => {
 	const { key } = getLicenseData( state );
 	return key;
 };
@@ -31,100 +36,119 @@ export const getLicenseKey = ( state: LicenseState ): LicenseKey => {
 /**
  * Get license status.
  *
- * @param {LicenseState} state LicenseState Current state.
- * @return {LicenseStatus} Current license status.
+ * @param {State} state State.
+ *
+ * @return {LicenseStatus} License status.
  */
-export const getLicenseStatus = ( state: LicenseState ): LicenseStatus => {
-	const { status } = getLicenseData( state );
+export const getLicenseStatus = createSelector(
+	( state: State ): LicenseStatus => {
+		const { status } = getLicenseData( state );
 
-	return {
-		...licenseStatusDefaults,
-		...status,
-	};
-};
+		return {
+			...licenseStatusDefaults,
+			...status,
+		};
+	},
+	( state: State ) => [ state.license.status ]
+);
 
 /**
  * Get connect info for pro upgrade.
  *
- * @param {LicenseState} state LicenseState Current state.
- * @return {LicenseConnect|undefined} Current license status.
+ * @param {State} state State.
+ *
+ * @return {LicenseConnect | undefined} Connect info.
  */
-export const getConnectInfo = (
-	state: LicenseState
-): LicenseConnect | undefined => state.connectInfo;
+export const getConnectInfo = ( state: State ): LicenseConnect | undefined =>
+	state.connectInfo;
 
 /**
  * Get current status for dispatched action.
  *
- * @param {LicenseState}                state      Current state.
- * @param {LicenseStore['ActionNames']} actionName Action name to check.
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
  *
- * @return {string} Current status for dispatched action.
+ * @return {string | undefined} Status.
  */
 export const getDispatchStatus = (
-	state: LicenseState,
-	actionName: LicenseStore[ 'ActionNames' ]
+	state: State,
+	actionName: StoreActionNames
 ): string | undefined => state?.dispatchStatus?.[ actionName ]?.status;
 
 /**
  * Check if action is dispatching.
  *
- * @param {LicenseState}                                              state       Current state.
- * @param {LicenseStore['ActionNames']|LicenseStore['ActionNames'][]} actionNames Action name or array of names to check.
+ * @param {State}                                 state       State.
+ * @param {StoreActionNames | StoreActionNames[]} actionNames Action name or array of action names.
  *
- * @return {boolean} True if is dispatching.
+ * @return {boolean} True if action is dispatching, false otherwise.
  */
-export const isDispatching = (
-	state: LicenseState,
-	actionNames: LicenseStore[ 'ActionNames' ] | LicenseStore[ 'ActionNames' ][]
-): boolean => {
-	if ( ! Array.isArray( actionNames ) ) {
-		return getDispatchStatus( state, actionNames ) === Status.Resolving;
-	}
-
-	let dispatching = false;
-
-	for ( let i = 0; actionNames.length > i; i++ ) {
-		dispatching =
-			getDispatchStatus( state, actionNames[ i ] ) === Status.Resolving;
-
-		if ( dispatching ) {
-			return true;
+export const isDispatching = createSelector(
+	(
+		state: State,
+		actionNames: StoreActionNames | StoreActionNames[]
+	): boolean => {
+		if ( ! Array.isArray( actionNames ) ) {
+			return (
+				getDispatchStatus( state, actionNames ) ===
+				DispatchStatus.Resolving
+			);
 		}
-	}
 
-	return dispatching;
-};
+		let dispatching = false;
+
+		for ( let i = 0; actionNames.length > i; i++ ) {
+			dispatching =
+				getDispatchStatus( state, actionNames[ i ] ) ===
+				DispatchStatus.Resolving;
+
+			if ( dispatching ) {
+				return true;
+			}
+		}
+
+		return dispatching;
+	},
+	( state: State, actionNames: StoreActionNames | StoreActionNames[] ) => [
+		state.dispatchStatus,
+		actionNames,
+	]
+);
 
 /**
  * Check if action has finished dispatching.
  *
- * @param {LicenseState}                state      Current state.
- * @param {LicenseStore['ActionNames']} actionName Action name to check.
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
  *
- * @return {boolean} True if dispatched.
+ * @return {boolean} True if action has finished dispatching, false otherwise.
  */
-export const hasDispatched = (
-	state: LicenseState,
-	actionName: LicenseStore[ 'ActionNames' ]
-): boolean => {
-	const status = getDispatchStatus( state, actionName );
+export const hasDispatched = createSelector(
+	( state: State, actionName: StoreActionNames ): boolean => {
+		const status = getDispatchStatus( state, actionName );
 
-	return !! (
-		status &&
-		( [ Status.Success, Status.Error ] as string[] ).indexOf( status ) >= 0
-	);
-};
+		return !! (
+			status &&
+			(
+				[ DispatchStatus.Success, DispatchStatus.Error ] as string[]
+			 ).indexOf( status ) >= 0
+		);
+	},
+	( state: State, actionName: StoreActionNames ) => [
+		state.dispatchStatus,
+		actionName,
+	]
+);
 
 /**
  * Get dispatch action error if esists.
  *
- * @param {LicenseState}                state      Current state.
- * @param {LicenseStore['ActionNames']} actionName Action name to check.
+ * @param {State}            state      State.
+ * @param {StoreActionNames} actionName Action name.
  *
- * @return {string|undefined} Current error message.
+ * @return {string | undefined} Error.
  */
 export const getDispatchError = (
-	state: LicenseState,
-	actionName: LicenseStore[ 'ActionNames' ]
+	state: State,
+	actionName: StoreActionNames
 ): string | undefined => state?.dispatchStatus?.[ actionName ]?.error;

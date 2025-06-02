@@ -1,6 +1,6 @@
 import { useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@popup-maker/i18n';
 import { useDebounce } from '@wordpress/compose';
 import { store as coreDataStore } from '@wordpress/core-data';
 
@@ -10,7 +10,7 @@ import type { Post, Taxonomy } from '@wordpress/core-data';
 
 import type { Props as SmartTokenControlProps } from '../smart-token-control';
 
-export type Props< T extends number | number[] > = Omit<
+export type Props< T extends number | number[] | string > = Omit<
 	SmartTokenControlProps,
 	'value' | 'onChange' | 'suggestions'
 > & {
@@ -20,6 +20,7 @@ export type Props< T extends number | number[] > = Omit<
 	multiple?: boolean;
 	entityKind: 'postType' | 'taxonomy';
 	entityType?: string;
+	forceRefresh?: boolean;
 };
 
 interface ObjectOption extends Post< 'edit' >, Taxonomy< 'edit' > {}
@@ -35,6 +36,7 @@ const EntitySelectControl = <
 	entityKind = 'postType',
 	entityType = 'post',
 	multiple = false,
+	forceRefresh = false,
 	...inputProps
 }: Props< T > ) => {
 	const [ queryText, setQueryText ] = useState( '' );
@@ -57,7 +59,7 @@ const EntitySelectControl = <
 				  ) as ObjectOption[] )
 				: [],
 		} ),
-		[ value, entityKind, entityType ]
+		[ value, entityKind, entityType, forceRefresh ]
 	);
 
 	const { suggestions = [], isSearching = false } = useSelect(
@@ -82,7 +84,7 @@ const EntitySelectControl = <
 				]
 			),
 		} ),
-		[ entityKind, entityType, queryText ]
+		[ entityKind, entityType, queryText, forceRefresh ]
 	);
 
 	const findSuggestion = ( _id: number | string ) => {
@@ -156,8 +158,20 @@ const EntitySelectControl = <
 				onInputChange={ updateQueryText }
 				onChange={ ( newValue ) => {
 					const val = newValue
-						.map( ( v ) => parseInt( getTokenValue( v ), 10 ) )
-						.filter( ( v ) => ! isNaN( v ) );
+						.map( ( v ) => {
+							const tokenValue = getTokenValue( v );
+							// Check if it's a string (likely from extraOptions)
+							if (
+								typeof tokenValue === 'string' &&
+								! tokenValue.match( /^\d+$/ )
+							) {
+								return tokenValue;
+							}
+							// Otherwise treat as numeric ID
+							const numericValue = parseInt( tokenValue, 10 );
+							return isNaN( numericValue ) ? null : numericValue;
+						} )
+						.filter( ( v ): v is number | string => v !== null );
 
 					onChange( ( multiple ? val : val[ 0 ] ) as T );
 				} }

@@ -2,13 +2,14 @@ import './editor.scss';
 
 import clsx from 'clsx';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { arrowDown, arrowUp } from '@wordpress/icons';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { Button, CheckboxControl, Icon } from '@wordpress/components';
 
 import { useControlledState } from '../utils';
-import type { TableItemBase } from './types';
+import type { TableItemBase, SortConfig } from './types';
+import { SortDirection } from './types';
 
 type Props< T extends TableItemBase > = {
 	items: T[];
@@ -28,6 +29,8 @@ type Props< T extends TableItemBase > = {
 	className?: clsx.ClassValue;
 	selectedItems?: number[];
 	onSelectItems?: ( selectedItems: number[] ) => void;
+	onSort?: ( orderby: string, order: SortDirection ) => void;
+	initialSort?: SortConfig | null;
 };
 
 type CellProps = {
@@ -56,6 +59,8 @@ const ListTable = < T extends TableItemBase >( {
 	className,
 	selectedItems: incomingSelectedItems = [],
 	onSelectItems = () => {},
+	onSort,
+	initialSort,
 }: Props< T > ) => {
 	const cols = { [ idCol ]: columns[ idCol ] ?? '', ...columns };
 	const colCount = Object.keys( cols ).length;
@@ -66,33 +71,16 @@ const ListTable = < T extends TableItemBase >( {
 		onSelectItems
 	);
 
-	const [ sortBy, setSortBy ] = useState< string | null >(
-		sortableColumns.length ? sortableColumns[ 0 ] : null
-	);
-	const [ sortDirection, setSortDirection ] = useState< 'ASC' | 'DESC' >(
-		'ASC'
-	);
-
 	useEffect( () => {
 		onSelectItems( selectedItems );
 	}, [ selectedItems, onSelectItems ] );
-
-	const sortedItems = ! sortBy
-		? items
-		: items.sort( ( a, b ) => {
-				if ( sortDirection === 'ASC' ) {
-					return a[ sortBy ] > b[ sortBy ] ? 1 : -1;
-				}
-
-				return b[ sortBy ] > a[ sortBy ] ? 1 : -1;
-		  } );
 
 	const ColumnHeaders = ( { header = false } ) => (
 		<>
 			{ Object.entries( cols ).map( ( [ col, colLabel ] ) => {
 				const isIdCol = col === idCol;
 				const isBulkSelect = showBulkSelect && isIdCol;
-				const isSortedBy = col === sortBy;
+				const isSortedBy = initialSort?.orderby === col;
 				const isSortable = ! isBulkSelect
 					? sortableColumns.indexOf( col ) >= 0
 					: false;
@@ -105,7 +93,10 @@ const ListTable = < T extends TableItemBase >( {
 					className: clsx( [
 						`column-${ col }`,
 						...( ! isBulkSelect && isSortable
-							? [ 'sortable', sortDirection.toLowerCase() ]
+							? [
+									'sortable',
+									initialSort?.order ?? SortDirection.ASC,
+							  ]
 							: [] ),
 						isBulkSelect && 'check-column',
 					] ),
@@ -121,7 +112,8 @@ const ListTable = < T extends TableItemBase >( {
 								{ isSortedBy && (
 									<Icon
 										icon={
-											sortDirection === 'ASC'
+											initialSort?.order ===
+											SortDirection.ASC
 												? arrowUp
 												: arrowDown
 										}
@@ -153,6 +145,7 @@ const ListTable = < T extends TableItemBase >( {
 									selectedItems.length > 0 &&
 									selectedItems.length < items.length
 								}
+								__nextHasNoMarginBottom
 							/>
 						) }
 
@@ -160,15 +153,20 @@ const ListTable = < T extends TableItemBase >( {
 							<Button
 								variant="link"
 								onClick={ () => {
-									if ( sortBy === col ) {
-										setSortDirection(
-											sortDirection === 'ASC'
-												? 'DESC'
-												: 'ASC'
-										);
-									} else {
-										setSortBy( col );
-										setSortDirection( 'ASC' );
+									if ( onSort ) {
+										let newDirection: SortDirection;
+
+										if ( initialSort?.orderby === col ) {
+											newDirection =
+												initialSort.order ===
+												SortDirection.ASC
+													? SortDirection.DESC
+													: SortDirection.ASC;
+										} else {
+											newDirection = SortDirection.ASC;
+										}
+
+										onSort( col, newDirection );
 									}
 								} }
 							>
@@ -189,7 +187,7 @@ const ListTable = < T extends TableItemBase >( {
 				className,
 				'component-list-table',
 				'list-table',
-				sortedItems.length === 0 && 'no-items',
+				items.length === 0 && 'no-items',
 			] ) }
 		>
 			<thead>
@@ -198,8 +196,8 @@ const ListTable = < T extends TableItemBase >( {
 				</tr>
 			</thead>
 			<tbody>
-				{ sortedItems.length ? (
-					sortedItems.map( ( item, rowIndex ) => (
+				{ items.length ? (
+					items.map( ( item, rowIndex ) => (
 						<tr
 							key={ item.id }
 							className={ clsx( rowClasses( item ) ) }
@@ -243,6 +241,7 @@ const ListTable = < T extends TableItemBase >( {
 														item.id
 													) >= 0
 												}
+												__nextHasNoMarginBottom
 											/>
 										) : (
 											renderCell( col, item, rowIndex )

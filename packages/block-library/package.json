@@ -4,6 +4,7 @@
 	"description": "Popup Maker Block Library",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
+	"private": true,
 	"keywords": [
 		"wordpress",
 		"popup-maker"
@@ -11,21 +12,46 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/block-library/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
 		"directory": "packages/block-library"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
+	"publishConfig": {
+		"access": "restricted"
+	},
 	"main": "build/index",
 	"types": "build-types",
-	"dependencies": {},
+	"react-native": "src/index",
+	"dependencies": {
+		"@popup-maker/core-data": "*",
+		"@popup-maker/components": "*",
+		"@popup-maker/cta-editor": "*",
+		"@popup-maker/i18n": "*",
+		"@wordpress/block-editor": "^14.10.1",
+		"@wordpress/block-library": "^9.15.1",
+		"@wordpress/blocks": "^14.4.1",
+		"@wordpress/components": "^29.1.1",
+		"@wordpress/editor": "^14.24.0",
+		"@wordpress/element": "^6.15.1",
+		"@wordpress/icons": "^10.15.1",
+		"@wordpress/data": "^10.15.1",
+		"clsx": "^2.1.1"
+	},
 	"devDependencies": {
-		"@types/jquery": "^3.5.32"
+		"@types/jquery": "^3.5.32",
+		"@types/wordpress__block-editor": "^11.5.16"
+	},
+	"peerDependencies": {
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-native": "^0.76.5"
 	},
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
 		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",

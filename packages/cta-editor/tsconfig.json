@@ -1,0 +1,30 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		// "noImplicitAny": true,
+		"rootDir": "src",
+		"outDir": "build",
+		"declarationDir": "build-types"
+	},
+	"include": [ "./src/**/*" ],
+	"references": [
+		{
+			"path": "../components"
+		},
+		{
+			"path": "../core-data"
+		},
+		{
+			"path": "../i18n"
+		},
+		{
+			"path": "../fields"
+		},
+		{
+			"path": "../registry"
+		},
+		{
+			"path": "../utils"
+		}
+	]
+}

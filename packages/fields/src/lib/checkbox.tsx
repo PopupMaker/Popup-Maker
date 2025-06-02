@@ -21,12 +21,17 @@ const CheckboxField = ( {
 				label={ label }
 				checked={ value }
 				onChange={ onChange }
+				__nextHasNoMarginBottom
 			/>
 		);
 	}
 
 	return (
-		<BaseControl id={ fieldProps.id } label={ label }>
+		<BaseControl
+			id={ fieldProps.id }
+			label={ label }
+			__nextHasNoMarginBottom
+		>
 			<FormToggle
 				checked={ value }
 				onChange={ () => onChange( ! value ) }

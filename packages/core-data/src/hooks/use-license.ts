@@ -1,7 +1,7 @@
 import { useMemo } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 
-import { licenseStore } from '../license/index';
+import { licenseStore } from '../license';
 
 const useLicense = () => {
 	// Fetch needed data from the @popup-paker/core-data & @wordpress/data stores.

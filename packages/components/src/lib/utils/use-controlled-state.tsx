@@ -1,16 +1,19 @@
 import { useCallback, useRef, useState } from '@wordpress/element';
 
-export default function useControlledState< T >(
-	value: T,
+export default function useControlledState< T extends any = unknown >(
+	value: T | undefined,
 	defaultValue: T,
-	onChange: ( value: T, ...args: any[] ) => void
+	onChange:
+		| undefined
+		| ( ( value: T ) => void )
+		| ( ( value: T, ...args: any[] ) => void )
 ): [ T, ( value: T, ...args: any[] ) => void ] {
-	const [ stateValue, setStateValue ] = useState( value || defaultValue );
+	const [ stateValue, setStateValue ] = useState( value ?? defaultValue );
 	const ref = useRef( value !== undefined );
 	const wasControlled = ref.current;
 	const isControlled = value !== undefined;
 	// Internal state reference for useCallback
-	const stateRef = useRef( stateValue );
+	const stateRef = useRef< T | undefined >( stateValue );
 	if ( wasControlled !== isControlled ) {
 		// eslint-disable-next-line no-console
 		console.warn(
@@ -74,5 +77,5 @@ export default function useControlledState< T >(
 		value = stateValue;
 	}
 
-	return [ value, setValue ];
+	return [ value, setValue ] as [ T, ( value: T, ...args: any[] ) => void ];
 }

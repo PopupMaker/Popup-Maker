@@ -70,6 +70,27 @@ function pum_integrated_form_submission( $args = [] ) {
 }
 
 /**
+ * Triggers a tracking event for a given popup.
+ *
+ * @param int   $popup_id Popup ID.
+ * @param array $args Array of optional arguments.
+ */
+function pum_track_conversion_event( $popup_id = 0, $args = [] ) {
+	/**
+	 * Track conversion with added value.
+	 */
+	PUM_Analytics::track(
+		array_merge(
+			$args,
+			[
+				'event' => 'conversion',
+				'pid'   => $popup_id,
+			]
+		)
+	);
+}
+
+/**
  * Register a script for possible caching.
  *
  * @param string   $handle The script handle.

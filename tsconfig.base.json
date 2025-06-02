@@ -9,15 +9,15 @@
 		"lib": [ "dom", "esnext" ],
 		"skipLibCheck": true,
 		"declaration": true,
-		"declarationDir": "build-types",
 		"declarationMap": true,
 		"composite": true,
 		"emitDeclarationOnly": false,
 		"isolatedModules": true,
 		/* Strict Type-Checking Options */
 		"strict": true,
-		/* Additional Checks */
+		/* This is done on a per package basis currently. */
 		"noImplicitAny": false,
+		/* Additional Checks */
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noImplicitReturns": true,
@@ -30,28 +30,20 @@
 		/* This needs to be false so our types are possible to consume without setting this */
 		"esModuleInterop": false,
 		"resolveJsonModule": true,
-		"strictNullChecks": true
+		"strictNullChecks": true,
+		"types": [ "node", "react", "jest", "@testing-library/jest-dom" ]
 	},
 	"exclude": [
-		"**.js",
-		"**/*.android.js",
-		"**/*.ios.js",
-		"**/*.native.js",
+		"node_modules",
+		"**/node_modules/*",
+		"build",
+		"dist",
+		"build-types",
+		"**/*.js",
 		"**/assets/**",
-		"assets/**",
 		"**/build/**",
-		"build/**",
-		"**/build-types/**",
-		"build-types/**",
 		"**/dist/**",
-		"dist/**",
 		"**/vendor/**",
-		"vendor/**",
-		"**/node_modules/**",
-		"node_modules/**",
-		"packages/*/build-*/**",
-		"packages/*/build/**",
-		"**/test/**",
-		"packages/**/react-native-*/**"
+		"**/test/**"
 	]
 }

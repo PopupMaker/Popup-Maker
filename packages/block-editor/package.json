@@ -4,6 +4,7 @@
 	"description": "Popup Maker Block Editor",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
+	"private": true,
 	"keywords": [
 		"wordpress",
 		"popup-maker"
@@ -11,22 +12,27 @@
 	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/block-editor/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/popupmaker/popup-maker.git"
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/block-editor"
 	},
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"publishConfig": {
+		"access": "restricted"
 	},
 	"main": "build/index",
 	"types": "build-types",
 	"dependencies": {
 		"@popup-maker/components": "*",
+		"@popup-maker/core-data": "*",
+		"@popup-maker/i18n": "*",
 		"@popup-maker/icons": "*",
 		"@wordpress/block-editor": "^14.9.0",
 		"@wordpress/components": "^29.0.0",
 		"@wordpress/compose": "^7.14.0",
 		"@wordpress/dom": "^4.14.0",
 		"@wordpress/element": "^6.14.0",
-		"@wordpress/i18n": "^5.14.0",
 		"@wordpress/keycodes": "^4.14.0",
 		"@wordpress/rich-text": "^7.14.0",
 		"clsx": "2.1.1",
@@ -41,6 +47,7 @@
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
 		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",

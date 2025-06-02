@@ -1,141 +1,267 @@
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 
-import { Status } from '../constants';
+import { DispatchStatus } from '../constants';
 import { getErrorMessage } from '../utils';
+
 import { ACTION_TYPES } from './constants';
-import { fetchLinkSuggestions } from './controls';
+import { fetchLinkSuggestions } from './utils';
 
-import type { Statuses } from '../constants';
-import type {
-	SearchOptions,
-	URLSearchStore,
-	WPLinkSearchResult,
-} from './types';
+import type { ReducerAction } from './reducer';
+import type { SearchOptions, ThunkAction, WPLinkSearchResult } from './types';
 
-const { SEARCH_REQUEST, SEARCH_SUCCESS, SEARCH_ERROR, CHANGE_ACTION_STATUS } =
-	ACTION_TYPES;
+const {
+	SEARCH_REQUEST,
+	SEARCH_SUCCESS,
+	SEARCH_ERROR,
+	CHANGE_ACTION_STATUS,
+	INVALIDATE_RESOLUTION,
+} = ACTION_TYPES;
 
-/**
- * Set query search text.
- *
- * @param {string}                    queryText     Query text.
- * @param {SearchOptions[]|undefined} searchOptions Search options.
- * @return {Generator} Action object.
- */
-export function* updateSuggestions(
-	queryText: string,
-	searchOptions?: SearchOptions
-): Generator {
-	const actionName = 'updateSuggestions';
+const searchActions = {
+	/**
+	 * Set query search text.
+	 * @param {string}        queryText     Query text.
+	 * @param {SearchOptions} searchOptions Search options.
+	 */
+	updateSuggestions:
+		(
+			/**
+			 * Query text.
+			 */
+			queryText: string,
+			/**
+			 * Search options.
+			 */
+			searchOptions?: SearchOptions
+		): ThunkAction =>
+		async ( { dispatch, registry } ) => {
+			const actionName = 'updateSuggestions';
 
-	try {
-		yield changeActionStatus( actionName, Status.Resolving );
+			try {
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Resolving
+				);
 
-		yield searchRequest( queryText );
+				await registry.batch( async () => {
+					dispatch.searchRequest( queryText );
 
-		const results: WPLinkSearchResult[] = yield fetchLinkSuggestions(
-			queryText,
-			searchOptions
-		);
+					const results = await fetchLinkSuggestions(
+						queryText,
+						searchOptions
+					);
 
-		if ( results ) {
-			yield changeActionStatus( actionName, Status.Success );
+					if ( results ) {
+						dispatch.changeActionStatus(
+							actionName,
+							DispatchStatus.Success
+						);
 
-			return searchSuccess( queryText, results );
-		}
+						dispatch.searchSuccess( queryText, results );
+					}
 
-		const errorMessage = __( 'No results returned', 'popup-paker' );
+					const errorMessage = __(
+						'No results returned',
+						'popup-maker'
+					);
 
-		yield changeActionStatus( actionName, Status.Error, errorMessage );
+					dispatch.changeActionStatus(
+						actionName,
+						DispatchStatus.Error,
+						errorMessage
+					);
 
-		return searchError( queryText, errorMessage );
-	} catch ( error ) {
-		const errorMessage = getErrorMessage( error );
+					dispatch.searchError( queryText, errorMessage );
+				} );
+			} catch ( error ) {
+				const errorMessage = getErrorMessage( error );
 
-		yield changeActionStatus( actionName, Status.Error, errorMessage );
-		return searchError( queryText, errorMessage );
-	}
-}
+				dispatch.changeActionStatus(
+					actionName,
+					DispatchStatus.Error,
+					errorMessage
+				);
+				dispatch.searchError( queryText, errorMessage );
+			}
+		},
 
-/**
- * Populate search results.
- *
- * @param {string} queryText Query text.
- * @return {Object} Action object.
- */
-export function searchRequest( queryText: string ): {
-	type: string;
-	queryText: string;
-} {
-	return {
-		type: SEARCH_REQUEST,
-		queryText,
-	};
-}
+	/**
+	 * Populate search results.
+	 *
+	 * @param {string} queryText Query text.
+	 */
+	searchRequest: (
+		/**
+		 * Query text.
+		 */
+		queryText: string
+	): ReducerAction =>
+		( {
+			type: SEARCH_REQUEST,
+			payload: {
+				queryText,
+			},
+		} ) as ReducerAction,
 
-/**
- * Populate search results.
- *
- * @param {string}               queryText Query text.
- * @param {WPLinkSearchResult[]} results   Search results.
- * @return {Object} Action object.
- */
-export function searchSuccess(
-	queryText: string,
-	results: WPLinkSearchResult[]
-): { type: string; queryText: string; results: WPLinkSearchResult[] } {
-	return {
-		type: SEARCH_SUCCESS,
-		queryText,
-		results,
-	};
-}
+	/**
+	 * Populate search results.
+	 *
+	 * @param {string}               queryText Query text.
+	 * @param {WPLinkSearchResult[]} results   Search results.
+	 */
+	searchSuccess: (
+		/**
+		 * Query text.
+		 */
+		queryText: string,
+		/**
+		 * Search results.
+		 */
+		results: WPLinkSearchResult[]
+	): ReducerAction => {
+		return {
+			type: SEARCH_SUCCESS,
+			payload: {
+				queryText,
+				results,
+			},
+		} as ReducerAction;
+	},
 
-/**
- * Generate a search error action.
- *
- * @param {string} queryText Query text.
- * @param {string} error     Error message.
- * @return {Object} Action object.
- */
-export function searchError(
-	queryText: string,
-	error: string
-): { type: string; queryText: string; error: string } {
-	return {
-		type: SEARCH_ERROR,
-		queryText,
-		error,
-	};
-}
-
-/**
- * Change status of a dispatch action request.
- *
- * @param {URLSearchStore[ 'ActionNames' ]} actionName Action name to change status of.
- * @param {Statuses}                        status     New status.
- * @param {string | undefined}              message    Optional error message.
- * @return {Object} Action object.
- */
-export const changeActionStatus = (
-	actionName: URLSearchStore[ 'ActionNames' ],
-	status: Statuses,
-	message?: string | undefined
-): {
-	type: string;
-	actionName: URLSearchStore[ 'ActionNames' ];
-	status: Statuses;
-	message?: string;
-} => {
-	if ( message ) {
-		// eslint-disable-next-line no-console
-		console.log( actionName, message );
-	}
-
-	return {
-		type: CHANGE_ACTION_STATUS,
-		actionName,
-		status,
-		message,
-	};
+	/**
+	 * Generate a search error action.
+	 *
+	 * @param {string} queryText Query text.
+	 * @param {string} error     Error message.
+	 */
+	searchError: (
+		/**
+		 * Query text.
+		 */
+		queryText: string,
+		/**
+		 * Error message.
+		 */
+		error: string
+	): ReducerAction => {
+		return {
+			type: SEARCH_ERROR,
+			payload: {
+				queryText,
+				error,
+			},
+		};
+	},
 };
+
+/*****************************************************
+ * SECTION: Resolution actions
+ *****************************************************/
+const resolutionActions = {
+	/**
+	 * Change status of a dispatch action request.
+	 *
+	 * @param {CallToActionsStore[ 'ActionNames' ]} actionName Action name to change status of.
+	 * @param {Statuses}                            status     New status.
+	 * @param {string|undefined}                    message    Optional error message.
+	 * @return {Object} Action object.
+	 */
+	changeActionStatus:
+		(
+			actionName: string,
+			status: DispatchStatus,
+			message?: string | { message: string; [ key: string ]: any }
+		): ThunkAction =>
+		( { dispatch } ) => {
+			if ( message ) {
+				// eslint-disable-next-line no-console
+				console.log( actionName, message );
+			}
+
+			dispatch( {
+				type: CHANGE_ACTION_STATUS,
+				actionName,
+				status,
+				message,
+			} );
+		},
+
+	/**
+	 * Start resolution for an entity.
+	 */
+	// startResolution:
+	// 	( id: number | string, operation: string = 'fetch' ) =>
+	// 	( { dispatch } ) => {
+	// 		console.log( 'startResolution', id, operation );
+	// 		dispatch( {
+	// 			type: START_RESOLUTION,
+	// 			payload: {
+	// 				id,
+	// 				operation,
+	// 			},
+	// 		} );
+	// 	},
+
+	/**
+	 * Finish resolution for an entity.
+	 */
+	// finishResolution:
+	// 	( id: number | string, operation: string = 'fetch' ) =>
+	// 	( { dispatch } ) => {
+	// 		dispatch( {
+	// 			type: FINISH_RESOLUTION,
+	// 			payload: {
+	// 				id,
+	// 				operation,
+	// 			},
+	// 		} );
+	// 	},
+
+	/**
+	 * Fail resolution for an entity.
+	 */
+	// failResolution:
+	// 	(
+	// 		id: number | string,
+	// 		error: string,
+	// 		operation: string = 'fetch',
+	// 		extra?: Record< string, any >
+	// 	): ThunkAction =>
+	// 	( { dispatch } ) => {
+	// 		dispatch( {
+	// 			type: FAIL_RESOLUTION,
+	// 			payload: {
+	// 				id,
+	// 				error,
+	// 				operation,
+	// 				extra,
+	// 			},
+	// 		} );
+	// 	},
+
+	/**
+	 * Invalidate resolution for an entity.
+	 *
+	 * @param {number | string} id The entity ID.
+	 * @return {Promise<void>}
+	 */
+	invalidateResolution:
+		( id: number | string ): ThunkAction =>
+		( { dispatch } ) => {
+			dispatch( {
+				type: INVALIDATE_RESOLUTION,
+				payload: {
+					id,
+				},
+			} );
+		},
+};
+
+const actions = {
+	// Search actions
+	...searchActions,
+	// Resolution actions
+	...resolutionActions,
+};
+
+export default actions;

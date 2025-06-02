@@ -1,43 +1,26 @@
-import type { ApiPopup, Popup } from './types';
+import type { Updatable } from '@wordpress/core-data';
+import type { BaseEntity } from '../types';
+
+// Simple type guard for RenderedText fields
+export function isRenderedText(
+	value: any
+): value is { raw: string; rendered: string } {
+	return value && typeof value === 'object' && 'raw' in value;
+}
 
 /**
- * Get resuource path for various configs.
+ * Convert an entity to an editable entity.
  *
- * @param {number} id Popup id.
- * @return {string} Resulting resource path.
+ * @param {T} entity The entity to convert.
+ * @return {Updatable<T>} The editable entity.
  */
-export const getResourcePath = (
-	id: Popup[ 'id' ] | undefined = undefined
-): string => {
-	const root = `popup-maker/v2/popups`;
-
-	return id ? `${ root }/${ id }` : root;
-};
-
-export const convertApiPopup = ( {
-	title,
-	// content,
-	excerpt,
-	...popup
-}: ApiPopup ): Popup => {
-	const newPopup = {
-		...popup,
-		title: typeof title === 'string' ? title : title.raw,
-		// content: typeof content === 'string' ? content : content.raw,
-		description: typeof excerpt === 'string' ? excerpt : excerpt.raw,
-	};
-
-	return newPopup;
-};
-
-export const convertPopupToApi = ( {
-	description,
-	...popup
-}: Partial< Popup > ): Partial< ApiPopup > => {
-	const newPopup = {
-		...popup,
-		excerpt: description,
-	};
-
-	return newPopup;
-};
+export function editableEntity< T extends BaseEntity< 'edit' > >(
+	entity: T
+): Updatable< T > {
+	return Object.fromEntries(
+		Object.entries( entity ).map( ( [ key, value ] ) => [
+			key,
+			isRenderedText( value ) ? value.raw : value,
+		] )
+	) as Updatable< T >;
+}

@@ -15,7 +15,7 @@ use PopupMaker\Vendor\Pimple\Container as Base;
 /**
  * Localized container class.
  */
-class Container extends Base {
+class Container extends \PopupMaker\Vendor\Pimple\Container {
 	/**
 	 * Get item from container
 	 *

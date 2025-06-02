@@ -2,7 +2,7 @@ import './editor.scss';
 
 import clsx from 'clsx';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { addFilter } from '@wordpress/hooks';
 import { InspectorControls } from '@wordpress/block-editor';
 import {
@@ -29,6 +29,8 @@ const { popupTriggerExcludedBlocks } = window.popupMakerBlockEditor;
 const allowedBlocks: string[] = [];
 const excludedBlocks: string[] = popupTriggerExcludedBlocks || [
 	'core/nextpage',
+	'popup-maker/call-to-action',
+	'popup-maker/call-to-actions',
 ];
 
 function isAllowedForBlockType( name: string ) {
@@ -110,24 +112,41 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 								</PanelRow>
 								<PanelRow>
 									<PopupSelectControl
-										label={ <>
-											{ __( 'Open Popup', 'popup-maker' ) }
-											<Tooltip
-												position="top"
-												text={ __( 'This method does not work well with all block types.', 'popup-maker' ) }
-											>
-												<a href="https://wppopupmaker.com/docs/triggering-popups/trigger-click-open-overview-methods/" target="_blank" rel="noopener noreferrer">
-													<Icon
-														size="16"
-														icon="editor-help"
-														title={ __( 'Open documentation', 'popup-maker' ) }
-														style={ {
-															verticalAlign: 'middle',
-														} }
-													/>
-												</a>
-											</Tooltip>
-										</> }
+										label={
+											<>
+												{ __(
+													'Open Popup',
+													'popup-maker'
+												) }
+												<Tooltip
+													placement="top"
+													text={ __(
+														'This method does not work well with all block types.',
+														'popup-maker'
+													) }
+												>
+													<a
+														href="https://wppopupmaker.com/docs/triggering-popups/trigger-click-open-overview-methods/"
+														target="_blank"
+														rel="noopener noreferrer"
+													>
+														<Icon
+															size={ 16 }
+															icon="editor-help"
+															// @ts-expect-error
+															title={ __(
+																'Open documentation',
+																'popup-maker'
+															) }
+															style={ {
+																verticalAlign:
+																	'middle',
+															} }
+														/>
+													</a>
+												</Tooltip>
+											</>
+										}
 										value={ openPopupId }
 										onChange={ ( popupId ) =>
 											setAttributes( {

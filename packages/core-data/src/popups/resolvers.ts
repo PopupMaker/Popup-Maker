@@ -1,103 +1,87 @@
-import { __, sprintf } from '@wordpress/i18n';
+import {
+	appendUrlParams,
+	fetchFromApi,
+	//getErrorMessage
+} from '../utils';
+import { RECIEVE_RECORDS, RECIEVE_RECORD } from './constants';
 
-import { fetch } from '../controls';
-import { appendUrlParams, getErrorMessage } from '../utils';
-import { hydrate } from './actions';
-import { ACTION_TYPES } from './constants';
-import { convertApiPopup, getResourcePath } from './utils';
+import type { Popup, ThunkAction } from './types';
 
-import type { Popup, ApiPopup } from './types';
+const entityResolvers = {
+	getPopups:
+		(): ThunkAction =>
+		async ( { dispatch } ) => {
+			// const action = 'getAll';
 
-const { UPDATE, POPUPS_FETCH_ERROR } = ACTION_TYPES;
+			try {
+				// dispatch.startResolution( action );
 
-/**
- * Resolves get popups requests from the server.
- *
- * @return {Generator} Action object to hydrate store.
- */
-export function* getPopups(): Generator {
-	// catch any request errors.
-	try {
-		// execution will pause here until the `FETCH` control function's return
-		// value has resolved.
-		const popups: ApiPopup[] = yield fetch(
-			appendUrlParams( getResourcePath(), {
-				status: [ 'any', 'trash', 'auto-draft' ],
-				per_page: 100,
-				context: 'edit',
-			} )
-		);
+				const urlParams = {
+					status: [ 'any', 'trash', 'auto-draft' ],
+					per_page: 100,
+					context: 'edit',
+				};
 
-		if ( popups ) {
-			// Parse popups, replacing title & content with the API context versions.
-			const parsedPopups = popups.map( convertApiPopup );
+				const url = appendUrlParams( 'popups', urlParams );
 
-			// thing was successfully updated so return the action object that will
-			// update the saved thing in the state.
-			return hydrate( parsedPopups );
-		}
+				const results = await fetchFromApi< Popup< 'edit' >[] >( url, {
+					method: 'GET',
+				} );
 
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		return {
-			type: POPUPS_FETCH_ERROR,
-			message: __(
-				'An error occurred, popups were not loaded.',
-				'popup-maker'
-			),
-		};
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return {
-			type: POPUPS_FETCH_ERROR,
-			message: getErrorMessage( error ),
-		};
-	}
-}
+				if ( results.length ) {
+					dispatch( {
+						type: RECIEVE_RECORDS,
+						payload: {
+							records: results,
+						},
+					} );
+					// dispatch.finishResolution( action );
+				}
 
-/**
- * Resolves get popups requests from the server.
- *
- * @param {number} popupId
- *
- * @return {Generator} Action object to update single popup store.
- */
-export function* getPopup( popupId: Popup[ 'id' ] ): Generator {
-	// catch any request errors.
-	try {
-		// execution will pause here until the `FETCH` control function's return
-		// value has resolved.
-		const popup: ApiPopup = yield fetch(
-			appendUrlParams( getResourcePath( popupId ), {
-				context: 'edit',
-			} )
-		);
+				// dispatch.failResolution( action, 'No call to actions found' );
+			} catch ( error: any ) {
+				// const errorMessage = getErrorMessage( error );
+				// eslint-disable-next-line no-console
+				console.error( error );
+				// dispatch.failResolution( action, errorMessage );
+			}
+		},
 
-		if ( popup ) {
-			return {
-				type: UPDATE,
-				popup: convertApiPopup( popup ),
-			};
-		}
+	getPopup:
+		( id: number ): ThunkAction =>
+		async ( { dispatch } ) => {
+			// const action = 'getById';
 
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		return {
-			type: POPUPS_FETCH_ERROR,
-			message: sprintf(
-				/* translators: 1: popup id */
-				__(
-					`An error occurred, popup %d were not loaded.`,
-					'popup-maker'
-				),
-				popupId
-			),
-		};
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return {
-			type: POPUPS_FETCH_ERROR,
-			message: getErrorMessage( error ),
-		};
-	}
-}
+			try {
+				// dispatch.startResolution( action );
+
+				const url = appendUrlParams( `ctas/${ id }`, {
+					context: 'edit',
+				} );
+
+				const record = await fetchFromApi< Popup< 'edit' > >( url, {
+					method: 'GET',
+				} );
+
+				dispatch( {
+					type: RECIEVE_RECORD,
+					payload: {
+						record,
+					},
+				} );
+
+				// dispatch.finishResolution( action );
+			} catch ( error: any ) {
+				// const errorMessage = getErrorMessage( error );
+				// eslint-disable-next-line no-console
+				console.error( error );
+				// dispatch.failResolution( action, errorMessage );
+			}
+		},
+};
+
+const resolvers = {
+	...entityResolvers,
+};
+
+export default resolvers;

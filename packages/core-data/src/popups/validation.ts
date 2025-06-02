@@ -1,5 +1,7 @@
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
+
 import type { Popup } from './types';
+import type { Updatable } from '@wordpress/core-data';
 
 /**
  * Checks of the set values are valid.
@@ -9,9 +11,9 @@ import type { Popup } from './types';
  * @return {boolean} True when set values are valid.
  */
 export const validatePopup = (
-	popup: Popup
+	popup: Partial< Updatable< Popup< 'edit' > > >
 ):
-	| boolean
+	| true
 	| {
 			message: string;
 			tabName?: string;
@@ -19,17 +21,16 @@ export const validatePopup = (
 			[ key: string ]: any;
 	  } => {
 	if ( ! popup ) {
-		return false;
+		return {
+			message: __( 'Popup not found', 'popup-maker' ),
+		};
 	}
 
-	const title =
-		typeof popup.title === 'string' ? popup.title : popup.title?.raw;
-
-	if ( ! title.length ) {
+	if ( popup.title && ! popup.title?.length ) {
 		return {
 			message: __(
 				'Please provide a name for this popup.',
-				'popup-paker'
+				'popup-maker'
 			),
 			tabName: 'general',
 			field: 'title',
@@ -43,7 +44,7 @@ export const validatePopup = (
 		return {
 			message: __(
 				'Please provide at least one condition for this popup before enabling it.',
-				'popup-paker'
+				'popup-maker'
 			),
 			tabName: 'content',
 		};

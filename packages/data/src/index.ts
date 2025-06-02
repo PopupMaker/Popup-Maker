@@ -1,9 +1,11 @@
 import { doAction } from '@wordpress/hooks';
 import { createRegistry } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
+import { store as noticesStore } from '@wordpress/notices';
 
 import {
-	popupsStore,
+	callToActionStore,
+	popupStore,
 	licenseStore,
 	settingsStore,
 	urlSearchStore,
@@ -27,12 +29,15 @@ declare module '@wordpress/data' {
 
 const registry = createRegistry( {} );
 
+// Core stores.
 registry.register( coreStore );
+registry.register( noticesStore );
+// Custom stores.
+registry.register( callToActionStore );
 registry.register( licenseStore );
 registry.register( settingsStore );
-registry.register( popupsStore );
+registry.register( popupStore );
 registry.register( urlSearchStore );
-
 // On document ready
 document.addEventListener( 'DOMContentLoaded', () => {
 	// Allow other scripts to hook into the registry.

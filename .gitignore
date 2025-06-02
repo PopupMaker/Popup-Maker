@@ -35,7 +35,9 @@ dist
 npm-debug.log
 
 # Coverage
+artifacts
 coverage
+test-results
 
 # Logs
 logs
@@ -51,4 +53,12 @@ packages/*/lib
 strauss.phar
 *.zip
 .DS_Store
+repomix-output.md
+repomix-output.json
+repomix-output.txt
 
+.cursorrules
+
+
+.nx/cache
+.nx/workspace-data

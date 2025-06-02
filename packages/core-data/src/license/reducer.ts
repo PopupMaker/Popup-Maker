@@ -1,12 +1,12 @@
-import { ACTION_TYPES } from './constants';
+import { ACTION_TYPES, initialState } from './constants';
 
+import type { DispatchStatuses } from '../constants';
 import type {
 	License,
 	LicenseConnect,
-	LicenseState,
-	LicenseStore,
+	LicenseStatus,
+	StoreActionNames,
 } from './types';
-import type { Statuses } from '../constants';
 
 const {
 	ACTIVATE_LICENSE,
@@ -20,33 +20,75 @@ const {
 	LICENSE_FETCH_ERROR,
 } = ACTION_TYPES;
 
-interface ActionPayloadTypes {
-	type: keyof typeof ACTION_TYPES;
+export type State = {
 	license: License;
-	licenseKey: License[ 'key' ];
-	licenseStatus: License[ 'status' ];
-	connectInfo: LicenseConnect;
-	// Boilerplate.
-	actionName: LicenseStore[ 'ActionNames' ];
-	status: Statuses;
-	message: string;
-}
+	connectInfo?: LicenseConnect;
+	// Boilerplate
+	dispatchStatus?: {
+		[ Property in StoreActionNames ]?: {
+			status: string;
+			error: string;
+		};
+	};
+	error?: string;
+};
 
-const reducer = (
-	state: LicenseState,
-	{
-		type,
-		license,
-		licenseKey,
-		licenseStatus,
-		connectInfo,
-		// Boilerplate
-		actionName,
-		status,
-		message,
-	}: ActionPayloadTypes
-) => {
-	switch ( type ) {
+type BaseAction = {
+	type: keyof typeof ACTION_TYPES;
+};
+
+type LicenseStatusAction = BaseAction & {
+	type:
+		| typeof ACTIVATE_LICENSE
+		| typeof DEACTIVATE_LICENSE
+		| typeof CHECK_LICENSE_STATUS;
+	licenseStatus: LicenseStatus;
+};
+
+type ConnectSiteAction = BaseAction & {
+	type: typeof CONNECT_SITE;
+	licenseStatus: LicenseStatus;
+	connectInfo: LicenseConnect;
+};
+
+type UpdateLicenseKeyAction = BaseAction & {
+	type: typeof UPDATE_LICENSE_KEY;
+	licenseKey: string;
+	licenseStatus: LicenseStatus;
+};
+
+type RemoveLicenseAction = BaseAction & {
+	type: typeof REMOVE_LICENSE;
+};
+
+type HydrateLicenseDataAction = BaseAction & {
+	type: typeof HYDRATE_LICENSE_DATA;
+	license: License;
+};
+
+type LicenseFetchErrorAction = BaseAction & {
+	type: typeof LICENSE_FETCH_ERROR;
+	message: string;
+};
+
+type ChangeActionStatusAction = BaseAction & {
+	type: typeof CHANGE_ACTION_STATUS;
+	actionName: StoreActionNames;
+	status: DispatchStatuses;
+	message: string;
+};
+
+export type ReducerAction =
+	| LicenseStatusAction
+	| ConnectSiteAction
+	| UpdateLicenseKeyAction
+	| RemoveLicenseAction
+	| HydrateLicenseDataAction
+	| LicenseFetchErrorAction
+	| ChangeActionStatusAction;
+
+const reducer = ( state: State = initialState, action: ReducerAction ) => {
+	switch ( action.type ) {
 		case ACTIVATE_LICENSE:
 		case DEACTIVATE_LICENSE:
 		case CHECK_LICENSE_STATUS:
@@ -54,18 +96,19 @@ const reducer = (
 				...state,
 				license: {
 					...state.license,
-					status: licenseStatus,
+					status: action.licenseStatus,
 				},
 			};
+			return state;
 
 		case CONNECT_SITE:
 			return {
 				...state,
 				license: {
 					...state.license,
-					status: licenseStatus,
+					status: action.licenseStatus,
 				},
-				connectInfo,
+				connectInfo: action.connectInfo,
 			};
 
 		case UPDATE_LICENSE_KEY:
@@ -73,8 +116,8 @@ const reducer = (
 				...state,
 				license: {
 					...state.license,
-					key: licenseKey,
-					status: licenseStatus,
+					key: action.licenseKey,
+					status: action.licenseStatus,
 				},
 			};
 
@@ -90,13 +133,13 @@ const reducer = (
 		case HYDRATE_LICENSE_DATA:
 			return {
 				...state,
-				license,
+				license: action.license,
 			};
 
 		case LICENSE_FETCH_ERROR:
 			return {
 				...state,
-				error: message,
+				error: action.message,
 			};
 
 		case CHANGE_ACTION_STATUS:
@@ -104,10 +147,10 @@ const reducer = (
 				...state,
 				dispatchStatus: {
 					...state.dispatchStatus,
-					[ actionName ]: {
-						...state?.dispatchStatus?.[ actionName ],
-						status,
-						error: message,
+					[ action.actionName ]: {
+						...state?.dispatchStatus?.[ action.actionName ],
+						status: action.status,
+						error: action.message,
 					},
 				},
 			};

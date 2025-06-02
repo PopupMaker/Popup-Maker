@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { speak } from '@wordpress/a11y';
 import { withSpokenMessages } from '@wordpress/components';
 import { removeFormat, isCollapsed } from '@wordpress/rich-text';

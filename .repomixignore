@@ -1,0 +1,51 @@
+# Add patterns to ignore here, one per line
+# Example:
+# *.log
+# tmp/
+
+.github/
+.nx/
+.storybook/
+.wordpress-org/
+bin/
+dist/
+tasks/
+node_modules/
+vendor/
+release/
+languages/
+build/
+build-types/
+
+.browserslistrc
+.distignore
+.editorconfig
+.eslintignore
+# .eslintrc.js
+.gitattributes
+.gitignore
+.jshintrc
+# .phpcs.xml.dist
+.prettierrc.js
+.scrutinizer.yml
+.stylelintignore
+.phpstorm.meta.php
+.stylelintrc.json
+.travis.yml
+apigen.neon
+# composer.json
+Gruntfile.js
+gulpfile.js
+labels.json
+# package.json
+phpci.yml
+phpunit.xml
+postcss.config.js
+
+
+
+tsconfig.tsbuildinfo
+
+includes/google-fonts.json
+builtin-themes.xml
+assets/js/src/admin/general/vendor/select2.full.custom.js

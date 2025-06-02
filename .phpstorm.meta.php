@@ -17,75 +17,77 @@ namespace PHPSTORM_META;
  * Return lists below all must match, it cannot be defined as a variable.
  * Thus all the duplication is needed.
  */
+override(\PopupMaker\Plugin\Core::get_controller(0), map([
+    // Controllers
+    'PostTypes'     => \PopupMaker\Controllers\PostTypes::class,
+    'Assets'        => \PopupMaker\Controllers\Assets::class,
+    'Admin'         => \PopupMaker\Controllers\Admin::class,
+    'Frontend\Popups' => \PopupMaker\Controllers\Frontend\Popups::class,
+    'Compatibility' => \PopupMaker\Controllers\Compatibility::class,
+    'CallToActions' => \PopupMaker\Controllers\CallToActions::class,
+    'RestAPI'       => \PopupMaker\Controllers\RestAPI::class,
+]));
 
-/**
-  * NOTE: applies specifically to using the Plugin getter directly.
-  * Example Usage: $events = pum_Scheduling_plugin()->get( 'events' );
-  */
-  override( \PopupMaker\Plugin\Core::get(0), map( [
-    // Controllers.
-    ''             => '@',
-    'connect'      => \PopupMaker\Plugin\Connect::class,
-    'license'      => \PopupMaker\Plugin\License::class,
+override(\PopupMaker\Plugin\Container::get_controller(0), map([
+    // Controllers
+    'PostTypes'     => \PopupMaker\Controllers\PostTypes::class,
+    'Assets'        => \PopupMaker\Controllers\Assets::class,
+    'Admin'         => \PopupMaker\Controllers\Admin::class,
+    'Frontend\Popups' => \PopupMaker\Controllers\Frontend\Popups::class,
+    'Compatibility' => \PopupMaker\Controllers\Compatibility::class,
+    'CallToActions' => \PopupMaker\Controllers\CallToActions::class,
+    'RestAPI'       => \PopupMaker\Controllers\RestAPI::class,
+]));
+
+override(\PopupMaker\Plugin\Core::get(0), map([
+    // Services
+    'popups'       => \PopupMaker\Services\Repository\Popups::class,
+    'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
+    'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
+    'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
-    'options'      => \PopupMaker\Plugin\Options::class,
-    'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
-    // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
-    // 'restrictions' => \PopupMaker\Services\Restrictions::class,
-    // 'globals'      => \PopupMaker\Services\Globals::class,
-    // 'Frontend\Restrictions\PostContent' => \PopupMaker\Controllers\Frontend\Restrictions\PostContent::class,
-  ] ) );
+    
+    // Config Values
+    'path'         => 'string',
+    'url'          => 'string',
+    'slug'         => 'string',
+    'version'      => 'string',
+    'db_ver'       => 'string',
+    'prefix'       => 'string',
+]));
 
- /**
-  * NOTE: applies specifically to using the global getter function.
-  * Example Usage: $events = pum_scheduling( 'events' );
-  */
-  override ( \PopupMaker\plugin(0), map( [
-    // Controllers.
-    '' => '@',
-    'connect'      => \PopupMaker\Plugin\Connect::class,
-    'license'      => \PopupMaker\Plugin\License::class,
+// Required for external plugin() function access.
+override(\PopupMaker\plugin(0), map([
+    // Services
+    'popups'       => \PopupMaker\Services\Repository\Popups::class,
+    'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
+    'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
+    'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
-    'options'      => \PopupMaker\Plugin\Options::class,
-    'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
-    // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
-    // 'restrictions' => \PopupMaker\Services\Restrictions::class,
-    // 'globals'      => \PopupMaker\Services\Globals::class,
-    // 'Frontend\Restrictions\PostContent' => \PopupMaker\Controllers\Frontend\Restrictions\PostContent::class,
-  ] ) );
+    
+    // Config Values
+    'path'         => 'string',
+    'url'          => 'string',
+    'slug'         => 'string',
+    'version'      => 'string',
+    'db_ver'       => 'string',
+    'prefix'       => 'string',
+]));
 
-  /**
-  * NOTE: applies specifically to using the global getter function.
-  * Example Usage: $events = pum_scheduling( 'events' );
-  */
-  override ( \PopupMaker\Base\Container::get(0), map( [
-    // Controllers.
-    '' => '@',
-    'connect'      => \PopupMaker\Plugin\Connect::class,
-    'license'      => \PopupMaker\Plugin\License::class,
+// Required for internal $controller->container->get($id);
+override( \PopupMaker\Plugin\Container::get(0), map([
+    // Services
+    'popups'       => \PopupMaker\Services\Repository\Popups::class,
+    'ctas'         => \PopupMaker\Services\Repository\CallToActions::class,
+    'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
+    'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
-    'options'      => \PopupMaker\Plugin\Options::class,
-    'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
-    // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
-    // 'restrictions' => \PopupMaker\Services\Restrictions::class,
-    // 'globals'      => \PopupMaker\Services\Globals::class,
-    // 'Frontend\Restrictions\PostContent' => \PopupMaker\Controllers\Frontend\Restrictions\PostContent::class,
-  ] ) );
-
-    /**
-  * NOTE: applies specifically to using the global getter function.
-  * Example Usage: $events = pum_scheduling( 'events' );
-  */
-override ( \PopupMaker\Base\Container::offsetGet(0), map( [
-  // Controllers.
-  '' => '@',
-  'connect'      => \PopupMaker\Plugin\Connect::class,
-  'license'      => \PopupMaker\Plugin\License::class,
-  'logging'      => \PopupMaker\Services\Logging::class,
-  'options'      => \PopupMaker\Plugin\Options::class,
-  'upgrader'     => \PopupMaker\Plugin\Upgrader::class,
-  // 'rules'        => \PopupMaker\RuleEngine\Rules::class,
-  // 'restrictions' => \PopupMaker\Services\Restrictions::class,
-  // 'globals'      => \PopupMaker\Services\Globals::class,
-  // 'Frontend\Restrictions\PostContent' => \PopupMaker\Controllers\Frontend\Restrictions\PostContent::class,
-  ] ) );
+    
+    // Config Values
+    'path'         => 'string',
+    'url'          => 'string',
+    'slug'         => 'string',
+    'version'      => 'string',
+    'db_ver'       => 'string',
+    'prefix'       => 'string',
+]));

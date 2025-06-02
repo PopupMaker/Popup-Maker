@@ -1,53 +1,51 @@
-import { __ } from '@wordpress/i18n';
-import { select } from '@wordpress/data-controls';
+import { __ } from '@popup-maker/i18n';
 
-import { fetch } from '../controls';
-import { getErrorMessage } from '../utils';
-import { hydrate } from './actions';
-import { ACTION_TYPES, STORE_NAME } from './constants';
-import { getResourcePath } from './utils';
+import { getErrorMessage, fetchFromApi } from '../utils';
+import { LICENSE_FETCH_ERROR } from './constants';
+import { apiPath } from './utils';
 
-import type { License } from './types';
+import type { License, LicenseKey, LicenseStatus, ThunkAction } from './types';
 
-const { LICENSE_FETCH_ERROR } = ACTION_TYPES;
+export const getLicenseData =
+	(): ThunkAction =>
+	async ( { dispatch } ) => {
+		try {
+			const results = await fetchFromApi< License >( apiPath(), {
+				method: 'GET',
+			} );
 
-export function* getLicenseData() {
-	// catch any request errors.
-	try {
-		// execution will pause here until the `FETCH` control function's return
-		// value has resolved.
-		const results: License = yield fetch( getResourcePath(), {
-			method: 'GET',
-		} );
+			if ( results ) {
+				dispatch.hydrate( results );
+				return;
+			}
 
-		if ( results ) {
-			return hydrate( results );
+			dispatch( {
+				type: LICENSE_FETCH_ERROR,
+				message: __(
+					'An error occurred, license data was not loaded.',
+					'popup-maker'
+				),
+			} );
+		} catch ( error ) {
+			dispatch( {
+				type: LICENSE_FETCH_ERROR,
+				message: getErrorMessage( error ),
+			} );
 		}
+	};
 
-		// if execution arrives here, then thing didn't update in the state so return
-		// action object that will add an error to the state about this.
-		return {
-			type: LICENSE_FETCH_ERROR,
-			message: __(
-				'An error occurred, license data was not loaded.',
-				'popup-paker'
-			),
-		};
-	} catch ( error ) {
-		// returning an action object that will save the update error to the state.
-		return {
-			type: LICENSE_FETCH_ERROR,
-			message: getErrorMessage( error ),
-		};
-	}
-}
+export const getLicenseKey =
+	(): ThunkAction< LicenseKey > =>
+	async ( { resolveSelect } ) => {
+		const { key = '' } = ( await resolveSelect.getLicenseData() ) ?? {};
 
-export function* getLicenseKey() {
-	const { key } = yield select( STORE_NAME, 'getLicenseData' );
-	return key;
-}
+		return key;
+	};
 
-export function* getLicenseStatus() {
-	const { status } = yield select( STORE_NAME, 'getLicenseData' );
-	return status;
-}
+export const getLicenseStatus =
+	(): ThunkAction< LicenseStatus > =>
+	async ( { resolveSelect } ) => {
+		const { status } = ( await resolveSelect.getLicenseData() ) ?? {};
+
+		return status;
+	};

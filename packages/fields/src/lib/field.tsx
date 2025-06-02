@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 
-import { __, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@popup-maker/i18n';
 
 import {
 	CheckboxField,

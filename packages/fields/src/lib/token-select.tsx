@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { useState } from '@wordpress/element';
 import { SmartTokenControl } from '@popup-maker/components';
 

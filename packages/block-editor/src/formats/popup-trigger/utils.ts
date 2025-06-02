@@ -76,13 +76,6 @@ export function updateFormattedText(
 		return applyFormat( value, format );
 	}
 
-	console.log( 'applyFormat', {
-		value,
-		format,
-		start: boundary.start ?? undefined,
-		end: boundary.end ?? undefined,
-	} );
-
 	// Apply the format to the entire format boundary range
 	return applyFormat(
 		value,

@@ -23,7 +23,7 @@ class Popup_Maker {
 	/**
 	 * @var string Plugin Version
 	 */
-	public static $VER = '1.19.2';
+	public static $VER = '1.20.5';
 
 	/**
 	 * @var int DB Version
@@ -84,6 +84,8 @@ class Popup_Maker {
 
 	/**
 	 * @var null|PUM_Model_Popup
+	 *
+	 * @deprecated X.X.X
 	 */
 	public $current_popup;
 
@@ -178,6 +180,7 @@ class Popup_Maker {
 		PUM_Shortcode_PopupTrigger::init();
 		PUM_Shortcode_PopupClose::init();
 		PUM_Shortcode_PopupCookie::init();
+		PUM_Shortcode_CallToAction::init();
 
 		PUM_Telemetry::init();
 

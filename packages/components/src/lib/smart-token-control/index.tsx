@@ -6,7 +6,7 @@ import {
 	Popover,
 	BaseControl,
 } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { useInstanceId } from '@wordpress/compose';
 import { close } from '@wordpress/icons';
 import { forwardRef, useEffect, useRef, useState } from '@wordpress/element';
@@ -14,7 +14,7 @@ import { clamp, noop } from '@popup-maker/utils';
 
 import './editor.scss';
 
-import type { ForwardedRef } from 'react';
+import type { CSSProperties, ForwardedRef } from 'react';
 import type { KeyboardShortcutsProps } from '@wordpress/components/build-types/keyboard-shortcuts/types';
 
 export type Token =
@@ -31,6 +31,8 @@ export type Props< T extends Token = Token > = {
 	label?: string | JSX.Element;
 	placeholder?: string;
 	className?: clsx.ClassValue;
+	inputStyles?: CSSProperties;
+	popoverStyles?: CSSProperties;
 	classes?: {
 		container?: string;
 		popover?: string;
@@ -46,6 +48,11 @@ export type Props< T extends Token = Token > = {
 	};
 	multiple?: boolean;
 	suggestions: string[];
+	extraOptions?: Array< {
+		value: Token;
+		label: string;
+		onSelect?: () => void;
+	} >;
 	closeOnSelect?: boolean;
 	renderToken?: ( token: T ) => JSX.Element | string;
 
@@ -112,6 +119,8 @@ const SmartTokenControl = < T extends Token = string >(
 		label,
 		placeholder = __( 'Enter a value', 'popup-maker' ),
 		className,
+		inputStyles = {},
+		popoverStyles = {},
 		tokenOnComma = false,
 		classes = defaultClasses,
 		renderToken = ( token ) => (
@@ -125,6 +134,7 @@ const SmartTokenControl = < T extends Token = string >(
 		extraKeyboardShortcuts = {},
 		multiple = false,
 		suggestions,
+		extraOptions = [],
 		messages = {
 			searchTokens: __( 'Search', 'popup-maker' ),
 			noSuggestions: __( 'No suggestions', 'popup-maker' ),
@@ -208,6 +218,7 @@ const SmartTokenControl = < T extends Token = string >(
 		setState( {
 			...state,
 			inputText: '',
+			selectedSuggestion: -1,
 			popoverOpen: closeOnSelect ? false : popoverOpen,
 		} );
 	}
@@ -239,7 +250,10 @@ const SmartTokenControl = < T extends Token = string >(
 		setState( {
 			...state,
 			inputText: text,
-			popoverOpen: text.length >= minQueryLength,
+			selectedSuggestion: -1,
+			popoverOpen:
+				text.length >= minQueryLength ||
+				( extraOptions.length > 0 && text.length === 0 ),
 		} );
 
 		onInputChange( text );
@@ -340,7 +354,7 @@ const SmartTokenControl = < T extends Token = string >(
 				} );
 			}
 
-			addNewToken( suggestions[ currentIndex ] );
+			handleSuggestionSelect( mergedSuggestions[ currentIndex ] );
 		},
 		// Close the popover.
 		escape: ( event: KeyboardEvent ) => {
@@ -369,6 +383,33 @@ const SmartTokenControl = < T extends Token = string >(
 		...extraKeyboardShortcuts,
 	};
 
+	// Merge regular suggestions with extra options
+	const mergedSuggestions = [
+		...suggestions,
+		...extraOptions.map( ( opt ) => opt.label ),
+	];
+
+	const handleSuggestionSelect = ( suggestion: string ) => {
+		// Check if it's an extra option
+		const extraOption = extraOptions.find(
+			( opt ) => opt.label === suggestion
+		);
+		if ( extraOption ) {
+			extraOption.onSelect?.();
+			addNewToken( extraOption.value.toString() );
+			return;
+		}
+
+		// Regular suggestion
+		addNewToken( suggestion );
+	};
+
+	// Only show popover if we have a valid anchor and content to show
+	const shouldShowPopover =
+		popoverOpen &&
+		inputRef.current &&
+		( mergedSuggestions.length > 0 || extraOptions.length > 0 );
+
 	return (
 		<KeyboardShortcuts shortcuts={ keyboardShortcuts }>
 			<div
@@ -392,7 +433,7 @@ const SmartTokenControl = < T extends Token = string >(
 					// If the blur event is coming from the popover, don't close it.
 					if ( event.relatedTarget ) {
 						const popover = event.relatedTarget as HTMLElement;
-						if ( popover.classList.contains( elClasses.popover ) ) {
+						if ( popover.closest( `.${ elClasses.popover }` ) ) {
 							return;
 						}
 					}
@@ -401,6 +442,7 @@ const SmartTokenControl = < T extends Token = string >(
 						...state,
 						isFocused: false,
 						popoverOpen: false,
+						selectedSuggestion: -1,
 					} );
 				} }
 			>
@@ -412,6 +454,7 @@ const SmartTokenControl = < T extends Token = string >(
 					}
 					label={ label }
 					hideLabelFromVision={ hideLabelFromVision }
+					__nextHasNoMarginBottom
 				>
 					<div
 						className={ clsx( [
@@ -449,6 +492,7 @@ const SmartTokenControl = < T extends Token = string >(
 							}
 							type="text"
 							className={ clsx( [ elClasses.textInput ] ) }
+							style={ inputStyles ?? {} }
 							placeholder={ placeholder }
 							disabled={ ! multiple && value.length > 0 }
 							ref={ inputRef }
@@ -469,14 +513,21 @@ const SmartTokenControl = < T extends Token = string >(
 									...state,
 									isFocused: true,
 									popoverOpen:
-										inputText.length >= minQueryLength,
+										inputText.length >= minQueryLength ||
+										( extraOptions.length > 0 &&
+											( suggestions.length === 0 ||
+												inputText.length === 0 ) ),
 								} );
 							} }
 							onClick={ () => {
-								if ( ! popoverOpen ) {
+								if (
+									! popoverOpen &&
+									( suggestions.length > 0 ||
+										extraOptions.length > 0 )
+								) {
 									setState( {
 										...state,
-										popoverOpen: suggestions.length > 0,
+										popoverOpen: true,
 									} );
 								}
 							} }
@@ -486,9 +537,7 @@ const SmartTokenControl = < T extends Token = string >(
 									event.relatedTarget as HTMLElement;
 								if (
 									popover &&
-									popover.classList.contains(
-										elClasses.popover
-									)
+									popover.closest( `.${ elClasses.popover }` )
 								) {
 									return;
 								}
@@ -497,18 +546,26 @@ const SmartTokenControl = < T extends Token = string >(
 									...state,
 									isFocused: false,
 									popoverOpen: false,
+									selectedSuggestion: -1,
 								} );
 							} }
 						/>
 					</div>
 				</BaseControl>
-				{ popoverOpen && (
+				{ shouldShowPopover && (
 					<Popover
 						focusOnMount={ false }
-						onClose={ () => setSelectedSuggestion( -1 ) }
+						onClose={ () => {
+							setState( {
+								...state,
+								popoverOpen: false,
+								selectedSuggestion: -1,
+							} );
+						} }
 						position="bottom right"
 						anchor={ inputRef.current }
 						className={ elClasses.popover }
+						style={ popoverStyles ?? {} }
 					>
 						<div
 							className={ elClasses.suggestions }
@@ -517,8 +574,8 @@ const SmartTokenControl = < T extends Token = string >(
 								width: inputRef.current?.clientWidth,
 							} }
 						>
-							{ suggestions.length ? (
-								suggestions.map( ( suggestion, i ) => (
+							{ mergedSuggestions.length ? (
+								mergedSuggestions.map( ( suggestion, i ) => (
 									<div
 										key={ i }
 										id={ `sug-${ i }` }
@@ -539,7 +596,9 @@ const SmartTokenControl = < T extends Token = string >(
 										} }
 										onMouseDown={ ( event ) => {
 											event.preventDefault();
-											addNewToken( suggestions[ i ] );
+											handleSuggestionSelect(
+												mergedSuggestions[ i ]
+											);
 										} }
 										role="option"
 										tabIndex={ i }

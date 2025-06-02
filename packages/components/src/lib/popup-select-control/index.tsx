@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { __ } from '@wordpress/i18n';
+import { __ } from '@popup-maker/i18n';
 import { SelectControl } from '@wordpress/components';
 
 import type { PopupSelectControlProps } from './types';
@@ -54,6 +54,8 @@ export const PopupSelectControl = ( {
 					  } ),
 				...props,
 			} }
+			__next40pxDefaultSize
+			__nextHasNoMarginBottom
 		/>
 	);
 };

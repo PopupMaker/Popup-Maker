@@ -1,6 +1,9 @@
 const path = require( 'path' );
 const CustomTemplatedPathPlugin = require( '@popup-maker/custom-templated-path-webpack-plugin' );
 const DependencyExtractionWebpackPlugin = require( '@popup-maker/dependency-extraction-webpack-plugin' );
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
+const RtlCssPlugin = require( 'rtlcss-webpack-plugin' );
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
@@ -13,9 +16,14 @@ const packages = {
 	'block-library': 'packages/block-library',
 	components: 'packages/components',
 	'core-data': 'packages/core-data',
+	'cta-admin': 'packages/cta-admin',
+	'cta-editor': 'packages/cta-editor',
 	data: 'packages/data',
 	fields: 'packages/fields',
+	i18n: 'packages/i18n',
 	icons: 'packages/icons',
+	registry: 'packages/registry',
+	'use-query-params': 'packages/use-query-params',
 	utils: 'packages/utils',
 };
 
@@ -40,10 +48,6 @@ const config = {
 	},
 	output: {
 		path: path.resolve( process.cwd(), 'dist/packages' ),
-		filename: ( { chunk } ) => {
-			return '[name].js';
-		},
-		// assetModuleFilename: '../images/[name][ext]',
 		publicPath: '/wp-content/plugins/popup-maker/dist/packages/',
 		devtoolNamespace: 'popup-maker/core',
 		devtoolModuleFilenameTemplate:
@@ -76,9 +80,29 @@ const config = {
 	plugins: [
 		...defaultConfig.plugins.filter(
 			( plugin ) =>
-				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin' // &&
+				plugin.constructor.name !==
+					'DependencyExtractionWebpackPlugin' &&
+				plugin.constructor.name !== 'MiniCssExtractPlugin' &&
+				plugin.constructor.name !== 'RtlCssPlugin'
 			// plugin.constructor.name !== 'CleanWebpackPlugin'
 		),
+		new MiniCssExtractPlugin( {
+			filename: ( { chunk } ) => {
+				if ( chunk.name.includes( 'style' ) ) {
+					return `${ chunk.runtime }-style.css`;
+				}
+
+				return `${ chunk.runtime }.css`;
+			},
+		} ),
+		new RtlCssPlugin( {
+			filename: ( { chunk } ) => {
+				if ( chunk.name.includes( 'style-' ) ) {
+					return `${ chunk.runtime }-style-rtl.css`;
+				}
+				return `${ chunk.runtime }-rtl.css`;
+			},
+		} ),
 		new CustomTemplatedPathPlugin( {
 			modulename( outputPath, data ) {
 				const entryName = data.chunk.name;
@@ -93,6 +117,23 @@ const config = {
 		new DependencyExtractionWebpackPlugin( {
 			combineAssets: true,
 			combinedOutputFile: '../package-assets.php',
+		} ),
+		new CopyWebpackPlugin( {
+			patterns: [
+				{
+					from: 'packages/block-library/src/lib/**/block.json',
+					to( { absoluteFilename } ) {
+						const pathParts = absoluteFilename.split( '/' );
+						const blockDirName = pathParts[ pathParts.length - 2 ];
+						return `../blocks/${ blockDirName }.block.json`;
+					},
+					context: '.',
+					noErrorOnMissing: true,
+					transform( content ) {
+						return content;
+					},
+				},
+			],
 		} ),
 	],
 	optimization: {
