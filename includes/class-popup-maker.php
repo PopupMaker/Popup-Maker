@@ -12,6 +12,7 @@ use function PopupMaker\config;
  * Main Popup_Maker Class
  *
  * @since 1.0
+ * @deprecated X.X.X
  */
 class Popup_Maker {
 
@@ -38,12 +39,12 @@ class Popup_Maker {
 	/**
 	 * @var string
 	 */
-	public static $MIN_PHP_VER = '7.2';
+	public static $MIN_PHP_VER = '7.4';
 
 	/**
 	 * @var string
 	 */
-	public static $MIN_WP_VER = '5.8';
+	public static $MIN_WP_VER = '6.6';
 
 	/**
 	 * @var string Plugin URL
