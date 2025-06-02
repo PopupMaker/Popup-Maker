@@ -55,7 +55,7 @@ class Link extends \PopupMaker\Base\CallToAction {
 
 		$call_to_action->increase_event_count( 'conversion' );
 
-		wp_safe_redirect( esc_url_raw( $url ) );
+		\PopupMaker\safe_redirect( $url );
 		exit;
 	}
 

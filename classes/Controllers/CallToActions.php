@@ -26,6 +26,7 @@ class CallToActions extends Controller {
 	public function init() {
 		add_action( 'template_redirect', [ $this, 'template_redirect' ] );
 	}
+
 	/**
 	 * Checks for valid requests and properly handles them.
 	 *
@@ -109,7 +110,7 @@ class CallToActions extends Controller {
 				$call_to_action->increase_event_count( 'conversion' );
 			}
 
-			wp_safe_redirect( esc_url_raw( $url ) );
+			\PopupMaker\safe_redirect( $url );
 			exit;
 		}
 
