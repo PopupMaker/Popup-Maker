@@ -35,12 +35,12 @@ interface CallToAction {
 	/**
 	 * Handle the CTA action.
 	 *
-	 * @param \PopupMaker\Base\CallToAction $call_to_action Call to action object.
-	 * @param array                         $extra_args     Optional. Additional data passed to the handler (will include popup_id).
+	 * @param \PopupMaker\Models\CallToAction $call_to_action Call to action object.
+	 * @param array                           $extra_args     Optional. Additional data passed to the handler (will include popup_id).
 	 *
-	 * @return mixed The result of the action
+	 * @return void
 	 */
-	public function action_handler( $call_to_action, $extra_args = [] );
+	public function action_handler( \PopupMaker\Models\CallToAction $call_to_action, array $extra_args = [] ): void;
 
 	/**
 	 * Returns an array that represents the cta.

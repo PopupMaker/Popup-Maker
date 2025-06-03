@@ -31,24 +31,24 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	 *
 	 * @return string
 	 */
-	abstract public function label();
+	abstract public function label(): string;
 
 	/**
 	 * Function that returns array of fields by group.
 	 *
 	 * @return array
 	 */
-	abstract public function fields();
+	abstract public function fields(): array;
 
 	/**
 	 * Handle the CTA action.
 	 *
-	 * @param \PopupMaker\Base\CallToAction $call_to_action Call to action object.
-	 * @param array                         $extra_args     Optional. Additional data passed to the handler (will include popup_id).
+	 * @param \PopupMaker\Models\CallToAction $call_to_action Call to action object.
+	 * @param array                           $extra_args     Optional. Additional data passed to the handler (will include popup_id).
 	 *
-	 * @return mixed The result of the action
+	 * @return void
 	 */
-	abstract public function action_handler( $call_to_action, $extra_args = [] );
+	abstract public function action_handler( \PopupMaker\Models\CallToAction $call_to_action, array $extra_args = [] ): void;
 
 	/**
 	 * Returns an array that represents the cta.
@@ -57,7 +57,7 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	 *
 	 * @return array
 	 */
-	public function as_array() {
+	public function as_array(): array {
 		return [
 			'key'    => $this->key,
 			'label'  => $this->label(),
