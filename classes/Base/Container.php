@@ -10,8 +10,6 @@ namespace PopupMaker\Base;
 
 defined( 'ABSPATH' ) || exit;
 
-use PopupMaker\Vendor\Pimple\Container as Base;
-
 /**
  * Localized container class.
  */

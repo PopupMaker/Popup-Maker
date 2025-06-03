@@ -255,24 +255,14 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			'text-only' === $atts['style'] ? 'pum-cta--button' : null,
 		];
 
-		$call_to_action_type_handler = \PopupMaker\plugin( 'cta_types' )->get( $type );
-
-		/**
-		 * Check if CTA has a custom renderer method, if so use that, if not use the default link method.
-		 */
-		// TODO Should custom_renderer be an optional method rather than a property, and replace render?
-		if ( $call_to_action_type_handler && property_exists( $call_to_action_type_handler, 'custom_renderer' ) && $call_to_action_type_handler->custom_renderer ) {
-			$cta_content = $call_to_action_type_handler ? $call_to_action_type_handler->render( $atts ) : '';
-		} else {
-			$cta_content = sprintf(
-				"<a href='%s' class='pum-cta %s' target='%s' data-cta-type='%s' rel='noreferrer noopener'>%s</a>",
-				esc_url_raw( $url ),
-				esc_attr( $atts['extra_link_classes'] ),
-				esc_attr( $target ),
-				esc_attr( $type ),
-				esc_html( $text )
-			);
-		}
+		$cta_content = sprintf(
+			"<a href='%s' class='pum-cta %s' target='%s' data-cta-type='%s' rel='noreferrer noopener'>%s</a>",
+			esc_url_raw( $url ),
+			esc_attr( $atts['extra_link_classes'] ),
+			esc_attr( $target ),
+			esc_attr( $type ),
+			esc_html( $text )
+		);
 
 		ob_start();
 		?>

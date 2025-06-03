@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Call To Action service.
  *
  * @since X.X.X
- * @template-extends Repository<CallToAction>
+ * @template-extends Repository<\PopupMaker\Models\CallToAction>
  */
 class CallToActions extends Repository {
 
@@ -32,7 +32,7 @@ class CallToActions extends Repository {
 	/**
 	 * Items by UUID.
 	 *
-	 * @var array<string,CallToAction>
+	 * @var array<string,\PopupMaker\Models\CallToAction>
 	 */
 	protected $items_by_uuid = [];
 
@@ -52,7 +52,7 @@ class CallToActions extends Repository {
 	 *
 	 * @param \WP_Post $post Post object.
 	 *
-	 * @return CallToAction|null
+	 * @return \PopupMaker\Models\CallToAction|null
 	 */
 	public function instantiate_model_from_post( $post ) {
 		if ( ! $post instanceof \WP_Post ) {
@@ -65,7 +65,7 @@ class CallToActions extends Repository {
 	/**
 	 * Cache an item internally.
 	 *
-	 * @param CallToAction $item Item to cache.
+	 * @param \PopupMaker\Models\CallToAction $item Item to cache.
 	 *
 	 * @return void
 	 */
@@ -79,7 +79,7 @@ class CallToActions extends Repository {
 	 *
 	 * @param string $uuid Call to action UUID.
 	 *
-	 * @return CallToAction|null
+	 * @return \PopupMaker\Models\CallToAction|null
 	 */
 	public function get_by_uuid( $uuid = '' ) {
 		if ( isset( $this->items_by_uuid[ $uuid ] ) ) {
@@ -107,7 +107,7 @@ class CallToActions extends Repository {
 
 		$options = [];
 		foreach ( $items as $item ) {
-			$options[ $item->id ] = $item->title;
+			$options[ $item->ID ] = $item->title;
 		}
 
 		return $options;

@@ -33,7 +33,7 @@ class CallToActions extends Controller {
 	 * Redirects when needed.
 	 */
 	public function template_redirect() {
-		$cta_args = [ 'cta', 'pid' ];
+		$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ 'cta', 'pid' ] );
 
 		/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
 		$cta_uuid = ! empty( $_GET['cta'] ) ? sanitize_text_field( wp_unslash( $_GET['cta'] ) ) : '';
@@ -98,10 +98,10 @@ class CallToActions extends Controller {
 			/**
 			 * Allow extensions to handle their own CTA types.
 			 *
-			 * @param \PopupMaker\Base\CallToAction $call_to_action Call to action object.
-			 * @param array                         $extra_args     Optional. Additional data passed to the handler (will include popup_id).
+			 * @param \PopupMaker\Models\CallToAction   $call_to_action Call to action object.
+			 * @param array                             $extra_args     Optional. Additional data passed to the handler (will include popup_id).
 			 */
-			do_action( 'pum_cta_' . $cta_type . '_action', $call_to_action, $extra_args );
+			do_action( 'popup_maker/cta_' . $cta_type . '_action', $call_to_action, $extra_args );
 
 			// Default to current URL without CTA parameters.
 			$url = remove_query_arg( $cta_args );
