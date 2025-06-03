@@ -70,14 +70,9 @@ function popup_maker_config() {
 }
 
 /**
- * Plugin functions loader.
- */
-require_once __DIR__ . '/includes/entry--bootstrap.php';
-
-/**
  * Legacy bootstrap.
  *
- * Includes a non composer autoloadaer for backwards compatibility.
+ * Includes a non composer autoloader for backwards compatibility.
  * This self unregisters itself if no autoloaders are present.
  *
  * This goes first as we potentially bail early if the autoloader fails below.
@@ -86,49 +81,10 @@ require_once __DIR__ . '/includes/entry--bootstrap.php';
 require_once __DIR__ . '/bootstrap.legacy.php';
 
 /**
- * Load the current main class.
- *
- * This is a placeholder for the eventual removal and deferal to the autoloader.
- */
-require_once __DIR__ . '/includes/class-popup-maker.php';
-
-/**
  * Load the plugin config and register autoloader.
+ * This handles the main initialization logic.
  */
 require_once __DIR__ . '/bootstrap.php';
-
-/**
- * Initialize Popup Maker if requirements are met.
- *
- * NOTE: This will be replaced with the simpler init function
- * below once we add a plugin container class.
- *
- * @return void
- *
- * @since 1.8.0
- */
-function pum_init() {
-	if ( ! \PopupMaker\check_prerequisites() ) {
-		/**
-		 * Required, some older extensions init and require
-		 * these functions to not error.
-		 *
-		 * TODO In the near future we could move the requires to
-		 * the bootstrap.php file meaning they would always be
-		 * available.
-		 */
-		require_once 'includes/entry--failsafes.php';
-		return;
-	}
-
-	// Get Popup Maker
-	pum();
-
-	do_action( 'popup_maker/init' );
-}
-
-// Get Popup Maker running.
-add_action( 'plugins_loaded', 'pum_init', 9 );
 
 // Register activation, deactivation & uninstall hooks.
 register_activation_hook( __FILE__, [ 'PUM_Install', 'activate_plugin' ] );

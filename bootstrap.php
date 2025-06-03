@@ -59,6 +59,11 @@ function config( $key = null ) {
 }
 
 /**
+ * Plugin functions loader.
+ */
+require_once __DIR__ . '/includes/entry--bootstrap.php';
+
+/**
  * Register autoloader.
  */
 require_once __DIR__ . '/vendor-prefixed/code-atlantic/wp-autoloader/src/Autoloader.php';
@@ -116,7 +121,6 @@ function plugin_instance() {
 	static $plugin;
 
 	if ( ! $plugin instanceof \PopupMaker\Plugin\Core ) {
-		require_once __DIR__ . '/includes/entry--plugin-init.php';
 		$plugin = new Plugin\Core( get_plugin_config() );
 	}
 
@@ -146,18 +150,33 @@ function plugin( $service_or_config = null ) {
 	return $instance->get( $service_or_config );
 }
 
+function init_plugin() {
+	if ( ! check_prerequisites() ) {
+		/**
+		 * Required, some older extensions init and require
+		 * these functions to not error.
+		 *
+		 * TODO In the near future we could move the requires to
+		 * the bootstrap.php file meaning they would always be
+		 * available.
+		 */
+		require_once __DIR__ . '/includes/entry--failsafes.php';
+		return;
+	}
+
+	/**
+	 * Plugin initialization functions.
+	 */
+	require_once __DIR__ . '/includes/entry--plugin-init.php';
+
+	plugin_instance();
+
+	do_action( 'popup_maker/init' );
+}
+
 add_action(
 	'plugins_loaded',
-	function () {
-		if ( check_prerequisites() ) {
-			plugin_instance();
-		}
-	},
+	'\PopupMaker\init_plugin',
 	// Core plugin loads at 11, Pro loads at 12 & addons load at 13.
-	11
+	11 // Old pum_init() was at 9.
 );
-
-// Future use.
-// \register_activation_hook( __FILE__, '\PopupMaker\Plugin\Install::activate_plugin' );
-// \register_deactivation_hook( __FILE__, '\PopupMaker\Plugin\Install::deactivate_plugin' );
-// \register_uninstall_hook( __FILE__, '\PopupMaker\Plugin\Install::uninstall_plugin' );
