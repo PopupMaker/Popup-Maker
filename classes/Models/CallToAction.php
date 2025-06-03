@@ -72,7 +72,7 @@ class CallToAction extends Post {
 		 *
 		 * @var array<string,mixed>|false $settings
 		 */
-		$settings = get_post_meta( $this->id, 'cta_settings', true );
+		$settings = get_post_meta( $this->ID, 'cta_settings', true );
 
 		if ( empty( $settings ) ) {
 			$settings = \PopupMaker\get_default_call_to_action_settings();
@@ -99,11 +99,11 @@ class CallToAction extends Post {
 		}
 
 		// Get or generate UUID
-		$uuid = get_post_meta( $this->id, 'cta_uuid', true );
+		$uuid = get_post_meta( $this->ID, 'cta_uuid', true );
 
 		if ( empty( $uuid ) ) {
-			$uuid = \PopupMaker\generate_unique_cta_uuid( $this->id );
-			update_post_meta( $this->id, 'cta_uuid', $uuid );
+			$uuid = \PopupMaker\generate_unique_cta_uuid( $this->ID );
+			update_post_meta( $this->ID, 'cta_uuid', $uuid );
 		}
 
 		/**
@@ -114,7 +114,7 @@ class CallToAction extends Post {
 		 *
 		 * @return string
 		 */
-		$this->uuid = apply_filters( 'popup_maker/get_call_to_action_uuid', $uuid, $this->id );
+		$this->uuid = apply_filters( 'popup_maker/get_call_to_action_uuid', $uuid, $this->ID );
 
 		return $this->uuid;
 	}
@@ -168,7 +168,7 @@ class CallToAction extends Post {
 		 *
 		 * @return mixed
 		 */
-		return apply_filters( 'popup_maker/get_call_to_action_setting', $value, $key, $default_value, $this->id );
+		return apply_filters( 'popup_maker/get_call_to_action_setting', $value, $key, $default_value, $this->ID );
 	}
 
 	/**
@@ -178,7 +178,7 @@ class CallToAction extends Post {
 	 */
 	public function get_description() {
 		if ( ! isset( $this->description ) ) {
-			$this->description = get_the_excerpt( $this->id );
+			$this->description = get_the_excerpt( $this->ID );
 
 			if ( empty( $this->description ) ) {
 				$this->description = __( 'This content is restricted.', 'popup-maker' );
@@ -213,7 +213,7 @@ class CallToAction extends Post {
 		$settings = $this->get_settings();
 
 		return array_merge( [
-			'id'          => $this->id,
+			'id'          => $this->ID,
 			'slug'        => $this->slug,
 			'title'       => $this->title,
 			'description' => $this->get_description(),

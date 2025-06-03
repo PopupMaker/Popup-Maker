@@ -38,11 +38,8 @@ class Post {
 	 * Call To Action id.
 	 *
 	 * @var int
-	 *
-	 * TODO This should be ID mimicing WP_Post, as to make them more interchangeable.
-	 * TODO Declare all WP_Post properties on the Post class above, and add magic methods for getting them from $this->post;
 	 */
-	public $id = 0;
+	public $ID = 0;
 
 	/**
 	 * Call To Action slug.
@@ -105,8 +102,8 @@ class Post {
 	 * @return string
 	 */
 	public function get_edit_link() {
-		if ( current_user_can( 'edit_post', $this->id ) ) {
-			return admin_url( "post.php?action=edit&post_type={$this->post->post_type}&post=" . absint( $this->id ) );
+		if ( current_user_can( 'edit_post', $this->ID ) ) {
+			return admin_url( "post.php?action=edit&post_type={$this->post->post_type}&post=" . absint( $this->ID ) );
 		}
 
 		return '';
@@ -121,7 +118,7 @@ class Post {
 	 * @return mixed
 	 */
 	public function get_meta( $key, $single = true ) {
-		return get_post_meta( $this->id, $key, $single );
+		return get_post_meta( $this->ID, $key, $single );
 	}
 
 	/**
@@ -133,7 +130,7 @@ class Post {
 	 * @return bool|int
 	 */
 	public function update_meta( $key, $value ) {
-		return update_post_meta( $this->id, $key, $value );
+		return update_post_meta( $this->ID, $key, $value );
 	}
 
 	/**
@@ -143,7 +140,7 @@ class Post {
 	 */
 	public function to_array() {
 		return [
-			'id'     => $this->id,
+			'id'     => $this->ID,
 			'slug'   => $this->slug,
 			'title'  => $this->title,
 			'status' => $this->status,

@@ -71,7 +71,7 @@ abstract class Repository extends Service {
 	 * @return void
 	 */
 	protected function cache_item( $item ) {
-		$this->items_by_id[ $item->ID ?? $item->id ] = $item;
+		$this->items_by_id[ $item->ID ?? $item->ID ] = $item;
 	}
 
 	/**
