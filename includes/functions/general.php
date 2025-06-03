@@ -284,18 +284,19 @@ function popmake_post( $name, $do_stripslashes = true ) {
 
 	return $do_stripslashes ? stripslashes_deep( $value ) : $value;
 }
+
 if ( ! function_exists( 'pum_is_func_disabled' ) ) {
-/**
- * Checks whether function is disabled.
- *
- * @since 1.4
- *
- * @param string $function_name Name of the function.
- *
- * @return bool Whether or not function is disabled.
- */
-function pum_is_func_disabled( $function_name ) {
-	$disabled = explode( ',', ini_get( 'disable_functions' ) );
+	/**
+	 * Checks whether function is disabled.
+	 *
+	 * @since 1.4
+	 *
+	 * @param string $function_name Name of the function.
+	 *
+	 * @return bool Whether or not function is disabled.
+	 */
+	function pum_is_func_disabled( $function_name ) {
+		$disabled = explode( ',', ini_get( 'disable_functions' ) );
 
 		return in_array( $function_name, $disabled, true );
 	}
