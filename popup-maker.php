@@ -124,8 +124,7 @@ function pum_init() {
 	// Get Popup Maker
 	pum();
 
-	// Initialize old PUM extensions.
-	add_action( 'plugins_loaded', 'popmake_initialize' );
+	do_action( 'popup_maker/init' );
 }
 
 // Get Popup Maker running.

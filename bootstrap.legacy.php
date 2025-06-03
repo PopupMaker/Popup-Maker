@@ -120,6 +120,8 @@ function popmake_initialize() {
 	do_action( 'popmake_initialize' );
 }
 
+add_action( 'popup_maker/init', 'popmake_initialize' );
+
 /**
  * The main function responsible for returning the one true Popup_Maker
  * Instance to functions everywhere.
