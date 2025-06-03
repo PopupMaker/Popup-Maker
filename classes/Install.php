@@ -49,11 +49,6 @@ class PUM_Install {
 	private static function do_multisite( $network_wide, $method, $args = [] ) {
 		global $wpdb;
 
-		// Ensure all global functions are loaded.
-		if ( ! function_exists( 'pum_is_func_disabled' ) ) {
-			require_once __DIR__ . '/../includes/functions.php';
-		}
-
 		if ( is_multisite() && $network_wide ) {
 			$activated = get_site_option( 'pum_activated', [] );
 
@@ -206,80 +201,5 @@ class PUM_Install {
 	 * @since 1.9.0
 	 */
 	public static function uninstall_site() {
-	}
-
-	/**
-	 * Returns an activation failure flag if one exists.
-	 *
-	 * @return string|null
-	 */
-	public static function get_activation_flag() {
-		global $wp_version;
-
-		$flag = null;
-
-		if ( version_compare( PHP_VERSION, config( 'min_php_ver' ), '<' ) ) {
-			$flag = 'PHP';
-		} elseif ( version_compare( $wp_version, config( 'min_wp_ver' ), '<' ) ) {
-			$flag = 'WordPress';
-		}
-
-		return $flag;
-	}
-
-	/**
-	 * Checks if Popup Maker can activate safely.
-	 *
-	 * @return bool
-	 */
-	public static function meets_activation_requirements() {
-		return self::get_activation_flag() === null;
-	}
-
-	/**
-	 * Gets activation failure notice message.
-	 *
-	 * @return string
-	 */
-	public static function get_activation_failure_notice() {
-		$flag    = self::get_activation_flag();
-		$version = 'PHP' === $flag ? config( 'min_php_ver' ) : config( 'min_wp_ver' );
-
-		return sprintf(
-			/* translators: 1. Plugin name, 2. Required plugin name, 3. Version number, 4. Opening HTML tag, 5. Closing HTML tag. */
-			__( 'The %4$s %1$s %5$s plugin requires %2$s version %3$s or greater.', 'popup-maker' ),
-			config( 'name' ),
-			$flag,
-			$version,
-			'<strong>',
-			'</strong>'
-		);
-	}
-
-	/**
-	 *
-	 */
-	public static function activation_failure_admin_notice() {
-		?>
-		<div class="notice notice-error is-dismissible">
-			<p><?php echo wp_kses( self::get_activation_failure_notice(), [ 'strong' => [] ] ); ?></p>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Plugin Activation hook function to check for Minimum PHP and WordPress versions
-	 *
-	 * Cannot use static:: in case php 5.2 is used.
-	 */
-	public static function activation_check() {
-		if ( self::meets_activation_requirements() ) {
-			return;
-		}
-
-		// Deactivate automatically due to insufficient PHP or WP Version.
-		deactivate_plugins( basename( __FILE__ ) );
-
-		add_action( 'admin_notices', [ __CLASS__, 'activation_failure_admin_notice' ] );
 	}
 }

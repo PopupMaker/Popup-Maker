@@ -284,7 +284,7 @@ function popmake_post( $name, $do_stripslashes = true ) {
 
 	return $do_stripslashes ? stripslashes_deep( $value ) : $value;
 }
-
+if ( ! function_exists( 'pum_is_func_disabled' ) ) {
 /**
  * Checks whether function is disabled.
  *
@@ -297,5 +297,6 @@ function popmake_post( $name, $do_stripslashes = true ) {
 function pum_is_func_disabled( $function_name ) {
 	$disabled = explode( ',', ini_get( 'disable_functions' ) );
 
-	return in_array( $function_name, $disabled, true );
+		return in_array( $function_name, $disabled, true );
+	}
 }

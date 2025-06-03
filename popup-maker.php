@@ -4,7 +4,7 @@
  * Plugin URI:        https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=plugin-uri
  * Description:       Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
  * Version:           1.20.5
- * Requires PHP:      7.4
+ * Requires PHP:      7.2
  * Requires at least: 6.5
  * Author:            Popup Maker
  * Author URI:        https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=author-uri
@@ -46,7 +46,6 @@ function popup_maker_config() {
 
 	if ( ! isset( $config ) ) {
 		$config = [
-
 			// Using untranslated strings in config to avoid early translation loading.
 			// Translations for these strings should be handled at the point of display.
 			'name'           => 'Popup Maker',
@@ -55,9 +54,9 @@ function popup_maker_config() {
 			'option_prefix'  => 'popup_maker',
 			'text_domain'    => 'popup-maker',
 			'fullname'       => 'Popup Maker',
-			'min_wp_ver'     => '6.2.0',
+			'min_wp_ver'     => '6.6.0',
 			'min_php_ver'    => '7.4.0',
-			'future_wp_req'  => '6.5.0',
+			'future_wp_req'  => '6.6.0',
 			'future_php_req' => '7.4.0',
 			'file'           => __FILE__,
 			'basename'       => plugin_basename( __FILE__ ),
@@ -131,9 +130,6 @@ function pum_init() {
 
 // Get Popup Maker running.
 add_action( 'plugins_loaded', 'pum_init', 9 );
-
-// Ensure plugin & environment compatibility or deactivate if not.
-register_activation_hook( __FILE__, [ 'PUM_Install', 'activation_check' ] );
 
 // Register activation, deactivation & uninstall hooks.
 register_activation_hook( __FILE__, [ 'PUM_Install', 'activate_plugin' ] );
