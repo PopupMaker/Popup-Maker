@@ -27,6 +27,7 @@ class PostTypes extends Controller {
 	public function init() {
 		add_action( 'init', [ $this, 'register_post_types' ] );
 		add_action( 'save_post_popup', [ $this, 'save_post' ], 10, 3 );
+		add_filter( 'post_updated_messages', [ $this, 'updated_messages' ] );
 	}
 
 	/**
@@ -465,5 +466,48 @@ class PostTypes extends Controller {
 		$current_popup_data_version = get_data_version( $post->post_type );
 
 		add_post_meta( $post_id, 'data_version', $current_popup_data_version );
+	}
+
+	/**
+	 * Updated Messages
+	 *
+	 * Returns an array of with all updated messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $messages Post updated message
+	 *
+	 * @return array $messages New post updated messages
+	 */
+	public static function updated_messages( $messages ) {
+
+		$labels = [
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
+			1 => _x( '%1$s updated.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
+			4 => _x( '%1$s updated.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
+			6 => _x( '%1$s published.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
+			7 => _x( '%1$s saved.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+			/* translators: %1$s: Post Type Singular: Popup, Theme */
+			8 => _x( '%1$s submitted.', 'Post Type Singular: Popup, Theme', 'popup-maker' ),
+		];
+
+		$messages['pum_cta']     = [];
+		$messages['popup']       = [];
+		$messages['popup_theme'] = [];
+
+		$cta   = __( 'Call to Action', 'popup-maker' );
+		$popup = __( 'Popup', 'popup-maker' );
+		$theme = __( 'Popup Theme', 'popup-maker' );
+
+		foreach ( $labels as $k => $string ) {
+			$messages['pum_cta'][ $k ]     = sprintf( $string, $cta );
+			$messages['popup'][ $k ]       = sprintf( $string, $popup );
+			$messages['popup_theme'][ $k ] = sprintf( $string, $theme );
+		}
+
+		return $messages;
 	}
 }

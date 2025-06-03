@@ -92,3 +92,25 @@ class PUM {
 	static $DB_VER = null;
 	static $VER    = null;
 }
+
+/**
+ * Class for Types
+ *
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2024, Code Atlantic LLC
+ *
+ * @deprecated X.X.X
+ */
+class PUM_Types {
+	/**
+	 * @param $singular
+	 * @param $plural
+	 *
+	 * @return mixed
+	 *
+	 * @deprecated X.X.X
+	 */
+	public static function post_type_labels( $singular, $plural ) {
+		return \PopupMaker\plugin()->get_controller( 'PostTypes' )->post_type_labels( $singular, $plural );
+	}
+}

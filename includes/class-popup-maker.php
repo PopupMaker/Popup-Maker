@@ -165,7 +165,6 @@ class Popup_Maker {
 		$this->popups = new PUM_Repository_Popups();
 		$this->themes = new PUM_Repository_Themes();
 
-		PUM_Types::init();
 		PUM_AssetCache::init();
 		PUM_Site::init();
 		PUM_Admin::init();
