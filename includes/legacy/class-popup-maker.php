@@ -156,8 +156,6 @@ class Popup_Maker {
 		// Initialize global options
 		// TODO Replace this with Options class.
 		PUM_Utils_Options::init();
-
-		require_once self::$DIR . 'includes/entry--legacy-init.php';
 	}
 
 	public function init() {
