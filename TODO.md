@@ -1,8 +1,13 @@
 # TODO
 
+- [ ] Make PopupMaker\Base\Model\Post copatible replacement for PUM_Abstract_Model_Post. Currently these might be divergent making moving Popups to the new one difficult without breakage. Alternatively we can migrate CTA's to the old model and then namespace it.
+- [ ] Update `pum_install_example_popups` and others with new better examples in `includes/pum-install-functions.php`
+
 ## PM Pro branch
 
 -   [ ] Add proper current_data_versions() versioning.
+
+-   [ ] Add vanity CTA urls (by slug)
 
 -   [ ] In core add new Go Pro page?
         -- popup-maker/classes/Services/Upgrader.php:70 - Update this to point to the correct upgrade page url.
