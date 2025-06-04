@@ -1,5 +1,6 @@
 import { __, sprintf } from '@popup-maker/i18n';
 import { store as noticesStore } from '@wordpress/notices';
+import { decodeEntities } from '@wordpress/html-entities';
 
 import { ACTION_TYPES, NOTICE_CONTEXT } from './constants';
 
@@ -110,7 +111,7 @@ const entityActions = {
 								'Call to action "%s" saved successfully.',
 								'popup-maker'
 							),
-							result?.title.rendered
+							decodeEntities( result?.title.rendered )
 						),
 						{
 							id: 'call-to-action-saved',
@@ -264,7 +265,7 @@ const entityActions = {
 								'Call to action "%s" updated successfully.',
 								'popup-maker'
 							),
-							result?.title.rendered
+							decodeEntities( result?.title.rendered )
 						),
 						{
 							id: 'call-to-action-saved',
@@ -390,7 +391,7 @@ const entityActions = {
 								'Call to action "%s" deleted successfully.',
 								'popup-maker'
 							),
-							canonicalPopup?.title.rendered
+							decodeEntities( canonicalPopup?.title.rendered )
 						),
 						{
 							id: 'call-to-action-deleted',
@@ -641,7 +642,7 @@ const editorActions = {
 								'Call to action "%s" saved successfully.',
 								'popup-maker'
 							),
-							editedPopup.title
+							decodeEntities( editedPopup.title )
 						),
 						{
 							id: 'call-to-action-saved',
