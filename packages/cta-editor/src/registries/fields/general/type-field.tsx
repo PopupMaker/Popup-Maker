@@ -28,22 +28,28 @@ const TypeField = ( {
 	settings: CallToAction[ 'settings' ];
 	updateSettings: ( settings: Partial< CallToAction[ 'settings' ] > ) => void;
 } ) => {
-	const instanceId = useInstanceId( TypeField );
+	// const instanceId = useInstanceId( TypeField );
+
+	if ( callToActionTypeOptions.length === 1 ) {
+		return null;
+	}
 
 	return (
-		<FieldPanel title={ __( 'Type', 'popup-maker' ) }>
-			<FieldRow label={ __( 'Call to Action type', 'popup-maker' ) }>
-				<SelectControl
-					id={ `popup-maker-call-to-action-type-${ instanceId }` }
-					label={ __( 'Type', 'popup-maker' ) }
-					options={ callToActionTypeOptions }
-					value={ settings.type ?? '' }
-					onChange={ ( type ) => updateSettings( { type } ) }
-					__next40pxDefaultSize
-					__nextHasNoMarginBottom
-				/>
-			</FieldRow>
-		</FieldPanel>
+		<>
+			{ /* <FieldPanel title={ __( 'Type', 'popup-maker' ) }>
+			<FieldRow label={ __( 'Call to Action type', 'popup-maker' ) }> */ }
+			<SelectControl
+				// id={ `popup-maker-call-to-action-type-${ instanceId }` }
+				label={ __( 'Action Type', 'popup-maker' ) }
+				options={ callToActionTypeOptions }
+				value={ settings.type ?? '' }
+				onChange={ ( type ) => updateSettings( { type } ) }
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+			{ /* </FieldRow> */ }
+			{ /* </FieldPanel> */ }
+		</>
 	);
 };
 

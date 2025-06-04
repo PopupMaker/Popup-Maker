@@ -1,6 +1,10 @@
 import { __ } from '@popup-maker/i18n';
 import { addFilter } from '@wordpress/hooks';
-import { FieldPanel, FieldRow, URLControl } from '@popup-maker/components';
+import {
+	// FieldPanel,
+	//  FieldRow,
+	URLControl,
+} from '@popup-maker/components';
 
 import type { CallToAction } from '@popup-maker/core-data';
 
@@ -11,19 +15,22 @@ const LinkFields = ( {
 	settings: CallToAction[ 'settings' ];
 	updateSettings: ( settings: Partial< CallToAction[ 'settings' ] > ) => void;
 } ) => {
+	if ( settings.type !== 'link' ) {
+		return null;
+	}
+
 	return (
-		<FieldPanel title={ __( 'URL', 'popup-maker' ) }>
-			<FieldRow label={ __( 'Target URL', 'popup-maker' ) }>
-				<URLControl
-					value={ settings.url }
-					onChange={ ( value ) =>
-						updateSettings( {
-							url: value.url,
-						} )
-					}
-				/>
-			</FieldRow>
-		</FieldPanel>
+		// <FieldPanel title={ __( 'Link Settings', 'popup-maker' ) }>
+		<URLControl
+			label={ __( 'Target URL', 'popup-maker' ) }
+			value={ settings.url }
+			onChange={ ( value ) =>
+				updateSettings( {
+					url: value.url,
+				} )
+			}
+		/>
+		// </FieldPanel>
 	);
 };
 

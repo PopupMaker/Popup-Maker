@@ -1,7 +1,15 @@
 import { __ } from '@popup-maker/i18n';
 import { clamp } from '@popup-maker/utils';
+import { URLControl } from '@popup-maker/components';
+import { CallToAction } from '@popup-maker/core-data';
 import { cleanForSlug } from '@wordpress/url';
-import { Notice, TextareaControl, TextControl } from '@wordpress/components';
+import { applyFilters } from '@wordpress/hooks';
+import {
+	Notice,
+	SelectControl,
+	TextareaControl,
+	TextControl,
+} from '@wordpress/components';
 
 import { useFields } from '../../hooks';
 
@@ -11,11 +19,50 @@ export const name = 'general';
 
 export const title = __( 'General', 'popup-maker' );
 
+export const callToActionTypeOptions: {
+	value: Exclude< CallToAction[ 'settings' ][ 'type' ], undefined > | '';
+	label: string;
+	disabled?: boolean;
+	[ key: string ]: any;
+}[] = applyFilters( 'popupMaker.callToActionEditor.typeOptions', [
+	{
+		value: '',
+		label: __( 'Select a type', 'popup-maker' ),
+	},
+	{
+		value: 'link',
+		label: __( 'Link', 'popup-maker' ),
+	},
+	// {
+	// 	value: 'openPopup',
+	// 	label: __( 'Open Popup (Available in Pro)', 'popup-maker' ),
+	// 	disabled: true,
+	// },
+	// {
+	// 	value: 'addToCart',
+	// 	label: __( 'Add to Cart (Available in Pro+)', 'popup-maker' ),
+	// 	disabled: true,
+	// },
+	// {
+	// 	value: 'applyDiscount',
+	// 	label: __( 'Apply Discount (Available in Pro+)', 'popup-maker' ),
+	// 	disabled: true,
+	// },
+] ) as {
+	value: Exclude< CallToAction[ 'settings' ][ 'type' ], undefined > | '';
+	label: string;
+	disabled?: boolean;
+	[ key: string ]: any;
+}[];
+
 export const Component = ( {
 	callToAction,
 	updateFields,
+	updateSettings,
 }: BaseEditorTabProps ) => {
 	const { getTabFields } = useFields();
+
+	const { settings } = callToAction;
 
 	const descriptionRowEst = ( callToAction.excerpt ?? '' ).length / 80;
 	const descriptionRows = clamp( descriptionRowEst, 1, 5 );
@@ -23,8 +70,8 @@ export const Component = ( {
 	return (
 		<div className="general-tab">
 			<TextControl
-				label={ __( 'Call to Action label', 'popup-maker' ) }
-				hideLabelFromVision={ true }
+				label={ __( 'Name', 'popup-maker' ) }
+				// hideLabelFromVision={ true }
 				placeholder={ __( 'Name…', 'popup-maker' ) }
 				className="title-field"
 				value={ callToAction.title ?? '' }
@@ -42,8 +89,8 @@ export const Component = ( {
 				rows={ descriptionRows }
 				// @ts-ignore
 				scrolling={ descriptionRows > 5 ? 'auto' : 'no' }
-				label={ __( 'Call to Action description', 'popup-maker' ) }
-				hideLabelFromVision={ true }
+				label={ __( 'Description', 'popup-maker' ) }
+				// hideLabelFromVision={ true }
 				placeholder={ __( 'Add description…', 'popup-maker' ) }
 				className="description-field"
 				value={ callToAction.excerpt ?? '' }
@@ -59,6 +106,17 @@ export const Component = ( {
 				>
 					{ __( 'Enter a label for this set.', 'popup-maker' ) }
 				</Notice>
+			) }
+
+			{ callToActionTypeOptions.length > 1 && (
+				<SelectControl
+					label={ __( 'Action Type', 'popup-maker' ) }
+					options={ callToActionTypeOptions }
+					value={ settings.type ?? '' }
+					onChange={ ( type ) => updateSettings( { type } ) }
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
 			) }
 
 			{ getTabFields( 'general' ).map( ( field ) => (

@@ -1,8 +1,11 @@
-import { initTypeField, initTypeLinkFields } from './general';
+import {
+	//  initTypeField,
+	initTypeLinkFields,
+} from './general';
 import { initCustomFields } from './custom-fields';
 
 export const initFields = () => {
-	initTypeField();
+	// initTypeField();
 	initTypeLinkFields();
 	initCustomFields();
 };
