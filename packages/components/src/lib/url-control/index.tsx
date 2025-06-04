@@ -332,7 +332,7 @@ const URLControl = (
 				} }
 			>
 				{ ! isEditing && parsedValue.url.length > 0 ? (
-					<div className="suggestion">
+					<div className="chosen-suggestion">
 						<Icon icon={ globe } className="suggestion-item-icon" />
 						<span className="suggestion-item-header">
 							<span className="suggestion-item-title">

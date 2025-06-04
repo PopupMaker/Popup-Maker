@@ -48,9 +48,33 @@
 			}
 		}
 	}
+
+	.chosen-suggestion {
+		display: flex;
+		align-items: top;
+		gap: 8px;
+		padding: 12px 16px;
+		background-color: #f0f0f0;
+		border-radius: 2px;
+		font-size: 13px;
+
+		.suggestion-item-header {
+			display: flex;
+			flex-direction: column;
+			gap: 0;
+		}
+
+		.suggestion-item-title {
+			font-weight: 500;
+		}
+
+		.suggestion-item-info {
+			color: #757575;
+		}
+	}
 }
 
-.suggestions-popover > .components-popover__content {
+.suggestions-popover>.components-popover__content {
 	width: fit-content;
 
 	.suggestion {

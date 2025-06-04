@@ -15,6 +15,11 @@ import type { BaseEditorProps, BaseEditorTabProps, EditorTab } from '../types';
 /**
  * The base editor component.
  *
+ * NOTE: The editor now conditionally renders tabs based on the number of available tabs.
+ * - If there's only one tab, it renders the content directly without tab navigation.
+ * - If there are multiple tabs, it renders the full TabPanel interface.
+ * This provides a cleaner UX and is forward-compatible.
+ *
  * @param {BaseEditorProps} props The props to pass to the editor.
  *
  * @return {JSX.Element} The editor component.
@@ -30,7 +35,7 @@ const BaseEditor = ( {
 	 *
 	 * This allows for the use of dataStore or hooks in parent component.
 	 */
-	const [ tab, setTab ] = useControlledState< string >(
+	const [ activeTab, setActiveTab ] = useControlledState< string >(
 		props.tab,
 		'general',
 		props.setTab
@@ -105,6 +110,25 @@ const BaseEditor = ( {
 		return tabsFilter ? tabsFilter( _tabs ) : _tabs;
 	}, [ tabsFilter ] );
 
+	/**
+	 * Determine if we should show tabs or render content directly.
+	 */
+	const shouldShowTabs = tabs.length > 1;
+
+	/**
+	 * Get the component to render when not showing tabs.
+	 */
+	const getSingleTabComponent = () => {
+		if ( tabs.length === 0 ) {
+			return null;
+		}
+
+		// Find the active tab or use the first available tab
+		const targetTab =
+			tabs.find( ( tab ) => tab.name === activeTab ) || tabs[ 0 ];
+		return targetTab?.Component;
+	};
+
 	return (
 		<div className={ clsx( 'call-to-action-editor', className ) }>
 			{ beforeTabs && (
@@ -112,16 +136,31 @@ const BaseEditor = ( {
 			) }
 
 			<div className="editor-tabs-container">
-				<TabPanel
-					orientation="vertical"
-					initialTabName={ tab ?? 'general' }
-					onSelect={ setTab }
-					// @ts-ignore This is a bug in the @types/wordpress__components package.
-					tabs={ tabs }
-					className="editor-tabs"
-				>
-					{ ( { Component } ) => <Component { ...tabProps } /> }
-				</TabPanel>
+				{ shouldShowTabs ? (
+					<TabPanel
+						orientation="vertical"
+						initialTabName={ activeTab ?? 'general' }
+						onSelect={ setActiveTab }
+						// @ts-ignore This is a bug in the @types/wordpress__components package.
+						tabs={ tabs }
+						className="editor-tabs"
+					>
+						{ ( { Component } ) => <Component { ...tabProps } /> }
+					</TabPanel>
+				) : (
+					<div className="editor-tab-content">
+						{ ( () => {
+							const Component = getSingleTabComponent();
+							return Component ? (
+								<Component { ...tabProps } />
+							) : (
+								<div className="no-content-available">
+									No content available
+								</div>
+							);
+						} )() }
+					</div>
+				) }
 			</div>
 
 			{ afterTabs && (

@@ -42,7 +42,6 @@ export const withQueryParams = (
 		onClose: onCloseProp,
 		...componentProps
 	}: EditorWithQueryParamsProps ) {
-		// Tempoary.
 		const closeOnSave = true;
 
 		const { tab, setTab, clearEditorParams, editorId } = useEditor();
