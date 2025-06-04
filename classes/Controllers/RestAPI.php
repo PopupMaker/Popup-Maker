@@ -269,7 +269,7 @@ class RestAPI extends Controller {
 
 				// If edit context, return the current settings.
 				if ( 'edit' === $request['context'] ) {
-					$settings = $cta->get_settings();
+					$settings = get_post_meta( $obj['id'], 'cta_settings', true );
 				} else {
 					// Otherwise, return the public settings.
 					$settings = $cta->get_public_settings();
