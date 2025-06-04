@@ -35,5 +35,6 @@ function get_default_settings() {
 function get_default_call_to_action_settings() {
 	return [
 		'type' => 'link',
+		'url'  => '',
 	];
 }

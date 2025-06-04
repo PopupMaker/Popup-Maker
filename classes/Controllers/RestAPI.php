@@ -270,6 +270,10 @@ class RestAPI extends Controller {
 				// If edit context, return the current settings.
 				if ( 'edit' === $request['context'] ) {
 					$settings = get_post_meta( $obj['id'], 'cta_settings', true );
+
+					if ( empty( $settings ) ) {
+						$settings = \PopupMaker\get_default_call_to_action_settings();
+					}
 				} else {
 					// Otherwise, return the public settings.
 					$settings = $cta->get_public_settings();

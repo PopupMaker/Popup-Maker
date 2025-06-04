@@ -120,6 +120,7 @@ export const defaultValues: EditableCta = {
 	status: 'draft',
 	settings: {
 		type: 'link',
+		url: '',
 	},
 	// Required Post fields
 	date: null,
