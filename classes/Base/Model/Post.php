@@ -78,7 +78,7 @@ class Post {
 		$this->post = $post;
 
 		$properties = [
-			'id'     => $post->ID,
+			'ID'     => $post->ID,
 			'slug'   => $post->post_name,
 			'title'  => $post->post_title,
 			'status' => $post->post_status,
@@ -140,7 +140,7 @@ class Post {
 	 */
 	public function to_array() {
 		return [
-			'id'     => $this->ID,
+			'ID'     => $this->ID,
 			'slug'   => $this->slug,
 			'title'  => $this->title,
 			'status' => $this->status,
