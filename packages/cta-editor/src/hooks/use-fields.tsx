@@ -121,7 +121,9 @@ const useFields = () => {
 	const getTabFields = ( tab: string ): FieldDef[] => {
 		const fields = applyFilters(
 			`popupMaker.callToActionEditor.tabFields.${ tab }`,
-			tabFields[ tab ] ?? []
+			tabFields[ tab ] ?? [],
+			settings,
+			updateSettings
 		) as FieldDef[];
 
 		return fields
