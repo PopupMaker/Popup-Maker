@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import { cloneDeep, mergeWith } from 'lodash';
 import { compare as jsonpatchCompare } from 'fast-json-patch';
 
 import { __, sprintf } from '@popup-maker/i18n';
@@ -503,12 +503,21 @@ const editorActions = {
 					}
 
 					// Create a new object with the edits deeply merged into the canonical entity
-					const editedEntity = merge(
+					// First clone the canonical entity, then deep merge the edits
+					const editedEntity = mergeWith(
 						{},
-						canonicalCallToAction,
-						edits
+						cloneDeep( canonicalCallToAction ),
+						edits,
+						( objValue, srcValue ) => {
+							if ( Array.isArray( srcValue ) ) {
+								// Always replace arrays completely, even if empty
+								return srcValue.slice();
+							}
+							return undefined;
+						}
 					);
 
+					// Force patches for empty arrays to ensure they are saved
 					const diff = jsonpatchCompare(
 						canonicalCallToAction,
 						editedEntity
