@@ -150,12 +150,18 @@ class CallToAction extends Post {
 	 * @return mixed|false
 	 */
 	public function get_setting( $key, $default_value = false ) {
-		// Support camelCase, snake_case, and dot.notation.
-		// Check for camelKeys & dot.notation.
-		$value = \PopupMaker\fetch_key_from_array( $key, $this->settings, 'camelCase' );
+		if ( isset( $this->settings[ $key ] ) ) {
+			$value = $this->settings[ $key ];
+		} else {
+			// Support camelCase, snake_case, and dot.notation.
+			// Check for camelKeys & dot.notation.
+			$value = \PopupMaker\fetch_key_from_array( $key, $this->settings, 'camelCase' );
 
-		if ( null === $value ) {
-			$value = $default_value;
+			if ( null === $value ) {
+				if ( null === $value ) {
+					$value = $default_value;
+				}
+			}
 		}
 
 		/**
