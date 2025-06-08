@@ -306,11 +306,11 @@ class Assets extends Controller {
 		}
 	}
 
-		/**
-		 * Get global vars.
-		 *
-		 * @return array
-		 */
+	/**
+	 * Get global vars.
+	 *
+	 * @return array
+	 */
 	private function get_global_vars() {
 		$additional_global_vars = is_admin() ?
 		$this->get_admin_global_vars() :
@@ -320,6 +320,7 @@ class Assets extends Controller {
 			'popup_maker/global_vars',
 			array_merge(
 				[
+					'siteUrl'   => esc_url_raw( site_url() ),
 					'version'   => $this->container->get( 'version' ),
 					'pluginUrl' => $this->container->get_url( '' ),
 					'assetsUrl' => $this->container->get_url( 'assets/' ),
@@ -330,11 +331,11 @@ class Assets extends Controller {
 		);
 	}
 
-		/**
-		 * Get admin-onlyglobal vars.
-		 *
-		 * @return array
-		 */
+	/**
+	 * Get admin-onlyglobal vars.
+	 *
+	 * @return array
+	 */
 	private function get_admin_global_vars() {
 		$wp_version = get_bloginfo( 'version' );
 		// Strip last number from version as they won't be breaking changes.
@@ -356,20 +357,20 @@ class Assets extends Controller {
 		);
 	}
 
-		/**
-		 * Get frontend-only global vars.
-		 *
-		 * @return array
-		 */
+	/**
+	 * Get frontend-only global vars.
+	 *
+	 * @return array
+	 */
 	private function get_frontend_global_vars() {
 		return apply_filters( 'popup_maker/frontend_global_vars', [] );
 	}
 
-		/**
-		 * Print global vars.
-		 *
-		 * @return void
-		 */
+	/**
+	 * Print global vars.
+	 *
+	 * @return void
+	 */
 	public function print_global_vars() {
 		static $printed;
 
@@ -389,9 +390,9 @@ class Assets extends Controller {
 			<?php
 	}
 
-		/**
-		 * Auto load styles if scripts are enqueued.
-		 */
+	/**
+	 * Auto load styles if scripts are enqueued.
+	 */
 	public function autoload_styles_for_scripts() {
 		$packages = $this->get_packages();
 
@@ -445,11 +446,11 @@ class Assets extends Controller {
 		}
 	}
 
-		/**
-		 * Fix old handles that might be enqueueed and not loaded, load their replacements.
-		 *
-		 * @return void
-		 */
+	/**
+	 * Fix old handles that might be enqueueed and not loaded, load their replacements.
+	 *
+	 * @return void
+	 */
 	public function fix_old_handles() {
 	}
 }
