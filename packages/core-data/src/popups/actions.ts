@@ -33,6 +33,8 @@ const {
 	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
 
+// TODO This should be reported from call-to-actions/actions.ts with edit history and diffs.
+
 /*****************************************************
  * SECTION: Entity actions
  *****************************************************/
