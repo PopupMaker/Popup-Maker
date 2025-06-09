@@ -30,6 +30,7 @@ import {
 	// @ts-ignore - Experimental components
 	useBlockEditingMode,
 } from '@wordpress/block-editor';
+import { decodeEntities } from '@wordpress/html-entities';
 import {
 	cloneBlock,
 	createBlock,
@@ -715,11 +716,13 @@ function ButtonEdit( props: ButtonEditProps ) {
 												textOverflow: 'ellipsis',
 												whiteSpace: 'nowrap',
 											} }
-											title={
+											title={ decodeEntities(
 												selectedCTA?.title?.rendered
-											}
+											) }
 										>
-											{ selectedCTA?.title?.rendered }
+											{ decodeEntities(
+												selectedCTA?.title?.rendered
+											) }
 										</div>
 
 										<Button

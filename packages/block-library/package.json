@@ -37,6 +37,7 @@
 		"@wordpress/element": "^6.15.1",
 		"@wordpress/icons": "^10.15.1",
 		"@wordpress/data": "^10.15.1",
+		"@wordpress/html-entities": "^4.25.0",
 		"clsx": "^2.1.1"
 	},
 	"devDependencies": {
