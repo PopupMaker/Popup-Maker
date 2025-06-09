@@ -1,6 +1,5 @@
 import { __ } from '@popup-maker/i18n';
 import { clamp } from '@popup-maker/utils';
-import { URLControl } from '@popup-maker/components';
 import { CallToAction } from '@popup-maker/core-data';
 import { cleanForSlug } from '@wordpress/url';
 import { applyFilters } from '@wordpress/hooks';
@@ -20,6 +19,18 @@ export const name = 'general';
 export const title = __( 'General', 'popup-maker' );
 
 export const getCallToActionTypeOptions = () => {
+	// Get all registered CTA types from the global data
+	const { cta_types: registeredCtaTypes = {} } =
+		window.popupMakerCtaEditor || {};
+
+	// Convert registered CTA types to dropdown options
+	const registeredOptions = Object.values( registeredCtaTypes ).map(
+		( ctaType: any ) => ( {
+			value: ctaType.key,
+			label: ctaType.label,
+		} )
+	);
+
 	const callToActionTypeOptions: {
 		value: Exclude< CallToAction[ 'settings' ][ 'type' ], undefined > | '';
 		label: string;
@@ -30,10 +41,8 @@ export const getCallToActionTypeOptions = () => {
 			value: '',
 			label: __( 'Select a type', 'popup-maker' ),
 		},
-		{
-			value: 'link',
-			label: __( 'Link', 'popup-maker' ),
-		},
+		// Include all registered CTA types (core + pro)
+		...registeredOptions,
 		// {
 		// 	value: 'openPopup',
 		// 	label: __( 'Open Popup (Available in Pro)', 'popup-maker' ),
