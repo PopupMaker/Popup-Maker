@@ -29,7 +29,13 @@ const TokenSelectField = ( {
 			return true;
 		}
 
-		return opt.toLowerCase().includes( inputText.toLowerCase() );
+		if ( typeof options[ opt ] === 'string' ) {
+			return options[ opt ]
+				.toLowerCase()
+				.includes( inputText.toLowerCase() );
+		}
+
+		return false;
 	} );
 
 	const renderOption = ( optionValue: string | { value: string } ) => {
