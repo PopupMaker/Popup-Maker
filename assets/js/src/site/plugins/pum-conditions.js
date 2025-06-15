@@ -115,14 +115,21 @@
 				return false;
 			}
 
-			// TODO once all extensions updated and in circulation for v1.7, change the below to pass settings, not condition.
+			// Get v1.21.0+ condition callback.
+			const conditionCallback = getConditionCallback( target );
 
-			// Method calling logic
+			if ( conditionCallback ) {
+				return conditionCallback.apply( this, [ settings, condition ] );
+			}
+
+			// Backward Compatible Method calling logic.
+			// TODO once all extensions updated and in circulation for v1.7, change the below to pass settings, not condition.
 			if ( $.fn.popmake.conditions[ target ] ) {
 				return $.fn.popmake.conditions[ target ].apply( this, [
 					condition,
 				] );
 			}
+
 			if ( window.console ) {
 				console.warn( 'Condition ' + target + ' does not exist.' );
 				return true;
@@ -130,5 +137,44 @@
 		},
 	} );
 
-	$.fn.popmake.conditions = $.fn.popmake.conditions || {};
+	// Cache condition callbacks.
+	let popupConditionCallbacks = {};
+
+	/**
+	 * Get the condition callbacks for the current popup.
+	 *
+	 * @since 1.21.0
+	 *
+	 * @return {Object} The condition callbacks object.
+	 */
+	const getConditionCallbacks = () => {
+		if ( Object.keys( popupConditionCallbacks ).length ) {
+			return popupConditionCallbacks;
+		}
+
+		popupConditionCallbacks = window.PUM.hooks.applyFilters(
+			'popupMaker.conditionCallbacks',
+			{}
+		);
+
+		// Set the conditions on the Popup Maker object for backwards compatibility.
+		$.fn.popmake.conditionCallbacks = popupConditionCallbacks;
+
+		return popupConditionCallbacks;
+	};
+
+	/**
+	 * Get the condition callback for a given condition ID.
+	 *
+	 * @since 1.21.0
+	 *
+	 * @param {string} conditionId - The ID of the condition to get the callback for.
+	 * @return {Function|false} The condition callback function, or false if not found.
+	 */
+	const getConditionCallback = ( conditionId ) => {
+		const conditionCallbacks = getConditionCallbacks();
+		return conditionCallbacks[ conditionId ] ?? false;
+	};
+
+	// $.fn.popmake.conditions = $.fn.popmake.conditions || getConditions();
 } )( jQuery, document );
