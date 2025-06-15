@@ -144,6 +144,6 @@ function safe_redirect( $url, $status = 302 ) {
 		}
 	}
 
-	wp_safe_redirect( esc_url_raw( $url ), $status );
+	wp_safe_redirect( sanitize_url( $url ), $status );
 	exit;
 }
