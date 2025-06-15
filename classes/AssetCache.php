@@ -883,7 +883,7 @@ class PUM_AssetCache {
 	 *
 	 * @since X.X.X
 	 */
-	public static function register_script( $handle, $src, $deps = [], $version = null, $in_footer = false ) {
+	public static function register_script( $handle, $src, $deps = [], $version = null, $in_footer = false, $merge_priority = 5 ) {
 		// Implement internal store of scripts. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
 		self::$registered_scripts[ $handle ] = [
 			'src'       => $src,
@@ -899,7 +899,7 @@ class PUM_AssetCache {
 			add_filter( 'pum_generated_js', function ( $js = [] ) use ( $handle, $src ): array {
 				$js[ $handle ] = [
 					'content'  => self::get_asset_contents( $src ),
-					'priority' => 5,
+					'priority' => $merge_priority,
 				];
 
 				return $js;
@@ -922,7 +922,7 @@ class PUM_AssetCache {
 	 *
 	 * @since X.X.X
 	 */
-	public static function register_style( $handle, $src, $deps = [], $version = null, $media = 'all' ) {
+	public static function register_style( $handle, $src, $deps = [], $version = null, $media = 'all', $merge_priority = 5 ) {
 		// Implement internal store of styles. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
 		self::$registered_styles[ $handle ] = [
 			'src'     => $src,
@@ -938,7 +938,7 @@ class PUM_AssetCache {
 			add_filter( 'pum_generated_css', function ( $css = [] ) use ( $handle, $src ): array {
 				$css[ $handle ] = [
 					'content'  => self::get_asset_contents( $src ),
-					'priority' => 5,
+					'priority' => $merge_priority,
 				];
 
 				return $css;
