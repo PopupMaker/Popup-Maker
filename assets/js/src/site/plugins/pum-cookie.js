@@ -4,7 +4,6 @@
  *
  * Defines the pm_cookie & pm_remove_cookie global functions.
  */
-var pm_cookie, pm_cookie_json, pm_remove_cookie;
 ( function ( $ ) {
 	'use strict';
 
@@ -207,7 +206,7 @@ var pm_cookie, pm_cookie_json, pm_remove_cookie;
 		cookie: cookie(),
 	} );
 
-	pm_cookie = $.pm_cookie = $.fn.popmake.cookie.process;
-	pm_cookie_json = $.pm_cookie_json = $.fn.popmake.cookie.getJSON;
-	pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
+	window.pm_cookie = $.pm_cookie = $.fn.popmake.cookie.process;
+	window.pm_cookie_json = $.pm_cookie_json = $.fn.popmake.cookie.getJSON;
+	window.pm_remove_cookie = $.pm_remove_cookie = $.fn.popmake.cookie.remove;
 } )( jQuery );
