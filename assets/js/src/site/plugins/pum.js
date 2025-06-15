@@ -149,6 +149,9 @@
 				)
 			);
 		},
+		setCookieRaw: function ( cookie_name, value, settings ) {
+			$.pm_cookie( cookie_name, value, settings );
+		},
 		clearCookie: function ( cookie_name, callback ) {
 			$.pm_remove_cookie( cookie_name );
 
@@ -420,10 +423,18 @@
 
 			$popup.trigger( 'pumBeforeOpen' );
 
+			var preventOpen = PUM.hooks.applyFilters(
+				'popupMaker.popup.preventOpen',
+				false,
+				$popup,
+				settings
+			);
+
 			/**
 			 * Allow for preventing popups from opening.
 			 */
 			if (
+				preventOpen ||
 				$popup.hasClass( 'preventOpen' ) ||
 				$container.hasClass( 'preventOpen' )
 			) {
@@ -604,9 +615,8 @@
 						`click.popmake-${ settings.id }`,
 						function ( e ) {
 							var $target = $( e.target ),
-								$container = $target.closest(
-									'.pum-container'
-								);
+								$container =
+									$target.closest( '.pum-container' );
 
 							if ( ! $container.length ) {
 								$.fn.popmake.last_close_trigger =
@@ -825,8 +835,8 @@
 				}
 			}
 
-			reposition.my = $.trim( reposition.my );
-			reposition.at = $.trim( reposition.at );
+			reposition.my = reposition.my.trim();
+			reposition.at = reposition.at.trim();
 
 			if ( $popup.is( ':hidden' ) ) {
 				opacity.overlay = $popup.css( 'opacity' );
@@ -951,8 +961,8 @@
 							at: start.at + ' bottom',
 						};
 					}
-					start.my = $.trim( start.my );
-					start.at = $.trim( start.at );
+					start.my = start.my.trim();
+					start.at = start.at.trim();
 					break;
 			}
 			start.of = window;

@@ -40,6 +40,12 @@
 
 	// Initiate when ready.
 	$( function () {
+		const shouldInit = PUM.hooks.applyFilters( 'pum.shouldInit', true );
+
+		if ( ! shouldInit ) {
+			return;
+		}
+
 		// TODO can this be moved outside doc.ready since we are awaiting our own promises first?
 		var initHandler = PUM.hooks.applyFilters( 'pum.initHandler', PUM.init );
 		var initPromises = PUM.hooks.applyFilters( 'pum.initPromises', [] );
@@ -60,13 +66,13 @@
 			 * If there are forms in the popup add a hidden field for use in retriggering the popup on reload.
 			 */
 			if ( $forms.length ) {
-				var $hiddenField = $('<input>', {
+				var $hiddenField = $( '<input>', {
 					type: 'hidden',
 					name: 'pum_form_popup_id',
-					value: popupID
-				});
-				
-				$forms.append($hiddenField);
+					value: popupID,
+				} );
+
+				$forms.append( $hiddenField );
 			}
 		} )
 		.on( 'pumAfterClose', window.PUM.actions.stopIframeVideosPlaying );
