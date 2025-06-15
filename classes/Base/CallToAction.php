@@ -64,4 +64,28 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 			'fields' => $this->fields(),
 		];
 	}
+
+	/**
+	 * Safely redirect user with fallback handling & sanitization.
+	 *
+	 * This function handles the common pattern of redirecting with fallbacks
+	 * used across PopupMaker Pro helper classes.
+	 *
+	 * @param string $redirect_url Redirect URL.
+	 * @param string $fallback_url Fallback URL.
+	 * @return void
+	 */
+	public function safe_redirect( string $redirect_url = '', string $fallback_url = '' ): void {
+		if ( ! empty( $redirect_url ) && filter_var( $redirect_url, FILTER_VALIDATE_URL ) ) {
+			\PopupMaker\safe_redirect( $redirect_url );
+		} elseif ( ! empty( $fallback_url ) ) {
+			\PopupMaker\safe_redirect( $fallback_url );
+		} else {
+			// Default fallback.
+			$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ 'cta', 'pid' ] );
+			$url      = remove_query_arg( $cta_args );
+			\PopupMaker\safe_redirect( $url );
+		}
+		exit;
+	}
 }
