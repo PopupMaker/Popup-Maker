@@ -66,7 +66,7 @@ class PUM_Admin_BlockEditor {
 	 * @return bool
 	 */
 	private static function load_block_library() {
-		return apply_filters( 'popup_maker/block_editor/load_block_library', pum_is_popup_editor() || ! is_admin() );
+		return apply_filters( 'popup_maker/block_editor/load_block_library', pum_is_popup_editor() );
 	}
 
 	/**
