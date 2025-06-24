@@ -200,6 +200,7 @@ class PUM_Site_Assets {
 				'jquery',
 				'jquery-ui-core',
 				'jquery-ui-position',
+				'wp-hooks',
 			] );
 
 			wp_register_script(
