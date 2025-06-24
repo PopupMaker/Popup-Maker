@@ -29,6 +29,7 @@ This update begins the process of modernizing our codebase while polishing exist
 -   Updated build processes to rely on @wordpress/scripts & Webpack, as well as improved developer tooling. This should result in smaller JS & CSS file sizes, more reliable builds, and faster development cycles.
 -   Updated all branding to use SVGs and new marks/logos.
 -   Improve reliability of admin notice dismissals.
+-   Use `navigator.sendBeacon` when available for more reliable analytics.
 -   Better handling of version changes & migration processing during plugin updates.
 
 **Fixes**

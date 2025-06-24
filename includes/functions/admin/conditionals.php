@@ -60,7 +60,7 @@ function pum_is_all_popups_page() {
 function pum_is_popup_editor() {
 	global $pagenow;
 
-	return  pum_is_admin_page()
+	return pum_is_admin_page()
 		&& 'popup' === pum_typenow()
 		&& in_array( $pagenow, [ 'post-new.php', 'post.php' ], true );
 }
