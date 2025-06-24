@@ -1,9 +1,3 @@
-/**
- * Defines the core pum analytics methods.
- * Version 1.4
- */
-
-var PUM_Analytics;
 ( function ( $ ) {
 	'use strict';
 
@@ -15,16 +9,15 @@ var PUM_Analytics;
 		typeof pum_vars.analytics_api !== 'undefined' && pum_vars.analytics_api
 	);
 
-	PUM_Analytics = {
+	window.PUM_Analytics = {
 		beacon: function ( data, callback ) {
-			var beacon = new Image(),
-				url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl,
+			var url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl,
 				opts = {
-					route: pum.hooks.applyFilters(
+					route: window.pum.hooks.applyFilters(
 						'pum.analyticsBeaconRoute',
 						'/' + pum_vars.analytics_route + '/'
 					),
-					data: pum.hooks.applyFilters(
+					data: window.pum.hooks.applyFilters(
 						'pum.AnalyticsBeaconData',
 						$.extend(
 							true,
@@ -50,9 +43,52 @@ var PUM_Analytics;
 
 			// Create a beacon if a url is provided
 			if ( url ) {
+				// Use modern sendBeacon API when available (more reliable for page exit events)
+				if ( 'sendBeacon' in navigator ) {
+					try {
+						// Convert data to FormData for sendBeacon
+						var formData = new FormData();
+						for ( var key in opts.data ) {
+							if (
+								Object.prototype.hasOwnProperty.call(
+									opts.data,
+									key
+								)
+							) {
+								// Check if the value is an object and serialize it
+								var value = opts.data[ key ];
+								if (
+									typeof value === 'object' &&
+									value !== null
+								) {
+									value = JSON.stringify( value );
+								}
+								formData.append( key, value );
+							}
+						}
+
+						// Send beacon - returns true if queued successfully
+						var success = navigator.sendBeacon( url, formData );
+
+						// Call callback if provided
+						if ( success ) {
+							opts.callback();
+						}
+
+						return;
+					} catch ( error ) {
+						// Fall back to image beacon if sendBeacon fails
+						console.warn(
+							'sendBeacon failed, falling back to image beacon:',
+							error
+						);
+					}
+				}
+
+				// Fallback: Use traditional image beacon method
+				var beacon = new Image();
 				// Attach the event handlers to the image object
 				$( beacon ).on( 'error success load done', opts.callback );
-
 				// Attach the src for the script call
 				beacon.src = url + '?' + $.param( opts.data );
 			}
@@ -72,7 +108,7 @@ var PUM_Analytics;
 			 * Track opens for popups.
 			 */
 			.on( 'pumAfterOpen.core_analytics', '.pum', function () {
-				var $popup = PUM.getPopup( this ),
+				var $popup = window.PUM.getPopup( this ),
 					data = {
 						pid:
 							parseInt(
@@ -86,14 +122,14 @@ var PUM_Analytics;
 					data.pid > 0 &&
 					! $( 'body' ).hasClass( 'single-popup' )
 				) {
-					PUM_Analytics.beacon( data );
+					window.PUM_Analytics.beacon( data );
 				}
 			} );
 		/**
 		 * Track form submission conversions
 		 */
 		$( function () {
-			PUM.hooks.addAction(
+			window.PUM.hooks.addAction(
 				'pum.integration.form.success',
 				function ( form, args ) {
 					// If the submission has already been counted in the backend, we can bail early.
@@ -119,7 +155,7 @@ var PUM_Analytics;
 						data.pid > 0 &&
 						! $( 'body' ).hasClass( 'single-popup' )
 					) {
-						PUM_Analytics.beacon( data );
+						window.PUM_Analytics.beacon( data );
 					}
 				}
 			);

@@ -262,6 +262,8 @@
 	// Initialize hooks directly on PUM
 	window.PUM.hooks = window.PUM.hooks || new EventManager();
 
+	// window.PUM.hooks = window.wp.hooks;
+
 	// Maintain backward compatibility with lowercase pum
 	window.pum = window.PUM;
 } )( window );
