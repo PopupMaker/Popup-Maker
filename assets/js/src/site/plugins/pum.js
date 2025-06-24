@@ -79,11 +79,11 @@
 			if ( isInt( el ) ) {
 				$this = PUM.get( '#pum-' + el );
 			} else if ( el === 'current' ) {
-				$this = PUM.get( '.pum-overlay.pum-active:eq(0)', true );
+				$this = $( '.pum-overlay.pum-active:eq(0)' );
 			} else if ( el === 'open' ) {
-				$this = PUM.get( '.pum-overlay.pum-active', true );
+				$this = $( '.pum-overlay.pum-active' );
 			} else if ( el === 'closed' ) {
-				$this = PUM.get( '.pum-overlay:not(.pum-active)', true );
+				$this = $( '.pum-overlay:not(.pum-active)' );
 			} else if ( el instanceof jQuery ) {
 				$this = el;
 			} else {
