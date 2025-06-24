@@ -6,6 +6,7 @@ export { default as EntitySelectControl } from './entity-select-control';
 export { default as FieldPanel } from './field-panel';
 export { default as FieldRow } from './field-row';
 export { default as FreeFormEditControl } from './freeform-control';
+export { default as FullScreenPanel } from './full-screen-panel';
 export {
 	default as ListTable,
 	type SortConfig,
