@@ -61,12 +61,46 @@ class PUM_Admin_BlockEditor {
 	}
 
 	/**
+	 * Check if the block editor is active.
+	 *
+	 * @param int|null $post_id Post ID.
+	 * @return bool
+	 */
+	public static function is_block_editor_active( $post_id = null ) {
+		// If no post ID is provided, attempt to get it from the global $pagenow.
+		global $pagenow;
+
+		// Check that we're on the post editing screen.
+		if ( 'post.php' !== $pagenow && 'post-new.php' !== $pagenow ) {
+			return false;
+		}
+
+		// Determine post type.
+		$post_type = null;
+
+		 // phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['post_type'] ) ) {
+			$post_type = sanitize_key( $_GET['post_type'] );
+		} elseif ( isset( $_GET['post'] ) ) {
+			$post_id   = (int) $_GET['post'];
+			$post_type = get_post_type( $post_id );
+		}
+		 // phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		if ( ! $post_type ) {
+			return false;
+		}
+
+		return use_block_editor_for_post_type( $post_type );
+	}
+
+	/**
 	 * Check if the block library should be loaded.
 	 *
 	 * @return bool
 	 */
 	private static function load_block_library() {
-		return apply_filters( 'popup_maker/block_editor/load_block_library', pum_is_popup_editor() );
+		return apply_filters( 'popup_maker/block_editor/load_block_library', self::is_block_editor_active() && pum_is_popup_editor() );
 	}
 
 	/**
