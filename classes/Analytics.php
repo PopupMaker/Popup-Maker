@@ -179,7 +179,7 @@ class PUM_Analytics {
 			apply_filters(
 				'pum_analytics_rest_route_args',
 				[
-					'methods'             => 'GET',
+					'methods'             => [ 'GET', 'POST' ],
 					'callback'            => [ __CLASS__, 'analytics_endpoint' ],
 					'permission_callback' => '__return_true',
 					'args'                => [
