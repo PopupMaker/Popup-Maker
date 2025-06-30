@@ -51,6 +51,7 @@ export default function save( { attributes, className } ) {
 	const typographyProps = getTypographyClassesAndStyles( attributes );
 
 	const buttonClasses = clsx(
+		'pum-cta',
 		'wp-block-popup-maker-cta-button__link',
 		// Themes like Twenty Twenty-Three use these classes to style buttons.
 		'wp-element-button',
