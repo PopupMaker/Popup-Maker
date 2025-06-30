@@ -18,12 +18,16 @@
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "build/index.js",
-	"types": "build-types/index.d.ts",
+	"main": "build/src/index.js",
+	"types": "build-types/src/index.d.ts",
 	"wpScript": true,
+	"sideEffects": true,
 	"dependencies": {
 		"serialize-query-params": "^2.0.2",
 		"use-query-params": "^2.2.1"
+	},
+	"peerDependencies": {
+		"react-router": "^6.0.0 || ^7.0.0"
 	},
 	"scripts": {
 		"build:tsc": "tsc",
@@ -35,7 +39,7 @@
 		"packages-update": "wp-scripts packages-update"
 	},
 	"publishConfig": {
-		"access": "restricted"
+		"access": "public"
 	},
 	"files": [
 		"adapters",
