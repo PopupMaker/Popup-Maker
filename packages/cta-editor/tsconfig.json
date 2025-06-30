@@ -4,7 +4,17 @@
 		// "noImplicitAny": true,
 		"rootDir": "src",
 		"outDir": "build",
-		"declarationDir": "build-types"
+		"declarationDir": "build-types",
+		"baseUrl": ".",
+		"paths": {
+			"@popup-maker/components": [ "../components/src" ],
+			"@popup-maker/core-data": [ "../core-data/src" ],
+			"@popup-maker/i18n": [ "../i18n/src" ],
+			"@popup-maker/fields": [ "../fields/src" ],
+			"@popup-maker/registry": [ "../registry/src" ],
+			"@popup-maker/use-query-params": [ "../use-query-params/src" ],
+			"@popup-maker/utils": [ "../utils/src" ]
+		}
 	},
 	"include": [ "./src/**/*" ],
 	"references": [
@@ -22,6 +32,9 @@
 		},
 		{
 			"path": "../registry"
+		},
+		{
+			"path": "../use-query-params"
 		},
 		{
 			"path": "../utils"

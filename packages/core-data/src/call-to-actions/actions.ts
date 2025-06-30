@@ -508,7 +508,7 @@ const editorActions = {
 						{},
 						cloneDeep( canonicalCallToAction ),
 						edits,
-						( objValue, srcValue ) => {
+						( _objValue, srcValue ) => {
 							if ( Array.isArray( srcValue ) ) {
 								// Always replace arrays completely, even if empty
 								return srcValue.slice();

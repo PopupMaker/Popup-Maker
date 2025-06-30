@@ -8,30 +8,5 @@
 	},
 	"include": [ "./src/**/*" ],
 	"types": [ "jquery" ],
-	"references": [
-		{
-			"path": "../cta-editor"
-		},
-		{
-			"path": "../components"
-		},
-		{
-			"path": "../core-data"
-		},
-		{
-			"path": "../data"
-		},
-		{
-			"path": "../fields"
-		},
-		{
-			"path": "../icons"
-		},
-		{
-			"path": "../registry"
-		},
-		{
-			"path": "../utils"
-		}
-	]
+	"references": []
 }

@@ -1,8 +1,7 @@
 import { __ } from '@popup-maker/i18n';
 import { addFilter, applyFilters } from '@wordpress/hooks';
-import { useInstanceId } from '@wordpress/compose';
 import { SelectControl } from '@wordpress/components';
-import { FieldPanel, FieldRow } from '@popup-maker/components';
+// import { FieldPanel, FieldRow } from '@popup-maker/components';
 
 import type { CallToAction } from '@popup-maker/core-data';
 

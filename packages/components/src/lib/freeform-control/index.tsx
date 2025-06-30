@@ -19,6 +19,14 @@ type Props< T extends string > = {
 	minHeight?: number;
 };
 
+export interface WindowWP {
+	oldEditor: {
+		initialize: ( id: string, settings: any ) => void;
+		remove: ( id: string ) => void;
+	};
+	blocks?: unknown;
+}
+
 declare global {
 	interface Window {
 		tinymce: any;
@@ -29,13 +37,7 @@ declare global {
 				settings: any;
 			};
 		};
-		wp: {
-			oldEditor: {
-				initialize: ( id: string, settings: any ) => void;
-				remove: ( id: string ) => void;
-			};
-			blocks?: unknown;
-		};
+		wp: WindowWP;
 	}
 }
 
