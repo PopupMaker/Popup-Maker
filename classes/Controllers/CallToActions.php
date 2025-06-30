@@ -25,6 +25,7 @@ class CallToActions extends Controller {
 	 */
 	public function init() {
 		add_action( 'template_redirect', [ $this, 'template_redirect' ] );
+		add_action( 'popup_maker/cta_conversion', [ $this, 'track_cta_conversion' ], 10, 2 );
 	}
 
 	/**
@@ -56,35 +57,27 @@ class CallToActions extends Controller {
 			return;
 		}
 
-		$extra_args = [
+		/**
+		 * Filters the arguments passed to the CTA event.
+		 *
+		 * @param array<string,mixed> $extra_args {
+		 *     @type int    $cta_id The CTA ID.
+		 *     @type string $cta_uuid The CTA UUID.
+		 *     @type int    $popup_id The popup ID.
+		 *     @type bool   $notrack Whether to not track the conversion.
+		 *     @type string $source_url The source URL.
+		 * }
+		 * @param \PopupMaker\Models\CallToAction $call_to_action The CTA object.
+		 *
+		 * @return array<string,mixed>
+		 */
+		$extra_args = apply_filters( 'popup_maker/cta_event_args', [
+			'cta_id'     => $call_to_action->ID,
 			'cta_uuid'   => $cta_uuid,
 			'popup_id'   => $popup_id,
 			'notrack'    => $notrack,
 			'source_url' => wp_get_raw_referer(),
-		];
-
-		// Basic conversion tracking.
-		if ( ! $notrack ) {
-			\pum_track_conversion_event( $popup_id, $extra_args );
-		}
-
-		/**
-		 * Allow extensions to handle their own CTA types.
-		 *
-		 * @param bool  $handled Whether the CTA was handled.
-		 * @param CTA   $cta The CTA object.
-		 * @param array $args {
-		 *     @type int    $popup_id The popup ID if any
-		 *     @type string $cta_uuid The CTA UUID
-		 *     @type string $source_url The source URL
-		 *     @type bool   $notrack Whether to not track the conversion
-		 * }
-		 */
-		$actioned = apply_filters( 'popup_maker/cta_action', false, $call_to_action, $extra_args );
-
-		if ( false !== $actioned ) {
-			return;
-		}
+		], $call_to_action );
 
 		$cta_type = $call_to_action->get_setting( 'type' );
 
@@ -106,14 +99,30 @@ class CallToActions extends Controller {
 			// Default to current URL without CTA parameters.
 			$url = remove_query_arg( $cta_args );
 
-			if ( ! $notrack ) {
-				$call_to_action->increase_event_count( 'conversion' );
-			}
+			$call_to_action->track_conversion( $extra_args );
 
 			\PopupMaker\safe_redirect( $url );
 			exit;
 		}
 
 		$cta_type_handler->action_handler( $call_to_action, $extra_args );
+	}
+
+	/**
+	 * Track a popup conversion when CTA was clicked within a popup.
+	 *
+	 * @param \PopupMaker\Models\CallToAction $call_to_action Call to action object.
+	 * @param array                           $args           Arguments.
+	 *
+	 * @return void
+	 */
+	public function track_cta_conversion( $call_to_action, $args ) {
+		$popup_id = $args['popup_id'];
+		$notrack  = $args['notrack'];
+
+		if ( ! $notrack && $popup_id && $popup_id > 0 ) {
+			// Triggers pum_analytics_event / pum_analytics_conversion actions.
+			\pum_track_conversion_event( $popup_id, $args );
+		}
 	}
 }

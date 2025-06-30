@@ -263,6 +263,35 @@ class CallToAction extends Post {
 	}
 
 	/**
+	 * Track a conversion for this CTA based on CTA event args.
+	 *
+	 * @param array<string,mixed> $extra_args Extra arguments.
+	 *
+	 * @return void
+	 */
+	public function track_conversion( $extra_args = [] ) {
+		$extra_args = wp_parse_args( $extra_args, [
+			'notrack' => false,
+		] );
+
+		if ( $extra_args['notrack'] ) {
+			return;
+		}
+
+		$this->increase_event_count( 'conversion' );
+
+				/**
+		 * Fires when a CTA triggers core to track a conversion for a popup.
+		 *
+		 * @param \PopupMaker\Models\CallToAction $cta The CTA object.
+		 * @param array<string,mixed> $extra_args {
+		 *     @type bool   $notrack Whether to not track the conversion.
+		 * }
+		 */
+		do_action( 'popup_maker/cta_conversion', $this, $extra_args );
+	}
+
+	/**
 	 * Increase a CTA's event count.
 	 *
 	 * @param string $event Event name.

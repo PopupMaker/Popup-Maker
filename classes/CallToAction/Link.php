@@ -54,7 +54,7 @@ class Link extends \PopupMaker\Base\CallToAction {
 			$url = remove_query_arg( $cta_args );
 		}
 
-		$call_to_action->increase_event_count( 'conversion' );
+		$call_to_action->track_conversion( $extra_args );
 
 		\PopupMaker\safe_redirect( $url );
 		exit;
