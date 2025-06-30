@@ -48,6 +48,9 @@
 		"lint": "vendor/bin/phpcs --standard=.phpcs.xml.dist",
 		"lint:report": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml",
 		"generate-stubs": "vendor/bin/generate-stubs --finder=./bin/generate-stubs.php --out=popup-maker.stub --stats --force --include-inaccessible-class-nodes",
+		"install-strauss": [
+			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.22.4/strauss.phar"
+		],
 		"clean-vendor-prefix-folder": [
 			"rm -rf vendor-prefixed/**/*"
 		],
