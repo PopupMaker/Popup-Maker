@@ -11,6 +11,7 @@ module.exports = [
 	'@popup-maker/fields',
 	'@popup-maker/i18n',
 	'@popup-maker/icons',
+	'@popup-maker/popup-admin',
 	'@popup-maker/registry',
 	'@popup-maker/use-query-params',
 	'@popup-maker/utils',

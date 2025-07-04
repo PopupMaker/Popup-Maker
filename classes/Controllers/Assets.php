@@ -184,6 +184,11 @@ class Assets extends Controller {
 				// 'varsName' => 'popupMakerIcons',
 				// 'vars'     => [],
 			],
+			'popup-admin'      => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-popup-admin',
+				'styles'  => true,
+			],
 			'registry'         => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-registry',
