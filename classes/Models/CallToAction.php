@@ -280,7 +280,7 @@ class CallToAction extends Post {
 
 		$this->increase_event_count( 'conversion' );
 
-				/**
+		/**
 		 * Fires when a CTA triggers core to track a conversion for a popup.
 		 *
 		 * @param \PopupMaker\Models\CallToAction $cta The CTA object.

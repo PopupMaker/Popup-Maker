@@ -82,6 +82,15 @@ class CallToActions extends Repository {
 	 * @return \PopupMaker\Models\CallToAction|null
 	 */
 	public function get_by_uuid( $uuid = '' ) {
+
+		$cache_key = 'popup_maker_cta_id_by_uuid_' . $uuid;
+
+		$cta_id = wp_cache_get( $cache_key, 'popup_maker_ctas' );
+
+		if ( false !== $cta_id ) {
+			return $this->get_by_id( $cta_id );
+		}
+
 		if ( isset( $this->items_by_uuid[ $uuid ] ) ) {
 			return $this->items_by_uuid[ $uuid ];
 		}
@@ -92,7 +101,13 @@ class CallToActions extends Repository {
 			'posts_per_page' => 1,
 		] );
 
-		return ! empty( $items ) ? $items[0] : null;
+		$item = ! empty( $items ) ? $items[0] : null;
+
+		if ( $item ) {
+			wp_cache_set( $cache_key, $item->ID, 'popup_maker_ctas' );
+		}
+
+		return $item;
 	}
 
 	/**
