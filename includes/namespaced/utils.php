@@ -147,3 +147,43 @@ function safe_redirect( $url, $status = 302 ) {
 	wp_safe_redirect( sanitize_url( $url ), $status );
 	exit;
 }
+
+/**
+ * Render a progress bar.
+ *
+ * @param float|int                                    $percentage The percentage to display.
+ * @param array{size:string,title:string,class:string} $args       The arguments for the progress bar.
+ * @return void
+ */
+function progress_bar( float|int $percentage, array $args = [] ): void {
+
+	$args = wp_parse_args( $args, [
+		'size'            => null,
+		'title'           => '',
+		'class'           => '',
+		'show_percentage' => true,
+	] );
+
+	$classes = [
+		'pum-progress-bar',
+	];
+
+	if ( $args['size'] ) {
+		$classes[] = 'pum-progress-bar--' . esc_attr( $args['size'] );
+	}
+
+	if ( $args['class'] ) {
+		$classes[] = esc_attr( $args['class'] );
+	}
+
+	echo '<div class="' . esc_attr( implode( ' ', $classes ) ) . '" title="' . esc_html( $args['title'] ) . '">';
+	echo '<div class="pum-progress-bar__inner">';
+	echo '<div class="pum-progress-fill" style="width: ' . esc_attr( min( $percentage, 100 ) ) . '%;"></div>';
+	echo '</div>';
+
+	if ( $args['show_percentage'] ) {
+		echo '<strong>' . esc_html( round( $percentage, 1 ) ) . '%</strong>';
+	}
+
+	echo '</div>';
+}

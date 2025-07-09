@@ -6,6 +6,8 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+use function PopupMaker\progress_bar;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -1304,26 +1306,16 @@ class PUM_Admin_Popups {
 							$conversion_rate = 0;
 						}
 
-						if ( ! $conversion_rate || ! is_numeric( $conversion_rate ) ) {
-							$conversion_rate_text    = 'N/A';
-							$conversion_rate_percent = 0;
-						} else {
-							$conversion_rate_percent = round( $conversion_rate, 1 );
-							$conversion_rate_text    = $conversion_rate_percent . '%';
-						}
-
 						echo '<div class="pum-col-content">';
 
 						// Progress bar with percentage.
-						if ( 'N/A' === $conversion_rate_text ) {
-							echo '<strong>' . esc_html( $conversion_rate_text ) . '</strong>';
+						if ( ! $conversion_rate || ! is_numeric( $conversion_rate ) ) {
+							echo '<strong>' . esc_html__( 'N/A', 'popup-maker' ) . '</strong>';
 						} else {
-							echo '<div class="pum-progress-bar">';
-							echo '<div class="pum-progress-bar__inner">';
-							echo '<div class="pum-progress-fill" style="width: ' . esc_attr( min( $conversion_rate_percent, 100 ) ) . '%;"></div>';
-							echo '</div>';
-							echo '<strong>' . esc_html( $conversion_rate_text ) . '</strong>';
-							echo '</div>';
+							progress_bar( $conversion_rate, [
+								'size'  => 'small',
+								'title' => esc_html__( 'Calculated Conversion Rate', 'popup-maker' ),
+							] );
 							echo '<span>' . esc_html( $conversions ) . ' ' . esc_html__( 'conversions', 'popup-maker' ) . '</span>';
 						}
 
