@@ -394,7 +394,10 @@ class PUM_Admin_Notices {
 					'primary' => true,
 					'type'    => 'link',
 					'action'  => '',
-					'href'    => 'https://wppopupmaker.com/pricing/?utm_source=plugin-notice&utm_campaign=bfcm2024',
+					'href'    => \PopupMaker\get_upgrade_link( [
+						'utm_source'   => 'plugin-notice',
+						'utm_campaign' => 'bfcm2024',
+					] ),
 					'text'    => sprintf( 'Get %s%% Off Now', $discount_amount ),
 				],
 				[

@@ -31,10 +31,15 @@ class PUM_Upsell {
 	 */
 	public static function notice_bar_display() {
 		if ( pum_is_all_popups_page() && 0 === count( pum_enabled_extensions() ) ) {
-			$message = sprintf(
+			$upgrade_link = \PopupMaker\get_upgrade_link( [
+				'utm_source'   => 'upsell-notice-bar',
+				'utm_medium'   => 'text-link',
+				'utm_campaign' => 'upsell',
+			] );
+			$message      = sprintf(
 				/* translators: %s - Wraps ending in link to pricing page. */
 				esc_html__( 'You are using the free version of Popup Maker. To get even more value, consider %1$supgrading to our premium plans%2$s.', 'popup-maker' ),
-				'<a href="https://wppopupmaker.com/pricing/?utm_source=upsell-notice-bar&utm_medium=text-link&utm_campaign=upsell" target="_blank" rel="noopener noreferrer">',
+				'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener noreferrer">',
 				'</a>'
 			);
 			?>

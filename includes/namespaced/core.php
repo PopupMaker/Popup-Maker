@@ -65,6 +65,30 @@ function set_global( $key, $value ) {
 }
 
 /**
+ * Check if pro is active.
+ *
+ * @return boolean
+ */
+function is_pro_active() {
+	return plugin()->is_pro_active();
+}
+
+/**
+ * Get upgrade link.
+ *
+ * @return string
+ */
+function get_upgrade_link( $utm_args = [] ) {
+	$utm_args = array_merge( [
+		'utm_source'   => 'plugin',
+		'utm_medium'   => 'dashboard',
+		'utm_campaign' => 'upgrade',
+	], $utm_args );
+
+	return 'https://wppopupmaker.com/pricing/?' . http_build_query( $utm_args );
+}
+
+/**
  * Get logging service.
  *
  * @since X.X.X
