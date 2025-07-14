@@ -105,6 +105,11 @@ function pum_autoloader( $class_name ) {
 spl_autoload_register( 'pum_autoloader' ); // Register autoloader
 
 /**
+ * Plugin functions loader.
+ */
+require_once __DIR__ . '/includes/entry--legacy.php';
+
+/**
  * Triggers the initialization of the Popup Maker plugin and extensions.
  *
  * @since      1.0.0
@@ -115,10 +120,6 @@ function pum_init_legacy() {
 		return;
 	}
 
-	/**
-	 * Plugin functions loader.
-	 */
-	require_once __DIR__ . '/includes/entry--legacy.php';
 
 	// Get Popup Maker
 	pum();
