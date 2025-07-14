@@ -1124,6 +1124,10 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$network_total = ! $network_total ? $site_total : $network_total + 1;
 			update_site_option( 'pum_site_total_' . $keys[0] . '_count', $network_total );
 		}
+
+		if ( 'conversion' === $event || 'open' === $event ) {
+			$this->update_meta( 'popup_conversion_rate', $this->get_event_count( 'conversion', 'current' ) / $this->get_event_count( 'open', 'current' ) );
+		}
 	}
 
 	/**

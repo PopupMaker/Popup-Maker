@@ -47,6 +47,7 @@
 		"@popup-maker/core-data": "file:./packages/core-data",
 		"@popup-maker/cta-admin": "file:./packages/cta-admin",
 		"@popup-maker/cta-editor": "file:./packages/cta-editor",
+		"@popup-maker/dashboard": "file:./packages/dashboard",
 		"@popup-maker/data": "file:./packages/data",
 		"@popup-maker/fields": "file:./packages/fields",
 		"@popup-maker/i18n": "file:./packages/i18n",

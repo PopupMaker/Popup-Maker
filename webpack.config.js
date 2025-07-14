@@ -18,6 +18,7 @@ const packages = {
 	'core-data': 'packages/core-data',
 	'cta-admin': 'packages/cta-admin',
 	'cta-editor': 'packages/cta-editor',
+	dashboard: 'packages/dashboard',
 	data: 'packages/data',
 	fields: 'packages/fields',
 	i18n: 'packages/i18n',

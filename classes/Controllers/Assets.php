@@ -156,6 +156,13 @@ class Assets extends Controller {
 				},
 					// 'head'     => true,
 			],
+			'dashboard'        => [
+				'bundled'  => false,
+				'handle'   => 'popup-maker-dashboard',
+				'styles'   => true,
+				'varsName' => 'popupMakerDashboard',
+				'vars'     => [],
+			],
 			'data'             => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-data',

@@ -1,0 +1,237 @@
+// Popup Maker Dashboard Widget Styles
+
+.pum-widget-badge {
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 12px;
+
+  &.pum-badge-pro {
+    background: #7c3aed;
+    color: white;
+  }
+}
+
+#pum_analytics_basic .postbox-header h2 {
+  gap: 1em;
+
+  .pum-widget-badge {
+    margin-right: auto;
+  }
+}
+
+
+
+// Upgrade box
+.pum-upgrade-box {
+  margin: 20px;
+  padding: 20px;
+  background: #f3f0ff;
+  border-radius: 8px;
+  border: 1px solid #e9d5ff;
+
+  .pum-upgrade-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .pum-upgrade-icon {
+    font-size: 20px;
+  }
+
+  .pum-upgrade-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #7c3aed;
+  }
+
+  .pum-upgrade-text {
+    margin: 0 0 16px 0;
+    color: #6b22c3;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .pum-upgrade-button {
+    display: block;
+    padding: 12px 24px;
+    background: #7c3aed;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #6d28d9;
+      color: white;
+    }
+  }
+}
+
+
+
+
+
+// Stats grid
+.pum-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+
+  &.pum-stats-grid-2x2 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+}
+
+// Individual stat styles
+.pum-stat {
+  text-align: center;
+
+  &.pum-stat-with-chart {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .pum-stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+
+    &.pum-stat-views {
+      color: #3b82f6;
+    }
+
+    &.pum-stat-conversions {
+      color: #10b981;
+    }
+  }
+
+  .pum-stat-label {
+    color: #6b7280;
+    font-size: 14px;
+  }
+}
+
+// Conversion rate section
+.pum-conversion-rate {
+  text-align: center;
+  padding: 20px;
+  background: #f9fafb;
+
+  .pum-rate-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 4px;
+  }
+
+  .pum-rate-label {
+    color: #6b7280;
+    font-size: 14px;
+  }
+}
+
+// Top performer section
+.pum-top-performer {
+  padding: 20px;
+  border-top: 1px solid #e5e7eb;
+
+  .pum-performer-label {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .pum-performer-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+}
+
+// Top performers list
+.pum-top-performers {
+  padding: 20px;
+  border-top: 1px solid #e5e7eb;
+
+  h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .pum-performer-item {
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .pum-performer-name {
+    display: block;
+    font-size: 14px;
+    color: #1f2937;
+    margin-bottom: 4px;
+  }
+
+  .pum-performer-bar {
+    position: relative;
+    background: #e5e7eb;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+  }
+
+  .pum-performer-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: #374151;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+  }
+
+  .pum-performer-rate {
+    position: relative;
+    z-index: 1;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+}
+
+// Responsive adjustments for smaller dashboard layouts
+@media (max-width: 782px) {
+  .pum-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pum-device-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .pum-widget-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

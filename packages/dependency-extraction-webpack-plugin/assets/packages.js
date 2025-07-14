@@ -7,6 +7,7 @@ module.exports = [
 	'@popup-maker/core-data',
 	'@popup-maker/cta-admin',
 	'@popup-maker/cta-editor',
+	'@popup-maker/dashboard',
 	'@popup-maker/data',
 	'@popup-maker/fields',
 	'@popup-maker/i18n',
