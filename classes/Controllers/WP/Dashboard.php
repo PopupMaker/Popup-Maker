@@ -109,6 +109,7 @@ class Dashboard extends Controller {
 			</div>
 			<?php endif; ?>
 
+			<?php if ( ! \PopupMaker\is_pro_active() ) : ?>
 			<div class="pum-upgrade-box">
 				<div class="pum-upgrade-header">
 					<span class="pum-upgrade-icon">👑</span>
@@ -119,6 +120,7 @@ class Dashboard extends Controller {
 					<?php esc_html_e( 'Upgrade Now','popup-maker' ); ?>
 				</a>
 			</div>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
