@@ -42,7 +42,7 @@ export const ExportListOption = () => {
 
 						<Button
 							variant="primary"
-							href="https://popupmaker.com/pricing/?utm_source=popup-maker&utm_medium=cta-editor&utm_campaign=export-cta"
+							href="https://wppopupmaker.com/pricing/?utm_source=popup-maker&utm_medium=cta-editor&utm_campaign=export-cta"
 							target="_blank"
 						>
 							{ __(

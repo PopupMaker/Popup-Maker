@@ -41,7 +41,7 @@ export const ImportListOption = () => {
 
 						<Button
 							variant="primary"
-							href="https://popupmaker.com/pricing/?utm_source=popup-maker&utm_medium=cta-editor&utm_campaign=import-cta"
+							href="https://wppopupmaker.com/pricing/?utm_source=popup-maker&utm_medium=cta-editor&utm_campaign=import-cta"
 							target="_blank"
 						>
 							{ __(
