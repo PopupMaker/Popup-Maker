@@ -896,7 +896,7 @@ class PUM_AssetCache {
 		if ( ! self::enabled() ) {
 			wp_register_script( $handle, $src, $deps, $version, $in_footer );
 		} else {
-			add_filter( 'pum_generated_js', function ( $js = [] ) use ( $handle, $src ): array {
+			add_filter( 'pum_generated_js', function ( $js = [] ) use ( $handle, $src, $merge_priority ): array {
 				$js[ $handle ] = [
 					'content'  => self::get_asset_contents( $src ),
 					'priority' => $merge_priority,
@@ -935,7 +935,7 @@ class PUM_AssetCache {
 		if ( ! self::enabled() ) {
 			wp_register_style( $handle, $src, $deps, $version, $media );
 		} else {
-			add_filter( 'pum_generated_css', function ( $css = [] ) use ( $handle, $src ): array {
+			add_filter( 'pum_generated_css', function ( $css = [] ) use ( $handle, $src, $merge_priority ): array {
 				$css[ $handle ] = [
 					'content'  => self::get_asset_contents( $src ),
 					'priority' => $merge_priority,
