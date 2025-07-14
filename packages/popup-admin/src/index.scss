@@ -6,6 +6,14 @@
         width: 80px;
     }
 
+    th.column-views,
+    th.column-interactions,
+    th.column-conversions,
+    th.column-purchases,
+    th.column-revenue {
+        width: 150px;
+    }
+
     td.column-conversions {
         .pum-col-content {
             max-width: 15ch;
@@ -42,6 +50,10 @@
     // Column-specific colors
     td.column-views>.pum-col-content>strong {
         color: #1e3a8a;
+    }
+
+    td.column-conversions>.pum-col-content>strong {
+        color: #581c87;
     }
 
     // Conversion rate progress bar
