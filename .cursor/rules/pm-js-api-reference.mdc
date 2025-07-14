@@ -1,0 +1,181 @@
+---
+globs: *.js,*.ts,*.tsx,*.jsx
+alwaysApply: false
+---
+# Popup Maker JavaScript API & Developer Cheatsheet
+
+This document provides a detailed overview of Popup Maker's frontend JavaScript APIs, including the global `PUM` object, the modern data stores, and the event-driven hooks system. It is intended for developers who wish to integrate with or extend the functionality of Popup Maker on the client side.
+
+## The Global `PUM` Object
+
+The primary way to interact with popups on the frontend is through the global `window.PUM` object. It provides a stable and consistent API for controlling popups.
+
+*File Reference: `assets/js/src/site/plugins/pum.js`*
+
+### Core Methods
+
+-   `PUM.open( popupId | 'current' | jQueryObject )`: Opens a specified popup.
+-   `PUM.close( popupId | 'current' | jQueryObject )`: Closes a specified popup.
+-   `PUM.getPopup( popupId | 'current' | jQueryObject )`: Retrieves the jQuery object for a popup's overlay (`.pum-overlay`). This is the main object on which other methods are called.
+-   `PUM.getSettings( popupId )`: Retrieves the settings object for a specific popup.
+-   `PUM.getSetting( popupId, key, defaultValue )`: Retrieves a specific setting value for a popup.
+
+### Cookie Management
+
+-   `PUM.getCookie( cookieName )`: Retrieves the value of a cookie.
+-   `PUM.setCookie( popupId, settings )`: Sets a cookie for a specific popup. The `settings` object can include `name`, `time`, and `path`.
+-   `PUM.clearCookie( cookieName, callback )`: Removes a specific cookie.
+-   `PUM.clearCookies( popupId, callback )`: Removes all cookies associated with a specific popup.
+
+### State & Condition Checking
+
+-   `PUM.checkConditions( popupId )`: Evaluates all conditions for a popup and returns `true` if they are met.
+-   `PUM.getPopup( popupId ).popmake('state', 'isOpen' | 'isClosed' )`: Checks the current open/closed state of a popup.
+
+## The jQuery `popmake` Method
+
+While the global `PUM` object is preferred, the underlying methods are attached to jQuery objects. You can access them directly on the popup's jQuery object.
+
+-   `$('#pum-123').popmake('open', callback)`: Opens the popup.
+-   `$('#pum-123').popmake('close', callback)`: Closes the popup.
+-   `$('#pum-123').popmake('getSettings')`: Returns the settings object.
+-   `$('#pum-123').popmake('getContainer')`: Returns the jQuery object for the popup container (`.pum-container`).
+
+## JavaScript Hooks & Events (`PUM.hooks`)
+
+Popup Maker's frontend JavaScript is event-driven, using a custom hooks system similar to WordPress's PHP hooks. This is the recommended way to extend frontend functionality.
+
+*File Reference: `assets/js/src/site/plugins/pum-hooks.js`*
+
+### Key Actions (doAction / addAction)
+
+Use `PUM.hooks.addAction('hook_name', callback, priority)` to hook into key events.
+
+-   `pum.popup.beforeOpen`: Fires just before a popup begins its opening animation.
+-   `pum.popup.afterOpen`: Fires after a popup has finished opening.
+-   `pum.popup.beforeClose`: Fires just before a popup begins its closing animation.
+-   `pum.popup.afterClose`: Fires after a popup has finished closing.
+-   `pum.integration.form.success`: The most important hook for form integrations. Fires when any integrated form is successfully submitted.
+    -   *Callback arguments:* `form` (jQuery object of the form), `args` (object with `formProvider`, `formId`, `popup`, etc.).
+
+### Key Filters (applyFilters / addFilter)
+
+Use `PUM.hooks.addFilter('hook_name', callback, priority)` to modify data.
+
+-   `pum.AnalyticsBeaconData`: Filter the data sent in an analytics tracking request.
+-   `pum.trigger.click_open.selectors`: Modify the CSS selectors used for Click Open triggers.
+
+**Example: Running code when a specific popup opens**
+
+```javascript
+(function ($) {
+    if (window.PUM && window.PUM.hooks) {
+        PUM.hooks.addAction('pum.popup.afterOpen', function (data) {
+            // data.popup is the jQuery object of the popup that opened.
+            if (data.popup.attr('id') === 'pum-123') {
+                console.log('Popup #123 has opened!');
+            }
+        });
+    }
+}(jQuery));
+```
+
+## Form Integrations (Frontend)
+
+To integrate a form plugin that submits via AJAX:
+
+1.  Listen for your form's successful submission event.
+2.  Inside your event handler, call `window.PUM.integrations.formSubmission()`.
+3.  Pass the form's jQuery object and an object containing `formProvider` and `formId`.
+
+*File Reference: `assets/js/src/integration/` (see existing integrations for examples)*
+
+```javascript
+// Generic Example
+$(document).on('my_form_plugin_ajax_success', function(event, formElement, response) {
+    var $form = $(formElement);
+    var formId = $form.data('form-id');
+
+    window.PUM.integrations.formSubmission($form, {
+        formProvider: 'my_form_plugin',
+        formId: formId,
+        extras: {
+            response: response
+        }
+    });
+});
+```
+
+This will automatically trigger Popup Maker's **Form Submission** triggers and cookies.
+
+## Modern Packages & Data Stores
+
+Popup Maker is transitioning its admin UI to a modern, React-based stack. These packages are primarily for the admin area, but understanding them is key to modern development with Popup Maker.
+
+### Core Data (`@popup-maker/core-data`)
+
+This is the central data layer, containing Redux-style data stores for managing state.
+
+*Package Reference: `packages/core-data/`*
+
+-   **`callToActionStore`**: Manages all Call to Action data.
+-   **`licenseStore`**: Handles premium license key and status.
+-   **`popupStore`**: Manages popup data (still in development, most popup data is passed via PHP `pum_vars` for now).
+-   **`settingsStore`**: Manages global plugin settings.
+
+To interact with these stores, you use `@wordpress/data`'s `useSelect` and `useDispatch` hooks.
+
+**Example: Getting a setting in a React component**
+
+```jsx
+import { useSelect } from '@wordpress/data';
+import { settingsStore } from '@popup-maker/core-data';
+
+const MyComponent = () => {
+    const mySetting = useSelect((select) => {
+        return select(settingsStore).getSetting('my_custom_setting', 'default-value');
+    }, []);
+
+    return <div>{mySetting}</div>;
+};
+```
+
+### Components (`@popup-maker/components`)
+
+A library of reusable React components for building admin interfaces.
+
+*Package Reference: `packages/components/`*
+
+**Key Components:**
+
+-   `ListTable`: A React-based, sortable, and filterable table.
+-   `PopupSelectControl`: A dropdown for selecting a popup.
+-   `EntitySelectControl`: A searchable dropdown for selecting posts, pages, or other CPTs.
+-   `URLControl`: An advanced input for URLs, with search suggestions.
+-   `ConfirmDialogue`: A modal for confirming user actions.
+
+### Fields (`@popup-maker/fields`)
+
+A system for declaratively rendering form fields from a configuration object. This is used extensively in the new admin interfaces.
+*Package Reference: `packages/fields/`*
+
+### CTA Editor (`@popup-maker/cta-editor`)
+
+This package powers the new Call to Action editor. It's a prime example of how to use the data stores and components together. It also features a **Registry API** for extending its functionality.
+
+*Package Reference: `packages/cta-editor/`*
+
+-   **`registerEditorTab`**: Add new tabs to the editor.
+-   **`registerEditorHeaderAction`**: Add new buttons to the editor's header.
+-   **`registerEditorHeaderOption`**: Add items to the "more" menu in the header.
+
+### Admin Bar (`@popup-maker/admin-bar`)
+
+This package contains the logic for the frontend admin bar menu, which allows for debugging and controlling popups directly from the frontend.
+*Package Reference: `packages/admin-bar/`*
+
+-   The "Get Selector" tool uses the `@medv/finder` library to generate unique CSS selectors for any element clicked on the page, a very useful tool for setting up Click Open triggers.
+
+---
+
+This cheatsheet provides a comprehensive overview of Popup Maker's JavaScript APIs. As the plugin continues to modernize, expect more functionality to move into the modular packages and data stores. Always refer to the latest source code for the most up-to-date information.

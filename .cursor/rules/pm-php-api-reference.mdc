@@ -1,0 +1,193 @@
+---
+globs: *.php
+alwaysApply: false
+---
+# Popup Maker PHP API & Developer Cheatsheet
+
+This document provides a detailed overview of Popup Maker's PHP functions, classes, action hooks, and filters. It is intended for developers who wish to integrate with or extend the functionality of the Popup Maker plugin.
+
+## Core Functions: Your Go-To Helpers
+
+These are the primary functions you'll use to interact with Popup Maker's data. They are the most stable and recommended way to access popups, themes, and settings.
+
+### Popup Functions
+
+-   `pum_get_popup( (int|null) $popup_id )`: Retrieves a single `PUM_Model_Popup` object. If no ID is passed, it attempts to get the current popup in the loop.
+-   `pum_get_popups( (array) $args )`: Returns an array of `PUM_Model_Popup` objects based on WP_Query arguments.
+-   `pum_get_all_popups( (array) $args )`: A helper for `pum_get_popups()` that gets all popups by setting `posts_per_page` to -1.
+-   `pum_get_popup_id( (int|null) $popup_id )`: Returns a valid popup ID. Gets the current popup's ID if `$popup_id` is null.
+-   `pum_is_popup( (object) $popup )`: Checks if a variable is a valid `PUM_Model_Popup` object.
+-   `pum_is_popup_loadable( (int) $popup_id )`: Checks if a popup's conditions are met and it should be loaded on the current page.
+
+### Theme Functions
+
+-   `pum_get_theme( (int) $theme_id )`: Retrieves a `PUM_Model_Theme` object.
+-   `pum_get_themes( (array) $args )`: Returns an array of `PUM_Model_Theme` objects based on WP_Query arguments.
+-   `pum_get_all_themes( (array) $args )`: Gets all themes.
+-   `pum_get_default_theme_id()`: Returns the ID of the default popup theme.
+-   `pum_get_theme_generated_styles( (int) $theme_id )`: Returns the generated CSS style array for a theme.
+
+### Template Functions
+
+These functions are used within your popup templates (`templates/popup.php`) to render dynamic content.
+
+-   `pum_popup_ID( (int|null) $popup_id )`: Echoes the popup ID.
+-   `pum_popup_title( (int|null) $popup_id )`: Echoes the popup title.
+-   `pum_popup_content( (int|null) $popup_id )`: Echoes the popup content after applying standard WordPress content filters.
+-   `pum_popup_classes( (int|null) $popup_id, (string) $element )`: Echoes the CSS classes for a given popup element (`overlay`, `container`, `title`, `content`, `close`).
+-   `pum_popup_data_attr( (int|null) $popup_id )`: Echoes the `data-popmake` attribute containing all popup settings for the frontend JavaScript.
+-   `pum_show_close_button( (int|null) $popup_id )`: Returns `true` if the close button should be displayed.
+-   `pum_popup_close_text( (int|null) $popup_id )`: Echoes the close button text, supporting Font Awesome icons.
+
+### Global Options
+
+-   `pum_get_option( (string) $key, (mixed) $default_value )`: Retrieves a specific setting from the Popup Maker settings.
+-   `pum_update_option( (string) $key, (mixed) $value )`: Updates a single Popup Maker setting.
+-   `pum_get_options()`: Retrieves all Popup Maker settings.
+
+## Key Classes & Data Models
+
+Understanding these classes is crucial for deeper integrations.
+
+### `PUM_Model_Popup`
+
+This class is an object-oriented wrapper for the `popup` post type. It provides methods to access and manipulate popup data.
+*File: `classes/Model/Popup.php`*
+
+**Key Methods:**
+
+-   `$popup->get_settings()`: Get all settings for the popup.
+-   `$popup->get_setting( 'key', 'default' )`: Get a specific setting.
+-   `$popup->update_settings( $new_settings )`: Update multiple settings.
+-   `$popup->get_triggers()`: Get an array of the popup's triggers.
+-   `$popup->get_cookies()`: Get an array of the popup's cookies.
+-   `$popup->get_conditions()`: Get an array of the popup's targeting conditions.
+-   `$popup->get_theme_id()`: Get the assigned theme ID.
+-   `$popup->is_enabled()`: Check if the popup is enabled to be loaded.
+-   `$popup->is_loadable()`: Check if the popup should be loaded on the current page based on its conditions.
+-   `$popup->increase_event_count('open|conversion')`: Increment analytics counters.
+
+### `PUM_Model_Theme`
+
+This is an object-oriented wrapper for the `popup_theme` post type.
+*File: `classes/Model/Theme.php`*
+
+**Key Methods:**
+
+-   `$theme->get_settings()`: Get all settings for the theme.
+-   `$theme->get_setting( 'key', 'default' )`: Get a specific theme setting.
+-   `$theme->update_settings( $new_settings )`: Update multiple theme settings.
+-   `$theme->get_generated_styles()`: Get the processed CSS rules for the theme.
+
+### Utility Classes (`PUM_Utils_*`)
+
+These static classes provide various helper functions.
+
+-   **`PUM_Utils_Array`**: Array manipulation helpers.
+    -   *Methods:* `filter_null`, `sanitize`, `move_item`, `pluck_keys_starting_with`, `allowed_keys`, `sort`, `replace_key`, `from_object`, `safe_json_encode`
+-   **`PUM_Utils_Cache`**: Wrapper for WordPress's object cache.
+    -   *Methods:* `get`, `set`, `add`, `delete`, `delete_group`, `enabled`
+-   **`PUM_Utils_CSS`**: CSS value generation helpers.
+    -   *Methods:* `hex2rgb`, `hex2rgba`, `border_style`, `box_shadow_style`, `text_shadow_style`
+-   **`PUM_Utils_Format`**: Data formatting helpers.
+    -   *Methods:* `time`, `number`, `human_time`, `abbreviated_number`
+-   **`PUM_Utils_Logging`**: A simple file-based logging system.
+    -   *Methods:* `log`, `log_unique`, `get_log`, `clear_log`, `enabled`
+-   **`PUM_Utils_Options`**: The core settings API.
+    -   *Methods:* `get_all`, `get`, `update`, `update_all`, `delete`
+-   **`PUM_Utils_Shortcodes`**: Shortcode processing utilities.
+    -   *Methods:* `clean_do_shortcode`, `get_shortcodes_from_content`
+-   **`PUM_Utils_Template`**: Theme template loader.
+    -   *Methods:* `locate`, `locate_part`, `render`, `get_part`, `get`
+-   **`PUM_Utils_Upgrades`**: Handles database and data upgrade routines.
+    -   *Methods:* `has_uncomplete_upgrades`, `set_upgrade_complete`, `has_completed_upgrade`
+
+## Action Hooks
+
+Hook into these actions to add your own functionality at key points.
+
+### General Hooks
+
+-   `pum_initialize`: Fires after Popup Maker's core classes are loaded (legacy, use `pum_init` instead).
+-   `pum_init`: Fires after all of Popup Maker has been initialized.
+-   `pum_after_install`: Fires once after the plugin is first installed.
+-   `pum_update_core_version`: Fires when the core plugin is updated to a new version.
+-   `pum_styles`: Allows you to add custom CSS to be included in the asset cache.
+-   `pum_enqueue_scripts`: Use this to properly enqueue scripts and styles for your extension.
+
+### Popup Lifecycle Hooks
+
+-   `pum_preload_popup ( (int) $popup_id )`: Fires when a popup is determined to be loadable on the current page, before assets are enqueued.
+-   `pum_popup_before_title ( (int) $popup_id )`: Fires inside the popup container, before the title.
+-   `pum_popup_before_content ( (int) $popup_id )`: Fires inside the popup container, after the title and before the content.
+-   `pum_popup_after_content ( (int) $popup_id )`: Fires inside the popup container, after the content and before the close button.
+
+### Admin Hooks
+
+-   `pum_save_popup ( (int) $post_id, (WP_Post) $post )`: Fires when a popup is saved.
+-   `pum_save_theme ( (int) $post_id, (WP_Post) $post )`: Fires when a theme is saved.
+-   `pum_save_settings ( (array) $settings )`: Fires when the global settings are saved.
+-   `pum_alert_dismissed ( (string) $code, (string) $action )`: Fires when a Popup Maker admin notice is dismissed.
+
+### Form & Conversion Hooks
+
+-   `pum_integrated_form_submission ( (array) $args )`: Fires when any integrated form is successfully submitted, both AJAX and non-AJAX.
+-   `pum_analytics_conversion ( (int) $popup_id, (array) $args )`: Fires specifically when a conversion event is tracked.
+-   `pum_analytics_open ( (int) $popup_id, (array) $args )`: Fires when a popup open event is tracked.
+
+## Filter Hooks
+
+Use these filters to modify Popup Maker's data and behavior.
+
+### Setting & Field Filters
+
+-   `pum_settings_fields ( (array) $tabs )`: Modify the fields displayed on the **Popup Maker -> Settings** page.
+-   `pum_popup_settings_fields ( (array) $tabs )`: Modify the fields in the **Popup Editor -> Popup Settings** meta box.
+-   `pum_theme_settings_fields ( (array) $tabs )`: Modify the fields in the **Theme Editor**.
+-   `pum_get_options ( (array) $settings )`: Filter all of Popup Maker's global settings.
+-   `pum_get_option ( (mixed) $value, (string) $key, (mixed) $default_value )`: Filter a single global setting.
+
+### Popup Data & Behavior Filters
+
+-   `pum_popup_settings ( (array) $settings, (int) $popup_id )`: Filter the settings array for a specific popup.
+-   `pum_popup_is_loadable ( (bool) $loadable, (int) $popup_id )`: Programmatically control whether a popup can be loaded on the current page.
+-   `pum_popup_data_attr ( (array) $data_attr, (int) $popup_id )`: Filter the `data-popmake` attribute array before it's converted to JSON.
+-   `pum_popup_classes ( (array) $classes, (int) $popup_id )`: Filter all CSS classes for a popup's elements.
+-   `pum_popup_container_classes ( (array) $classes, (int) $popup_id )`: Filter CSS classes specifically for the popup container. Similar filters exist for `overlay`, `title`, `content`, and `close`.
+-   `pum_popup_content ( (string) $content, (int) $popup_id )`: Filter the popup's content.
+
+### Asset Filters
+
+-   `pum_generated_js ( (array) $js_fragments )`: Add or modify JavaScript code fragments before they are compiled into the cached asset file.
+-   `pum_generated_css ( (array) $css_fragments )`: Add or modify CSS code fragments before they are compiled into the cached asset file.
+
+## Extending Popup Maker: APIs
+
+Popup Maker provides structured ways to add new functionality.
+
+### Triggers, Cookies, and Conditions
+
+-   **Registration:** Use the `pum_registered_triggers`, `pum_registered_cookies`, and `pum_registered_conditions` filters to add new options to the Popup Editor UI. Each filter expects an array of configuration arrays.
+-   **Structure:** Each item must have an `id` and `name`. You can also include `fields` to add custom settings for your item. See `classes/Triggers.php`, `classes/Cookies.php`, and `classes/Conditions.php` for examples.
+-   **JavaScript Handlers:** For client-side functionality (like a new trigger), you must also add a corresponding handler to the `PUM.hooks` system.
+
+### Form Integrations
+
+-   **PHP Class:** Create a class that extends `PUM_Abstract_Integration_Form`.
+-   **Registration:** Use the `pum_integrations` filter to add an instance of your class to the integrations array.
+-   **Key Methods:** Your class must implement `label()`, `enabled()`, `get_forms()`, and `get_form_selectlist()`.
+-   **JavaScript:** Your integration must fire the `pum.integration.form.success` action on successful form submission.
+    *Reference: `classes/Integrations.php`*
+
+## Deprecated Code
+
+To maintain stability, avoid using the following:
+
+-   **`popmake_` prefixed functions**: Use the `pum_` equivalents.
+-   **The `the_popup_content` filter**: Use `pum_popup_content`.
+-   **Directly instantiating `PUM_Fields`, `PUM_Form`, etc.**: These are part of the old settings API and are being replaced by the React-based admin interfaces.
+-   **Any function or class marked with `@deprecated`**: The docblocks for these will often suggest a replacement.
+
+---
+
+This guide provides a foundational understanding of the Popup Maker PHP API. For more detailed examples, refer to the core plugin's code, particularly in the `classes/` and `includes/functions/` directories.
