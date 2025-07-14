@@ -1306,20 +1306,20 @@ class PUM_Admin_Popups {
 							$conversion_rate = 0;
 						}
 
+						$conversions = pum_format_number( $conversions );
+
 						echo '<div class="pum-col-content">';
 
 						// Progress bar with percentage.
 						if ( ! $conversion_rate || ! is_numeric( $conversion_rate ) ) {
 							echo '<strong>' . esc_html__( 'N/A', 'popup-maker' ) . '</strong>';
 						} else {
+							echo '<strong>' . esc_html( $conversions ) . '</strong>';
 							progress_bar( $conversion_rate, [
 								'size'  => 'small',
 								'title' => esc_html__( 'Calculated Conversion Rate', 'popup-maker' ),
 							] );
-							echo '<span>' . esc_html( $conversions ) . ' ' . esc_html__( 'conversions', 'popup-maker' ) . '</span>';
 						}
-
-						// Conversions count below.
 
 						echo '</div>';
 					}
