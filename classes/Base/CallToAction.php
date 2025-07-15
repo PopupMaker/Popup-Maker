@@ -27,6 +27,13 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	public $key;
 
 	/**
+	 * Whether the CTA requires the user to be logged in.
+	 *
+	 * @var bool
+	 */
+	public $login_required = false;
+
+	/**
 	 * Label for reference.
 	 *
 	 * @return string
@@ -39,6 +46,21 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	 * @return array
 	 */
 	abstract public function fields(): array;
+
+	/**
+	 * Whether the CTA requires the user to be logged in.
+	 *
+	 * @return void
+	 */
+	public function check_login_required() {
+		if ( $this->login_required ) {
+			if ( ! is_user_logged_in() ) {
+				// Get current URL including query args safely using WordPress functions.
+				$current_url = add_query_arg( [] );
+				$this->safe_redirect( wp_login_url( $current_url ) );
+			}
+		}
+	}
 
 	/**
 	 * Handle the CTA action.
@@ -59,9 +81,10 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	 */
 	public function as_array(): array {
 		return [
-			'key'    => $this->key,
-			'label'  => $this->label(),
-			'fields' => $this->fields(),
+			'key'            => $this->key,
+			'label'          => $this->label(),
+			'login_required' => $this->login_required,
+			'fields'         => $this->fields(),
 		];
 	}
 

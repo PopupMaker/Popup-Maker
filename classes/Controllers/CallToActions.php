@@ -105,6 +105,10 @@ class CallToActions extends Controller {
 			exit;
 		}
 
+		// Check if the CTA requires the user to be logged in.
+		$cta_type_handler->check_login_required();
+
+		// Execute the CTA action.
 		$cta_type_handler->action_handler( $call_to_action, $extra_args );
 	}
 
