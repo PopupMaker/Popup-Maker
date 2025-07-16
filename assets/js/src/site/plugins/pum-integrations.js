@@ -44,9 +44,11 @@
 		 * }
 		 */
 		formSubmission: function ( form, args ) {
+			var $popup = PUM.getPopup( form );
+
 			args = $.extend(
 				{
-					popup: PUM.getPopup( form ),
+					popup: $popup,
 					formProvider: null,
 					formId: null,
 					formInstanceId: null,
@@ -65,7 +67,8 @@
 					.join( '_' );
 
 			if ( args.popup && args.popup.length ) {
-				args.popupId = PUM.getSetting( args.popup, 'id' );
+				args.popupId = PUM.getSetting( $popup, 'id' );
+				$popup.trigger( 'pumConversion' );
 				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
 				// $popup.trigger('pumFormSuccess');
 			}

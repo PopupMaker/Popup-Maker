@@ -81,6 +81,12 @@
 				$popup.popmake( 'setCookie', settings );
 			} );
 		},
+		on_popup_conversion: function ( settings ) {
+			var $popup = PUM.getPopup( this );
+			$popup.on( 'pumConversion', function () {
+				$popup.popmake( 'setCookie', settings );
+			} );
+		},
 		form_submission: function ( settings ) {
 			var $popup = PUM.getPopup( this );
 
