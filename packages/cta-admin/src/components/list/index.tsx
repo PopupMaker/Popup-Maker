@@ -250,12 +250,10 @@ const List = () => {
 															)
 														}
 													>
-														{
-															decodeEntities(
-																callToAction.title
-																	.rendered
-															)
-														}
+														{ decodeEntities(
+															callToAction.title
+																.rendered
+														) }
 													</Button>
 
 													<ListQuickActions
