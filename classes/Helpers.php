@@ -139,12 +139,17 @@ class PUM_Helpers {
 	}
 
 	public static function post_type_selectlist_query( $post_type, $args = [], $include_total = false ) {
+		// Normalize post_type input - handles string, comma-separated string, or array
+		$post_types = wp_parse_list( $post_type );
+
+		// If only one post type, pass as string for consistency with WP_Query expectations
+		$normalized_post_type = count( $post_types ) === 1 ? $post_types[0] : $post_types;
 
 		$args = wp_parse_args(
 			$args,
 			[
 				'posts_per_page'         => 10,
-				'post_type'              => $post_type,
+				'post_type'              => $normalized_post_type,
 				'post__in'               => null,
 				'post__not_in'           => null,
 				'post_status'            => null,
@@ -190,6 +195,9 @@ class PUM_Helpers {
 		if ( empty( $taxonomies ) ) {
 			$taxonomies = [ 'category' ];
 		}
+
+		// Normalize taxonomy input - handles string, comma-separated string, or array
+		$taxonomies = wp_parse_list( $taxonomies );
 
 		$args = wp_parse_args(
 			$args,

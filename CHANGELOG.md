@@ -32,6 +32,8 @@ This update begins the process of modernizing our codebase while polishing exist
 -   Improve reliability of admin notice dismissals.
 -   Use `navigator.sendBeacon` when available for more reliable analytics.
 -   Better handling of version changes & migration processing during plugin updates.
+-   Added ability to search multiple post types in postselect fields.
+-   Added ability to search multiple taxonomies in taxonomyselect fields.
 
 **Fixes**
 
