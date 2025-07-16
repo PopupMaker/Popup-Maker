@@ -155,7 +155,9 @@ class PUM_Admin_Notices {
 	 * @return array
 	 */
 	public static function fetch_notices() {
-		$notices = wp_remote_get( 'https://wppopupmaker.com/wp-json/wp/v2/plugin-notices' );
+		$notices = wp_remote_get( 'https://wppopupmaker.com/wp-content/uploads/plugin-notices.json', [
+			'timeout' => 3,
+		] );
 
 		if ( is_wp_error( $notices ) ) {
 			return [];
