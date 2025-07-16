@@ -19,6 +19,7 @@ This update begins the process of modernizing our codebase while polishing exist
     -   CTA Shortcode to insert them without Gutenberg.
     -   Works with premium Popup Analytics.
     -   Upgrade to Popup Maker Pro or Pro+ to use them outside popups, for quick import/export, or to create WooCommerce add to cart & apply discount buttons.
+-   New `On Conversion` cookie event to disable popups once they convert.
 
 **Improvements**
 
