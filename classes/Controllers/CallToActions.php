@@ -85,9 +85,9 @@ class CallToActions extends Controller {
 			return;
 		}
 
-		$cta_type_handler = $this->container->get( 'cta_types' )->get( $cta_type );
+		$cta_type_handler = $call_to_action->get_action_type_handler();
 
-		if ( ! $cta_type_handler instanceof \PopupMaker\Base\CallToAction ) {
+		if ( false === $cta_type_handler ) {
 			/**
 			 * Allow extensions to handle their own CTA types.
 			 *

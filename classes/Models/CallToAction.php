@@ -120,6 +120,22 @@ class CallToAction extends Post {
 	}
 
 	/**
+	 * Get the action type class for this call to action.
+	 *
+	 * @return \PopupMaker\Base\CallToAction|false
+	 */
+	public function get_action_type_handler() {
+		$cta_type         = $this->get_setting( 'type', 'link' );
+		$cta_type_handler = \PopupMaker\plugin( 'cta_types' )->get( $cta_type );
+
+		if ( ! $cta_type_handler instanceof \PopupMaker\Base\CallToAction ) {
+			return false;
+		}
+
+		return $cta_type_handler;
+	}
+
+	/**
 	 * Get the call to action settings array.
 	 *
 	 * @return array<string,mixed>
@@ -275,6 +291,15 @@ class CallToAction extends Post {
 		] );
 
 		if ( $extra_args['notrack'] ) {
+			/**
+			 * Fires when a CTA triggers core to track a conversion for a popup.
+			 *
+			 * @param \PopupMaker\Models\CallToAction $cta The CTA object.
+			 * @param array<string,mixed> $extra_args {
+			 *     @type bool   $notrack Whether to not track the conversion.
+			 * }
+			 */
+			do_action( 'popup_maker/cta_conversion_notrack', $this, $extra_args );
 			return;
 		}
 
