@@ -22,6 +22,12 @@
 	"main": "build/index.js",
 	"module": "src/index.js",
 	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
 	"wpScript": true,
 	"sideEffects": false,
 	"dependencies": {

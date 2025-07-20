@@ -21,8 +21,14 @@
 	"publishConfig": {
 		"access": "restricted"
 	},
-	"main": "build/index",
-	"types": "build-types",
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
 	"dependencies": {},
 	"devDependencies": {
 		"@types/jquery": "^3.5.32"

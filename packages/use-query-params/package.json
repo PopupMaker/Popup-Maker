@@ -20,6 +20,12 @@
 	},
 	"main": "build/src/index.js",
 	"types": "build-types/src/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/src/index.d.ts",
+			"default": "./build/src/index.js"
+		}
+	},
 	"wpScript": true,
 	"sideEffects": true,
 	"dependencies": {

@@ -17,7 +17,12 @@
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"types": "src/index.d.ts",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts"
+		}
+	},
 	"wpScript": true,
 	"sideEffects": false,
 	"scripts": {

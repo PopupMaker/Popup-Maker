@@ -17,8 +17,14 @@
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "build/index",
-	"types": "build-types",
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
 	"dependencies": {},
 	"devDependencies": {},
 	"scripts": {

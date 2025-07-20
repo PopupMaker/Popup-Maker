@@ -21,8 +21,14 @@
 	"publishConfig": {
 		"access": "restricted"
 	},
-	"main": "build/index",
-	"types": "build-types",
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
 	"dependencies": {
 		"@medv/finder": "^3.2.0",
 		"@popup-maker/i18n": "*"

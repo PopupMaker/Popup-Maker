@@ -4,9 +4,57 @@
 		// "noImplicitAny": true,
 		"rootDir": "src",
 		"outDir": "build",
-		"declarationDir": "build-types"
+		"declarationDir": "build-types",
+		"baseUrl": ".",
+		"paths": {
+			"@popup-maker/components": [ "../components/src" ],
+			"@popup-maker/core-data": [ "../core-data/src" ],
+			"@popup-maker/cta-editor": [ "../cta-editor/src" ],
+			"@popup-maker/data": [ "../data/src" ],
+			"@popup-maker/fields": [ "../fields/src" ],
+			"@popup-maker/i18n": [ "../i18n/src" ],
+			"@popup-maker/icons": [ "../icons/src" ],
+			"@popup-maker/registry": [ "../registry/src" ],
+			"@popup-maker/types": [ "../types/src" ],
+			"@popup-maker/use-query-params": [ "../use-query-params/src" ],
+			"@popup-maker/utils": [ "../utils/src" ]
+		}
 	},
 	"include": [ "./src/**/*" ],
 	"types": [ "jquery" ],
-	"references": []
+	"references": [
+		{
+			"path": "../components"
+		},
+		{
+			"path": "../core-data"
+		},
+		{
+			"path": "../cta-editor"
+		},
+		{
+			"path": "../data"
+		},
+		{
+			"path": "../fields"
+		},
+		{
+			"path": "../i18n"
+		},
+		{
+			"path": "../icons"
+		},
+		{
+			"path": "../registry"
+		},
+		{
+			"path": "../types"
+		},
+		{
+			"path": "../use-query-params"
+		},
+		{
+			"path": "../utils"
+		}
+	]
 }

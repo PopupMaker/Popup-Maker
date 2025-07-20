@@ -6,5 +6,9 @@
 		"declarationDir": "build-types"
 	},
 	"include": [ "./src/**/*" ],
-	"references": []
+	"references": [
+		{
+			"path": "../i18n"
+		}
+	]
 }

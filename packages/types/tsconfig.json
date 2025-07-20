@@ -4,6 +4,7 @@
 		// "noEmit": true,
 		"rootDir": "src",
 		"outDir": "build",
+		"declarationDir": "build-types"
 	},
 	"include": [ "./src/**/*" ],
 	"references": []

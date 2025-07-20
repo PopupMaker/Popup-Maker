@@ -11,6 +11,9 @@
 			"path": "../core-data"
 		},
 		{
+			"path": "../i18n"
+		},
+		{
 			"path": "../utils"
 		}
 	]
