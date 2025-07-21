@@ -14,6 +14,12 @@ declare module '@wordpress/core-data' {
 			 * Custom uuid field.
 			 */
 			uuid: string;
+
+			/**
+			 * Popup is enabled or not.
+			 */
+			enabled: boolean;
+
 			/**
 			 * Custom settings field.
 			 */

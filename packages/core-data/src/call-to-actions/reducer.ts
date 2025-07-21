@@ -88,21 +88,21 @@ type BaseAction = {
 	payload?: Record< string, any >;
 };
 
-export type RecieveRecordAction = BaseAction & {
+export type ReceiveRecordAction = BaseAction & {
 	type: typeof RECEIVE_RECORD;
 	payload: {
 		record: CallToAction< 'edit' >;
 	};
 };
 
-export type RecieveRecordsAction = BaseAction & {
+export type ReceiveRecordsAction = BaseAction & {
 	type: typeof RECEIVE_RECORDS;
 	payload: {
 		records: CallToAction< 'edit' >[];
 	};
 };
 
-export type RecieveErrorAction = BaseAction & {
+export type ReceiveErrorAction = BaseAction & {
 	type: typeof RECEIVE_ERROR;
 	payload: {
 		id?: number;
@@ -110,7 +110,7 @@ export type RecieveErrorAction = BaseAction & {
 	};
 };
 
-export type RecieveQueryRecordsAction = BaseAction & {
+export type ReceiveQueryRecordsAction = BaseAction & {
 	type: typeof RECEIVE_QUERY_RECORDS;
 	payload: {
 		query: GetRecordsHttpQuery;
@@ -232,10 +232,10 @@ export type InvalidateResolutionAction = BaseAction & {
 };
 
 export type ReducerAction =
-	| RecieveRecordAction
-	| RecieveRecordsAction
-	| RecieveQueryRecordsAction
-	| RecieveErrorAction
+	| ReceiveRecordAction
+	| ReceiveRecordsAction
+	| ReceiveQueryRecordsAction
+	| ReceiveErrorAction
 	| PurgeRecordAction
 	| PurgeRecordsAction
 	| ChangeEditorAction

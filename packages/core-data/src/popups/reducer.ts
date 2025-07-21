@@ -1,15 +1,17 @@
-import { DispatchStatus } from '../constants';
 import { ACTION_TYPES, initialState } from './constants';
 
-import type { DispatchStatuses } from '../constants';
-import type { EditorId, GetRecordsHttpQuery, Notice } from '../types';
-import type { Popup, EditablePopup, PopupEdit } from './types';
+import type { DispatchStatuses, ResolutionState } from '../constants';
+import type { EditorId, Notice, GetRecordsHttpQuery } from '../types';
+import type { Popup, EditablePopup } from './types';
+import type { Operation } from 'fast-json-patch';
 
 const {
-	RECIEVE_RECORD,
-	RECIEVE_RECORDS,
-	RECIEVE_QUERY_RECORDS,
+	RECEIVE_RECORD,
+	RECEIVE_RECORDS,
+	RECEIVE_QUERY_RECORDS,
+	RECEIVE_ERROR,
 	PURGE_RECORD,
+	PURGE_RECORDS,
 	EDITOR_CHANGE_ID,
 	EDIT_RECORD,
 	START_EDITING_RECORD,
@@ -17,17 +19,9 @@ const {
 	UNDO_EDIT_RECORD,
 	REDO_EDIT_RECORD,
 	RESET_EDIT_RECORD,
-	START_RESOLUTION,
-	FINISH_RESOLUTION,
-	FAIL_RESOLUTION,
 	INVALIDATE_RESOLUTION,
+	CHANGE_ACTION_STATUS,
 } = ACTION_TYPES;
-
-export type ResolutionState = {
-	status: DispatchStatuses;
-	error?: string;
-	timestamp?: number;
-};
 
 /**
  * The shape of the state for the popups store.
@@ -63,7 +57,7 @@ export type State = {
 	 *
 	 * Each edit is an object with the same shape as the editable entity, but without the `id` property.
 	 */
-	editHistory: Record< number, PopupEdit[] >;
+	editHistory: Record< number, Operation[][] >;
 
 	/**
 	 * The index of the current edit for each popup.
@@ -73,15 +67,20 @@ export type State = {
 	/**
 	 * The resolution state for each operation.
 	 */
-	resolutionState: Record<
-		string,
-		Record< string | number, ResolutionState >
-	>;
+	resolutionState: Record< string | number, ResolutionState >;
 
 	/**
 	 * The notices for the popups.
 	 */
 	notices: Record< string, Notice >;
+
+	/**
+	 * The errors for the call to actions.
+	 */
+	errors: {
+		global: string | null;
+		byId: { [ id: number ]: string };
+	};
 };
 
 type BaseAction = {
@@ -89,22 +88,30 @@ type BaseAction = {
 	payload?: Record< string, any >;
 };
 
-export type RecieveRecordAction = BaseAction & {
-	type: typeof RECIEVE_RECORD;
+export type ReceiveRecordAction = BaseAction & {
+	type: typeof RECEIVE_RECORD;
 	payload: {
-		record: Popup;
+		record: Popup< 'edit' >;
 	};
 };
 
-export type RecieveRecordsAction = BaseAction & {
-	type: typeof RECIEVE_RECORDS;
+export type ReceiveRecordsAction = BaseAction & {
+	type: typeof RECEIVE_RECORDS;
 	payload: {
 		records: Popup< 'edit' >[];
 	};
 };
 
-export type RecieveQueryRecordsAction = BaseAction & {
-	type: typeof RECIEVE_QUERY_RECORDS;
+export type ReceiveErrorAction = BaseAction & {
+	type: typeof RECEIVE_ERROR;
+	payload: {
+		id?: number;
+		error: string;
+	};
+};
+
+export type ReceiveQueryRecordsAction = BaseAction & {
+	type: typeof RECEIVE_QUERY_RECORDS;
 	payload: {
 		query: GetRecordsHttpQuery;
 		records: Popup< 'edit' >[];
@@ -115,6 +122,13 @@ export type PurgeRecordAction = BaseAction & {
 	type: typeof PURGE_RECORD;
 	payload: {
 		id: Popup[ 'id' ];
+	};
+};
+
+export type PurgeRecordsAction = BaseAction & {
+	type: typeof PURGE_RECORDS;
+	payload: {
+		ids: Popup[ 'id' ][];
 	};
 };
 
@@ -130,6 +144,7 @@ export type StartEditingRecordAction = BaseAction & {
 	payload: {
 		id: number;
 		editableEntity: EditablePopup;
+		setEditorId: boolean;
 	};
 };
 
@@ -137,7 +152,7 @@ export type EditRecordAction = BaseAction & {
 	type: typeof EDIT_RECORD;
 	payload: {
 		id: number;
-		edits: PopupEdit;
+		edits: Operation[];
 	};
 };
 
@@ -173,31 +188,40 @@ export type SaveEditedRecordAction = BaseAction & {
 	};
 };
 
-export type StartResolutionAction = BaseAction & {
-	type: typeof START_RESOLUTION;
+export type ChangeActionStatusAction = BaseAction & {
+	type: typeof CHANGE_ACTION_STATUS;
 	payload: {
-		id: number | string;
-		operation: string;
+		actionName: string;
+		status: DispatchStatuses;
+		message?: string;
 	};
 };
 
-export type FinishResolutionAction = BaseAction & {
-	type: typeof FINISH_RESOLUTION;
-	payload: {
-		id: number | string;
-		operation: string;
-	};
-};
+// export type StartResolutionAction = BaseAction & {
+// 	type: typeof START_RESOLUTION;
+// 	payload: {
+// 		id: number | string;
+// 		operation: string;
+// 	};
+// };
 
-export type FailResolutionAction = BaseAction & {
-	type: typeof FAIL_RESOLUTION;
-	payload: {
-		id: number | string;
-		operation: string;
-		error: string;
-		extra?: Record< string, any >;
-	};
-};
+// export type FinishResolutionAction = BaseAction & {
+// 	type: typeof FINISH_RESOLUTION;
+// 	payload: {
+// 		id: number | string;
+// 		operation: string;
+// 	};
+// };
+
+// export type FailResolutionAction = BaseAction & {
+// 	type: typeof FAIL_RESOLUTION;
+// 	payload: {
+// 		id: number | string;
+// 		operation: string;
+// 		error: string;
+// 		extra?: Record< string, any >;
+// 	};
+// };
 
 export type InvalidateResolutionAction = BaseAction & {
 	type: typeof INVALIDATE_RESOLUTION;
@@ -208,10 +232,12 @@ export type InvalidateResolutionAction = BaseAction & {
 };
 
 export type ReducerAction =
-	| RecieveRecordAction
-	| RecieveRecordsAction
-	| RecieveQueryRecordsAction
+	| ReceiveRecordAction
+	| ReceiveRecordsAction
+	| ReceiveQueryRecordsAction
+	| ReceiveErrorAction
 	| PurgeRecordAction
+	| PurgeRecordsAction
 	| ChangeEditorAction
 	| StartEditingRecordAction
 	| EditRecordAction
@@ -219,14 +245,15 @@ export type ReducerAction =
 	| RedoEditRecordAction
 	| ResetEditRecordAction
 	| SaveEditedRecordAction
-	| StartResolutionAction
-	| FinishResolutionAction
-	| FailResolutionAction
+	| ChangeActionStatusAction
 	| InvalidateResolutionAction;
 
-const reducer = ( state: State = initialState, action: ReducerAction ) => {
+export const reducer = (
+	state: State = initialState,
+	action: ReducerAction
+): State => {
 	switch ( action.type ) {
-		case RECIEVE_RECORD: {
+		case RECEIVE_RECORD: {
 			const { record } = action.payload;
 
 			return {
@@ -241,8 +268,8 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 			};
 		}
 
-		case RECIEVE_RECORDS:
-		case RECIEVE_QUERY_RECORDS: {
+		case RECEIVE_RECORDS:
+		case RECEIVE_QUERY_RECORDS: {
 			const { records, query = false } = action.payload;
 
 			// Add the new records to the byId object.
@@ -266,31 +293,78 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 				queries: query
 					? {
 							...state.queries,
-							[ JSON.stringify( query ) ]: records,
+							[ JSON.stringify( query ) ]: records.map(
+								( r ) => r.id
+							),
 					  }
 					: state.queries,
 			};
 		}
 
+		case RECEIVE_ERROR: {
+			const { error, id = false } = action.payload;
+			// Ensure existing errors state or initialize if undefined
+			const prevErrors = state.errors || { global: null, byId: {} };
+			const newById = { ...prevErrors.byId };
+			if ( id ) {
+				newById[ id ] = error;
+			} else {
+				// No id provided, set the global error
+				prevErrors.global = error;
+			}
+			return {
+				...state,
+				errors: {
+					global: id ? prevErrors.global : error,
+					byId: newById,
+				},
+			};
+		}
+
+		case PURGE_RECORDS:
 		case PURGE_RECORD: {
-			const { id: entityId } = action.payload;
+			const { ids = [], id = null } = action.payload;
+
+			if ( id && id > 0 ) {
+				ids.push( id );
+			}
+
+			if ( ids.length === 0 ) {
+				return state;
+			}
 
 			// Remove the entity from the allIds array.
-			const allIds = state.allIds.filter( ( id ) => id !== entityId );
+			const allIds = state.allIds.filter(
+				( _id ) => ! ids.includes( _id )
+			);
 
 			// Remove the entity from the byId object.
-			const { [ entityId ]: _1, ...byId } = state.byId;
+			const byId = Object.fromEntries(
+				Object.entries( state.byId ).filter(
+					( [ _id ] ) => ! ids.includes( _id )
+				)
+			);
 
 			// Remove the entity from the editedEntities object.
-			const { [ entityId ]: _2, ...editedEntities } =
-				state.editedEntities;
+			const editedEntities = Object.fromEntries(
+				Object.entries( state.editedEntities ).filter(
+					( [ _id ] ) => ! ids.includes( _id )
+				)
+			);
 
 			// Remove the entity from the editHistory object.
-			const { [ entityId ]: _3, ...editHistory } = state.editHistory;
+			const editHistory = Object.fromEntries(
+				Object.entries( state.editHistory ).filter(
+					( [ _id ] ) => ! ids.includes( _id )
+				)
+			);
 
 			// Remove the entity from the editHistoryIndex object.
-			const { [ entityId ]: _4, ...editHistoryIndex } =
-				state.editHistoryIndex;
+			const editHistoryIndex = Object.fromEntries(
+				Object.entries( state.editHistoryIndex ).filter(
+					( [ _id ] ) => ! ids.includes( _id )
+				)
+			);
 
 			return {
 				...state,
@@ -312,22 +386,23 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 		}
 
 		case START_EDITING_RECORD: {
-			const { id, editableEntity } = action.payload;
+			const { id, editableEntity, setEditorId } = action.payload;
 
-			return {
+			const newState = {
 				...state,
 				editedEntities: {
 					...state.editedEntities,
 					[ id ]: editableEntity,
 				},
-				editHistory: {
-					...state.editHistory,
-					[ id ]: [],
-				},
-				editHistoryIndex: {
-					...state.editHistoryIndex,
-					[ id ]: 0,
-				},
+			};
+
+			if ( ! setEditorId ) {
+				return newState;
+			}
+
+			return {
+				...newState,
+				editorId: id,
 			};
 		}
 
@@ -335,17 +410,23 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 			const { id, edits } = action.payload;
 
 			const editHistory = state.editHistory[ id ] ?? [];
-			const newEditHistory = [ ...editHistory, edits ];
+			const currentIndex = state.editHistoryIndex[ id ] ?? -1;
+
+			// If we're not at the end of history, we need to clear future edits
+			const newEditHistory =
+				currentIndex < editHistory.length - 1
+					? editHistory.slice( 0, currentIndex + 1 )
+					: editHistory;
 
 			return {
 				...state,
 				editHistory: {
 					...state.editHistory,
-					[ id ]: newEditHistory,
+					[ id ]: [ ...newEditHistory, edits ],
 				},
 				editHistoryIndex: {
 					...state.editHistoryIndex,
-					[ id ]: newEditHistory.length - 1,
+					[ id ]: newEditHistory.length, // Points to the new edit
 				},
 			};
 		}
@@ -353,8 +434,8 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 		case UNDO_EDIT_RECORD: {
 			const { id, steps = 1 } = action.payload;
 
-			const currentIndex = state.editHistoryIndex[ id ] ?? 0;
-			const newIndex = Math.max( 0, currentIndex - steps );
+			const currentIndex = state.editHistoryIndex[ id ] ?? -1;
+			const newIndex = Math.max( -1, currentIndex - steps );
 
 			return {
 				...state,
@@ -368,11 +449,13 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 		case REDO_EDIT_RECORD: {
 			const { id, steps } = action.payload;
 
-			const currentIndex = state.editHistoryIndex[ id ] ?? 0;
-			const newIndex = Math.min(
-				state.editHistory[ id ].length - 1,
-				currentIndex + steps
-			);
+			const currentIndex = state.editHistoryIndex[ id ] ?? -1;
+			// Check if we have a history and if there are edits to redo
+			const maxIndex = ( state.editHistory[ id ]?.length ?? 0 ) - 1;
+			const newIndex =
+				maxIndex >= 0
+					? Math.min( maxIndex, currentIndex + steps )
+					: currentIndex;
 
 			return {
 				...state,
@@ -386,41 +469,24 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 		case SAVE_EDITED_RECORD: {
 			const { id, historyIndex, editedEntity } = action.payload;
 
+			// Get all edits up to current index
 			const remainingEdits = state.editHistory[ id ].slice(
 				historyIndex + 1
 			);
-
-			// If no edits, remove the edited entity & edit history.
-			if ( remainingEdits.length === 0 ) {
-				const { [ id ]: _1, ...editedEntities } = state.editedEntities;
-				const { [ id ]: _2, ...editHistory } = state.editHistory;
-				const { [ id ]: _3, ...editHistoryIndex } =
-					state.editHistoryIndex;
-
-				return {
-					...state,
-					editedEntities,
-					editHistory,
-					editHistoryIndex,
-				};
-			}
 
 			return {
 				...state,
 				editedEntities: {
 					...state.editedEntities,
-					// Replace the edited entity with the new entity.
 					[ id ]: editedEntity,
 				},
 				editHistory: {
 					...state.editHistory,
-					// Trim the edit history to the current index.
 					[ id ]: remainingEdits,
 				},
 				editHistoryIndex: {
-					// Reset the edit history index to 0.
 					...state.editHistoryIndex,
-					[ id ]: 0,
+					[ id ]: -1,
 				},
 			};
 		}
@@ -428,73 +494,97 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 		case RESET_EDIT_RECORD: {
 			const { id } = action.payload;
 
-			const { [ id ]: _1, ...editedEntities } = state.editedEntities;
-			const { [ id ]: _2, ...editHistory } = state.editHistory;
-			const { [ id ]: _3, ...editHistoryIndex } = state.editHistoryIndex;
-
 			return {
 				...state,
-				editedEntities,
-				editHistory,
-				editHistoryIndex,
+				// Remove all edit history for this record.
+				editedEntities: Object.fromEntries(
+					Object.entries( state.editedEntities ).filter(
+						( [ _id ] ) => Number( _id ) !== id
+					)
+				),
+				editHistory: Object.fromEntries(
+					Object.entries( state.editHistory ).filter(
+						( [ _id ] ) => Number( _id ) !== id
+					)
+				),
+				editHistoryIndex: Object.fromEntries(
+					Object.entries( state.editHistoryIndex ).filter(
+						( [ _id ] ) => Number( _id ) !== id
+					)
+				),
 			};
 		}
 
-		case START_RESOLUTION: {
-			const { id, operation } = action.payload;
-
-			return {
-				...state,
-				resolutionState: {
-					...state.resolutionState,
-					[ operation ]: {
-						...state.resolutionState?.[ operation ],
-						[ id ]: {
-							status: DispatchStatus.Resolving,
-							timestamp: Date.now(),
-						},
-					},
-				},
-			};
-		}
-
-		case FINISH_RESOLUTION: {
-			const { id, operation } = action.payload;
+		case CHANGE_ACTION_STATUS: {
+			const { actionName, status, message } = action.payload;
 
 			return {
 				...state,
 				resolutionState: {
 					...state.resolutionState,
-					[ operation ]: {
-						...state.resolutionState?.[ operation ],
-						[ id ]: {
-							status: DispatchStatus.Success,
-							timestamp: Date.now(),
-						},
+					[ actionName ]: {
+						status,
+						error: message,
 					},
 				},
 			};
 		}
 
-		case FAIL_RESOLUTION: {
-			const { id, operation, error, extra } = action.payload;
+		// case START_RESOLUTION: {
+		// 	const { id, operation } = action.payload;
 
-			return {
-				...state,
-				resolutionState: {
-					...state.resolutionState,
-					[ operation ]: {
-						...state.resolutionState?.[ operation ],
-						[ id ]: {
-							status: DispatchStatus.Error,
-							error,
-							extra,
-							timestamp: Date.now(),
-						},
-					},
-				},
-			};
-		}
+		// 	return {
+		// 		...state,
+		// 		resolutionState: {
+		// 			...state.resolutionState,
+		// 			[ operation ]: {
+		// 				...state.resolutionState?.[ operation ],
+		// 				[ id ]: {
+		// 					status: DispatchStatus.Resolving,
+		// 					timestamp: Date.now(),
+		// 				},
+		// 			},
+		// 		},
+		// 	};
+		// }
+
+		// case FINISH_RESOLUTION: {
+		// 	const { id, operation } = action.payload;
+
+		// 	return {
+		// 		...state,
+		// 		resolutionState: {
+		// 			...state.resolutionState,
+		// 			[ operation ]: {
+		// 				...state.resolutionState?.[ operation ],
+		// 				[ id ]: {
+		// 					status: DispatchStatus.Success,
+		// 					timestamp: Date.now(),
+		// 				},
+		// 			},
+		// 		},
+		// 	};
+		// }
+
+		// case FAIL_RESOLUTION: {
+		// 	const { id, operation, error, extra } = action.payload;
+
+		// 	return {
+		// 		...state,
+		// 		resolutionState: {
+		// 			...state.resolutionState,
+		// 			[ operation ]: {
+		// 				...state.resolutionState?.[ operation ],
+		// 				[ id ]: {
+		// 					status: DispatchStatus.Error,
+		// 					error: error,
+		// 					extra: extra,
+		// 					timestamp: Date.now(),
+		// 				},
+		// 			},
+		// 		},
+		// 	};
+		// }
 
 		case INVALIDATE_RESOLUTION: {
 			const { id, operation } = action.payload;

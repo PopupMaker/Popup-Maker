@@ -5,10 +5,12 @@ export const STORE_NAME = 'popup-maker/popups';
 export const NOTICE_CONTEXT = 'pum-popup-editor';
 
 // Entity actions.
-export const RECIEVE_RECORD = 'RECIEVE_RECORD';
-export const RECIEVE_RECORDS = 'RECIEVE_RECORDS';
-export const RECIEVE_QUERY_RECORDS = 'RECIEVE_QUERY_RECORDS';
+export const RECEIVE_RECORD = 'RECEIVE_RECORD';
+export const RECEIVE_RECORDS = 'RECEIVE_RECORDS';
+export const RECEIVE_QUERY_RECORDS = 'RECEIVE_QUERY_RECORDS';
+export const RECEIVE_ERROR = 'RECEIVE_ERROR';
 export const PURGE_RECORD = 'PURGE_RECORD';
+export const PURGE_RECORDS = 'PURGE_RECORDS';
 
 // Editor actions.
 export const EDITOR_CHANGE_ID = 'EDITOR_CHANGE_ID';
@@ -28,10 +30,12 @@ export const INVALIDATE_RESOLUTION = 'INVALIDATE_RESOLUTION';
 
 export const ACTION_TYPES: {
 	// Entity actions
-	RECIEVE_RECORD: typeof RECIEVE_RECORD;
-	RECIEVE_RECORDS: typeof RECIEVE_RECORDS;
-	RECIEVE_QUERY_RECORDS: typeof RECIEVE_QUERY_RECORDS;
+	RECEIVE_RECORD: typeof RECEIVE_RECORD;
+	RECEIVE_RECORDS: typeof RECEIVE_RECORDS;
+	RECEIVE_QUERY_RECORDS: typeof RECEIVE_QUERY_RECORDS;
+	RECEIVE_ERROR: typeof RECEIVE_ERROR;
 	PURGE_RECORD: typeof PURGE_RECORD;
+	PURGE_RECORDS: typeof PURGE_RECORDS;
 
 	// Editor actions
 	EDITOR_CHANGE_ID: typeof EDITOR_CHANGE_ID;
@@ -48,9 +52,11 @@ export const ACTION_TYPES: {
 	FAIL_RESOLUTION: typeof FAIL_RESOLUTION;
 	INVALIDATE_RESOLUTION: typeof INVALIDATE_RESOLUTION;
 } = {
-	RECIEVE_RECORD,
-	RECIEVE_RECORDS,
-	RECIEVE_QUERY_RECORDS,
+	RECEIVE_RECORD,
+	RECEIVE_RECORDS,
+	RECEIVE_QUERY_RECORDS,
+	RECEIVE_ERROR,
+	PURGE_RECORDS,
 	PURGE_RECORD,
 	EDITOR_CHANGE_ID,
 	EDIT_RECORD,
@@ -79,6 +85,10 @@ export const initialState: State = {
 	editHistoryIndex: {},
 	resolutionState: {},
 	notices: {},
+	errors: {
+		global: null,
+		byId: {},
+	},
 };
 
 /**
@@ -109,6 +119,7 @@ export const defaultValues: EditablePopup = {
 	content: '',
 	excerpt: '',
 	status: 'draft',
+	enabled: false,
 	settings: {
 		conditions: {
 			logicalOperator: 'or',
@@ -122,7 +133,7 @@ export const defaultValues: EditablePopup = {
 	link: '',
 	modified: '',
 	modified_gmt: '',
-	type: 'pum_popup',
+	type: 'popup',
 	author: 0,
 	generated_slug: '',
 	permalink_template: '',

@@ -56,7 +56,6 @@ const entityActions = {
 			const action = 'createCallToAction';
 
 			try {
-				// dispatch.startResolution( action, operation );
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
 					payload: {
@@ -102,7 +101,6 @@ const entityActions = {
 
 				if ( result ) {
 					registry.batch( () => {
-						// dispatch.finishResolution( action, operation );
 						dispatch( {
 							type: CHANGE_ACTION_STATUS,
 							payload: {
@@ -190,7 +188,6 @@ const entityActions = {
 			const action = 'updateCallToAction';
 
 			try {
-				// dispatch.startResolution( action, operation );
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
 					payload: {
@@ -519,7 +516,7 @@ const editorActions = {
 
 					// Force patches for empty arrays to ensure they are saved
 					const diff = jsonpatchCompare(
-						canonicalCallToAction,
+						canonicalCallToAction ?? {},
 						editedEntity
 					);
 
