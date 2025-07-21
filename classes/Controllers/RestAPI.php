@@ -65,6 +65,18 @@ class RestAPI extends Controller {
 		$post_type       = $this->container->get_controller( 'PostTypes' )->get_type_key( 'popup' );
 		$edit_permission = $this->container->get_permission( 'edit_popups' );
 
+		register_rest_field( $post_type, 'enabled', [
+			'get_callback'        => function ( $obj ) {
+				return get_post_meta( $obj['id'], 'enabled', true );
+			},
+			'update_callback'     => function ( $value, $obj ) {
+				update_post_meta( $obj->ID, 'enabled', $value );
+			},
+			'permission_callback' => function () use ( $edit_permission ) {
+				return current_user_can( $edit_permission );
+			},
+		] );
+
 		register_rest_field( $post_type, 'settings', [
 			'get_callback'        => function ( $obj, $field, $request ) {
 				$popup = pum_get_popup( $obj['id'] );
