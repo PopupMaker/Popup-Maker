@@ -5,6 +5,5 @@
 		"outDir": "build",
 		"declarationDir": "build-types"
 	},
-	"include": [ "./src/**/*", "adapters" ],
-	"references": []
+	"include": [ "./src/**/*", "adapters" ]
 }

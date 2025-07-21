@@ -1,12 +1,9 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"strict": true,
-		"noImplicitAny": true,
 		"rootDir": "src",
 		"outDir": "build",
 		"declarationDir": "build-types"
 	},
-	"include": [ "./src/**/*" ],
-	"references": []
+	"include": [ "./src/**/*" ]
 }

@@ -3,9 +3,9 @@
 	"compilerOptions": {
 		"rootDir": "src",
 		"outDir": "build",
-		"declarationDir": "build-types",
+		"declarationDir": "build-types"
 	},
-	"include": [ "./src/**/*.ts|tsx|js|json" ],
+	"include": [ "src/**/*.{ts,tsx}", "src/**/*.json" ],
 	"types": [ "jquery" ],
 	"references": [
 		{

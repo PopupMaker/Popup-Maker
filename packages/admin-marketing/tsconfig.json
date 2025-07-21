@@ -6,6 +6,5 @@
 		"declarationDir": "build-types"
 	},
 	"include": [ "./src/**/*" ],
-	"types": [ "jquery" ],
-	"references": []
+	"types": [ "jquery" ]
 }

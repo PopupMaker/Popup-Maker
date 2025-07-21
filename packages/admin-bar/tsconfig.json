@@ -6,6 +6,7 @@
 		"declarationDir": "build-types"
 	},
 	"include": [ "./src/**/*" ],
+	"types": [ "jquery" ],
 	"references": [
 		{
 			"path": "../i18n"
