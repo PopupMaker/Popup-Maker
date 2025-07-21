@@ -36,6 +36,9 @@
 	"devDependencies": {
 		"@types/jquery": "^3.5.32"
 	},
+	"peerDependencies": {
+		"jquery": "^3.5.32"
+	},
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",

@@ -29,7 +29,6 @@
 	"wpScript": true,
 	"sideEffects": true,
 	"dependencies": {
-		"serialize-query-params": "^2.0.2",
 		"use-query-params": "^2.2.1"
 	},
 	"peerDependencies": {

@@ -26,8 +26,8 @@
 		}
 	},
 	"dependencies": {
-		"@popup-maker/i18n": "file:../../../popup-maker/packages/i18n",
-		"@wordpress/hooks": "^4.25.0",
+		"@popup-maker/i18n": "*",
+		"@wordpress/hooks": "^4.26.0",
 		"@wordpress/element": "^6.26.0"
 	},
 	"devDependencies": {},

@@ -9,7 +9,6 @@ import type { WPNotice } from '@popup-maker/core-data';
 // REVIEW: This one doesn't allow for extra options such as closeDelay.
 // REVIEW: We also need to allow typing/grouping of notices, such as toast or editor etc.
 
-
 const Notices = () => {
 	const noticeTimerRef = useRef< {
 		[ key: WPNotice[ 'id' ] ]: ReturnType< typeof setTimeout >;

@@ -3,7 +3,12 @@
 	"compilerOptions": {
 		"rootDir": "src",
 		"outDir": "build",
-		"declarationDir": "build-types"
+		"declarationDir": "build-types",
+		"paths": {
+			"@popup-maker/core-data": [ "../core-data/src" ],
+			"@popup-maker/i18n": [ "../i18n/src" ],
+			"@popup-maker/utils": [ "../utils/src" ]
+		}
 	},
 	"include": [ "./src/**/*" ],
 	"references": [

@@ -35,11 +35,9 @@
 	"dependencies": {
 		"@popup-maker/core-data": "*",
 		"@wordpress/core-data": "^7.26.0",
-		"@wordpress/data": "^10.26.0"
-	},
-	"devDependencies": {},
-	"peerDependencies": {
-		"react": "^18.3.1"
+		"@wordpress/data": "^10.26.0",
+		"@wordpress/hooks": "^4.26.0",
+		"@wordpress/notices": "^5.26.0"
 	},
 	"scripts": {
 		"build:tsc": "tsc",
