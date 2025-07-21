@@ -1,5 +1,5 @@
 {
-	"name": "@popup-maker-pro/dashboard",
+	"name": "@popup-maker/dashboard",
 	"version": "1.0.0",
 	"description": "Popup Maker WP Admin dashboard implementation",
 	"author": "Code Atlantic",
@@ -8,7 +8,7 @@
 		"wordpress",
 		"popup-maker"
 	],
-	"homepage": "https://github.com/popupmaker/popup-maker-pro/tree/trunk/packages/dashboard/README.md",
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/dashboard/README.md",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/popupmaker/popup-maker.git",
@@ -26,13 +26,8 @@
 		}
 	},
 	"dependencies": {
-		"@popup-maker/i18n": "*",
 		"@wordpress/hooks": "^4.26.0",
 		"@wordpress/element": "^6.26.0"
-	},
-	"devDependencies": {},
-	"peerDependencies": {
-		"react": "^18.3.1"
 	},
 	"scripts": {
 		"build:tsc": "tsc",
