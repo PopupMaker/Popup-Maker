@@ -5,13 +5,15 @@
 			"outputs": [
 				"{projectRoot}/build,build-types,tsconfig.tsbuildinfo"
 			],
-			"cache": true
+			"cache": true,
+			"dependsOn": ["^build:tsc"]
 		},
 		"build:types": {
 			"outputs": [
 				"{projectRoot}/build,build-types,tsconfig.tsbuildinfo"
 			],
-			"cache": true
+			"cache": true,
+			"dependsOn": ["^build:types"]
 		},
 		"watch:tsc": {
 			"outputs": [
