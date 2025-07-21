@@ -6,8 +6,6 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { store as coreDataStore } from '@wordpress/core-data';
 import { SmartTokenControl } from '@popup-maker/components';
 
-import type { Post, Taxonomy } from '@wordpress/core-data';
-
 import type {
 	ObjectSelectFieldProps,
 	PostSelectFieldProps,
@@ -16,7 +14,14 @@ import type {
 	WithOnChange,
 } from '../types';
 
-interface ObjectOption extends Post< 'edit' >, Taxonomy< 'edit' > {}
+interface ObjectOption {
+	id: number;
+	title?: {
+		rendered?: string;
+		raw?: string;
+	};
+	name?: string;
+}
 
 const ObjectSelectField = ( {
 	label,
@@ -194,8 +199,8 @@ const ObjectSelectField = ( {
 					}
 
 					return 'postType' === entityKind
-						? decodeEntities( suggestion.title.rendered )
-						: suggestion.name;
+						? decodeEntities( suggestion.title?.rendered || '' )
+						: suggestion.name || '';
 				} }
 				renderSuggestion={ ( item ) => {
 					const suggestion = findSuggestion( item );
@@ -207,10 +212,11 @@ const ObjectSelectField = ( {
 						<>
 							{ 'postType' === entityKind
 								? decodeEntities(
-									suggestion.title.rendered ??
-									suggestion.title.raw
-								)
-								: suggestion.name }
+										( suggestion.title?.rendered ??
+											suggestion.title?.raw ) ||
+											''
+								  )
+								: suggestion.name || '' }
 						</>
 					);
 				} }

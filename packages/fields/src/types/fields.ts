@@ -28,6 +28,11 @@ export interface FieldBaseProps {
 	dependencies?: { [ key: string ]: string | boolean | number };
 }
 
+export interface HtmlFieldProps extends FieldBaseProps {
+	type: 'html';
+	content: string;
+}
+
 export interface InputFieldProps< V extends string | number = string | number >
 	extends FieldBaseProps {
 	value?: V;
@@ -172,6 +177,7 @@ export type FieldProps =
 	| DateFieldProps
 	| HexColorFieldProps
 	| HiddenFieldProps
+	| HtmlFieldProps
 	| LicenseKeyFieldProps
 	| MeasureFieldProps
 	| MulticheckFieldProps
@@ -211,6 +217,7 @@ export type IntermediaryFieldProps =
 	| AtLeast< DateFieldProps, MinFieldProps >
 	| AtLeast< HexColorFieldProps, MinFieldProps >
 	| AtLeast< HiddenFieldProps, MinFieldProps >
+	| AtLeast< HtmlFieldProps, MinFieldProps >
 	| AtLeast< LicenseKeyFieldProps, MinFieldProps >
 	| AtLeast< MeasureFieldProps, MinFieldProps | 'units' >
 	| AtLeast< MulticheckFieldProps, MinFieldProps >
@@ -232,10 +239,11 @@ export type IntermediaryFieldProps =
 
 export type FieldPropsMap = {
 	checkbox: CheckboxFieldProps;
-	color: CheckboxFieldProps;
+	color: HexColorFieldProps;
 	date: DateFieldProps;
 	email: TextFieldProps;
 	hidden: HiddenFieldProps;
+	html: HtmlFieldProps;
 	license_key: LicenseKeyFieldProps;
 	measure: MeasureFieldProps;
 	multicheck: MulticheckFieldProps;

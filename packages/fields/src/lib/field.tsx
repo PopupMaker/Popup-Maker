@@ -8,6 +8,7 @@ import {
 	DateField,
 	MeasureField,
 	MulticheckField,
+	HtmlField,
 	NumberField,
 	ObjectSelectField,
 	RadioField,
@@ -59,6 +60,8 @@ const FieldComponent = ( fieldProps: FieldPropsWithOnChange ): JSX.Element => {
 			return <TextAreaField { ...fieldProps } />;
 		case 'tokenselect':
 			return <TokenSelectField { ...fieldProps } />;
+		case 'html':
+			return <HtmlField { ...fieldProps } />;
 	}
 
 	return (

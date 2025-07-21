@@ -12,6 +12,7 @@ export interface OldFieldArgs {
 	type: OldField[ 'type' ];
 	allow_html?: boolean;
 	as_array?: boolean;
+	content?: string;
 	class?: string;
 	classes?: string | string[];
 	dependencies?: { [ key: string ]: string | boolean | number };
@@ -60,6 +61,11 @@ export interface OldFieldBase {
 		[ key: string ]: any;
 	};
 	dependencies?: { [ key: string ]: string | boolean | number };
+}
+
+export interface OldHtmlField extends OldFieldBase {
+	type: 'html';
+	content?: string;
 }
 
 export interface OldHiddenField extends OldFieldBase {
@@ -162,6 +168,7 @@ export interface OldTextareaField extends OldFieldBase {
 }
 
 export type OldFieldProps =
+	| OldHtmlField
 	| OldHiddenField
 	| OldTextField
 	| OldNumberField
@@ -186,6 +193,7 @@ export type OldFieldProps =
 export type PartialOldFieldProps = AtLeast< OldFieldProps, 'type' >;
 
 export type OldFieldMap = {
+	html: OldHtmlField;
 	checkbox: OldCheckboxField;
 	color: OldColorField;
 	email: OldTextField;

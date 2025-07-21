@@ -24,6 +24,7 @@ export const oldFieldDefaults = {
 	placeholder: '',
 	desc: null,
 	dynamic_desc: null,
+	content: '',
 	size: 'regular',
 	classes: [],
 	dependencies: '',
@@ -117,6 +118,9 @@ export const parseOldArgsToProps = (
 			};
 
 		case 'hidden':
+			return fieldProps;
+
+		case 'html':
 			return fieldProps;
 
 		case 'license_key':
@@ -413,6 +417,12 @@ export const parseFieldProps = (
 
 	// Ensure prop completeness.
 	switch ( fieldProps.type ) {
+		case 'html':
+			return {
+				...fieldProps,
+				content: fieldProps.content ?? '',
+			};
+
 		case 'checkbox':
 			return {
 				...fieldProps,
