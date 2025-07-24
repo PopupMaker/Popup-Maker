@@ -81,7 +81,6 @@
 		"@testing-library/react": "^16.2.0",
 		"@testing-library/user-event": "^14.6.1",
 		"@types/testing-library__jest-dom": "^6.0.0",
-		"@wordpress/base-styles": "^5.14.0",
 		"@wordpress/e2e-test-utils-playwright": "^1.17.0",
 		"@wordpress/scripts": "^27.9.0",
 		"copy-webpack-plugin": "^12.0.2",
