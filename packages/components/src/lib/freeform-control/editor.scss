@@ -1,7 +1,8 @@
 @use "sass:math";
-@import "@wordpress/base-styles/variables";
-@import "@wordpress/base-styles/mixins";
-@import "@wordpress/base-styles/breakpoints";
+@import "~@wordpress/base-styles/colors";
+@import "~@wordpress/base-styles/variables";
+@import "~@wordpress/base-styles/mixins";
+@import "~@wordpress/base-styles/breakpoints";
 
 // Need to import the math functions to use them in the loop below.
 
