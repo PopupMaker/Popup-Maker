@@ -1126,7 +1126,19 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		}
 
 		if ( 'conversion' === $event || 'open' === $event ) {
-			$this->update_meta( 'popup_conversion_rate', $this->get_event_count( 'conversion', 'current' ) / $this->get_event_count( 'open', 'current' ) );
+			$open_count       = $this->get_event_count( 'open', 'current' );
+			$conversion_count = $this->get_event_count( 'conversion', 'current' );
+			$this->update_meta( 'popup_conversion_rate', $open_count > 0 ? $conversion_count / $open_count : 0 );
+
+			$site_total_opens       = get_option( 'pum_total_open_count', 0 );
+			$site_total_conversions = get_option( 'pum_total_conversion_count', 0 );
+			update_option( 'pum_overall_conversion_rate', $site_total_opens > 0 ? $site_total_conversions / $site_total_opens : 0 );
+
+			if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+				$network_total_opens       = get_site_option( 'pum_site_total_open_count', 0 );
+				$network_total_conversions = get_site_option( 'pum_site_total_conversion_count', 0 );
+				update_site_option( 'pum_overall_conversion_rate', $network_total_opens > 0 ? $network_total_conversions / $network_total_opens : 0 );
+			}
 		}
 	}
 
