@@ -42,6 +42,20 @@ class CallToActions extends Controller {
 		$notrack  = (bool) ( ! empty( $_GET['notrack'] ) ? sanitize_text_field( wp_unslash( $_GET['notrack'] ) ) : false );
 		/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
 
+		/**
+		 * Filter the CTA identifier before lookup.
+		 *
+		 * Allows extensions to modify or resolve the CTA identifier.
+		 * For example, converting a slug to a UUID.
+		 *
+		 * @param string $cta_uuid The CTA identifier (UUID, slug, or custom identifier).
+		 *
+		 * @return string The resolved CTA identifier.
+		 *
+		 * @since X.X.X
+		 */
+		$cta_uuid = apply_filters( 'popup_maker/cta_identifier', $cta_uuid );
+
 		if ( empty( $cta_uuid ) ) {
 			return;
 		}
