@@ -390,7 +390,7 @@ class PUM_Utils_Array {
 	 * @return bool
 	 */
 	public static function sort_by_sort( $a, $b ) {
-		return $a['sort'] > $b['sort'];
+		return $a['sort'] <=> $b['sort'];
 	}
 
 	/**
