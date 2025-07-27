@@ -56,47 +56,104 @@ export const initCustomFields = () => {
 									return null;
 								}
 
+								const shouldHide = () => {
+									if ( ! field.dependencies ) {
+										return false;
+									}
+
+									const dependencies = field.dependencies;
+
+									return ! Object.entries(
+										dependencies
+									).every( ( [ key, value ] ) => {
+										const dependencyValue = settings[ key ];
+
+										if ( typeof value === 'string' ) {
+											if (
+												typeof dependencyValue ===
+												'undefined'
+											) {
+												return value === '';
+											}
+											return value === dependencyValue;
+										}
+
+										if ( typeof value === 'boolean' ) {
+											if (
+												typeof dependencyValue ===
+												'undefined'
+											) {
+												return value === false;
+											}
+											return value === dependencyValue;
+										}
+
+										return false;
+									} );
+								};
+
 								return {
 									...field,
 									id: fieldId,
 									priority: field?.priority ?? 0,
-									component:
-										'url' === field.type ? (
-											<FieldPanel
-												title={ field.label ?? '' }
-											>
-												<URLControl
-													key={ fieldId }
-													{ ...field }
-													value={
-														settings[ fieldId ]
-													}
-													onChange={ ( value ) =>
-														updateSettings( {
-															[ fieldId ]:
-																value.url,
-														} )
-													}
-												/>
-											</FieldPanel>
-										) : (
-											<FieldPanel
-												title={ field.label ?? '' }
-											>
-												<Field
-													key={ fieldId }
-													{ ...field }
-													value={
-														settings[ fieldId ]
-													}
-													onChange={ ( value ) =>
-														updateSettings( {
-															[ fieldId ]: value,
-														} )
-													}
-												/>
-											</FieldPanel>
-										),
+									component: (
+										<div key={ fieldId }>
+											{ ! shouldHide() &&
+												( 'url' === field.type ? (
+													<FieldPanel
+														title={
+															field.label ?? ''
+														}
+													>
+														<URLControl
+															key={ fieldId }
+															{ ...field }
+															value={
+																settings[
+																	fieldId
+																]
+															}
+															onChange={ (
+																value
+															) =>
+																updateSettings(
+																	{
+																		[ fieldId ]:
+																			value.url,
+																	}
+																)
+															}
+														/>
+													</FieldPanel>
+												) : (
+													<FieldPanel
+														title={
+															field.label ?? ''
+														}
+													>
+														<Field
+															key={ fieldId }
+															{ ...field }
+															value={
+																settings[
+																	fieldId
+																]
+															}
+															onChange={ (
+																value
+															) =>
+																updateSettings(
+																	{
+																		[ fieldId ]:
+																			value,
+																	}
+																)
+															}
+														/>
+													</FieldPanel>
+												) ) }
+										</div>
+									),
 								};
 							}
 						),
