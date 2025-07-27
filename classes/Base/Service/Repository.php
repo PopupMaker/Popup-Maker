@@ -135,4 +135,45 @@ abstract class Repository extends Service {
 
 		return null;
 	}
+
+	/**
+	 * Get item by custom field or column.
+	 *
+	 * @param string $field Field name (post column or meta key).
+	 * @param mixed  $value Field value.
+	 * @param string $type  'column' or 'meta'.
+	 *
+	 * @return TPost|null
+	 */
+	public function get_by_field( $field, $value, $type = 'column' ) {
+		if ( empty( $field ) || ( empty( $value ) && 0 !== $value && '0' !== $value ) ) {
+			return null;
+		}
+
+		$query_args = [
+			'post_type'      => $this->post_type,
+			'posts_per_page' => 1,
+			'post_status'    => [ 'publish', 'private', 'draft' ],
+		];
+
+		if ( 'meta' === $type ) {
+			$query_args['meta_key']   = $field; // phpcs:ignore WordPress.DB.SlowDBQuery
+			$query_args['meta_value'] = $value; // phpcs:ignore WordPress.DB.SlowDBQuery
+		} else {
+			// For post columns like post_name, post_title, etc.
+			$query_args[ $field ] = $value;
+		}
+
+		$query = new \WP_Query( $query_args );
+
+		if ( $query->have_posts() ) {
+			$item = $this->instantiate_model_from_post( $query->posts[0] );
+			if ( $item ) {
+				$this->cache_item( $item );
+			}
+			return $item;
+		}
+
+		return null;
+	}
 }
