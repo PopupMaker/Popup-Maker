@@ -5,7 +5,7 @@ import './style.scss';
  * WordPress dependencies
  */
 import { __ } from '@popup-maker/i18n';
-import { buttons as icon } from '@wordpress/icons';
+import { Mark as MarkIcon } from '@popup-maker/icons';
 import { addFilter } from '@wordpress/hooks';
 
 /**
@@ -23,7 +23,7 @@ const { name } = metadata;
 export { metadata, name };
 
 export const settings = {
-	icon,
+	icon: MarkIcon,
 	example: {
 		attributes: {
 			layout: {
