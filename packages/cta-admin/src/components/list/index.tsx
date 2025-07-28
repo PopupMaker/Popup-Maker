@@ -274,6 +274,11 @@ const List = () => {
 												callToAction.settings.type
 											);
 
+										case 'description':
+											return decodeEntities(
+												callToAction.excerpt?.raw || ''
+											);
+
 										default:
 											return (
 												callToAction[ col ] ??
