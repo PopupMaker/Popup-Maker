@@ -9,6 +9,7 @@ declare global {
 		popupMakerBlockLibrary: {
 			homeUrl: string;
 		};
+		typenow: string;
 	}
 }
 

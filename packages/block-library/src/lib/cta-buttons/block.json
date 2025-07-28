@@ -8,8 +8,7 @@
 	"description": "Prompt visitors to take action with a group of button-style links.",
 	"keywords": [ "link", "button", "call to action", "cta", "conversion" ],
 	"textdomain": "popup-maker",
-	"attributes": {
-	},
+	"attributes": {},
 	"supports": {
 		"anchor": true,
 		"align": [ "wide", "full" ],
