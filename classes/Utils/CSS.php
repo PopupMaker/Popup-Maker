@@ -15,10 +15,23 @@ class PUM_Utils_CSS {
 	 * @return array|string
 	 */
 	public static function hex2rgb( $hex = '#ffffff', $return_type = 'rgb' ) {
+		// Handle invalid input types (null, false, objects, etc.)
+		if ( ! is_string( $hex ) && ! is_numeric( $hex ) && ! is_array( $hex ) ) {
+			$hex = '#ffffff';
+		}
+
+		// Handle arrays by joining
 		if ( is_array( $hex ) ) {
 			$hex = implode( '', $hex );
 		}
-		$hex = str_replace( '#', '', $hex );
+
+		// Convert to string and remove hash
+		$hex = str_replace( '#', '', (string) $hex );
+
+		// Validate hex format (3 or 6 valid hex characters only)
+		if ( ! preg_match( '/^[0-9a-fA-F]{3}$|^[0-9a-fA-F]{6}$/', $hex ) ) {
+			$hex = 'ffffff'; // Default to white for invalid hex
+		}
 
 		if ( strlen( $hex ) === 3 ) {
 			$r = hexdec( substr( $hex, 0, 1 ) . substr( $hex, 0, 1 ) );
