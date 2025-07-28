@@ -34,6 +34,7 @@ This update begins the process of modernizing our codebase while polishing exist
 -   Better handling of version changes & migration processing during plugin updates.
 -   Added ability to search multiple post types in postselect fields.
 -   Added ability to search multiple taxonomies in taxonomyselect fields.
+-   Added validation for hex color conversion to prevent deprecated notices.
 
 **Fixes**
 
