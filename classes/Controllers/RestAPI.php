@@ -370,6 +370,16 @@ class RestAPI extends Controller {
 		// Validate settings using the CTA type's validation method
 		$validation_result = $cta_type->validate_settings( $settings );
 
+		if ( is_array( $validation_result ) ) {
+			// Merge each field error into a single error.
+			$error = new \WP_Error();
+			foreach ( $validation_result as $field_error ) {
+				$error->add( $field_error->get_error_code(), $field_error->get_error_message(), $field_error->get_error_data() );
+			}
+
+			return $error;
+		}
+
 		if ( is_wp_error( $validation_result ) ) {
 			return $validation_result;
 		}
