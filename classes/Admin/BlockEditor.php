@@ -19,6 +19,11 @@ class PUM_Admin_BlockEditor {
 	 * Initialize
 	 */
 	public static function init() {
+		// Always register block categories, regardless of block playground
+		// Support both WordPress 5.8+ and older versions
+		add_filter( 'block_categories_all', [ __CLASS__, 'register_block_categories' ], 10, 2 );
+		// add_filter( 'block_categories', [ __CLASS__, 'register_block_categories_legacy' ], 10, 2 );
+
 		// Bail early if the Block Playground is active and ahead of core.
 		if ( defined( 'PUM_BLOCK_PLAYGROUND' ) && version_compare( PUM_BLOCK_PLAYGROUND, self::$version, '>' ) ) {
 			return;
@@ -101,6 +106,37 @@ class PUM_Admin_BlockEditor {
 	 */
 	private static function load_block_library() {
 		return apply_filters( 'popup_maker/block_editor/load_block_library', self::is_block_editor_active() && pum_is_popup_editor() );
+	}
+
+	/**
+	 * Register custom block categories.
+	 *
+	 * @param array                   $categories Array of block categories.
+	 * @param WP_Block_Editor_Context $editor_context Block editor context.
+	 * @return array Modified block categories.
+	 * @since 1.10.0
+	 */
+	public static function register_block_categories( $categories, $editor_context ) {
+		// Always add Popup Maker category for better discoverability
+
+		$insert_index = 3;
+
+		// https://pm.local/wp-admin/post.php?post=821&action=edit
+
+		// If in the popup editor insert at index 0.
+		if ( isset( $_GET['post'] ) && get_post_type( sanitize_text_field( wp_unslash( $_GET['post'] ) ) ) === 'popup' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$insert_index = 0;
+		}
+
+		array_splice( $categories, $insert_index, 0, [
+			[
+				'slug'  => 'popup-maker',
+				'title' => __( 'Popup Maker', 'popup-maker' ),
+				'icon'  => pum_asset_url( 'mark.svg' ),
+			],
+		] );
+
+		return $categories;
 	}
 
 	/**

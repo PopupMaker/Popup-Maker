@@ -3,7 +3,7 @@
 	"apiVersion": 3,
 	"name": "popup-maker/cta-button",
 	"title": "Call to Action Button",
-	"category": "design",
+	"category": "popup-maker",
 	"parent": [ "popup-maker/cta-buttons", "core/buttons" ],
 	"description": "Prompt visitors to take action with a button-style link.",
 	"keywords": [ "link", "button", "call to action", "cta", "conversion" ],
