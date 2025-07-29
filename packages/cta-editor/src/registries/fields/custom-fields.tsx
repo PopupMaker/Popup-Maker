@@ -1,6 +1,5 @@
-import { Field } from '@popup-maker/fields';
 import { addFilter } from '@wordpress/hooks';
-import { FieldPanel, URLControl } from '@popup-maker/components';
+import { FieldWithError } from '../../components';
 
 import type { FieldProps } from '@popup-maker/fields';
 import type { CallToAction } from '@popup-maker/core-data';
@@ -98,60 +97,20 @@ export const initCustomFields = () => {
 									priority: field?.priority ?? 0,
 									component: (
 										<div key={ fieldId }>
-											{ ! shouldHide() &&
-												( 'url' === field.type ? (
-													<FieldPanel
-														title={
-															field.label ?? ''
-														}
-													>
-														<URLControl
-															key={ fieldId }
-															{ ...field }
-															value={
-																settings[
-																	fieldId
-																]
-															}
-															onChange={ (
-																value
-															) =>
-																updateSettings(
-																	{
-																		[ fieldId ]:
-																			value.url,
-																	}
-																)
-															}
-														/>
-													</FieldPanel>
-												) : (
-													<FieldPanel
-														title={
-															field.label ?? ''
-														}
-													>
-														<Field
-															key={ fieldId }
-															{ ...field }
-															value={
-																settings[
-																	fieldId
-																]
-															}
-															onChange={ (
-																value
-															) =>
-																updateSettings(
-																	{
-																		[ fieldId ]:
-																			value,
-																	}
-																)
-															}
-														/>
-													</FieldPanel>
-												) ) }
+											{ ! shouldHide() && (
+												<FieldWithError
+													fieldId={ fieldId }
+													field={ field }
+													value={
+														settings[ fieldId ]
+													}
+													onChange={ ( value ) =>
+														updateSettings( {
+															[ fieldId ]: value,
+														} )
+													}
+												/>
+											) }
 										</div>
 									),
 								};
