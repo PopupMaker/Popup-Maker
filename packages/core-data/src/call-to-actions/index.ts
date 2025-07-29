@@ -9,6 +9,7 @@ export * from './validation';
 export {
 	defaultValues as defaultCtaValues,
 	STORE_NAME as CALL_TO_ACTION_STORE,
+	NOTICE_CONTEXT,
 } from './constants';
 
 export type * from './types/posttype';
