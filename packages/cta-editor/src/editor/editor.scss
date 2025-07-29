@@ -273,6 +273,55 @@ $gap4: $gap * 4;
 		margin: -5px 0 10px 0;
 	}
 
+	// Field wrapper error styles
+	.cta-field-wrapper {
+		&--has-error {
+
+			.components-panel__header {
+				border-bottom: 1px solid #cc1818 !important;
+			}
+
+			.components-panel__body {
+				background: linear-gradient(to bottom, rgba(204, 24, 24, 0.03), rgba(204, 24, 24, 0.08));
+				border-radius: 0 0 4px 4px;
+			}
+
+			.components-base-control__label {
+				color: #cc1818 !important;
+			}
+
+
+			.components-text-control__input,
+			.components-textarea-control__input,
+			.components-select-control__input,
+			.url-control__input,
+			.components-input-control__input,
+			.components-number-control__input,
+			.component-smart-token-control__input,
+			// For fields that use a wrapper with background
+			.components-select-control__input-wrapper {
+				background-color: #fff;
+				border: 1px solid #cc1818 !important;
+				box-shadow: 0 0 0 1px #cc1818 !important;
+
+			}
+
+			.components-input-control__backdrop {
+				border-color: transparent;
+				background-color: transparent;
+			}
+
+		}
+
+		// Error message.
+		.cta-field-error {
+			font-size: 12px;
+			line-height: 1.4;
+			margin-top: 8px;
+			color: #cc1818;
+		}
+	}
+
 	.editor-tabs {
 		.components-tab-panel__tabs {
 			.components-tab-panel__tabs-item {
