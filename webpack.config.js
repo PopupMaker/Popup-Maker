@@ -145,6 +145,9 @@ const config = {
 	devServer: {
 		...( defaultConfig.devServer || {} ),
 		allowedHosts: 'all',
+		// port: 8887,
+		// Fix for webpack-dev-server proxy configuration issue
+		proxy: undefined, // Remove any inherited proxy configuration that might be causing the array format issue
 	},
 };
 
