@@ -48,6 +48,12 @@ const Notices = () => {
 				return;
 			}
 
+			// Don't auto-dismiss field errors - they're cleared when the field is updated
+			const isFieldError = notice.id?.startsWith( 'field-error-' );
+			if ( isFieldError ) {
+				return;
+			}
+
 			// Set a timer to dismiss the notice after the delay.
 			// When DEBUG_MODE is enabled, notices stay visible for debugging
 			if ( ! DEBUG_MODE ) {

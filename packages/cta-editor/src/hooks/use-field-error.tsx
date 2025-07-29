@@ -2,6 +2,8 @@ import { callToActionStore, NOTICE_CONTEXT } from '@popup-maker/core-data';
 import { store as noticesStore } from '@wordpress/notices';
 import { useSelect } from '@wordpress/data';
 
+import useFields from './use-fields';
+
 /**
  * Hook to get the error message for a specific field.
  *
@@ -41,19 +43,31 @@ export const useTabHasError = ( tabName: string ): boolean => {
 		[]
 	);
 
+	const { getTabFields } = useFields();
+
 	return useSelect(
 		( select ) => {
 			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
-			// For now, we'll need a field-to-tab mapping
-			// This should eventually come from PHP via localization
-			const fieldTabMap: Record< string, string > = {
-				url: 'general',
-				title: 'general',
-				description: 'general',
-				type: 'general',
-				popup_id: 'targeting',
-				// Add more mappings as needed
-			};
+
+			// Build dynamic field-to-tab mapping from the actual field definitions
+			const tabFields = getTabFields( tabName );
+			const fieldTabMap: Record< string, string > = {};
+
+			// Map each field ID to this tab
+			tabFields.forEach( ( field ) => {
+				fieldTabMap[ field.id ] = tabName;
+			} );
+
+			// Also check other tabs to build complete mapping
+			const allTabs = [ 'general', 'targeting', 'settings' ]; // Add other tab names as needed
+			allTabs.forEach( ( tab ) => {
+				if ( tab !== tabName ) {
+					const otherTabFields = getTabFields( tab );
+					otherTabFields.forEach( ( field ) => {
+						fieldTabMap[ field.id ] = tab;
+					} );
+				}
+			} );
 
 			return notices.some( ( notice ) => {
 				if (
@@ -65,13 +79,16 @@ export const useTabHasError = ( tabName: string ): boolean => {
 				}
 
 				// Extract field name from notice ID
-				const fieldMatch = notice.id.match( /field-error-\d+-(.+)$/ );
+				// Pattern handles both numeric IDs and 'new' for new CTAs
+				const fieldMatch = notice.id.match(
+					/field-error-(?:\d+|new)-(.+)$/
+				);
 				const field = fieldMatch?.[ 1 ];
 
 				return field && fieldTabMap[ field ] === tabName;
 			} );
 		},
-		[ ctaId, tabName ]
+		[ ctaId, tabName, getTabFields ]
 	);
 };
 

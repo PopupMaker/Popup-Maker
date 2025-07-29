@@ -10,7 +10,8 @@ import {
 	TextControl,
 } from '@wordpress/components';
 
-import { useFields, useTabHasError } from '../../hooks';
+import { useFields } from '../../hooks';
+import { TabErrorNotice } from '../../components';
 
 import type { CallToAction } from '@popup-maker/core-data';
 import type { BaseEditorTabProps } from '../../types';
@@ -75,7 +76,6 @@ export const Component = ( {
 	updateSettings,
 }: BaseEditorTabProps ) => {
 	const { getTabFields } = useFields();
-	const tabHasError = useTabHasError( 'general' );
 
 	const { settings } = callToAction;
 
@@ -86,11 +86,7 @@ export const Component = ( {
 
 	return (
 		<div className="general-tab">
-			{ tabHasError && (
-				<Notice status="error" isDismissible={ false }>
-					{ __( 'Please fix the errors below.', 'popup-maker' ) }
-				</Notice>
-			) }
+			<TabErrorNotice tabName="general" />
 
 			<TextControl
 				label={ __( 'Name', 'popup-maker' ) }

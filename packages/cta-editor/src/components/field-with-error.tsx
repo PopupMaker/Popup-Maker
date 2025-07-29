@@ -1,6 +1,9 @@
 import React from 'react';
 import { Field } from '@popup-maker/fields';
-import { FieldPanel, URLControl } from '@popup-maker/components';
+import { URLControl } from '@popup-maker/components';
+import { callToActionStore, NOTICE_CONTEXT } from '@popup-maker/core-data';
+import { useDispatch, useSelect } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import { FieldWrapper } from './field-wrapper';
 import { useFieldError } from '../hooks';
 
@@ -30,6 +33,24 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 	onChange,
 } ) => {
 	const error = useFieldError( fieldId );
+	const { removeNotice } = useDispatch( noticesStore );
+
+	const ctaId = useSelect(
+		( select ) => select( callToActionStore ).getEditorId(),
+		[]
+	);
+
+	// Clear field error when value changes
+	const handleChange = ( newValue: any ) => {
+		// Clear the field-specific error notice when the field is updated
+		if ( error ) {
+			const errorNoticeId = `field-error-${
+				ctaId || 'new'
+			}-${ fieldId }`;
+			removeNotice( errorNoticeId, NOTICE_CONTEXT );
+		}
+		onChange( newValue );
+	};
 
 	return (
 		<FieldWrapper
@@ -41,10 +62,10 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 				<URLControl
 					{ ...field }
 					value={ value }
-					onChange={ ( urlValue ) => onChange( urlValue.url ) }
+					onChange={ ( urlValue ) => handleChange( urlValue.url ) }
 				/>
 			) : (
-				<Field { ...field } value={ value } onChange={ onChange } />
+				<Field { ...field } value={ value } onChange={ handleChange } />
 			) }
 		</FieldWrapper>
 	);

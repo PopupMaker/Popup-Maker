@@ -247,8 +247,20 @@ const entityActions = {
 				} );
 
 				if ( withNotices ) {
-					// Generate a generic error notice.
-					dispatch.createErrorNotice( errorMessage );
+					// Handle field-specific validation errors or generic error
+					const hasFieldErrors = handleFieldValidationErrors(
+						error,
+						callToAction?.id,
+						dispatch,
+						registry
+					);
+
+					if ( ! hasFieldErrors ) {
+						// Generic error notice
+						dispatch.createErrorNotice( errorMessage, {
+							id: 'call-to-action-save-error',
+						} );
+					}
 				}
 
 				throw error;
@@ -326,6 +338,21 @@ const entityActions = {
 						},
 					} );
 
+					// Also store the error by CTA ID for the editor to access
+					if ( callToAction.id ) {
+						dispatch( {
+							type: CHANGE_ACTION_STATUS,
+							payload: {
+								actionName: callToAction.id.toString(),
+								status: DispatchStatus.Error,
+								message: __(
+									'Call to action not found',
+									'popup-maker'
+								),
+							},
+						} );
+					}
+
 					return false;
 				}
 
@@ -399,8 +426,20 @@ const entityActions = {
 				} );
 
 				if ( withNotices ) {
-					// Generate a generic error notice.
-					dispatch.createErrorNotice( errorMessage );
+					// Handle field-specific validation errors or generic error
+					const hasFieldErrors = handleFieldValidationErrors(
+						error,
+						callToAction?.id,
+						dispatch,
+						registry
+					);
+
+					if ( ! hasFieldErrors ) {
+						// Generic error notice
+						dispatch.createErrorNotice( errorMessage, {
+							id: 'call-to-action-save-error',
+						} );
+					}
 				}
 
 				throw error;
@@ -621,7 +660,9 @@ const editorActions = {
 				// eslint-disable-next-line no-console
 				console.error( 'Edit failed:', error );
 
-				await dispatch.createErrorNotice( errorMessage );
+				await dispatch.createErrorNotice( errorMessage, {
+					id: 'call-to-action-edit-error',
+				} );
 			}
 		},
 
@@ -762,10 +803,6 @@ const editorActions = {
 				console.error( 'Save failed:', error );
 
 				registry.batch( async () => {
-					if ( withNotices ) {
-						await dispatch.createErrorNotice( errorMessage );
-					}
-
 					dispatch( {
 						type: CHANGE_ACTION_STATUS,
 						payload: {
@@ -774,6 +811,23 @@ const editorActions = {
 							message: errorMessage,
 						},
 					} );
+
+					if ( withNotices ) {
+						// Handle field-specific validation errors or generic error
+						const hasFieldErrors = handleFieldValidationErrors(
+							error,
+							id,
+							dispatch,
+							registry
+						);
+
+						if ( ! hasFieldErrors ) {
+							// Generic error notice
+							await dispatch.createErrorNotice( errorMessage, {
+								id: 'call-to-action-save-error',
+							} );
+						}
+					}
 				} );
 
 				throw error;
@@ -963,7 +1017,9 @@ const editorActions = {
 				// eslint-disable-next-line no-console
 				console.error( 'Failed to change editor ID:', error );
 
-				dispatch.createErrorNotice( errorMessage );
+				dispatch.createErrorNotice( errorMessage, {
+					id: 'call-to-action-editor-error',
+				} );
 			}
 		},
 };
@@ -1112,11 +1168,6 @@ const resolutionActions = {
 			message?: string | { message: string; [ key: string ]: any }
 		): ThunkAction =>
 		( { dispatch } ) => {
-			if ( message ) {
-				// eslint-disable-next-line no-console
-				console.log( actionName, message );
-			}
-
 			dispatch( {
 				type: CHANGE_ACTION_STATUS,
 				payload: {
