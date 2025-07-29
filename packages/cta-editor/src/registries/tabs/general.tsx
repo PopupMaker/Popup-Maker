@@ -1,6 +1,5 @@
 import { __ } from '@popup-maker/i18n';
 import { clamp } from '@popup-maker/utils';
-import { CallToAction } from '@popup-maker/core-data';
 import { cleanForSlug } from '@wordpress/url';
 import { applyFilters } from '@wordpress/hooks';
 import {
@@ -12,6 +11,7 @@ import {
 
 import { useFields } from '../../hooks';
 
+import type { CallToAction } from '@popup-maker/core-data';
 import type { BaseEditorTabProps } from '../../types';
 
 export const name = 'general';

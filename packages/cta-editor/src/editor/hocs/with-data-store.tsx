@@ -2,16 +2,18 @@ import { __ } from '@popup-maker/i18n';
 import {
 	defaultCtaValues,
 	callToActionStore,
-	getErrorMessage,
 	DispatchStatus,
+	NOTICE_CONTEXT,
 } from '@popup-maker/core-data';
 import { Notice } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import { useEffect, useState, useRef, useMemo } from '@wordpress/element';
+import { DebugNotices } from '../../components';
 
 import type { ComponentType } from 'react';
 import type { EditorId, EditableCta } from '@popup-maker/core-data';
-import type { BaseEditorProps, EditorTab } from '../../types';
+import type { BaseEditorProps } from '../../types';
 
 type Editable = EditableCta;
 
@@ -50,16 +52,6 @@ export interface EditorWithDataStoreProps
 }
 
 /**
- * Type definition for error notices that can include tab and field-specific information
- */
-type ErrorNotice = {
-	message: string;
-	tabName?: string;
-	field?: string;
-	[ key: string ]: any;
-};
-
-/**
  * Wrap the editor with the data store.
  *
  * @param {ComponentType<EditorWithDataStoreProps>} WrappedComponent The component to wrap.
@@ -75,13 +67,6 @@ export const withDataStore = (
 		onSave,
 		...componentProps
 	}: EditorWithDataStoreProps ) {
-		/**
-		 * State for tracking error messages and saving status
-		 */
-		const [ errorMessage, setErrorMessage ] = useState<
-			string | ErrorNotice
-		>();
-
 		/**
 		 * State for tracking save attempts and preventing duplicate saves
 		 *
@@ -103,8 +88,6 @@ export const withDataStore = (
 			isEditorActive,
 			isSaving,
 			savedSuccessfully,
-			hasError,
-			error,
 			getEditorValues,
 		} = useSelect(
 			( select ) => {
@@ -114,8 +97,6 @@ export const withDataStore = (
 					store.getResolutionState( 'createCallToAction' ) ||
 					store.getResolutionState( 'updateCallToAction' );
 
-				const resolutionError = store.getResolutionError( id );
-
 				return {
 					values: store.getEditedCallToAction( id ),
 					isEditorActive: store.isEditorActive(),
@@ -123,8 +104,6 @@ export const withDataStore = (
 					getEditorValues: store.getEditedCallToAction,
 					savedSuccessfully:
 						resolutionState?.status === DispatchStatus.Success,
-					hasError: !! resolutionError,
-					error: resolutionError,
 				};
 			},
 			[ id ]
@@ -134,6 +113,20 @@ export const withDataStore = (
 
 		const { editRecord, resetRecordEdits, changeEditorId } =
 			useDispatch( callToActionStore );
+
+		/**
+		 * Get general error notices (not field-specific)
+		 */
+		const notices = useSelect( ( select ) => {
+			const allNotices =
+				select( noticesStore ).getNotices( NOTICE_CONTEXT );
+			// Filter out field-specific notices
+			return allNotices.filter(
+				( notice ) => ! notice.id?.startsWith( 'field-error-' )
+			);
+		}, [] );
+
+		const { removeNotice } = useDispatch( noticesStore );
 
 		useEffect( () => {
 			if ( ! isEditorActive && id ) {
@@ -148,18 +141,7 @@ export const withDataStore = (
 		}, [ id, valuesId, isEditorActive, changeEditorId ] );
 
 		/**
-		 * Listen for errors and set the error message.
-		 */
-		useEffect( () => {
-			if ( hasError ) {
-				setErrorMessage( error );
-			}
-		}, [ hasError, error ] );
-
-		/**
 		 * Save the CallToAction when the editor is saved.
-		 *
-		 * Also clear the error message when the editor is saved.
 		 */
 		useEffect( () => {
 			if ( ! triedSaving ) {
@@ -172,7 +154,6 @@ export const withDataStore = (
 
 			if ( savedSuccessfully && ! saveHandledRef.current ) {
 				saveHandledRef.current = true;
-				setErrorMessage( undefined );
 				setTriedSaving( false );
 				// Get the latest CTA from the store after save
 				const latestCta = getEditorValues( values.id );
@@ -252,58 +233,36 @@ export const withDataStore = (
 		}
 
 		/**
-		 * Filter the tabs to add an error class to the tab that has an error.
-		 *
-		 * @param {EditorTab[]} tabs The tabs.
+		 * Render the error messages.
 		 */
-		const tabsFilter = ( tabs: EditorTab[] ) => {
-			/**
-			 * Filter the tabs to add an error class to the tab that has an error.
-			 */
-			const _tabs = tabs.map( ( tab ) => {
-				if (
-					typeof tab !== 'object' ||
-					typeof errorMessage !== 'object'
-				) {
-					return tab;
-				}
-
-				if ( errorMessage?.tabName === tab.name ) {
-					return {
-						...tab,
-						className: tab.className
-							? tab.className + ' error'
-							: 'error',
-					};
-				}
-
-				return tab;
-			} );
-
-			/**
-			 * If a tabsFilter is provided, use it to filter the tabs.
-			 */
-			return componentProps.tabsFilter
-				? componentProps.tabsFilter( _tabs )
-				: _tabs;
-		};
-
-		/**
-		 * Render the error message.
-		 */
-		const ErrorMessage = () => (
+		const ErrorMessages = () => (
 			<>
-				{ errorMessage && (
+				{ notices.map( ( notice ) => (
 					<Notice
-						status="error"
+						key={ notice.id }
+						status={
+							( notice.status as
+								| 'error'
+								| 'warning'
+								| 'success'
+								| 'info'
+								| undefined ) || 'error'
+						}
 						className="call-to-action-editor-error"
-						onDismiss={ () => {
-							setErrorMessage( undefined );
-						} }
+						onDismiss={
+							notice.isDismissible !== false
+								? () => {
+										removeNotice(
+											notice.id,
+											NOTICE_CONTEXT
+										);
+								  }
+								: undefined
+						}
 					>
-						{ getErrorMessage( errorMessage ) }
+						{ notice.content }
 					</Notice>
-				) }
+				) ) }
 			</>
 		);
 
@@ -316,10 +275,10 @@ export const withDataStore = (
 				onChange={ ( newValues ) => {
 					editRecord( values.id, newValues );
 				} }
-				tabsFilter={ tabsFilter }
 				beforeTabs={
 					<>
-						<ErrorMessage />
+						<DebugNotices />
+						<ErrorMessages />
 						{ componentProps.beforeTabs }
 					</>
 				}
