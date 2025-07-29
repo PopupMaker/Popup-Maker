@@ -367,12 +367,6 @@ class RestAPI extends Controller {
 			return new \WP_Error( 'invalid_type', __( 'Invalid CTA type', 'popup-maker' ), [ 'status' => 400 ] );
 		}
 
-		$validation_result = $cta_type->validate_settings( $settings );
-
-		if ( is_wp_error( $validation_result ) ) {
-			return $validation_result;
-		}
-
 		// Validate settings using the CTA type's validation method
 		$validation_result = $cta_type->validate_settings( $settings );
 
