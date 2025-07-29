@@ -5,6 +5,8 @@ import { SelectControl } from '@wordpress/components';
 
 import type { CallToAction } from '@popup-maker/core-data';
 
+// UNUSED, here for reference.
+
 export const callToActionTypeOptions: {
 	value: Exclude< CallToAction[ 'settings' ][ 'type' ], undefined > | '';
 	label: string;
