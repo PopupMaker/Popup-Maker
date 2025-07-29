@@ -14,11 +14,12 @@ const Notices = () => {
 		[ key: WPNotice[ 'id' ] ]: ReturnType< typeof setTimeout >;
 	} >( {} );
 
-	const { notices } = useSelect(
+	const { notices, isEditorActive } = useSelect(
 		( select ) => ( {
 			// TODO: Segment this with a notice type based selector.
 			// TODO: These should be notices under the notice type, other types might be toast or editor etc.
 			notices: select( callToActionStore ).getNotices(),
+			isEditorActive: select( callToActionStore ).isEditorActive(),
 		} ),
 		[]
 	);
@@ -53,7 +54,8 @@ const Notices = () => {
 		} );
 	}, [ notices, handleDismiss ] );
 
-	if ( ! notices.length ) {
+	// Hide notices when editor is active to avoid duplicate error displays
+	if ( ! notices.length || isEditorActive ) {
 		return null;
 	}
 
