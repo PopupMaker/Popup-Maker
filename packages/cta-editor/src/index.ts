@@ -4,6 +4,12 @@ import { doAction } from '@wordpress/hooks';
 import initEditor from './init';
 import type { OldField } from '@popup-maker/fields';
 
+/**
+ * Debug mode flag for CTA editor.
+ * When enabled, shows additional debugging information like notice contexts.
+ */
+export const DEBUG_MODE = false;
+
 export * from './hooks';
 export * from './editor';
 export * from './registry';
