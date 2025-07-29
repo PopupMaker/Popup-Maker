@@ -12,13 +12,21 @@ $blocks-block__margin: 0.5em;
 	width: 100%;
 	word-break: break-word;
 
-	&.aligncenter {
+	&.aligncenter,
+	&.has-text-align-center {
 		text-align: center;
 	}
 
-	&.alignright {
+	&.alignright,
+	&.has-text-align-right {
 		/*rtl:ignore*/
 		text-align: right;
+	}
+
+	&.alignleft,
+	&.has-text-align-left {
+		/*rtl:ignore*/
+		text-align: left;
 	}
 }
 
@@ -148,12 +156,12 @@ $blocks-block__margin: 0.5em;
 	&[style*="background-color"]:not(.is-style-outline) {
 		filter: brightness(0.85);
 	}
-	
+
 	// For buttons with custom background colors using CSS classes
 	&.has-background:not(.is-style-outline):hover {
 		filter: brightness(0.85);
 	}
-	
+
 	// For outline buttons with custom colors
 	&.is-style-outline:hover {
 		filter: brightness(1.05);
@@ -165,7 +173,7 @@ $blocks-block__margin: 0.5em;
 	:where(.wp-block-popup-maker-cta-button:not(.is-style-outline))>.wp-block-popup-maker-cta-button__link:not(.is-style-outline):hover {
 		filter: brightness(0.85);
 	}
-	
+
 	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link.wp-block-popup-maker-cta-button__link:not(.has-background):hover) {
 		filter: brightness(1.05);
 	}

@@ -43,6 +43,15 @@ interface CallToAction {
 	public function action_handler( \PopupMaker\Models\CallToAction $call_to_action, array $extra_args = [] ): void;
 
 	/**
+	 * Validate CTA settings array before saving.
+	 *
+	 * @param array $settings The raw settings array to validate.
+	 *
+	 * @return true|\WP_Error True if valid, WP_Error if validation fails.
+	 */
+	public function validate_settings( array $settings );
+
+	/**
 	 * Returns an array that represents the cta.
 	 *
 	 * Used to pass configs to JavaScript.
