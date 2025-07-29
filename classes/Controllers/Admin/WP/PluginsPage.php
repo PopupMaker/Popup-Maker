@@ -126,7 +126,7 @@ class PluginsPage extends Controller {
 			<script type="text/javascript" id="pum-branding">
                 document.addEventListener('DOMContentLoaded', function() {
                     // Constants
-                    const PRIORITY_LIST = ['Pro', 'Ecommerce Popups'];
+                    const PRIORITY_LIST = ['Pro', 'LMS Popups', 'Ecommerce Popups'];
                     const LOGO_HTML = '<img class="pum-plugin-icon" src="<?php echo esc_url( plugins_url( 'assets/images/mark.svg', POPMAKE ) ); ?>" alt="Popup Maker Logo" />';
                     const TOGGLE_HTML = '<span class="pum-toggle-icon dashicons dashicons-arrow-down-alt2"></span>';
                     
