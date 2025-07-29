@@ -52,7 +52,7 @@ function findScssImports( filePath ) {
 
 	while ( ( match = scssImportRegex.exec( content ) ) !== null ) {
 		const importPath = match[ 1 ]; // Remove the ~ prefix
-		
+
 		// Normalize to package name (e.g., @wordpress/base-styles/variables -> @wordpress/base-styles)
 		if ( importPath.startsWith( '@' ) ) {
 			const parts = importPath.split( '/' );
@@ -167,7 +167,9 @@ function scanPackageImports( packageDir ) {
 				normalizedImports.forEach( ( imp ) => {
 					allImports.add( imp );
 					if ( imp.startsWith( '@popup-maker/' ) ) {
-						popupMakerImports.add( normalizePopupMakerImport( imp ) );
+						popupMakerImports.add(
+							normalizePopupMakerImport( imp )
+						);
 					}
 				} );
 			}
@@ -180,7 +182,10 @@ function scanPackageImports( packageDir ) {
 		const imports = findScssImports( fullPath );
 		if ( imports.length > 0 ) {
 			if ( importsByFile[ file ] ) {
-				importsByFile[ file ] = [ ...importsByFile[ file ], ...imports ];
+				importsByFile[ file ] = [
+					...importsByFile[ file ],
+					...imports,
+				];
 			} else {
 				importsByFile[ file ] = imports;
 			}
@@ -225,8 +230,7 @@ function isTypesPackageUsed( typesPackage, usedImports ) {
 
 	// If the base package is used, keep the @types package
 	return (
-		usedImports.has( basePackage ) ||
-		usedImports.has( scopedBasePackage )
+		usedImports.has( basePackage ) || usedImports.has( scopedBasePackage )
 	);
 }
 

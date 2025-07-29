@@ -1,5 +1,4 @@
 {
-
 	"plugins": [ "." ],
 	"themes": [ "./test/emptytheme" ],
 	"env": {

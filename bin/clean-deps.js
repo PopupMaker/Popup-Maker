@@ -104,7 +104,9 @@ function removeUnusedDeps( packageJsonPath, unusedDeps ) {
 		[ 'dependencies', 'devDependencies', 'peerDependencies' ].forEach(
 			( depType ) => {
 				if ( packageJson[ depType ] ) {
-					packageJson[ depType ] = sortObjectKeys( packageJson[ depType ] );
+					packageJson[ depType ] = sortObjectKeys(
+						packageJson[ depType ]
+					);
 				}
 			}
 		);

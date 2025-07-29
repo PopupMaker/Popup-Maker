@@ -31,43 +31,63 @@ function buildDependencyVersionCache( currentPackageDir ) {
 	// Get the current plugin context to know which paths to scan
 	const pathInfo = getPluginPathInfo( currentPackageDir );
 	const absolutePath = path.resolve( currentPackageDir );
-	
+
 	// Always scan core packages if accessible
 	if ( pathInfo.coreRelativePath ) {
-		const corePackagesPath = path.resolve( currentPackageDir, pathInfo.coreRelativePath );
+		const corePackagesPath = path.resolve(
+			currentPackageDir,
+			pathInfo.coreRelativePath
+		);
 		if ( fs.existsSync( corePackagesPath ) ) {
 			packagePaths.push( corePackagesPath );
 		}
 	}
-	
-	// Scan pro packages if accessible  
+
+	// Scan pro packages if accessible
 	if ( pathInfo.proRelativePath ) {
-		const proPackagesPath = path.resolve( currentPackageDir, pathInfo.proRelativePath );
+		const proPackagesPath = path.resolve(
+			currentPackageDir,
+			pathInfo.proRelativePath
+		);
 		if ( fs.existsSync( proPackagesPath ) ) {
 			packagePaths.push( proPackagesPath );
 		}
 	}
-	
+
 	// Scan LMS/addon packages if accessible
 	if ( pathInfo.lmsRelativePath ) {
-		const lmsPackagesPath = path.resolve( currentPackageDir, pathInfo.lmsRelativePath );
+		const lmsPackagesPath = path.resolve(
+			currentPackageDir,
+			pathInfo.lmsRelativePath
+		);
 		if ( fs.existsSync( lmsPackagesPath ) ) {
 			packagePaths.push( lmsPackagesPath );
 		}
 	}
 
 	// Scan all discovered package directories
-	packagePaths.forEach( packagesPath => {
-		if ( !fs.existsSync( packagesPath ) ) return;
-		
-		const packages = fs.readdirSync( packagesPath )
-			.filter( dir => fs.statSync( path.join( packagesPath, dir ) ).isDirectory() )
-			.filter( dir => fs.existsSync( path.join( packagesPath, dir, 'package.json' ) ) );
+	packagePaths.forEach( ( packagesPath ) => {
+		if ( ! fs.existsSync( packagesPath ) ) return;
 
-		packages.forEach( pkg => {
-			const packageJsonPath = path.join( packagesPath, pkg, 'package.json' );
+		const packages = fs
+			.readdirSync( packagesPath )
+			.filter( ( dir ) =>
+				fs.statSync( path.join( packagesPath, dir ) ).isDirectory()
+			)
+			.filter( ( dir ) =>
+				fs.existsSync( path.join( packagesPath, dir, 'package.json' ) )
+			);
+
+		packages.forEach( ( pkg ) => {
+			const packageJsonPath = path.join(
+				packagesPath,
+				pkg,
+				'package.json'
+			);
 			try {
-				const packageJson = JSON.parse( fs.readFileSync( packageJsonPath, 'utf8' ) );
+				const packageJson = JSON.parse(
+					fs.readFileSync( packageJsonPath, 'utf8' )
+				);
 				const allDeps = {
 					...( packageJson.dependencies || {} ),
 					...( packageJson.devDependencies || {} ),
@@ -76,15 +96,19 @@ function buildDependencyVersionCache( currentPackageDir ) {
 
 				Object.entries( allDeps ).forEach( ( [ depName, version ] ) => {
 					// Skip file: dependencies and popup-maker packages
-					if ( version.startsWith( 'file:' ) || depName.startsWith( '@popup-maker' ) ) {
+					if (
+						version.startsWith( 'file:' ) ||
+						depName.startsWith( '@popup-maker' )
+					) {
 						return;
 					}
 
-					if ( !versionCounts[ depName ] ) {
+					if ( ! versionCounts[ depName ] ) {
 						versionCounts[ depName ] = {};
 					}
-					
-					versionCounts[ depName ][ version ] = ( versionCounts[ depName ][ version ] || 0 ) + 1;
+
+					versionCounts[ depName ][ version ] =
+						( versionCounts[ depName ][ version ] || 0 ) + 1;
 				} );
 			} catch ( error ) {
 				// Skip packages with invalid JSON
@@ -95,7 +119,9 @@ function buildDependencyVersionCache( currentPackageDir ) {
 	// Build cache with most common version for each dependency
 	dependencyVersionCache = {};
 	Object.entries( versionCounts ).forEach( ( [ depName, versions ] ) => {
-		const sortedVersions = Object.entries( versions ).sort( ( a, b ) => b[ 1 ] - a[ 1 ] );
+		const sortedVersions = Object.entries( versions ).sort(
+			( a, b ) => b[ 1 ] - a[ 1 ]
+		);
 		if ( sortedVersions.length > 0 ) {
 			dependencyVersionCache[ depName ] = sortedVersions[ 0 ][ 0 ]; // Most common version
 		}
@@ -143,7 +169,10 @@ function validatePackage( packageDir ) {
 	} );
 
 	Object.keys( allDeps ).forEach( ( dep ) => {
-		if ( dep.startsWith( '@popup-maker/' ) && ! allImports.includes( dep ) ) {
+		if (
+			dep.startsWith( '@popup-maker/' ) &&
+			! allImports.includes( dep )
+		) {
 			extraInPackageJson.push( dep );
 		}
 	} );
@@ -254,34 +283,48 @@ function validatePackage( packageDir ) {
  * @param {string} [depType]  - The dependency type: 'dependencies', 'devDependencies', or 'peerDependencies'
  * @return {string} The dependency reference (file: path or version)
  */
-function getDependencyReference( depName, pathInfo, packageDir, depType = 'dependencies' ) {
-	const packageName = depName.replace( /^@popup-maker(-pro|-lms-popups)?\//,  '' );
-	
+function getDependencyReference(
+	depName,
+	pathInfo,
+	packageDir,
+	depType = 'dependencies'
+) {
+	const packageName = depName.replace(
+		/^@popup-maker(-pro|-lms-popups)?\//,
+		''
+	);
+
 	// Handle core packages (@popup-maker/*)
-	if ( depName.startsWith( '@popup-maker/' ) && !depName.startsWith( '@popup-maker-' ) ) {
-		if ( !pathInfo.coreRelativePath ) return '*'; // Fallback
-		const basePath = pathInfo.type === 'core' ? `../${ packageName }` : `${ pathInfo.coreRelativePath }${ packageName }`;
+	if (
+		depName.startsWith( '@popup-maker/' ) &&
+		! depName.startsWith( '@popup-maker-' )
+	) {
+		if ( ! pathInfo.coreRelativePath ) return '*'; // Fallback
+		const basePath =
+			pathInfo.type === 'core'
+				? `../${ packageName }`
+				: `${ pathInfo.coreRelativePath }${ packageName }`;
 		return `file:${ basePath }`;
 	}
-	
+
 	// Handle pro packages (@popup-maker-pro/*)
 	if ( depName.startsWith( '@popup-maker-pro/' ) ) {
-		if ( !pathInfo.proRelativePath ) return '*'; // Fallback
+		if ( ! pathInfo.proRelativePath ) return '*'; // Fallback
 		return `file:${ pathInfo.proRelativePath }${ packageName }`;
 	}
-	
+
 	// Handle LMS packages (@popup-maker-lms-popups/*)
 	if ( depName.startsWith( '@popup-maker-lms-popups/' ) ) {
-		if ( !pathInfo.lmsRelativePath ) return '*'; // Fallback
+		if ( ! pathInfo.lmsRelativePath ) return '*'; // Fallback
 		return `file:${ pathInfo.lmsRelativePath }${ packageName }`;
 	}
-	
+
 	// Special handling for jQuery - always use peer dependency pattern
 	if ( depName === 'jquery' && depType === 'peerDependencies' ) {
 		const versionCache = buildDependencyVersionCache( packageDir );
 		return versionCache[ depName ] || '^3.5.32'; // Default to common version
 	}
-	
+
 	// For non-popup-maker packages, try to find existing version
 	const versionCache = buildDependencyVersionCache( packageDir );
 	return versionCache[ depName ] || '*';
@@ -315,28 +358,39 @@ function fixPackageJson( packageJsonPath, missingDeps ) {
 	}
 
 	let changed = false;
-	
+
 	// Get path info for current package
 	const packageDir = path.dirname( packageJsonPath );
 	const pathInfo = getPluginPathInfo( packageDir );
-	
+
 	missingDeps.forEach( ( dep ) => {
 		// Special handling for jQuery
 		if ( dep === 'jquery' ) {
 			// Add @types/jquery to devDependencies if not present
 			if ( ! packageJson.devDependencies[ '@types/jquery' ] ) {
-				const jqueryTypesVersion = getDependencyReference( '@types/jquery', pathInfo, packageDir, 'devDependencies' );
-				packageJson.devDependencies[ '@types/jquery' ] = jqueryTypesVersion;
+				const jqueryTypesVersion = getDependencyReference(
+					'@types/jquery',
+					pathInfo,
+					packageDir,
+					'devDependencies'
+				);
+				packageJson.devDependencies[ '@types/jquery' ] =
+					jqueryTypesVersion;
 				changed = true;
 			}
-			
+
 			// Add jquery to peerDependencies if not present
 			if ( ! packageJson.peerDependencies[ 'jquery' ] ) {
-				const jqueryVersion = getDependencyReference( 'jquery', pathInfo, packageDir, 'peerDependencies' );
+				const jqueryVersion = getDependencyReference(
+					'jquery',
+					pathInfo,
+					packageDir,
+					'peerDependencies'
+				);
 				packageJson.peerDependencies[ 'jquery' ] = jqueryVersion;
 				changed = true;
 			}
-			
+
 			// Remove jquery from regular dependencies if present
 			if ( packageJson.dependencies[ 'jquery' ] ) {
 				delete packageJson.dependencies[ 'jquery' ];
@@ -345,7 +399,11 @@ function fixPackageJson( packageJsonPath, missingDeps ) {
 		} else {
 			// Handle other dependencies normally
 			if ( ! packageJson.dependencies[ dep ] ) {
-				const depReference = getDependencyReference( dep, pathInfo, packageDir );
+				const depReference = getDependencyReference(
+					dep,
+					pathInfo,
+					packageDir
+				);
 				packageJson.dependencies[ dep ] = depReference;
 				changed = true;
 			}
@@ -355,19 +413,25 @@ function fixPackageJson( packageJsonPath, missingDeps ) {
 	// Sort all dependency sections alphabetically
 	if ( changed ) {
 		if ( Object.keys( packageJson.dependencies ).length > 0 ) {
-			packageJson.dependencies = sortObjectKeys( packageJson.dependencies );
+			packageJson.dependencies = sortObjectKeys(
+				packageJson.dependencies
+			);
 		} else {
 			delete packageJson.dependencies; // Clean up empty dependencies
 		}
-		
+
 		if ( Object.keys( packageJson.devDependencies ).length > 0 ) {
-			packageJson.devDependencies = sortObjectKeys( packageJson.devDependencies );
+			packageJson.devDependencies = sortObjectKeys(
+				packageJson.devDependencies
+			);
 		} else {
 			delete packageJson.devDependencies; // Clean up empty devDependencies
 		}
-		
+
 		if ( Object.keys( packageJson.peerDependencies ).length > 0 ) {
-			packageJson.peerDependencies = sortObjectKeys( packageJson.peerDependencies );
+			packageJson.peerDependencies = sortObjectKeys(
+				packageJson.peerDependencies
+			);
 		} else {
 			delete packageJson.peerDependencies; // Clean up empty peerDependencies
 		}
@@ -392,44 +456,46 @@ function fixPackageJson( packageJsonPath, missingDeps ) {
 function getPluginPathInfo( packageDir ) {
 	// Get absolute path and find which plugin we're in
 	const absolutePath = path.resolve( packageDir );
-	
+
 	// Check if we're in core (popup-maker)
 	if ( absolutePath.includes( '/plugins/popup-maker/packages/' ) ) {
 		return {
 			type: 'core',
 			coreRelativePath: '../',
 			proRelativePath: null, // Core doesn't reference pro
-			lmsRelativePath: null  // Core doesn't reference LMS
+			lmsRelativePath: null, // Core doesn't reference LMS
 		};
 	}
-	
+
 	// Check if we're in pro
 	if ( absolutePath.includes( '/plugins/popup-maker-pro/packages/' ) ) {
 		return {
 			type: 'pro',
 			coreRelativePath: '../../../popup-maker/packages/',
 			proRelativePath: '../',
-			lmsRelativePath: null // Pro doesn't reference LMS
+			lmsRelativePath: null, // Pro doesn't reference LMS
 		};
 	}
-	
+
 	// Check if we're in LMS (or any future addon that extends pro)
-	if ( absolutePath.includes( '/plugins/popup-maker-lms-popups/packages/' ) || 
-		 absolutePath.match( /\/plugins\/popup-maker-[^/]+\/packages\// ) ) {
+	if (
+		absolutePath.includes( '/plugins/popup-maker-lms-popups/packages/' ) ||
+		absolutePath.match( /\/plugins\/popup-maker-[^/]+\/packages\// )
+	) {
 		return {
 			type: 'addon',
 			coreRelativePath: '../../../popup-maker/packages/',
 			proRelativePath: '../../../popup-maker-pro/packages/',
-			lmsRelativePath: '../' // Self-references within addon
+			lmsRelativePath: '../', // Self-references within addon
 		};
 	}
-	
+
 	// Default fallback (shouldn't reach here)
 	return {
 		type: 'unknown',
 		coreRelativePath: '../',
 		proRelativePath: null,
-		lmsRelativePath: null
+		lmsRelativePath: null,
 	};
 }
 
@@ -441,26 +507,32 @@ function getPluginPathInfo( packageDir ) {
  * @return {string|null} The relative path or null if reference shouldn't exist
  */
 function getRelativePathForPackage( refName, pathInfo ) {
-	const packageName = refName.replace( /^@popup-maker(-pro|-lms-popups)?\//,  '' );
-	
+	const packageName = refName.replace(
+		/^@popup-maker(-pro|-lms-popups)?\//,
+		''
+	);
+
 	// Handle core packages (@popup-maker/*)
-	if ( refName.startsWith( '@popup-maker/' ) && !refName.startsWith( '@popup-maker-' ) ) {
-		if ( !pathInfo.coreRelativePath ) return null;
+	if (
+		refName.startsWith( '@popup-maker/' ) &&
+		! refName.startsWith( '@popup-maker-' )
+	) {
+		if ( ! pathInfo.coreRelativePath ) return null;
 		return `${ pathInfo.coreRelativePath }${ packageName }`;
 	}
-	
+
 	// Handle pro packages (@popup-maker-pro/*)
 	if ( refName.startsWith( '@popup-maker-pro/' ) ) {
-		if ( !pathInfo.proRelativePath ) return null;
+		if ( ! pathInfo.proRelativePath ) return null;
 		return `${ pathInfo.proRelativePath }${ packageName }`;
 	}
-	
+
 	// Handle LMS packages (@popup-maker-lms-popups/*)
 	if ( refName.startsWith( '@popup-maker-lms-popups/' ) ) {
-		if ( !pathInfo.lmsRelativePath ) return null;
+		if ( ! pathInfo.lmsRelativePath ) return null;
 		return `${ pathInfo.lmsRelativePath }${ packageName }`;
 	}
-	
+
 	return null;
 }
 
@@ -480,17 +552,19 @@ function fixTsconfig( tsconfigPath, missingRefs, hasJquery = false ) {
 	}
 
 	let changed = false;
-	
+
 	// Get path info for current package
 	const packageDir = path.dirname( tsconfigPath );
 	const pathInfo = getPluginPathInfo( packageDir );
-	
+
 	// Add missing references
 	missingRefs.forEach( ( refName ) => {
 		const relativePath = getRelativePathForPackage( refName, pathInfo );
-		
-		if ( !relativePath ) {
-			console.warn( `Warning: Cannot create reference for ${ refName } from ${ pathInfo.type } context` );
+
+		if ( ! relativePath ) {
+			console.warn(
+				`Warning: Cannot create reference for ${ refName } from ${ pathInfo.type } context`
+			);
 			return;
 		}
 
@@ -510,7 +584,7 @@ function fixTsconfig( tsconfigPath, missingRefs, hasJquery = false ) {
 		if ( ! tsconfig.types ) {
 			tsconfig.types = [];
 		}
-		
+
 		if ( ! tsconfig.types.includes( 'jquery' ) ) {
 			tsconfig.types.push( 'jquery' );
 			tsconfig.types.sort(); // Keep types sorted
@@ -520,10 +594,10 @@ function fixTsconfig( tsconfigPath, missingRefs, hasJquery = false ) {
 
 	// Always sort references alphabetically by path if references exist
 	if ( tsconfig.references && tsconfig.references.length > 0 ) {
-		const originalOrder = tsconfig.references.map( ref => ref.path );
+		const originalOrder = tsconfig.references.map( ( ref ) => ref.path );
 		tsconfig.references.sort( ( a, b ) => a.path.localeCompare( b.path ) );
-		const newOrder = tsconfig.references.map( ref => ref.path );
-		
+		const newOrder = tsconfig.references.map( ( ref ) => ref.path );
+
 		// Check if the order changed
 		if ( JSON.stringify( originalOrder ) !== JSON.stringify( newOrder ) ) {
 			changed = true;
@@ -548,27 +622,34 @@ function fixTsconfig( tsconfigPath, missingRefs, hasJquery = false ) {
  * @return {string[]|null} The TypeScript path array or null if path shouldn't exist
  */
 function getTypeScriptPathForPackage( pathName, pathInfo ) {
-	const packageName = pathName.replace( /^@popup-maker(-pro|-lms-popups)?\//,  '' );
-	
+	const packageName = pathName.replace(
+		/^@popup-maker(-pro|-lms-popups)?\//,
+		''
+	);
+
 	// Handle core packages (@popup-maker/*)
-	if ( pathName.startsWith( '@popup-maker/' ) && !pathName.startsWith( '@popup-maker-' ) ) {
-		if ( !pathInfo.coreRelativePath ) return null;
-		const basePath = pathInfo.type === 'core' ? '../' : pathInfo.coreRelativePath;
+	if (
+		pathName.startsWith( '@popup-maker/' ) &&
+		! pathName.startsWith( '@popup-maker-' )
+	) {
+		if ( ! pathInfo.coreRelativePath ) return null;
+		const basePath =
+			pathInfo.type === 'core' ? '../' : pathInfo.coreRelativePath;
 		return [ `${ basePath }${ packageName }/build-types` ];
 	}
-	
+
 	// Handle pro packages (@popup-maker-pro/*)
 	if ( pathName.startsWith( '@popup-maker-pro/' ) ) {
-		if ( !pathInfo.proRelativePath ) return null;
+		if ( ! pathInfo.proRelativePath ) return null;
 		return [ `${ pathInfo.proRelativePath }${ packageName }/build-types` ];
 	}
-	
+
 	// Handle LMS packages (@popup-maker-lms-popups/*)
 	if ( pathName.startsWith( '@popup-maker-lms-popups/' ) ) {
-		if ( !pathInfo.lmsRelativePath ) return null;
+		if ( ! pathInfo.lmsRelativePath ) return null;
 		return [ `${ pathInfo.lmsRelativePath }${ packageName }/build-types` ];
 	}
-	
+
 	return null;
 }
 
@@ -591,17 +672,19 @@ function fixTsconfigPaths( tsconfigPath, missingPaths ) {
 	}
 
 	let changed = false;
-	
+
 	// Get path info for current package
 	const packageDir = path.dirname( tsconfigPath );
 	const pathInfo = getPluginPathInfo( packageDir );
-	
+
 	// Add missing paths
 	missingPaths.forEach( ( pathName ) => {
 		const tsPath = getTypeScriptPathForPackage( pathName, pathInfo );
-		
-		if ( !tsPath ) {
-			console.warn( `Warning: Cannot create TypeScript path for ${ pathName } from ${ pathInfo.type } context` );
+
+		if ( ! tsPath ) {
+			console.warn(
+				`Warning: Cannot create TypeScript path for ${ pathName } from ${ pathInfo.type } context`
+			);
 			return;
 		}
 
@@ -612,13 +695,18 @@ function fixTsconfigPaths( tsconfigPath, missingPaths ) {
 	} );
 
 	// Always sort paths alphabetically by key if paths exist
-	if ( tsconfig.compilerOptions.paths && Object.keys( tsconfig.compilerOptions.paths ).length > 0 ) {
+	if (
+		tsconfig.compilerOptions.paths &&
+		Object.keys( tsconfig.compilerOptions.paths ).length > 0
+	) {
 		const currentKeys = Object.keys( tsconfig.compilerOptions.paths );
 		const sortedKeys = [ ...currentKeys ].sort();
-		
+
 		// Check if the order changed
 		if ( JSON.stringify( currentKeys ) !== JSON.stringify( sortedKeys ) ) {
-			tsconfig.compilerOptions.paths = sortObjectKeys( tsconfig.compilerOptions.paths );
+			tsconfig.compilerOptions.paths = sortObjectKeys(
+				tsconfig.compilerOptions.paths
+			);
 			changed = true;
 		}
 	}
@@ -681,7 +769,9 @@ What it validates:
 			fs.existsSync( path.join( packagesDir, dir, 'package.json' ) )
 		);
 
-	console.log( `🔍 Validating dependency trees for ${ packages.length } packages...\n` );
+	console.log(
+		`🔍 Validating dependency trees for ${ packages.length } packages...\n`
+	);
 
 	let hasAnyIssues = false;
 	const isFixMode = args.includes( '--fix' );
@@ -700,7 +790,9 @@ What it validates:
 			if ( isFixMode && fs.existsSync( result.tsconfigPath ) ) {
 				const changed = fixTsconfigPaths( result.tsconfigPath, [] );
 				if ( changed ) {
-					console.log( `🔤 ${ result.packageName }: Sorted tsconfig.json paths alphabetically` );
+					console.log(
+						`🔤 ${ result.packageName }: Sorted tsconfig.json paths alphabetically`
+					);
 				} else {
 					console.log(
 						`✅ ${ result.packageName }: All dependencies properly configured`
@@ -772,7 +864,9 @@ What it validates:
 			const hasJquery = result.imports.includes( 'jquery' );
 			const changed = fixTsconfig( result.tsconfigPath, [], hasJquery );
 			if ( changed ) {
-				console.log( `   🔤 Sorted tsconfig.json references alphabetically` );
+				console.log(
+					`   🔤 Sorted tsconfig.json references alphabetically`
+				);
 			}
 		}
 
@@ -804,7 +898,9 @@ What it validates:
 			// Even if no missing paths, try to sort existing paths
 			const changed = fixTsconfigPaths( result.tsconfigPath, [] );
 			if ( changed ) {
-				console.log( `   🔤 Sorted tsconfig.json paths alphabetically` );
+				console.log(
+					`   🔤 Sorted tsconfig.json paths alphabetically`
+				);
 			}
 		}
 
@@ -825,7 +921,9 @@ What it validates:
 		);
 		process.exit( 1 );
 	} else {
-		console.log( '✅ All packages have properly configured dependency trees!' );
+		console.log(
+			'✅ All packages have properly configured dependency trees!'
+		);
 	}
 }
 

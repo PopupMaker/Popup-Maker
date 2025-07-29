@@ -62,7 +62,8 @@ fs.writeFileSync( changelogFilePath, updatedChangelog, 'utf8' );
 const readmeContent = fs.readFileSync( readmeFilePath, 'utf8' );
 
 // Find the changelog section and first version entry
-const changelogPattern = /== Changelog ==\n\nFor the latest updates and release information:.*?\n\n(= v\d+\.\d+\.\d+ - \d{4}-\d{2}-\d{2} =)/s;
+const changelogPattern =
+	/== Changelog ==\n\nFor the latest updates and release information:.*?\n\n(= v\d+\.\d+\.\d+ - \d{4}-\d{2}-\d{2} =)/s;
 const changelogMatch = readmeContent.match( changelogPattern );
 
 if ( ! changelogMatch ) {

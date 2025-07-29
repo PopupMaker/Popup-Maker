@@ -45,14 +45,14 @@ var PUM_Accessibility;
 					if ( focusedItemIndex === 0 ) {
 						focusableItems
 							.get( numberOfFocusableItems - 1 )
-							.trigger('focus');
+							.trigger( 'focus' );
 						e.preventDefault();
 					}
 				} else {
 					//forward tab
 					// if focused on the last item and user preses tab, go to the first focusable item
 					if ( focusedItemIndex === numberOfFocusableItems - 1 ) {
-						focusableItems.get( 0 ).trigger('focus');
+						focusableItems.get( 0 ).trigger( 'focus' );
 						e.preventDefault();
 					}
 				}
@@ -67,7 +67,7 @@ var PUM_Accessibility;
 				.first();
 
 			// set focus to first focusable item
-			$firstEl.trigger('focus');
+			$firstEl.trigger( 'focus' );
 		},
 		initiateFocusLock: function () {
 			var $popup = PUM.getPopup( this ),
@@ -126,7 +126,7 @@ var PUM_Accessibility;
 
 			// Accessibility: Focus back on the previously focused element.
 			if ( previouslyFocused !== undefined && previouslyFocused.length ) {
-				previouslyFocused.trigger('focus');
+				previouslyFocused.trigger( 'focus' );
 			}
 
 			// Accessibility: Clears the currentModal var.
