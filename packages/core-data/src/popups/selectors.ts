@@ -372,7 +372,7 @@ export const getResolutionState = createSelector(
 
 		return resolutionState;
 	},
-	( _state: State, id: number | string ) => [ id ]
+	( state: State, id: number | string ) => [ state.resolutionState, id ]
 );
 
 /**
@@ -427,7 +427,7 @@ export const getResolutionError = createSelector(
 		const resolutionState = getResolutionState( state, id );
 		return resolutionState.error;
 	},
-	( _state: State, id: number | string ) => [ id ]
+	( state: State, id: number | string ) => [ state.resolutionState, id ]
 );
 
 export default {

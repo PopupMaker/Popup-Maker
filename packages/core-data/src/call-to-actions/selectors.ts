@@ -377,7 +377,7 @@ const resolutionSelectors = {
 
 			return resolutionState;
 		},
-		( _state: State, id: number | string ) => [ id ]
+		( state: State, id: number | string ) => [ state.resolutionState, id ]
 	),
 
 	/**
@@ -447,7 +447,7 @@ const resolutionSelectors = {
 			);
 			return resolutionState.error;
 		},
-		( _state: State, id: number | string ) => [ id ]
+		( state: State, id: number | string ) => [ state.resolutionState, id ]
 	),
 };
 
