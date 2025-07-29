@@ -30,5 +30,12 @@ export const getErrorMessage = ( error: unknown ): string => {
 		return error.message;
 	}
 
+	// Handle objects with a message property (like validation errors)
+	if ( typeof error === 'object' && error !== null && 'message' in error ) {
+		return String( ( error as { message: unknown } ).message );
+	}
+
 	return String( error );
 };
+
+// mapRestValidationError removed - using WordPress notices for field errors

@@ -10,6 +10,21 @@ type WPError = {
 	message?: string;
 	data?: {
 		status?: number;
+		params?: Record< string, string >;
+		details?: {
+			settings: {
+				code: string;
+				message: string;
+				data?: {
+					field: string;
+				};
+			};
+			[ key: string ]: {
+				code: string;
+				message: string;
+				data?: any;
+			};
+		};
 	};
 };
 
@@ -88,6 +103,13 @@ export const fetchFromWPApi = async < T extends any = any >(
 		// Handle WordPress API error format
 		if ( typeof error === 'object' && error !== null ) {
 			const wpError = error as WPError;
+
+			// Pass through the original error with validation params
+			if ( wpError.code === 'rest_invalid_param' ) {
+				throw wpError;
+			}
+
+			// For other errors, throw generic error
 			const message = wpError.message || 'API request failed';
 			throw new Error( message );
 		}
