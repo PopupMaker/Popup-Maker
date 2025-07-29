@@ -82,7 +82,7 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	 *
 	 * @return true|\WP_Error True if valid, WP_Error if validation fails.
 	 */
-	public function validate_settings( array $settings ) {
+	public function validate_settings( array $settings ): \WP_Error|bool {
 		// Default implementation: validate required fields.
 		$errors = [];
 		$fields = $this->fields();
