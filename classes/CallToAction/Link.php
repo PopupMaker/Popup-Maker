@@ -69,12 +69,32 @@ class Link extends \PopupMaker\Base\CallToAction {
 		return [
 			'general' => [
 				'url' => [
-					// 'type'     => 'url',
-					// 'label'    => __( 'Link', 'popup-maker' ),
-					// 'priority' => 1.2,
-					'std' => '',
+					'type'         => 'url',
+					'label'        => __( 'Link URL', 'popup-maker' ),
+					'placeholder'  => __( 'https://example.com', 'popup-maker' ),
+					'priority'     => 1.2,
+					'required'     => true,
+					'dependencies' => [
+						'type' => 'link',
+					],
+					'std'          => '',
 				],
 			],
 		];
+	}
+
+	/**
+	 * Validate the settings for this CTA.
+	 *
+	 * @param array $settings The settings for this CTA.
+	 *
+	 * @return \WP_Error|true
+	 */
+	public function validate_settings( array $settings ): \WP_Error|true {
+		if ( empty( $settings['url'] ) ) {
+			return new \WP_Error( 'missing_url', __( 'URL is required', 'popup-maker' ) );
+		}
+
+		return true;
 	}
 }

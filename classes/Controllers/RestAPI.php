@@ -355,7 +355,31 @@ class RestAPI extends Controller {
 	 * @return bool|\WP_Error True if valid, WP_Error if not.
 	 */
 	public function validate_call_to_action_settings( $settings, $id ) {
-		// TODO Validate all known settings by type.
+		if ( empty( $settings['type'] ) ) {
+			return new \WP_Error( 'missing_type', __( 'CTA type is required', 'popup-maker' ) );
+		}
+
+		// Get the CTA type handler
+		$cta_types = $this->container->get( 'cta_types' );
+		$cta_type  = $cta_types->get( $settings['type'] );
+
+		if ( ! $cta_type ) {
+			return new \WP_Error( 'invalid_type', __( 'Invalid CTA type', 'popup-maker' ), [ 'status' => 400 ] );
+		}
+
+		$validation_result = $cta_type->validate_settings( $settings );
+
+		if ( is_wp_error( $validation_result ) ) {
+			return $validation_result;
+		}
+
+		// Validate settings using the CTA type's validation method
+		$validation_result = $cta_type->validate_settings( $settings );
+
+		if ( is_wp_error( $validation_result ) ) {
+			return $validation_result;
+		}
+
 		return true;
 	}
 

@@ -73,6 +73,71 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	abstract public function action_handler( \PopupMaker\Models\CallToAction $call_to_action, array $extra_args = [] ): void;
 
 	/**
+	 * Validate CTA settings array before saving.
+	 *
+	 * Default implementation validates required fields based on field definitions.
+	 * Extensions can override this method for custom validation logic.
+	 *
+	 * @param array $settings The raw settings array to validate.
+	 *
+	 * @return true|\WP_Error True if valid, WP_Error if validation fails.
+	 */
+	public function validate_settings( array $settings ) {
+		// Default implementation: validate required fields.
+		$errors = [];
+		$fields = $this->fields();
+
+		// Check all fields in all tabs for required validation.
+		foreach ( $fields as $tab_fields ) {
+			foreach ( $tab_fields as $field_id => $field ) {
+				if ( empty( $field['required'] ) ) {
+					continue;
+				}
+
+				// Check dependencies - field should only be validated if dependencies are met.
+				if ( ! empty( $field['dependencies'] ) ) {
+					$dependencies_met = true;
+					foreach ( $field['dependencies'] as $key => $expected_value ) {
+						$actual_value = $settings[ $key ] ?? '';
+
+						if ( is_string( $expected_value ) ) {
+							if ( $actual_value !== $expected_value ) {
+								$dependencies_met = false;
+								break;
+							}
+						}
+
+						if ( is_bool( $expected_value ) ) {
+							if ( (bool) $actual_value !== $expected_value ) {
+								$dependencies_met = false;
+								break;
+							}
+						}
+					}
+
+					if ( ! $dependencies_met ) {
+						continue; // Skip validation if dependencies not met.
+					}
+				}
+
+				// Check if required field is empty.
+				$field_value = $settings[ $field_id ] ?? '';
+				if ( empty( $field_value ) || ( is_string( $field_value ) && '' === trim( $field_value ) ) ) {
+					$field_label = $field['label'] ?? $field_id;
+					/* translators: %s: Field label */
+					$errors[] = sprintf( __( '%s is required', 'popup-maker' ), $field_label );
+				}
+			}
+		}
+
+		if ( ! empty( $errors ) ) {
+			return new \WP_Error( 'validation_failed', implode( ', ', $errors ), $errors );
+		}
+
+		return true;
+	}
+
+	/**
 	 * Returns an array that represents the cta.
 	 *
 	 * Used to pass configs to JavaScript.
