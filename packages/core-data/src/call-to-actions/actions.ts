@@ -34,6 +34,93 @@ const {
 	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
 
+/**
+ * Helper function to handle field-specific validation errors using WordPress notices
+ *
+ * @param {any}      error    The error object from the API
+ * @param {number}   ctaId    The CTA ID for field error association
+ * @param {Function} dispatch The dispatch function with createErrorNotice
+ * @param {any}      registry The registry for accessing stores
+ */
+const handleFieldValidationErrors = (
+	error: any,
+	ctaId: number | undefined,
+	dispatch: any,
+	registry: any
+) => {
+	// Handle field-specific validation errors
+	if ( error?.code === 'rest_invalid_param' && error?.data?.params ) {
+		// Clear previous field errors for this CTA
+		if ( ctaId ) {
+			const notices = registry
+				.select( noticesStore )
+				.getNotices( NOTICE_CONTEXT );
+			const fieldErrors = notices.filter(
+				( n: Notice ) => n.id?.startsWith( `field-error-${ ctaId }-` )
+			);
+			fieldErrors.forEach( ( n: Notice ) =>
+				registry
+					.dispatch( noticesStore )
+					.removeNotice( n.id, NOTICE_CONTEXT )
+			);
+		}
+
+		// Create notices for each field error
+		Object.entries( error.data.params ).forEach( ( [ field, message ] ) => {
+			// Check if this is a nested field error with details
+			if ( field === 'settings' && error.data.details?.settings ) {
+				const settingsError = error.data.details.settings;
+
+				// Handle the primary error
+				if ( settingsError.data?.field ) {
+					dispatch.createErrorNotice( settingsError.message, {
+						id: `field-error-${ ctaId || 'new' }-${
+							settingsError.data.field
+						}`,
+						isDismissible: false,
+						type: 'default', // Prevent auto-dismiss
+					} );
+				}
+
+				// Handle additional errors
+				if (
+					settingsError.additional_errors &&
+					Array.isArray( settingsError.additional_errors )
+				) {
+					settingsError.additional_errors.forEach(
+						( additionalError: any ) => {
+							if (
+								additionalError.data?.field &&
+								additionalError.message
+							) {
+								dispatch.createErrorNotice(
+									additionalError.message,
+									{
+										id: `field-error-${ ctaId || 'new' }-${
+											additionalError.data.field
+										}`,
+										isDismissible: false,
+										type: 'default', // Prevent auto-dismiss
+									}
+								);
+							}
+						}
+					);
+				}
+			} else {
+				// Regular field error
+				dispatch.createErrorNotice( message as string, {
+					id: `field-error-${ ctaId || 'new' }-${ field }`,
+					isDismissible: false,
+					type: 'default', // Prevent auto-dismiss
+				} );
+			}
+		} );
+		return true;
+	}
+	return false;
+};
+
 /*****************************************************
  * SECTION: Entity actions
  *****************************************************/

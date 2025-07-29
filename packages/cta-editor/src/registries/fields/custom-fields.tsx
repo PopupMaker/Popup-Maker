@@ -95,23 +95,18 @@ export const initCustomFields = () => {
 									...field,
 									id: fieldId,
 									priority: field?.priority ?? 0,
-									component: (
-										<div key={ fieldId }>
-											{ ! shouldHide() && (
-												<FieldWithError
-													fieldId={ fieldId }
-													field={ field }
-													value={
-														settings[ fieldId ]
-													}
-													onChange={ ( value ) =>
-														updateSettings( {
-															[ fieldId ]: value,
-														} )
-													}
-												/>
-											) }
-										</div>
+									component: ! shouldHide() && (
+										<FieldWithError
+											key={ fieldId }
+											fieldId={ fieldId }
+											field={ field }
+											value={ settings[ fieldId ] }
+											onChange={ ( value ) =>
+												updateSettings( {
+													[ fieldId ]: value,
+												} )
+											}
+										/>
 									),
 								};
 							}

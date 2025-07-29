@@ -32,18 +32,20 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 	const error = useFieldError( fieldId );
 
 	return (
-		<FieldWrapper fieldId={ fieldId } error={ error }>
-			<FieldPanel title={ field.label ?? '' }>
-				{ field.type === 'url' ? (
-					<URLControl
-						{ ...field }
-						value={ value }
-						onChange={ ( urlValue ) => onChange( urlValue.url ) }
-					/>
-				) : (
-					<Field { ...field } value={ value } onChange={ onChange } />
-				) }
-			</FieldPanel>
+		<FieldWrapper
+			fieldId={ fieldId }
+			title={ field.label ?? '' }
+			error={ error }
+		>
+			{ field.type === 'url' ? (
+				<URLControl
+					{ ...field }
+					value={ value }
+					onChange={ ( urlValue ) => onChange( urlValue.url ) }
+				/>
+			) : (
+				<Field { ...field } value={ value } onChange={ onChange } />
+			) }
 		</FieldWrapper>
 	);
 };

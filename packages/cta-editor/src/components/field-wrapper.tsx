@@ -1,8 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
+import { Panel, PanelBody } from '@wordpress/components';
 
 type FieldWrapperProps = {
 	fieldId: string;
+	title: string;
 	error?: string | null;
 	className?: string;
 	children: React.ReactNode;
@@ -13,6 +15,7 @@ type FieldWrapperProps = {
  *
  * @param {FieldWrapperProps} props           - The component props.
  * @param {string}            props.fieldId   - The ID of the field.
+ * @param {string}            props.title     - The title of the field.
  * @param {string | null}     props.error     - The error message to display.
  * @param {string}            props.className - The class name to apply to the wrapper.
  * @param {React.ReactNode}   props.children  - The child elements to render.
@@ -20,6 +23,7 @@ type FieldWrapperProps = {
  */
 export const FieldWrapper: React.FC< FieldWrapperProps > = ( {
 	fieldId,
+	title,
 	error,
 	className,
 	children,
@@ -27,8 +31,10 @@ export const FieldWrapper: React.FC< FieldWrapperProps > = ( {
 	const hasError = error !== null && error !== undefined && error !== '';
 
 	return (
-		<div
+		<Panel
+			header={ title }
 			className={ clsx(
+				'components-field-panel',
 				'cta-field-wrapper',
 				`cta-field-wrapper--${ fieldId }`,
 				{
@@ -37,9 +43,11 @@ export const FieldWrapper: React.FC< FieldWrapperProps > = ( {
 				className
 			) }
 		>
-			{ children }
-			{ hasError && <div className="cta-field-error">{ error }</div> }
-		</div>
+			<PanelBody opened>
+				{ children }
+				{ hasError && <div className="cta-field-error">{ error }</div> }
+			</PanelBody>
+		</Panel>
 	);
 };
 

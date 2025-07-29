@@ -1,6 +1,7 @@
 import { __ } from '@popup-maker/i18n';
 import { clamp } from '@popup-maker/utils';
 import { cleanForSlug } from '@wordpress/url';
+import { Fragment } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import {
 	Notice,
@@ -142,7 +143,7 @@ export const Component = ( {
 			) }
 
 			{ getTabFields( 'general' ).map( ( field ) => (
-				<div key={ field.id }>{ field.component }</div>
+				<Fragment key={ field.id }>{ field.component }</Fragment>
 			) ) }
 		</div>
 	);

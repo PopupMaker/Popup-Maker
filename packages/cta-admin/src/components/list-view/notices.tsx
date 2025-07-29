@@ -4,6 +4,7 @@ import { useCallback, useLayoutEffect, useRef } from '@wordpress/element';
 
 import { callToActionStore } from '@popup-maker/core-data';
 import type { WPNotice } from '@popup-maker/core-data';
+import { DEBUG_MODE } from '@popup-maker/cta-editor';
 
 // REVIEW: We need to create our own notice store to handle the notices.
 // REVIEW: This one doesn't allow for extra options such as closeDelay.
@@ -48,9 +49,12 @@ const Notices = () => {
 			}
 
 			// Set a timer to dismiss the notice after the delay.
-			noticeTimerRef.current[ notice.id ] = setTimeout( () => {
-				handleDismiss( notice.id );
-			}, 3000 );
+			// When DEBUG_MODE is enabled, notices stay visible for debugging
+			if ( ! DEBUG_MODE ) {
+				noticeTimerRef.current[ notice.id ] = setTimeout( () => {
+					handleDismiss( notice.id );
+				}, 3000 );
+			}
 		} );
 	}, [ notices, handleDismiss ] );
 
