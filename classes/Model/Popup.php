@@ -1222,7 +1222,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$b = (float) $b['timestamp'];
 
 		// Sort in descending order (newest first) to get the most recent reset
-		return (float) $b['timestamp'] <=> (float) $a['timestamp'];
+		return $b <=> $a;
 	}
 
 	/**
