@@ -40,6 +40,7 @@ Popup Maker is a WordPress plugin for creating and managing popups. It's a matur
 ### PHP Structure
 - **PSR-4 Namespace**: `PopupMaker\` maps to `classes/` directory
 - **Legacy Code**: `includes/` contains backwards-compatible functions and deprecated classes
+- **Namespaced Functions**: `includes/namespaced/` contains newer namespaced functions
 - **Modern Controllers**: Located in `classes/Controllers/` using dependency injection via `Plugin\Core`
 - **Models**: `classes/Model/` for data objects (Popup, Theme, etc.)
 - **Services**: `classes/Services/` for business logic and external integrations
@@ -125,6 +126,52 @@ function my_plugin_check_membership_condition( $settings ) {
 }
 ```
 
+#### Adding Advanced JavaScript Conditions
+```php
+// Register a JavaScript-based condition (evaluated in browser)
+function my_plugin_register_advanced_conditions( $conditions ) {
+    $conditions['device_orientation'] = [
+        'name'     => __( 'Device Orientation', 'my-plugin' ),
+        'group'    => __( 'Device', 'my-plugin' ),
+        'advanced' => true, // Mark as JavaScript condition
+        // No callback needed - handled in JavaScript
+        'fields'   => [
+            'orientation' => [
+                'label'   => __( 'Orientation', 'my-plugin' ),
+                'type'    => 'select',
+                'options' => [
+                    'portrait'  => __( 'Portrait', 'my-plugin' ),
+                    'landscape' => __( 'Landscape', 'my-plugin' ),
+                ],
+            ],
+        ],
+    ];
+    return $conditions;
+}
+add_filter( 'pum_registered_conditions', 'my_plugin_register_advanced_conditions' );
+
+// Add JavaScript handler for the condition
+add_action( 'wp_footer', function() {
+    ?>
+    <script>
+    jQuery(document).ready(function($) {
+        // Register condition callback
+        PUM.hooks.addFilter('popupMaker.conditionCallbacks', function(callbacks) {
+            callbacks.device_orientation = function(settings) {
+                var isLandscape = window.innerWidth > window.innerHeight;
+                return (settings.orientation === 'landscape' && isLandscape) ||
+                       (settings.orientation === 'portrait' && !isLandscape);
+            };
+            return callbacks;
+        });
+    });
+    </script>
+    <?php
+});
+```
+
+**Note**: Conditions with `'advanced' => true` or no `'callback'` are evaluated client-side using JavaScript. This is useful for dynamic conditions based on browser state, user interactions, or device characteristics.
+
 #### Adding Custom Cookies
 ```php
 // Register a custom cookie
@@ -153,9 +200,9 @@ add_filter( 'pum_registered_cookies', 'my_plugin_register_cookies' );
 
 #### Asset Enqueuing
 ```php
-// Enqueue assets through Popup Maker's asset cache system
+// Enqueue frontend assets through Popup Maker's asset cache system
 function my_plugin_enqueue_assets() {
-    // Frontend script
+    // Frontend scripts that should be cached
     pum_enqueue_script( 
         'my-plugin-frontend', 
         plugins_url( '/js/frontend.js', __FILE__ ), 
@@ -163,17 +210,144 @@ function my_plugin_enqueue_assets() {
         '1.0.0'
     );
     
-    // Admin script
-    if ( is_admin() ) {
-        pum_enqueue_script( 
-            'my-plugin-admin', 
-            plugins_url( '/js/admin.js', __FILE__ ), 
-            [ 'popup-maker-admin' ],
-            '1.0.0'
-        );
-    }
+    // Frontend styles for caching
+    pum_enqueue_style(
+        'my-plugin-frontend',
+        plugins_url( '/css/frontend.css', __FILE__ ),
+        [],
+        '1.0.0'
+    );
 }
 add_action( 'pum_enqueue_scripts', 'my_plugin_enqueue_assets' );
+
+// For admin assets or non-popup assets, use standard WordPress functions
+function my_plugin_admin_assets() {
+    wp_enqueue_script(
+        'my-plugin-admin',
+        plugins_url( '/js/admin.js', __FILE__ ),
+        [ 'jquery' ],
+        '1.0.0'
+    );
+}
+add_action( 'admin_enqueue_scripts', 'my_plugin_admin_assets' );
+```
+
+**Important**: Use `pum_enqueue_*` only for frontend assets that qualify for AssetCache. Use `wp_enqueue_*` for admin assets or assets that don't need caching.
+
+### AssetCache System
+
+Popup Maker's AssetCache system optimizes frontend performance by combining and caching all popup-related assets into single files.
+
+#### How It Works
+- **JavaScript**: Combined into `pum-site-scripts.js`
+- **CSS**: Combined into `pum-site-styles.css`
+- **Location**: Stored in `wp-content/uploads/pum/` (configurable)
+- **Regeneration**: Automatic on popup/theme changes, settings updates, or extension changes
+
+#### Benefits
+1. **Performance**: Reduces HTTP requests, smaller total size, better caching
+2. **Ad Blocker Bypass**: Randomized filenames avoid pattern-based blocking
+3. **Smart Loading**: Only loads assets when popups are present on page
+4. **Automatic Optimization**: Minification in production, deferred loading support
+
+#### Adding Custom Assets to Cache
+```php
+// Add custom JavaScript with priority
+add_filter( 'pum_generated_js', function( $js ) {
+    $js['my-custom-js'] = [
+        'content' => 'console.log("Custom JS");',
+        'priority' => 5, // 0=core, 1-5=extensions, 10=default, 15-20=per-popup
+    ];
+    return $js;
+});
+
+// Add custom CSS
+add_filter( 'pum_generated_css', function( $css ) {
+    $css['my-custom-css'] = [
+        'content' => '.my-popup { color: red; }',
+        'priority' => 10,
+    ];
+    return $css;
+});
+
+// Add per-popup JavaScript
+add_action( 'pum_generate_popup_js', function( $popup_id ) {
+    if ( $popup_id === 123 ) {
+        echo 'console.log("Popup 123 loaded");';
+    }
+});
+```
+
+### Registering Custom Call to Actions (CTAs)
+
+CTAs allow popups to trigger conversions with tracking. Register custom CTAs by extending the base class:
+
+```php
+// Method 1: Using the filter
+add_filter( 'popup_maker/registered_call_to_actions', function( $ctas ) {
+    $ctas['my_custom_cta'] = new \MyPlugin\CallToAction\MyCustomCTA();
+    return $ctas;
+});
+
+// Method 2: Using the action
+add_action( 'popup_maker/register_call_to_actions', function( $cta_types ) {
+    $cta_types->add( new \MyPlugin\CallToAction\MyCustomCTA() );
+});
+
+// Custom CTA Implementation
+namespace MyPlugin\CallToAction;
+
+use PopupMaker\Base\CallToAction;
+use PopupMaker\Models\CallToAction as CTAModel;
+
+class MyCustomCTA extends CallToAction {
+    
+    public $key = 'my_custom_cta';
+    
+    public function label(): string {
+        return __( 'My Custom CTA', 'my-plugin' );
+    }
+    
+    public function fields(): array {
+        return [
+            'general' => [
+                'redirect_url' => [
+                    'type'         => 'url',
+                    'label'        => __( 'Redirect URL', 'my-plugin' ),
+                    'required'     => true,
+                    'dependencies' => [
+                        'type' => 'my_custom_cta',
+                    ],
+                ],
+            ],
+        ];
+    }
+    
+    public function action_handler( CTAModel $call_to_action, array $extra_args = [] ): void {
+        // Always track conversion
+        $call_to_action->track_conversion( $extra_args );
+        
+        // Get settings and perform action
+        $redirect_url = $call_to_action->get_setting( 'redirect_url' );
+        $this->safe_redirect( $redirect_url );
+        exit;
+    }
+    
+    public function validate_settings( array $settings ): \WP_Error|array|bool {
+        // Validate required fields
+        $validation = $this->validate_required_fields( $settings );
+        if ( is_wp_error( $validation ) ) {
+            return $validation;
+        }
+        
+        // Custom validation
+        if ( ! filter_var( $settings['redirect_url'], FILTER_VALIDATE_URL ) ) {
+            return new \WP_Error( 'invalid_url', __( 'Invalid URL', 'my-plugin' ) );
+        }
+        
+        return true;
+    }
+}
 ```
 
 ### JavaScript Frontend Integration
@@ -330,6 +504,276 @@ function MyComponent() {
         </div>
     );
 }
+```
+
+#### Popup Maker Custom Data Stores
+Popup Maker provides several custom data stores in addition to using WordPress core data:
+
+##### Available Stores
+- `popup-maker/popups` - Popup management
+- `popup-maker/call-to-actions` - CTA management  
+- `popup-maker/settings` - Plugin settings
+- `popup-maker/license` - License management
+- `popup-maker/url-search` - URL search functionality
+
+##### Using Popup Store
+```typescript
+import { popupStore, POPUP_STORE } from '@popup-maker/core-data';
+import { useSelect, useDispatch } from '@wordpress/data';
+
+function PopupManager() {
+    // Selectors
+    const { popups, popup, isLoading, error, hasEdits } = useSelect((select) => {
+        const store = select(popupStore);
+        // Or: const store = select(POPUP_STORE);
+        return {
+            popups: store.getPopups(),
+            popup: store.getPopup(123), // Get specific popup
+            isLoading: store.isResolving('getPopup', [123]),
+            error: store.getFetchError(123),
+            hasEdits: store.hasEdits(123),
+            // Additional selectors:
+            // isEditing: store.isEditorActive(),
+            // editedValues: store.getCurrentEditorValues(),
+            // canUndo: store.hasUndo(123),
+            // canRedo: store.hasRedo(123),
+        };
+    }, []);
+
+    // Actions
+    const { 
+        createPopup, 
+        updatePopup, 
+        deletePopup,
+        editRecord,
+        saveEditedRecord,
+        undo,
+        redo,
+        resetRecordEdits
+    } = useDispatch(popupStore);
+
+    // Create new popup
+    const handleCreate = async () => {
+        const newPopup = await createPopup({
+            title: 'New Popup',
+            content: 'Popup content',
+            status: 'draft',
+            settings: {
+                conditions: {
+                    logicalOperator: 'or',
+                    items: [],
+                },
+            },
+        });
+    };
+
+    // Update existing popup
+    const handleUpdate = async (id) => {
+        await updatePopup({
+            id,
+            title: 'Updated Title',
+            settings: { /* ... */ },
+        });
+    };
+
+    // Edit mode with undo/redo
+    const handleEdit = (id, edits) => {
+        editRecord(id, edits);
+    };
+
+    const handleSaveEdits = async (id) => {
+        await saveEditedRecord(id);
+    };
+}
+```
+
+###### Popup Store Selectors
+- `getPopups()` - Get all popups
+- `getPopup(id)` - Get specific popup by ID
+- `getFiltered(predicate)` - Get filtered popups
+- `getFetchError(id?)` - Get fetch error for popup or global error
+- `getEditorId()` - Get currently editing popup ID
+- `isEditorActive()` - Check if editor is active
+- `getCurrentEditorValues()` - Get current editor values
+- `hasEditedEntity(id)` - Check if popup has been edited
+- `getEditedEntity(id)` - Get edited popup data
+- `hasEdits(id)` - Check if popup has unsaved edits
+- `hasUndo(id)` - Check if undo is available
+- `hasRedo(id)` - Check if redo is available
+- `getEditedPopup(id)` - Get popup with edits applied
+- `getNotices()` - Get all notices
+- `isResolving(selectorName, args?)` - Check if selector is loading
+
+###### Popup Store Actions
+- `createPopup(popup, validate?, withNotices?)` - Create new popup
+- `updatePopup(popup, validate?, withNotices?)` - Update existing popup
+- `deletePopup(id, forceDelete?)` - Delete popup
+- `editRecord(id, edits)` - Start editing popup
+- `saveEditedRecord(id, validate?, withNotices?)` - Save edited popup
+- `undo(id)` - Undo last edit
+- `redo(id)` - Redo last undone edit
+- `resetRecordEdits(id)` - Reset all edits
+- `updateEditorValues(values)` - Update editor values
+- `changeEditorId(id)` - Change active editor popup
+- `createNotice(notice)` - Create notice
+- `removeNotice(id)` - Remove notice
+
+##### Using Call to Actions Store
+```typescript
+import { callToActionStore, CALL_TO_ACTION_STORE } from '@popup-maker/core-data';
+import { useSelect, useDispatch } from '@wordpress/data';
+
+function CTAManager() {
+    // Selectors
+    const { ctas, cta, isEditing, hasEdits } = useSelect((select) => {
+        const store = select(callToActionStore);
+        // Or: const store = select(CALL_TO_ACTION_STORE);
+        return {
+            ctas: store.getCallToActions(),
+            cta: store.getCallToAction(456),
+            isEditing: store.isEditingCallToAction(456),
+            hasEdits: store.hasEdits(456),
+            // Additional selectors available similar to popup store
+        };
+    }, []);
+
+    // Actions
+    const { 
+        createCallToAction,
+        updateCallToAction,
+        deleteCallToAction,
+        editRecord,
+        saveEditedRecord,
+        undo,
+        redo
+    } = useDispatch(callToActionStore);
+
+    // Work with CTAs
+    const handleCreateCTA = async () => {
+        const newCTA = await createCallToAction({
+            title: 'New CTA',
+            type: 'button',
+            settings: { /* ... */ },
+        });
+    };
+}
+```
+
+###### Call to Action Store Selectors
+Similar to Popup Store with CTA-specific naming:
+- `getCallToActions()` - Get all CTAs
+- `getCallToAction(id)` - Get specific CTA
+- `isEditingCallToAction(id)` - Check if CTA is being edited
+- `getFiltered(predicate)` - Get filtered CTAs
+- `hasEdits(id)` - Check for unsaved edits
+- `hasUndo(id)` / `hasRedo(id)` - Undo/redo availability
+- `isResolving(selectorName, args?)` - Loading state
+
+###### Call to Action Store Actions
+- `createCallToAction(cta, validate?, withNotices?)` - Create CTA
+- `updateCallToAction(cta, validate?, withNotices?)` - Update CTA
+- `deleteCallToAction(id, forceDelete?)` - Delete CTA
+- `editRecord(id, edits)` - Edit CTA in memory
+- `saveEditedRecord(id)` - Save edits to server
+- `undo(id)` / `redo(id)` - Undo/redo edits
+
+##### Using Settings Store
+```typescript
+import { settingsStore, useSettings } from '@popup-maker/core-data';
+
+// Option 1: Using the custom hook (recommended)
+function SettingsComponent() {
+    const {
+        settings,
+        getSetting,
+        updateSettings,
+        saveSettings,
+        isSaving,
+        hasUnsavedChanges
+    } = useSettings();
+
+    // Get specific setting
+    const analyticsEnabled = getSetting('analyticsEnabled', false);
+
+    // Update and save settings
+    const handleSave = async () => {
+        updateSettings({ analyticsEnabled: true });
+        await saveSettings();
+    };
+}
+
+// Option 2: Using selectors/actions directly
+function AlternativeSettings() {
+    const settings = useSelect(select => 
+        select(settingsStore).getSettings()
+    );
+    
+    const { updateSettings, saveSettings } = useDispatch(settingsStore);
+}
+```
+
+##### Using License Store
+```typescript
+import { licenseStore, useLicense } from '@popup-maker/core-data';
+
+// Using the custom hook
+function LicenseManager() {
+    const {
+        licenseData,
+        licenseKey,
+        licenseStatus,
+        connect,
+        updateLicenseKey,
+        verifyLicense,
+        isValid
+    } = useLicense();
+
+    const handleVerify = async () => {
+        await verifyLicense(licenseKey);
+    };
+}
+```
+
+##### Using URL Search Store
+```typescript
+import { urlSearchStore } from '@popup-maker/core-data';
+
+function URLSearchComponent() {
+    const { results, isSearching } = useSelect((select) => {
+        const store = select(urlSearchStore);
+        return {
+            results: store.getSearchResults('posts'),
+            isSearching: store.isSearching('posts'),
+        };
+    });
+
+    const { searchUrls } = useDispatch(urlSearchStore);
+
+    const handleSearch = async (query) => {
+        await searchUrls('posts', query);
+    };
+}
+```
+
+##### Store Registration
+All Popup Maker stores are automatically registered when using the packages. However, if you need to manually register them:
+
+```typescript
+import { register } from '@wordpress/data';
+import {
+    popupStore,
+    callToActionStore,
+    settingsStore,
+    licenseStore,
+    urlSearchStore
+} from '@popup-maker/core-data';
+
+// Register stores (usually done automatically)
+register(popupStore);
+register(callToActionStore);
+register(settingsStore);
+register(licenseStore);
+register(urlSearchStore);
 ```
 
 #### Using Fields
@@ -636,39 +1080,130 @@ $triggers['custom_trigger'] = [
 1. Fields are processed through `PUM_Utils_Fields::parse_field()` which normalizes options
 2. Rendering happens via `PUM_Utils_Fields::render_field()` which:
    - First checks for custom action: `do_action("pum_{$type}_field", $args)`
-   - Then checks for method: `PUM_Form_Fields::{$type}_callback()`
+   - Then checks for method: `PUM_Form_Fields::{$type}_callback()` (Note: This class doesn't exist, appears to be a bug)
    - Then checks for function: `pum_{$type}_callback()`
-   - Falls back to: `PUM_Form_Fields::missing_callback()`
+   - Falls back to: `PUM_Form_Fields::missing_callback()` (which also won't work due to missing class)
 
-#### Custom Field Types
+**Important**: Due to the bug referencing non-existent `PUM_Form_Fields` class, custom fields MUST use either:
+- The action hook method: `add_action('pum_{$type}_field', $callback)`
+- The function method: Define a function named `pum_{$type}_callback`
 
-To add a custom field type:
+For rendering built-in field types, the actual implementation is in `PUM_Fields` class (`includes/legacy/class-pum-fields.php`) which has methods like `text_callback()`, `checkbox_callback()`, etc. These are typically called through `PUM_Fields::instance()->render_field()` or form instances that extend `PUM_Fields`.
+
+#### Custom Field Types (PHP/Legacy)
+
+To add a custom field type for PHP/Legacy admin forms:
 
 ```php
-// Method 1: Using action hook
+// Method 1: Using action hook (preferred for extensions)
 add_action('pum_myfield_field', function($args) {
-    $value = $args['value'] ?? $args['std'] ?? '';
+    // Get the PUM_Fields instance for field helpers
+    $fields = PUM_Fields::instance();
+    
+    // Parse the value
+    $value = isset($args['value']) ? $args['value'] : (isset($args['std']) ? $args['std'] : '');
+    
+    // Render field wrapper and label
+    $fields->field_before($args);
+    $fields->field_label($args);
     ?>
+    
     <input type="text" 
            id="<?php echo esc_attr($args['id']); ?>" 
            name="<?php echo esc_attr($args['name']); ?>" 
            value="<?php echo esc_attr($value); ?>"
-           class="my-custom-field <?php echo esc_attr($args['class']); ?>" />
+           placeholder="<?php echo esc_attr($args['placeholder']); ?>"
+           class="<?php echo esc_attr($args['size']); ?>-text"
+           <?php echo $args['required'] ? 'required' : ''; ?> />
+    
     <?php
+    // Render field description
+    $fields->field_description($args);
+    $fields->field_after();
 });
 
 // Method 2: Using callback function
 function pum_myfield_callback($args) {
-    // Render field HTML
+    $fields = PUM_Fields::instance();
+    $value = isset($args['value']) ? $args['value'] : (isset($args['std']) ? $args['std'] : '');
+    
+    $fields->field_before($args);
+    $fields->field_label($args);
+    // ... render field HTML ...
+    $fields->field_description($args);
+    $fields->field_after();
 }
+
+// Method 3: For template fields (underscore.js templates)
+add_action('pum_myfield_templ_field', function($args) {
+    $fields = PUM_Fields::instance();
+    
+    $fields->field_before($args);
+    $fields->field_label($args);
+    ?>
+    
+    <input type="text" 
+           id="<?php echo esc_attr($args['id']); ?>" 
+           name="<?php echo esc_attr($args['name']); ?>" 
+           value="{{data.<?php echo esc_attr($args['templ_name']); ?>}}"
+           placeholder="<?php echo esc_attr($args['placeholder']); ?>"
+           class="<?php echo esc_attr($args['size']); ?>-text" />
+    
+    <?php
+    $fields->field_description($args);
+    $fields->field_after();
+});
 ```
+
+#### Custom Field Types (React/Modern)
+
+For modern React-based admin interfaces (CTA editor, block editor):
+
+```typescript
+// In packages/fields/src/lib/field.tsx, add your field type to the switch statement
+// Or create a custom field component and use it directly
+
+import { FieldPropsWithOnChange } from '@popup-maker/fields';
+
+const MyCustomField = ({ 
+    name, 
+    value, 
+    onChange, 
+    placeholder, 
+    required 
+}: FieldPropsWithOnChange) => {
+    return (
+        <input
+            type="text"
+            name={name}
+            value={value || ''}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            required={required}
+        />
+    );
+};
+
+// Use in CTA editor or other React contexts
+<Field
+    type="myfield"
+    name="custom_field"
+    label={__('My Custom Field', 'popup-maker')}
+    value={value}
+    onChange={onChange}
+/>
+```
+
+Note: The React field system is used in newer admin interfaces (CTA editor, block editor), while the PHP/Legacy system is used for popup/theme settings and older admin pages.
 
 ### Extension Development Best Practices
 - Use `pum_` prefixes for all public functions and hooks
+- Use custom `\PopupMaker\{ExtensionName}\` namespace for classes/functions/hooks
 - Check for Popup Maker existence before calling functions
 - Follow WordPress coding standards (enforced by PHPCS)
 - Use dependency injection over global access
-- Leverage `@wordpress/data` stores for admin interfaces
+- **Prioritize `@popup-maker/*` packages over `@wordpress/*` when available** (better optimization and consistency)
+- Use Popup Maker's data stores (`popupStore`, `callToActionStore`) instead of WordPress core data when possible
 - Use PUM.hooks system for frontend extensibility
 - Follow `.cursor/rules/pm-best-practices.mdc` guidelines
 
