@@ -6,7 +6,6 @@ import {
 	URLControl,
 } from '@popup-maker/components';
 
-import { useFieldError } from '../../../hooks';
 import type { CallToAction } from '@popup-maker/core-data';
 
 // UNUSED, here for reference.
@@ -18,8 +17,6 @@ const LinkFields = ( {
 	settings: CallToAction[ 'settings' ];
 	updateSettings: ( settings: Partial< CallToAction[ 'settings' ] > ) => void;
 } ) => {
-	const urlError = useFieldError( 'url' );
-
 	if ( settings.type !== 'link' ) {
 		return null;
 	}
@@ -34,7 +31,6 @@ const LinkFields = ( {
 					url: value.url,
 				} )
 			}
-			error={ urlError }
 		/>
 		// </FieldPanel>
 	);
