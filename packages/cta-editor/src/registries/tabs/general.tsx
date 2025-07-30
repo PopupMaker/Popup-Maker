@@ -10,7 +10,7 @@ import {
 	TextControl,
 } from '@wordpress/components';
 
-import { useFields } from '../../hooks';
+import { useFields, useAllFieldErrors } from '../../hooks';
 import { TabErrorNotice } from '../../components';
 
 import type { CallToAction } from '@popup-maker/core-data';
@@ -76,6 +76,7 @@ export const Component = ( {
 	updateSettings,
 }: BaseEditorTabProps ) => {
 	const { getTabFields } = useFields();
+	const { clearAllErrors } = useAllFieldErrors();
 
 	const { settings } = callToAction;
 
@@ -132,7 +133,10 @@ export const Component = ( {
 					label={ __( 'Action Type', 'popup-maker' ) }
 					options={ callToActionTypeOptions }
 					value={ settings.type ?? '' }
-					onChange={ ( type ) => updateSettings( { type } ) }
+					onChange={ ( type ) => {
+						clearAllErrors();
+						updateSettings( { type } );
+					} }
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				/>
