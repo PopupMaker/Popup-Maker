@@ -84,13 +84,13 @@ class Link extends \PopupMaker\Base\CallToAction {
 	}
 
 	/**
-	 * Validate the settings for this CTA.
+	 * Validate CTA settings array before saving.
 	 *
-	 * @param array $settings The settings for this CTA.
+	 * @param array $settings The raw settings array to validate.
 	 *
-	 * @return \WP_Error|true
+	 * @return true|\WP_Error|\WP_Error[] True if valid, WP_Error if validation fails.
 	 */
-	public function validate_settings( array $settings ): \WP_Error|true {
+	public function validate_settings( array $settings ): \WP_Error|array|bool {
 		if ( empty( $settings['url'] ) ) {
 			return new \WP_Error( 'missing_url', __( 'URL is required', 'popup-maker' ), [
 				'field' => 'url',

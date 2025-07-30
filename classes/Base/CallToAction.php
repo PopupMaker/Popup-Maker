@@ -75,14 +75,20 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	/**
 	 * Validate CTA settings array before saving.
 	 *
-	 * Default implementation validates required fields based on field definitions.
-	 * Extensions can override this method for custom validation logic.
+	 * @param array $settings The raw settings array to validate.
+	 *
+	 * @return true|\WP_Error|\WP_Error[] True if valid, WP_Error if validation fails.
+	 */
+	abstract public function validate_settings( array $settings ): \WP_Error|array|bool;
+
+	/**
+	 * Validate required fields.
 	 *
 	 * @param array $settings The raw settings array to validate.
 	 *
 	 * @return true|\WP_Error|\WP_Error[] True if valid, WP_Error if validation fails.
 	 */
-	public function validate_settings( array $settings ): \WP_Error|array|bool {
+	public function validate_required_fields( array $settings ): \WP_Error|array|bool {
 		// Default implementation: validate required fields.
 		$errors = [];
 		$fields = $this->fields();
