@@ -1,20 +1,27 @@
 import { callToActionStore, NOTICE_CONTEXT } from '@popup-maker/core-data';
 import { store as noticesStore } from '@wordpress/notices';
-import { useSelect } from '@wordpress/data';
+import { useSelect, useDispatch } from '@wordpress/data';
+import { useCallback } from '@wordpress/element';
 
 import useFields from './use-fields';
 
 /**
- * Hook to get the error message for a specific field.
+ * Hook to get the error message and clear function for a specific field.
  *
  * @param {string} fieldId The field ID to check for errors.
- * @return {string|null} The error message if the field has an error, null otherwise.
+ * @return {Object} Object containing error message and clearError function.
  */
-export const useFieldError = ( fieldId: string ): string | null => {
+export const useFieldError = (
+	fieldId: string
+): {
+	error: string | null;
+	clearError: () => void;
+} => {
 	const ctaId = useSelect(
 		( select ) => select( callToActionStore ).getEditorId(),
 		[]
 	);
+	const { removeNotice } = useDispatch( noticesStore );
 
 	const error = useSelect(
 		( select ) => {
@@ -28,48 +35,45 @@ export const useFieldError = ( fieldId: string ): string | null => {
 		[ ctaId, fieldId ]
 	);
 
-	return error;
+	const clearError = useCallback( () => {
+		if ( ctaId !== undefined ) {
+			removeNotice(
+				`field-error-${ ctaId || 'new' }-${ fieldId }`,
+				NOTICE_CONTEXT
+			);
+		}
+	}, [ ctaId, fieldId, removeNotice ] );
+
+	return { error, clearError };
 };
 
 /**
- * Hook to check if a tab has any field errors.
+ * Hook to get tab error information and clear function.
  *
  * @param {string} tabName The tab name to check for errors.
- * @return {boolean} True if the tab has any field errors, false otherwise.
+ * @return {Object} Object containing hasErrors, errorCount, and clearTabErrors function.
  */
-export const useTabHasError = ( tabName: string ): boolean => {
+export const useTabErrors = (
+	tabName: string
+): {
+	hasErrors: boolean;
+	errorCount: number;
+	clearTabErrors: () => void;
+} => {
 	const ctaId = useSelect(
 		( select ) => select( callToActionStore ).getEditorId(),
 		[]
 	);
-
+	const { removeNotice } = useDispatch( noticesStore );
 	const { getTabFields } = useFields();
 
-	return useSelect(
+	const { hasErrors, errorCount, errorIds } = useSelect(
 		( select ) => {
 			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
-
-			// Build dynamic field-to-tab mapping from the actual field definitions
 			const tabFields = getTabFields( tabName );
-			const fieldTabMap: Record< string, string > = {};
+			const fieldIds = new Set( tabFields.map( ( f ) => f.id ) );
 
-			// Map each field ID to this tab
-			tabFields.forEach( ( field ) => {
-				fieldTabMap[ field.id ] = tabName;
-			} );
-
-			// Also check other tabs to build complete mapping
-			const allTabs = [ 'general', 'targeting', 'settings' ]; // Add other tab names as needed
-			allTabs.forEach( ( tab ) => {
-				if ( tab !== tabName ) {
-					const otherTabFields = getTabFields( tab );
-					otherTabFields.forEach( ( field ) => {
-						fieldTabMap[ field.id ] = tab;
-					} );
-				}
-			} );
-
-			return notices.some( ( notice ) => {
+			const tabErrors = notices.filter( ( notice ) => {
 				if (
 					! notice.id?.startsWith(
 						`field-error-${ ctaId || 'new' }-`
@@ -77,19 +81,100 @@ export const useTabHasError = ( tabName: string ): boolean => {
 				) {
 					return false;
 				}
-
-				// Extract field name from notice ID
-				// Pattern handles both numeric IDs and 'new' for new CTAs
 				const fieldMatch = notice.id.match(
 					/field-error-(?:\d+|new)-(.+)$/
 				);
-				const field = fieldMatch?.[ 1 ];
-
-				return field && fieldTabMap[ field ] === tabName;
+				const fieldId = fieldMatch?.[ 1 ];
+				return fieldId && fieldIds.has( fieldId );
 			} );
+
+			return {
+				hasErrors: tabErrors.length > 0,
+				errorCount: tabErrors.length,
+				errorIds: tabErrors.map( ( n ) => n.id ),
+			};
 		},
 		[ ctaId, tabName, getTabFields ]
 	);
+
+	const clearTabErrors = useCallback( () => {
+		errorIds.forEach( ( id ) => removeNotice( id, NOTICE_CONTEXT ) );
+	}, [ errorIds, removeNotice ] );
+
+	return { hasErrors, errorCount, clearTabErrors };
+};
+
+/**
+ * Legacy hook for backward compatibility.
+ *
+ * @param {string} tabName The tab name to check for errors.
+ * @return {boolean} True if the tab has errors, false otherwise.
+ */
+export const useTabHasError = ( tabName: string ): boolean => {
+	const { hasErrors } = useTabErrors( tabName );
+	return hasErrors;
+};
+
+/**
+ * Hook to manage all field errors across the CTA.
+ *
+ * @return {Object} Object containing errors map, hasAnyError flag, and clear functions.
+ */
+export const useAllFieldErrors = (): {
+	errors: Record< string, string >;
+	hasAnyError: boolean;
+	clearAllErrors: () => void;
+	clearFieldError: ( fieldId: string ) => void;
+} => {
+	const ctaId = useSelect(
+		( select ) => select( callToActionStore ).getEditorId(),
+		[]
+	);
+	const { removeNotice } = useDispatch( noticesStore );
+
+	const { errors, errorIds } = useSelect(
+		( select ) => {
+			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
+			const fieldErrors: Record< string, string > = {};
+			const ids: string[] = [];
+
+			notices.forEach( ( notice ) => {
+				const match = notice.id?.match(
+					new RegExp( `^field-error-${ ctaId || 'new' }-(.+)$` )
+				);
+				if ( match ) {
+					fieldErrors[ match[ 1 ] ] = notice.content as string;
+					ids.push( notice.id );
+				}
+			} );
+
+			return { errors: fieldErrors, errorIds: ids };
+		},
+		[ ctaId ]
+	);
+
+	const clearAllErrors = useCallback( () => {
+		errorIds.forEach( ( id ) => removeNotice( id, NOTICE_CONTEXT ) );
+	}, [ errorIds, removeNotice ] );
+
+	const clearFieldError = useCallback(
+		( fieldId: string ) => {
+			if ( ctaId !== undefined ) {
+				removeNotice(
+					`field-error-${ ctaId || 'new' }-${ fieldId }`,
+					NOTICE_CONTEXT
+				);
+			}
+		},
+		[ ctaId, removeNotice ]
+	);
+
+	return {
+		errors,
+		hasAnyError: Object.keys( errors ).length > 0,
+		clearAllErrors,
+		clearFieldError,
+	};
 };
 
 export default useFieldError;
