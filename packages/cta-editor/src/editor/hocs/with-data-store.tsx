@@ -6,10 +6,11 @@ import {
 	NOTICE_CONTEXT,
 } from '@popup-maker/core-data';
 import { Notice } from '@wordpress/components';
-import { useDispatch, useSelect, useRegistry } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { useEffect, useState, useRef, useMemo } from '@wordpress/element';
 import { DebugNotices } from '../../components';
+import { useAllFieldErrors } from '../../hooks/use-field-error';
 
 import type { ComponentType } from 'react';
 import type { EditorId, EditableCta } from '@popup-maker/core-data';
@@ -126,8 +127,8 @@ export const withDataStore = (
 			);
 		}, [] );
 
-		const { removeNotice, removeNotices } = useDispatch( noticesStore );
-		const registry = useRegistry();
+		const { removeNotice } = useDispatch( noticesStore );
+		const { clearAllErrors } = useAllFieldErrors();
 
 		useEffect( () => {
 			if ( ! isEditorActive && id ) {
@@ -137,33 +138,11 @@ export const withDataStore = (
 			return () => {
 				if ( valuesId && isEditorActive ) {
 					// Clear all field errors for this CTA when editor closes
-					const allNotices = registry
-						.select( noticesStore )
-						.getNotices( NOTICE_CONTEXT );
-					const fieldErrorIds = allNotices
-						.filter(
-							( notice ) =>
-								notice.id?.startsWith(
-									`field-error-${ valuesId }-`
-								)
-						)
-						.map( ( notice ) => notice.id );
-
-					if ( fieldErrorIds.length > 0 ) {
-						removeNotices( fieldErrorIds, NOTICE_CONTEXT );
-					}
-
+					clearAllErrors();
 					changeEditorId( undefined );
 				}
 			};
-		}, [
-			id,
-			valuesId,
-			isEditorActive,
-			changeEditorId,
-			removeNotices,
-			registry,
-		] );
+		}, [ id, valuesId, isEditorActive, changeEditorId, clearAllErrors ] );
 
 		/**
 		 * Save the CallToAction when the editor is saved.

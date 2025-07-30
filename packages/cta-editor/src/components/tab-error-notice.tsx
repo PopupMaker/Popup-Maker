@@ -3,7 +3,7 @@ import { Notice } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
 import { useSelect } from '@wordpress/data';
 import { DEBUG_MODE } from '../index';
-import { useTabHasError } from '../hooks';
+import { useTabErrors } from '../hooks';
 import { callToActionStore } from '@popup-maker/core-data';
 
 interface TabErrorNoticeProps {
@@ -23,7 +23,7 @@ export const TabErrorNotice: React.FC< TabErrorNoticeProps > = ( {
 	tabName,
 	message = __( 'Please fix the errors below.', 'popup-maker' ),
 } ) => {
-	const hasError = useTabHasError( tabName );
+	const { hasErrors: hasError } = useTabErrors( tabName );
 	const [ showNotice, setShowNotice ] = useState( false );
 	const timerRef = useRef< NodeJS.Timeout | null >( null );
 	const lastHasError = useRef( false );

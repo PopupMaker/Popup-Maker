@@ -1,9 +1,6 @@
 import React from 'react';
 import { Field } from '@popup-maker/fields';
 import { URLControl } from '@popup-maker/components';
-import { callToActionStore, NOTICE_CONTEXT } from '@popup-maker/core-data';
-import { useDispatch, useSelect } from '@wordpress/data';
-import { store as noticesStore } from '@wordpress/notices';
 import { FieldWrapper } from './field-wrapper';
 import { useFieldError } from '../hooks';
 
@@ -32,22 +29,13 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 	value,
 	onChange,
 } ) => {
-	const error = useFieldError( fieldId );
-	const { removeNotice } = useDispatch( noticesStore );
-
-	const ctaId = useSelect(
-		( select ) => select( callToActionStore ).getEditorId(),
-		[]
-	);
+	const { error, clearError } = useFieldError( fieldId );
 
 	// Clear field error when value changes
 	const handleChange = ( newValue: any ) => {
 		// Clear the field-specific error notice when the field is updated
 		if ( error ) {
-			const errorNoticeId = `field-error-${
-				ctaId || 'new'
-			}-${ fieldId }`;
-			removeNotice( errorNoticeId, NOTICE_CONTEXT );
+			clearError();
 		}
 		onChange( newValue );
 	};
