@@ -9,6 +9,7 @@ import { Button, Modal, Spinner } from '@wordpress/components';
 import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
 
 import { EditorHeaderActions, EditorHeaderOptions } from '../components';
+import { useAllFieldErrors } from '../../hooks';
 
 import type { ComponentType } from 'react';
 import type { ModalProps } from '@wordpress/components/build-types/modal/types';
@@ -106,6 +107,8 @@ export const withModal = (
 		const { saveEditorValues, resetRecordEdits } =
 			useDispatch( callToActionStore );
 
+		const { hasAnyError } = useAllFieldErrors();
+
 		/**
 		 * Get the modal title based on the CTA state.
 		 */
@@ -164,6 +167,11 @@ export const withModal = (
 		 */
 		const saveValues = useCallback(
 			async () => {
+				// Don't save if there are field errors
+				if ( hasAnyError ) {
+					return;
+				}
+
 				try {
 					// Save to the database
 					await saveEditorValues();
@@ -182,7 +190,7 @@ export const withModal = (
 				}
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ closeOnSave, closeModal, getHasEdits ]
+			[ closeOnSave, closeModal, getHasEdits, hasAnyError ]
 		);
 
 		const { id: valuesId } = values;
@@ -279,7 +287,9 @@ export const withModal = (
 							/>
 							<Button
 								variant="primary"
-								disabled={ isSaving || ! hasEdits }
+								disabled={
+									isSaving || ! hasEdits || hasAnyError
+								}
 								onClick={ (
 									event: React.MouseEvent< HTMLButtonElement >
 								) => {
