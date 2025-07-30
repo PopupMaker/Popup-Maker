@@ -1,3 +1,4 @@
+import { Fragment } from '@wordpress/element';
 import { addFilter } from '@wordpress/hooks';
 import { FieldWithError } from '../../components';
 
@@ -49,8 +50,8 @@ export const initCustomFields = () => {
 
 					acc[ tab ] = [
 						...acc[ tab ],
-						...Object.entries( tabFields ).map(
-							( [ fieldId, field ] ) => {
+						...Object.entries( tabFields )
+							.map( ( [ fieldId, field ] ) => {
 								if ( ! field || ! field.type ) {
 									return null;
 								}
@@ -95,25 +96,31 @@ export const initCustomFields = () => {
 									...field,
 									id: fieldId,
 									priority: field?.priority ?? 0,
-									component: ! shouldHide() && (
-										<FieldWithError
-											key={ fieldId }
-											fieldId={ fieldId }
-											field={ field }
-											value={ settings[ fieldId ] }
-											onChange={ ( value ) =>
-												updateSettings( {
-													[ fieldId ]: value,
-												} )
-											}
-										/>
+									component: (
+										<Fragment key={ fieldId }>
+											{ ! shouldHide() && (
+												<FieldWithError
+													fieldId={ fieldId }
+													field={ field }
+													value={
+														settings[ fieldId ]
+													}
+													onChange={ ( value ) =>
+														updateSettings( {
+															[ fieldId ]: value,
+														} )
+													}
+												/>
+											) }
+										</Fragment>
 									),
 								};
-							}
-						),
-					]
-						.filter( ( item ) => item !== null )
-						.filter( Boolean );
+							} )
+							.filter(
+								( item ): item is NonNullable< typeof item > =>
+									item !== null
+							),
+					];
 
 					return acc;
 				},
