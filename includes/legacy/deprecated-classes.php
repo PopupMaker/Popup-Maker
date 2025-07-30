@@ -20,14 +20,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Use PUM_Extension_License instead.
  */
-class PopMake_License extends PUM_Extension_License {}
+if ( class_exists( 'PUM_Extension_License' ) ) {
+	/**
+	 * PopMake_License Class
+	 *
+	 * @deprecated 1.5.0 Use PUM_Extension_License instead.
+	 */
+	class PopMake_License extends PUM_Extension_License {}
+}
 
 /**
  * PopupMaker_Plugin_Updater
  *
  * @deprecated 1.5.0 Use PUM_Extension_Updater.
  */
-class PopupMaker_Plugin_Updater extends PUM_Extension_Updater {}
+if ( class_exists( 'PUM_Extension_Updater' ) ) {
+	/**
+	 * PopupMaker_Plugin_Updater
+	 *
+	 * @deprecated 1.5.0 Use PUM_Extension_Updater.
+	 */
+	class PopupMaker_Plugin_Updater extends PUM_Extension_Updater {}
+}
 
 /**
  * Popmake_Cron Class
@@ -37,7 +51,14 @@ class PopupMaker_Plugin_Updater extends PUM_Extension_Updater {}
  * @since 1.3.0
  * @deprecated 1.8.0
  */
-class Popmake_Cron extends PUM_Utils_Cron {}
+if ( class_exists( 'PUM_Utils_Cron' ) ) {
+	/**
+	 * Popmake_Cron Class
+	 *
+	 * @deprecated 1.8.0 Use PUM_Utils_Cron instead.
+	 */
+	class Popmake_Cron extends PUM_Utils_Cron {}
+}
 
 /**
  * Class PUM_Popup_Query

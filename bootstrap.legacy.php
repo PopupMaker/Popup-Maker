@@ -68,7 +68,8 @@ function pum_autoloader( $class_name ) {
 
 	if ( count( $pum_autoloaders ) === 0 ) {
 		// Unregister this autoloader if there are no deprecated autoloaders .
-		spl_autoload_unregister( 'pum_autoloader' );
+		// spl_autoload_unregister( 'pum_autoloader' );
+		return;
 	}
 
 	// Deprecated newsletter autoloader, remove this in future.
@@ -119,7 +120,6 @@ function pum_init_legacy() {
 	if ( ! \PopupMaker\check_prerequisites() ) {
 		return;
 	}
-
 
 	// Get Popup Maker
 	pum();

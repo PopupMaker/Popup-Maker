@@ -64,15 +64,6 @@ function config( $key = null ) {
 require_once __DIR__ . '/includes/entry--bootstrap.php';
 
 /**
- * Register autoloader.
- */
-require_once __DIR__ . '/vendor-prefixed/code-atlantic/wp-autoloader/src/Autoloader.php';
-
-if ( ! \PopupMaker\Vendor\CodeAtlantic\Autoloader\Autoloader::init( config( 'name' ), config( 'path' ) . '/vendor-prefixed/autoload.php' ) ) {
-	return;
-}
-
-/**
  * Check plugin prerequisites.
  *
  * @return bool
