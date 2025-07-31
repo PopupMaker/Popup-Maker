@@ -23,6 +23,7 @@ const packages = {
 	fields: 'packages/fields',
 	i18n: 'packages/i18n',
 	icons: 'packages/icons',
+	layout: 'packages/layout',
 	'popup-admin': 'packages/popup-admin',
 	registry: 'packages/registry',
 	'use-query-params': 'packages/use-query-params',

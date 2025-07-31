@@ -4,9 +4,10 @@ import { StringParam, useQueryParams } from '@popup-maker/use-query-params';
 import { __ } from '@popup-maker/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import { useEffect, useMemo } from '@wordpress/element';
-import { Popover, SlotFillProvider } from '@wordpress/components';
+import { Popover } from '@wordpress/components';
+import { AppLayout, AppHeader, AppContent } from '@popup-maker/layout';
 
-import { AppHeader, CallToActionsView } from './components';
+import { CallToActionsView } from './components';
 import { getGlobalVars } from './utils';
 
 import type { TabComponent } from '@popup-maker/types';
@@ -66,23 +67,29 @@ const App = () => {
 			__( 'Popup Maker', 'popup-maker' );
 	}, [ view, views ] );
 
+	const { adminUrl, assetsUrl } = getGlobalVars();
+
 	return (
-		<SlotFillProvider>
-			<div
-				className={ clsx( [
-					'popup-maker-call-to-actions-page',
-					`view-${ view }`,
-				] ) }
-			>
-				<AppHeader tabs={ views } />
-				<div className="popup-maker-call-to-actions-page__content">
-					<ViewComponent />
-				</div>
-				{ /*
+		<AppLayout
+			className={ clsx( [
+				'popup-maker-call-to-actions-page',
+				`view-${ view }`,
+			] ) }
+		>
+			<AppHeader
+				tabs={ views }
+				currentTab={ view ?? undefined }
+				onTabChange={ ( tabName ) => setParams( { view: tabName } ) }
+				brandingLogoUrl="https://wppopupmaker.com/wp-content/plugins/popup-maker/assets/images/mark.svg"
+				adminUrl={ adminUrl }
+			/>
+			<AppContent>
+				<ViewComponent />
+			</AppContent>
+			{ /*
 			// @ts-ignore */ }
-				<Popover.Slot />
-			</div>
-		</SlotFillProvider>
+			<Popover.Slot />
+		</AppLayout>
 	);
 };
 

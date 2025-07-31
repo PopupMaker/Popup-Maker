@@ -52,6 +52,7 @@
 		"@popup-maker/fields": "file:./packages/fields",
 		"@popup-maker/i18n": "file:./packages/i18n",
 		"@popup-maker/icons": "file:./packages/icons",
+		"@popup-maker/layout": "file:./packages/layout",
 		"@popup-maker/popup-admin": "file:./packages/popup-admin",
 		"@popup-maker/registry": "file:./packages/registry",
 		"@popup-maker/use-query-params": "file:./packages/use-query-params",

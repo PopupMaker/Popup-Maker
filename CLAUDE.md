@@ -401,3 +401,8 @@ const { settings, getSetting, updateSettings, saveSettings } = useSettings();
 - Gradual migration from jQuery to React for admin interfaces
 - `popmake_` prefixed functions are deprecated
 - Asset cache system maintains compatibility with older extensions
+
+## Workflow Notes
+
+### Package Management Considerations
+- When adding new packages, we have to update webpack config, tsconfigs, dependency extraction plugin package list AND Assets.php appropriately
