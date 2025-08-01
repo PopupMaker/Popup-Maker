@@ -181,71 +181,6 @@ class PluginReleaseBuilder {
 		}
 	}
 
-	installDependencies() {
-		if ( this.options.skipComposer ) {
-			if ( ! this.options.quiet ) {
-				console.log( '\n=== Skipping Composer install ===' );
-			}
-			return;
-		}
-
-		if ( ! this.options.quiet ) {
-			console.log( '\n=== Installing production dependencies ===' );
-		}
-
-		// Check if composer.json exists
-		const composerPath = path.join( this.projectRoot, 'composer.json' );
-		if ( fs.existsSync( composerPath ) ) {
-			this.executeCommand(
-				'composer install -o --no-dev --classmap-authoritative --',
-				'Installing Composer dependencies'
-			);
-		} else {
-			if ( ! this.options.quiet ) {
-				console.log(
-					'No composer.json found, skipping Composer install'
-				);
-			}
-		}
-	}
-
-	buildAssets() {
-		if ( this.options.skipNpm ) {
-			if ( ! this.options.quiet ) {
-				console.log( '\n=== Skipping npm build ===' );
-			}
-			return;
-		}
-
-		if ( ! this.options.quiet ) {
-			console.log( '\n=== Building production assets ===' );
-		}
-
-		// Check if package.json has build:production script
-		if (
-			this.packageJSON.scripts &&
-			this.packageJSON.scripts[ 'build:production' ]
-		) {
-			this.executeCommand(
-				'npm run build:production --',
-				'Building production assets'
-			);
-		} else if (
-			this.packageJSON.scripts &&
-			this.packageJSON.scripts.build
-		) {
-			this.executeCommand(
-				'NODE_ENV=production npm run build --',
-				'Building assets with production flag'
-			);
-		} else {
-			if ( ! this.options.quiet ) {
-				console.log(
-					'No build scripts found in package.json, skipping npm build'
-				);
-			}
-		}
-	}
 
 	copyDistributionFiles() {
 		if ( ! this.options.quiet ) {
@@ -380,7 +315,7 @@ class PluginReleaseBuilder {
 		this.removeDirectory( this.buildPath );
 	}
 
-	build() {
+	async build() {
 		console.log(
 			`🚀 Building ${ this.pluginName } v${ this.version }${
 				! this.options.quiet ? '\n' : ''
@@ -389,8 +324,10 @@ class PluginReleaseBuilder {
 
 		try {
 			this.cleanBuildArtifacts();
-			this.installDependencies();
-			this.buildAssets();
+			
+			// Run composer and npm builds in parallel for significant time savings
+			await this.runParallelBuilds();
+			
 			this.copyDistributionFiles();
 			const zipPath = this.createZipFile();
 			this.cleanup();
@@ -402,6 +339,139 @@ class PluginReleaseBuilder {
 			console.error( `\n❌ Release build failed:`, error.message );
 			process.exit( 1 );
 		}
+	}
+
+	async runParallelBuilds() {
+		if ( ! this.options.quiet ) {
+			console.log( '\n=== Running parallel builds ===' );
+		}
+
+		const startTime = Date.now();
+
+		// Create promises for parallel execution
+		const buildPromises = [];
+		
+		// Add composer install promise if not skipped
+		if ( ! this.options.skipComposer ) {
+			buildPromises.push(
+				this.runComposerInstall().catch( error => {
+					throw new Error( `Composer install failed: ${ error.message }` );
+				} )
+			);
+		}
+
+		// Add npm build promise if not skipped
+		if ( ! this.options.skipNpm ) {
+			buildPromises.push(
+				this.runNpmBuild().catch( error => {
+					throw new Error( `NPM build failed: ${ error.message }` );
+				} )
+			);
+		}
+
+		// Wait for all builds to complete
+		try {
+			await Promise.all( buildPromises );
+			
+			const duration = ( ( Date.now() - startTime ) / 1000 ).toFixed( 1 );
+			if ( ! this.options.quiet ) {
+				console.log( `✅ Parallel builds completed in ${ duration }s` );
+			}
+		} catch ( error ) {
+			throw error;
+		}
+	}
+
+	async runComposerInstall() {
+		return new Promise( ( resolve, reject ) => {
+			// Check if composer.json exists
+			const composerPath = path.join( this.projectRoot, 'composer.json' );
+			if ( ! fs.existsSync( composerPath ) ) {
+				if ( ! this.options.quiet ) {
+					console.log( 'No composer.json found, skipping Composer install' );
+				}
+				resolve();
+				return;
+			}
+
+			if ( this.options.verbose ) {
+				console.log( 'Installing Composer dependencies...' );
+			} else if ( this.options.quiet ) {
+				process.stdout.write( 'Installing Composer dependencies... ' );
+			} else {
+				console.log( 'Installing Composer dependencies...' );
+			}
+
+			try {
+				const result = execSync( 'composer install -o --no-dev --classmap-authoritative --', {
+					cwd: this.projectRoot,
+					stdio: this.options.verbose ? 'inherit' : 'pipe',
+					encoding: 'utf8',
+					env: { ...process.env },
+				} );
+
+				if ( this.options.quiet ) {
+					console.log( '✅' );
+				} else if ( ! this.options.verbose ) {
+					console.log( '✅ Done' );
+				}
+
+				resolve( result );
+			} catch ( error ) {
+				if ( this.options.quiet || ! this.options.verbose ) {
+					console.log( '❌' );
+				}
+				reject( error );
+			}
+		} );
+	}
+
+	async runNpmBuild() {
+		return new Promise( ( resolve, reject ) => {
+			// Check if package.json has build scripts
+			let buildCommand;
+			if ( this.packageJSON.scripts && this.packageJSON.scripts[ 'build:production' ] ) {
+				buildCommand = 'npm run build:production --';
+			} else if ( this.packageJSON.scripts && this.packageJSON.scripts.build ) {
+				buildCommand = 'NODE_ENV=production npm run build --';
+			} else {
+				if ( ! this.options.quiet ) {
+					console.log( 'No build scripts found in package.json, skipping npm build' );
+				}
+				resolve();
+				return;
+			}
+
+			if ( this.options.verbose ) {
+				console.log( 'Building production assets...' );
+			} else if ( this.options.quiet ) {
+				process.stdout.write( 'Building production assets... ' );
+			} else {
+				console.log( 'Building production assets...' );
+			}
+
+			try {
+				const result = execSync( buildCommand, {
+					cwd: this.projectRoot,
+					stdio: this.options.verbose ? 'inherit' : 'pipe',
+					encoding: 'utf8',
+					env: { ...process.env },
+				} );
+
+				if ( this.options.quiet ) {
+					console.log( '✅' );
+				} else if ( ! this.options.verbose ) {
+					console.log( '✅ Done' );
+				}
+
+				resolve( result );
+			} catch ( error ) {
+				if ( this.options.quiet || ! this.options.verbose ) {
+					console.log( '❌' );
+				}
+				reject( error );
+			}
+		} );
 	}
 }
 
@@ -497,7 +567,10 @@ Examples:
 if ( require.main === module ) {
 	const options = parseArgs();
 	const builder = new PluginReleaseBuilder( options );
-	builder.build();
+	builder.build().catch( error => {
+		console.error( `\n❌ Release build failed:`, error.message );
+		process.exit( 1 );
+	} );
 }
 
 module.exports = PluginReleaseBuilder;
