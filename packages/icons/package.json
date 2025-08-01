@@ -22,6 +22,10 @@
 	"main": "build/index.js",
 	"module": "src/index.js",
 	"types": "build-types/index.d.ts",
+	"sideEffects": [
+		"*.scss",
+		"*.css"
+	],
 	"exports": {
 		".": {
 			"types": "./build-types/index.d.ts",

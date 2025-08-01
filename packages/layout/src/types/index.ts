@@ -8,7 +8,6 @@ export interface AppLayoutProps {
 export interface AppHeaderProps {
 	title?: string;
 	brandingUrl?: string;
-	brandingLogoUrl?: string;
 	tabs?: TabComponent[];
 	currentTab?: string;
 	onTabChange?: ( tabName: string ) => void;

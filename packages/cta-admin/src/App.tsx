@@ -67,7 +67,7 @@ const App = () => {
 			__( 'Popup Maker', 'popup-maker' );
 	}, [ view, views ] );
 
-	const { adminUrl, assetsUrl } = getGlobalVars();
+	const { adminUrl } = getGlobalVars();
 
 	return (
 		<AppLayout
@@ -80,7 +80,6 @@ const App = () => {
 				tabs={ views }
 				currentTab={ view ?? undefined }
 				onTabChange={ ( tabName ) => setParams( { view: tabName } ) }
-				brandingLogoUrl="https://wppopupmaker.com/wp-content/plugins/popup-maker/assets/images/mark.svg"
 				adminUrl={ adminUrl }
 			/>
 			<AppContent>
