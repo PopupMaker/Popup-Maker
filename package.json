@@ -92,7 +92,8 @@
 		"prettier": "npm:wp-prettier@3.0.3",
 		"react-docgen-typescript": "^2.2.2",
 		"rtlcss-webpack-plugin": "^4.0.7",
-		"storybook": "^8.4.7"
+		"storybook": "^8.4.7",
+		"webpack-bundle-analyzer": "^4.10.2"
 	},
 	"scripts": {
 		"build": "wp-scripts build --config webpack.config.js --config webpack.old.config.js",
@@ -124,6 +125,12 @@
 		"start": "wp-scripts start --config webpack.config.js --config webpack.old.config.js",
 		"start:hot": "wp-scripts start --hot --config webpack.config.js",
 		"release": "node bin/build-release.js",
+		"cache:stats": "node bin/webpack-cache-manager.js stats",
+		"cache:clean": "node bin/webpack-cache-manager.js clean",
+		"cache:validate": "node bin/webpack-cache-manager.js validate",
+		"bundle:analyze": "node bin/bundle-analyzer.js analyze",
+		"bundle:report": "ANALYZE=true npm run build",
+		"build:optimized": "NODE_ENV=production npm run build && npm run bundle:analyze",
 		"test:e2e": "wp-scripts test-playwright --config tests/e2e/playwright.config.ts",
 		"test:e2e:debug": "wp-scripts test-playwright --config tests/e2e/playwright.config.ts --ui",
 		"test:e2e:watch": "wp-scripts test-playwright --config tests/e2e/playwright.config.ts --watch",
@@ -139,5 +146,10 @@
 	},
 	"workspaces": [
 		"./packages/*"
+	],
+	"sideEffects": [
+		"*.scss",
+		"*.css",
+		"assets/js/src/**/*.js"
 	]
 }

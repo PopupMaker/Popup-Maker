@@ -34,6 +34,10 @@ dist
 .nx
 npm-debug.log
 
+# Webpack cache
+.webpack-cache
+.webpack-cache-legacy
+
 # Coverage
 artifacts
 coverage

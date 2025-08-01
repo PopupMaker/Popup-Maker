@@ -8,6 +8,7 @@ const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
+const isProduction = NODE_ENV === 'production';
 
 const packages = {
 	'admin-bar': 'packages/admin-bar',
@@ -91,7 +92,7 @@ const config = {
 		),
 		new MiniCssExtractPlugin( {
 			filename: ( { chunk } ) => {
-				if ( chunk.name.includes( 'style' ) ) {
+				if ( chunk.name && chunk.name.includes( 'style' ) ) {
 					return `${ chunk.runtime }-style.css`;
 				}
 
@@ -100,7 +101,7 @@ const config = {
 		} ),
 		new RtlCssPlugin( {
 			filename: ( { chunk } ) => {
-				if ( chunk.name.includes( 'style-' ) ) {
+				if ( chunk.name && chunk.name.includes( 'style-' ) ) {
 					return `${ chunk.runtime }-style-rtl.css`;
 				}
 				return `${ chunk.runtime }-rtl.css`;
@@ -110,7 +111,7 @@ const config = {
 			modulename( outputPath, data ) {
 				const entryName = data.chunk.name;
 				if ( entryName ) {
-					return entryName.replace( /-([a-z])/g, ( match, letter ) =>
+					return entryName.replace( /-([a-z])/g, ( _, letter ) =>
 						letter.toUpperCase()
 					);
 				}
@@ -138,10 +139,43 @@ const config = {
 				},
 			],
 		} ),
+		// Bundle analyzer - only in analyze mode
+		...( process.env.ANALYZE
+			? [
+					new ( require( 'webpack-bundle-analyzer' ).BundleAnalyzerPlugin )(
+						{
+							analyzerMode: 'server',
+							analyzerPort: 8888,
+							openAnalyzer: false,
+						}
+					),
+			  ]
+			: [] ),
 	],
+	cache: {
+		type: 'filesystem',
+		cacheDirectory: path.resolve( process.cwd(), '.webpack-cache' ),
+		buildDependencies: {
+			// Invalidate cache when webpack config changes
+			config: [ __filename ],
+			// Invalidate cache when package.json changes (dependencies)
+			packages: [ path.resolve( process.cwd(), 'package.json' ) ],
+		},
+		// Cache for 7 days in production, 1 day in development
+		maxAge: isProduction ? 1000 * 60 * 60 * 24 * 7 : 1000 * 60 * 60 * 24,
+		compression: 'gzip',
+		name: `popup-maker-packages-${ NODE_ENV }`,
+		version: require( path.resolve( process.cwd(), 'package.json' ) )
+			.version,
+	},
 	optimization: {
 		...defaultConfig.optimization,
 		minimize: NODE_ENV !== 'development',
+		// Tree shaking optimizations
+		usedExports: true,
+		sideEffects: false, // Enable aggressive tree shaking
+		// Module concatenation (scope hoisting)
+		concatenateModules: isProduction,
 	},
 	devServer: {
 		...( defaultConfig.devServer || {} ),

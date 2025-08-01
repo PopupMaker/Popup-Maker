@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
+const isProduction = NODE_ENV === 'production';
 
 const srcPath = path.join( process.cwd(), 'assets/js/src' );
 const distPath = path.join( process.cwd(), 'dist/assets' );
@@ -89,6 +90,21 @@ const config = {
 		// ],
 	},
 
+	cache: {
+		type: 'filesystem',
+		cacheDirectory: path.resolve( process.cwd(), '.webpack-cache-legacy' ),
+		buildDependencies: {
+			// Invalidate cache when webpack config changes
+			config: [ __filename ],
+			// Invalidate cache when package.json changes (dependencies)
+			packages: [ path.resolve( process.cwd(), 'package.json' ) ],
+		},
+		// Cache for 7 days in production, 1 day in development
+		maxAge: isProduction ? 1000 * 60 * 60 * 24 * 7 : 1000 * 60 * 60 * 24,
+		compression: 'gzip',
+		name: `popup-maker-legacy-${ NODE_ENV }`,
+		version: require( path.resolve( process.cwd(), 'package.json' ) ).version,
+	},
 	optimization: {
 		...defaultConfig.optimization,
 		minimize: NODE_ENV !== 'development',
