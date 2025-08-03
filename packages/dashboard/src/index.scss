@@ -1,15 +1,32 @@
 // Popup Maker Dashboard Widget Styles
 
+// Main widget container
+.pum-dashboard-widget {
+  // Reset any custom styling to match WP defaults
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  
+  a {
+    color: #2271b1;
+    text-decoration: underline;
+    
+    &:hover,
+    &:focus {
+      color: #135e96;
+      text-decoration: none;
+    }
+  }
+}
+
 .pum-widget-badge {
-  background: #f3f4f6;
-  color: #6b7280;
+  background: #f0f0f1; // WP admin gray
+  color: #646970; // WP admin text muted
   font-size: 12px;
   font-weight: 500;
   padding: 4px 12px;
-  border-radius: 12px;
+  border-radius: 3px; // WP standard radius
 
   &.pum-badge-pro {
-    background: #7c3aed;
+    background: #2271b1; // WP admin blue
     color: white;
   }
 }
@@ -27,10 +44,10 @@
 // Upgrade box
 .pum-upgrade-box {
   margin: 20px;
-  padding: 20px;
-  background: #f3f0ff;
-  border-radius: 8px;
-  border: 1px solid #e9d5ff;
+  padding: 15px;
+  background: #f6f7f7; // WP admin light background
+  border-radius: 3px;
+  border-left: 4px solid #2271b1; // WP admin blue accent
 
   .pum-upgrade-header {
     display: flex;
@@ -44,33 +61,39 @@
   }
 
   .pum-upgrade-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
-    color: #7c3aed;
+    color: #1d2327; // WP admin text primary
   }
 
   .pum-upgrade-text {
     margin: 0 0 16px 0;
-    color: #6b22c3;
-    font-size: 14px;
+    color: #50575e; // WP admin text secondary
+    font-size: 13px;
     line-height: 1.5;
   }
 
   .pum-upgrade-button {
-    display: block;
-    padding: 12px 24px;
-    background: #7c3aed;
+    display: inline-block;
+    padding: 6px 14px;
+    background: #2271b1; // WP admin blue
     color: white;
     text-align: center;
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 6px;
-    transition: background 0.2s;
+    font-size: 13px;
+    font-weight: normal;
+    border-radius: 3px;
+    border: 1px solid #2271b1;
+    cursor: pointer;
+    transition: background 0.05s ease-in-out;
 
-    &:hover {
-      background: #6d28d9;
+    &:hover,
+    &:focus {
+      background: #135e96; // WP admin blue hover
+      border-color: #135e96;
       color: white;
+      outline: 2px solid transparent;
+      outline-offset: 0;
     }
   }
 }
@@ -105,22 +128,23 @@
 
   .pum-stat-value {
     font-size: 32px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1;
     margin-bottom: 4px;
+    color: #1d2327; // WP admin text primary
 
     &.pum-stat-views {
-      color: #3b82f6;
+      color: #1d2327; // Standard text color for views
     }
 
     &.pum-stat-conversions {
-      color: #10b981;
+      color: #00a32a; // WP admin success green for conversions
     }
   }
 
   .pum-stat-label {
-    color: #6b7280;
-    font-size: 14px;
+    color: #646970; // WP admin text muted
+    font-size: 13px;
   }
 }
 
@@ -128,49 +152,49 @@
 .pum-conversion-rate {
   text-align: center;
   padding: 20px;
-  background: #f9fafb;
+  background: #f6f7f7; // WP admin light background
 
   .pum-rate-value {
     font-size: 36px;
-    font-weight: 700;
-    color: #1f2937;
+    font-weight: 600;
+    color: #00a32a; // WP admin success green for conversion rate
     margin-bottom: 4px;
   }
 
   .pum-rate-label {
-    color: #6b7280;
-    font-size: 14px;
+    color: #646970; // WP admin text muted
+    font-size: 13px;
   }
 }
 
 // Top performer section
 .pum-top-performer {
   padding: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #c3c4c7; // WP admin border
 
   .pum-performer-label {
-    color: #6b7280;
-    font-size: 14px;
+    color: #646970; // WP admin text muted
+    font-size: 13px;
     margin-bottom: 4px;
   }
 
   .pum-performer-name {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
-    color: #1f2937;
+    color: #1d2327; // WP admin text primary
   }
 }
 
 // Top performers list
 .pum-top-performers {
   padding: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #c3c4c7; // WP admin border
 
   h4 {
     margin: 0 0 12px 0;
     font-size: 14px;
     font-weight: 600;
-    color: #374151;
+    color: #1d2327; // WP admin text primary
   }
 
   .pum-performer-item {
@@ -183,16 +207,16 @@
 
   .pum-performer-name {
     display: block;
-    font-size: 14px;
-    color: #1f2937;
+    font-size: 13px;
+    color: #1d2327; // WP admin text primary
     margin-bottom: 4px;
   }
 
   .pum-performer-bar {
     position: relative;
-    background: #e5e7eb;
+    background: #dcdcde; // WP admin light gray
     height: 20px;
-    border-radius: 10px;
+    border-radius: 3px;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -205,8 +229,8 @@
     left: 0;
     top: 0;
     height: 100%;
-    background: #374151;
-    border-radius: 10px;
+    background: #2271b1; // WP admin blue
+    border-radius: 3px;
     transition: width 0.3s ease;
   }
 
@@ -215,7 +239,7 @@
     z-index: 1;
     font-size: 12px;
     font-weight: 600;
-    color: #1f2937;
+    color: #1d2327; // WP admin text primary
   }
 }
 
