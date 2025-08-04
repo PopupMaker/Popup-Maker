@@ -105,6 +105,16 @@ jobs:
           tools: composer:v2
           coverage: none
       
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -166,6 +176,16 @@ jobs:
           tools: composer:v2
           coverage: none
       
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -206,7 +226,7 @@ jobs:
         run: |
           echo "📦 Installing production dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-          npm ci --production=false  # Need dev deps for build
+          npm ci --include=dev  # Need dev deps for build
       
       - name: Build production assets
         run: |
