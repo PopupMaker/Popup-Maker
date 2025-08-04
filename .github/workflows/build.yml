@@ -407,69 +407,86 @@ jobs:
           status: custom
           custom_payload: |
             {
-              "text": "🔨 Test Build Complete",
+              "text": "✅ Build Complete: ${{ fromJson(needs.validate.outputs.plugin_info).name }} ${{ needs.validate.outputs.build_version }}",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "🔨 Test Build Complete"
+                    "text": "✅ ${{ fromJson(needs.validate.outputs.plugin_info).name }} Build Complete"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Version:* `${{ needs.validate.outputs.build_version }}`\\n*Source:* `${{ github.event.inputs.ref || 'develop' }}`\\n*Size:* ${{ needs.build.outputs.file_size || 'Unknown' }}\\n*Quality:* ${{ needs.quality-checks.result == 'success' && '✅ All checks passed' || needs.quality-checks.result == 'skipped' && '⏭️ Checks skipped' || '⚠️ Issues found (build continued)' }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*📥 Download & Install*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "1. <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open workflow run>\\n2. Scroll to *Artifacts* section\\n3. Click `${{ needs.build.outputs.artifact_name }}`\\n4. Install ZIP in WordPress: *Plugins → Add New → Upload*"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🔗 Links*"
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View Build"
+                    },
+                    "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                   }
                 },
                 {
                   "type": "section",
                   "fields": [
                     {
-                      "type": "mrkdwn",
-                      "text": "*Plugin:* ${{ fromJson(needs.validate.outputs.plugin_info).name }}"
+                      "type": "mrkdwn", 
+                      "text": "<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|📋 Build Details>"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Version:* ${{ needs.validate.outputs.build_version }}"
+                      "text": "<https://github.com/${{ github.repository }}/blob/${{ github.event.inputs.ref || 'develop' }}/CHANGELOG.md|📖 Full Changelog>"
+                    },
+                    {
+                      "type": "mrkdwn", 
+                      "text": "<https://github.com/${{ github.repository }}/commit/${{ needs.build.outputs.commit_hash }}|🔗 Source Commit>"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch:* ${{ github.event.inputs.ref || 'develop' }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Requested by:* ${{ github.actor }}"
+                      "text": "<https://github.com/${{ github.repository }}/tree/${{ github.event.inputs.ref || 'develop' }}|🌿 Source Branch>"
                     }
                   ]
                 },
                 {
-                  "type": "section",
-                  "fields": [
+                  "type": "context",
+                  "elements": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Tests:* ${{ needs.quality-checks.result == 'success' && '✅ Passed' || needs.quality-checks.result == 'skipped' && '⏭️ Skipped' || '⚠️ Issues' }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Package Size:* ${{ needs.build.outputs.file_size || 'Unknown' }}"
+                      "text": "⚠️ Test build • Available for 30 days • Requested by ${{ github.actor }}"
                     }
                   ]
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "📦 *Package:* `${{ needs.build.outputs.package_name || 'Unknown' }}`\\n🎯 *Artifact:* `${{ needs.build.outputs.artifact_name || 'Unknown' }}`"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "⬇️ *Download:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Go to workflow run> → **Artifacts** section → click `${{ needs.build.outputs.artifact_name }}` → install ZIP in WordPress (Available for 30 days)"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "ℹ️ *Note:* This is a test build from `${{ github.event.inputs.ref || 'develop' }}` branch. Not an official release."
-                  }
                 }
               ]
             }
@@ -483,13 +500,38 @@ jobs:
           status: custom
           custom_payload: |
             {
-              "text": "❌ Test Build Failed",
+              "text": "❌ Build Failed: ${{ fromJson(needs.validate.outputs.plugin_info).name }}",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "❌ Test Build Failed"
+                    "text": "❌ ${{ fromJson(needs.validate.outputs.plugin_info).name }} Build Failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Source:* `${{ github.event.inputs.ref || 'develop' }}`\\n*Failed at:* ${{ needs.validate.result != 'success' && 'Validation stage' || needs.quality-checks.result == 'failure' && 'Quality checks' || 'Build process' }}\\n*Requested by:* ${{ github.actor }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🔍 Troubleshooting*"
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View Logs"
+                    },
+                    "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                   }
                 },
                 {
@@ -497,28 +539,22 @@ jobs:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Plugin:* ${{ fromJson(needs.validate.outputs.plugin_info).name }}"
+                      "text": "<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|📋 Build Logs>"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch:* ${{ github.event.inputs.ref || 'develop' }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Requested by:* ${{ github.actor }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Failed at:* ${{ needs.validate.result != 'success' && 'Validation' || needs.quality-checks.result == 'failure' && 'Quality Checks' || 'Build Process' }}"
+                      "text": "<https://github.com/${{ github.repository }}/tree/${{ github.event.inputs.ref || 'develop' }}|🌿 Source Branch>"
                     }
                   ]
                 },
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "🔗 <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Full Logs>"
-                  }
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "💡 Check the logs above for detailed error information"
+                    }
+                  ]
                 }
               ]
             }
