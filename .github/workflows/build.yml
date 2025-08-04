@@ -380,7 +380,14 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "⬇️ *Download:* Go to <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow run> → scroll to *Artifacts* section → click artifact name (Available for 30 days)"
+                    "text": "⬇️ *Download:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Go to workflow run> → scroll to bottom **Artifacts** section → click artifact name (Available for 30 days)"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "ℹ️ *Note:* This is a test build from `${{ github.event.inputs.ref || 'develop' }}` branch. Not an official release."
                   }
                 }
               ]
@@ -497,14 +504,22 @@ jobs:
             echo "3. Extract the downloaded ZIP to get the plugin file" >> $GITHUB_STEP_SUMMARY
             echo "4. Install the plugin ZIP file in WordPress" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Option 2: Via Artifacts Page" >> $GITHUB_STEP_SUMMARY
-            echo "Visit the [workflow artifacts page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) and look for the artifact named \`${{ needs.build.outputs.artifact_name }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "### Option 2: Via Workflow Page" >> $GITHUB_STEP_SUMMARY
+            echo "Visit the [workflow run page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) and scroll to the **Artifacts** section at the bottom" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "⏰ **Retention:** Package will be available for **30 days**" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ No test package was created due to build failure." >> $GITHUB_STEP_SUMMARY
           fi
           
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📝 Build Information" >> $GITHUB_STEP_SUMMARY
+          echo "**Source:** ${{ github.event.inputs.ref || 'develop' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** [\`$(git rev-parse --short HEAD)\`](https://github.com/${{ github.repository }}/commit/$(git rev-parse HEAD))" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Recent Changes:**" >> $GITHUB_STEP_SUMMARY
+          git log --oneline -5 --pretty=format:"- %s (\`%h\`)" >> $GITHUB_STEP_SUMMARY || echo "- Unable to retrieve recent changes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## ℹ️ Note" >> $GITHUB_STEP_SUMMARY
           echo "This is a **test build only**. No changes were committed to the repository." >> $GITHUB_STEP_SUMMARY
