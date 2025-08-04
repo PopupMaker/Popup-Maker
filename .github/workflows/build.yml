@@ -245,24 +245,53 @@ jobs:
           if [ -f "CHANGELOG.md" ]; then
             echo "📝 Extracting changelog content..."
             
-            # Extract content between "## Unreleased" and next "##" section
+            # Try Unreleased section first
             CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
               if (/^## Unreleased/) next
               if (/^## [^U]/) exit
               if (NF > 0 && !/^[[:space:]]*$/) print
-            }' CHANGELOG.md | head -30 | sed 's/^[[:space:]]*//')
+            }' CHANGELOG.md)
             
-            # Clean up any weird formatting issues
-            CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | sed '/^[[:space:]]*$/d' | head -25)
+            # If Unreleased is empty, try latest version section
+            if [ -z "$CHANGELOG_CONTENT" ]; then
+              echo "Unreleased section empty, trying latest version..."
+              CHANGELOG_CONTENT=$(awk '/^## v[0-9]|^## [0-9]/ {
+                if (found) exit
+                found = 1
+                next
+              }
+              found && /^## / { exit }
+              found && NF > 0 && !/^[[:space:]]*$/ { print }' CHANGELOG.md)
+            fi
             
-            # If no unreleased content or content seems malformed, get recent commits
+            # Filter to only Features, Improvements, Fixes sections
+            if [ -n "$CHANGELOG_CONTENT" ]; then
+              echo "📝 Filtering to user-facing changes only..."
+              CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | awk '
+                /^# Features?$|^## Features?$|^\* Feature:|^- Feature:/ { in_section=1; print; next }
+                /^# Improvements?$|^## Improvements?$|^\* Improvement:|^- Improvement:/ { in_section=1; print; next }
+                /^# Fixes?$|^## Fixes?$|^\* Fix:|^- Fix:/ { in_section=1; print; next }
+                /^# Security$|^## Security$|^\* Security:|^- Security:/ { in_section=1; print; next }
+                /^# Changes?$|^## Changes?$|^\* Change:|^- Change:/ { in_section=1; print; next }
+                /^# (Developers?|Internal|Dependencies?|Breaking|Deprecated)/ { in_section=0; next }
+                /^## (Developers?|Internal|Dependencies?|Breaking|Deprecated)/ { in_section=0; next }
+                in_section && /^[*-] / { print }
+                in_section && /^[[:space:]]*$/ { next }
+                /^[*-] (Feature|Improvement|Fix|Security|Change):/ { print }
+              ' | head -8)
+            fi
+            
+            # Clean fallback to recent commits if still empty or malformed
             if [ -z "$CHANGELOG_CONTENT" ] || echo "$CHANGELOG_CONTENT" | grep -q "xdg-open\|Synopsis\|Use 'man"; then
-              echo "No unreleased changes or malformed content found, using recent commits..."
-              CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
+              echo "Using recent commits as fallback..."
+              CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" --grep="^feat\|^fix\|^perf\|^security" --since="2 weeks ago" | head -4)
+              if [ -z "$CHANGELOG_CONTENT" ]; then
+                CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" | head -4)
+              fi
             fi
           else
             echo "No CHANGELOG.md found, using recent commits..."
-            CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
+            CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" | head -4)
           fi
           
           # Save changelog content (handle multiline)
@@ -407,55 +436,49 @@ jobs:
           status: custom
           custom_payload: |
             {
-              "text": "✅ Build Complete: ${{ fromJson(needs.validate.outputs.plugin_info).name }} ${{ needs.validate.outputs.build_version }}",
+              "text": "🚀 ${{ fromJson(needs.validate.outputs.plugin_info).name }} ${{ needs.validate.outputs.build_version }} (${{ github.event.inputs.ref || 'develop' }}) Ready",
               "blocks": [
                 {
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "✅ ${{ fromJson(needs.validate.outputs.plugin_info).name }} Build Complete"
+                    "text": "🚀 ${{ fromJson(needs.validate.outputs.plugin_info).name }} ${{ needs.validate.outputs.build_version }} (${{ github.event.inputs.ref || 'develop' }}) Ready"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Version:* `${{ needs.validate.outputs.build_version }}`\\n*Source:* `${{ github.event.inputs.ref || 'develop' }}`\\n*Size:* ${{ needs.build.outputs.file_size || 'Unknown' }}\\n*Quality:* ${{ needs.quality-checks.result == 'success' && '✅ All checks passed' || needs.quality-checks.result == 'skipped' && '⏭️ Checks skipped' || '⚠️ Issues found (build continued)' }}"
-                  }
-                },
-                {
-                  "type": "divider"
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*📥 Download & Install*"
+                    "text": "*Version:* `${{ needs.validate.outputs.build_version }}`  •  *Source:* `${{ github.event.inputs.ref || 'develop' }}`  •  *Size:* ${{ needs.build.outputs.file_size || 'Unknown' }}\n*Quality:* ${{ needs.quality-checks.result == 'success' && '✅ All checks passed' || needs.quality-checks.result == 'skipped' && '⏭️ Checks skipped' || '⚠️ Issues found (build continued)' }}"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "1. <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open workflow run>\\n2. Scroll to *Artifacts* section\\n3. Click `${{ needs.build.outputs.artifact_name }}`\\n4. Install ZIP in WordPress: *Plugins → Add New → Upload*"
-                  }
-                },
-                {
-                  "type": "divider"
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*🔗 Links*"
+                    "text": "*📥 Download*"
                   },
                   "accessory": {
                     "type": "button",
                     "text": {
                       "type": "plain_text",
-                      "text": "View Build"
+                      "text": "Download ZIP"
                     },
-                    "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    "url": "${{ needs.build.outputs.artifact_url || format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ needs.build.outputs.artifact_url && '• Click *Download ZIP* above (requires GitHub login)\n• Install directly in WordPress: *Plugins → Add New → Upload*' || '• Click *Download ZIP* → scroll to *Artifacts* section → click artifact name\n• Install ZIP in WordPress: *Plugins → Add New → Upload*' }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*📝 Recent Changes*\n${{ needs.build.outputs.changelog_content || '• Latest development changes\n• See full changelog for details' }}"
                   }
                 },
                 {
