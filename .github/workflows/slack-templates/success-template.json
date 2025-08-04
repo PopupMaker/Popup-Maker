@@ -1,0 +1,68 @@
+{
+  "text": "🎉 {{PLUGIN_NAME}} {{RELEASE_TAG}} Released!",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "🎉 {{PLUGIN_NAME}} {{RELEASE_TAG}} Released!"
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Version:* {{VERSION}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Type:* {{RELEASE_TYPE}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Package Size:* {{PACKAGE_SIZE}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*WordPress.org:* {{WORDPRESS_STATUS}}"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*📝 What's New:*\n{{CHANGELOG_CONTENT}}"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "👥 **Team:** Please update your local environments and test the new version"
+      }
+    },
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "📦 GitHub Release"
+          },
+          "url": "{{GITHUB_RELEASE_URL}}"
+        },
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "🌐 WordPress.org"
+          },
+          "url": "{{WORDPRESS_URL}}"
+        }
+      ]
+    }
+  ]
+}

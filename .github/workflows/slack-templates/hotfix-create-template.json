@@ -1,0 +1,53 @@
+{
+  "text": "🛠️ Hotfix Branch Created: {{PLUGIN_NAME}} v{{VERSION}}",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "🛠️ Hotfix Branch Ready"
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Plugin:* {{PLUGIN_NAME}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Version:* {{VERSION}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Branch:* {{HOTFIX_BRANCH}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Created by:* {{ACTOR}}"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "🔧 *Next Steps:*\n1. Apply your hotfix changes to the branch\n2. Test thoroughly\n3. Run the 'complete' action to finish the hotfix process"
+      }
+    },
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "🌿 View Branch"
+          },
+          "url": "{{BRANCH_URL}}"
+        }
+      ]
+    }
+  ]
+}

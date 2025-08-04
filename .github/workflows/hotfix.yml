@@ -1,0 +1,937 @@
+name: Hotfix WordPress Plugin
+
+on:
+  # Manual trigger - protected environment
+  workflow_dispatch:
+    inputs:
+      hotfix_action:
+        description: 'Hotfix action'
+        required: true
+        type: choice
+        options:
+          - create
+          - complete
+        default: 'create'
+      
+      version:
+        description: 'Hotfix version (e.g., 1.19.1) - required for create'
+        required: false
+        type: string
+      
+      hotfix_branch:
+        description: 'Existing hotfix branch name (e.g., hotfix/1.19.1) - required for complete'
+        required: false
+        type: string
+      
+      source_branch:
+        description: 'Source branch for hotfix (usually master)'
+        required: false
+        type: string
+        default: 'master'
+      
+      changelog_message:
+        description: 'Hotfix changelog notes'
+        required: false
+        type: string
+        default: ''
+      
+      deploy_wordpress:
+        description: 'Deploy to WordPress.org SVN (complete action only)'
+        required: false
+        type: boolean
+        default: false
+      
+      dry_run_svn:
+        description: 'Dry-run SVN deployment (test without committing)'
+        required: false
+        type: boolean
+        default: false
+      
+      skip_quality_checks:
+        description: 'Skip quality checks (emergency use only)'
+        required: false
+        type: boolean
+        default: false
+
+  # API trigger support
+  repository_dispatch:
+    types: [create-hotfix, complete-hotfix]
+
+jobs:
+  # ============================================================================
+  # VALIDATION AND PREPARATION
+  # ============================================================================
+  validate:
+    name: Validate Hotfix
+    runs-on: ubuntu-latest
+    environment: production  # Requires approval
+    outputs:
+      plugin_slug: ${{ steps.info.outputs.plugin_slug }}
+      plugin_name: ${{ steps.info.outputs.plugin_name }}
+      hotfix_version: ${{ steps.version.outputs.version }}
+      hotfix_branch: ${{ steps.branch.outputs.branch }}
+      action_type: ${{ steps.action.outputs.type }}
+      source_branch: ${{ steps.branch.outputs.source }}
+    
+    steps:
+      - name: Validate action inputs
+        id: action
+        run: |
+          ACTION="${{ github.event.inputs.hotfix_action || github.event.client_payload.action || 'create' }}"
+          VERSION="${{ github.event.inputs.version || github.event.client_payload.version }}"
+          HOTFIX_BRANCH="${{ github.event.inputs.hotfix_branch || github.event.client_payload.hotfix_branch }}"
+          
+          echo "type=${ACTION}" >> $GITHUB_OUTPUT
+          
+          if [ "$ACTION" == "create" ]; then
+            if [ -z "$VERSION" ]; then
+              echo "❌ Version is required for create action"
+              exit 1
+            fi
+            echo "📝 Action: Create hotfix for version $VERSION"
+          elif [ "$ACTION" == "complete" ]; then
+            if [ -z "$HOTFIX_BRANCH" ]; then
+              echo "❌ Hotfix branch is required for complete action"
+              exit 1
+            fi
+            echo "📝 Action: Complete hotfix from branch $HOTFIX_BRANCH"
+          else
+            echo "❌ Invalid action: $ACTION"
+            exit 1
+          fi
+      
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.source_branch || github.event.client_payload.source_branch || 'master' }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Hotfix"
+      
+      - name: Extract plugin information
+        id: info
+        run: |
+          PLUGIN_SLUG=$(node -p "require('./package.json').name || 'popup-maker'")
+          PLUGIN_NAME=$(node -p "require('./package.json').displayName || 'Popup Maker'")
+          
+          echo "plugin_slug=${PLUGIN_SLUG}" >> $GITHUB_OUTPUT
+          echo "plugin_name=${PLUGIN_NAME}" >> $GITHUB_OUTPUT
+          
+          echo "📦 Plugin: ${PLUGIN_NAME} (${PLUGIN_SLUG})"
+      
+      - name: Validate version and branches
+        id: version
+        run: |
+          ACTION="${{ steps.action.outputs.type }}"
+          SOURCE_BRANCH="${{ github.event.inputs.source_branch || 'master' }}"
+          
+          if [ "$ACTION" == "create" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            
+            # Validate semantic versioning
+            if ! echo "$VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9\.]+)?(\+[a-zA-Z0-9\.]+)?$'; then
+              echo "❌ Invalid version format: $VERSION"
+              exit 1
+            fi
+            
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            
+            # Check if hotfix branch already exists
+            if git show-ref --verify --quiet "refs/heads/hotfix/${VERSION}"; then
+              echo "❌ Hotfix branch hotfix/${VERSION} already exists"
+              exit 1
+            fi
+            
+          elif [ "$ACTION" == "complete" ]; then
+            HOTFIX_BRANCH="${{ github.event.inputs.hotfix_branch }}"
+            
+            # Extract version from branch name
+            VERSION=$(echo "$HOTFIX_BRANCH" | sed 's/^hotfix\///')
+            
+            if [ -z "$VERSION" ]; then
+              echo "❌ Could not extract version from branch name: $HOTFIX_BRANCH"
+              exit 1
+            fi
+            
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            
+            # Check if hotfix branch exists
+            if ! git show-ref --verify --quiet "refs/heads/${HOTFIX_BRANCH}"; then
+              echo "❌ Hotfix branch ${HOTFIX_BRANCH} does not exist"
+              exit 1
+            fi
+          fi
+          
+          # Verify source branch exists
+          if ! git show-ref --verify --quiet "refs/heads/${SOURCE_BRANCH}"; then
+            echo "❌ Source branch ${SOURCE_BRANCH} not found"
+            exit 1
+          fi
+          
+          # Update local branches
+          git fetch origin "${SOURCE_BRANCH}:${SOURCE_BRANCH}"
+          git fetch origin develop:develop
+          
+          echo "✅ Version and branches validated: $VERSION"
+      
+      - name: Set branch information
+        id: branch
+        run: |
+          ACTION="${{ steps.action.outputs.type }}"
+          SOURCE_BRANCH="${{ github.event.inputs.source_branch || 'master' }}"
+          
+          if [ "$ACTION" == "create" ]; then
+            VERSION="${{ steps.version.outputs.version }}"
+            HOTFIX_BRANCH="hotfix/${VERSION}"
+          else
+            HOTFIX_BRANCH="${{ github.event.inputs.hotfix_branch }}"
+          fi
+          
+          echo "branch=${HOTFIX_BRANCH}" >> $GITHUB_OUTPUT
+          echo "source=${SOURCE_BRANCH}" >> $GITHUB_OUTPUT
+
+  # ============================================================================
+  # QUALITY CHECKS (for create action)
+  # ============================================================================
+  quality-checks:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    needs: validate
+    if: |
+      needs.validate.outputs.action_type == 'create' &&
+      github.event.inputs.skip_quality_checks != 'true'
+    
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate.outputs.source_branch }}
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer:v2
+          coverage: none
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --no-progress
+          npm ci
+      
+      - name: Run quality checks
+        run: |
+          echo "🔍 Running PHP linting..."
+          composer run lint || echo "⚠️ PHP linting issues found"
+          
+          echo "🔍 Running JavaScript linting..."
+          npm run lint:js || echo "⚠️ JavaScript linting issues found"
+          
+          echo "🧪 Running tests..."
+          if grep -q '"test"' composer.json; then
+            composer run tests || echo "⚠️ PHP tests failed"
+          fi
+          
+          if grep -q '"test:unit"' package.json; then
+            npm run test:unit || echo "⚠️ JavaScript tests failed"
+          fi
+          
+          echo "✅ Quality checks completed (warnings may exist for hotfixes)"
+
+  # ============================================================================
+  # CREATE HOTFIX BRANCH
+  # ============================================================================
+  create-hotfix:
+    name: Create Hotfix Branch
+    runs-on: ubuntu-latest
+    needs: [validate, quality-checks]
+    if: |
+      always() && 
+      needs.validate.result == 'success' && 
+      needs.validate.outputs.action_type == 'create' &&
+      (needs.quality-checks.result == 'success' || needs.quality-checks.result == 'skipped')
+    outputs:
+      changelog_content: ${{ steps.changelog.outputs.content }}
+    
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate.outputs.source_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Hotfix"
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Create hotfix branch
+        run: |
+          HOTFIX_BRANCH="${{ needs.validate.outputs.hotfix_branch }}"
+          SOURCE_BRANCH="${{ needs.validate.outputs.source_branch }}"
+          
+          echo "🌿 Creating hotfix branch: ${HOTFIX_BRANCH} from ${SOURCE_BRANCH}"
+          git checkout -b "${HOTFIX_BRANCH}"
+      
+      - name: Update version and changelog
+        id: changelog
+        run: |
+          VERSION="${{ needs.validate.outputs.hotfix_version }}"
+          CHANGELOG_MESSAGE="${{ github.event.inputs.changelog_message }}"
+          
+          echo "📝 Updating version and changelog for hotfix ${VERSION}..."
+          
+          # Update version in plugin files
+          sed -i "s/Version:.*$/Version:           ${VERSION}/" popup-maker.php
+          sed -i "s/define( 'POPMAKE_VERSION'.*$/define( 'POPMAKE_VERSION', '${VERSION}' );/" popup-maker.php
+          
+          # Update package.json
+          npm version ${VERSION} --no-git-tag-version --allow-same-version
+          
+          # Update readme.txt
+          if [ -f "readme.txt" ]; then
+            sed -i "s/Stable tag:.*$/Stable tag: ${VERSION}/" readme.txt
+          fi
+          
+          # Update changelog
+          DATE=$(date +%Y-%m-%d)
+          if [ -f "CHANGELOG.md" ]; then
+            # Create hotfix changelog entry
+            if [ -n "$CHANGELOG_MESSAGE" ]; then
+              CHANGELOG_ENTRY="$CHANGELOG_MESSAGE"
+            else
+              CHANGELOG_ENTRY="Hotfix release ${VERSION}"
+            fi
+            
+            # Add to changelog
+            {
+              head -n 3 CHANGELOG.md
+              echo ""
+              echo "## v${VERSION} - ${DATE}"
+              echo ""
+              echo "**Hotfix**"
+              echo ""
+              echo "$CHANGELOG_ENTRY"
+              echo ""
+              tail -n +4 CHANGELOG.md
+            } > CHANGELOG.tmp
+            mv CHANGELOG.tmp CHANGELOG.md
+            
+            # Save for output
+            echo "content<<EOF" >> $GITHUB_OUTPUT
+            echo "**Hotfix**" >> $GITHUB_OUTPUT
+            echo "" >> $GITHUB_OUTPUT
+            echo "$CHANGELOG_ENTRY" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "content=Hotfix release ${VERSION}" >> $GITHUB_OUTPUT
+          fi
+          
+          # Update readme.txt changelog
+          if [ -f "readme.txt" ]; then
+            ENTRY_TEXT="Hotfix release - $CHANGELOG_MESSAGE"
+            [ -z "$CHANGELOG_MESSAGE" ] && ENTRY_TEXT="Hotfix release"
+            
+            awk -v version="${VERSION}" -v date="${DATE}" -v entry="${ENTRY_TEXT}" '
+              /^== Changelog ==/ {
+                print
+                getline
+                while ($0 ~ /^[^=]/ && NF > 0 && $0 !~ /^= [0-9]/) {
+                  print
+                  getline
+                }
+                print "= " version " - " date " ="
+                print entry
+                print ""
+              }
+              { print }
+            ' readme.txt > readme.tmp
+            mv readme.tmp readme.txt
+          fi
+      
+      - name: Commit hotfix preparation
+        run: |
+          VERSION="${{ needs.validate.outputs.hotfix_version }}"
+          HOTFIX_BRANCH="${{ needs.validate.outputs.hotfix_branch }}"
+          
+          git add -A
+          git commit -m "Prepare hotfix ${VERSION}
+
+- Update version numbers for hotfix ${VERSION}
+- Update changelog with hotfix notes
+- Update readme.txt stable tag
+
+This commit prepares the hotfix branch for manual fixes.
+After applying your fixes, use the 'complete' action to finish the hotfix process."
+          
+          echo "✅ Hotfix preparation committed"
+      
+      - name: Push hotfix branch
+        run: |
+          HOTFIX_BRANCH="${{ needs.validate.outputs.hotfix_branch }}"
+          
+          git push origin "${HOTFIX_BRANCH}"
+          echo "✅ Hotfix branch pushed: ${HOTFIX_BRANCH}"
+
+  # ============================================================================
+  # COMPLETE HOTFIX PROCESS
+  # ============================================================================
+  complete-hotfix:
+    name: Complete Hotfix
+    runs-on: ubuntu-latest
+    needs: validate
+    if: needs.validate.outputs.action_type == 'complete'
+    outputs:
+      changelog_content: ${{ steps.extract.outputs.content }}
+      hotfix_tag: ${{ steps.merge.outputs.tag }}
+    
+    steps:
+      - name: Checkout hotfix branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate.outputs.hotfix_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Hotfix"
+      
+      - name: Extract changelog content
+        id: extract
+        run: |
+          VERSION="${{ needs.validate.outputs.hotfix_version }}"
+          
+          if [ -f "CHANGELOG.md" ]; then
+            # Extract the hotfix changelog content
+            CHANGELOG_CONTENT=$(awk "/^## v${VERSION}/,/^## v[0-9]+\.[0-9]+\.[0-9]+/" CHANGELOG.md | head -n -1 | tail -n +2)
+            
+            if [ -z "$CHANGELOG_CONTENT" ]; then
+              CHANGELOG_CONTENT="Hotfix ${VERSION}"
+            fi
+            
+            echo "content<<EOF" >> $GITHUB_OUTPUT
+            echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "content=Hotfix ${VERSION}" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Merge hotfix and create tag
+        id: merge
+        run: |
+          VERSION="${{ needs.validate.outputs.hotfix_version }}"
+          HOTFIX_BRANCH="${{ needs.validate.outputs.hotfix_branch }}"
+          SOURCE_BRANCH="${{ needs.validate.outputs.source_branch }}"
+          
+          echo "🔀 Completing hotfix process..."
+          
+          # Update local branches
+          git fetch origin "${SOURCE_BRANCH}:${SOURCE_BRANCH}"
+          git fetch origin develop:develop
+          
+          # Merge hotfix to source branch (usually master)
+          echo "🔀 Merging ${HOTFIX_BRANCH} to ${SOURCE_BRANCH}..."
+          git checkout "${SOURCE_BRANCH}"
+          git merge --no-ff "${HOTFIX_BRANCH}" -m "Hotfix ${VERSION}
+
+Merge hotfix branch ${HOTFIX_BRANCH} into ${SOURCE_BRANCH}"
+          
+          # Tag the hotfix
+          echo "🏷️ Tagging hotfix: v${VERSION}"
+          git tag -a "v${VERSION}" -m "Hotfix ${VERSION}"
+          
+          # Merge to develop to keep it in sync
+          echo "🔄 Merging hotfix to develop..."
+          git checkout develop
+          git merge --no-ff "${SOURCE_BRANCH}" -m "Sync hotfix ${VERSION} from ${SOURCE_BRANCH}"
+          
+          # Push all changes
+          git push origin "${SOURCE_BRANCH}"
+          git push origin develop
+          git push origin "v${VERSION}"
+          
+          # Clean up hotfix branch
+          git branch -d "${HOTFIX_BRANCH}"
+          git push origin --delete "${HOTFIX_BRANCH}" || echo "Hotfix branch already deleted remotely"
+          
+          echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+          echo "✅ Hotfix process completed"
+
+  # ============================================================================
+  # BUILD HOTFIX PACKAGE (complete action only)
+  # ============================================================================
+  build:
+    name: Build Hotfix Package
+    runs-on: ubuntu-latest
+    needs: [validate, complete-hotfix]
+    if: needs.validate.outputs.action_type == 'complete'
+    outputs:
+      package_name: ${{ steps.package.outputs.package_name }}
+      file_size: ${{ steps.package.outputs.file_size }}
+    
+    steps:
+      - name: Checkout hotfix tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.complete-hotfix.outputs.hotfix_tag }}
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer:v2
+          coverage: none
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install production dependencies
+        run: |
+          echo "📦 Installing production dependencies..."
+          composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+          npm ci --production=false
+      
+      - name: Build production assets
+        run: |
+          echo "🏗️ Building production assets..."
+          npm run build:production
+          echo "✅ Production build complete"
+      
+      - name: Create hotfix package
+        id: package
+        run: |
+          VERSION="${{ needs.validate.outputs.hotfix_version }}"
+          PLUGIN_SLUG="${{ needs.validate.outputs.plugin_slug }}"
+          
+          echo "📦 Creating hotfix package..."
+          
+          if [ -f "bin/build-release.js" ]; then
+            node bin/build-release.js --zip-name "${PLUGIN_SLUG}_${VERSION}.zip"
+            PACKAGE_NAME="${PLUGIN_SLUG}_${VERSION}.zip"
+          else
+            echo "⚠️ Using fallback packaging..."
+            
+            rm -rf build
+            mkdir -p build/${PLUGIN_SLUG}
+            
+            rsync -av --exclude-from='.distignore' \
+              --exclude='build/' \
+              --exclude='node_modules/' \
+              --exclude='tests/' \
+              --exclude='.*' \
+              --exclude='composer.*' \
+              --exclude='package*' \
+              --exclude='webpack.config.js' \
+              ./ build/${PLUGIN_SLUG}/
+            
+            cd build
+            PACKAGE_NAME="${PLUGIN_SLUG}_${VERSION}.zip"
+            zip -r "../${PACKAGE_NAME}" ${PLUGIN_SLUG}/
+            cd ..
+          fi
+          
+          # Generate checksum and get file size
+          sha256sum "$PACKAGE_NAME" > "${PACKAGE_NAME}.sha256"
+          FILE_SIZE=$(ls -lh "$PACKAGE_NAME" | awk '{print $5}')
+          
+          echo "✅ Hotfix package created: $PACKAGE_NAME ($FILE_SIZE)"
+          echo "package_name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
+          echo "file_size=${FILE_SIZE}" >> $GITHUB_OUTPUT
+      
+      - name: Upload hotfix artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.validate.outputs.plugin_slug }}-${{ needs.validate.outputs.hotfix_version }}-hotfix
+          path: |
+            ${{ steps.package.outputs.package_name }}
+            ${{ steps.package.outputs.package_name }}.sha256
+          retention-days: 90
+
+  # ============================================================================
+  # CREATE GITHUB RELEASE (complete action only)
+  # ============================================================================
+  github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate, complete-hotfix, build]
+    if: needs.validate.outputs.action_type == 'complete'
+    
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.complete-hotfix.outputs.hotfix_tag }}
+      
+      - name: Download hotfix artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.validate.outputs.plugin_slug }}-${{ needs.validate.outputs.hotfix_version }}-hotfix
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.complete-hotfix.outputs.hotfix_tag }}
+          name: ${{ needs.validate.outputs.plugin_name }} ${{ needs.complete-hotfix.outputs.hotfix_tag }} (Hotfix)
+          body: |
+            # ${{ needs.validate.outputs.plugin_name }} ${{ needs.complete-hotfix.outputs.hotfix_tag }}
+            
+            **🚨 This is a hotfix release addressing critical issues.**
+            
+            ${{ needs.complete-hotfix.outputs.changelog_content }}
+            
+            ## 📦 Installation
+            
+            1. Download the plugin ZIP file below
+            2. Upload to WordPress via Plugins → Add New → Upload Plugin
+            3. Activate the plugin
+            
+            ---
+            
+            **Full Changelog**: https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md
+          files: |
+            ${{ needs.build.outputs.package_name }}
+            ${{ needs.build.outputs.package_name }}.sha256
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+  # ============================================================================
+  # DEPLOY TO WORDPRESS.ORG (complete action only)
+  # ============================================================================
+  wordpress-deploy:
+    name: Deploy to WordPress.org
+    runs-on: ubuntu-latest
+    needs: [validate, complete-hotfix, build, github-release]
+    if: |
+      needs.validate.outputs.action_type == 'complete' &&
+      (github.event.inputs.deploy_wordpress == 'true' || github.event.inputs.dry_run_svn == 'true')
+    
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.complete-hotfix.outputs.hotfix_tag }}
+      
+      - name: Deploy to WordPress.org using 10up action
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: false
+          dry-run: ${{ github.event.inputs.dry_run_svn == 'true' }}
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: ${{ needs.validate.outputs.plugin_slug }}
+          VERSION: ${{ needs.validate.outputs.hotfix_version }}
+
+  # ============================================================================
+  # SLACK NOTIFICATIONS
+  # ============================================================================
+  notify-create:
+    name: Notify Hotfix Created
+    runs-on: ubuntu-latest
+    needs: [validate, create-hotfix]
+    if: always() && needs.validate.outputs.action_type == 'create' && needs.create-hotfix.result == 'success'
+    
+    steps:
+      - name: Send creation notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "🛠️ Hotfix Branch Created: ${{ needs.validate.outputs.plugin_name }} v${{ needs.validate.outputs.hotfix_version }}",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🛠️ Hotfix Branch Ready"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Plugin:* ${{ needs.validate.outputs.plugin_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version:* ${{ needs.validate.outputs.hotfix_version }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:* ${{ needs.validate.outputs.hotfix_branch }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Created by:* ${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🔧 *Next Steps:*\n1. Apply your hotfix changes to the branch\n2. Test thoroughly\n3. Run the 'complete' action to finish the hotfix process"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "🌿 View Branch"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/tree/${{ needs.validate.outputs.hotfix_branch }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV }}
+
+  notify-complete:
+    name: Notify Hotfix Complete
+    runs-on: ubuntu-latest
+    needs: [validate, complete-hotfix, build, github-release, wordpress-deploy]
+    if: always() && needs.validate.outputs.action_type == 'complete' && needs.github-release.result == 'success'
+    
+    steps:
+      - name: Send completion notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "🚨 Hotfix Released: ${{ needs.validate.outputs.plugin_name }} ${{ needs.complete-hotfix.outputs.hotfix_tag }}",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 Hotfix Released"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Plugin:* ${{ needs.validate.outputs.plugin_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version:* ${{ needs.validate.outputs.hotfix_version }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Package Size:* ${{ needs.build.outputs.file_size }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*WordPress.org:* ${{ needs.wordpress-deploy.result == 'success' && '✅ Deployed' || needs.wordpress-deploy.result == 'skipped' && '⏭️ Skipped' || '❌ Failed' }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*🛠️ Hotfix Details:*\n${{ needs.complete-hotfix.outputs.changelog_content }}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "⚡ *Urgent:* This hotfix addresses critical issues. Please update immediately."
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "📦 GitHub Release"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/releases/tag/${{ needs.complete-hotfix.outputs.hotfix_tag }}"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "🌐 WordPress.org"
+                      },
+                      "url": "https://wordpress.org/plugins/${{ needs.validate.outputs.plugin_slug }}/"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_SUCCESS }}
+
+  notify-failure:
+    name: Notify Failure
+    runs-on: ubuntu-latest
+    needs: [validate, create-hotfix, complete-hotfix, build, github-release]
+    if: always() && (needs.validate.result == 'failure' || needs.create-hotfix.result == 'failure' || needs.complete-hotfix.result == 'failure' || needs.build.result == 'failure' || needs.github-release.result == 'failure')
+    
+    steps:
+      - name: Send failure notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "❌ Hotfix Failed: ${{ needs.validate.outputs.plugin_name || 'Plugin' }} ${{ needs.validate.outputs.hotfix_version || 'Unknown' }}",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "❌ Hotfix Process Failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Plugin:* ${{ needs.validate.outputs.plugin_name || 'Unknown' }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version:* ${{ needs.validate.outputs.hotfix_version || 'Unknown' }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Action:* ${{ needs.validate.outputs.action_type || 'Unknown' }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Triggered by:* ${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Failed at:* ${{ needs.validate.result == 'failure' && 'Validation' || needs.create-hotfix.result == 'failure' && 'Create Branch' || needs.complete-hotfix.result == 'failure' && 'Complete Process' || needs.build.result == 'failure' && 'Build Package' || needs.github-release.result == 'failure' && 'GitHub Release' || 'Unknown Stage' }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🔗 <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Full Logs>"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "⚠️ *Action Required:* Review logs and retry hotfix process"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_FAILURE }}
+
+  # ============================================================================
+  # SUMMARY
+  # ============================================================================
+  summary:
+    name: Hotfix Summary
+    runs-on: ubuntu-latest
+    needs: [validate, create-hotfix, complete-hotfix, build, github-release, wordpress-deploy]
+    if: always()
+    
+    steps:
+      - name: Generate summary
+        run: |
+          ACTION="${{ needs.validate.outputs.action_type }}"
+          VERSION="${{ needs.validate.outputs.hotfix_version }}"
+          PLUGIN_NAME="${{ needs.validate.outputs.plugin_name }}"
+          HOTFIX_BRANCH="${{ needs.validate.outputs.hotfix_branch }}"
+          
+          echo "# 🛠️ Hotfix Summary for ${PLUGIN_NAME} v${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Action info
+          echo "**Action:** ${ACTION}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${HOTFIX_BRANCH}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Status indicators
+          echo "## 📊 Process Status" >> $GITHUB_STEP_SUMMARY
+          
+          [ "${{ needs.validate.result }}" == "success" ] && echo "✅ **Validation**: Passed" >> $GITHUB_STEP_SUMMARY || echo "❌ **Validation**: Failed" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$ACTION" == "create" ]; then
+            [ "${{ needs.create-hotfix.result }}" == "success" ] && echo "✅ **Branch Creation**: Completed" >> $GITHUB_STEP_SUMMARY || echo "❌ **Branch Creation**: Failed" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "${{ needs.create-hotfix.result }}" == "success" ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "## 🔧 Next Steps" >> $GITHUB_STEP_SUMMARY
+              echo "1. Switch to the hotfix branch: \`git checkout ${HOTFIX_BRANCH}\`" >> $GITHUB_STEP_SUMMARY
+              echo "2. Apply your hotfix changes" >> $GITHUB_STEP_SUMMARY
+              echo "3. Test thoroughly" >> $GITHUB_STEP_SUMMARY
+              echo "4. Run the hotfix workflow with 'complete' action" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "[🌿 View Hotfix Branch](https://github.com/${{ github.repository }}/tree/${HOTFIX_BRANCH})" >> $GITHUB_STEP_SUMMARY
+            fi
+          elif [ "$ACTION" == "complete" ]; then
+            [ "${{ needs.complete-hotfix.result }}" == "success" ] && echo "✅ **Git Flow**: Completed" >> $GITHUB_STEP_SUMMARY || echo "❌ **Git Flow**: Failed" >> $GITHUB_STEP_SUMMARY
+            [ "${{ needs.build.result }}" == "success" ] && echo "✅ **Build**: Successful" >> $GITHUB_STEP_SUMMARY || echo "❌ **Build**: Failed" >> $GITHUB_STEP_SUMMARY
+            [ "${{ needs.github-release.result }}" == "success" ] && echo "✅ **GitHub Release**: Created" >> $GITHUB_STEP_SUMMARY || echo "❌ **GitHub Release**: Failed" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "${{ github.event.inputs.deploy_wordpress }}" == "true" ]; then
+              [ "${{ needs.wordpress-deploy.result }}" == "success" ] && echo "✅ **WordPress.org**: Deployed" >> $GITHUB_STEP_SUMMARY || echo "❌ **WordPress.org**: Failed" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⏭️ **WordPress.org**: Not requested" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            if [ "${{ needs.github-release.result }}" == "success" ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "## 🔗 Hotfix Links" >> $GITHUB_STEP_SUMMARY
+              echo "- [📦 GitHub Release](https://github.com/${{ github.repository }}/releases/tag/${{ needs.complete-hotfix.outputs.hotfix_tag }})" >> $GITHUB_STEP_SUMMARY
+              echo "- [🌐 WordPress.org Plugin](https://wordpress.org/plugins/${{ needs.validate.outputs.plugin_slug }}/)" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "## 🛠️ Hotfix Details" >> $GITHUB_STEP_SUMMARY
+              echo "${{ needs.complete-hotfix.outputs.changelog_content }}" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi

@@ -1,0 +1,47 @@
+{
+  "text": "❌ Release Failed: {{PLUGIN_NAME}} {{VERSION}}",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "❌ Release Failed"
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Plugin:* {{PLUGIN_NAME}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Version:* {{VERSION}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Triggered by:* {{ACTOR}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Failed at:* {{FAILED_STAGE}}"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "🔗 <{{LOGS_URL}}|View Full Logs>"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "⚠️ *Action Required:* Review logs and retry release process"
+      }
+    }
+  ]
+}
