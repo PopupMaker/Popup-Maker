@@ -275,7 +275,7 @@ jobs:
             
             # Use the official script to get formatted changelog content
             # We use a dummy version to trigger extraction without file modification
-            CHANGELOG_CONTENT=$(node bin/update-changelog.js "0.0.0-build" --verbose 2>/dev/null | grep -A 100 "Unreleased Changes:" | tail -n +2 || echo "")
+            CHANGELOG_CONTENT=$(node bin/update-changelog.js "0.0.0-build" --verbose 2>/dev/null | grep -A 100 "Unreleased Changes:" | tail -n +2 || true)
             
             # If the script approach fails, fall back to direct parsing
             if [ -z "$CHANGELOG_CONTENT" ]; then
