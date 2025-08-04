@@ -162,6 +162,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate, quality-checks]
     if: always() && needs.validate.result == 'success'
+    outputs:
+      package_name: ${{ steps.package.outputs.package_name }}
+      file_size: ${{ steps.package.outputs.file_size }}
+      artifact_name: ${{ steps.upload_info.outputs.artifact_name }}
     
     steps:
       - name: Checkout code
@@ -285,6 +289,7 @@ jobs:
           fi
       
       - name: Upload test package
+        id: upload
         uses: actions/upload-artifact@v4
         with:
           name: ${{ fromJson(needs.validate.outputs.plugin_info).slug }}-${{ needs.validate.outputs.build_version }}-test
@@ -292,6 +297,17 @@ jobs:
             ${{ steps.package.outputs.package_name }}
             ${{ steps.package.outputs.package_name }}.sha256
           retention-days: 30
+      
+      - name: Set artifact info for summary
+        id: upload_info
+        run: |
+          PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
+          PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
+          BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
+          ARTIFACT_NAME="${PLUGIN_SLUG}-${BUILD_VERSION}-test"
+          
+          echo "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
+          echo "📋 Artifact name: ${ARTIFACT_NAME}"
 
   # ============================================================================
   # SLACK NOTIFICATION
@@ -357,14 +373,14 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "📦 *Test package:* `${{ needs.build.outputs.package_name || 'Unknown' }}`"
+                    "text": "📦 *Package:* `${{ needs.build.outputs.package_name || 'Unknown' }}`\\n🎯 *Artifact:* `${{ needs.build.outputs.artifact_name || 'Unknown' }}`"
                   }
                 },
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "⬇️ *Download:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts|View Artifacts> (Available for 30 days)"
+                    "text": "⬇️ *Download:* Go to <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow run> → scroll to *Artifacts* section → click artifact name (Available for 30 days)"
                   }
                 }
               ]
@@ -469,21 +485,22 @@ jobs:
           echo "## 📥 Test Package" >> $GITHUB_STEP_SUMMARY
           
           if [ "${{ needs.build.result }}" == "success" ]; then
-            PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
-            ARTIFACT_NAME="${PLUGIN_SLUG}-${BUILD_VERSION}-test"
-            
             echo "📦 **Package:** \`${{ needs.build.outputs.package_name }}\`" >> $GITHUB_STEP_SUMMARY
             echo "📏 **Size:** ${{ needs.build.outputs.file_size || 'Unknown' }}" >> $GITHUB_STEP_SUMMARY
+            echo "🎯 **Artifact:** \`${{ needs.build.outputs.artifact_name }}\`" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Download:** [${ARTIFACT_NAME}.zip](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)" >> $GITHUB_STEP_SUMMARY
+            echo "## ⬇️ Download Instructions" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "💡 **Instructions:**" >> $GITHUB_STEP_SUMMARY
-            echo "1. Click the download link above" >> $GITHUB_STEP_SUMMARY
-            echo "2. Find the artifact named \`${ARTIFACT_NAME}\`" >> $GITHUB_STEP_SUMMARY
-            echo "3. Download and extract the ZIP file" >> $GITHUB_STEP_SUMMARY
-            echo "4. Install the plugin ZIP in WordPress" >> $GITHUB_STEP_SUMMARY
+            echo "### Option 1: Direct Download (Recommended)" >> $GITHUB_STEP_SUMMARY
+            echo "1. Scroll down to the **Artifacts** section at the bottom of this workflow run" >> $GITHUB_STEP_SUMMARY
+            echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\` to download" >> $GITHUB_STEP_SUMMARY
+            echo "3. Extract the downloaded ZIP to get the plugin file" >> $GITHUB_STEP_SUMMARY
+            echo "4. Install the plugin ZIP file in WordPress" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "⏰ Package will be retained for **30 days**." >> $GITHUB_STEP_SUMMARY
+            echo "### Option 2: Via Artifacts Page" >> $GITHUB_STEP_SUMMARY
+            echo "Visit the [workflow artifacts page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) and look for the artifact named \`${{ needs.build.outputs.artifact_name }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⏰ **Retention:** Package will be available for **30 days**" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ No test package was created due to build failure." >> $GITHUB_STEP_SUMMARY
           fi
