@@ -383,6 +383,13 @@ const { settings, getSetting, updateSettings, saveSettings } = useSettings();
 - ESLint for JavaScript/TypeScript
 - Stylelint for CSS/SCSS
 
+### PHP
+
+DO NOT FORGET:
+- Inline comments must end in full-stops, exclamation marks, or question marks (Squiz.Commenting.InlineComment.InvalidEndChar)
+
+### JavaScript
+
 ## Dependency Management
 
 ### PHP Dependencies
