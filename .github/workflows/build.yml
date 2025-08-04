@@ -214,16 +214,6 @@ jobs:
           restore-keys: |
             composer-${{ runner.os }}-
       
-      - name: Cache Strauss vendor prefixed dependencies
-        id: strauss-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            vendor-prefixed
-          key: strauss-${{ runner.os }}-${{ hashFiles('composer.lock', 'composer.json', 'classes/**/*.php', 'includes/**/*.php') }}
-          restore-keys: |
-            strauss-${{ runner.os }}-
-      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -241,31 +231,6 @@ jobs:
           restore-keys: |
             npm-${{ runner.os }}-
       
-      - name: Cache build artifacts
-        id: build-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            dist
-            assets/css/*.css
-            assets/js/*.js
-            assets/js/vendor
-            .webpack-cache
-            .webpack-cache-legacy
-          key: build-artifacts-${{ runner.os }}-${{ hashFiles('webpack*.js', 'package-lock.json', 'src/**/*', 'packages/**/*') }}
-          restore-keys: |
-            build-artifacts-${{ runner.os }}-
-      
-      - name: Cache changelog extraction
-        id: changelog-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .changelog-cache
-          key: changelog-${{ runner.os }}-${{ hashFiles('CHANGELOG.md', 'bin/update-changelog.js') }}
-          restore-keys: |
-            changelog-${{ runner.os }}-
-      
       - name: Capture build information
         id: build_info
         run: |
@@ -276,11 +241,8 @@ jobs:
           echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
           echo "commit_short=${COMMIT_SHORT}" >> $GITHUB_OUTPUT
           
-          # Extract changelog content using cached approach or update-changelog.js script
-          if [ "${{ steps.changelog-cache.outputs.cache-hit }}" == "true" ] && [ -f ".changelog-cache/content.txt" ]; then
-            echo "📋 Using cached changelog content..."
-            CHANGELOG_CONTENT=$(cat .changelog-cache/content.txt)
-          elif [ -f "CHANGELOG.md" ] && [ -f "bin/update-changelog.js" ]; then
+          # Extract changelog content using update-changelog.js script
+          if [ -f "CHANGELOG.md" ] && [ -f "bin/update-changelog.js" ]; then
             echo "📝 Extracting changelog using update-changelog.js..."
             
             # Use the official script to get formatted changelog content
@@ -307,10 +269,6 @@ jobs:
               CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | sed 's/^[0-9]\+\. /• /' | head -8)
             fi
             
-            # Cache the extracted content for future runs
-            mkdir -p .changelog-cache
-            echo "$CHANGELOG_CONTENT" > .changelog-cache/content.txt
-            
             # Fallback to git commits if still empty
             if [ -z "$CHANGELOG_CONTENT" ]; then
               echo "CHANGELOG.md empty, using recent commits as fallback..."
@@ -318,13 +276,10 @@ jobs:
               if [ -z "$CHANGELOG_CONTENT" ]; then
                 CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" | head -4)
               fi
-              echo "$CHANGELOG_CONTENT" > .changelog-cache/content.txt
             fi
           else
             echo "Missing CHANGELOG.md or bin/update-changelog.js, using recent commits..."
             CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" | head -4)
-            mkdir -p .changelog-cache
-            echo "$CHANGELOG_CONTENT" > .changelog-cache/content.txt
           fi
           
           # Save changelog content (handle multiline)
@@ -379,14 +334,9 @@ jobs:
       
       - name: Build production assets
         run: |
-          if [ "${{ steps.build-cache.outputs.cache-hit }}" == "true" ]; then
-            echo "⚡ Using cached build artifacts..."
-            echo "✅ Build artifacts restored from cache"
-          else
-            echo "🏗️ Building production assets..."
-            npm run build:production
-            echo "✅ Production build complete"
-          fi
+          echo "🏗️ Building production assets..."
+          npm run build:production
+          echo "✅ Production build complete"
       
       - name: Create test package
         id: package
