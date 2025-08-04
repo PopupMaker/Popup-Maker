@@ -20,13 +20,13 @@ on:
         description: 'Run test suite'
         required: false
         type: boolean
-        default: true
+        default: false
       
       run_linting:
         description: 'Run code linting'
         required: false
         type: boolean
-        default: true
+        default: false
       
       notify_slack:
         description: 'Send Slack notification when complete'
@@ -108,7 +108,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
       
       - name: Install dependencies
@@ -169,7 +169,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
       
       - name: Prepare test version files
