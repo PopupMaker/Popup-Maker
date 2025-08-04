@@ -214,6 +214,16 @@ jobs:
           restore-keys: |
             composer-${{ runner.os }}-
       
+      - name: Cache Strauss vendor prefixed dependencies
+        id: strauss-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor-prefixed
+          key: strauss-${{ runner.os }}-${{ hashFiles('composer.lock', 'composer.json', 'classes/**/*.php', 'includes/**/*.php') }}
+          restore-keys: |
+            strauss-${{ runner.os }}-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -245,6 +255,18 @@ jobs:
           key: build-artifacts-${{ runner.os }}-${{ hashFiles('webpack*.js', 'package-lock.json', 'src/**/*', 'packages/**/*') }}
           restore-keys: |
             build-artifacts-${{ runner.os }}-
+      
+      - name: Cache TypeScript build info
+        id: typescript-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            packages/*/tsconfig.tsbuildinfo
+            packages/*/build
+            tsconfig.tsbuildinfo
+          key: typescript-${{ runner.os }}-${{ hashFiles('**/tsconfig.json', 'packages/**/src/**/*') }}
+          restore-keys: |
+            typescript-${{ runner.os }}-
       
       - name: Cache changelog extraction
         id: changelog-cache
