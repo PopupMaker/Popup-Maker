@@ -372,8 +372,11 @@ jobs:
           
           # Update readme.txt changelog
           if [ -f "readme.txt" ]; then
-            ENTRY_TEXT="Hotfix release - $CHANGELOG_MESSAGE"
-            [ -z "$CHANGELOG_MESSAGE" ] && ENTRY_TEXT="Hotfix release"
+            if [ -n "$CHANGELOG_MESSAGE" ]; then
+              ENTRY_TEXT="Hotfix release - $CHANGELOG_MESSAGE"
+            else
+              ENTRY_TEXT="Hotfix release"
+            fi
             
             awk -v version="${VERSION}" -v date="${DATE}" -v entry="${ENTRY_TEXT}" '
               /^== Changelog ==/ {
@@ -388,8 +391,7 @@ jobs:
                 print ""
               }
               { print }
-            ' readme.txt > readme.tmp
-            mv readme.tmp readme.txt
+            ' readme.txt > readme.tmp && mv readme.tmp readme.txt
           fi
       
       - name: Commit hotfix preparation
