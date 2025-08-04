@@ -1,0 +1,68 @@
+{
+  "text": "🚨 Hotfix Released: {{PLUGIN_NAME}} {{RELEASE_TAG}}",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "🚨 Hotfix Released"
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Plugin:* {{PLUGIN_NAME}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Version:* {{VERSION}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Package Size:* {{PACKAGE_SIZE}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*WordPress.org:* {{WORDPRESS_STATUS}}"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*🛠️ Hotfix Details:*\n{{CHANGELOG_CONTENT}}"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "⚡ *Urgent:* This hotfix addresses critical issues. Please update immediately."
+      }
+    },
+    {
+      "type": "actions",
+      "elements": [
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "📦 GitHub Release"
+          },
+          "url": "{{GITHUB_RELEASE_URL}}"
+        },
+        {
+          "type": "button",
+          "text": {
+            "type": "plain_text",
+            "text": "🌐 WordPress.org"
+          },
+          "url": "{{WORDPRESS_URL}}"
+        }
+      ]
+    }
+  ]
+}

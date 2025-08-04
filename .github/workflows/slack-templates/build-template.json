@@ -1,0 +1,53 @@
+{
+  "text": "🔨 Test Build Complete",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "🔨 Test Build Complete"
+      }
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Plugin:* {{PLUGIN_NAME}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Version:* {{BUILD_VERSION}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Branch:* {{BRANCH}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Requested by:* {{ACTOR}}"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "fields": [
+        {
+          "type": "mrkdwn",
+          "text": "*Tests:* {{TEST_STATUS}}"
+        },
+        {
+          "type": "mrkdwn",
+          "text": "*Package Size:* {{PACKAGE_SIZE}}"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "📦 *Test package available for 30 days* - <{{ARTIFACTS_URL}}|Download from Artifacts>"
+      }
+    }
+  ]
+}

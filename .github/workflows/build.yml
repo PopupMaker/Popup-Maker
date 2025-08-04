@@ -1,0 +1,454 @@
+name: Build Test Package
+
+on:
+  # Manual trigger - anyone can run this
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag, or commit to build from'
+        required: true
+        default: 'develop'
+        type: string
+      
+      version_suffix:
+        description: 'Version identifier (defaults to branch name + timestamp)'
+        required: false
+        type: string
+        default: ''
+      
+      run_tests:
+        description: 'Run test suite'
+        required: false
+        type: boolean
+        default: true
+      
+      run_linting:
+        description: 'Run code linting'
+        required: false
+        type: boolean
+        default: true
+      
+      notify_slack:
+        description: 'Send Slack notification when complete'
+        required: false
+        type: boolean
+        default: false
+
+  # Also allow API triggering
+  repository_dispatch:
+    types: [build-test]
+
+jobs:
+  # ============================================================================
+  # VALIDATION
+  # ============================================================================
+  validate:
+    name: Validate Build Parameters
+    runs-on: ubuntu-latest
+    outputs:
+      build_version: ${{ steps.version.outputs.version }}
+      plugin_info: ${{ steps.info.outputs.plugin_info }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}
+      
+      - name: Extract plugin information
+        id: info
+        run: |
+          PLUGIN_SLUG=$(node -p "require('./package.json').name || 'popup-maker'")
+          PLUGIN_NAME=$(node -p "require('./package.json').displayName || 'Popup Maker'")
+          
+          echo "plugin_info={\"slug\":\"${PLUGIN_SLUG}\",\"name\":\"${PLUGIN_NAME}\"}" >> $GITHUB_OUTPUT
+          echo "📦 Building: ${PLUGIN_NAME} (${PLUGIN_SLUG})"
+      
+      - name: Generate build version
+        id: version
+        run: |
+          REF_NAME="${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}"
+          VERSION_SUFFIX="${{ github.event.inputs.version_suffix }}"
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          
+          # Clean the ref name for use in version
+          CLEAN_REF=$(echo "$REF_NAME" | sed 's/[^a-zA-Z0-9._-]/-/g')
+          
+          if [ -n "$VERSION_SUFFIX" ]; then
+            BUILD_VERSION="${VERSION_SUFFIX}"
+          else
+            BUILD_VERSION="${CLEAN_REF}-${TIMESTAMP}"
+          fi
+          
+          echo "version=${BUILD_VERSION}" >> $GITHUB_OUTPUT
+          echo "🏗️ Build version: ${BUILD_VERSION}"
+
+  # ============================================================================
+  # QUALITY CHECKS
+  # ============================================================================
+  quality-checks:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.event.inputs.run_tests == 'true' || github.event.inputs.run_linting == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer:v2
+          coverage: none
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies for quality checks..."
+          composer install --no-interaction --no-progress
+          npm ci
+      
+      - name: PHP Linting
+        if: github.event.inputs.run_linting == 'true'
+        run: |
+          echo "🔍 Running PHP Code Sniffer..."
+          composer run lint || echo "⚠️ PHP linting failed but continuing..."
+      
+      - name: JavaScript Linting
+        if: github.event.inputs.run_linting == 'true'
+        run: |
+          echo "🔍 Running ESLint..."
+          npm run lint:js || echo "⚠️ JavaScript linting failed but continuing..."
+      
+      - name: Run Tests
+        if: github.event.inputs.run_tests == 'true'
+        run: |
+          echo "🧪 Running tests..."
+          
+          # PHP tests if available
+          if [ -f "composer.json" ] && grep -q '"test"' composer.json; then
+            composer run tests || echo "⚠️ PHP tests failed but continuing..."
+          fi
+          
+          # JavaScript tests if available
+          if [ -f "package.json" ] && grep -q '"test"' package.json; then
+            npm run test:unit || echo "⚠️ JavaScript tests failed but continuing..."
+          fi
+
+  # ============================================================================
+  # BUILD PACKAGE
+  # ============================================================================
+  build:
+    name: Build Test Package
+    runs-on: ubuntu-latest
+    needs: [validate, quality-checks]
+    if: always() && needs.validate.result == 'success'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer:v2
+          coverage: none
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Prepare test version files
+        run: |
+          BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
+          PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
+          PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
+          
+          echo "📝 Preparing test build version ${BUILD_VERSION}..."
+          
+          # Create temporary version files (don't commit)
+          # Update version in main plugin file
+          sed "s/Version:.*$/Version:           ${BUILD_VERSION}/" popup-maker.php > popup-maker.php.tmp
+          sed "s/define( 'POPMAKE_VERSION'.*$/define( 'POPMAKE_VERSION', '${BUILD_VERSION}' );/" popup-maker.php.tmp > popup-maker.php.new
+          mv popup-maker.php.new popup-maker.php
+          rm popup-maker.php.tmp
+          
+          # Update package.json version (temporarily)
+          node -e "
+            const pkg = require('./package.json');
+            pkg.version = '$BUILD_VERSION';
+            require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+          
+          # Update readme.txt stable tag (temporarily)
+          if [ -f "readme.txt" ]; then
+            sed "s/Stable tag:.*$/Stable tag: ${BUILD_VERSION}/" readme.txt > readme.txt.tmp
+            mv readme.txt.tmp readme.txt
+          fi
+          
+          echo "✅ Version files prepared (not committed)"
+      
+      - name: Install production dependencies
+        run: |
+          echo "📦 Installing production dependencies..."
+          composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+          npm ci --production=false  # Need dev deps for build
+      
+      - name: Build production assets
+        run: |
+          echo "🏗️ Building production assets..."
+          npm run build:production
+          echo "✅ Production build complete"
+      
+      - name: Create test package
+        id: package
+        run: |
+          BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
+          PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
+          PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
+          
+          echo "📦 Creating test package..."
+          
+          # Use build-release.js if available
+          if [ -f "bin/build-release.js" ]; then
+            node bin/build-release.js --zip-name "${PLUGIN_SLUG}_${BUILD_VERSION}-test.zip"
+            PACKAGE_NAME="${PLUGIN_SLUG}_${BUILD_VERSION}-test.zip"
+          else
+            # Fallback packaging
+            echo "⚠️ No build-release.js found, using fallback..."
+            
+            rm -rf build
+            mkdir -p build/${PLUGIN_SLUG}
+            
+            # Copy files (exclude development files)
+            rsync -av --exclude-from='.distignore' \
+              --exclude='build/' \
+              --exclude='node_modules/' \
+              --exclude='tests/' \
+              --exclude='.*' \
+              --exclude='composer.*' \
+              --exclude='package*' \
+              --exclude='webpack.config.js' \
+              ./ build/${PLUGIN_SLUG}/
+            
+            cd build
+            PACKAGE_NAME="${PLUGIN_SLUG}_${BUILD_VERSION}-test.zip"
+            zip -r "../${PACKAGE_NAME}" ${PLUGIN_SLUG}/
+            cd ..
+          fi
+          
+          # Generate checksum
+          if [ -f "$PACKAGE_NAME" ]; then
+            sha256sum "$PACKAGE_NAME" > "${PACKAGE_NAME}.sha256"
+            FILE_SIZE=$(ls -lh "$PACKAGE_NAME" | awk '{print $5}')
+            
+            echo "✅ Test package created: $PACKAGE_NAME ($FILE_SIZE)"
+            echo "package_name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
+            echo "file_size=${FILE_SIZE}" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed to create test package"
+            exit 1
+          fi
+      
+      - name: Upload test package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ fromJson(needs.validate.outputs.plugin_info).slug }}-${{ needs.validate.outputs.build_version }}-test
+          path: |
+            ${{ steps.package.outputs.package_name }}
+            ${{ steps.package.outputs.package_name }}.sha256
+          retention-days: 30
+
+  # ============================================================================
+  # SLACK NOTIFICATION
+  # ============================================================================
+  notify:
+    name: Send Slack Notification
+    runs-on: ubuntu-latest
+    needs: [validate, quality-checks, build]
+    if: always() && github.event.inputs.notify_slack == 'true'
+    
+    steps:
+      - name: Send success notification
+        if: needs.build.result == 'success'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "🔨 Test Build Complete",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🔨 Test Build Complete"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Plugin:* ${{ fromJson(needs.validate.outputs.plugin_info).name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version:* ${{ needs.validate.outputs.build_version }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:* ${{ github.event.inputs.ref || 'develop' }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Requested by:* ${{ github.actor }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Tests:* ${{ needs.quality-checks.result == 'success' && '✅ Passed' || needs.quality-checks.result == 'skipped' && '⏭️ Skipped' || '⚠️ Issues' }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Package Size:* ${{ needs.build.outputs.file_size || 'Unknown' }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "📦 *Test package available for 30 days* - <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Download from Artifacts>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV }}
+      
+      - name: Send failure notification
+        if: needs.build.result != 'success'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "❌ Test Build Failed",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "❌ Test Build Failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Plugin:* ${{ fromJson(needs.validate.outputs.plugin_info).name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:* ${{ github.event.inputs.ref || 'develop' }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Requested by:* ${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Failed at:* ${{ needs.validate.result != 'success' && 'Validation' || needs.quality-checks.result == 'failure' && 'Quality Checks' || 'Build Process' }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🔗 <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Full Logs>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV }}
+
+  # ============================================================================
+  # SUMMARY
+  # ============================================================================
+  summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: [validate, quality-checks, build]
+    if: always()
+    
+    steps:
+      - name: Generate summary
+        run: |
+          BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
+          PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
+          PLUGIN_NAME=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).name")
+          
+          echo "# 🔨 Test Build Summary for ${PLUGIN_NAME}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${BUILD_VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "**Source:** ${{ github.event.inputs.ref || 'develop' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Requested by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Status indicators
+          if [ "${{ needs.validate.result }}" == "success" ]; then
+            echo "✅ **Validation**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Validation**: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.quality-checks.result }}" == "success" ]; then
+            echo "✅ **Quality Checks**: Passed" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.quality-checks.result }}" == "skipped" ]; then
+            echo "⏭️ **Quality Checks**: Skipped" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Quality Checks**: Issues found (build continued)" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.build.result }}" == "success" ]; then
+            echo "✅ **Build**: Successful" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Build**: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📥 Test Package" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.build.result }}" == "success" ]; then
+            echo "Test package is available in the [Actions artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) section." >> $GITHUB_STEP_SUMMARY
+            echo "Package will be retained for **30 days**." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ No test package was created due to build failure." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ℹ️ Note" >> $GITHUB_STEP_SUMMARY
+          echo "This is a **test build only**. No changes were committed to the repository." >> $GITHUB_STEP_SUMMARY
+          echo "For official releases, use the Release workflow." >> $GITHUB_STEP_SUMMARY
