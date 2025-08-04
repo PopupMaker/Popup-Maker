@@ -296,11 +296,7 @@ jobs:
           VERSION="${{ needs.validate.outputs.release_version }}"
           
           git add -A
-          git commit -m "Prepare release ${VERSION}
-          
-          - Update version numbers to ${VERSION}
-          - Update changelog and readme
-          - Prepare for release deployment"
+          git commit -m "Prepare release ${VERSION} - Update version numbers, changelog and readme"
           
           echo "✅ Release preparation committed"
       
@@ -313,9 +309,7 @@ jobs:
           if [ "$IS_PRERELEASE" == "true" ]; then
             echo "🏷️ Pre-release: Tagging develop branch directly"
             git checkout develop
-            git merge --no-ff "release/${VERSION}" -m "Release ${VERSION}
-
-Pre-release: merge release branch back to develop"
+            git merge --no-ff "release/${VERSION}" -m "Release ${VERSION} - Pre-release: merge release branch back to develop"
             git tag -a "v${VERSION}" -m "Pre-release ${VERSION}"
             git push origin develop
             git push origin "v${VERSION}"
@@ -329,9 +323,7 @@ Pre-release: merge release branch back to develop"
             
             # Merge to master
             git checkout master
-            git merge --no-ff "release/${VERSION}" -m "Release ${VERSION}
-
-Production release: merge from develop via release branch"
+            git merge --no-ff "release/${VERSION}" -m "Release ${VERSION} - Production release: merge from develop via release branch"
             
             # Tag the release
             git tag -a "v${VERSION}" -m "Release ${VERSION}"

@@ -371,14 +371,7 @@ jobs:
           HOTFIX_BRANCH="${{ needs.validate.outputs.hotfix_branch }}"
           
           git add -A
-          git commit -m "Prepare hotfix ${VERSION}
-
-- Update version numbers for hotfix ${VERSION}
-- Update changelog with hotfix notes
-- Update readme.txt stable tag
-
-This commit prepares the hotfix branch for manual fixes.
-After applying your fixes, use the 'complete' action to finish the hotfix process."
+          git commit -m "Prepare hotfix ${VERSION} - Update version numbers, changelog and readme. Apply fixes then use 'complete' action."
           
           echo "✅ Hotfix preparation committed"
       
@@ -450,9 +443,7 @@ After applying your fixes, use the 'complete' action to finish the hotfix proces
           # Merge hotfix to source branch (usually master)
           echo "🔀 Merging ${HOTFIX_BRANCH} to ${SOURCE_BRANCH}..."
           git checkout "${SOURCE_BRANCH}"
-          git merge --no-ff "${HOTFIX_BRANCH}" -m "Hotfix ${VERSION}
-
-Merge hotfix branch ${HOTFIX_BRANCH} into ${SOURCE_BRANCH}"
+          git merge --no-ff "${HOTFIX_BRANCH}" -m "Hotfix ${VERSION} - Merge hotfix branch ${HOTFIX_BRANCH} into ${SOURCE_BRANCH}"
           
           # Tag the hotfix
           echo "🏷️ Tagging hotfix: v${VERSION}"
