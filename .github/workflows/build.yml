@@ -71,13 +71,16 @@ jobs:
           VERSION_SUFFIX="${{ github.event.inputs.version_suffix }}"
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
           
-          # Clean the ref name for use in version
-          CLEAN_REF=$(echo "$REF_NAME" | sed 's/[^a-zA-Z0-9._-]/-/g')
-          
           if [ -n "$VERSION_SUFFIX" ]; then
+            # User provided custom version - use as-is
             BUILD_VERSION="${VERSION_SUFFIX}"
+            echo "🎯 Using custom version: ${BUILD_VERSION}"
           else
-            BUILD_VERSION="${CLEAN_REF}-${TIMESTAMP}"
+            # No custom version - use ref name (branch/tag/commit)
+            # Clean the ref name for use in version
+            CLEAN_REF=$(echo "$REF_NAME" | sed 's/[^a-zA-Z0-9._-]/-/g')
+            BUILD_VERSION="${CLEAN_REF}"
+            echo "🌿 Using ref-based version: ${BUILD_VERSION}"
           fi
           
           echo "version=${BUILD_VERSION}" >> $GITHUB_OUTPUT
@@ -247,11 +250,14 @@ jobs:
               if (/^## Unreleased/) next
               if (/^## [^U]/) exit
               if (NF > 0 && !/^[[:space:]]*$/) print
-            }' CHANGELOG.md)
+            }' CHANGELOG.md | head -30 | sed 's/^[[:space:]]*//')
             
-            # If no unreleased content, get recent commits
-            if [ -z "$CHANGELOG_CONTENT" ]; then
-              echo "No unreleased changes found, using recent commits..."
+            # Clean up any weird formatting issues
+            CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | sed '/^[[:space:]]*$/d' | head -25)
+            
+            # If no unreleased content or content seems malformed, get recent commits
+            if [ -z "$CHANGELOG_CONTENT" ] || echo "$CHANGELOG_CONTENT" | grep -q "xdg-open\|Synopsis\|Use 'man"; then
+              echo "No unreleased changes or malformed content found, using recent commits..."
               CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
             fi
           else
@@ -326,8 +332,8 @@ jobs:
           
           # Use build-release.js if available
           if [ -f "bin/build-release.js" ]; then
-            node bin/build-release.js --zip-name "${PLUGIN_SLUG}_${BUILD_VERSION}-test.zip"
-            PACKAGE_NAME="${PLUGIN_SLUG}_${BUILD_VERSION}-test.zip"
+            node bin/build-release.js --zip-name "${PLUGIN_SLUG}_${BUILD_VERSION}.zip"
+            PACKAGE_NAME="${PLUGIN_SLUG}_${BUILD_VERSION}.zip"
           else
             # Fallback packaging
             echo "⚠️ No build-release.js found, using fallback..."
@@ -347,7 +353,7 @@ jobs:
               ./ build/${PLUGIN_SLUG}/
             
             cd build
-            PACKAGE_NAME="${PLUGIN_SLUG}_${BUILD_VERSION}-test.zip"
+            PACKAGE_NAME="${PLUGIN_SLUG}_${BUILD_VERSION}.zip"
             zip -r "../${PACKAGE_NAME}" ${PLUGIN_SLUG}/
             cd ..
           fi
@@ -369,7 +375,7 @@ jobs:
         id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ fromJson(needs.validate.outputs.plugin_info).slug }}-${{ needs.validate.outputs.build_version }}-test
+          name: ${{ fromJson(needs.validate.outputs.plugin_info).slug }}-${{ needs.validate.outputs.build_version }}
           path: ${{ steps.package.outputs.package_name }}
           retention-days: 30
       
@@ -379,7 +385,7 @@ jobs:
           PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
           PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
           BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
-          ARTIFACT_NAME="${PLUGIN_SLUG}-${BUILD_VERSION}-test"
+          ARTIFACT_NAME="${PLUGIN_SLUG}-${BUILD_VERSION}"
           
           echo "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
           echo "📋 Artifact name: ${ARTIFACT_NAME}"
