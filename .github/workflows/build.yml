@@ -231,6 +231,31 @@ jobs:
           restore-keys: |
             npm-${{ runner.os }}-
       
+      - name: Cache build artifacts
+        id: build-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            dist
+            assets/css/*.css
+            assets/js/*.js
+            assets/js/vendor
+            .webpack-cache
+            .webpack-cache-legacy
+          key: build-artifacts-${{ runner.os }}-${{ hashFiles('webpack*.js', 'package-lock.json', 'src/**/*', 'packages/**/*') }}
+          restore-keys: |
+            build-artifacts-${{ runner.os }}-
+      
+      - name: Cache changelog extraction
+        id: changelog-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .changelog-cache
+          key: changelog-${{ runner.os }}-${{ hashFiles('CHANGELOG.md', 'bin/update-changelog.js') }}
+          restore-keys: |
+            changelog-${{ runner.os }}-
+      
       - name: Capture build information
         id: build_info
         run: |
@@ -241,57 +266,55 @@ jobs:
           echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
           echo "commit_short=${COMMIT_SHORT}" >> $GITHUB_OUTPUT
           
-          # Extract changelog content from CHANGELOG.md
-          if [ -f "CHANGELOG.md" ]; then
-            echo "📝 Extracting changelog content..."
+          # Extract changelog content using cached approach or update-changelog.js script
+          if [ "${{ steps.changelog-cache.outputs.cache-hit }}" == "true" ] && [ -f ".changelog-cache/content.txt" ]; then
+            echo "📋 Using cached changelog content..."
+            CHANGELOG_CONTENT=$(cat .changelog-cache/content.txt)
+          elif [ -f "CHANGELOG.md" ] && [ -f "bin/update-changelog.js" ]; then
+            echo "📝 Extracting changelog using update-changelog.js..."
             
-            # Try Unreleased section first
-            CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
-              if (/^## Unreleased/) next
-              if (/^## [^U]/) exit
-              if (NF > 0 && !/^[[:space:]]*$/) print
-            }' CHANGELOG.md)
+            # Use the official script to get formatted changelog content
+            # We use a dummy version to trigger extraction without file modification
+            CHANGELOG_CONTENT=$(node bin/update-changelog.js "0.0.0-build" --verbose 2>/dev/null | grep -A 100 "Unreleased Changes:" | tail -n +2 || echo "")
             
-            # If Unreleased is empty, try latest version section
+            # If the script approach fails, fall back to direct parsing
             if [ -z "$CHANGELOG_CONTENT" ]; then
-              echo "Unreleased section empty, trying latest version..."
-              CHANGELOG_CONTENT=$(awk '/^## v[0-9]|^## [0-9]/ {
-                if (found) exit
-                found = 1
-                next
-              }
-              found && /^## / { exit }
-              found && NF > 0 && !/^[[:space:]]*$/ { print }' CHANGELOG.md)
+              echo "Script extraction failed, using direct CHANGELOG.md parsing..."
+              
+              # Extract Unreleased section directly
+              CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
+                if (/^## Unreleased/) next
+                if (/^## [^U]/) exit
+                if (/^\*\*/ || /^-   / || /^   -/) print
+              }' CHANGELOG.md | head -10)
+              
+              # Clean up formatting for Slack
+              if [ -n "$CHANGELOG_CONTENT" ]; then
+                CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | sed 's/^-   /• /' | sed 's/^   -/  - /' | grep -v '^\*\*')
+              fi
+            else
+              # Convert numbered list to bullet points for Slack
+              CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | sed 's/^[0-9]\+\. /• /' | head -8)
             fi
             
-            # Filter to only Features, Improvements, Fixes sections
-            if [ -n "$CHANGELOG_CONTENT" ]; then
-              echo "📝 Filtering to user-facing changes only..."
-              CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | awk '
-                /^# Features?$|^## Features?$|^\* Feature:|^- Feature:/ { in_section=1; print; next }
-                /^# Improvements?$|^## Improvements?$|^\* Improvement:|^- Improvement:/ { in_section=1; print; next }
-                /^# Fixes?$|^## Fixes?$|^\* Fix:|^- Fix:/ { in_section=1; print; next }
-                /^# Security$|^## Security$|^\* Security:|^- Security:/ { in_section=1; print; next }
-                /^# Changes?$|^## Changes?$|^\* Change:|^- Change:/ { in_section=1; print; next }
-                /^# (Developers?|Internal|Dependencies?|Breaking|Deprecated)/ { in_section=0; next }
-                /^## (Developers?|Internal|Dependencies?|Breaking|Deprecated)/ { in_section=0; next }
-                in_section && /^[*-] / { print }
-                in_section && /^[[:space:]]*$/ { next }
-                /^[*-] (Feature|Improvement|Fix|Security|Change):/ { print }
-              ' | head -8)
-            fi
+            # Cache the extracted content for future runs
+            mkdir -p .changelog-cache
+            echo "$CHANGELOG_CONTENT" > .changelog-cache/content.txt
             
-            # Clean fallback to recent commits if still empty or malformed
-            if [ -z "$CHANGELOG_CONTENT" ] || echo "$CHANGELOG_CONTENT" | grep -q "xdg-open\|Synopsis\|Use 'man"; then
-              echo "Using recent commits as fallback..."
+            # Fallback to git commits if still empty
+            if [ -z "$CHANGELOG_CONTENT" ]; then
+              echo "CHANGELOG.md empty, using recent commits as fallback..."
               CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" --grep="^feat\|^fix\|^perf\|^security" --since="2 weeks ago" | head -4)
               if [ -z "$CHANGELOG_CONTENT" ]; then
                 CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" | head -4)
               fi
+              echo "$CHANGELOG_CONTENT" > .changelog-cache/content.txt
             fi
           else
-            echo "No CHANGELOG.md found, using recent commits..."
+            echo "Missing CHANGELOG.md or bin/update-changelog.js, using recent commits..."
             CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" | head -4)
+            mkdir -p .changelog-cache
+            echo "$CHANGELOG_CONTENT" > .changelog-cache/content.txt
           fi
           
           # Save changelog content (handle multiline)
@@ -346,9 +369,14 @@ jobs:
       
       - name: Build production assets
         run: |
-          echo "🏗️ Building production assets..."
-          npm run build:production
-          echo "✅ Production build complete"
+          if [ "${{ steps.build-cache.outputs.cache-hit }}" == "true" ]; then
+            echo "⚡ Using cached build artifacts..."
+            echo "✅ Build artifacts restored from cache"
+          else
+            echo "🏗️ Building production assets..."
+            npm run build:production
+            echo "✅ Production build complete"
+          fi
       
       - name: Create test package
         id: package
