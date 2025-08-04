@@ -293,9 +293,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ fromJson(needs.validate.outputs.plugin_info).slug }}-${{ needs.validate.outputs.build_version }}-test
-          path: |
-            ${{ steps.package.outputs.package_name }}
-            ${{ steps.package.outputs.package_name }}.sha256
+          path: ${{ steps.package.outputs.package_name }}
           retention-days: 30
       
       - name: Set artifact info for summary
@@ -380,7 +378,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "⬇️ *Download:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Go to workflow run> → scroll to bottom **Artifacts** section → click artifact name (Available for 30 days)"
+                    "text": "⬇️ *Download:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Go to workflow run> → **Artifacts** section → click artifact → install ZIP directly in WordPress (Available for 30 days)"
                   }
                 },
                 {
@@ -500,9 +498,9 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### Option 1: Direct Download (Recommended)" >> $GITHUB_STEP_SUMMARY
             echo "1. Scroll down to the **Artifacts** section at the bottom of this workflow run" >> $GITHUB_STEP_SUMMARY
-            echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\` to download" >> $GITHUB_STEP_SUMMARY
-            echo "3. Extract the downloaded ZIP to get the plugin file" >> $GITHUB_STEP_SUMMARY
-            echo "4. Install the plugin ZIP file in WordPress" >> $GITHUB_STEP_SUMMARY
+            echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\` to download the plugin ZIP" >> $GITHUB_STEP_SUMMARY
+            echo "3. Install the downloaded ZIP file directly in WordPress" >> $GITHUB_STEP_SUMMARY
+            echo "   - WordPress Admin → Plugins → Add New → Upload Plugin" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### Option 2: Via Workflow Page" >> $GITHUB_STEP_SUMMARY
             echo "Visit the [workflow run page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) and scroll to the **Artifacts** section at the bottom" >> $GITHUB_STEP_SUMMARY
