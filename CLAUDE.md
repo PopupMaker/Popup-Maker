@@ -383,12 +383,19 @@ const { settings, getSetting, updateSettings, saveSettings } = useSettings();
 - ESLint for JavaScript/TypeScript
 - Stylelint for CSS/SCSS
 
+### WordPress
+
+- Use `%i` for the table name in $wpdb prepared queries.
+
 ### PHP
 
 DO NOT FORGET:
 - Inline comments must end in full-stops, exclamation marks, or question marks (Squiz.Commenting.InlineComment.InvalidEndChar)
 
 ### JavaScript
+
+DO NOT FORGET:
+- No `any` type, only use `unknown` for dynamic values outside of the type system, if we can find the type in another package, or define it reasonably for our own internal use, then we do that instead of `unknown`
 
 ## Dependency Management
 
