@@ -157,12 +157,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+      
+      - name: Cache npm dependencies
+        id: npm-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            packages/*/node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
       
       - name: Install dependencies
         run: |
           composer install --no-interaction --no-progress
-          npm ci
+          
+          if [ "${{ steps.npm-cache.outputs.cache-hit }}" != "true" ]; then
+            echo "📦 Installing npm dependencies..."
+            npm ci
+          else
+            echo "✅ npm dependencies restored from cache"
+          fi
       
       - name: Run quality checks
         run: |
@@ -383,13 +400,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+      
+      - name: Cache npm dependencies
+        id: npm-cache-build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            packages/*/node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
       
       - name: Install production dependencies
         run: |
           echo "📦 Installing production dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-          npm ci --include=dev
+          
+          if [ "${{ steps.npm-cache-build.outputs.cache-hit }}" != "true" ]; then
+            echo "📦 Installing npm dependencies..."
+            npm ci --include=dev
+          else
+            echo "✅ npm dependencies restored from cache"
+          fi
       
       - name: Build production assets
         run: |

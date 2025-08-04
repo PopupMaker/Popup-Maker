@@ -119,13 +119,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+      
+      - name: Cache npm dependencies
+        id: npm-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            packages/*/node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
       
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies for quality checks..."
           composer install --no-interaction --no-progress
-          npm ci
+          
+          if [ "${{ steps.npm-cache.outputs.cache-hit }}" != "true" ]; then
+            echo "📦 Installing npm dependencies..."
+            npm ci
+          else
+            echo "✅ npm dependencies restored from cache"
+          fi
       
       - name: PHP Linting
         if: github.event.inputs.run_linting == 'true'
@@ -197,7 +214,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+      
+      - name: Cache npm dependencies
+        id: npm-cache-build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            packages/*/node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
       
       - name: Prepare test version files
         run: |
@@ -233,7 +261,13 @@ jobs:
         run: |
           echo "📦 Installing production dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-          npm ci --include=dev  # Need dev deps for build
+          
+          if [ "${{ steps.npm-cache-build.outputs.cache-hit }}" != "true" ]; then
+            echo "📦 Installing npm dependencies..."
+            npm ci --include=dev  # Need dev deps for build
+          else
+            echo "✅ npm dependencies restored from cache"
+          fi
       
       - name: Build production assets
         run: |
