@@ -256,18 +256,6 @@ jobs:
           restore-keys: |
             build-artifacts-${{ runner.os }}-
       
-      - name: Cache TypeScript build info
-        id: typescript-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            packages/*/tsconfig.tsbuildinfo
-            packages/*/build
-            tsconfig.tsbuildinfo
-          key: typescript-${{ runner.os }}-${{ hashFiles('**/tsconfig.json', 'packages/**/src/**/*') }}
-          restore-keys: |
-            typescript-${{ runner.os }}-
-      
       - name: Cache changelog extraction
         id: changelog-cache
         uses: actions/cache@v4
