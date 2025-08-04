@@ -183,6 +183,7 @@ jobs:
       package_name: ${{ steps.package.outputs.package_name }}
       file_size: ${{ steps.package.outputs.file_size }}
       artifact_name: ${{ steps.upload_info.outputs.artifact_name }}
+      artifact_url: ${{ steps.upload.outputs.artifact-url }}
       commit_hash: ${{ steps.build_info.outputs.commit_hash }}
       commit_short: ${{ steps.build_info.outputs.commit_short }}
       changelog_content: ${{ steps.build_info.outputs.changelog_content }}
@@ -242,19 +243,11 @@ jobs:
             echo "📝 Extracting changelog content..."
             
             # Extract content between "## Unreleased" and next "##" section
-            FULL_CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
+            CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
               if (/^## Unreleased/) next
               if (/^## [^U]/) exit
               if (NF > 0 && !/^[[:space:]]*$/) print
             }' CHANGELOG.md)
-            
-            # Limit to 8 lines and check if truncated
-            CHANGELOG_CONTENT=$(echo "$FULL_CHANGELOG_CONTENT" | head -8)
-            FULL_LINES=$(echo "$FULL_CHANGELOG_CONTENT" | wc -l)
-            
-            if [ "$FULL_LINES" -gt 8 ]; then
-              CHANGELOG_CONTENT="${CHANGELOG_CONTENT}\n..._(truncated - see full changelog)_"
-            fi
             
             # If no unreleased content, get recent commits
             if [ -z "$CHANGELOG_CONTENT" ]; then
@@ -462,7 +455,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "⬇️ *Download:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Go to workflow run> → **Artifacts** section → click artifact → install ZIP directly in WordPress (Available for 30 days)"
+                    "text": "⬇️ *Download:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Go to workflow run> → **Artifacts** section → click `${{ needs.build.outputs.artifact_name }}` → install ZIP in WordPress (Available for 30 days)"
                   }
                 },
                 {
@@ -584,11 +577,25 @@ jobs:
             echo "## ⬇️ Download Instructions" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             
-            echo "### 🎯 How to Download" >> $GITHUB_STEP_SUMMARY
-            echo "1. Scroll down to the **Artifacts** section at the bottom of this workflow run" >> $GITHUB_STEP_SUMMARY
-            echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\` to download the plugin ZIP" >> $GITHUB_STEP_SUMMARY
-            echo "3. Install the downloaded ZIP file directly in WordPress" >> $GITHUB_STEP_SUMMARY
-            echo "   - WordPress Admin → Plugins → Add New → Upload Plugin" >> $GITHUB_STEP_SUMMARY
+            # Show direct download URL if available
+            if [ -n "${{ needs.build.outputs.artifact_url }}" ]; then
+              echo "### 🎯 Direct Download" >> $GITHUB_STEP_SUMMARY
+              echo "**[⬇️ Download Plugin ZIP](${{ needs.build.outputs.artifact_url }})**" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "1. Click the download link above (requires GitHub login)" >> $GITHUB_STEP_SUMMARY
+              echo "2. Install the ZIP file directly in WordPress" >> $GITHUB_STEP_SUMMARY
+              echo "   - WordPress Admin → Plugins → Add New → Upload Plugin" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### Alternative: Via Artifacts Section" >> $GITHUB_STEP_SUMMARY
+              echo "1. Scroll down to **Artifacts** section at bottom of this workflow" >> $GITHUB_STEP_SUMMARY
+              echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\`" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### 🎯 How to Download" >> $GITHUB_STEP_SUMMARY
+              echo "1. Scroll down to the **Artifacts** section at the bottom of this workflow run" >> $GITHUB_STEP_SUMMARY
+              echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\` to download the plugin ZIP" >> $GITHUB_STEP_SUMMARY
+              echo "3. Install the downloaded ZIP file directly in WordPress" >> $GITHUB_STEP_SUMMARY
+              echo "   - WordPress Admin → Plugins → Add New → Upload Plugin" >> $GITHUB_STEP_SUMMARY
+            fi
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "⏰ **Retention:** Package will be available for **30 days**" >> $GITHUB_STEP_SUMMARY
           else
