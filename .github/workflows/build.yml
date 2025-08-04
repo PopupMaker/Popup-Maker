@@ -227,6 +227,45 @@ jobs:
           restore-keys: |
             npm-${{ runner.os }}-
       
+      - name: Capture build information
+        id: build_info
+        run: |
+          # Capture commit information BEFORE modifying files
+          COMMIT_HASH=$(git rev-parse HEAD)
+          COMMIT_SHORT=$(git rev-parse --short HEAD)
+          
+          echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
+          echo "commit_short=${COMMIT_SHORT}" >> $GITHUB_OUTPUT
+          
+          # Extract changelog content from CHANGELOG.md
+          if [ -f "CHANGELOG.md" ]; then
+            echo "📝 Extracting changelog content..."
+            
+            # Extract content between "## Unreleased" and next "##" section
+            CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
+              if (/^## Unreleased/) next
+              if (/^## [^U]/) exit
+              if (NF > 0 && !/^[[:space:]]*$/) print
+            }' CHANGELOG.md | head -10)
+            
+            # If no unreleased content, get recent commits
+            if [ -z "$CHANGELOG_CONTENT" ]; then
+              echo "No unreleased changes found, using recent commits..."
+              CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
+            fi
+          else
+            echo "No CHANGELOG.md found, using recent commits..."
+            CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
+          fi
+          
+          # Save changelog content (handle multiline)
+          echo "changelog_content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          echo "📋 Commit: ${COMMIT_SHORT}"
+          echo "📝 Changelog lines: $(echo "$CHANGELOG_CONTENT" | wc -l)"
+      
       - name: Prepare test version files
         run: |
           BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
@@ -332,45 +371,6 @@ jobs:
           name: ${{ fromJson(needs.validate.outputs.plugin_info).slug }}-${{ needs.validate.outputs.build_version }}-test
           path: ${{ steps.package.outputs.package_name }}
           retention-days: 30
-      
-      - name: Capture build information
-        id: build_info
-        run: |
-          # Capture commit information
-          COMMIT_HASH=$(git rev-parse HEAD)
-          COMMIT_SHORT=$(git rev-parse --short HEAD)
-          
-          echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
-          echo "commit_short=${COMMIT_SHORT}" >> $GITHUB_OUTPUT
-          
-          # Extract changelog content from CHANGELOG.md
-          if [ -f "CHANGELOG.md" ]; then
-            echo "📝 Extracting changelog content..."
-            
-            # Extract content between "## Unreleased" and next "##" section
-            CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
-              if (/^## Unreleased/) next
-              if (/^## [^U]/) exit
-              if (NF > 0 && !/^[[:space:]]*$/) print
-            }' CHANGELOG.md | head -10)
-            
-            # If no unreleased content, get recent commits
-            if [ -z "$CHANGELOG_CONTENT" ]; then
-              echo "No unreleased changes found, using recent commits..."
-              CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
-            fi
-          else
-            echo "No CHANGELOG.md found, using recent commits..."
-            CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
-          fi
-          
-          # Save changelog content (handle multiline)
-          echo "changelog_content<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          
-          echo "📋 Commit: ${COMMIT_SHORT}"
-          echo "📝 Changelog lines: $(echo "$CHANGELOG_CONTENT" | wc -l)"
       
       - name: Set artifact info for summary
         id: upload_info
@@ -528,6 +528,26 @@ jobs:
     if: always()
     
     steps:
+      - name: Get artifact download URL
+        id: artifact
+        if: needs.build.result == 'success'
+        run: |
+          # Get artifacts for this workflow run
+          RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts")
+          
+          # Extract download URL for our artifact
+          ARTIFACT_NAME="${{ needs.build.outputs.artifact_name }}"
+          DOWNLOAD_URL=$(echo "$RESPONSE" | jq -r ".artifacts[] | select(.name == \"$ARTIFACT_NAME\") | .archive_download_url")
+          
+          if [ "$DOWNLOAD_URL" != "null" ] && [ -n "$DOWNLOAD_URL" ]; then
+            echo "download_url=${DOWNLOAD_URL}" >> $GITHUB_OUTPUT
+            echo "✅ Found artifact download URL"
+          else
+            echo "download_url=" >> $GITHUB_OUTPUT
+            echo "⚠️ Could not find artifact download URL"
+          fi
+      
       - name: Generate summary
         run: |
           BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
@@ -572,14 +592,29 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "## ⬇️ Download Instructions" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Option 1: Direct Download (Recommended)" >> $GITHUB_STEP_SUMMARY
-            echo "1. Scroll down to the **Artifacts** section at the bottom of this workflow run" >> $GITHUB_STEP_SUMMARY
-            echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\` to download the plugin ZIP" >> $GITHUB_STEP_SUMMARY
-            echo "3. Install the downloaded ZIP file directly in WordPress" >> $GITHUB_STEP_SUMMARY
-            echo "   - WordPress Admin → Plugins → Add New → Upload Plugin" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Option 2: Via Workflow Page" >> $GITHUB_STEP_SUMMARY
-            echo "Visit the [workflow run page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) and scroll to the **Artifacts** section at the bottom" >> $GITHUB_STEP_SUMMARY
+            
+            # Show direct download URL if available
+            if [ -n "${{ steps.artifact.outputs.download_url }}" ]; then
+              echo "### 🎯 Direct Download (Recommended)" >> $GITHUB_STEP_SUMMARY
+              echo "**[⬇️ Download Plugin ZIP](${{ steps.artifact.outputs.download_url }})**" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "1. Click the download link above (requires GitHub login)" >> $GITHUB_STEP_SUMMARY
+              echo "2. Install the ZIP file directly in WordPress" >> $GITHUB_STEP_SUMMARY
+              echo "   - WordPress Admin → Plugins → Add New → Upload Plugin" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### Alternative: Via Artifacts Section" >> $GITHUB_STEP_SUMMARY
+              echo "1. Scroll down to **Artifacts** section at bottom of this workflow" >> $GITHUB_STEP_SUMMARY
+              echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\`" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### Option 1: Direct Download (Recommended)" >> $GITHUB_STEP_SUMMARY
+              echo "1. Scroll down to the **Artifacts** section at the bottom of this workflow run" >> $GITHUB_STEP_SUMMARY
+              echo "2. Click on \`${{ needs.build.outputs.artifact_name }}\` to download the plugin ZIP" >> $GITHUB_STEP_SUMMARY
+              echo "3. Install the downloaded ZIP file directly in WordPress" >> $GITHUB_STEP_SUMMARY
+              echo "   - WordPress Admin → Plugins → Add New → Upload Plugin" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "### Option 2: Via Workflow Page" >> $GITHUB_STEP_SUMMARY
+              echo "Visit the [workflow run page](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) and scroll to the **Artifacts** section at the bottom" >> $GITHUB_STEP_SUMMARY
+            fi
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "⏰ **Retention:** Package will be available for **30 days**" >> $GITHUB_STEP_SUMMARY
           else
@@ -588,11 +623,11 @@ jobs:
           
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📝 Build Information" >> $GITHUB_STEP_SUMMARY
-          echo "**Source:** ${{ github.event.inputs.ref || 'develop' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit:** [\`$(git rev-parse --short HEAD)\`](https://github.com/${{ github.repository }}/commit/$(git rev-parse HEAD))" >> $GITHUB_STEP_SUMMARY
+          echo "**Source:** [\`${{ github.event.inputs.ref || 'develop' }}\`](https://github.com/${{ github.repository }}/tree/${{ github.event.inputs.ref || 'develop' }})" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** [\`${{ needs.build.outputs.commit_short }}\`](https://github.com/${{ github.repository }}/commit/${{ needs.build.outputs.commit_hash }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Recent Changes:**" >> $GITHUB_STEP_SUMMARY
-          git log --oneline -5 --pretty=format:"- %s (\`%h\`)" >> $GITHUB_STEP_SUMMARY || echo "- Unable to retrieve recent changes" >> $GITHUB_STEP_SUMMARY
+          echo "${{ needs.build.outputs.changelog_content }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## ℹ️ Note" >> $GITHUB_STEP_SUMMARY
