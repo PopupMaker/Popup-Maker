@@ -297,10 +297,10 @@ jobs:
           
           git add -A
           git commit -m "Prepare release ${VERSION}
-
-- Update version numbers to ${VERSION}
-- Update changelog and readme
-- Prepare for release deployment"
+          
+          - Update version numbers to ${VERSION}
+          - Update changelog and readme
+          - Prepare for release deployment"
           
           echo "✅ Release preparation committed"
       
