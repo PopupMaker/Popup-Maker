@@ -357,7 +357,14 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "📦 *Test package available for 30 days* - <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Download from Artifacts>"
+                    "text": "📦 *Test package:* `${{ needs.build.outputs.package_name || 'Unknown' }}`"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "⬇️ *Download:* <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts|View Artifacts> (Available for 30 days)"
                   }
                 }
               ]
@@ -462,8 +469,21 @@ jobs:
           echo "## 📥 Test Package" >> $GITHUB_STEP_SUMMARY
           
           if [ "${{ needs.build.result }}" == "success" ]; then
-            echo "Test package is available in the [Actions artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) section." >> $GITHUB_STEP_SUMMARY
-            echo "Package will be retained for **30 days**." >> $GITHUB_STEP_SUMMARY
+            PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
+            ARTIFACT_NAME="${PLUGIN_SLUG}-${BUILD_VERSION}-test"
+            
+            echo "📦 **Package:** \`${{ needs.build.outputs.package_name }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "📏 **Size:** ${{ needs.build.outputs.file_size || 'Unknown' }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Download:** [${ARTIFACT_NAME}.zip](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "💡 **Instructions:**" >> $GITHUB_STEP_SUMMARY
+            echo "1. Click the download link above" >> $GITHUB_STEP_SUMMARY
+            echo "2. Find the artifact named \`${ARTIFACT_NAME}\`" >> $GITHUB_STEP_SUMMARY
+            echo "3. Download and extract the ZIP file" >> $GITHUB_STEP_SUMMARY
+            echo "4. Install the plugin ZIP in WordPress" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⏰ Package will be retained for **30 days**." >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ No test package was created due to build failure." >> $GITHUB_STEP_SUMMARY
           fi
