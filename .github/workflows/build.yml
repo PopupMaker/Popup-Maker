@@ -166,6 +166,9 @@ jobs:
       package_name: ${{ steps.package.outputs.package_name }}
       file_size: ${{ steps.package.outputs.file_size }}
       artifact_name: ${{ steps.upload_info.outputs.artifact_name }}
+      commit_hash: ${{ steps.build_info.outputs.commit_hash }}
+      commit_short: ${{ steps.build_info.outputs.commit_short }}
+      changelog_content: ${{ steps.build_info.outputs.changelog_content }}
     
     steps:
       - name: Checkout code
@@ -295,6 +298,45 @@ jobs:
           name: ${{ fromJson(needs.validate.outputs.plugin_info).slug }}-${{ needs.validate.outputs.build_version }}-test
           path: ${{ steps.package.outputs.package_name }}
           retention-days: 30
+      
+      - name: Capture build information
+        id: build_info
+        run: |
+          # Capture commit information
+          COMMIT_HASH=$(git rev-parse HEAD)
+          COMMIT_SHORT=$(git rev-parse --short HEAD)
+          
+          echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
+          echo "commit_short=${COMMIT_SHORT}" >> $GITHUB_OUTPUT
+          
+          # Extract changelog content from CHANGELOG.md
+          if [ -f "CHANGELOG.md" ]; then
+            echo "📝 Extracting changelog content..."
+            
+            # Extract content between "## Unreleased" and next "##" section
+            CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
+              if (/^## Unreleased/) next
+              if (/^## [^U]/) exit
+              if (NF > 0 && !/^[[:space:]]*$/) print
+            }' CHANGELOG.md | head -10)
+            
+            # If no unreleased content, get recent commits
+            if [ -z "$CHANGELOG_CONTENT" ]; then
+              echo "No unreleased changes found, using recent commits..."
+              CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
+            fi
+          else
+            echo "No CHANGELOG.md found, using recent commits..."
+            CHANGELOG_CONTENT=$(git log --oneline -5 --pretty=format:"- %s" | head -5)
+          fi
+          
+          # Save changelog content (handle multiline)
+          echo "changelog_content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          echo "📋 Commit: ${COMMIT_SHORT}"
+          echo "📝 Changelog lines: $(echo "$CHANGELOG_CONTENT" | wc -l)"
       
       - name: Set artifact info for summary
         id: upload_info
