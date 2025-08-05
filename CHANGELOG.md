@@ -39,6 +39,7 @@ This update begins the process of modernizing our codebase while polishing exist
 **Fixes**
 
 -   `Close on overlay click` & `Close on ESC press` stopped working if 2 popups were open and one closed.
+-   Potential error due to post object missing a post type.
 
 **Developers**
 
