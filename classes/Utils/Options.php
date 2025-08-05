@@ -111,7 +111,7 @@ class PUM_Utils_Options {
 		}
 
 		// First let's grab the current settings
-		$options = get_option( self::$prefix . 'settings' );
+		$options = get_option( self::$prefix . 'settings', [] );
 
 		// Let's let devs alter that value coming in
 		$value = apply_filters( self::$prefix . 'update_option', $value, $key );
