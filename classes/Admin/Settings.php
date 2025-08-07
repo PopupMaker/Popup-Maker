@@ -237,24 +237,24 @@ class PUM_Admin_Settings {
 			$fields = [
 				'general' => [
 					'main' => [
-						'default_theme_id'          => [
+						'default_theme_id'      => [
 							'label'        => __( 'Default Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose the default theme used for new popups', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( 'post.php?action=edit&post={{data.value}}' ) ),
 							'type'         => 'select',
 							'options'      => pum_is_settings_page() ? PUM_Helpers::popup_theme_selectlist() : null,
 							'std'          => pum_get_default_theme_id(),
 						],
-						'gutenberg_support_enabled' => [
-							'label' => __( 'Enable Block Editor Support', 'popup-maker' ),
-							'desc'  => __( 'Enable experimental support for using the block editor to edit popups.', 'popup-maker' ),
+						'enable_classic_editor' => [
+							'label' => __( 'Use Classic Editor for Popups', 'popup-maker' ),
+							'desc'  => __( 'Disable the block editor and use the classic editor for editing popups.', 'popup-maker' ),
 							'type'  => 'checkbox',
 						],
-						'google_fonts_api_key'      => [
+						'google_fonts_api_key'  => [
 							'type'  => 'text',
 							'label' => __( 'Google Fonts API Key *optional', 'popup-maker' ),
 							'desc'  => __( 'Enter your own Google Fonts API key to always get the latest fonts available.', 'popup-maker' ),
 						],
-						'telemetry'                 => [
+						'telemetry'             => [
 							'type'  => 'checkbox',
 							'label' => __( 'Allow usage tracking?', 'popup-maker' ),
 							'desc'  => sprintf(

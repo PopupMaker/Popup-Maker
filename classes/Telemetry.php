@@ -173,7 +173,7 @@ class PUM_Telemetry {
 			'open_count'             => get_option( 'pum_total_open_count', 0 ),
 
 			// Popup Maker Settings.
-			'block_editor_enabled'   => pum_get_option( 'gutenberg_support_enabled' ),
+			'block_editor_enabled'   => ! pum_get_option( 'enable_classic_editor', false ),
 			'bypass_ad_blockers'     => pum_get_option( 'bypass_adblockers' ),
 			'disable_taxonomies'     => pum_get_option( 'disable_popup_category_tag' ),
 			'disable_asset_cache'    => pum_get_option( 'disable_asset_caching' ),

@@ -23,6 +23,10 @@ This update begins the process of modernizing our codebase while polishing exist
 
 **Improvements**
 
+-   Block editor is now the default for new popups, replacing the previous opt-in beta approach for a more streamlined editing experience.
+    -   Added "Use Classic Editor" setting for users who prefer the traditional popup editor interface.
+    -   Existing users who previously disabled the block editor will see a one-time migration notice with options to continue using the block editor or switch to classic.
+    -   Updated new user onboarding to include guidance about the classic editor option for users who prefer the traditional interface.
 -   Optimized popup `open` functions to improve browser animation reliability and consistent user experience. This update aims to eliminate visual inconsistencies and resolve issues where popups occasionally failed to display.
 -   Added plugin settings shortcut to the admin toolbar menu.
 -   Updated CSS selector generation tool with click-to-copy and improved selectors.
