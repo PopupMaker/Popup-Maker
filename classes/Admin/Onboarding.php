@@ -376,7 +376,7 @@ class PUM_Admin_Onboarding {
 		];
 
 		if (
- 			'enabled' !== get_option( 'pum_gutenberg_legacy_choice', 'new_user' ) &&
+			'enabled' !== get_option( 'pum_gutenberg_legacy_choice', 'new_user' ) &&
 			! pum_get_option( 'enable_classic_editor', false )
 		) {
 			$tips[] = [
