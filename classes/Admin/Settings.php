@@ -86,14 +86,14 @@ class PUM_Admin_Settings {
 
 			$settings = apply_filters( 'pum_sanitize_settings', $settings );
 
-			if ( PUM_Utils_Options::update_all( $settings ) ) {
-				self::$notices[] = [
-					'type'    => 'success',
-					'message' => __( 'Settings saved successfully!', 'popup-maker' ),
-				];
+			// Always show success notice, regardless of whether values actually changed
+			PUM_Utils_Options::update_all( $settings );
+			update_option( 'pum_settings_admin_notice', __( 'Settings saved successfully!', 'popup-maker' ) );
 
-				do_action( 'pum_save_settings', $settings );
-			}
+			// Determine current tab for redirect
+			$current_tab = isset( $_POST['current_tab'] ) ? sanitize_text_field( wp_unslash( $_POST['current_tab'] ) ) : 'general';
+
+			do_action( 'pum_save_settings', $settings );
 
 			return;
 
