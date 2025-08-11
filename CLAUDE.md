@@ -420,3 +420,6 @@ DO NOT FORGET:
 
 ### Package Management Considerations
 - When adding new packages, we have to update webpack config, tsconfigs, dependency extraction plugin package list AND Assets.php appropriately
+
+- Let services handle their own business logic - delegate with single method 
+  calls rather than orchestrating multiple service operations when it makes since.
