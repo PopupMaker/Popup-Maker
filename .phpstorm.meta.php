@@ -46,7 +46,8 @@ override(\PopupMaker\Plugin\Core::get(0), map([
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
-    
+    'license'      => \PopupMaker\Services\License::class,
+
     // Config Values
     'path'         => 'string',
     'url'          => 'string',
@@ -64,7 +65,8 @@ override(\PopupMaker\plugin(0), map([
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
-    
+    'license'      => \PopupMaker\Services\License::class,
+
     // Config Values
     'path'         => 'string',
     'url'          => 'string',
@@ -82,7 +84,8 @@ override( \PopupMaker\Plugin\Container::get(0), map([
     'cta_types'    => \PopupMaker\Services\Collector\CallToActionTypes::class,
     'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
-    
+    'license'      => \PopupMaker\Services\License::class,
+
     // Config Values
     'path'         => 'string',
     'url'          => 'string',
