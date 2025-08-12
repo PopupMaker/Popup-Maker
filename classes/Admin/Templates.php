@@ -195,7 +195,28 @@ class PUM_Admin_Templates {
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-license_key">
-			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{data.value.key}}" autocomplete="off" {{{data.meta}}}/>
+			<#
+			var isActive = data.value.status === 'valid';
+			var shouldMask = isActive && data.value.key && data.value.key.length > 6;
+			var shouldDisable = isActive || data.value.auto_activated;
+			var displayValue = shouldMask ? data.value.key.substring(0,3) + '*'.repeat(data.value.key.length - 6) + data.value.key.slice(-3) : data.value.key;
+			#>
+
+			<# if (data.value.auto_activated) { #>
+			<!-- Auto-activated license: readonly field with notice -->
+			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{displayValue}}" autocomplete="off" readonly style="background: #f1f1f1;" {{{data.meta}}}/>
+			<p class="description" style="color: #0073aa; font-weight: 500;">
+				<?php esc_html_e( 'This license is automatically managed via the POPUP_MAKER_LICENSE_KEY constant.', 'popup-maker' ); ?>
+			</p>
+			<# } else { #>
+			<!-- Regular license field: mask and disable when active -->
+			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{displayValue}}" autocomplete="off" <# if (shouldDisable) { #>disabled<# } #> {{{data.meta}}}/>
+			<# if (isActive && shouldMask) { #>
+			<p class="description" style="color: #666; font-style: italic; margin: 5px 0;">
+				<?php esc_html_e( 'License key is masked for security. Deactivate to make changes.', 'popup-maker' ); ?>
+			</p>
+			<# } #>
+			<# } #>
 
 			<# if (data.value.key !== '') { #>
 			<?php wp_nonce_field( 'pum_license_activation', 'pum_license_activation_nonce' ); ?>
@@ -215,6 +236,268 @@ class PUM_Admin_Templates {
 				<# } #>
 			</div>
 			<# } #>
+		</script>
+
+		<?php
+		$license_service   = \PopupMaker\plugin( 'license' );
+		$is_auto_activated = $license_service->is_auto_activated();
+		$license_status    = $license_service->get_license_status_data();
+
+		?>
+
+		<script type="text/html" id="tmpl-pum-field-pro_license">
+			<#
+			var hasKey = data.value && data.value.key && data.value.key.length > 0;
+			var shouldMask = hasKey && data.value.key.length > 6;
+			var displayValue = shouldMask ? data.value.key.substring(0,3) + '*'.repeat(data.value.key.length - 6) + data.value.key.slice(-3) : (data.value && data.value.key ? data.value.key : '');
+			var safeValue = data.value || {};
+			var isAutoActivated = <?php echo $is_auto_activated ? 'true' : 'false'; ?>;
+
+			// Use comprehensive status system instead of binary logic
+			var status = (data.value && data.value.status) ? data.value.status : 'empty';
+			var statusClasses = (data.value && data.value.classes) ? data.value.classes : 'pum-license-empty';
+			var isActive = status === 'valid';
+			var isDeactivated = status === 'deactivated';
+			var isInactive = !isActive && !isDeactivated && hasKey;
+
+
+			// Add status class to parent field wrapper after render
+			setTimeout(function() {
+				var fieldWrapper = document.querySelector('.pum-field-pro_license');
+				if (fieldWrapper) {
+					// Remove any existing license status classes
+					fieldWrapper.className = fieldWrapper.className.replace(/pum-license-\w+-notice/g, '');
+					// Add new status class for field-level styling
+					if (status === 'deactivated') {
+						fieldWrapper.classList.add('pum-license-deactivated-notice');
+					} else if (status === 'valid') {
+						fieldWrapper.classList.add('pum-license-valid-notice');
+					} else if (status === 'expired') {
+						fieldWrapper.classList.add('pum-license-expired-notice');
+					} else if (status === 'error') {
+						fieldWrapper.classList.add('pum-license-error-notice');
+					}
+				}
+			}, 10);
+			#>
+
+			<!-- Main Content Container (like Content Control) -->
+			<div class="pum-pro-license-content">
+				<!-- Pro Licensing Header (like Content Control) -->
+				<div class="pum-pro-license-header">
+					<svg class="pum-license-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m0 0a2 2 0 012 2 2 2 0 11-4 0c0-1.1.9-2 2-2zM9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m-6 3l6-3"></path>
+					</svg>
+					<h3><?php esc_html_e( 'Pro Licensing', 'popup-maker' ); ?></h3>
+					<# if (hasKey) { #>
+					<span class="pum-license-status-badge <# if (isActive) { #>active<# } else if (isDeactivated) { #>deactivated<# } else if (status === 'expired') { #>expired<# } else { #>error<# } #>">
+						<# if (isActive) { #><?php esc_html_e( 'Activated', 'popup-maker' ); ?><# } else if (isDeactivated) { #><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?><# } else if (status === 'expired') { #><?php esc_html_e( 'Expired', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Invalid', 'popup-maker' ); ?><# } #>
+					</span>
+					<# } #>
+				</div>
+				<h3 class="pum-license-heading"><?php esc_html_e( 'Enter your Popup Maker Pro License Key', 'popup-maker' ); ?></h3>
+
+				<p class="pum-license-description">
+					<# if (isActive) { #>
+					<?php esc_html_e( 'You are currently using Popup Maker Pro — no license key required. Enjoy!', 'popup-maker' ); ?> 😄
+					<# } else if (isDeactivated) { #>
+					<?php esc_html_e( 'Your Pro license is valid but deactivated on this site. Activate it below to enable Pro features!', 'popup-maker' ); ?> 🔑
+					<# } else { #>
+					<?php esc_html_e( 'You are currently using Popup Maker Lite — no license key required. Enjoy!', 'popup-maker' ); ?> 😄
+					<# } #>
+				</p>
+
+				<# if (!isActive) { #>
+				<p class="pum-license-description">
+					<?php esc_html_e( 'Enter your license key below to activate', 'popup-maker' ); ?> <strong><?php esc_html_e( 'Popup Maker Pro', 'popup-maker' ); ?></strong><?php esc_html_e( '!', 'popup-maker' ); ?>
+				</p>
+				<# } #>
+
+				<div class="pum-license-input-wrapper">
+					<div class="pum-license-input-group">
+						<input placeholder="<?php esc_attr_e( 'Paste or enter your license key here.', 'popup-maker' ); ?>" class="{{data.size}}-text pum-license-key-input" id="{{data.id}}" name="{{data.name}}" value="{{displayValue}}" autocomplete="off" <# if (isActive) { #>disabled<# } #> {{{data.meta}}}/>
+
+						<div class="pum-license-buttons">
+							<?php wp_nonce_field( 'pum_license_operation_nonce', 'pum_license_operation_nonce' ); ?>
+
+							<# if (!hasKey) { #>
+							<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>" disabled/>
+
+							<# } else if (isActive && !isAutoActivated) { #>
+							<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span>
+							<input type="submit" class="button button-secondary pum-license-deactivate" id="{{data.id}}_deactivate" name="pum_license_operation[deactivate]" value="<?php esc_attr_e( 'Deactivate', 'popup-maker' ); ?>"/>
+							<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
+
+							<# } else if (isDeactivated && !isAutoActivated) { #>
+							<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?></span>
+							<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>"/>
+							<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
+
+							<# } else if (hasKey && !isActive && !isDeactivated && !isAutoActivated) { #>
+							<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Inactive', 'popup-maker' ); ?></span>
+							<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>"/>
+							<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
+
+							<# } else if (isActive && isAutoActivated) { #>
+							<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span>
+							<span class="description" style="color: #0073aa; font-style: italic;"><?php esc_html_e( '(Auto-activated)', 'popup-maker' ); ?></span>
+							<# } #>
+						</div>
+					</div>
+				</div>
+
+				<# if (safeValue.messages && safeValue.messages.length) { #>
+				<div class="pum-license-messages">
+					<# for(var i=0; i < safeValue.messages.length; i++) { #>
+					<p class="error">{{{safeValue.messages[i]}}}</p>
+					<# } #>
+				</div>
+				<# } #>
+
+				<# if (isAutoActivated) { #>
+				<p class="pum-license-description" style="color: #0073aa; font-weight: 500;">
+					<?php esc_html_e( 'This license is automatically managed via the POPUP_MAKER_LICENSE_KEY constant.', 'popup-maker' ); ?>
+				</p>
+				<# } else if (isActive) { #>
+				<p class="pum-license-description success">
+					<?php esc_html_e( 'Your license key is active. Thank you for supporting Popup Maker!', 'popup-maker' ); ?>
+				</p>
+
+				<# if (safeValue.expires || isActive) { #>
+				<div class="pum-license-details">
+					<h4><?php esc_html_e( 'License Details', 'popup-maker' ); ?></h4>
+					<table class="pum-license-details-table">
+						<tr>
+							<td><strong><?php esc_html_e( 'Status:', 'popup-maker' ); ?></strong></td>
+							<td><span class="pum-license-status-active"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span></td>
+						</tr>
+						<tr>
+							<td><strong><?php esc_html_e( 'License Key:', 'popup-maker' ); ?></strong></td>
+							<td><code>{{displayValue}}</code></td>
+						</tr>
+						<# if (safeValue.expires && safeValue.expires !== 'lifetime') { #>
+						<tr>
+							<td><strong><?php esc_html_e( 'Expires:', 'popup-maker' ); ?></strong></td>
+							<td>{{safeValue.expires}}</td>
+						</tr>
+						<# } else if (safeValue.expires === 'lifetime') { #>
+						<tr>
+							<td><strong><?php esc_html_e( 'License Type:', 'popup-maker' ); ?></strong></td>
+							<td><?php esc_html_e( 'Lifetime License', 'popup-maker' ); ?></td>
+						</tr>
+						<# } #>
+					</table>
+				</div>
+				<# } #>
+
+				<# } else if (hasKey && !isActive) { #>
+				<p class="pum-license-description">
+					<?php esc_html_e( 'Your license key is currently deactivated. Click Activate to enable Pro features.', 'popup-maker' ); ?>
+				</p>
+				<# } #>
+
+				<# if (!isActive) { #>
+				<div class="pum-license-upgrade-text">
+					<?php esc_html_e( 'Enter your license key to activate. If you do not have a license key, you can', 'popup-maker' ); ?>
+					<a href="https://wppopupmaker.com/pricing/?utm_source=plugin-settings&utm_medium=pro-license-field&utm_campaign=upgrade" target="_blank"><?php esc_html_e( 'purchase one here', 'popup-maker' ); ?></a>
+				</div>
+
+				<hr class="pum-license-separator" />
+
+				<div class="pum-pro-features">
+					<div class="pum-features-intro">
+						<# if (isDeactivated) { #>
+						<?php esc_html_e( 'Activate your Pro license above to unlock these powerful features:', 'popup-maker' ); ?>
+						<# } else { #>
+						<?php esc_html_e( 'To unlock these game-changing features,', 'popup-maker' ); ?>
+						<a href="https://wppopupmaker.com/pricing/?utm_source=plugin-settings&utm_medium=pro-license-field&utm_campaign=upgrade" target="_blank"><?php esc_html_e( 'upgrade to Pro', 'popup-maker' ); ?></a>
+						<?php esc_html_e( ' and enter your license key above.', 'popup-maker' ); ?>
+						<# } #>
+					</div>
+
+					<div class="pum-features-grid">
+						<div class="pum-feature-column">
+							<h4><?php esc_html_e( 'Monetize & Track Every Conversion', 'popup-maker' ); ?></h4>
+							<ul>
+								<li>
+									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+									<div>
+										<strong><?php esc_html_e( 'Revenue Attribution & Analytics:', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Track every dollar earned through your popups. Prove ROI with complete conversion tracking and detailed revenue reports.', 'popup-maker' ); ?>
+									</div>
+								</li>
+								<li>
+									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+									<div>
+										<strong><?php esc_html_e( 'Professional CTA Management:', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' One-click export/import for CTAs. Create shareable vanity URLs. Bulk operations for enterprise-scale management.', 'popup-maker' ); ?>
+									</div>
+								</li>
+								<li>
+									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+									<div>
+										<strong><?php esc_html_e( 'WooCommerce Integration:', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Add products to cart, apply discounts, and recover abandoned carts with complete revenue attribution. Proven to increase sales by 15-40%.', 'popup-maker' ); ?>
+									</div>
+								</li>
+								<li>
+									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+									<div>
+										<strong><?php esc_html_e( 'Easy Digital Downloads Integration:', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Perfect for software and digital product sales with license management. Seamlessly integrate checkout flows and boost digital sales conversion rates.', 'popup-maker' ); ?>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+						<div class="pum-feature-column">
+							<h4><?php esc_html_e( 'Smart Targeting & Automation', 'popup-maker' ); ?></h4>
+							<ul>
+								<li>
+									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+									<div>
+										<strong><?php esc_html_e( 'FluentCRM Integration:', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Seamlessly add tags, trigger automation sequences, and create smart links. Perfect for lead nurturing and customer journey automation.', 'popup-maker' ); ?>
+									</div>
+								</li>
+								<li>
+									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+									<div>
+										<strong><?php esc_html_e( 'Advanced Targeting & Behavioral Triggers:', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Target by user role, comment history, device, and custom behaviors. Show the right message to the right person at the perfect time.', 'popup-maker' ); ?>
+									</div>
+								</li>
+								<li>
+									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+									<div>
+										<strong><?php esc_html_e( 'Real-Time Analytics & Insights:', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Live performance tracking with detailed conversion metrics. Monitor popup effectiveness in real-time and make data-driven optimization decisions instantly.', 'popup-maker' ); ?>
+									</div>
+								</li>
+								<li>
+									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+									<div>
+										<strong><?php esc_html_e( 'Time-Based Campaign Scheduling:', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Smart campaign scheduling with timezone support and recurring campaigns. Perfect timing for seasonal promotions and global audiences.', 'popup-maker' ); ?>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Backup features for A/B testing -->
+					<!--
+					Alternative high-value features for randomization:
+					- A/B Testing & Optimization: Test popup variations automatically to maximize conversion rates
+					- Time-Based Scheduling: Smart campaign scheduling with timezone support and recurring campaigns
+					- User Role Targeting: Show different content to different user types (Admin, Subscriber, etc.)
+					- LifterLMS Integration: Automate student enrollment and rewards for course creators
+					- Easy Digital Downloads: Perfect for software and digital product sales with license management
+					- Advanced Shortcodes: Developer-friendly trigger customization and complex display logic
+					-->
+				</div>
+				<# } #>
+			</div>
 		</script>
 
 		<script type="text/html" id="tmpl-pum-field-datetime">

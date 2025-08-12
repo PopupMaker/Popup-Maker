@@ -406,7 +406,7 @@ class License extends Service {
 			self::API_URL,
 			array_merge( $params ?? [], [
 				'timeout'   => 15,
-				'sslverify' => ! in_array( wp_get_environment_type(), ['local', 'development'], true ),
+				'sslverify' => ! in_array( wp_get_environment_type(), [ 'local', 'development' ], true ),
 				'body'      => $api_params,
 			] )
 		);

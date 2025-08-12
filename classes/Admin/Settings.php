@@ -26,8 +26,7 @@ class PUM_Admin_Settings {
 	public static function init() {
 		add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
 		add_action( 'admin_init', [ __CLASS__, 'save' ] );
-		// add_action( 'pum_license_deactivated', array( __CLASS__, 'license_deactivated' ) );
-		// add_action( 'pum_license_check_failed', array( __CLASS__, 'license_deactivated' ) );
+		add_action( 'pum_save_settings', [ __CLASS__, 'process_license_operation' ], 10, 1 );
 	}
 
 	// display default admin notice
@@ -37,16 +36,18 @@ class PUM_Admin_Settings {
 	 */
 	public static function notices() {
 
-		if ( isset( $_POST['pum_settings_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
-			if ( isset( $_GET['success'] ) && get_option( 'pum_settings_admin_notice' ) ) {
-				self::$notices[] = [
-					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					'type'    => (bool) $_GET['success'] ? 'success' : 'error',
-					'message' => get_option( 'pum_settings_admin_notice' ),
-				];
+		if ( ! pum_is_settings_page() ) {
+			return;
+		}
 
-				delete_option( 'pum_settings_admin_notice' );
-			}
+		if ( get_option( 'pum_settings_admin_notice' ) ) {
+			self::$notices[] = [
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				'type'    => isset( $_GET['success'] ) && ! (bool) $_GET['success'] ? 'error' : 'success',
+				'message' => get_option( 'pum_settings_admin_notice' ),
+			];
+
+			delete_option( 'pum_settings_admin_notice' );
 		}
 
 		if ( ! empty( self::$notices ) ) {
@@ -56,7 +57,7 @@ class PUM_Admin_Settings {
 					<?php
 					// Ignored because this breaks the HTML and the notices are escaped when added to the array.
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo( $notice['message'] );
+					echo esc_html( $notice['message'] );
 					?>
 					</strong></p>
 					<button type="button" class="notice-dismiss">
@@ -72,63 +73,124 @@ class PUM_Admin_Settings {
 	 * Save settings when needed.
 	 */
 	public static function save() {
-		if ( ! empty( $_POST['pum_settings'] ) && empty( $_POST['pum_license_activate'] ) && empty( $_POST['pum_license_deactivate'] ) ) {
-			if ( ! isset( $_POST['pum_settings_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
-				return;
-			}
+		// Handle settings save.
+		if (
+			! pum_is_settings_page() ||
+			! isset( $_POST['pum_settings_nonce'] ) ||
+			! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ||
+			! current_user_can( 'manage_options' )
+			) {
+			return;
+		}
 
-			if ( ! current_user_can( 'manage_options' ) ) {
-				return;
-			}
-
+		if ( ! empty( $_POST['pum_settings'] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$settings = self::sanitize_settings( wp_unslash( $_POST['pum_settings'] ) );
 
 			$settings = apply_filters( 'pum_sanitize_settings', $settings );
 
-			// Always show success notice, regardless of whether values actually changed
+			// Save settings and set initial success notice
 			PUM_Utils_Options::update_all( $settings );
-			update_option( 'pum_settings_admin_notice', __( 'Settings saved successfully!', 'popup-maker' ) );
+			self::set_admin_notice( __( 'Settings saved successfully!', 'popup-maker' ) );
 
-			// Determine current tab for redirect
-			$current_tab = isset( $_POST['current_tab'] ) ? sanitize_text_field( wp_unslash( $_POST['current_tab'] ) ) : 'general';
-
+			// Fire hooks that may override the notice
 			do_action( 'pum_save_settings', $settings );
-
-			return;
-
-			/**
-			 * Process licensing if set.
-			 *
-			 * // We store the key in wp_options for use by the update & licensing system to keep things cleanly detached.
-			 * $old_license = get_option( 'pum_license_key' );
-			 *
-			 * if ( empty( $settings['pum_license_key'] ) ) {
-			 * delete_option( 'pum_license_key' ); // empty key, remove existing license info.
-			 * delete_option( 'pum_license' ); // empty key, remove existing license info.
-			 * } else if ( $old_license != $settings['pum_license_key'] ) {
-			 * update_option( 'pum_license_key', $settings['pum_license_key'] );
-			 * delete_option( 'pum_license' ); // new license has been entered, so must reactivate
-			 *
-			 * // Prevent additional calls to licensing.
-			 * if ( empty( $_POST['pum_license_activate'] ) ) {
-			 * $message = PUM_Licensing::activate();
-			 *
-			 * if ( $message !== true && ! empty ( $message ) ) {
-			 * self::$notices[] = array(
-			 * 'type'    => 'error',
-			 * 'message' => $message,
-			 * );
-			 * } else {
-			 * self::$notices[] = array(
-			 * 'type'    => 'success',
-			 * 'message' => __( 'License activated successfully!', 'popup-maker' ),
-			 * );
-			 * }
-			 * }
-			 * }
-			 */
 		}
+	}
+
+	/**
+	 * Process license activation when hooked to pum_save_settings.
+	 */
+	public static function process_license_operation() {
+		// Handle license operations.
+		if (
+			! isset( $_POST['pum_license_operation_nonce'] ) ||
+			! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_license_operation_nonce'] ) ), 'pum_license_operation_nonce' ) ||
+			! current_user_can( 'manage_options' ) ||
+			! isset( $_POST['pum_license_operation'] )
+			) {
+			return;
+		}
+
+		$operations = [
+			'activate'   => isset( $_POST['pum_license_operation']['activate'] ),
+			'deactivate' => isset( $_POST['pum_license_operation']['deactivate'] ),
+			'delete'     => isset( $_POST['pum_license_operation']['delete'] ),
+		];
+
+		$operation = array_search( true, $operations, true );
+
+		try {
+			$license_service = \PopupMaker\plugin( 'license' );
+
+			switch ( $operation ) {
+				case 'activate':
+					// Extract license key from form data for activation
+					$license_key = isset( $_POST['pum_settings']['popup_maker_pro_license_key'] )
+						? sanitize_text_field( wp_unslash( $_POST['pum_settings']['popup_maker_pro_license_key'] ) )
+						: null;
+
+					$succeeded = $license_service->maybe_activate_license( $license_key );
+					$message   = __( 'License activated successfully!', 'popup-maker' );
+
+					if ( ! $succeeded ) {
+						$status_data = $license_service->get_license_status_data();
+						$message     = ! empty( $status_data['error_message'] ) ? $status_data['error_message'] : __( 'License activation failed.', 'popup-maker' );
+					}
+
+					break;
+
+				case 'deactivate':
+					$succeeded = $license_service->deactivate_license();
+					$message   = $succeeded ? __( 'License deactivated successfully!', 'popup-maker' ) : __( 'License deactivation failed.', 'popup-maker' );
+					break;
+
+				case 'delete':
+					$succeeded = $license_service->remove_license();
+					$message   = __( 'License key deleted successfully!', 'popup-maker' );
+					break;
+			}
+
+			self::safe_redirect_with_notice( $message, 'licenses', $succeeded );
+		} catch ( Exception $e ) {
+			self::handle_license_service_exception( $e, 'licenses' );
+		}
+	}
+
+	/**
+	 * Set admin notice message.
+	 *
+	 * @param string $message The notice message.
+	 * @param bool   $success Whether it's a success notice.
+	 */
+	private static function set_admin_notice( $message, $success = true ) {
+		update_option( 'pum_settings_admin_notice', $message );
+	}
+
+	/**
+	 * Redirect with notice message.
+	 *
+	 * @param string $message The notice message.
+	 * @param string $tab     The tab to redirect to.
+	 * @param bool   $success Whether it's a success notice.
+	 */
+	private static function safe_redirect_with_notice( $message, $tab = 'licenses', $success = true ) {
+		self::set_admin_notice( $message, $success );
+		wp_safe_redirect( add_query_arg( [
+			'tab'     => $tab,
+			'success' => $success ? '1' : '0',
+		], admin_url( 'edit.php?post_type=popup&page=pum-settings' ) ) );
+		exit;
+	}
+
+	/**
+	 * Handle license service exceptions.
+	 *
+	 * @param Exception $e   The exception.
+	 * @param string    $tab The tab to redirect to.
+	 */
+	private static function handle_license_service_exception( Exception $e, $tab = 'licenses' ) {
+		self::safe_redirect_with_notice( $e->getMessage(), $tab, false );
 	}
 
 	/**
@@ -173,13 +235,21 @@ class PUM_Admin_Settings {
 						$settings[ $key ] .= $settings[ $key . '_unit' ];
 						break;
 
+					case 'pro_license':
+						// Pro license is now handled via hooks, treat as regular text field
+						$settings[ $key ] = is_string( $value ) ? trim( $value ) : $value;
+						break;
+
 					case 'license_key':
+						// Use old system for extension licenses
 						$old = PUM_Utils_Options::get( $key );
 						$new = trim( $value );
 
 						if ( $old && $old !== $new ) {
 							delete_option( str_replace( '_license_key', '_license_active', $key ) );
-							call_user_func( $field['options']['activation_callback'] );
+							if ( ! empty( $field['options']['activation_callback'] ) ) {
+								call_user_func( $field['options']['activation_callback'] );
+							}
 						}
 
 						$settings[ $key ] = is_string( $value ) ? trim( $value ) : $value;
@@ -241,7 +311,7 @@ class PUM_Admin_Settings {
 							'label'        => __( 'Default Popup Theme', 'popup-maker' ),
 							'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose the default theme used for new popups', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( 'post.php?action=edit&post={{data.value}}' ) ),
 							'type'         => 'select',
-							'options'      => pum_is_settings_page() ? PUM_Helpers::popup_theme_selectlist() : null,
+							'options'      => PUM_Helpers::popup_theme_selectlist(),
 							'std'          => pum_get_default_theme_id(),
 						],
 						'enable_classic_editor' => [
@@ -333,7 +403,11 @@ class PUM_Admin_Settings {
 						'main' => [],
 					],
 					'licenses'   => [
-						'main' => [],
+						'main' => [
+							'popup_maker_pro_license_key' => [
+								'type' => 'pro_license',
+							],
+						],
 					],
 					'privacy'    => [
 						'main'  => [
@@ -829,6 +903,58 @@ class PUM_Admin_Settings {
 	 */
 	public static function parse_values( $settings ) {
 
+		/**
+		 * Star the key.
+		 *
+		 * @param string $key The key to star.
+		 *
+		 * @return string The starred key.
+		 */
+		$star_key = function ( $key ) {
+			if ( empty( $key ) ) {
+				return '';
+			}
+
+			return substr( $key, 0, 3 ) . str_repeat( '*', max( 0, strlen( $key ) - 6 ) ) . substr( $key, -3 );
+		};
+
+		/**
+		 * Map license status to template data.
+		 *
+		 * @param string $status License status from service.
+		 * @return array Template data for license status.
+		 */
+		$map_license_status = function ( $status ) {
+			switch ( $status ) {
+				case 'valid':
+					return [
+						'status'  => 'valid',
+						'classes' => 'pum-license-valid',
+					];
+				case 'deactivated':
+					return [
+						'status'  => 'deactivated',
+						'classes' => 'pum-license-deactivated',
+					];
+				case 'expired':
+					return [
+						'status'  => 'expired',
+						'classes' => 'pum-license-expired',
+					];
+				case 'empty':
+					return [
+						'status'  => 'empty',
+						'classes' => 'pum-license-empty',
+					];
+				case 'error':
+				default:
+					return [
+						'status'  => 'invalid',
+						'classes' => 'pum-license-invalid',
+					];
+			}
+		};
+
 		foreach ( $settings as $key => $value ) {
 			$field = self::get_field( $key );
 
@@ -840,11 +966,51 @@ class PUM_Admin_Settings {
 				switch ( $field['type'] ) {
 					case 'measure':
 						break;
+
+					case 'pro_license':
+						// Handle Pro license key specially
+						try {
+							$license_service = \PopupMaker\plugin( 'license' );
+							$license_status  = $license_service->get_license_status_data();
+
+							// Get the comprehensive license status from service
+							$actual_status = $license_service->get_license_status();
+
+							// Get the actual license key (either from form input or service)
+							// $license_key = ! empty( $value ) ? trim( $value ) : $license_service->get_license_key();
+							$license_key = $license_service->get_license_key();
+
+							$license_key = $star_key( $license_key );
+
+							// Use the mapping function to get proper status and classes
+							$status_mapping = $map_license_status( $actual_status );
+
+							// Pass anything we want to the template here.
+							$settings[ $key ] = [
+								'key'      => $license_key,
+								'status'   => $status_mapping['status'],
+								'messages' => ! empty( $license_status['error_message'] ) ? [ $license_status['error_message'] ] : [],
+								'expires'  => $license_service->get_license_expiration(),
+								'classes'  => $status_mapping['classes'],
+							];
+						} catch ( Exception $e ) {
+							$settings[ $key ] = [
+								'key'      => $star_key( trim( $value ) ),
+								'status'   => 'invalid',
+								/* translators: %s is the error message */
+								'messages' => [ sprintf( __( 'Error loading license status: %s', 'popup-maker' ), $e->getMessage() ) ],
+								'expires'  => '',
+								'classes'  => 'pum-license-invalid',
+							];
+						}
+						break;
+
 					case 'license_key':
+						// Handle other license keys using the legacy system
 						$license = get_option( $field['options']['is_valid_license_option'] );
 
 						$settings[ $key ] = [
-							'key'      => trim( $value ),
+							'key'      => $star_key( trim( $value ) ),
 							'status'   => PUM_Licensing::get_status( $license, ! empty( $value ) ),
 							'messages' => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
 							'expires'  => PUM_Licensing::get_license_expiration( $license ),
