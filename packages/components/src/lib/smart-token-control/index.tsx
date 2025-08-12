@@ -246,7 +246,7 @@ const SmartTokenControl = < T extends Token = string >(
 	 *
 	 * @param {string} text new input text
 	 */
-	const udpateInputText = ( text: string ) => {
+	const updateInputText = ( text: string ) => {
 		setState( {
 			...state,
 			inputText: text,
@@ -498,7 +498,7 @@ const SmartTokenControl = < T extends Token = string >(
 							ref={ inputRef }
 							value={ inputText ?? '' }
 							onChange={ ( event ) =>
-								udpateInputText( event.target.value )
+								updateInputText( event.target.value )
 							}
 							autoComplete="off"
 							aria-autocomplete="list"

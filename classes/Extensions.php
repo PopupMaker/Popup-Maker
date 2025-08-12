@@ -28,7 +28,7 @@ class PUM_Extensions {
 	 */
 	public function init() {
 		add_action( 'init', [ $this, 'rename_plugins' ] );
-		add_action( 'upgrader_process_complete', [ $this, 'monitor_plugin_udpates_for_renaming' ], 10, 2 );
+		add_action( 'upgrader_process_complete', [ $this, 'monitor_plugin_updates_for_renaming' ], 10, 2 );
 	}
 
 	/**
@@ -58,7 +58,7 @@ class PUM_Extensions {
 	 * @param array $upgrader_object Array of information regarding the upgrade process.
 	 * @param array $options         Array of bulk item update data.
 	 */
-	public function monitor_plugin_udpates_for_renaming( $upgrader_object, $options ) {
+	public function monitor_plugin_updates_for_renaming( $upgrader_object, $options ) {
 		$renamed_plugin_map = $this->get_renamed_plugin_map();
 		$renamed_plugins    = array_keys( $renamed_plugin_map );
 		$_transient_data    = [];
