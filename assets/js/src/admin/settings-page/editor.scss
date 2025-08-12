@@ -92,3 +92,390 @@
 		clear: both;
 	}
 }
+
+// License tab content spacing
+#pum-settings_licenses.tab-content {
+	padding-top: 8px;
+}
+
+// Pro License Interface (Content Control exact styling)
+.pum-field-pro_license {
+	background: transparent;
+	border: none;
+	padding: 0;
+	margin: 0;
+	box-shadow: none;
+
+	// Remove label from showing - handled in template
+	label,
+	label[for="popup_maker_pro_license_key"] {
+		display: none !important;
+	}
+
+	// License Content Container (like Content Control's main section)
+	.pum-pro-license-content {
+		background: #fff;
+		border: 1px solid #c3c4c7;
+		border-radius: 4px;
+		padding: 20px;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+
+		// Pro Licensing Header Section (like Content Control)
+		.pum-pro-license-header {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin: -20px -20px 20px -20px;
+			padding: 12px 20px;
+			border-bottom: 1px solid #dcdcde;
+			background: #f9f9f9;
+
+			.pum-license-icon {
+				width: 20px;
+				height: 20px;
+				opacity: 0.7;
+			}
+
+			h3 {
+				margin: 0;
+				font-size: 16px;
+				font-weight: 500;
+				color: #1d2327;
+			}
+
+			.pum-license-status-badge {
+				display: inline-flex;
+				align-items: center;
+				padding: 4px 12px;
+				border-radius: 20px;
+				font-size: 12px;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				margin-left: auto;
+
+				&.active {
+					background: #d7f5d0;
+					color: #2d5016;
+					border: 1px solid #7ad03a;
+				}
+
+				&.deactivated {
+					background: #fff3cd;
+					color: #856404;
+					border: 1px solid #ffc107;
+				}
+
+				&.expired,
+				&.error {
+					background: #fce8e6;
+					color: #8a2424;
+					border: 1px solid #d63638;
+				}
+			}
+		}
+
+		// Main heading like Content Control
+		.pum-license-heading {
+			margin: 0 0 12px 0;
+			font-size: 18px;
+			font-weight: 600;
+			color: #1d2327;
+		}
+
+		// Description text
+		.pum-license-description {
+			margin: 0 0 16px 0;
+			font-size: 14px;
+			color: #646970;
+			line-height: 1.5;
+		}
+
+		// Input section exactly like Content Control
+		.pum-license-input-wrapper {
+			margin: 20px 0;
+
+			.pum-license-input-group {
+				display: flex;
+				gap: 0;
+				max-width: 600px;
+
+				input[type="text"] {
+					flex: 1;
+					height: 36px;
+					padding: 8px 12px;
+					border: 1px solid #8c8f94;
+					border-right: none;
+					border-radius: 3px 0 0 3px;
+					font-size: 14px;
+					background: #fff;
+
+					&:focus {
+						border-color: #0073aa;
+						outline: 2px solid transparent;
+						box-shadow: 0 0 0 1px #0073aa;
+						z-index: 1;
+						position: relative;
+					}
+
+					&:disabled {
+						background: #f6f7f7;
+						color: #646970;
+					}
+
+				}
+
+				.pum-license-buttons {
+					display: flex;
+					align-items: stretch;
+
+					.button {
+						height: 36px;
+						padding: 0 16px;
+						margin: 0;
+						border-radius: 0;
+						font-size: 13px;
+						line-height: 1;
+						border-left: none;
+
+						&:last-child {
+							border-radius: 0 3px 3px 0;
+						}
+					}
+
+					.button-primary {
+						background: #0073aa;
+						border-color: #0073aa;
+						color: #fff;
+
+						&:hover:not(:disabled) {
+							background: #005a87;
+							border-color: #005a87;
+						}
+
+						&:disabled {
+							background: #c3c4c7 !important;
+							border-color: #c3c4c7 !important;
+							color: #fff !important;
+							cursor: not-allowed;
+						}
+					}
+
+					.button-secondary {
+						background: #f6f7f7;
+						border-color: #8c8f94;
+						color: #50575e;
+
+						&:hover {
+							background: #f0f0f1;
+							border-color: #787c82;
+						}
+					}
+
+					.pum-license-delete {
+						background: #d63638;
+						border-color: #d63638;
+						color: #fff;
+
+						&:hover {
+							background: #b32d2e;
+							border-color: #b32d2e;
+						}
+					}
+
+					.pum-license-status {
+						display: flex;
+						align-items: center;
+						padding: 0 12px;
+						font-size: 13px;
+						font-weight: 500;
+						border: 1px solid #8c8f94;
+
+						&.active,
+						&.pum-license-valid {
+							background: #d7f5d0;
+							color: #2d5016;
+							border-color: #7ad03a;
+						}
+
+						&.deactivated,
+						&.pum-license-deactivated {
+							background: #fff3cd;
+							color: #856404;
+							border-color: #ffc107;
+						}
+
+						&.inactive {
+							background: #fce8e6;
+							color: #8a2424;
+							border-color: #d63638;
+						}
+					}
+				}
+			}
+		}
+
+		// Success/error messages
+		.pum-license-messages {
+			margin: 16px 0;
+
+			p {
+				margin: 8px 0;
+				font-size: 14px;
+
+				&.success {
+					color: #00a32a;
+				}
+
+				&.error {
+					color: #d63638;
+				}
+			}
+		}
+
+		// Upgrade text like Content Control
+		.pum-license-upgrade-text {
+			margin: 16px 0;
+			font-size: 14px;
+			color: #646970;
+
+			a {
+				color: #0073aa;
+				text-decoration: none;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+
+		// Separator
+		hr.pum-license-separator {
+			margin: 24px 0;
+			border: none;
+			height: 1px;
+			background: #dcdcde;
+		}
+
+		// Features section exactly like Content Control
+		.pum-pro-features {
+			margin: 24px 0 0 0;
+
+			.pum-features-intro {
+				margin: 0 0 20px 0;
+				font-size: 14px;
+				color: #1d2327;
+
+				a {
+					color: #0073aa;
+					text-decoration: none;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+			}
+
+			.pum-features-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0 32px;
+
+				.pum-feature-column {
+					background: #f8f9fa;
+					border: 1px solid #dcdcde;
+					border-radius: 4px;
+					padding: 16px;
+
+					h4 {
+						margin: 0 0 12px 0;
+						font-size: 14px;
+						font-weight: 600;
+						color: #1d2327;
+					}
+
+					ul {
+						margin: 0;
+						padding: 0;
+						list-style: none;
+
+						li {
+							margin: 0 0 12px 0;
+							display: flex;
+							align-items: flex-start;
+							gap: 8px;
+							font-size: 13px;
+							line-height: 1.4;
+
+							img.feature-icon {
+								width: 14px;
+								height: 14px;
+								margin-top: 1px;
+								flex-shrink: 0;
+							}
+
+							div {
+								flex: 1;
+							}
+
+							strong {
+								color: #1d2327;
+								font-weight: 600;
+							}
+
+							&:last-child {
+								margin-bottom: 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Bottom text outside container (like Content Control)
+	.pum-license-footer-text {
+		margin: 16px 0 0 0;
+		font-size: 13px;
+		color: #646970;
+		font-style: italic;
+	}
+
+
+	// Mobile responsiveness
+	@media (max-width: 782px) {
+		.pum-pro-license-content {
+			padding: 16px;
+
+			.pum-license-input-wrapper {
+				.pum-license-input-group {
+					flex-direction: column;
+
+					input[type="text"] {
+						border-radius: 3px;
+						border-right: 1px solid #8c8f94;
+						margin-bottom: 8px;
+						height: 40px;
+					}
+
+					.pum-license-buttons {
+						justify-content: flex-start;
+
+						.button {
+							border-radius: 3px;
+							border-left: 1px solid #8c8f94;
+							margin-right: 8px;
+						}
+					}
+				}
+			}
+
+			.pum-pro-features {
+				.pum-features-grid {
+					grid-template-columns: 1fr;
+					gap: 16px 0;
+				}
+			}
+		}
+	}
+}

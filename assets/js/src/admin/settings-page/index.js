@@ -2,6 +2,7 @@
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 import './editor.scss';
+import './license-key-enhancements';
 
 ( function ( $ ) {
 	'use strict';
