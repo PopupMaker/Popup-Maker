@@ -6,7 +6,7 @@ import { settingsStore } from '../settings';
 import type { Settings } from '../settings/types';
 
 const useSettings = () => {
-	// Fetch needed data from the @popup-paker/core-data & @wordpress/data stores.
+	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
 	const { currentSettings, unsavedChanges, hasUnsavedChanges, isSaving } =
 		useSelect(
 			( select ) => {

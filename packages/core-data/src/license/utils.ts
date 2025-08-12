@@ -3,5 +3,5 @@ export const apiPath = ( subpath = '' ) => {
 		subpath = `/${ subpath }`;
 	}
 
-	return `popup-paker/v2/license${ subpath }`;
+	return `popup-maker/v2/license${ subpath }`;
 };
