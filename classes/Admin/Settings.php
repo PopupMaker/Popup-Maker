@@ -985,22 +985,27 @@ class PUM_Admin_Settings {
 							// Use the mapping function to get proper status and classes
 							$status_mapping = $map_license_status( $actual_status );
 
+							// Get the license tier (pro or pro_plus).
+							$license_tier = $license_service->get_license_tier();
+
 							// Pass anything we want to the template here.
 							$settings[ $key ] = [
-								'key'      => $license_key,
-								'status'   => $status_mapping['status'],
-								'messages' => ! empty( $license_status['error_message'] ) ? [ $license_status['error_message'] ] : [],
-								'expires'  => $license_service->get_license_expiration(),
-								'classes'  => $status_mapping['classes'],
+								'key'          => $license_key,
+								'status'       => $status_mapping['status'],
+								'messages'     => ! empty( $license_status['error_message'] ) ? [ $license_status['error_message'] ] : [],
+								'expires'      => $license_service->get_license_expiration(),
+								'classes'      => $status_mapping['classes'],
+								'license_tier' => $license_tier,
 							];
 						} catch ( Exception $e ) {
 							$settings[ $key ] = [
-								'key'      => $star_key( trim( $value ) ),
-								'status'   => 'invalid',
+								'key'          => $star_key( trim( $value ) ),
+								'status'       => 'invalid',
 								/* translators: %s is the error message */
-								'messages' => [ sprintf( __( 'Error loading license status: %s', 'popup-maker' ), $e->getMessage() ) ],
-								'expires'  => '',
-								'classes'  => 'pum-license-invalid',
+								'messages'     => [ sprintf( __( 'Error loading license status: %s', 'popup-maker' ), $e->getMessage() ) ],
+								'expires'      => '',
+								'classes'      => 'pum-license-invalid',
+								'license_tier' => 'pro', // Default to pro on error.
 							];
 						}
 						break;

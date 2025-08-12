@@ -603,6 +603,13 @@ $custom-select2-selector: 'select2' !default;
 		}
 	}
 
+	&.#{$plugin-prefix}-license-deactivated-notice {
+		border-color: #ffc107;
+		.pum-license-status {
+			color: #856404;
+		}
+	}
+
 	&.#{$plugin-prefix}-license-inactive-notice {
 		//background-color: #0073aa;
 		border-color: #0073aa;
