@@ -129,7 +129,7 @@ class PUM_Admin_Popups {
 	public static function title_meta_field() {
 		global $post, $pagenow, $typenow;
 
-		if ( has_blocks( $post ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+		if ( ( function_exists( 'has_blocks' ) && has_blocks( $post ) ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
 			return;
 		}
 
@@ -161,7 +161,7 @@ class PUM_Admin_Popups {
 	public static function popup_post_title_contextual_message() {
 		global $post, $pagenow, $typenow;
 
-		if ( has_blocks( $post ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+		if ( ( function_exists( 'has_blocks' ) && has_blocks( $post ) ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
 			return;
 		}
 
@@ -1116,7 +1116,7 @@ class PUM_Admin_Popups {
 								?>
 								<br />
 								<small>
-									<strong><?php esc_html_e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo esc_html( wp_date( 'm-d-Y H:i', $reset['timestamp'] ) ); ?>
+									<strong><?php esc_html_e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo esc_html( function_exists( 'wp_date' ) ? wp_date( 'm-d-Y H:i', $reset['timestamp'] ) : date( 'm-d-Y H:i', $reset['timestamp'] ) ); ?>
 									<br /> <strong><?php esc_html_e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo esc_html( $reset['opens'] ); ?>
 
 									<?php if ( $reset['conversions'] > 0 ) : ?>

@@ -254,7 +254,7 @@ class PUM_AssetCache {
 
 		$js  = "/**\n";
 		$js .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$js .= ' * Last modified time: ' . wp_date( 'M d Y, h:i:s' ) . "\n";
+		$js .= ' * Last modified time: ' . ( function_exists( 'wp_date' ) ? wp_date( 'M d Y, h:i:s' ) : date( 'M d Y, h:i:s', current_time( 'timestamp' ) ) ) . "\n";
 		$js .= " */\n\n\n";
 		$js .= self::generate_js();
 
@@ -276,7 +276,7 @@ class PUM_AssetCache {
 
 		$css  = "/**\n";
 		$css .= " * Do not touch this file! This file created by the Popup Maker plugin using PHP\n";
-		$css .= ' * Last modified time: ' . wp_date( 'M d Y, h:i:s' ) . "\n";
+		$css .= ' * Last modified time: ' . ( function_exists( 'wp_date' ) ? wp_date( 'M d Y, h:i:s' ) : date( 'M d Y, h:i:s', current_time( 'timestamp' ) ) ) . "\n";
 		$css .= " */\n\n\n";
 		$css .= self::generate_css();
 

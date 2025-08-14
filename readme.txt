@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Donate link:
 Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 4.9
-Tested up to: 6.8.1
+Tested up to: 6.8.2
 Requires PHP: 5.6
-Stable tag: 1.20.5
+Stable tag: 1.20.6
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -238,10 +238,14 @@ For the latest updates and release information:
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
 
+= 1.20.6 - 2025-08-14 =
+
+-   Fix: WordPress 4.9 compatibility by checking has_blocks() function existence before calling it.
+-   Fix: WordPress 4.9 compatibility by checking wp_date() function existence before calling it.
+
 = 1.20.5 - 2025-05-30 =
 
 -   Security: Fix potential XSS for custom HTML based popups.
-
 
 = 1.20.4 - 2025-01-29 =
 
