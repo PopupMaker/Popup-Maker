@@ -129,7 +129,7 @@ class PUM_Admin_Popups {
 	public static function title_meta_field() {
 		global $post, $pagenow, $typenow;
 
-		if ( has_blocks( $post ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+		if ( ( function_exists( 'has_blocks' ) && has_blocks( $post ) ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
 			return;
 		}
 
@@ -161,7 +161,7 @@ class PUM_Admin_Popups {
 	public static function popup_post_title_contextual_message() {
 		global $post, $pagenow, $typenow;
 
-		if ( has_blocks( $post ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+		if ( ( function_exists( 'has_blocks' ) && has_blocks( $post ) ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
 			return;
 		}
 

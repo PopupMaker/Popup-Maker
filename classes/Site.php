@@ -100,7 +100,7 @@ class PUM_Site {
 
 		// If there are blocks in this content, we shouldn't run wpautop() on it later.
 		$priority = has_filter( 'pum_popup_content', 'wpautop' );
-		if ( false !== $priority && doing_filter( 'pum_popup_content' ) && has_blocks( $content ) ) {
+		if ( false !== $priority && doing_filter( 'pum_popup_content' ) && function_exists( 'has_blocks' ) && has_blocks( $content ) ) {
 			remove_filter( 'pum_popup_content', 'wpautop', $priority );
 			add_filter( 'pum_popup_content', [ __CLASS__, 'restore_wpautop_hook' ], $priority + 1 );
 		}
