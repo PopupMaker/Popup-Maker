@@ -5,6 +5,7 @@
 ## v1.20.6 - 2025-08-14
 
 * Fix: WordPress 4.9 compatibility by checking has_blocks() function existence before calling it.
+* Fix: WordPress 4.9 compatibility by checking wp_date() function existence before calling it.
 
 ## v1.20.5 - 2025-05-30
 

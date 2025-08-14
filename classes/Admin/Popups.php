@@ -1116,7 +1116,7 @@ class PUM_Admin_Popups {
 								?>
 								<br />
 								<small>
-									<strong><?php esc_html_e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo esc_html( wp_date( 'm-d-Y H:i', $reset['timestamp'] ) ); ?>
+									<strong><?php esc_html_e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo esc_html( function_exists( 'wp_date' ) ? wp_date( 'm-d-Y H:i', $reset['timestamp'] ) : date( 'm-d-Y H:i', $reset['timestamp'] ) ); ?>
 									<br /> <strong><?php esc_html_e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo esc_html( $reset['opens'] ); ?>
 
 									<?php if ( $reset['conversions'] > 0 ) : ?>

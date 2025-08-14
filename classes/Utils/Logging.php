@@ -242,7 +242,7 @@ class PUM_Utils_Logging {
 	 * @param string $message The message to log.
 	 */
 	public function log( $message = '' ) {
-		$this->write_to_log( wp_date( 'Y-n-d H:i:s' ) . ' - ' . $message );
+		$this->write_to_log( ( function_exists( 'wp_date' ) ? wp_date( 'Y-n-d H:i:s' ) : date( 'Y-n-d H:i:s', current_time( 'timestamp' ) ) ) . ' - ' . $message );
 	}
 
 	/**
@@ -371,7 +371,7 @@ class PUM_Utils_Logging {
 	 * @return void
 	 */
 	public function setup_new_log() {
-		$this->set_log_content( "Popup Maker Debug Logs:\r\n" . wp_date( 'Y-n-d H:i:s' ) . " - Log file initialized\r\n", true );
+		$this->set_log_content( "Popup Maker Debug Logs:\r\n" . ( function_exists( 'wp_date' ) ? wp_date( 'Y-n-d H:i:s' ) : date( 'Y-n-d H:i:s', current_time( 'timestamp' ) ) ) . " - Log file initialized\r\n", true );
 	}
 
 	/**
