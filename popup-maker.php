@@ -37,7 +37,7 @@ function popup_maker_config() {
 			// Translations for these strings should be handled at the point of display.
 			'name'           => 'Popup Maker',
 			'slug'           => 'popup-maker',
-			'version'        => '1.20.5',
+			'version'        => '1.20.6',
 			'option_prefix'  => 'popup_maker',
 			'text_domain'    => 'popup-maker',
 			'fullname'       => 'Popup Maker',
