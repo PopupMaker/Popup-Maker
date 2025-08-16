@@ -130,19 +130,23 @@ export const withDataStore = (
 		const { removeNotice } = useDispatch( noticesStore );
 		const { clearAllErrors } = useAllFieldErrors();
 
-		useEffect( () => {
-			if ( ! isEditorActive && id ) {
-				changeEditorId( id );
-			}
-
-			return () => {
-				if ( valuesId && isEditorActive ) {
-					// Clear all field errors for this CTA when editor closes
-					clearAllErrors();
-					changeEditorId( undefined );
+		useEffect(
+			() => {
+				if ( ! isEditorActive && id ) {
+					changeEditorId( id );
 				}
-			};
-		}, [ id, valuesId, isEditorActive, changeEditorId, clearAllErrors ] );
+
+				return () => {
+					if ( valuesId && isEditorActive ) {
+						// Clear all field errors for this CTA when editor closes
+						clearAllErrors();
+						changeEditorId( undefined );
+					}
+				};
+			},
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+			[ id, valuesId, isEditorActive, changeEditorId ] // Adding clearAllErrors here causes errors in the editor to not work properly.
+		);
 
 		/**
 		 * Save the CallToAction when the editor is saved.
