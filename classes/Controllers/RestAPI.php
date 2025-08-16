@@ -31,6 +31,9 @@ class RestAPI extends Controller {
 		add_action( 'init', [ $this, 'register_popup_rest_fields' ] );
 		add_action( 'init', [ $this, 'register_cta_rest_fields' ] );
 
+		// Register custom REST API endpoints.
+		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+
 		// Authentication.
 		add_filter( 'rest_pre_dispatch', [ $this, 'rest_pre_dispatch' ], 10, 3 );
 
@@ -39,6 +42,15 @@ class RestAPI extends Controller {
 		// add_filter( 'popup_maker/validate_popup_settings', [ $this, 'validate_popup_settings' ], 10, 2 );
 		add_filter( 'popup_maker/sanitize_call_to_action_settings', [ $this, 'sanitize_call_to_action_settings' ], 10, 2 );
 		add_filter( 'popup_maker/validate_call_to_action_settings', [ $this, 'validate_call_to_action_settings' ], 10, 2 );
+	}
+
+	/**
+	 * Register Rest API routes.
+	 *
+	 * @return void
+	 */
+	public function register_routes() {
+		( new \PopupMaker\RestAPI\ObjectSearch() )->register_routes();
 	}
 
 	protected function register_data_version_field( $post_type, $update_permission ) {
