@@ -294,22 +294,37 @@ class PUM_Admin_Templates {
 			<div class="pum-pro-license-content <# if (isProPlus) { #>pum-license-tier-pro-plus<# } else { #>pum-license-tier-pro<# } #>">
 				<!-- Pro Licensing Header (like Content Control) -->
 				<div class="pum-pro-license-header <# if (isProPlus) { #>pro-plus<# } #>">
-					<svg class="pum-license-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m0 0a2 2 0 012 2 2 2 0 11-4 0c0-1.1.9-2 2-2zM9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m-6 3l6-3"></path>
-					</svg>
-					<h3><# if (isProPlus) { #><?php esc_html_e( 'Pro+ Licensing', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Pro Licensing', 'popup-maker' ); ?><# } #></h3>
+					<img class="pum-license-logo" src="<?php echo esc_url( POPMAKE_URL . '/assets/images/mark.svg' ); ?>" alt="<?php esc_attr_e( 'Popup Maker', 'popup-maker' ); ?>" />
+					<div class="pum-license-header-text">
+						<h3><# if (isProPlus) { #><?php esc_html_e( 'Pro+ Licensing', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Pro Licensing', 'popup-maker' ); ?><# } #></h3>
+						<# if (isProPlus) { #>
+						<span class="pum-license-subtitle"><?php esc_html_e( 'Premium Ecommerce Edition', 'popup-maker' ); ?></span>
+						<# } #>
+					</div>
 					<# if (hasKey) { #>
 					<span class="pum-license-status-badge <# if (isActive) { #>active<# } else if (isDeactivated) { #>deactivated<# } else if (status === 'expired') { #>expired<# } else { #>error<# } #> <# if (isProPlus) { #>pro-plus<# } #>">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="crown-icon"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
-						<# if (isActive) { #><?php esc_html_e( 'Activated', 'popup-maker' ); ?><# } else if (isDeactivated) { #><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?><# } else if (status === 'expired') { #><?php esc_html_e( 'Expired', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Invalid', 'popup-maker' ); ?><# } #>
 						<# if (isActive) { #>
+							<# if (isProPlus) { #><?php esc_html_e( 'PRO+ ACTIVATED', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'PRO ACTIVATED', 'popup-maker' ); ?><# } #>
+						<# } else if (isDeactivated) { #><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?><# } else if (status === 'expired') { #><?php esc_html_e( 'Expired', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Invalid', 'popup-maker' ); ?><# } #>
+						<# if (isActive) { #>
+							<# if (isProPlus) { #>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lightning-icon"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg>
+							<# } else { #>
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
+							<# } #>
 						<# } #>
 						</span>
 					<# } #>
 				</div>
 				<h3 class="pum-license-heading"><# if (isProPlus) { #><?php esc_html_e( 'Enter your Popup Maker Pro+ License Key', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Enter your Popup Maker Pro License Key', 'popup-maker' ); ?><# } #></h3>
 
+				<# if (isDeactivated) { #>
+				<div class="pum-license-deactivated-callout">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+					<span><?php esc_html_e( 'Your Pro license is valid but deactivated on this site. Activate it below to enable Pro features!', 'popup-maker' ); ?> 🔑</span>
+				</div>
+				<# } else { #>
 				<p class="pum-license-description">
 					<# if (isActive) { #>
 						<# if (isProPlus) { #>
@@ -317,12 +332,11 @@ class PUM_Admin_Templates {
 						<# } else { #>
 						<?php esc_html_e( 'You are currently using Popup Maker Pro — all premium features unlocked!', 'popup-maker' ); ?> 😄
 						<# } #>
-					<# } else if (isDeactivated) { #>
-					<?php esc_html_e( 'Your Pro license is valid but deactivated on this site. Activate it below to enable Pro features!', 'popup-maker' ); ?> 🔑
 					<# } else { #>
 					<?php esc_html_e( 'You are currently using Popup Maker Lite — no license key required. Enjoy!', 'popup-maker' ); ?> 😄
 					<# } #>
 				</p>
+				<# } #>
 
 				<# if (!isActive) { #>
 				<p class="pum-license-description">
