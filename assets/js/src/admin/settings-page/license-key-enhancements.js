@@ -7,7 +7,6 @@
 ( function ( $ ) {
 	'use strict';
 
-
 	/**
 	 * License Key UX Enhancements
 	 * - Auto-click activate button on paste
@@ -31,17 +30,21 @@
 				.closest( '.pum-license-input-group' )
 				.find( '.pum-license-activate, .button-primary' );
 
-
 			/**
 			 * Check license key length and enable/disable activate button
-			 * Enables button when input length equals 32 characters
+			 * Enables button when input length equals 32 characters and not processing
 			 */
 			function checkLicenseKeyLength() {
 				const licenseKey = $input.val().trim();
 				const targetLength = 32; // Length of fbec66dc4c7b47c233a136e9b66f1c64
+				const isProcessing =
+					$activateButton.data( 'processing' ) === true;
 
 				if ( $activateButton.length ) {
-					if ( licenseKey.length === targetLength ) {
+					if (
+						licenseKey.length === targetLength &&
+						! isProcessing
+					) {
 						$activateButton.prop( 'disabled', false );
 					} else {
 						$activateButton.prop( 'disabled', true );
@@ -104,9 +107,19 @@
 				}
 			} );
 
+			// Disable button during processing
+			$activateButton.on( 'click', function () {
+				const $btn = $( this );
+				setTimeout( function () {
+					$btn.data( 'processing', true );
+					$btn.data( 'original-text', $btn.val() );
+					$btn.val( $btn.val() + '...' );
+					$btn.prop( 'disabled', true );
+				}, 50 );
+			} );
+
 			// Initial check on page load to set correct button state
 			checkLicenseKeyLength();
-
 		} );
 	}
 
