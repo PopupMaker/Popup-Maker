@@ -150,7 +150,7 @@ class PUM_Utils_Fields {
 
 	/**
 	 * @param       $fields
-	 * @param array  $args
+	 * @param array $args
 	 *
 	 * @return mixed
 	 */

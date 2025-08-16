@@ -1476,7 +1476,7 @@ class PUM_Admin_Popups {
 	/**
 	 * Prepends Popup ID to the action row on All Popups
 	 *
-	 * @param array         $actions The row actions.
+	 * @param array $actions The row actions.
 	 * @param $post The post
 	 *
 	 * @return array The new actions.

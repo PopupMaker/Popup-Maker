@@ -137,7 +137,7 @@ class PUM_Utils_Template {
 	 * Render file with extracted arguments.
 	 *
 	 * @param       $template
-	 * @param array    $args
+	 * @param array $args
 	 */
 	public static function render( $template, $args = [] ) {
 
@@ -202,7 +202,7 @@ class PUM_Utils_Template {
 	 * Gets the rendered contents of the specified template file.
 	 *
 	 * @param       $template_name
-	 * @param array         $args
+	 * @param array $args
 	 *
 	 * @return string
 	 */

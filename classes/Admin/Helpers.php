@@ -227,7 +227,7 @@ class PUM_Admin_Helpers {
 
 	/**
 	 * @param       $fields
-	 * @param array  $args
+	 * @param array $args
 	 *
 	 * @return mixed
 	 */
