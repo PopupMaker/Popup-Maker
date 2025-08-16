@@ -753,7 +753,7 @@ const editorActions = {
 				const result = await dispatch.updateCallToAction(
 					editedCallToAction,
 					false,
-					false
+					withNotices
 				);
 
 				if ( result ) {
@@ -832,6 +832,8 @@ const editorActions = {
 
 				throw error;
 			}
+
+			return false;
 		},
 
 	/**

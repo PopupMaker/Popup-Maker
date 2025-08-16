@@ -257,6 +257,29 @@ class License extends Service {
 	}
 
 	/**
+	 * Get license tier (pro or pro_plus).
+	 *
+	 * @return string 'pro' or 'pro_plus' based on license data.
+	 */
+	public function get_license_tier(): string {
+		$license_status = $this->get_license_status_data();
+
+		if ( empty( $license_status ) ) {
+			return 'pro';
+		}
+
+		// Check if license_tier is explicitly set in the license data.
+		if ( ! empty( $license_status['license_tier'] ) ) {
+			return in_array( $license_status['license_tier'], [ 'pro', 'pro_plus' ], true ) 
+				? $license_status['license_tier'] 
+				: 'pro';
+		}
+
+		// Fallback to 'pro' if not specified.
+		return 'pro';
+	}
+
+	/**
 	 * Update license key.
 	 *
 	 * Side Effects:

@@ -4,7 +4,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { licenseStore } from '../license';
 
 const useLicense = () => {
-	// Fetch needed data from the @popup-paker/core-data & @wordpress/data stores.
+	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
 	const {
 		connectInfo,
 		licenseKey,

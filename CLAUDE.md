@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with the Popup Maker WordPress plugin.
 
+## Important
+- ALL instructions within this document MUST BE FOLLOWED, these are not optional unless explicitly stated.
+- ASK FOR CLARIFICATION If you are uncertain of any of thing within the document.
+- DO NOT edit more code than you have to.
+- DO NOT WASTE TOKENS, be succinct and concise.
+
 ## Project Overview
 
 Popup Maker is a mature WordPress plugin for creating popups. It uses both legacy PHP and modern React components in a monorepo structure.

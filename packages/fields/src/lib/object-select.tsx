@@ -1,10 +1,11 @@
 import { useSelect } from '@wordpress/data';
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import { __, sprintf } from '@popup-maker/i18n';
 import { useDebounce } from '@wordpress/compose';
 import { decodeEntities } from '@wordpress/html-entities';
 import { store as coreDataStore } from '@wordpress/core-data';
 import { SmartTokenControl } from '@popup-maker/components';
+import { fetchFromWPApi } from '@popup-maker/core-data';
 
 import type {
 	ObjectSelectFieldProps,
@@ -37,6 +38,14 @@ const ObjectSelectField = ( {
 	| UserSelectFieldProps
 > ) => {
 	const [ queryText, setQueryText ] = useState( '' );
+	const [ usePopupMakerAPI, setUsePopupMakerAPI ] = useState( false );
+	const [ apiData, setApiData ] = useState< {
+		prefill: ObjectOption[];
+		suggestions: ObjectOption[];
+	} >( {
+		prefill: [],
+		suggestions: [],
+	} );
 
 	const updateQueryText = useDebounce( ( text: string ) => {
 		setQueryText( text );
@@ -44,24 +53,47 @@ const ObjectSelectField = ( {
 
 	const { prefill = [] } = useSelect(
 		( select ) => ( {
-			prefill: value
-				? ( select( coreDataStore ).getEntityRecords(
-						entityKind,
-						entityType,
-						{
-							context: 'view',
-							include: value,
-							per_page: -1,
-						}
-				  ) as ObjectOption[] )
-				: [],
+			prefill: ( () => {
+				if ( usePopupMakerAPI ) {
+					return apiData.prefill;
+				}
+
+				if ( ! value ) {
+					return [];
+				}
+
+				const records = select( coreDataStore ).getEntityRecords(
+					entityKind,
+					entityType,
+					{
+						context: 'view',
+						include: value,
+						per_page: -1,
+					}
+				) as ObjectOption[];
+
+				// If core-data returns null and we haven't switched to popup-maker API yet, switch now.
+				if (
+					records === null &&
+					! usePopupMakerAPI &&
+					entityKind === 'postType'
+				) {
+					setUsePopupMakerAPI( true );
+				}
+
+				return records || [];
+			} )(),
 		} ),
-		[ value, entityKind, entityType ]
+		[ value, entityKind, entityType, usePopupMakerAPI, apiData.prefill ]
 	);
 
 	const { suggestions = [], isSearching = false } = useSelect(
 		( select ) => ( {
 			suggestions: ( () => {
+				if ( usePopupMakerAPI ) {
+					return apiData.suggestions;
+				}
+
 				if ( entityKind === 'user' ) {
 					return (
 						select( coreDataStore )
@@ -74,7 +106,7 @@ const ObjectSelectField = ( {
 					);
 				}
 
-				return select( coreDataStore ).getEntityRecords(
+				const records = select( coreDataStore ).getEntityRecords(
 					entityKind,
 					entityType,
 					{
@@ -83,9 +115,24 @@ const ObjectSelectField = ( {
 						per_page: -1,
 					}
 				) as ObjectOption[];
+
+				// If core-data returns null and we haven't switched to popup-maker API yet, switch now.
+				if (
+					records === null &&
+					! usePopupMakerAPI &&
+					entityKind === 'postType'
+				) {
+					setUsePopupMakerAPI( true );
+				}
+
+				return records;
 			} )(),
 			// @ts-ignore This exists and is being used as documented.
 			isSearching: ( () => {
+				if ( usePopupMakerAPI ) {
+					return false; // We handle popup-maker API loading separately.
+				}
+
 				if ( entityKind === 'user' ) {
 					return (
 						select( 'core/data' )
@@ -117,8 +164,76 @@ const ObjectSelectField = ( {
 				);
 			} )(),
 		} ),
-		[ queryText, entityKind, entityType ]
+		[
+			queryText,
+			entityKind,
+			entityType,
+			usePopupMakerAPI,
+			apiData.suggestions,
+		]
 	);
+
+	// Single effect to handle popup-maker API calls for both prefill and suggestions.
+	useEffect( () => {
+		if ( ! usePopupMakerAPI ) {
+			return;
+		}
+
+		const fetchApiData = async () => {
+			try {
+				// Build API URL with optional include and search parameters.
+				let apiUrl = `popup-maker/v1/object-search?object_type=post_type&object_key=${ entityType }`;
+
+				// Always include selected values to guarantee prefill data.
+				if ( value ) {
+					const includeIds = Array.isArray( value ) ? value : [ value ];
+					apiUrl += `&include=${ includeIds.join( ',' ) }`;
+				}
+
+				// Add search parameter if provided.
+				if ( queryText ) {
+					apiUrl += `&s=${ queryText }`;
+				}
+
+				const response = await fetchFromWPApi< {
+					items: Array< { id: number; text: string } >;
+					total_count: number;
+				} >( apiUrl );
+
+				// Map popup-maker API response to core-data format.
+				const mapItems = (
+					items: Array< { id: number; text: string } >
+				): ObjectOption[] =>
+					items.map( ( item ) => ( {
+						id: item.id,
+						title: {
+							rendered: item.text,
+						},
+					} ) );
+
+				const allOptions = mapItems( response.items );
+
+				// Extract prefill data from the same response if we have selected values.
+				let prefillData: ObjectOption[] = [];
+				if ( value ) {
+					const includeIds = Array.isArray( value ) ? value : [ value ];
+					prefillData = allOptions.filter( ( item ) =>
+						includeIds.includes( item.id )
+					);
+				}
+
+				setApiData( {
+					prefill: prefillData,
+					suggestions: allOptions,
+				} );
+			} catch ( error ) {
+				// Silently fail and set empty data - API fallback failed.
+				setApiData( { prefill: [], suggestions: [] } );
+			}
+		};
+
+		fetchApiData();
+	}, [ usePopupMakerAPI, value, queryText, entityType ] );
 
 	const findSuggestion = ( id: number | string ) => {
 		const found =

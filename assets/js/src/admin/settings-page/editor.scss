@@ -3,6 +3,7 @@
  ******************************************************************************/
 
 .wrap-licenses {
+
 	.form-table,
 	thead,
 	tbody,
@@ -13,6 +14,7 @@
 	caption {
 		display: block;
 	}
+
 	.form-table tr {
 		float: left;
 		margin: 0 15px 15px 0;
@@ -25,6 +27,7 @@
 		position: relative;
 		box-sizing: border-box;
 	}
+
 	.form-table th {
 		background: #f9f9f9;
 		padding: 14px;
@@ -32,13 +35,16 @@
 		margin: -14px -14px 20px;
 		width: 100%;
 	}
+
 	.form-table td {
 		padding: 0;
 	}
+
 	td input.regular-text {
 		margin: 0 0 8px;
 		width: 100%;
 	}
+
 	.popmake-license-data[class*='popmake-license-'] {
 		position: absolute;
 		background: #fafafa;
@@ -50,24 +56,29 @@
 		bottom: 14px;
 		box-sizing: border-box;
 	}
+
 	.popmake-license-data[class*='popmake-license-'] a {
 		color: #444;
 	}
+
 	.popmake-license-data[class*='popmake-license-'] a:hover {
 		text-decoration: none;
 	}
+
 	.popmake-license-data.license-expires-soon-notice {
 		background-color: #00a0d2;
 		color: #fff;
 		border-color: #00a0d2;
 	}
-	.popmake-license-data.popmake-license-valid {
-	}
+
+	.popmake-license-data.popmake-license-valid {}
+
 	.popmake-license-data.popmake-license-expired {
 		background-color: #e24e4e;
 		color: #fff;
 		border-color: #e24e4e;
 	}
+
 	.popmake-license-data.popmake-license-error,
 	.popmake-license-data.popmake-license-missing,
 	.popmake-license-data.popmake-license-invalid,
@@ -76,18 +87,22 @@
 		background-color: #ffebcd;
 		border-color: #ffebcd;
 	}
+
 	.popmake-license-data p {
 		font-size: 13px;
 		margin-top: 0;
 	}
+
 	.popmake-license-data.license-expires-soon-notice a,
 	.popmake-license-data.popmake-license-expired a {
 		color: #fff;
 	}
+
 	.popmake-license-data.license-expires-soon-notice a:hover,
 	.popmake-license-data.popmake-license-expired a:hover {
 		text-decoration: none;
 	}
+
 	p.submit {
 		clear: both;
 	}
@@ -112,6 +127,11 @@
 		display: none !important;
 	}
 
+	// Pro+ specific field styling
+	&.pum-license-tier-pro-plus {
+		// Pro+ specific field-level styles will be added here
+	}
+
 	// License Content Container (like Content Control's main section)
 	.pum-pro-license-content {
 		background: #fff;
@@ -120,57 +140,122 @@
 		padding: 20px;
 		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 
+		// Pro+ specific content styling
+		&.pum-license-tier-pro-plus {
+			// Pro+ border or background variations can be added here
+		}
+
 		// Pro Licensing Header Section (like Content Control)
 		.pum-pro-license-header {
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 12px;
 			margin: -20px -20px 20px -20px;
 			padding: 12px 20px;
 			border-bottom: 1px solid #dcdcde;
 			background: #f9f9f9;
+			background: linear-gradient(to right, rgb(248, 250, 252), rgb(249, 250, 251));
 
-			.pum-license-icon {
-				width: 20px;
-				height: 20px;
-				opacity: 0.7;
+			// Pro+ header styling
+			&.pro-plus {
+				background: linear-gradient(135deg, #ebe7fe 0%, #f2f2f3 100%);
+				border-bottom-color: #d6ccff;
 			}
 
-			h3 {
-				margin: 0;
-				font-size: 16px;
-				font-weight: 500;
-				color: #1d2327;
+			.pum-license-logo {
+				height: 40px;
+				width: 40px;
+				flex-shrink: 0;
 			}
+
+			.pum-license-header-text {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+
+				h3 {
+					margin: 0;
+					font-size: 20px;
+					font-weight: 500;
+					color: #1d2327;
+					line-height: 1.2;
+				}
+
+				.pum-license-subtitle {
+					font-size: 13px;
+					color: #8267f6;
+					font-weight: 500;
+				}
+			}
+
 
 			.pum-license-status-badge {
 				display: inline-flex;
 				align-items: center;
-				padding: 4px 12px;
+				padding: .6em 1em;
 				border-radius: 20px;
-				font-size: 12px;
+				font-size: 14px;
 				font-weight: 600;
 				text-transform: uppercase;
 				letter-spacing: 0.5px;
 				margin-left: auto;
 
+				svg {
+					width: 1em;
+					height: 1em;
+				}
+
+
+				.crown-icon {
+					margin-right: 10px;
+					color: #fbd803;
+					fill: #fbd803;
+				}
+
+				.star-icon {
+					margin-left: 10px;
+					color: #fff;
+				}
+
+				.lightning-icon {
+					margin-left: 10px;
+					color: #fbd803;
+					stroke: #fbd803;
+				}
+
 				&.active {
-					background: #d7f5d0;
-					color: #2d5016;
-					border: 1px solid #7ad03a;
+					background: linear-gradient(to right, #1dbe61, #179b4e);
+					color: #fff;
+					box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+
+					// Pro+ active badge styling
+					&.pro-plus {
+						background: linear-gradient(to right, #8267f6, #7356f5);
+					}
 				}
 
 				&.deactivated {
-					background: #fff3cd;
-					color: #856404;
-					border: 1px solid #ffc107;
+					background: linear-gradient(to right, #8267F6, #7356f5);
+					color: #fff;
+					// border: 1px solid #ffc107;
+
+					// Pro+ deactivated badge styling
+					&.pro-plus {
+						// Pro+ specific styling for deactivated state
+					}
 				}
 
 				&.expired,
 				&.error {
 					background: #fce8e6;
 					color: #8a2424;
-					border: 1px solid #d63638;
+					// border: 1px solid #d63638;
+
+					// Pro+ expired/error badge styling
+					&.pro-plus {
+						// Pro+ specific styling for error states
+					}
 				}
 			}
 		}
@@ -189,6 +274,39 @@
 			font-size: 14px;
 			color: #646970;
 			line-height: 1.5;
+		}
+
+		// Pro+ Status Section
+		.pum-pro-plus-status {
+			display: flex;
+			align-items: flex-start;
+			gap: 12px;
+			padding: 16px;
+			margin: 16px 0;
+			background: #f6f3ff;
+			border: 1px solid #d6ccff;
+			border-radius: 4px;
+
+			.dollar-icon {
+				width: 24px;
+				height: 24px;
+				color: #8267f6;
+				flex-shrink: 0;
+			}
+
+			strong {
+				display: block;
+				margin-bottom: 4px;
+				color: #1d2327;
+				font-size: 14px;
+			}
+
+			p {
+				margin: 0;
+				color: #646970;
+				font-size: 13px;
+				line-height: 1.5;
+			}
 		}
 
 		// Input section exactly like Content Control
@@ -430,6 +548,32 @@
 					}
 				}
 			}
+		}
+	}
+
+	// Deactivated callout for Pro/Pro+ licenses
+	.pum-license-deactivated-callout {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 16px;
+		margin: 16px 0;
+		background: linear-gradient(135deg, #ebe7fe 0%, #f2f2f3 100%);
+		border: 1px solid #d6ccff;
+		border-radius: 4px;
+		color: #270aa9;
+		font-size: 14px;
+		line-height: 1.5;
+
+		.info-icon {
+			width: 20px;
+			height: 20px;
+			flex-shrink: 0;
+			color: #270aa9;
+		}
+
+		span {
+			flex: 1;
 		}
 	}
 
