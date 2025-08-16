@@ -301,7 +301,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
 	 * @param      $group
-	 * @param null  $key
+	 * @param null $key
 	 *
 	 * @return mixed
 	 */

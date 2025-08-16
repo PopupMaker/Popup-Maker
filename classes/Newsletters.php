@@ -131,7 +131,7 @@ class PUM_Newsletters {
 	 * Optionally pass extra data to send back to front end.
 	 *
 	 * @param       $errors WP_Error
-	 * @param array           $extra_response_args
+	 * @param array $extra_response_args
 	 */
 	public static function send_errors( WP_Error $errors, $extra_response_args = [] ) {
 		$response = array_merge(

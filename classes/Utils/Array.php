@@ -573,7 +573,7 @@ class PUM_Utils_Array {
 
 	/**
 	 * @param      $value
-	 * @param bool  $encode
+	 * @param bool $encode
 	 *
 	 * @return string
 	 */

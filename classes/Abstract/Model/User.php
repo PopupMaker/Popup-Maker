@@ -218,7 +218,7 @@ abstract class PUM_Abstract_Model_User {
 	 *
 	 * @param      $key
 	 * @param      $value
-	 * @param bool  $is_global
+	 * @param bool $is_global
 	 *
 	 * @return bool|int
 	 */
