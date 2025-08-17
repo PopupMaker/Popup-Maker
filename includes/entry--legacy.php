@@ -5,7 +5,7 @@
  *
  * File loader guidelines:
  *
- * This file is loaded and will hanlde the loading of other function files.
+ * This file is loaded and will handle the loading of other function files.
  * - Newer files will be namespaced under PopupMaker\ namespace.
  * - Older functions will be prefixed as well as:
  *   - Deprecated & moved to the -deprecated directory, merged fewer files.
