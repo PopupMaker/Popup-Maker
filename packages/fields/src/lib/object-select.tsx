@@ -182,7 +182,7 @@ const ObjectSelectField = ( {
 		const fetchApiData = async () => {
 			try {
 				// Build API URL with optional include and search parameters.
-				let apiUrl = `popup-maker/v1/object-search?object_type=post_type&object_key=${ entityType }`;
+				let apiUrl = `popup-maker/v2/object-search?object_type=post_type&object_key=${ entityType }`;
 
 				// Always include selected values to guarantee prefill data.
 				if ( value ) {
