@@ -29,6 +29,9 @@ import './pum-newsletter';
 import './pum-integrations';
 import './pum-triggers';
 
+// Add URL tracking functionality
+import './pum-url-tracking';
+
 // Add bindings last (after all features are loaded)
 import './pum-binds';
 

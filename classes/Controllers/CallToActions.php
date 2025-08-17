@@ -57,6 +57,7 @@ class CallToActions extends Controller {
 		$cta_uuid = apply_filters( 'popup_maker/cta_identifier', $cta_uuid );
 
 		if ( empty( $cta_uuid ) ) {
+			$this->handle_url_tracking( $popup_id, $notrack, $cta_args );
 			return;
 		}
 
@@ -142,5 +143,48 @@ class CallToActions extends Controller {
 			// Triggers pum_analytics_event / pum_analytics_conversion actions.
 			\pum_track_conversion_event( $popup_id, $args );
 		}
+	}
+
+	/**
+	 * Handle URL tracking for non-CTA links with popup ID.
+	 *
+	 * @param int   $popup_id   The popup ID.
+	 * @param bool  $notrack    Whether tracking is disabled.
+	 * @param array $cta_args   Valid URL arguments for removal.
+	 *
+	 * @return void
+	 */
+	private function handle_url_tracking( $popup_id, $notrack, $cta_args ) {
+		if ( ! $popup_id || $popup_id <= 0 ) {
+			return;
+		}
+
+		/**
+		 * Filters the arguments passed to the URL tracking event.
+		 *
+		 * @param array<string,mixed> $extra_args {
+		 *     @type int    $popup_id   The popup ID.
+		 *     @type bool   $notrack    Whether to not track the conversion.
+		 *     @type string $source_url The source URL.
+		 *     @type string $target_url The current URL being tracked.
+		 * }
+		 * @param int $popup_id The popup ID.
+		 *
+		 * @return array<string,mixed>
+		 */
+		$extra_args = apply_filters( 'popup_maker/url_tracking_event_args', [
+			'popup_id'   => $popup_id,
+			'notrack'    => $notrack,
+			'source_url' => wp_get_raw_referer(),
+			'target_url' => remove_query_arg( $cta_args ),
+		], $popup_id );
+
+		if ( ! $notrack ) {
+			\pum_track_conversion_event( $popup_id, $extra_args );
+		}
+
+		$url = remove_query_arg( $cta_args );
+		\PopupMaker\safe_redirect( $url );
+		exit;
 	}
 }
