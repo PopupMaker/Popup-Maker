@@ -73,6 +73,7 @@ class PUM_Admin_Assets {
 					'default_provider'    => pum_get_option( 'newsletter_default_provider', 'none' ),
 					'homeurl'             => home_url(),
 					'object_search_nonce' => wp_create_nonce( 'pum_ajax_object_search_nonce' ),
+					'rest_nonce'          => wp_create_nonce( 'wp_rest' ),
 					'I10n'                => [
 						'preview_popup'                   => __( 'Preview', 'popup-maker' ),
 						'add'                             => __( 'Add', 'popup-maker' ),

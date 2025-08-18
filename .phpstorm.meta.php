@@ -47,6 +47,7 @@ override(\PopupMaker\Plugin\Core::get(0), map([
     'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
     'license'      => \PopupMaker\Services\License::class,
+	'connect'      => \PopupMaker\Services\Connect::class,
 
     // Config Values
     'path'         => 'string',
@@ -85,6 +86,7 @@ override( \PopupMaker\Plugin\Container::get(0), map([
     'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
     'license'      => \PopupMaker\Services\License::class,
+	'connect'      => \PopupMaker\Services\Connect::class,
 
     // Config Values
     'path'         => 'string',

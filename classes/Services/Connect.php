@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * NOTE: For wordpress.org admins: This is not called in the free, hosted version. This is only used if:
  * - The user explicitly entered a license key.
- * - This then opens a window to our site allowing the user to authorize the connection & installation of pro.
+ * - This then opens a window to our site allowing the user to authorize one-time oauth-style connection & installation of pro.
  *
  * @package PopupMaker
  */
@@ -114,6 +114,24 @@ class Connect extends Service {
 			}
 		}
 
+		// Fallback: Some servers strip Authorization headers, check for custom headers
+		if ( ! $headers ) {
+			$fallback_headers = [
+				'HTTP_X_AUTH_TOKEN'      => 'X-Auth-Token',
+				'HTTP_X_AUTH_TOKEN_UC'   => 'X-AUTH-TOKEN (uppercase)', // This won't match, but keeping for clarity
+				'HTTP_HTTP_X_AUTH_TOKEN' => 'HTTP_X_AUTH_TOKEN (server format)',
+			];
+
+			foreach ( $fallback_headers as $server_key => $header_name ) {
+				if ( isset( $_SERVER[ $server_key ] ) ) {
+					$token   = sanitize_text_field( wp_unslash( $_SERVER[ $server_key ] ) );
+					$headers = 'Bearer ' . $token;
+					// Using fallback header.
+					break;
+				}
+			}
+		}
+
 		return $headers;
 	}
 
@@ -159,7 +177,7 @@ class Connect extends Service {
 	public function get_connect_info( $license_key ) {
 		$token    = $this->generate_token();
 		$nonce    = wp_create_nonce( $this->get_nonce_name( $token ) );
-		$webhook  = admin_url( 'admin-ajax.php' );
+		$webhook  = rest_url( 'popup-maker/v2/connect/install' );
 		$redirect = add_query_arg(
 			[
 				'post_type' => 'popup',
@@ -181,7 +199,7 @@ class Connect extends Service {
 				'siteurl'  => admin_url(),
 				'homeurl'  => home_url(),
 				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-				'redirect' => rawurldecode( base64_encode( $redirect ) ),
+				'redirect' => rawurlencode( base64_encode( $redirect ) ),
 			],
 			self::API_URL
 		);
@@ -189,6 +207,10 @@ class Connect extends Service {
 		$this->debug_log( 'Generated new connection.' );
 		$this->debug_log( 'Token: ' . $token );
 		$this->debug_log( 'Nonce: ' . $nonce );
+		$this->debug_log( 'Redirect URL: ' . $redirect );
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+		$this->debug_log( 'Base64 Redirect: ' . base64_encode( $redirect ) );
+		$this->debug_log( 'Final URL: ' . $url );
 
 		return [
 			'url'      => $url,
@@ -231,8 +253,10 @@ class Connect extends Service {
 	 */
 	public function verify_user_agent() {
 		// Check user agent matches Popup Maker Upgrader.
-		if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) || 'PopupMakerUpgrader' !== $_SERVER['HTTP_USER_AGENT'] ) {
-			$this->kill_connection( self::ERROR_USER_AGENT, 'User agent invalid.' );
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+
+		if ( strpos( $user_agent, 'PopupMakerUpgrader' ) !== 0 ) {
+			$this->kill_connection( self::ERROR_USER_AGENT, 'User agent invalid: ' . $user_agent );
 		}
 	}
 
@@ -245,7 +269,6 @@ class Connect extends Service {
 		$referer = isset( $_SERVER['HTTP_X_SENDING_DOMAIN'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_SENDING_DOMAIN'] ) ) : '';
 
 		if ( ! $referer ) {
-			// Mimic the default you don't have permission to do that screen from WordPress.
 			$this->kill_connection( self::ERROR_REFERRER, 'Missing referrer' );
 		}
 
@@ -261,7 +284,6 @@ class Connect extends Service {
 		];
 
 		if ( ! in_array( $referer_host, $allowed_hosts, true ) ) {
-			$this->debug_log( 'Referrer mismatch: ' . $referer_host, 'DEBUG' );
 			$this->kill_connection( self::ERROR_REFERRER, 'Referrer doesn\'t match' );
 		}
 	}
@@ -304,8 +326,7 @@ class Connect extends Service {
 
 		// Verify hashes match.
 		if ( ! hash_equals( $token, $auth_token ) ) {
-			$this->debug_log( 'Token mismatch: ' . $auth_token, 'DEBUG' );
-			$this->kill_connection( self::ERROR_AUTHENTICATION, 'Invalid authentiction' );
+			$this->kill_connection( self::ERROR_AUTHENTICATION, 'Invalid authentication' );
 		}
 	}
 
@@ -340,9 +361,7 @@ class Connect extends Service {
 		// Generate the hash binary.
 		$hash = hash_hmac( 'sha256', $data, $token, true );
 
-		// The only deviation from ServerSide is that we optionally log the hash if debug mode is enabled.
-		$this->debug_log( 'Hash: ' . $hash, 'DEBUG' );
-		$this->debug_log( 'Data: ' . $data, 'DEBUG' );
+		// Generate HMAC-SHA256 signature.
 
 		// Encode the hash in base64 to make it URL safe.
 		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
@@ -356,19 +375,26 @@ class Connect extends Service {
 	 */
 	public function verify_signature() {
 		if ( ! isset( $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] ) ) {
-			return;
+			$this->kill_connection( self::ERROR_SIGNATURE, 'Missing signature' );
 		}
 
 		// Verify the webhook signature.
 		$signature = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] ) );
 
+		// Get the request data for signature calculation.
+		$request_data = json_decode( file_get_contents( 'php://input' ), true );
+
+		// Fallback to $_POST if JSON body is empty (backwards compatibility).
+		if ( empty( $request_data ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$request_data = $_POST;
+		}
+
 		// Calculate the expected signature.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$expected_signature = $this->generate_hash( $_POST, $this->get_access_token() );
+		$expected_signature = $this->generate_hash( $request_data, $this->get_access_token() );
 
 		// Compare the expected signature to the received signature.
 		if ( ! hash_equals( $expected_signature, $signature ) ) {
-			$this->debug_log( "Signature mismatch: \r\n - Webhook: " . $signature . "\r\n - Calculated: " . $expected_signature, 'DEBUG' );
 			$this->kill_connection( self::ERROR_SIGNATURE, 'Invalid signature' );
 		}
 	}
@@ -379,15 +405,11 @@ class Connect extends Service {
 	 * @return void
 	 */
 	public function validate_connection() {
-		$this->debug_log( 'Validating connection...', 'DEBUG' );
+		// Validate connection security layers.
 		$this->verify_user_agent();
-		// If production, verify the referrer.
-		if ( 'production' === wp_get_environment_type() ) {
-			$this->verify_referrer();
-		}
+		$this->verify_referrer();
 		$this->verify_authentication();
 		$this->verify_signature();
-		$this->debug_log( 'Connection validated', 'DEBUG' );
 	}
 
 	/**
@@ -406,15 +428,33 @@ class Connect extends Service {
 	 * @return array{file:string,type:string,slug:string,force:boolean}
 	 */
 	public function get_webhook_args() {
-		$args = [
-			// phpcs:disable WordPress.Security.NonceVerification.Recommended
-			'file'  => ! empty( $_REQUEST['file'] ) ? esc_url_raw( wp_unslash( $_REQUEST['file'] ) ) : '',
-			'type'  => ! empty( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : 'plugin',
-			'slug'  => ! empty( $_REQUEST['slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['slug'] ) ) : '',
-			'force' => ! empty( $_REQUEST['force'] ) ? (bool) $_REQUEST['force'] : false,
-			// phpcs:enable WordPress.Security.NonceVerification.Recommended
-		];
+		// First try to get data from JSON body (modern REST API approach)
+		$json_data = json_decode( file_get_contents( 'php://input' ), true );
 
+		if ( is_array( $json_data ) && ! empty( $json_data ) ) {
+			$this->debug_log( 'Using JSON body data for webhook args', 'DEBUG' );
+			$this->debug_log( 'JSON data: ' . wp_json_encode( $json_data, JSON_PRETTY_PRINT ), 'DEBUG' );
+
+			$args = [
+				'file'  => ! empty( $json_data['file'] ) ? esc_url_raw( $json_data['file'] ) : '',
+				'type'  => ! empty( $json_data['type'] ) ? sanitize_text_field( $json_data['type'] ) : 'plugin',
+				'slug'  => ! empty( $json_data['slug'] ) ? sanitize_text_field( $json_data['slug'] ) : '',
+				'force' => ! empty( $json_data['force'] ) ? (bool) $json_data['force'] : false,
+			];
+		} else {
+			// Fallback to $_REQUEST for backwards compatibility
+			$this->debug_log( 'Using $_REQUEST data for webhook args', 'DEBUG' );
+			$args = [
+				// phpcs:disable WordPress.Security.NonceVerification.Recommended
+				'file'  => ! empty( $_REQUEST['file'] ) ? esc_url_raw( wp_unslash( $_REQUEST['file'] ) ) : '',
+				'type'  => ! empty( $_REQUEST['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['type'] ) ) : 'plugin',
+				'slug'  => ! empty( $_REQUEST['slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['slug'] ) ) : '',
+				'force' => ! empty( $_REQUEST['force'] ) ? (bool) $_REQUEST['force'] : false,
+				// phpcs:enable WordPress.Security.NonceVerification.Recommended
+			];
+		}
+
+		$this->debug_log( 'Parsed webhook args: ' . wp_json_encode( $args, JSON_PRETTY_PRINT ), 'DEBUG' );
 		$this->verify_webhook_args( $args );
 
 		return $args;
@@ -516,5 +556,80 @@ class Connect extends Service {
 
 		$this->debug_log( 'Plugin install failed: ' . $error, 'DEBUG' );
 		wp_send_json_error( $installed->get_error_message() );
+	}
+
+	/**
+	 * Verify webhook request for REST API.
+	 *
+	 * Validates webhook requests coming through REST endpoints.
+	 * This method performs the same security checks as the AJAX webhook
+	 * but is designed for REST API integration.
+	 *
+	 * @param \WP_REST_Request $request REST request object.
+	 * @return array{valid:bool,error:string|null}
+	 */
+	public function verify_webhook_request( $request ) {
+		$this->debug_log( 'Verifying webhook request via REST API...', 'DEBUG' );
+
+		try {
+			// Validate the connection security.
+			$this->validate_connection();
+
+			// Validate license is active.
+			if ( ! plugin( 'license' )->is_license_active() ) {
+				$this->debug_log( 'License not active for webhook request', 'DEBUG' );
+				return [
+					'valid' => false,
+					'error' => 'License not active',
+				];
+			}
+
+			$this->debug_log( 'Webhook request verified successfully', 'DEBUG' );
+			return [
+				'valid' => true,
+				'error' => null,
+			];
+		} catch ( \Exception $e ) {
+			$this->debug_log( 'Webhook verification failed: ' . $e->getMessage(), 'ERROR' );
+			return [
+				'valid' => false,
+				'error' => $e->getMessage(),
+			];
+		}
+	}
+
+	/**
+	 * Generate webhook URL for REST endpoints.
+	 *
+	 * Creates properly formatted webhook URLs for REST API endpoints
+	 * with appropriate namespace and security parameters.
+	 *
+	 * @param string $endpoint The REST endpoint (e.g., 'connect/verify', 'upgrade/install').
+	 * @param array  $args     Additional query arguments.
+	 * @return string The webhook URL.
+	 */
+	public function generate_webhook_url( $endpoint, $args = [] ) {
+		// Generate security token.
+		$token = $this->generate_token();
+		$nonce = wp_create_nonce( $this->get_nonce_name( $token ) );
+
+		// Base REST URL with our namespace.
+		$base_url = rest_url( 'popup-maker/v2/' . ltrim( $endpoint, '/' ) );
+
+		// Add security parameters.
+		$default_args = [
+			'token' => $token,
+			'nonce' => $nonce,
+		];
+
+		$query_args = array_merge( $default_args, $args );
+
+		$webhook_url = add_query_arg( $query_args, $base_url );
+
+		$this->debug_log( 'Generated webhook URL: ' . $webhook_url );
+		$this->debug_log( 'Token: ' . $token );
+		$this->debug_log( 'Nonce: ' . $nonce );
+
+		return $webhook_url;
 	}
 }
