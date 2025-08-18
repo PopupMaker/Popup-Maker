@@ -160,38 +160,34 @@
 			return;
 		}
 
-		// Add upgrade trigger button if license key is empty
 		const $licenseInput = $( '#popup_maker_pro_license_key' );
 		const licenseKey = $licenseInput.val().trim();
 
+		// Add simple links for users without licenses (instead of purchase flow)
 		if ( licenseKey.length === 0 ) {
-			const $upgradeButton = $( `
-				<div class="pum-upgrade-flow-container">
-					<p class="pum-upgrade-prompt">
-						Don't have a license yet?
-						<button type="button" class="button button-secondary pum-pro-upgrade-trigger"
-								data-product="popup-maker-pro"
-								data-source="license-section"
-								data-campaign="no-license">
-							Get Popup Maker Pro
-						</button>
+			const $helpLinks = $( `
+				<div class="pum-license-help-container">
+					<p class="pum-license-help">
+						Need a license? 
+						<a href="https://wppopupmaker.com/my-account/" target="_blank" rel="noopener">Retrieve your license</a> | 
+						<a href="https://wppopupmaker.com/pricing/" target="_blank" rel="noopener">Purchase Popup Maker Pro</a>
 					</p>
 				</div>
 			` );
 
-			$licenseSection.append( $upgradeButton );
+			$licenseSection.append( $helpLinks );
 		}
 
-		// Add connection trigger for existing licenses
+		// Add legitimate upgrade trigger for existing licenses (connects to upgrade.wppopupmaker.com)
 		const $connectButton = $( `
 			<div class="pum-license-connect-container">
 				<p class="pum-connect-prompt">
-					Already have a license?
+					Have a license? After activation, upgrade here:
 					<button type="button" class="button button-primary pum-license-connect-trigger"
 							data-product="popup-maker-pro"
 							data-source="license-section"
 							data-campaign="existing-license">
-						Connect License
+						Upgrade to Pro
 					</button>
 				</p>
 			</div>
@@ -259,7 +255,7 @@
 						100% { transform: rotate(360deg); }
 					}
 
-					.pum-upgrade-flow-container,
+					.pum-license-help-container,
 					.pum-license-connect-container {
 						margin-top: 10px;
 						padding: 10px;
@@ -267,7 +263,7 @@
 						border-left: 4px solid #007cba;
 					}
 
-					.pum-upgrade-prompt,
+					.pum-license-help,
 					.pum-connect-prompt {
 						margin: 0;
 					}
@@ -519,7 +515,7 @@
 	 */
 	function showUpgradeTriggers() {
 		$(
-			'.pum-upgrade-flow-container, .pum-license-connect-container'
+			'.pum-license-help-container, .pum-license-connect-container'
 		).show();
 	}
 
@@ -528,7 +524,7 @@
 	 */
 	function hideUpgradeTriggers() {
 		$(
-			'.pum-upgrade-flow-container, .pum-license-connect-container'
+			'.pum-license-help-container, .pum-license-connect-container'
 		).hide();
 	}
 

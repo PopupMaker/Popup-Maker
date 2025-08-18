@@ -77,47 +77,24 @@
 			console.log( 'Initializing License Status Polling' );
 			this.setupApiConfig();
 			this.bindEvents();
-			
-			// Check if we have valid AJAX configuration
-			if ( ! this.apiConfig.endpoint || ! this.apiConfig.nonce ) {
-				console.warn( 'License Status Polling: Invalid AJAX configuration, disabling polling' );
-				return;
-			}
 		},
 
 		/**
 		 * Setup API configuration from global variables
 		 */
 		setupApiConfig: function () {
-			console.log( 'Setting up API config. Available globals:', {
-				ajaxurl: window.ajaxurl,
-				pum_admin_vars: window.pum_admin_vars,
-				pum_settings_editor: window.pum_settings_editor
-			} );
-			
-			// Use admin AJAX for license status checking
-			if ( window.ajaxurl ) {
-				this.apiConfig.endpoint = window.ajaxurl;
-				this.apiConfig.nonce = window.pum_admin_vars?.nonce || window.pum_settings_editor?.nonce || '';
-				console.log( 'Using ajaxurl:', this.apiConfig.endpoint );
-				console.log( 'Using nonce:', this.apiConfig.nonce );
-			} else if ( window.pum_admin_vars && window.pum_admin_vars.ajax_url ) {
-				// Fallback to admin AJAX from vars
+			// Get REST API URL and nonce from WordPress globals
+			if ( window.wpApiSettings ) {
+				this.apiConfig.endpoint = `${ window.wpApiSettings.root }${ this.apiConfig.namespace }/${ this.apiConfig.route }`;
+				this.apiConfig.nonce = window.wpApiSettings.nonce;
+			} else if ( window.pum_admin_vars ) {
+				// Fallback to admin AJAX
 				this.apiConfig.endpoint = window.pum_admin_vars.ajax_url;
 				this.apiConfig.nonce = window.pum_admin_vars.nonce;
-				console.log( 'Using fallback ajaxurl:', this.apiConfig.endpoint );
-				console.log( 'Using fallback nonce:', this.apiConfig.nonce );
 			} else {
 				console.warn(
-					'License Status Polling: No AJAX URL available'
+					'License Status Polling: No API configuration available'
 				);
-			}
-			
-			// Final validation - if we don't have valid configuration, clear everything
-			if ( ! this.apiConfig.endpoint || ! this.apiConfig.nonce || this.apiConfig.nonce.trim() === '' ) {
-				console.warn( 'License Status Polling: Invalid AJAX configuration detected, disabling polling entirely' );
-				this.apiConfig.endpoint = '';
-				this.apiConfig.nonce = '';
 			}
 		},
 
@@ -156,12 +133,6 @@
 		startPolling: function () {
 			if ( this.isPolling ) {
 				console.log( 'License Status Polling: Already polling' );
-				return;
-			}
-
-			// Skip if no valid configuration
-			if ( ! this.apiConfig.endpoint || ! this.apiConfig.nonce ) {
-				console.log( 'License Status Polling: Skipping polling - no valid AJAX configuration' );
 				return;
 			}
 
@@ -307,10 +278,11 @@
 			// Perform AJAX request
 			$.ajax( {
 				url: this.apiConfig.endpoint,
-				type: 'POST',
+				type: 'GET',
 				data: requestData,
 				dataType: 'json',
 				timeout: 10000, // 10 second timeout
+				beforeSend: this.setRequestHeaders.bind( this ),
 				success: this.handlePollSuccess.bind( this ),
 				error: this.handlePollError.bind( this ),
 			} );
@@ -321,20 +293,30 @@
 		 * @return {Object} Request data
 		 */
 		prepareRequestData: function () {
-			// Always use admin AJAX format
+			const baseData = {
+				_wpnonce: this.apiConfig.nonce,
+				timestamp: Date.now(),
+			};
+
+			// Use REST API format if available, otherwise use admin-ajax format
+			if ( window.wpApiSettings ) {
+				return baseData;
+			}
 			return {
+				...baseData,
 				action: 'pum_check_license_status',
 				nonce: this.apiConfig.nonce,
-				timestamp: Date.now(),
 			};
 		},
 
 		/**
-		 * Set request headers (not needed for admin AJAX)
+		 * Set request headers
 		 * @param {XMLHttpRequest} xhr XMLHttpRequest object
 		 */
 		setRequestHeaders: function ( xhr ) {
-			// Not needed for admin AJAX requests
+			if ( window.wpApiSettings && this.apiConfig.nonce ) {
+				xhr.setRequestHeader( 'X-WP-Nonce', this.apiConfig.nonce );
+			}
 		},
 
 		/**
@@ -536,12 +518,6 @@
 		handleLicenseConnected: function ( event, data ) {
 			console.log( 'License connected event received:', data );
 
-			// Skip if no valid configuration
-			if ( ! this.apiConfig.endpoint || ! this.apiConfig.nonce ) {
-				console.log( 'License Status Polling: Skipping connected event handling - no valid AJAX configuration' );
-				return;
-			}
-
 			// Stop current polling to restart with fresh state
 			this.stopPolling();
 
@@ -587,20 +563,15 @@
 		 * Perform immediate status check (bypass normal polling interval)
 		 */
 		performImmediateStatusCheck: function () {
-			// Skip if no valid configuration
-			if ( ! this.apiConfig.endpoint || ! this.apiConfig.nonce ) {
-				console.log( 'License Status Polling: Skipping status check - no valid AJAX configuration' );
-				return;
-			}
-			
 			const requestData = this.prepareRequestData();
 
 			$.ajax( {
 				url: this.apiConfig.endpoint,
-				type: 'POST',
+				type: 'GET',
 				data: requestData,
 				dataType: 'json',
 				timeout: 5000,
+				beforeSend: this.setRequestHeaders.bind( this ),
 				success: ( response ) => {
 					console.log( 'Immediate status check result:', response );
 

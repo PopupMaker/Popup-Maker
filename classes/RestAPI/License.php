@@ -439,30 +439,6 @@ class License extends WP_REST_Controller {
 		// Prefer stored license key over form field, use form field only as fallback
 		$final_license_key = ! empty( $stored_license_key ) ? $stored_license_key : $license_key;
 
-		// Handle empty license key scenario - provide purchase URL instead
-		if ( empty( $final_license_key ) ) {
-			$purchase_url = 'https://wppopupmaker.com/pricing/?' . http_build_query( [
-				'utm_source'   => $context['source'] ?? 'rest-api',
-				'utm_medium'   => 'popup-flow',
-				'utm_campaign' => $context['campaign'] ?? 'upgrade-flow',
-			] );
-
-			$response_data = [
-				'success' => true,
-				'data'    => [
-					'product'    => $context['product'] ?? 'popup-maker-pro',
-					'source'     => $context['source'] ?? 'rest-api',
-					'campaign'   => $context['campaign'] ?? 'upgrade-flow',
-					'base_url'   => 'https://wppopupmaker.com',
-					'full_url'   => $purchase_url,
-					'back_url'   => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=licenses' ),
-					'is_purchase_flow' => true,
-				],
-			];
-
-			return new WP_REST_Response( $response_data, 200 );
-		}
-
 		try {
 			// Use the Connect service to generate proper connection info.
 			$connect_service = \PopupMaker\plugin( 'connect' );

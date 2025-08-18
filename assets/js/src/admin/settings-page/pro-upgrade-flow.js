@@ -67,10 +67,10 @@
 		 * Bind event handlers
 		 */
 		bindEvents: function () {
-			// Bind to upgrade buttons and license connection triggers
+			// Bind to license connection triggers (purchase flow removed)
 			$( document ).on(
 				'click',
-				'.pum-pro-upgrade-trigger, .pum-license-connect-trigger',
+				'.pum-license-connect-trigger',
 				this.handleUpgradeClick.bind( this )
 			);
 
@@ -96,32 +96,25 @@
 					.prop( 'disabled', true )
 					.text( 'Opening upgrade window...' );
 
-				// Get connection info first to determine the flow type
+				// CRITICAL: Open popup IMMEDIATELY from user gesture to prevent blocking
+				// This is the Content Control pattern - popup opens first, then we get URL
+				this.openLoadingPopup();
+
+				// Now get connection info asynchronously
 				const connectInfo = await this.extractConnectInfo( $button );
 
 				// Validate required connection info
-				console.log( 'About to validate connectInfo:', connectInfo );
-				const isValid = this.validateConnectInfo( connectInfo );
-				console.log( 'Validation result:', isValid );
-				
-				if ( ! isValid ) {
+				if ( ! this.validateConnectInfo( connectInfo ) ) {
 					console.error( 'Invalid connection info:', connectInfo );
-					console.error( 'Validation failed for:', {
-						is_purchase_flow: connectInfo.is_purchase_flow,
-						has_full_url: !!connectInfo.full_url,
-						full_url: connectInfo.full_url
-					});
 					this.showError(
 						'Invalid connection parameters. Please try again.'
 					);
 					this.closePopup();
 					return;
 				}
-				
-				console.log( 'Connection info validated successfully, proceeding to open popup' );
 
-				// Open popup directly with the final URL to avoid delays and navigation issues
-				this.openDirectPopup( connectInfo );
+				// Navigate the already-open popup to the final URL
+				this.navigatePopupToFinalUrl( connectInfo );
 			} catch ( error ) {
 				console.error( 'Error getting connection info:', error );
 				this.showError(
@@ -133,8 +126,8 @@
 				$button
 					.prop( 'disabled', false )
 					.text(
-						$button.hasClass( 'pum-pro-upgrade-trigger' )
-							? 'Get Popup Maker Pro'
+						$button.hasClass( 'pum-license-connect-trigger' )
+							? 'Upgrade to Pro'
 							: 'Connect License'
 					);
 			}
@@ -192,31 +185,20 @@
 			} catch ( error ) {
 				console.error( 'Failed to get server connection info:', error );
 
-				// Fallback to basic client-side info - provide proper purchase URL
+				// Fallback to basic client-side info (will likely fail server validation)
 				console.warn(
-					'Using fallback client-side connection info - providing purchase URL'
+					'Using fallback client-side connection info - may not work properly'
 				);
-				
-				const urlParams = new URLSearchParams( {
-					utm_source: clientContext.source,
-					utm_medium: 'popup-flow',
-					utm_campaign: clientContext.campaign,
-				} );
-				
 				return {
 					site_url: window.location.origin || '',
 					admin_url: window.ajaxurl
 						? window.ajaxurl.replace( 'admin-ajax.php', '' )
-						: '/wp-admin/',
+						: '',
 					return_url: window.location.href,
 					product: clientContext.product,
 					source: clientContext.source,
 					campaign: clientContext.campaign,
 					existing_license: clientContext.existing_license,
-					base_url: 'https://wppopupmaker.com',
-					full_url: `https://wppopupmaker.com/pricing/?${ urlParams.toString() }`,
-					back_url: window.location.href,
-					is_purchase_flow: true,
 					nonce:
 						window.pum_admin_vars?.nonce ||
 						window.pum_settings_editor?.nonce ||
@@ -231,36 +213,10 @@
 		 * @return {boolean} True if valid
 		 */
 		validateConnectInfo: function ( connectInfo ) {
-			console.log( '🔍 VALIDATION DEBUG: connectInfo received:', connectInfo );
-			console.log( '🔍 VALIDATION DEBUG: connectInfo keys:', Object.keys( connectInfo || {} ) );
-			console.log( '🔍 VALIDATION DEBUG: is_purchase_flow value:', connectInfo?.is_purchase_flow );
-			console.log( '🔍 VALIDATION DEBUG: full_url value:', connectInfo?.full_url );
-			
-			// For purchase flow, we only need the full_url
-			if ( connectInfo.is_purchase_flow ) {
-				console.log( '🔍 VALIDATION DEBUG: Processing as purchase flow' );
-				const isValid = (
-					connectInfo.full_url &&
-					typeof connectInfo.full_url === 'string' &&
-					connectInfo.full_url.trim().length > 0
-				);
-				console.log( '🔍 VALIDATION DEBUG: Purchase flow validation result:', isValid );
-				return isValid;
-			}
-			
-			// For Pro installation flow, check for server-generated parameters
-			// Check for either old format (url) or new format (full_url)
-			const hasUrl = connectInfo.url && typeof connectInfo.url === 'string' && connectInfo.url.trim().length > 0;
-			const hasFullUrl = connectInfo.full_url && typeof connectInfo.full_url === 'string' && connectInfo.full_url.trim().length > 0;
-			
-			if ( hasUrl || hasFullUrl ) {
-				console.log( 'Pro installation flow has valid URL' );
-				return true;
-			}
+			// Check for key server-generated parameters
+			const required = [ 'key', 'token', 'nonce', 'full_url' ];
 
-			// Legacy validation for old parameter format
-			const required = [ 'token', 'nonce' ];
-			const isValid = required.every( ( field ) => {
+			return required.every( ( field ) => {
 				const value = connectInfo[ field ];
 				return (
 					value &&
@@ -268,80 +224,6 @@
 					value.trim().length > 0
 				);
 			} );
-			
-			console.log( 'Legacy validation result:', isValid );
-			return isValid;
-		},
-
-		/**
-		 * Open popup directly with final URL (faster, no loading screen)
-		 * @param {Object} connectInfo Connection information to pass
-		 */
-		openDirectPopup: function ( connectInfo ) {
-			// Close any existing popup
-			this.closePopup();
-
-			// Build the final popup URL
-			const popupUrl = this.buildPopupUrl( connectInfo );
-
-			// Calculate popup position (center of screen)
-			const left = Math.round(
-				( window.screen.width - this.popupConfig.width ) / 2
-			);
-			const top = Math.round(
-				( window.screen.height - this.popupConfig.height ) / 2
-			);
-
-			// Build features string with positioning
-			const features = `${ this.popupConfig.features },width=${ this.popupConfig.width },height=${ this.popupConfig.height },left=${ left },top=${ top }`;
-
-			console.log( 'Opening popup directly with final URL:', popupUrl );
-			console.log( 'Popup config:', {
-				name: this.popupConfig.name,
-				features: features,
-			} );
-
-			// Open the popup window directly with the final URL
-			this.popupWindow = window.open(
-				popupUrl,
-				this.popupConfig.name,
-				features
-			);
-
-			console.log( 'Popup window result:', this.popupWindow );
-
-			if ( ! this.popupWindow ) {
-				console.error(
-					'Failed to open popup window - likely blocked by browser'
-				);
-				this.showError(
-					'Popup blocked! Please allow popups for this site and try again.'
-				);
-				return;
-			}
-
-			// Additional check - sometimes window.open returns a window but it's not functional
-			try {
-				if ( this.popupWindow.closed ) {
-					console.error( 'Popup window was immediately closed' );
-					this.showError(
-						'Popup was blocked or closed. Please allow popups for this site.'
-					);
-					this.popupWindow = null;
-					return;
-				}
-			} catch ( e ) {
-				console.log(
-					'Cannot access popup window properties (normal for cross-origin):',
-					e.message
-				);
-			}
-
-			// Start monitoring the popup
-			this.startPopupMonitoring();
-
-			// Show loading state in UI
-			this.showPopupOpenState();
 		},
 
 		/**
@@ -421,38 +303,23 @@
 		 * @return {string} Complete popup URL
 		 */
 		buildPopupUrl: function ( connectInfo ) {
-			// For purchase flow, use the full_url directly
-			if ( connectInfo.is_purchase_flow && connectInfo.full_url ) {
-				console.log(
-					'Using purchase flow URL:',
-					connectInfo.full_url
-				);
-				return connectInfo.full_url;
-			}
-
-			// For Pro installation flow, use the server-generated URL from connect info
-			if ( connectInfo.url ) {
-				console.log(
-					'Using server-generated connection URL:',
-					connectInfo.url
-				);
-				return connectInfo.url;
-			}
-
-			// Fallback: If we have full_url, use it
+			// If we have a pre-built full URL from the server, use it.
 			if ( connectInfo.full_url ) {
 				console.log(
-					'Using fallback full URL:',
+					'Using server-generated full URL:',
 					connectInfo.full_url
 				);
 				return connectInfo.full_url;
 			}
 
-			// Last resort: build from parameters
+			// Fallback to building URL from parameters.
 			const baseUrl =
 				connectInfo.base_url || 'https://upgrade.wppopupmaker.com';
 
+			// URL encode the parameters
 			const params = new URLSearchParams();
+
+			// Skip special keys that aren't URL parameters.
 			const skipKeys = [
 				'product',
 				'source',
@@ -461,7 +328,6 @@
 				'full_url',
 				'back_url',
 				'existing_license',
-				'is_purchase_flow',
 			];
 
 			Object.keys( connectInfo ).forEach( ( key ) => {
@@ -606,49 +472,11 @@
 			console.log( 'Navigating existing popup to final URL:', popupUrl );
 
 			try {
-				// For cross-origin navigation, we need to use window.open with the same name
-				// This will reuse the existing window and navigate it to the new URL
-				const targetUrl = new URL( popupUrl );
-				const currentUrl = new URL( window.location.href );
-				
-				// Check if we're navigating to a different origin
-				if ( targetUrl.origin !== currentUrl.origin ) {
-					console.log( 'Cross-origin navigation detected, using window.open replacement strategy' );
-					
-					// Close the current popup and open a new one with the final URL
-					// This is the most reliable approach for cross-origin navigation
-					this.popupWindow.close();
-					
-					// Calculate popup position (center of screen)
-					const left = Math.round(
-						( window.screen.width - this.popupConfig.width ) / 2
-					);
-					const top = Math.round(
-						( window.screen.height - this.popupConfig.height ) / 2
-					);
-
-					// Build features string with positioning
-					const features = `${ this.popupConfig.features },width=${ this.popupConfig.width },height=${ this.popupConfig.height },left=${ left },top=${ top }`;
-
-					// Open new popup with the final URL
-					this.popupWindow = window.open(
-						popupUrl,
-						this.popupConfig.name,
-						features
-					);
-
-					if ( ! this.popupWindow ) {
-						console.error( 'Failed to open popup window for cross-origin navigation' );
-						this.showError( 'Popup blocked! Please allow popups for this site and try again.' );
-						return;
-					}
-				} else {
-					// Same-origin navigation - can navigate directly
-					this.popupWindow.location.href = popupUrl;
-				}
+				// Navigate the existing popup to the final URL
+				this.popupWindow.location.href = popupUrl;
 			} catch ( e ) {
 				console.warn(
-					'Could not navigate popup directly, attempting fallback:',
+					'Could not navigate popup directly, attempting to open new window:',
 					e.message
 				);
 
@@ -794,15 +622,9 @@
 			// Trigger custom event
 			$( document ).trigger( 'pum_license_popup_closed' );
 
-			// Start polling for license status changes only if polling is properly configured
+			// Start polling for license status changes
 			if ( window.PUM_Admin.LicenseStatusPolling ) {
-				// Check if polling has valid configuration before starting
-				const polling = window.PUM_Admin.LicenseStatusPolling;
-				if ( polling.apiConfig && polling.apiConfig.endpoint && polling.apiConfig.nonce ) {
-					window.PUM_Admin.LicenseStatusPolling.startPolling();
-				} else {
-					console.log( 'License Status Polling: Skipping auto-start after popup close - invalid configuration' );
-				}
+				window.PUM_Admin.LicenseStatusPolling.startPolling();
 			}
 		},
 
