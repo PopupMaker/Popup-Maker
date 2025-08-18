@@ -706,11 +706,14 @@
 
 	// Initialize on document ready
 	$( function () {
-		LicenseStatusPolling.init();
+		// TODO: Uncomment when store site integration is complete
+		// LicenseStatusPolling.init();
+		console.log( 'License Status Polling: Disabled pending store site integration' );
 	} );
 
 	// Re-initialize if settings are dynamically loaded
 	$( document ).on( 'pum_init', function () {
-		LicenseStatusPolling.init();
+		// TODO: Uncomment when store site integration is complete
+		// LicenseStatusPolling.init();
 	} );
 } )( jQuery );

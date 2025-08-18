@@ -991,12 +991,15 @@
 
 	// Initialize on document ready
 	$( function () {
-		ProUpgradeFlow.init();
+		// TODO: Uncomment when store site integration is complete
+		// ProUpgradeFlow.init();
+		console.log( 'Pro Upgrade Flow: Disabled pending store site integration' );
 	} );
 
 	// Re-initialize if settings are dynamically loaded
 	$( document ).on( 'pum_init', function () {
-		ProUpgradeFlow.init();
+		// TODO: Uncomment when store site integration is complete  
+		// ProUpgradeFlow.init();
 	} );
 
 	// Cleanup on page unload to prevent memory leaks
