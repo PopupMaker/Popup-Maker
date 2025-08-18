@@ -29,7 +29,7 @@ class ObjectSearch extends WP_REST_Controller {
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'popup-maker/v1';
+	protected $namespace = 'popup-maker/v2';
 
 	/**
 	 * REST base.

@@ -3,6 +3,8 @@
  ******************************************************************************/
 import './editor.scss';
 import './license-key-enhancements';
+import './license-status-polling';
+import './pro-upgrade-flow';
 
 ( function ( $ ) {
 	'use strict';

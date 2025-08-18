@@ -270,8 +270,8 @@ class License extends Service {
 
 		// Check if license_tier is explicitly set in the license data.
 		if ( ! empty( $license_status['license_tier'] ) ) {
-			return in_array( $license_status['license_tier'], [ 'pro', 'pro_plus' ], true ) 
-				? $license_status['license_tier'] 
+			return in_array( $license_status['license_tier'], [ 'pro', 'pro_plus' ], true )
+				? $license_status['license_tier']
 				: 'pro';
 		}
 
@@ -698,5 +698,76 @@ class License extends Service {
 		$current_key  = $this->get_license_key();
 
 		return $constant_key && $current_key === $constant_key && $this->is_license_active();
+	}
+
+	/**
+	 * Generate connection information for Pro upgrade.
+	 *
+	 * This method creates the necessary connection data for upgrading to Pro
+	 * when Pro is not already installed.
+	 *
+	 * @return array{url:string,back_url:string}|null Returns connection info or null if conditions not met.
+	 */
+	public function generate_connect_info(): ?array {
+		// Only generate connect info if license is active and Pro is not installed.
+		if ( ! $this->is_license_active() || $this->container->is_pro_installed() ) {
+			return null;
+		}
+
+		$license_key = $this->get_license_key();
+		if ( empty( $license_key ) ) {
+			return null;
+		}
+
+		// Use the Connect service to generate connection info.
+		$connect_service = $this->container->get( 'connect' );
+		return $connect_service->get_connect_info( $license_key );
+	}
+
+	/**
+	 * Validate license for Pro upgrade workflow.
+	 *
+	 * Determines if the current license state allows for Pro upgrade.
+	 *
+	 * @return array{valid:bool,can_upgrade:bool,reason:string}
+	 */
+	public function validate_for_upgrade(): array {
+		$license_key      = $this->get_license_key();
+		$license_status   = $this->get_license_status();
+		$is_pro_installed = $this->container->is_pro_installed();
+
+		// No license key provided.
+		if ( empty( $license_key ) ) {
+			return [
+				'valid'       => false,
+				'can_upgrade' => false,
+				'reason'      => 'no_license_key',
+			];
+		}
+
+		// License is not active.
+		if ( 'valid' !== $license_status ) {
+			return [
+				'valid'       => false,
+				'can_upgrade' => false,
+				'reason'      => "license_{$license_status}",
+			];
+		}
+
+		// Pro is already installed.
+		if ( $is_pro_installed ) {
+			return [
+				'valid'       => true,
+				'can_upgrade' => false,
+				'reason'      => 'pro_already_installed',
+			];
+		}
+
+		// License is valid and Pro is not installed - can upgrade.
+		return [
+			'valid'       => true,
+			'can_upgrade' => true,
+			'reason'      => 'ready_for_upgrade',
+		];
 	}
 }

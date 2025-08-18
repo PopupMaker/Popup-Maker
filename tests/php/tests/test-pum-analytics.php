@@ -17,28 +17,28 @@ class PUM_AnalyticsTEST extends WP_UnitTestCase {
 	public function test_track() {
 
 		// Creates our test popup.
-		$popup_id = wp_insert_post(array(
-			'post_type' => 'popup'
-		));
+		$popup_id = wp_insert_post([
+			'post_type' => 'popup',
+		]);
 
 		// Make sure counts are 0.
 		$popup = pum_get_popup( $popup_id );
 		$popup->reset_counts();
 
 		// Tests tracking an open.
-		$open = array(
-			'pid' => $popup_id,
-			'event' => 'open'
-		);
+		$open = [
+			'pid'   => $popup_id,
+			'event' => 'open',
+		];
 		PUM_Analytics::track( $open );
 		$new_count = $popup->get_event_count( 'open' );
 		$this->assertEquals( 1, $new_count, 'Open tracking check' );
 
 		// Tests tracking a conversion.
-		$conversion = array(
-			'pid' => $popup_id,
-			'event' => 'conversion'
-		);
+		$conversion = [
+			'pid'   => $popup_id,
+			'event' => 'conversion',
+		];
 		PUM_Analytics::track( $conversion );
 		$new_count = $popup->get_event_count( 'conversion' );
 		$this->assertEquals( 1, $new_count, 'Conversion tracking check' );
@@ -48,7 +48,7 @@ class PUM_AnalyticsTEST extends WP_UnitTestCase {
 	 * Tests to make sure data returned from `pum_vars` is valid.
 	 */
 	public function test_pum_vars() {
-		$pum_vars = PUM_Analytics::pum_vars( array() );
+		$pum_vars = PUM_Analytics::pum_vars( [] );
 		$this->assertIsArray( $pum_vars );
 
 		$this->assertArrayHasKey( 'analytics_route', $pum_vars );
@@ -62,7 +62,7 @@ class PUM_AnalyticsTEST extends WP_UnitTestCase {
 		$namespace = PUM_Analytics::get_analytics_namespace();
 		$this->assertIsString( $namespace );
 
-		$this->assertStringContainsString( '/v1', $namespace );
+		$this->assertStringContainsString( '/v2', $namespace );
 	}
 
 	/**

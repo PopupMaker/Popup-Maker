@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Localized service class.
  *
- * @template TContainer of \PopupMaker\Plugin\Container
+ * @template TContainer of \PopupMaker\Plugin\Core
  */
 abstract class Service implements \PopupMaker\Interfaces\Service {
 	/**
