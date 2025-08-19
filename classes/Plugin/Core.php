@@ -400,6 +400,26 @@ final class Core extends \PopupMaker\Plugin\Container {
 	}
 
 	/**
+	 * Get Pro plugin version if installed.
+	 *
+	 * @return string Pro plugin version or empty string if not installed.
+	 */
+	public function get_pro_version() {
+		$pro_plugin_file = WP_PLUGIN_DIR . '/popup-maker-pro/popup-maker-pro.php';
+
+		if ( ! file_exists( $pro_plugin_file ) ) {
+			return '';
+		}
+
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugin_data = get_plugin_data( $pro_plugin_file, false, false );
+		return isset( $plugin_data['Version'] ) ? $plugin_data['Version'] : '';
+	}
+
+	/**
 	 * Check if license is active.
 	 *
 	 * @return boolean
