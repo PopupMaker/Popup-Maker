@@ -54,11 +54,9 @@
 		init: function () {
 			// Prevent double initialization
 			if ( this.isInitialized ) {
-				console.log( 'Pro Upgrade Flow already initialized, skipping' );
-				return;
+					return;
 			}
 
-			console.log( 'Initializing Pro Upgrade Flow' );
 			this.isInitialized = true;
 			this.bindEvents();
 		},

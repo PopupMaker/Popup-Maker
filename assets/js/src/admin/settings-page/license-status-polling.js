@@ -32,21 +32,21 @@
 		pollTimeout: null,
 
 		/**
-		 * Polling configuration
+		 * Polling configuration - optimized for Pro installation detection
 		 */
 		config: {
 			// Initial polling interval (fast polling)
-			initialInterval: 2000, // 2 seconds
+			initialInterval: 3000, // 3 seconds
 			// Standard polling interval
 			normalInterval: 5000, // 5 seconds
 			// Slow polling interval
 			slowInterval: 10000, // 10 seconds
-			// Maximum polling duration
-			maxDuration: 300000, // 5 minutes
-			// Maximum number of attempts
-			maxAttempts: 60, // 5 minutes at 5-second intervals
+			// Maximum polling duration - reduced from 5 minutes
+			maxDuration: 120000, // 2 minutes
+			// Maximum number of attempts - reduced
+			maxAttempts: 24, // 2 minutes at 5-second intervals
 			// Fast polling duration
-			fastPollDuration: 30000, // 30 seconds
+			fastPollDuration: 20000, // 20 seconds
 		},
 
 		/**
@@ -74,28 +74,48 @@
 		 * Initialize the license status polling
 		 */
 		init: function () {
-			console.log( 'Initializing License Status Polling' );
-			this.setupApiConfig();
+	
+			// Setup API configuration and validate it
+			if ( ! this.setupApiConfig() ) {
+				console.error(
+					'License Status Polling: Failed to setup API configuration'
+				);
+				return;
+			}
+
 			this.bindEvents();
+
+			// NOTE: Do not start polling automatically on page load.
+			// Polling should only start when triggered by specific user actions.
 		},
 
 		/**
 		 * Setup API configuration from global variables
 		 */
 		setupApiConfig: function () {
-			// Get REST API URL and nonce from WordPress globals
-			if ( window.wpApiSettings ) {
+			// Always try REST API first - build the URL manually if needed
+			if ( window.wpApiSettings && window.wpApiSettings.root ) {
 				this.apiConfig.endpoint = `${ window.wpApiSettings.root }${ this.apiConfig.namespace }/${ this.apiConfig.route }`;
 				this.apiConfig.nonce = window.wpApiSettings.nonce;
-			} else if ( window.pum_admin_vars ) {
-				// Fallback to admin AJAX
-				this.apiConfig.endpoint = window.pum_admin_vars.ajax_url;
-				this.apiConfig.nonce = window.pum_admin_vars.nonce;
 			} else {
-				console.warn(
-					'License Status Polling: No API configuration available'
-				);
+				// Build REST API URL manually as fallback
+				const restRoot = window.location.origin + '/wp-json/';
+				this.apiConfig.endpoint = `${ restRoot }${ this.apiConfig.namespace }/${ this.apiConfig.route }`;
+				this.apiConfig.nonce =
+					window.pum_admin_vars?.rest_nonce ||
+					window.pum_admin_vars?.nonce ||
+					'';
 			}
+
+			// Validate we have a proper REST endpoint
+			if ( ! this.apiConfig.endpoint.includes( '/wp-json/' ) ) {
+				console.error(
+					'License Status Polling: Invalid REST API endpoint configured'
+				);
+				return false;
+			}
+
+			return true;
 		},
 
 		/**
@@ -128,11 +148,62 @@
 		},
 
 		/**
+		 * Check if polling is needed based on current license status
+		 * @return {Promise<boolean>} True if polling should start
+		 */
+		shouldStartPolling: async function () {
+			try {
+				// Get current license status from server
+				const response = await $.ajax( {
+					url: this.apiConfig.endpoint,
+					type: 'GET',
+					headers: {
+						'X-WP-Nonce': this.apiConfig.nonce,
+					},
+					timeout: 10000,
+				} );
+
+				console.log( 'Pre-flight license check:', response );
+
+				// Only poll if license is active but Pro is not yet installed/active
+				const needsPolling =
+					response.is_active &&
+					( ! response.is_pro_installed || ! response.is_pro_active );
+
+				if ( ! needsPolling ) {
+					console.log( 'License Status Polling: No polling needed', {
+						is_active: response.is_active,
+						is_pro_installed: response.is_pro_installed,
+						is_pro_active: response.is_pro_active,
+					} );
+				}
+
+				return needsPolling;
+			} catch ( error ) {
+				console.warn(
+					'License Status Polling: Pre-flight check failed, will attempt polling:',
+					error
+				);
+				// If check fails, err on the side of polling (might be needed)
+				return true;
+			}
+		},
+
+		/**
 		 * Start polling for license status updates
 		 */
-		startPolling: function () {
+		startPolling: async function () {
 			if ( this.isPolling ) {
 				console.log( 'License Status Polling: Already polling' );
+				return;
+			}
+
+			// Check if polling is actually needed
+			const shouldPoll = await this.shouldStartPolling();
+			if ( ! shouldPoll ) {
+				console.log(
+					'License Status Polling: Polling not needed, skipping'
+				);
 				return;
 			}
 
@@ -293,19 +364,10 @@
 		 * @return {Object} Request data
 		 */
 		prepareRequestData: function () {
-			const baseData = {
-				_wpnonce: this.apiConfig.nonce,
-				timestamp: Date.now(),
-			};
-
-			// Use REST API format if available, otherwise use admin-ajax format
-			if ( window.wpApiSettings ) {
-				return baseData;
-			}
+			// For REST API calls, we don't need body data - authentication is via headers
+			// Just add a timestamp to prevent caching
 			return {
-				...baseData,
-				action: 'pum_check_license_status',
-				nonce: this.apiConfig.nonce,
+				timestamp: Date.now(),
 			};
 		},
 
@@ -314,9 +376,13 @@
 		 * @param {XMLHttpRequest} xhr XMLHttpRequest object
 		 */
 		setRequestHeaders: function ( xhr ) {
-			if ( window.wpApiSettings && this.apiConfig.nonce ) {
+			// Always set the nonce header for REST API authentication
+			if ( this.apiConfig.nonce ) {
 				xhr.setRequestHeader( 'X-WP-Nonce', this.apiConfig.nonce );
 			}
+
+			// Set content type for JSON
+			xhr.setRequestHeader( 'Content-Type', 'application/json' );
 		},
 
 		/**
@@ -401,11 +467,11 @@
 		 */
 		extractStatusData: function ( response ) {
 			return {
-				is_valid: response.is_valid || false,
+				is_active: response.is_active || false,
 				license_key: response.license_key || '',
 				status: response.status || '',
-				expires: response.expires || '',
-				pro_installed: response.pro_installed || false,
+				is_pro_installed: response.is_pro_installed || false,
+				is_pro_active: response.is_pro_active || false,
 			};
 		},
 
@@ -423,7 +489,7 @@
 			this.updateLicenseUI( response );
 
 			// Check if license is now valid and pro should be installed
-			if ( response.is_valid && ! response.pro_installed ) {
+			if ( response.is_active && ! response.is_pro_installed ) {
 				this.triggerProInstallation( response );
 			}
 		},
@@ -453,7 +519,7 @@
 			if ( $statusContainer.length ) {
 				$statusContainer.removeClass( 'valid invalid' );
 				$statusContainer.addClass(
-					response.is_valid ? 'valid' : 'invalid'
+					response.is_active ? 'valid' : 'invalid'
 				);
 				$statusContainer
 					.find( '.pum-license-status-text' )
@@ -461,7 +527,7 @@
 			}
 
 			// Show status message
-			if ( response.is_valid ) {
+			if ( response.is_active ) {
 				this.showSuccess( 'License activated successfully!' );
 			} else if ( response.status ) {
 				this.showError( `License issue: ${ response.status }` );
@@ -497,16 +563,30 @@
 		 * @return {boolean} True if should continue
 		 */
 		shouldContinuePolling: function ( response ) {
-			// Stop if license is valid and pro is installed
-			if ( response.is_valid && response.pro_installed ) {
+			// Stop if license is valid and Pro is both installed AND active
+			if (
+				response.is_active &&
+				response.is_pro_installed &&
+				response.is_pro_active
+			) {
 				console.log(
-					'License valid and Pro installed, stopping polling'
+					'License valid and Pro installed & active, stopping polling'
 				);
 				return false;
 			}
 
-			// Continue polling if license is valid but pro not installed
-			// Continue polling if license is not yet valid
+			// Stop if license becomes invalid (shouldn't happen but safety check)
+			if ( ! response.is_active ) {
+				console.log( 'License is no longer active, stopping polling' );
+				return false;
+			}
+
+			// Continue polling if license is valid but Pro not yet installed/active
+			console.log( 'Continuing polling - Pro installation pending', {
+				is_active: response.is_active,
+				is_pro_installed: response.is_pro_installed,
+				is_pro_active: response.is_pro_active,
+			} );
 			return true;
 		},
 
@@ -550,6 +630,11 @@
 		 * Handle window focus (user returned from upgrade popup)
 		 */
 		handleWindowFocus: function () {
+			// Only check if we're currently polling (in upgrade flow)
+			if ( ! this.isPolling ) {
+				return;
+			}
+
 			// Check if Pro plugin is now installed by performing immediate poll
 			console.log(
 				'Window focused - checking if Pro plugin was installed'
