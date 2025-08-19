@@ -40,15 +40,27 @@ Styles for upgrade notice bar
 	.pum-notice-bar {
 		display: flex;
 		justify-content: center;
-		background-color: #f6f6f6;
-		border-top: 3px solid #ad1b8e;
-		color: #777;
+		background: linear-gradient(135deg, #ebe7fe 0%, #f6f6f7 100%);
+		border-top: 3px solid #8267f6;
+		border-left: 1px solid #d6ccff;
+		border-right: 1px solid #d6ccff;
+		border-bottom: 1px solid #d6ccff;
+		border-radius: 0 0 6px 6px;
+		color: #270aa9;
 		padding: 7px;
 		max-height: 100px;
 		visibility: visible;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 
 		a {
-			color: #9aba27;
+			color: #7356f5;
+			font-weight: 600;
+			text-decoration: none;
+
+			&:hover {
+				color: #8267f6;
+				text-decoration: underline;
+			}
 		}
 	}
 }
@@ -144,15 +156,15 @@ Styles for toggle buttons
 		width: 0;
 		height: 0;
 
-		&:focus + label {
+		&:focus+label {
 			box-shadow: 2px 2px 7px #2196f3;
 		}
 
-		&:checked + label {
+		&:checked+label {
 			background-color: #9ab927;
 		}
 
-		&:checked + label::before {
+		&:checked+label::before {
 			background-color: #fff;
 			transform: translateX(15px);
 		}
@@ -286,5 +298,53 @@ Styles for toggle buttons
 
 	@media only screen and (min-width: 0px) and (max-width: 783px) {
 		display: none !important;
+	}
+}
+
+/************
+Styles for upgrade tab
+************/
+
+.nav-tab.pum-upgrade-tab-pro {
+	font-weight: 500 !important;
+	color: #1dbe61 !important;
+	border: 1px solid #bcf5d4;
+	border-bottom: 2px solid transparent;
+	background: rgba(29, 190, 97, 0.05);
+
+	&:hover {
+		color: #179b4e !important;
+		border-color: #1dbe61;
+		border-bottom-color: #1dbe61;
+		background: rgba(29, 190, 97, 0.08);
+	}
+
+	&.nav-tab-active {
+		color: #179b4e !important;
+		border-color: #1dbe61;
+		border-bottom-color: #1dbe61;
+		background: rgba(29, 190, 97, 0.1);
+	}
+}
+
+.nav-tab.pum-upgrade-tab-pro-plus {
+	font-weight: 500 !important;
+	color: #8267f6 !important;
+	border: 1px solid #d6ccff;
+	border-bottom: 2px solid transparent;
+	background: rgba(130, 103, 246, 0.05);
+
+	&:hover {
+		color: #7356f5 !important;
+		border-color: #8267f6;
+		border-bottom-color: #8267f6;
+		background: rgba(130, 103, 246, 0.08);
+	}
+
+	&.nav-tab-active {
+		color: #7356f5 !important;
+		border-color: #8267f6;
+		border-bottom-color: #8267f6;
+		background: rgba(130, 103, 246, 0.1);
 	}
 }
