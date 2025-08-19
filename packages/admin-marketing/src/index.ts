@@ -16,8 +16,8 @@ const { assetsUrl } = window.popupMaker.globalVars;
 
 // Initiate when ready.
 $( () => {
-	$( 'a[href="edit.php?post_type=popup&page=pum-extensions"]' ).css( {
-		color: '#a0d468',
+	$( 'a[href*="pum-settings#go-pro"]' ).css( {
+		color: '#1dbe61',
 	} );
 
 	$( '#menu-posts-popup.wp-menu-open .wp-menu-image' ).css( {
