@@ -59,9 +59,9 @@ class PUM_Admin_Pages {
 				return null;
 			}
 
-			// Pro license (valid) - show "Go Pro Plus".
+			// Pro license (valid) - show "Go Pro+".
 			if ( 'valid' === $license_status && 'pro' === $license_tier ) {
-				$menu_title = __( 'Go Pro Plus', 'popup-maker' );
+				$menu_title = __( 'Go Pro+', 'popup-maker' );
 			} else {
 				// No license or invalid license - show "Go Pro".
 				$menu_title = __( 'Go Pro', 'popup-maker' );
@@ -69,15 +69,17 @@ class PUM_Admin_Pages {
 
 			return [
 				'page_title' => $menu_title,
+				'menu_slug'  => 'pum-settings#go-pro',
 				'capability' => 'edit_posts',
-				'callback'   => [ 'PUM_Admin_Extend', 'page' ],
+				'callback'   => [ 'PUM_Admin_Settings', 'page' ],
 			];
 		} catch ( \Exception $e ) {
 			// Fallback to default if license service unavailable.
 			return [
 				'page_title' => __( 'Go Pro', 'popup-maker' ),
+				'menu_slug'  => 'pum-settings#go-pro',
 				'capability' => 'edit_posts',
-				'callback'   => [ 'PUM_Admin_Extend', 'page' ],
+				'callback'   => [ 'PUM_Admin_Settings', 'page' ],
 			];
 		}
 	}
@@ -203,12 +205,13 @@ class PUM_Admin_Pages {
 		$last_pages = apply_filters(
 			'pum_admin_submenu_last_pages',
 			[
-				__( 'Extend', 'popup-maker' ),
 				__( 'Settings', 'popup-maker' ),
 				__( 'Tools', 'popup-maker' ),
 				__( 'Support Forum', 'popup-maker' ),
 				__( 'Account', 'popup-maker' ),
 				__( 'Contact Us', 'popup-maker' ),
+				__( 'Go Pro', 'popup-maker' ),
+				__( 'Go Pro+', 'popup-maker' ),
 				__( 'Help & Support', 'popup-maker' ),
 			]
 		);
