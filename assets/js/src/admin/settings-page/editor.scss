@@ -2,6 +2,28 @@
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
+@keyframes blink {
+	0% {
+		opacity: .9;
+	}
+
+	50% {
+		opacity: .5;
+	}
+}
+
+@keyframes glow {
+	0% {
+		opacity: 0.6;
+		transform: scale(1);
+	}
+
+	100% {
+		opacity: 0.8;
+		transform: scale(1.02);
+	}
+}
+
 .wrap-licenses {
 
 	.form-table,
@@ -115,22 +137,9 @@
 
 // Pro License Interface (Content Control exact styling)
 .pum-field-pro_license {
-	background: transparent;
-	border: none;
-	padding: 0;
-	margin: 0;
-	box-shadow: none;
+	margin-top: -8px !important;
 
-	// Remove label from showing - handled in template
-	label,
-	label[for="popup_maker_pro_license_key"] {
-		display: none !important;
-	}
-
-	// Pro+ specific field styling
-	&.pum-license-tier-pro-plus {
-		// Pro+ specific field-level styles will be added here
-	}
+	max-width: 1200px;
 
 	// License Content Container (like Content Control's main section)
 	.pum-pro-license-content {
@@ -140,11 +149,6 @@
 		padding: 20px;
 		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 
-		// Pro+ specific content styling
-		&.pum-license-tier-pro-plus {
-			// Pro+ border or background variations can be added here
-		}
-
 		// Pro Licensing Header Section (like Content Control)
 		.pum-pro-license-header {
 			display: flex;
@@ -153,6 +157,7 @@
 			margin: -20px -20px 20px -20px;
 			padding: 12px 20px;
 			border-bottom: 1px solid #dcdcde;
+			border-radius: 4px 4px 0 0;
 			background: #f9f9f9;
 			background: linear-gradient(to right, rgb(248, 250, 252), rgb(249, 250, 251));
 
@@ -215,13 +220,17 @@
 
 				.star-icon {
 					margin-left: 10px;
-					color: #fff;
+					// color: #fff;
+					color: #fbd803;
+					stroke: #fbd803;
+					animation: blink 1.5s infinite ease-in-out;
 				}
 
 				.lightning-icon {
 					margin-left: 10px;
 					color: #fbd803;
 					stroke: #fbd803;
+					animation: blink 1.5s infinite ease-in-out;
 				}
 
 				&.active {
@@ -239,6 +248,11 @@
 					background: linear-gradient(to right, #8267F6, #7356f5);
 					color: #fff;
 					// border: 1px solid #ffc107;
+
+					.crown-icon {
+						color: #fff;
+						fill: #fff;
+					}
 
 					// Pro+ deactivated badge styling
 					&.pro-plus {
@@ -260,9 +274,38 @@
 			}
 		}
 
+		// License Field Area - Main flex container
+		.pum-flex {
+			display: flex;
+		}
+
+		.pum-flex--column {
+			flex-direction: column;
+		}
+
+		.pum-flex--row {
+			flex-direction: row;
+		}
+
+		.pum-flex--gap-l {
+			gap: 24px;
+		}
+
+		.pum-flex--gap-m {
+			gap: 16px;
+		}
+
+		.pum-flex--gap-s {
+			gap: 8px;
+		}
+
+		.pum-flex--gap-xs {
+			gap: 5px;
+		}
+
 		// Main heading like Content Control
 		.pum-license-heading {
-			margin: 0 0 12px 0;
+			margin: 0;
 			font-size: 18px;
 			font-weight: 600;
 			color: #1d2327;
@@ -270,16 +313,28 @@
 
 		// Description text
 		.pum-license-description {
-			margin: 0 0 16px 0;
-			font-size: 14px;
+			margin: 0;
+			font-size: 1.2em;
 			color: #646970;
 			line-height: 1.5;
+
+			svg {
+				width: 16px;
+				height: 16px;
+				vertical-align: middle;
+				margin-right: 4px;
+
+				&.lightning-icon {
+					color: #fbd803;
+					stroke: #fbd803;
+				}
+			}
 		}
 
 		// Pro+ Status Section
 		.pum-pro-plus-status {
 			display: flex;
-			align-items: flex-start;
+			align-items: center;
 			gap: 12px;
 			padding: 16px;
 			margin: 16px 0;
@@ -295,38 +350,53 @@
 			}
 
 			strong {
-				display: block;
-				margin-bottom: 4px;
+				margin: 0;
 				color: #1d2327;
 				font-size: 14px;
+				line-height: 1.2;
 			}
 
 			p {
 				margin: 0;
 				color: #646970;
 				font-size: 13px;
-				line-height: 1.5;
+				line-height: 1.4;
+			}
+		}
+
+		.pum-license-input-label {
+			font-size: 13px;
+			font-weight: 600;
+
+			strong {
+				font-weight: 800;
 			}
 		}
 
 		// Input section exactly like Content Control
 		.pum-license-input-wrapper {
-			margin: 20px 0;
 
 			.pum-license-input-group {
 				display: flex;
 				gap: 0;
-				max-width: 600px;
+				// max-width: 600px;
 
 				input[type="text"] {
 					flex: 1;
-					height: 36px;
-					padding: 8px 12px;
-					border: 1px solid #8c8f94;
+					// height: 36px;
+					// padding: 8px 12px;
+					color: rgb(26, 25, 27);
+					border: 1px solid rgb(217, 215, 218);
 					border-right: none;
 					border-radius: 3px 0 0 3px;
 					font-size: 14px;
 					background: #fff;
+					padding: 0.75rem 1rem;
+					font-size: 0.875rem;
+					line-height: 1.25rem;
+					margin-right: -1px;
+					max-width: 300px;
+
 
 					&:focus {
 						border-color: #0073aa;
@@ -345,19 +415,110 @@
 
 				.pum-license-buttons {
 					display: flex;
-					align-items: stretch;
+					// align-items: stretch;
+					flex-wrap: wrap;
+					// gap: 12px;
+					justify-content: flex-start;
 
 					.button {
-						height: 36px;
-						padding: 0 16px;
+						padding: 0.75rem 1rem;
 						margin: 0;
 						border-radius: 0;
-						font-size: 13px;
+						font-size: 14px;
 						line-height: 1;
 						border-left: none;
 
-						&:last-child {
+						&:last-child:not(.pum-install-pro-button) {
 							border-radius: 0 3px 3px 0;
+						}
+					}
+
+					// Install Pro Button with glowing effect
+					.pum-install-pro-button {
+						padding: 0.75rem 1.5rem;
+						font-weight: 700;
+						font-size: 14px;
+						text-transform: uppercase;
+						letter-spacing: 0.5px;
+						border-radius: 6px !important;
+						border: 2px solid transparent;
+						margin-left: 12px;
+						position: relative;
+						background: linear-gradient(135deg, #1dbe61 0%, #179b4e 100%);
+						color: #fff;
+						box-shadow: 0 0 0 0 rgba(29, 190, 97, 0.4);
+						animation: blink 1.5s infinite ease-in-out;
+						transition: all 0.3s ease;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+
+						.download-icon,
+						.power-icon {
+							width: 16px;
+							height: 16px;
+							stroke-width: 2.5;
+						}
+
+						.power-icon {
+							// Slightly different styling for activation vs installation
+							stroke-width: 2;
+						}
+
+						&::before {
+							content: '';
+							position: absolute;
+							top: -4px;
+							left: -4px;
+							right: -4px;
+							bottom: -4px;
+							background: linear-gradient(135deg, rgba(29, 190, 97, 0.3), rgba(23, 155, 78, 0.3));
+							border-radius: 10px;
+							z-index: -1;
+							opacity: 0.8;
+							animation: glow 2s infinite ease-in-out alternate;
+						}
+
+						&:hover {
+							background: linear-gradient(135deg, #179b4e 0%, #1dbe61 100%);
+							transform: translateY(-1px);
+							box-shadow: 0 4px 12px rgba(29, 190, 97, 0.3);
+						}
+
+						&.pum-install-pro-plus {
+							background: linear-gradient(135deg, #8267f6 0%, #7356f5 100%);
+							box-shadow: 0 0 0 0 rgba(130, 103, 246, 0.4);
+
+							&::before {
+								background: linear-gradient(135deg, rgba(130, 103, 246, 0.3), rgba(115, 86, 245, 0.3));
+							}
+
+							&:hover {
+								background: linear-gradient(135deg, #7356f5 0%, #8267f6 100%);
+								box-shadow: 0 4px 12px rgba(130, 103, 246, 0.3);
+							}
+						}
+
+						// Disabled state - stop animations but keep visual appearance
+						&:disabled {
+							opacity: 0.7;
+							cursor: not-allowed;
+							animation: none;
+							transform: none;
+
+							&::before {
+								animation: none;
+								opacity: 0.4;
+							}
+
+							&:hover {
+								transform: none;
+								box-shadow: 0 0 0 0 rgba(29, 190, 97, 0.4);
+							}
+
+							&.pum-install-pro-plus:hover {
+								box-shadow: 0 0 0 0 rgba(130, 103, 246, 0.4);
+							}
 						}
 					}
 
@@ -453,12 +614,11 @@
 
 		// Upgrade text like Content Control
 		.pum-license-upgrade-text {
-			margin: 16px 0;
-			font-size: 14px;
+			font-size: 1.2em;
 			color: #646970;
 
 			a {
-				color: #0073aa;
+				color: #1dbe61;
 				text-decoration: none;
 
 				&:hover {
@@ -469,20 +629,190 @@
 
 		// Separator
 		hr.pum-license-separator {
-			margin: 24px 0;
+			margin: 0 0;
 			border: none;
 			height: 1px;
 			background: #dcdcde;
 		}
 
+		.pum-license-details {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			padding: 1rem;
+			font-size: 15px;
+			border: 1px solid;
+			border-radius: 4px;
+
+			background: #f2f2f3;
+
+			.pum-license-details-header {
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+				align-items: center;
+
+				h4 {
+					margin: 0;
+					font-size: 1.2em;
+				}
+
+				svg {
+					width: 1.4em;
+					height: 1.4em;
+				}
+			}
+
+
+
+			th {
+				text-align: left;
+				font-weight: 500;
+			}
+
+			td {
+				font-weight: 700;
+				text-align: right;
+
+				svg {
+					width: 1em;
+					height: 1em;
+					top: 2px;
+					position: relative;
+
+					&.crown-icon {
+						// color: #fbd803;
+						// fill: #fbd803;
+						stroke: #fbd803;
+					}
+				}
+			}
+
+			.pum-license-status {
+
+				&::before {
+					content: "";
+					display: inline-block;
+					border-radius: 9999px;
+					width: 0.5rem;
+					height: 0.5rem;
+					position: relative;
+					top: -1px;
+					margin-right: 0.25em;
+				}
+			}
+
+			.pum-pro-status {
+
+				&::before {
+					content: "";
+					display: inline-block;
+					border-radius: 9999px;
+					width: 0.5rem;
+					height: 0.5rem;
+					position: relative;
+					top: -1px;
+					margin-right: 0.25em;
+				}
+			}
+
+
+			&--active {
+				background: linear-gradient(135deg, rgb(233, 252, 241) 0%, rgb(242, 242, 243) 100%);
+				border-color: rgb(188, 245, 212);
+
+
+				.pum-license-status::before {
+					background-color: rgb(29, 190, 97);
+				}
+
+				.pum-pro-status {
+					&--active::before {
+						background-color: rgb(29, 190, 97);
+					}
+
+					&--installed::before {
+						background-color: rgb(29, 190, 97);
+						opacity: 0.5;
+					}
+
+					&--not-installed::before {
+						background-color: #dc3545;
+					}
+				}
+
+				.pum-license-details-header h4,
+				.pum-license-status {
+					color: #2d5016;
+				}
+
+
+				svg {
+					// fill: #2d5016;
+					stroke: #2d5016;
+				}
+
+
+			}
+
+			&--pro-plus {
+				background: linear-gradient(135deg, rgb(235, 231, 254) 0%, rgb(242, 242, 243) 100%);
+				border-color: rgb(195, 183, 251);
+
+				.pum-license-status::before {
+					background-color: rgb(130, 103, 246);
+				}
+
+				.pum-pro-status {
+					&--active::before {
+						background-color: rgb(130, 103, 246);
+					}
+
+					&--installed::before {
+						background-color: rgb(130, 103, 246);
+						opacity: 0.5;
+					}
+
+					&--not-installed::before {
+						background-color: #dc3545;
+					}
+				}
+
+				.pum-license-details-header h4,
+				.pum-license-status {
+					color: rgb(39, 10, 169);
+				}
+
+
+				svg {
+					stroke: rgb(130, 103, 246) !important;
+				}
+			}
+		}
+
 		// Features section exactly like Content Control
 		.pum-pro-features {
-			margin: 24px 0 0 0;
+			.pum-feature-heading::before {
+				content: "●";
+				color: #00a32a;
+				margin-right: 0.5em;
+				font-size: .6em;
+				position: relative;
+				top: -2px;
+			}
 
-			.pum-features-intro {
+			.pum-features-heading {
 				margin: 0 0 20px 0;
-				font-size: 14px;
+				font-size: 16px;
+				font-weight: 600;
 				color: #1d2327;
+				text-align: center;
+				line-height: 1.4;
+
+				span {
+					display: block;
+					margin-top: 5px;
+				}
 
 				a {
 					color: #0073aa;
@@ -499,6 +829,15 @@
 				grid-template-columns: 1fr 1fr;
 				gap: 0 32px;
 
+				.pum-pro-plus-badge {
+					background: #8267f6;
+					color: #fff;
+					padding: 2px 6px;
+					border-radius: 4px;
+					font-size: 12px;
+					margin-left: 0.5em;
+				}
+
 				.pum-feature-column {
 					background: #f8f9fa;
 					border: 1px solid #dcdcde;
@@ -507,7 +846,7 @@
 
 					h4 {
 						margin: 0 0 12px 0;
-						font-size: 14px;
+						font-size: 16px;
 						font-weight: 600;
 						color: #1d2327;
 					}
@@ -522,13 +861,13 @@
 							display: flex;
 							align-items: flex-start;
 							gap: 8px;
-							font-size: 13px;
+							font-size: 14px;
 							line-height: 1.4;
 
 							img.feature-icon {
 								width: 14px;
 								height: 14px;
-								margin-top: 1px;
+								margin-top: 3px;
 								flex-shrink: 0;
 							}
 
@@ -537,6 +876,7 @@
 							}
 
 							strong {
+								display: block;
 								color: #1d2327;
 								font-weight: 600;
 							}
@@ -551,31 +891,148 @@
 		}
 	}
 
-	// Deactivated callout for Pro/Pro+ licenses
-	.pum-license-deactivated-callout {
+	.pum-license-callout {
 		display: flex;
 		align-items: center;
 		gap: 12px;
 		padding: 16px;
-		margin: 16px 0;
-		background: linear-gradient(135deg, #ebe7fe 0%, #f2f2f3 100%);
-		border: 1px solid #d6ccff;
-		border-radius: 4px;
-		color: #270aa9;
-		font-size: 14px;
-		line-height: 1.5;
+		border: 1px solid;
 
-		.info-icon {
-			width: 20px;
-			height: 20px;
-			flex-shrink: 0;
-			color: #270aa9;
+		svg {
+			width: 16px;
+			height: 16px;
+			vertical-align: middle;
+			// margin-right: 4px;
+
+			&.lightning-icon {
+				color: #fbd803;
+				stroke: #fbd803;
+			}
 		}
 
 		span {
 			flex: 1;
 		}
+
+		&--activated {
+			background: linear-gradient(135deg, rgb(233, 252, 241) 0%, rgb(242, 242, 243) 100%);
+			border-color: rgb(188, 245, 212);
+			border-radius: 4px;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 1.5;
+			color: rgb(17, 111, 56);
+
+		}
+
+
+		&--deactivated {
+			background: linear-gradient(135deg, #ebe7fe 0%, #f2f2f3 100%);
+			border-color: #d6ccff;
+			border-radius: 4px;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 1.5;
+
+			.info-icon {
+				color: #270aa9;
+			}
+
+		}
+
+
 	}
+
+	$purple-light: rgb(235, 231, 254);
+	$pro-plus-border-color: rgb(195, 183, 251);
+	$pro-plus-bg-gradient: linear-gradient(135deg, rgb(235, 231, 254) 0%, rgb(242, 242, 243) 100%);
+	$pro-plus-accent-color: rgb(130, 103, 246);
+	$dark-purple: rgb(39, 10, 169);
+
+	.feature-icon {
+		opacity: 0.5;
+		color: inherit;
+	}
+
+	.pum-license-tier-pro {
+		.pro-feature {
+			.feature-icon {
+				opacity: 1;
+				color: #00a32a;
+			}
+		}
+
+		.pro-plus-enhanced-feature {
+			.feature-icon {
+				// opacity: 0.5;
+				color: #00a32a;
+			}
+		}
+
+		.pro-plus-exclusive-feature {
+			.feature-icon {
+				color: #8267f6;
+			}
+		}
+	}
+
+	.pum-pro-license-content.pum-license-tier-pro-plus {
+
+		.pum-license-callout--activated {
+			background: $pro-plus-bg-gradient;
+			border-color: rgb(195, 183, 251);
+			color: rgb(39, 10, 169);
+		}
+
+		.feature-icon {
+			opacity: 1;
+		}
+
+		.pro-feature {
+			.feature-icon {
+				color: #00a32a;
+			}
+		}
+
+		.pro-plus-enhanced-feature {
+			.feature-icon {
+				color: #00a32a;
+			}
+		}
+
+		.pro-plus-exclusive-feature {
+			.feature-icon {
+				color: #8267f6;
+			}
+		}
+
+
+		.pum-pro-features {
+
+			.pum-features-heading span {
+				color: $pro-plus-accent-color;
+			}
+
+			.pum-features-grid {
+				.pum-feature-column {
+					border-color: $pro-plus-border-color;
+					background: $pro-plus-bg-gradient;
+				}
+			}
+
+
+			.pum-pro-plus-badge {
+				background: $purple-light;
+				color: rgb(39, 10, 169);
+				padding: 2px 6px;
+				border-radius: 4px;
+				font-size: 12px;
+			}
+		}
+
+
+	}
+
 
 	// Bottom text outside container (like Content Control)
 	.pum-license-footer-text {
@@ -598,17 +1055,26 @@
 					input[type="text"] {
 						border-radius: 3px;
 						border-right: 1px solid #8c8f94;
-						margin-bottom: 8px;
-						height: 40px;
+						// margin-bottom: 8px;
+						// height: 40px;
 					}
 
 					.pum-license-buttons {
 						justify-content: flex-start;
+						gap: 8px;
 
 						.button {
 							border-radius: 3px;
 							border-left: 1px solid #8c8f94;
 							margin-right: 8px;
+							padding: 0.75rem 1rem;
+						}
+
+						.pum-install-pro-button {
+							margin-left: 0;
+							margin-top: 8px;
+							width: 100%;
+							justify-content: center;
 						}
 					}
 				}
