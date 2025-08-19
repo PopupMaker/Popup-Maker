@@ -103,6 +103,20 @@ class License extends WP_REST_Controller {
 			]
 		);
 
+		// POST /license/activate-plugin - Activate Pro plugin if installed.
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/activate-plugin',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'activate_plugin' ],
+					'permission_callback' => [ $this, 'license_action_permissions_check' ],
+					'args'                => [],
+				],
+			]
+		);
+
 		// POST /license/deactivate - Deactivate license.
 		register_rest_route(
 			$this->namespace,
@@ -504,6 +518,60 @@ class License extends WP_REST_Controller {
 				},
 			],
 		];
+	}
+
+	/**
+	 * Activate Pro plugin if installed but not active.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object or WP_Error on failure.
+	 */
+	public function activate_plugin( $request ) {
+		// Check if Pro plugin is installed.
+		if ( ! \PopupMaker\plugin()->is_pro_installed() ) {
+			return new WP_Error(
+				'pro_not_installed',
+				__( 'Pro plugin is not installed.', 'popup-maker' ),
+				[ 'status' => 404 ]
+			);
+		}
+
+		// Check if Pro plugin is already active.
+		if ( \PopupMaker\plugin()->is_pro_active() ) {
+			return new WP_Error(
+				'pro_already_active',
+				__( 'Pro plugin is already active.', 'popup-maker' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		// Activate the Pro plugin.
+		if ( ! function_exists( 'activate_plugin' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$plugin_path = 'popup-maker-pro/popup-maker-pro.php';
+		$result      = activate_plugin( $plugin_path, '', false, true );
+
+		if ( is_wp_error( $result ) ) {
+			return new WP_Error(
+				'activation_failed',
+				sprintf(
+					/* translators: %s - Error message */
+					__( 'Something went wrong, the Pro plugin could not be activated: %s', 'popup-maker' ),
+					$result->get_error_message()
+				),
+				[ 'status' => 500 ]
+			);
+		}
+
+		// Return success response.
+		return new WP_REST_Response( [
+			'success'          => true,
+			'message'          => __( 'Pro plugin activated successfully.', 'popup-maker' ),
+			'is_pro_installed' => \PopupMaker\plugin()->is_pro_installed(),
+			'is_pro_active'    => \PopupMaker\plugin()->is_pro_active(),
+		], 200 );
 	}
 
 	/**
