@@ -621,7 +621,7 @@ class PUM_Admin_Settings {
 							],
 						],
 					],
-					'pro'        => [
+					'go-pro'     => [
 						'main' => [
 							'popup_maker_pro_license_key' => [
 								'type' => 'pro_license',
@@ -819,7 +819,7 @@ class PUM_Admin_Settings {
 					'licenses'      => __( 'Licenses', 'popup-maker' ),
 					'privacy'       => __( 'Privacy', 'popup-maker' ),
 					'misc'          => __( 'Misc', 'popup-maker' ),
-					'pro'           => \PopupMaker\plugin( 'license' )->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
+					'go-pro'        => \PopupMaker\plugin( 'license' )->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
 				]
 			);
 
@@ -859,7 +859,7 @@ class PUM_Admin_Settings {
 					'main'   => __( 'Misc', 'popup-maker' ),
 					'assets' => __( 'Assets', 'popup-maker' ),
 				],
-				'pro'           => [
+				'go-pro'        => [
 					'main' => \PopupMaker\plugin( 'license' )->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
 				],
 			]
