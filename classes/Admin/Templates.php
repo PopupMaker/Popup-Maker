@@ -272,10 +272,10 @@ class PUM_Admin_Templates {
 					fieldWrapper.className = fieldWrapper.className.replace(/pum-license-\w+-notice/g, '');
 					// Remove any existing tier classes
 					fieldWrapper.className = fieldWrapper.className.replace(/pum-license-tier-\w+/g, '');
-					
+
 					// Add license tier class
 					fieldWrapper.classList.add('pum-license-tier-' + licenseTier.replace('_', '-'));
-					
+
 					// Add new status class for field-level styling
 					if (status === 'deactivated') {
 						fieldWrapper.classList.add('pum-license-deactivated-notice');
@@ -291,22 +291,49 @@ class PUM_Admin_Templates {
 			#>
 
 			<!-- Main Content Container (like Content Control) -->
-			<div class="pum-pro-license-content <# if (isProPlus) { #>pum-license-tier-pro-plus<# } else { #>pum-license-tier-pro<# } #>">
+			<div class="pum-pro-license-content <# if (hasKey && isProPlus) { #>pum-license-tier-pro-plus<# } else if (hasKey) { #>pum-license-tier-pro<# } #>">
 				<!-- Pro Licensing Header (like Content Control) -->
 				<div class="pum-pro-license-header <# if (isProPlus) { #>pro-plus<# } #>">
 					<img class="pum-license-logo" src="<?php echo esc_url( POPMAKE_URL . '/assets/images/mark.svg' ); ?>" alt="<?php esc_attr_e( 'Popup Maker', 'popup-maker' ); ?>" />
+
 					<div class="pum-license-header-text">
-						<h3><# if (isProPlus) { #><?php esc_html_e( 'Pro+ Licensing', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Pro Licensing', 'popup-maker' ); ?><# } #></h3>
+						<h3 class="pum-license-heading">
+							<# if (isProPlus) { #>
+								<?php esc_html_e( 'Pro+', 'popup-maker' ); ?>
+							<# } else { #>
+								<?php esc_html_e( 'Pro', 'popup-maker' ); ?>
+							<# } #>
+							<?php esc_html_e( 'Licensing', 'popup-maker' ); ?>
+						</h3>
+
 						<# if (isProPlus) { #>
 						<span class="pum-license-subtitle"><?php esc_html_e( 'Premium Ecommerce Edition', 'popup-maker' ); ?></span>
 						<# } #>
 					</div>
+
+
 					<# if (hasKey) { #>
 					<span class="pum-license-status-badge <# if (isActive) { #>active<# } else if (isDeactivated) { #>deactivated<# } else if (status === 'expired') { #>expired<# } else { #>error<# } #> <# if (isProPlus) { #>pro-plus<# } #>">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="crown-icon"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
 						<# if (isActive) { #>
-							<# if (isProPlus) { #><?php esc_html_e( 'PRO+ ACTIVATED', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'PRO ACTIVATED', 'popup-maker' ); ?><# } #>
-						<# } else if (isDeactivated) { #><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?><# } else if (status === 'expired') { #><?php esc_html_e( 'Expired', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Invalid', 'popup-maker' ); ?><# } #>
+							<# if (isProPlus) { #>
+								<?php esc_html_e( 'Pro+', 'popup-maker' ); ?>
+							<# } else { #>
+								<?php esc_html_e( 'Pro', 'popup-maker' ); ?>
+							<# } #>
+							<?php esc_html_e( 'Activated', 'popup-maker' ); ?>
+						<# } else if (isDeactivated) { #>
+							<# if (isProPlus) { #>
+								<?php esc_html_e( 'Pro+', 'popup-maker' ); ?>
+							<# } else { #>
+								<?php esc_html_e( 'Pro', 'popup-maker' ); ?>
+							<# } #>
+							<?php esc_html_e( 'Deactivated', 'popup-maker' ); ?>
+						<# } else if (status === 'expired') { #>
+							<?php esc_html_e( 'Expired', 'popup-maker' ); ?>
+						<# } else { #>
+							<?php esc_html_e( 'Invalid', 'popup-maker' ); ?>
+						<# } #>
 						<# if (isActive) { #>
 							<# if (isProPlus) { #>
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lightning-icon"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg>
@@ -314,76 +341,105 @@ class PUM_Admin_Templates {
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
 							<# } #>
 						<# } #>
-						</span>
+					</span>
 					<# } #>
 				</div>
-				<h3 class="pum-license-heading"><# if (isProPlus) { #><?php esc_html_e( 'Enter your Popup Maker Pro+ License Key', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Enter your Popup Maker Pro License Key', 'popup-maker' ); ?><# } #></h3>
 
-				<# if (isDeactivated) { #>
-				<div class="pum-license-deactivated-callout">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-					<span><?php esc_html_e( 'Your Pro license is valid but deactivated on this site. Activate it below to enable Pro features!', 'popup-maker' ); ?> 🔑</span>
-				</div>
-				<# } else { #>
-				<p class="pum-license-description">
-					<# if (isActive) { #>
-						<# if (isProPlus) { #>
-						<?php esc_html_e( 'You are currently using Popup Maker Pro+ with advanced ecommerce tracking — all premium features unlocked!', 'popup-maker' ); ?> 🚀
-						<# } else { #>
-						<?php esc_html_e( 'You are currently using Popup Maker Pro — all premium features unlocked!', 'popup-maker' ); ?> 😄
-						<# } #>
-					<# } else { #>
-					<?php esc_html_e( 'You are currently using Popup Maker Lite — no license key required. Enjoy!', 'popup-maker' ); ?> 😄
-					<# } #>
-				</p>
-				<# } #>
+				<div class="pum-flex pum-flex--column pum-flex--gap-m">
 
-				<# if (!isActive) { #>
-				<p class="pum-license-description">
-					<?php esc_html_e( 'Enter your license key below to activate', 'popup-maker' ); ?> <strong><# if (isProPlus) { #><?php esc_html_e( 'Popup Maker Pro+', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Popup Maker Pro', 'popup-maker' ); ?><# } #></strong><?php esc_html_e( '!', 'popup-maker' ); ?>
-				</p>
-				<# } #>
+					<div class="pum-flex pum-flex--column pum-flex--gap-s">
+						<h3 class="pum-license-heading">
+							<?php esc_html_e( 'Enter your Popup Maker Pro License Key', 'popup-maker' ); ?>
+						</h3>
 
-				<# if (isActive && isProPlus) { #>
-				<div class="pum-pro-plus-status">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dollar-icon"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-					<strong><?php esc_html_e( 'Pro+ Ecommerce Tracking Active', 'popup-maker' ); ?></strong>
-					<p><?php esc_html_e( 'Advanced revenue attribution, WooCommerce integration, and detailed conversion analytics are now tracking every dollar earned through your popups.', 'popup-maker' ); ?></p>
-				</div>
-				<# } #>
-
-				<div class="pum-license-input-wrapper">
-					<div class="pum-license-input-group">
-						<input placeholder="<?php esc_attr_e( 'Paste or enter your license key here.', 'popup-maker' ); ?>" class="{{data.size}}-text pum-license-key-input" id="{{data.id}}" name="{{data.name}}" value="{{displayValue}}" autocomplete="off" <# if (isActive) { #>disabled<# } #> {{{data.meta}}}/>
-
-						<div class="pum-license-buttons">
-							<?php wp_nonce_field( 'pum_license_operation_nonce', 'pum_license_operation_nonce' ); ?>
-
-							<# if (!hasKey) { #>
-							<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>" disabled/>
-
-							<# } else if (isActive && !isAutoActivated) { #>
-							<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span>
-							<input type="submit" class="button button-secondary pum-license-deactivate" id="{{data.id}}_deactivate" name="pum_license_operation[deactivate]" value="<?php esc_attr_e( 'Deactivate', 'popup-maker' ); ?>"/>
-							<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
-
-							<# } else if (isDeactivated && !isAutoActivated) { #>
-							<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?></span>
-							<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>"/>
-							<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
-
-							<# } else if (hasKey && !isActive && !isDeactivated && !isAutoActivated) { #>
-							<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Inactive', 'popup-maker' ); ?></span>
-							<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>"/>
-							<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
-
-							<# } else if (isActive && isAutoActivated) { #>
-							<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span>
-							<span class="description" style="color: #0073aa; font-style: italic;"><?php esc_html_e( '(Auto-activated)', 'popup-maker' ); ?></span>
+						<p class="pum-license-description">
+							<# if (isActive) { #>
+								<# if (isProPlus) { #>
+									<?php esc_html_e( 'You are currently using Popup Maker Pro+ with advanced ecommerce tracking — all premium features unlocked!', 'popup-maker' ); ?> 🚀
+								<# } else { #>
+									<?php esc_html_e( 'Your Pro license key is active. Thank you for supporting Popup Maker!', 'popup-maker' ); ?>
+								<# } #>
+							<# } else if (isDeactivated) { #>
+								<?php esc_html_e( 'Your Pro license is valid but deactivated on this site.', 'popup-maker' ); ?>
+							<# } else { #>
+							<?php esc_html_e( 'You are currently using Popup Maker Lite — no license key required. Enjoy!', 'popup-maker' ); ?> 😄
 							<# } #>
-						</div>
+						</p>
 					</div>
+
+					<div class="pum-flex pum-flex--column pum-flex--gap-xs">
+
+
+						<span class="pum-license-input-label">
+								<?php esc_html_e( 'Enter your license key below to activate', 'popup-maker' ); ?> <strong><# if (isProPlus) { #><?php esc_html_e( 'Popup Maker Pro+', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Popup Maker Pro', 'popup-maker' ); ?><# } #></strong><?php esc_html_e( '!', 'popup-maker' ); ?>
+						</span>
+
+						<div class="pum-license-input-wrapper">
+
+
+							<div class="pum-license-input-group">
+								<input type="text" placeholder="<?php esc_attr_e( 'Paste or enter your license key here.', 'popup-maker' ); ?>" class="{{data.size}}-text pum-license-key-input" id="{{data.id}}" name="{{data.name}}" value="{{displayValue}}" autocomplete="off" <# if (isActive) { #>disabled<# } #> {{{data.meta}}}/>
+
+
+								<div class="pum-license-buttons">
+									<?php wp_nonce_field( 'pum_license_operation_nonce', 'pum_license_operation_nonce' ); ?>
+
+									<# if (!hasKey) { #>
+									<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>" disabled/>
+
+									<# } else if (isActive && !isAutoActivated) { #>
+									<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span>
+									<input type="submit" class="button button-secondary pum-license-deactivate" id="{{data.id}}_deactivate" name="pum_license_operation[deactivate]" value="<?php esc_attr_e( 'Deactivate', 'popup-maker' ); ?>"/>
+									<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
+
+									<# } else if (isDeactivated && !isAutoActivated) { #>
+									<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?></span>
+									<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>"/>
+									<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
+
+									<# } else if (hasKey && !isActive && !isDeactivated && !isAutoActivated) { #>
+									<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Inactive', 'popup-maker' ); ?></span>
+									<input type="submit" class="button button-primary pum-license-activate" id="{{data.id}}_activate" name="pum_license_operation[activate]" value="<?php esc_attr_e( 'Activate', 'popup-maker' ); ?>"/>
+									<input type="submit" class="button pum-license-delete" id="{{data.id}}_delete" name="pum_license_operation[delete]" value="<?php esc_attr_e( 'Delete', 'popup-maker' ); ?>" onclick="return confirm('<?php esc_attr_e( 'Are you sure you want to delete this license key? This action cannot be undone.', 'popup-maker' ); ?>')"/>
+
+									<# } else if (isActive && isAutoActivated) { #>
+									<span class="pum-license-status {{statusClasses}}"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span>
+									<span class="description" style="color: #0073aa; font-style: italic;"><?php esc_html_e( '(Auto-activated)', 'popup-maker' ); ?></span>
+									<# } #>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+					<# if (!isActive && !isDeactivated) { #>
+						<div class="pum-flex pum-flex--column pum-flex--gap-xs">
+							<div class="pum-license-upgrade-text">
+								<?php esc_html_e( 'Enter your license key to activate. If you do not have a license key, you can', 'popup-maker' ); ?>
+								<a href="https://wppopupmaker.com/pricing/?utm_source=plugin-settings&utm_medium=pro-license-field&utm_campaign=upgrade" target="_blank"><?php esc_html_e( 'purchase one here', 'popup-maker' ); ?></a>
+							</div>
+						</div>
+					<# } else  #>
+						<# if (isActive) { #>
+							<# if (isProPlus) { #>
+								<?php esc_html_e( 'You are currently using Popup Maker Pro+ with advanced ecommerce tracking — all premium features unlocked!', 'popup-maker' ); ?> 🚀
+							<# } else { #>
+								<div class="pum-license-callout pum-license-callout--activated">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
+									<?php esc_html_e( 'Your Pro license key is active. Thank you for supporting Popup Maker!', 'popup-maker' ); ?>
+									😊
+								</div>
+							<# } #>
+						<# } else if (isDeactivated) { #>
+							<div class="pum-license-callout pum-license-callout--deactivated">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+								<span><?php esc_html_e( 'Your Pro license is valid but deactivated on this site.', 'popup-maker' ); ?> <?php esc_html_e( 'Activate it to enable Pro features!', 'popup-maker' ); ?> 🔑</span>
+							</div>
+						<# } #>
 				</div>
+
 
 				<# if (safeValue.messages && safeValue.messages.length) { #>
 				<div class="pum-license-messages">
@@ -394,130 +450,131 @@ class PUM_Admin_Templates {
 				<# } #>
 
 				<# if (isAutoActivated) { #>
-				<p class="pum-license-description" style="color: #0073aa; font-weight: 500;">
-					<?php esc_html_e( 'This license is automatically managed via the POPUP_MAKER_LICENSE_KEY constant.', 'popup-maker' ); ?>
-				</p>
-				<# } else if (isActive) { #>
-				<p class="pum-license-description success">
-					<?php esc_html_e( 'Your license key is active. Thank you for supporting Popup Maker!', 'popup-maker' ); ?>
-				</p>
-
-				<# if (safeValue.expires || isActive) { #>
-				<div class="pum-license-details">
-					<h4><?php esc_html_e( 'License Details', 'popup-maker' ); ?></h4>
-					<table class="pum-license-details-table">
-						<tr>
-							<td><strong><?php esc_html_e( 'Status:', 'popup-maker' ); ?></strong></td>
-							<td><span class="pum-license-status-active"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span></td>
-						</tr>
-						<tr>
-							<td><strong><?php esc_html_e( 'License Key:', 'popup-maker' ); ?></strong></td>
-							<td><code>{{displayValue}}</code></td>
-						</tr>
-						<# if (safeValue.expires && safeValue.expires !== 'lifetime') { #>
-						<tr>
-							<td><strong><?php esc_html_e( 'Expires:', 'popup-maker' ); ?></strong></td>
-							<td>{{safeValue.expires}}</td>
-						</tr>
-						<# } else if (safeValue.expires === 'lifetime') { #>
-						<tr>
-							<td><strong><?php esc_html_e( 'License Type:', 'popup-maker' ); ?></strong></td>
-							<td><?php esc_html_e( 'Lifetime License', 'popup-maker' ); ?></td>
-						</tr>
-						<# } #>
-					</table>
-				</div>
+					<p class="pum-license-description" style="color: #0073aa; font-weight: 500;">
+						<?php esc_html_e( 'This license is automatically managed via the POPUP_MAKER_LICENSE_KEY constant.', 'popup-maker' ); ?>
+					</p>
+				<# } else if (isActive || isDeactivated) { #>
+					<div class="pum-license-details <# if (isActive) { #>pum-license-details--active<# } #> <# if (isProPlus) { #>pum-license-details--pro-plus<# } #>">
+						<div class="pum-license-details-header">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+							<h4><?php esc_html_e( 'License Details', 'popup-maker' ); ?></h4>
+						</div>
+						<table class="pum-license-details-table">
+							<tr>
+								<th><?php esc_html_e( 'Status:', 'popup-maker' ); ?></th>
+								<td class="pum-license-status <# if (isActive) { #>pum-license-status--active<# } else if (isDeactivated) { #>pum-license-status--deactivated<# } #>"><?php esc_html_e( 'Active', 'popup-maker' ); ?></td>
+							</tr>
+							<tr>
+								<th><?php esc_html_e( 'License Key:', 'popup-maker' ); ?></th>
+								<td>{{displayValue}}</td>
+							</tr>
+							<# if (safeValue.expires && safeValue.expires !== 'lifetime') { #>
+							<tr>
+								<th><?php esc_html_e( 'Expires:', 'popup-maker' ); ?></th>
+								<td>{{safeValue.expires}}</td>
+							</tr>
+							<# } else if (safeValue.expires === 'lifetime') { #>
+							<tr>
+								<th><?php esc_html_e( 'License Type:', 'popup-maker' ); ?></th>
+								<td>
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="crown-icon"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
+									<# if (isProPlus) { #>
+										<?php esc_html_e( 'Pro+', 'popup-maker' ); ?>
+									<# } else { #>
+										<?php esc_html_e( 'Pro', 'popup-maker' ); ?>
+									<# } #>
+									<?php esc_html_e( 'Lifetime License', 'popup-maker' ); ?>
+								</td>
+							</tr>
+							<# } #>
+						</table>
+					</div>
 				<# } #>
-
-				<# } else if (hasKey && !isActive) { #>
-				<p class="pum-license-description">
-					<?php esc_html_e( 'Your license key is currently deactivated. Click Activate to enable Pro features.', 'popup-maker' ); ?>
-				</p>
-				<# } #>
-
-				<# if (!isActive) { #>
-				<div class="pum-license-upgrade-text">
-					<?php esc_html_e( 'Enter your license key to activate. If you do not have a license key, you can', 'popup-maker' ); ?>
-					<a href="https://wppopupmaker.com/pricing/?utm_source=plugin-settings&utm_medium=pro-license-field&utm_campaign=upgrade" target="_blank"><?php esc_html_e( 'purchase one here', 'popup-maker' ); ?></a>
-				</div>
 
 				<hr class="pum-license-separator" />
 
 				<div class="pum-pro-features">
-					<div class="pum-features-intro">
-						<# if (isDeactivated) { #>
-						<?php esc_html_e( 'Activate your Pro license above to unlock these powerful features:', 'popup-maker' ); ?>
+					<div class="pum-features-heading">
+						<# if (isActive && isProPlus) { #>
+							<?php esc_html_e( '🎉 You have access to these powerful Pro+ features:', 'popup-maker' ); ?>
+							<span><?php esc_html_e( 'Plus exclusive Pro+ ecommerce tracking capabilities!', 'popup-maker' ); ?></span>
+						<# } else if (isActive) { #>
+							<?php esc_html_e( '🎉 You have access to these powerful Pro features:', 'popup-maker' ); ?>
+						<# } else if (isDeactivated) { #>
+							<?php esc_html_e( 'Activate your Pro license above to unlock these powerful features:', 'popup-maker' ); ?>
 						<# } else { #>
-						<?php esc_html_e( 'To unlock these game-changing features,', 'popup-maker' ); ?>
-						<a href="https://wppopupmaker.com/pricing/?utm_source=plugin-settings&utm_medium=pro-license-field&utm_campaign=upgrade" target="_blank"><?php esc_html_e( 'upgrade to Pro', 'popup-maker' ); ?></a>
-						<?php esc_html_e( ' and enter your license key above.', 'popup-maker' ); ?>
+							<?php esc_html_e( 'To unlock these game-changing features,', 'popup-maker' ); ?>
+							<a href="https://wppopupmaker.com/pricing/?utm_source=plugin-settings&utm_medium=pro-license-field&utm_campaign=upgrade" target="_blank"><?php esc_html_e( 'upgrade to Pro', 'popup-maker' ); ?></a>
+							<?php esc_html_e( ' and enter your license key above.', 'popup-maker' ); ?>
 						<# } #>
 					</div>
 
 					<div class="pum-features-grid">
+
 						<div class="pum-feature-column">
-							<h4><?php esc_html_e( 'Monetize & Track Every Conversion', 'popup-maker' ); ?></h4>
+							<h4 class="pum-feature-heading"><?php esc_html_e( 'Smart Targeting & Automation', 'popup-maker' ); ?></h4>
 							<ul>
-								<li>
-									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+								<li class="pro-feature">
+									<span class="feature-icon dashicons dashicons-yes-alt"></span>
 									<div>
-										<strong><?php esc_html_e( 'Revenue Attribution & Analytics:', 'popup-maker' ); ?></strong>
-										<?php esc_html_e( ' Track every dollar earned through your popups. Prove ROI with complete conversion tracking and detailed revenue reports.', 'popup-maker' ); ?>
+										<strong><?php esc_html_e( 'FluentCRM Integration', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Seamlessly add tags, trigger automation sequences, and create smart links. Perfect for lead nurturing and customer journey automation.', 'popup-maker' ); ?>
 									</div>
 								</li>
-								<li>
-									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+								<li class="pro-feature">
+									<span class="feature-icon dashicons dashicons-yes-alt"></span>
 									<div>
-										<strong><?php esc_html_e( 'Professional CTA Management:', 'popup-maker' ); ?></strong>
+										<strong><?php esc_html_e( 'Advanced Targeting & Behavioral Triggers', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Target by user role, comment history, device, and custom behaviors. Show the right message to the right person at the perfect time.', 'popup-maker' ); ?>
+									</div>
+								</li>
+								<li class="pro-feature">
+									<span class="feature-icon dashicons dashicons-yes-alt"></span>
+									<div>
+										<strong><?php esc_html_e( 'Professional CTA Management', 'popup-maker' ); ?></strong>
 										<?php esc_html_e( ' One-click export/import for CTAs. Create shareable vanity URLs. Bulk operations for enterprise-scale management.', 'popup-maker' ); ?>
 									</div>
 								</li>
-								<li>
-									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+
+								<li class="pro-feature">
+									<span class="feature-icon dashicons dashicons-yes-alt"></span>
 									<div>
-										<strong><?php esc_html_e( 'WooCommerce Integration:', 'popup-maker' ); ?></strong>
-										<?php esc_html_e( ' Add products to cart, apply discounts, and recover abandoned carts with complete revenue attribution. Proven to increase sales by 15-40%.', 'popup-maker' ); ?>
-									</div>
-								</li>
-								<li>
-									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
-									<div>
-										<strong><?php esc_html_e( 'Easy Digital Downloads Integration:', 'popup-maker' ); ?></strong>
-										<?php esc_html_e( ' Perfect for software and digital product sales with license management. Seamlessly integrate checkout flows and boost digital sales conversion rates.', 'popup-maker' ); ?>
+										<strong><?php esc_html_e( 'Time-Based Campaign Scheduling', 'popup-maker' ); ?></strong>
+										<?php esc_html_e( ' Smart campaign scheduling with timezone support and recurring campaigns. Perfect timing for seasonal promotions and global audiences.', 'popup-maker' ); ?>
 									</div>
 								</li>
 							</ul>
 						</div>
 
 						<div class="pum-feature-column">
-							<h4><?php esc_html_e( 'Smart Targeting & Automation', 'popup-maker' ); ?></h4>
+							<h4 class="pum-feature-heading"><?php esc_html_e( 'Monetize & Track Every Conversion', 'popup-maker' ); ?></h4>
 							<ul>
-								<li>
-									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+								<li class="pro-feature pro-plus-enhanced-feature">
+									<span class="feature-icon dashicons dashicons-yes-alt"></span>
 									<div>
-										<strong><?php esc_html_e( 'FluentCRM Integration:', 'popup-maker' ); ?></strong>
-										<?php esc_html_e( ' Seamlessly add tags, trigger automation sequences, and create smart links. Perfect for lead nurturing and customer journey automation.', 'popup-maker' ); ?>
+										<strong><?php esc_html_e( 'Revenue Attribution & Analytics', 'popup-maker' ); ?><span class="pum-pro-plus-badge"><?php esc_html_e( 'Enhanced with Pro+', 'popup-maker' ); ?></span></strong>
+										<?php esc_html_e( ' Track every dollar earned through your popups. Prove ROI with complete conversion tracking and detailed revenue reports.', 'popup-maker' ); ?>
 									</div>
 								</li>
-								<li>
-									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+								<li class="pro-feature pro-plus-enhanced-feature">
+									<span class="feature-icon dashicons dashicons-yes-alt"></span>
 									<div>
-										<strong><?php esc_html_e( 'Advanced Targeting & Behavioral Triggers:', 'popup-maker' ); ?></strong>
-										<?php esc_html_e( ' Target by user role, comment history, device, and custom behaviors. Show the right message to the right person at the perfect time.', 'popup-maker' ); ?>
-									</div>
-								</li>
-								<li>
-									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
-									<div>
-										<strong><?php esc_html_e( 'Real-Time Analytics & Insights:', 'popup-maker' ); ?></strong>
+										<strong><?php esc_html_e( 'Real-Time Analytics & Insights', 'popup-maker' ); ?><span class="pum-pro-plus-badge"><?php esc_html_e( 'Enhanced with Pro+', 'popup-maker' ); ?></span></strong>
 										<?php esc_html_e( ' Live performance tracking with detailed conversion metrics. Monitor popup effectiveness in real-time and make data-driven optimization decisions instantly.', 'popup-maker' ); ?>
 									</div>
 								</li>
-								<li>
-									<img class="feature-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNyIgY3k9IjciIHI9IjciIGZpbGw9IiMwMGEzMmEiLz4KPHBhdGggc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Im00IDcgMiAyIDQtNCIvPgo8L3N2Zz4K" alt="Check icon" />
+								<li class="pro-plus-exclusive-feature">
+									<span class="feature-icon dashicons dashicons-yes-alt"></span>
 									<div>
-										<strong><?php esc_html_e( 'Time-Based Campaign Scheduling:', 'popup-maker' ); ?></strong>
-										<?php esc_html_e( ' Smart campaign scheduling with timezone support and recurring campaigns. Perfect timing for seasonal promotions and global audiences.', 'popup-maker' ); ?>
+										<strong><?php esc_html_e( 'WooCommerce Integration', 'popup-maker' ); ?><span class="pum-pro-plus-badge"><?php esc_html_e( 'Pro+', 'popup-maker' ); ?> <?php esc_html_e( 'Exclusive', 'popup-maker' ); ?></span></strong>
+										<?php esc_html_e( ' Add products to cart, apply discounts, and recover abandoned carts with complete revenue attribution. Proven to increase sales by 15-40%.', 'popup-maker' ); ?>
+									</div>
+								</li>
+								<li class="pro-plus-exclusive-feature">
+									<span class="feature-icon dashicons dashicons-yes-alt"></span>
+									<div>
+										<strong><?php esc_html_e( 'Easy Digital Downloads Integration', 'popup-maker' ); ?><span class="pum-pro-plus-badge"><?php esc_html_e( 'Pro+', 'popup-maker' ); ?> <?php esc_html_e( 'Exclusive', 'popup-maker' ); ?></span></strong>
+										<?php esc_html_e( ' Perfect for software and digital product sales with license management. Seamlessly integrate checkout flows and boost digital sales conversion rates.', 'popup-maker' ); ?>
 									</div>
 								</li>
 							</ul>
@@ -526,16 +583,15 @@ class PUM_Admin_Templates {
 
 					<!-- Backup features for A/B testing -->
 					<!--
-					Alternative high-value features for randomization:
-					- A/B Testing & Optimization: Test popup variations automatically to maximize conversion rates
-					- Time-Based Scheduling: Smart campaign scheduling with timezone support and recurring campaigns
+						Alternative high-value features for randomization:
+							- A/B Testing & Optimization: Test popup variations automatically to maximize conversion rates
+							- Time-Based Scheduling: Smart campaign scheduling with timezone support and recurring campaigns
 					- User Role Targeting: Show different content to different user types (Admin, Subscriber, etc.)
 					- LifterLMS Integration: Automate student enrollment and rewards for course creators
 					- Easy Digital Downloads: Perfect for software and digital product sales with license management
 					- Advanced Shortcodes: Developer-friendly trigger customization and complex display logic
 					-->
 				</div>
-				<# } #>
 			</div>
 		</script>
 
