@@ -83,7 +83,7 @@ class License extends Service {
 	public function autoregister() {
 		$key = defined( '\POPUP_MAKER_LICENSE_KEY' ) && '' !== \POPUP_MAKER_LICENSE_KEY ? \POPUP_MAKER_LICENSE_KEY : false;
 
-		if ( $key && '' === $this->get_license_key() ) {
+		if ( $key && $key !== $this->get_license_key() ) {
 			try {
 				$this->maybe_activate_license( $key );
 			// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
