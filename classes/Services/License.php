@@ -806,24 +806,35 @@ class License extends Service {
 			// Get the license tier (pro or pro_plus).
 			$license_tier = $license_service->get_license_tier();
 
+			// Get Pro installation status for template conditionals.
+			$is_pro_installed = $this->container->is_pro_installed();
+			$is_pro_active    = $this->container->is_pro_active();
+			$pro_version      = $this->container->get_pro_version();
+
 			// Pass anything we want to the template here.
 			$args['current_values'][ self::SETTINGS_KEY ] = [
-				'key'          => $license_key,
-				'status'       => $status_mapping['status'],
-				'messages'     => ! empty( $license_status['error_message'] ) ? [ $license_status['error_message'] ] : [],
-				'expires'      => $license_service->get_license_expiration(),
-				'classes'      => $status_mapping['classes'],
-				'license_tier' => $license_tier,
+				'key'              => $license_key,
+				'status'           => $status_mapping['status'],
+				'messages'         => ! empty( $license_status['error_message'] ) ? [ $license_status['error_message'] ] : [],
+				'expires'          => $license_service->get_license_expiration(),
+				'classes'          => $status_mapping['classes'],
+				'license_tier'     => $license_tier,
+				'is_pro_installed' => $is_pro_installed,
+				'is_pro_active'    => $is_pro_active,
+				'pro_version'      => $pro_version,
 			];
 		} catch ( \Exception $e ) {
 			$args['current_values'][ self::SETTINGS_KEY ] = [
-				'key'          => $this->star_key( trim( $value ) ),
-				'status'       => 'invalid',
+				'key'              => $this->star_key( trim( $value ) ),
+				'status'           => 'invalid',
 				/* translators: %s is the error message */
-				'messages'     => [ sprintf( __( 'Error loading license status: %s', 'popup-maker' ), $e->getMessage() ) ],
-				'expires'      => '',
-				'classes'      => 'pum-license-invalid',
-				'license_tier' => 'pro', // Default to pro on error.
+				'messages'         => [ sprintf( __( 'Error loading license status: %s', 'popup-maker' ), $e->getMessage() ) ],
+				'expires'          => '',
+				'classes'          => 'pum-license-invalid',
+				'license_tier'     => 'pro', // Default to pro on error.
+				'is_pro_installed' => $this->container->is_pro_installed(),
+				'is_pro_active'    => $this->container->is_pro_active(),
+				'pro_version'      => $this->container->get_pro_version(),
 			];
 		}
 
