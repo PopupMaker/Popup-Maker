@@ -903,58 +903,6 @@ class PUM_Admin_Settings {
 	 */
 	public static function parse_values( $settings ) {
 
-		/**
-		 * Star the key.
-		 *
-		 * @param string $key The key to star.
-		 *
-		 * @return string The starred key.
-		 */
-		$star_key = function ( $key ) {
-			if ( empty( $key ) ) {
-				return '';
-			}
-
-			return substr( $key, 0, 3 ) . str_repeat( '*', max( 0, strlen( $key ) - 6 ) ) . substr( $key, -3 );
-		};
-
-		/**
-		 * Map license status to template data.
-		 *
-		 * @param string $status License status from service.
-		 * @return array Template data for license status.
-		 */
-		$map_license_status = function ( $status ) {
-			switch ( $status ) {
-				case 'valid':
-					return [
-						'status'  => 'valid',
-						'classes' => 'pum-license-valid',
-					];
-				case 'deactivated':
-					return [
-						'status'  => 'deactivated',
-						'classes' => 'pum-license-deactivated',
-					];
-				case 'expired':
-					return [
-						'status'  => 'expired',
-						'classes' => 'pum-license-expired',
-					];
-				case 'empty':
-					return [
-						'status'  => 'empty',
-						'classes' => 'pum-license-empty',
-					];
-				case 'error':
-				default:
-					return [
-						'status'  => 'invalid',
-						'classes' => 'pum-license-invalid',
-					];
-			}
-		};
-
 		foreach ( $settings as $key => $value ) {
 			$field = self::get_field( $key );
 
@@ -968,46 +916,17 @@ class PUM_Admin_Settings {
 						break;
 
 					case 'pro_license':
-						// Handle Pro license key specially
-						try {
-							$license_service = \PopupMaker\plugin( 'license' );
-							$license_status  = $license_service->get_license_status_data();
-
-							// Get the comprehensive license status from service
-							$actual_status = $license_service->get_license_status();
-
-							// Get the actual license key (either from form input or service)
-							// $license_key = ! empty( $value ) ? trim( $value ) : $license_service->get_license_key();
-							$license_key = $license_service->get_license_key();
-
-							$license_key = $star_key( $license_key );
-
-							// Use the mapping function to get proper status and classes
-							$status_mapping = $map_license_status( $actual_status );
-
-							// Get the license tier (pro or pro_plus).
-							$license_tier = $license_service->get_license_tier();
-
-							// Pass anything we want to the template here.
-							$settings[ $key ] = [
-								'key'          => $license_key,
-								'status'       => $status_mapping['status'],
-								'messages'     => ! empty( $license_status['error_message'] ) ? [ $license_status['error_message'] ] : [],
-								'expires'      => $license_service->get_license_expiration(),
-								'classes'      => $status_mapping['classes'],
-								'license_tier' => $license_tier,
-							];
-						} catch ( Exception $e ) {
-							$settings[ $key ] = [
-								'key'          => $star_key( trim( $value ) ),
-								'status'       => 'invalid',
-								/* translators: %s is the error message */
-								'messages'     => [ sprintf( __( 'Error loading license status: %s', 'popup-maker' ), $e->getMessage() ) ],
-								'expires'      => '',
-								'classes'      => 'pum-license-invalid',
-								'license_tier' => 'pro', // Default to pro on error.
-							];
-						}
+						// Handled in filter_settings_editor_args via License::filter_settings_editor_args.
+						// Handle Pro license key specially if not activated by License service.
+						$settings[ $key ] = [
+							'key'          => \PopupMaker\plugin( 'license' )->star_key( trim( $value ) ),
+							'status'       => 'invalid',
+							/* translators: %s is the error message */
+							'messages'     => [ sprintf( __( 'Error loading license status: %s', 'popup-maker' ), 'unknown' ) ],
+							'expires'      => '',
+							'classes'      => 'pum-license-invalid',
+							'license_tier' => 'pro', // Default to pro on error.
+						];
 						break;
 
 					case 'license_key':
@@ -1015,7 +934,7 @@ class PUM_Admin_Settings {
 						$license = get_option( $field['options']['is_valid_license_option'] );
 
 						$settings[ $key ] = [
-							'key'      => $star_key( trim( $value ) ),
+							'key'      => \PopupMaker\plugin( 'license' )->star_key( trim( $value ) ),
 							'status'   => PUM_Licensing::get_status( $license, ! empty( $value ) ),
 							'messages' => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
 							'expires'  => PUM_Licensing::get_license_expiration( $license ),
