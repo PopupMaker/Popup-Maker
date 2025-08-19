@@ -30,16 +30,29 @@ class PUM_Upsell {
 	 * @since 1.14.0
 	 */
 	public static function notice_bar_display() {
-		if ( pum_is_all_popups_page() && 0 === count( pum_enabled_extensions() ) ) {
-			$upgrade_link = \PopupMaker\get_upgrade_link( [
-				'utm_source'   => 'upsell-notice-bar',
-				'utm_medium'   => 'text-link',
-				'utm_campaign' => 'upsell',
-			] );
+		$pro_is_active    = \PopupMaker\plugin( 'license' )->is_license_active();
+		$license_tier     = \PopupMaker\plugin( 'license' )->get_license_tier();
+		$pro_is_active    = \PopupMaker\plugin()->is_pro_active();
+		$pro_is_installed = \PopupMaker\plugin()->is_pro_installed();
+
+		if ( pum_is_admin_page() && ( ! $pro_is_active || 'pro_plus' !== $license_tier ) ) {
+			// Temporarily disable for CTA post type screens.
+			if ( isset( $_GET['page'] ) && 'popup-maker-call-to-actions' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				return;
+			}
+
+			// Disable it on post.php edit screens for popup editor & popup theme editor. post.php?post=850&action=edit | post-new.php?post_type=popup
+			$screen = get_current_screen();
+			if ( 'post' === $screen->base && ( 'popup' === $screen->post_type || 'popup_theme' === $screen->post_type ) ) {
+				return;
+			}
+
+			wp_enqueue_style( 'pum-admin-general' );
+			$upgrade_link = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
 			$message      = sprintf(
-				/* translators: %s - Wraps ending in link to pricing page. */
-				esc_html__( 'You are using the free version of Popup Maker. To get even more value, consider %1$supgrading to our premium plans%2$s.', 'popup-maker' ),
-				'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener noreferrer">',
+				/* translators: %s - Wraps ending in link to pro settings page. */
+				esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, analytics, and premium integrations.', 'popup-maker' ),
+				'<a href="' . esc_url( $upgrade_link ) . '">',
 				'</a>'
 			);
 			?>
@@ -172,20 +185,46 @@ class PUM_Upsell {
 		</style>
 		<nav class="nav-tab-wrapper">
 			<?php
+			// Default upgrade tab configuration.
+			$upgrade_tab = [
+				'name'  => esc_html__( 'Go Pro', 'popup-maker' ),
+				'url'   => admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' ),
+				'class' => 'pum-upgrade-tab pum-upgrade-tab-pro',
+			];
+
+			// Adjust based on license status.
+			try {
+				$license_service = \PopupMaker\plugin( 'license' );
+				$license_status  = $license_service->get_license_status();
+				$license_tier    = $license_service->get_license_tier();
+
+				if ( 'valid' === $license_status ) {
+					if ( 'pro_plus' === $license_tier ) {
+						$upgrade_tab = null; // Pro Plus - hide upgrade tab.
+					} elseif ( 'pro' === $license_tier ) {
+						$upgrade_tab['name']  = esc_html__( 'Go Pro+', 'popup-maker' );
+						$upgrade_tab['class'] = 'pum-upgrade-tab pum-upgrade-tab-pro-plus';
+					}
+				}
+			} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+				// Use default configuration if license service unavailable.
+			}
+
 			$tabs = [
-				'popups'       => [
+				'popups' => [
 					'name' => esc_html( $popup_labels['name'] ),
 					'url'  => admin_url( 'edit.php?post_type=popup' ),
 				],
-				'themes'       => [
+				'themes' => [
 					'name' => esc_html( $theme_labels['name'] ),
 					'url'  => admin_url( 'edit.php?post_type=popup_theme' ),
 				],
-				'integrations' => [
-					'name' => esc_html__( 'Upgrade', 'popup-maker' ),
-					'url'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions&view=integrations' ),
-				],
 			];
+
+			// Only add upgrade tab if not Pro Plus.
+			if ( $upgrade_tab ) {
+				$tabs['integrations'] = $upgrade_tab;
+			}
 
 			$tabs = apply_filters( 'pum_add_ons_tabs', $tabs );
 
@@ -210,9 +249,10 @@ class PUM_Upsell {
 
 			// Add each tab, marking the current one as active.
 			foreach ( $tabs as $tab_id => $tab ) {
-				$active = $active_tab === $tab_id ? ' nav-tab-active' : '';
+				$active      = $active_tab === $tab_id ? ' nav-tab-active' : '';
+				$extra_class = isset( $tab['class'] ) ? ' ' . esc_attr( $tab['class'] ) : '';
 				?>
-				<a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab<?php echo esc_attr( $active ); ?>">
+				<a href="<?php echo esc_url( $tab['url'] ); ?>" class="nav-tab<?php echo esc_attr( $active . $extra_class ); ?>">
 					<?php echo esc_html( $tab['name'] ); ?>
 				</a>
 				<?php
