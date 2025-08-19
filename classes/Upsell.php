@@ -51,7 +51,7 @@ class PUM_Upsell {
 			$upgrade_link = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
 			$message      = sprintf(
 				/* translators: %s - Wraps ending in link to pro settings page. */
-				esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, analytics, and premium integrations.', 'popup-maker' ),
+				esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
 				'<a href="' . esc_url( $upgrade_link ) . '">',
 				'</a>'
 			);
