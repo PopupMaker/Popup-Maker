@@ -54,7 +54,7 @@
 		init: function () {
 			// Prevent double initialization
 			if ( this.isInitialized ) {
-					return;
+				return;
 			}
 
 			this.isInitialized = true;
@@ -89,10 +89,8 @@
 			const $button = $( e.currentTarget );
 
 			try {
-				// Show loading state
-				$button
-					.prop( 'disabled', true )
-					.text( 'Opening upgrade window...' );
+				// Just disable button to prevent re-clicks, don't change text
+				$button.prop( 'disabled', true );
 
 				// CRITICAL: Open popup IMMEDIATELY from user gesture to prevent blocking
 				// This is the Content Control pattern - popup opens first, then we get URL
@@ -119,15 +117,8 @@
 					'Failed to prepare connection. Please try again.'
 				);
 				this.closePopup();
-			} finally {
-				// Restore button state
-				$button
-					.prop( 'disabled', false )
-					.text(
-						$button.hasClass( 'pum-license-connect-trigger' )
-							? 'Upgrade to Pro'
-							: 'Connect License'
-					);
+				// Re-enable button on error
+				$button.prop( 'disabled', false );
 			}
 		},
 
@@ -617,6 +608,12 @@
 			this.popupWindow = null;
 			this.hidePopupOpenState();
 
+			// Re-enable install pro buttons when popup closes
+			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).prop(
+				'disabled',
+				false
+			);
+
 			// Trigger custom event
 			$( document ).trigger( 'pum_license_popup_closed' );
 
@@ -638,6 +635,12 @@
 
 			// Close popup
 			this.closePopup();
+
+			// Re-enable buttons after successful connection
+			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).prop(
+				'disabled',
+				false
+			);
 
 			// Update license field if we have a key
 			if ( licenseKey ) {
@@ -672,6 +675,12 @@
 
 			// Close popup
 			this.closePopup();
+
+			// Re-enable buttons after error
+			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).prop(
+				'disabled',
+				false
+			);
 
 			// Show error message
 			this.showError( `Connection failed: ${ errorMessage }` );

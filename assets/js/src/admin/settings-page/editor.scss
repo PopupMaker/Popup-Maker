@@ -492,6 +492,28 @@
 								box-shadow: 0 4px 12px rgba(130, 103, 246, 0.3);
 							}
 						}
+
+						// Disabled state - stop animations but keep visual appearance
+						&:disabled {
+							opacity: 0.7;
+							cursor: not-allowed;
+							animation: none;
+							transform: none;
+
+							&::before {
+								animation: none;
+								opacity: 0.4;
+							}
+
+							&:hover {
+								transform: none;
+								box-shadow: 0 0 0 0 rgba(29, 190, 97, 0.4);
+							}
+
+							&.pum-install-pro-plus:hover {
+								box-shadow: 0 0 0 0 rgba(130, 103, 246, 0.4);
+							}
+						}
 					}
 
 					.button-primary {
