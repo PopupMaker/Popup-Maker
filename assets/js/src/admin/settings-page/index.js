@@ -20,6 +20,21 @@ import './pro-upgrade-flow';
 		if ( $container.length ) {
 			$container.find( '.pum-no-js' ).hide();
 			PUM_Admin.forms.render( args, values, $container );
+
+			// Universal tab deep linking - check hash and activate corresponding tab
+			const hash = window.location.hash.replace( '#', '' );
+			if ( hash ) {
+				// Try direct tab ID first (e.g. #pum-settings_licenses)
+				let $tab = $( `a[href="#${ hash }"]` );
+				// If not found, try with pum-settings_ prefix (e.g. #go-pro -> pum-settings_go-pro)
+				if ( ! $tab.length ) {
+					$tab = $( `a[href="#pum-settings_${ hash }"]` );
+				}
+				// Activate the tab if found
+				if ( $tab.length ) {
+					setTimeout( () => $tab.trigger( 'click' ), 100 );
+				}
+			}
 		}
 	} );
 } )( jQuery );
