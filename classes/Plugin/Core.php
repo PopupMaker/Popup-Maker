@@ -29,6 +29,8 @@ final class Core extends \PopupMaker\Plugin\Container {
 		parent::__construct( $config );
 
 		$this->check_version();
+
+		$this->init_services();
 	}
 
 	/**
@@ -291,6 +293,15 @@ final class Core extends \PopupMaker\Plugin\Container {
 		);
 
 		do_action( 'popup_maker/register_services', $this );
+	}
+
+	/**
+	 * Initialize services.
+	 *
+	 * @return void
+	 */
+	protected function init_services() {
+		$license = $this->get( 'license' );
 	}
 
 	/**
