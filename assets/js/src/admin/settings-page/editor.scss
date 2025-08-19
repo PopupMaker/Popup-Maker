@@ -453,10 +453,16 @@
 						align-items: center;
 						gap: 8px;
 
-						.download-icon {
+						.download-icon,
+						.power-icon {
 							width: 16px;
 							height: 16px;
 							stroke-width: 2.5;
+						}
+
+						.power-icon {
+							// Slightly different styling for activation vs installation
+							stroke-width: 2;
 						}
 
 						&::before {
