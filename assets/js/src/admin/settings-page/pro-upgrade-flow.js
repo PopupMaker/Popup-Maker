@@ -89,9 +89,21 @@
 			const $button = $( e.currentTarget );
 
 			try {
-				// Just disable button to prevent re-clicks, don't change text
+				// Store original text and disable button to prevent re-clicks
+				if ( ! $button.data( 'original-text' ) ) {
+					$button.data( 'original-text', $button.html() );
+				}
 				$button.prop( 'disabled', true );
 
+				// Check if this is an activate button (not install button)
+				const buttonText = $button.html();
+				if ( buttonText.includes( 'ACTIVATE PRO NOW' ) ) {
+					// This is an activation button - call API endpoint instead of opening popup
+					await this.handleProActivation( $button );
+					return;
+				}
+
+				// Regular install flow - open popup
 				// CRITICAL: Open popup IMMEDIATELY from user gesture to prevent blocking
 				// This is the Content Control pattern - popup opens first, then we get URL
 				this.openLoadingPopup();
@@ -118,6 +130,59 @@
 				);
 				this.closePopup();
 				// Re-enable button on error
+				$button.prop( 'disabled', false );
+			}
+		},
+
+		/**
+		 * Handle Pro plugin activation via REST API
+		 * @param {jQuery} $button The clicked activation button
+		 */
+		handleProActivation: async function ( $button ) {
+			try {
+				// Show loading state
+				this.showMessage( 'Activating Pro plugin...', 'info' );
+
+				// Call activation API endpoint
+				const response = await $.ajax( {
+					url:
+						window.location.origin +
+						'/wp-json/popup-maker/v2/license/activate-plugin',
+					type: 'POST',
+					data: {},
+					headers: {
+						'X-WP-Nonce':
+							window.pum_admin_vars?.rest_nonce ||
+							window.wpApiSettings?.nonce ||
+							'',
+					},
+				} );
+
+				// Handle success
+				if ( response.success ) {
+					this.showSuccess( response.message || 'Pro plugin activated successfully!' );
+					
+					// Reload page after short delay to show updated state
+					setTimeout( () => {
+						window.location.reload();
+					}, 1500 );
+				} else {
+					throw new Error( response.message || 'Activation failed' );
+				}
+			} catch ( error ) {
+				console.error( 'Pro activation error:', error );
+				
+				// Extract error message from response
+				let errorMessage = 'Failed to activate Pro plugin. Please try again.';
+				if ( error.responseJSON && error.responseJSON.message ) {
+					errorMessage = error.responseJSON.message;
+				} else if ( error.message ) {
+					errorMessage = error.message;
+				}
+
+				this.showError( errorMessage );
+				
+				// Re-enable button
 				$button.prop( 'disabled', false );
 			}
 		},
@@ -608,11 +673,17 @@
 			this.popupWindow = null;
 			this.hidePopupOpenState();
 
-			// Re-enable install pro buttons when popup closes
-			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).prop(
-				'disabled',
-				false
-			);
+			// Re-enable install pro buttons when popup closes and restore original text
+			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).each( function() {
+				const $btn = $( this );
+				$btn.prop( 'disabled', false );
+				
+				// Restore original text if stored
+				const originalText = $btn.data( 'original-text' );
+				if ( originalText ) {
+					$btn.html( originalText );
+				}
+			} );
 
 			// Trigger custom event
 			$( document ).trigger( 'pum_license_popup_closed' );
@@ -636,11 +707,17 @@
 			// Close popup
 			this.closePopup();
 
-			// Re-enable buttons after successful connection
-			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).prop(
-				'disabled',
-				false
-			);
+			// Re-enable buttons after successful connection and restore original text
+			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).each( function() {
+				const $btn = $( this );
+				$btn.prop( 'disabled', false );
+				
+				// Restore original text if stored
+				const originalText = $btn.data( 'original-text' );
+				if ( originalText ) {
+					$btn.html( originalText );
+				}
+			} );
 
 			// Update license field if we have a key
 			if ( licenseKey ) {
@@ -676,11 +753,17 @@
 			// Close popup
 			this.closePopup();
 
-			// Re-enable buttons after error
-			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).prop(
-				'disabled',
-				false
-			);
+			// Re-enable buttons after error and restore original text
+			$( '.pum-install-pro-button, .pum-license-connect-trigger' ).each( function() {
+				const $btn = $( this );
+				$btn.prop( 'disabled', false );
+				
+				// Restore original text if stored
+				const originalText = $btn.data( 'original-text' );
+				if ( originalText ) {
+					$btn.html( originalText );
+				}
+			} );
 
 			// Show error message
 			this.showError( `Connection failed: ${ errorMessage }` );
