@@ -597,6 +597,20 @@
 				}
 			}
 
+			.pum-pro-status {
+
+				&::before {
+					content: "";
+					display: inline-block;
+					border-radius: 9999px;
+					width: 0.5rem;
+					height: 0.5rem;
+					position: relative;
+					top: -1px;
+					margin-right: 0.25em;
+				}
+			}
+
 
 			&--active {
 				background: linear-gradient(135deg, rgb(233, 252, 241) 0%, rgb(242, 242, 243) 100%);
@@ -605,6 +619,21 @@
 
 				.pum-license-status::before {
 					background-color: rgb(29, 190, 97);
+				}
+
+				.pum-pro-status {
+					&--active::before {
+						background-color: rgb(29, 190, 97);
+					}
+
+					&--installed::before {
+						background-color: rgb(29, 190, 97);
+						opacity: 0.5;
+					}
+
+					&--not-installed::before {
+						background-color: #dc3545;
+					}
 				}
 
 				.pum-license-details-header h4,
@@ -627,6 +656,21 @@
 
 				.pum-license-status::before {
 					background-color: rgb(130, 103, 246);
+				}
+
+				.pum-pro-status {
+					&--active::before {
+						background-color: rgb(130, 103, 246);
+					}
+
+					&--installed::before {
+						background-color: rgb(130, 103, 246);
+						opacity: 0.5;
+					}
+
+					&--not-installed::before {
+						background-color: #dc3545;
+					}
 				}
 
 				.pum-license-details-header h4,
@@ -789,6 +833,45 @@
 				color: #270aa9;
 			}
 
+		}
+
+		&--install-pro {
+			background: linear-gradient(135deg, rgb(240, 253, 244) 0%, rgb(242, 242, 243) 100%);
+			border-color: rgb(34, 197, 94);
+			border-radius: 4px;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 1.5;
+			padding: 20px;
+			align-items: flex-start;
+
+			.download-icon {
+				color: rgb(34, 197, 94);
+				margin-top: 2px;
+				flex-shrink: 0;
+			}
+
+			div {
+				flex: 1;
+				margin-right: 16px;
+			}
+
+			strong {
+				color: rgb(20, 83, 45);
+				display: block;
+				margin-bottom: 4px;
+			}
+
+			p {
+				color: rgb(21, 128, 61);
+				margin: 0;
+				font-size: 13px;
+			}
+
+			.button {
+				flex-shrink: 0;
+				align-self: flex-start;
+			}
 		}
 
 	}
