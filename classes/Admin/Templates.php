@@ -263,6 +263,10 @@ class PUM_Admin_Templates {
 			// Get license tier (pro or pro_plus).
 			var licenseTier = (data.value && data.value.license_tier) ? data.value.license_tier : 'pro';
 			var isProPlus = licenseTier === 'pro_plus';
+			
+			// Get Pro installation status.
+			var isProInstalled = (data.value && data.value.is_pro_installed) ? data.value.is_pro_installed : false;
+			var isProActive = (data.value && data.value.is_pro_active) ? data.value.is_pro_active : false;
 
 			// Add status class to parent field wrapper after render
 			setTimeout(function() {
@@ -427,13 +431,33 @@ class PUM_Admin_Templates {
 								</div>
 							<# } else { #>
 								<# if (isActive) { #>
-									<# if (isProPlus) { #>
+									<# if (!isProInstalled) { #>
+										<!-- License active but Pro not installed - show install button -->
+										<div class="pum-license-callout pum-license-callout--install-pro">
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="download-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7,10 12,15 17,10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+											<div>
+												<strong>
+													<# if (isProPlus) { #>
+														<?php esc_html_e( 'Your Pro+ license is ready to install!', 'popup-maker' ); ?>
+													<# } else { #>
+														<?php esc_html_e( 'Your Pro license is ready to install!', 'popup-maker' ); ?>
+													<# } #>
+												</strong>
+												<p><?php esc_html_e( 'Click the button below to automatically install and activate your Pro features.', 'popup-maker' ); ?></p>
+											</div>
+											<button type="button" class="button button-primary pum-license-connect-trigger" data-source="settings-page" data-product="popup-maker-pro">
+												<?php esc_html_e( 'Install Pro', 'popup-maker' ); ?>
+											</button>
+										</div>
+									<# } else if (isProPlus) { #>
+										<!-- Pro installed and Pro+ license -->
 										<div class="pum-license-callout pum-license-callout--activated">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
 											<?php esc_html_e( 'Your Pro+ license key is active.', 'popup-maker' ); ?>
 											<?php esc_html_e( 'Thank you for supporting Popup Maker!', 'popup-maker' ); ?> 😊
 										</div>
 									<# } else { #>
+										<!-- Pro installed and regular Pro license -->
 										<div class="pum-license-callout pum-license-callout--activated">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
 											<?php esc_html_e( 'Your Pro license key is active.', 'popup-maker' ); ?>
@@ -487,6 +511,18 @@ class PUM_Admin_Templates {
 								<tr>
 									<th><?php esc_html_e( 'License Key:', 'popup-maker' ); ?></th>
 									<td>{{displayValue}}</td>
+								</tr>
+								<tr>
+									<th><?php esc_html_e( 'Pro Plugin:', 'popup-maker' ); ?></th>
+									<td class="pum-pro-status <# if (isProActive) { #>pum-pro-status--active<# } else if (isProInstalled) { #>pum-pro-status--installed<# } else { #>pum-pro-status--not-installed<# } #>">
+										<# if (isProActive) { #>
+											<?php esc_html_e( 'Active', 'popup-maker' ); ?><# if (safeValue.pro_version) { #> (v{{safeValue.pro_version}})<# } #>
+										<# } else if (isProInstalled) { #>
+											<?php esc_html_e( 'Installed', 'popup-maker' ); ?><# if (safeValue.pro_version) { #> (v{{safeValue.pro_version}})<# } #>
+										<# } else { #>
+											<?php esc_html_e( 'Not Installed', 'popup-maker' ); ?>
+										<# } #>
+									</td>
 								</tr>
 								<# if (safeValue.expires && safeValue.expires !== 'lifetime') { #>
 								<tr>
