@@ -125,7 +125,7 @@
 
 // Pro License Interface (Content Control exact styling)
 .pum-field-pro_license {
-
+	margin-top: -8px !important;
 
 	max-width: 1200px;
 
@@ -524,7 +524,7 @@
 
 		// Separator
 		hr.pum-license-separator {
-			margin: 24px 0;
+			margin: 0 0;
 			border: none;
 			height: 1px;
 			background: #dcdcde;
@@ -643,9 +643,6 @@
 
 		// Features section exactly like Content Control
 		.pum-pro-features {
-			margin: 24px 0 0 0;
-
-
 			.pum-feature-heading::before {
 				content: "●";
 				color: #00a32a;
@@ -750,7 +747,6 @@
 		align-items: center;
 		gap: 12px;
 		padding: 16px;
-		margin: 16px 0;
 		border: 1px solid;
 
 		svg {
@@ -818,7 +814,7 @@
 
 		.pro-plus-enhanced-feature {
 			.feature-icon {
-				opacity: 0.5;
+				// opacity: 0.5;
 				color: #00a32a;
 			}
 		}
@@ -830,7 +826,14 @@
 		}
 	}
 
-	.pum-license-tier-pro-plus {
+	.pum-pro-license-content.pum-license-tier-pro-plus {
+
+		.pum-license-callout--activated {
+			background: $pro-plus-bg-gradient;
+			border-color: rgb(195, 183, 251);
+			color: rgb(39, 10, 169);
+		}
+
 		.feature-icon {
 			opacity: 1;
 		}
@@ -853,28 +856,30 @@
 			}
 		}
 
-		.pum-pro-license-content {
-			.pum-pro-features {
-				.pum-features-grid {
-					.pum-feature-column {
-						border-color: $pro-plus-border-color;
-						background: $pro-plus-bg-gradient;
-					}
-				}
 
-				.pum-features-heading span {
-					color: $pro-plus-accent-color;
-				}
+		.pum-pro-features {
 
-				.pum-pro-plus-badge {
-					background: $purple-light;
-					color: rgb(39, 10, 169);
-					padding: 2px 6px;
-					border-radius: 4px;
-					font-size: 12px;
+			.pum-features-heading span {
+				color: $pro-plus-accent-color;
+			}
+
+			.pum-features-grid {
+				.pum-feature-column {
+					border-color: $pro-plus-border-color;
+					background: $pro-plus-bg-gradient;
 				}
 			}
+
+
+			.pum-pro-plus-badge {
+				background: $purple-light;
+				color: rgb(39, 10, 169);
+				padding: 2px 6px;
+				border-radius: 4px;
+				font-size: 12px;
+			}
 		}
+
 
 	}
 
