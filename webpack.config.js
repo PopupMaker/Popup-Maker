@@ -1,6 +1,6 @@
 const path = require( 'path' );
-const CustomTemplatedPathPlugin = require( '@popup-maker/custom-templated-path-webpack-plugin' );
-const DependencyExtractionWebpackPlugin = require( '@popup-maker/dependency-extraction-webpack-plugin' );
+const CustomTemplatedPathPlugin = require( './packages/custom-templated-path-webpack-plugin' );
+const DependencyExtractionWebpackPlugin = require( './packages/dependency-extraction-webpack-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const RtlCssPlugin = require( 'rtlcss-webpack-plugin' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
@@ -33,6 +33,7 @@ const packages = {
 
 const config = {
 	...defaultConfig,
+	// Maps our buildList into a new object of { key: build.entry }.
 	entry: {
 		...Object.entries( packages ).reduce(
 			( entry, [ packageName, packagePath ] ) => {
@@ -88,7 +89,6 @@ const config = {
 					'DependencyExtractionWebpackPlugin' &&
 				plugin.constructor.name !== 'MiniCssExtractPlugin' &&
 				plugin.constructor.name !== 'RtlCssPlugin'
-			// plugin.constructor.name !== 'CleanWebpackPlugin'
 		),
 		new MiniCssExtractPlugin( {
 			filename: ( { chunk } ) => {
@@ -111,6 +111,8 @@ const config = {
 			modulename( outputPath, data ) {
 				const entryName = data.chunk.name;
 				if ( entryName ) {
+					// Convert the dash-case name to a camel case module name.
+					// For example, 'csv-export' -> 'csvExport'
 					return entryName.replace( /-([a-z])/g, ( _, letter ) =>
 						letter.toUpperCase()
 					);
