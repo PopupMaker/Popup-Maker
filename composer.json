@@ -27,8 +27,7 @@
 		"phpunit/phpunit": "^10.5.38",
 		"mockery/mockery": "^1.6.12",
 		"brain/monkey": "^2.6.2",
-		"phpcompatibility/phpcompatibility-wp": "^2.1.7",
-		"php-stubs/generator": "0.8.5"
+		"phpcompatibility/phpcompatibility-wp": "^2.1.7"
 	},
 	"autoload": {
 		"psr-4": {
@@ -47,7 +46,7 @@
 		"format": "vendor/bin/phpcbf --standard=.phpcs.xml.dist --report-summary --report-source",
 		"lint": "vendor/bin/phpcs --standard=.phpcs.xml.dist",
 		"lint:report": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml",
-		"generate-stubs": "vendor/bin/generate-stubs --finder=./bin/generate-stubs.php --out=popup-maker.stub --stats --force --include-inaccessible-class-nodes",
+		"generate-stubs": "./bin/generate-stubs.sh",
 		"install-strauss": [
 			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.22.4/strauss.phar"
 		],

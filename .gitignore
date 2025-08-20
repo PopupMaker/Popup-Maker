@@ -33,6 +33,7 @@ dist
 /vendor-prefixed
 .nx
 npm-debug.log
+/*.stub
 
 # Webpack cache
 .webpack-cache
