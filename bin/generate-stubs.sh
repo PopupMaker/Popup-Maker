@@ -1,11 +1,22 @@
 #!/usr/bin/env bash
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Store the original working directory for relative --out paths
+ORIGINAL_CWD="$(pwd)"
+
+# Change to the project root directory to ensure relative paths work
+cd "$PROJECT_ROOT"
+
 HEADER=$'/**\n * Generated stub declarations for Popup Maker.\n * @see https://wppopupmaker.com/\n * @see https://github.com/code-atlantic/wp-plugin-stubs\n */'
 
 # Default output file if not specified
 DEFAULT_FILE="./popup-maker.stub"
 
 echo "Generating stubs for Popup Maker..."
+echo "Working from: $PROJECT_ROOT"
 
 # Check for -y flag (non-interactive)
 AUTO_INSTALL=false
@@ -17,6 +28,21 @@ for arg in "$@"; do
         AUTO_INSTALL=true
     elif [[ $arg == --out=* ]]; then
         OUT_FILE="${arg#*=}"
+
+        # If the output path is relative and we're not in the original directory,
+        # make it relative to the original calling directory
+        if [[ "$OUT_FILE" != /* && "$ORIGINAL_CWD" != "$PROJECT_ROOT" ]]; then
+            # Convert to absolute path based on original CWD
+            if [[ "$OUT_FILE" == ./* ]]; then
+                OUT_FILE="$ORIGINAL_CWD/${OUT_FILE#./}"
+            elif [[ "$OUT_FILE" != ../* ]]; then
+                OUT_FILE="$ORIGINAL_CWD/$OUT_FILE"
+            else
+                # For ../ paths, resolve them relative to original CWD
+                OUT_FILE="$ORIGINAL_CWD/$OUT_FILE"
+            fi
+        fi
+
         # Create directory if it doesn't exist
         OUT_DIR=$(dirname "$OUT_FILE")
         if [[ ! -d "$OUT_DIR" ]]; then
