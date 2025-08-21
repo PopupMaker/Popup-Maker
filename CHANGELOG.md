@@ -44,6 +44,7 @@ This update begins the process of modernizing our codebase while polishing exist
 
 **Fixes**
 
+-   Fixed multicheck fields not properly saving when all options were unchecked, preventing users from clearing all selections in settings like analytics reporting permissions.
 -   `Close on overlay click` & `Close on ESC press` stopped working if 2 popups were open and one closed.
 -   Potential error due to post object missing a post type.
 -   Prevent missing options data in DB from throwing errors on PHP 8.3+.

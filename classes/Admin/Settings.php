@@ -211,6 +211,11 @@ class PUM_Admin_Settings {
 						$settings[ $field_id ] = false;
 					}
 					break;
+				case 'multicheck':
+					if ( ! isset( $settings[ $field_id ] ) ) {
+						$settings[ $field_id ] = [];
+					}
+					break;
 			}
 		}
 
