@@ -51,108 +51,99 @@ const ObjectSelectField = ( {
 		setQueryText( text );
 	}, 300 );
 
-	const { prefill = [] } = useSelect(
-		( select ) => ( {
-			prefill: ( () => {
-				if ( usePopupMakerAPI ) {
-					return apiData.prefill;
+	const prefill = useSelect(
+		( select ) => {
+			if ( usePopupMakerAPI ) {
+				return apiData.prefill;
+			}
+
+			if ( ! value ) {
+				return [];
+			}
+
+			const records = select( coreDataStore ).getEntityRecords(
+				entityKind,
+				entityType,
+				{
+					context: 'view',
+					include: value,
+					per_page: -1,
 				}
+			) as ObjectOption[];
 
-				if ( ! value ) {
-					return [];
-				}
+			// If core-data returns null and we haven't switched to popup-maker API yet, switch now.
+			if (
+				records === null &&
+				! usePopupMakerAPI &&
+				entityKind === 'postType'
+			) {
+				setUsePopupMakerAPI( true );
+			}
 
-				const records = select( coreDataStore ).getEntityRecords(
-					entityKind,
-					entityType,
-					{
-						context: 'view',
-						include: value,
-						per_page: -1,
-					}
-				) as ObjectOption[];
-
-				// If core-data returns null and we haven't switched to popup-maker API yet, switch now.
-				if (
-					records === null &&
-					! usePopupMakerAPI &&
-					entityKind === 'postType'
-				) {
-					setUsePopupMakerAPI( true );
-				}
-
-				return records || [];
-			} )(),
-		} ),
+			return records || [];
+		},
 		[ value, entityKind, entityType, usePopupMakerAPI, apiData.prefill ]
 	);
 
-	const { suggestions = [], isSearching = false } = useSelect(
-		( select ) => ( {
-			suggestions: ( () => {
-				if ( usePopupMakerAPI ) {
-					return apiData.suggestions;
+	const suggestions = useSelect(
+		( select ) => {
+			if ( usePopupMakerAPI ) {
+				return apiData.suggestions;
+			}
+
+			if ( entityKind === 'user' ) {
+				return (
+					select( coreDataStore )
+						// @ts-ignore This exists and is being used as documented.
+						.getUsers( {
+							context: 'view',
+							search: queryText,
+							per_page: -1,
+						} ) as ObjectOption[]
+				);
+			}
+
+			const records = select( coreDataStore ).getEntityRecords(
+				entityKind,
+				entityType,
+				{
+					context: 'view',
+					search: queryText,
+					per_page: -1,
 				}
+			) as ObjectOption[];
 
-				if ( entityKind === 'user' ) {
-					return (
-						select( coreDataStore )
-							// @ts-ignore This exists and is being used as documented.
-							.getUsers( {
-								context: 'view',
-								search: queryText,
-								per_page: -1,
-							} ) as ObjectOption[]
-					);
-				}
+			// If core-data returns null and we haven't switched to popup-maker API yet, switch now.
+			if (
+				records === null &&
+				! usePopupMakerAPI &&
+				entityKind === 'postType'
+			) {
+				setUsePopupMakerAPI( true );
+			}
 
-				const records = select( coreDataStore ).getEntityRecords(
-					entityKind,
-					entityType,
-					{
-						context: 'view',
-						search: queryText,
-						per_page: -1,
-					}
-				) as ObjectOption[];
+			return records;
+		},
+		[
+			queryText,
+			entityKind,
+			entityType,
+			usePopupMakerAPI,
+			apiData.suggestions,
+		]
+	);
 
-				// If core-data returns null and we haven't switched to popup-maker API yet, switch now.
-				if (
-					records === null &&
-					! usePopupMakerAPI &&
-					entityKind === 'postType'
-				) {
-					setUsePopupMakerAPI( true );
-				}
+	const isSearching = useSelect(
+		( select ) => {
+			if ( usePopupMakerAPI ) {
+				return false; // We handle popup-maker API loading separately.
+			}
 
-				return records;
-			} )(),
-			// @ts-ignore This exists and is being used as documented.
-			isSearching: ( () => {
-				if ( usePopupMakerAPI ) {
-					return false; // We handle popup-maker API loading separately.
-				}
-
-				if ( entityKind === 'user' ) {
-					return (
-						select( 'core/data' )
-							// @ts-ignore This exists and is being used as documented.
-							.isResolving( 'core', 'getUsers', [
-								entityKind,
-								entityType,
-								{
-									context: 'view',
-									search: queryText,
-									per_page: -1,
-								},
-							] )
-					);
-				}
-
+			if ( entityKind === 'user' ) {
 				return (
 					select( 'core/data' )
 						// @ts-ignore This exists and is being used as documented.
-						.isResolving( 'core', 'getEntityRecords', [
+						.isResolving( 'core', 'getUsers', [
 							entityKind,
 							entityType,
 							{
@@ -162,8 +153,22 @@ const ObjectSelectField = ( {
 							},
 						] )
 				);
-			} )(),
-		} ),
+			}
+
+			return (
+				select( 'core/data' )
+					// @ts-ignore This exists and is being used as documented.
+					.isResolving( 'core', 'getEntityRecords', [
+						entityKind,
+						entityType,
+						{
+							context: 'view',
+							search: queryText,
+							per_page: -1,
+						},
+					] )
+			);
+		},
 		[
 			queryText,
 			entityKind,
@@ -186,7 +191,9 @@ const ObjectSelectField = ( {
 
 				// Always include selected values to guarantee prefill data.
 				if ( value ) {
-					const includeIds = Array.isArray( value ) ? value : [ value ];
+					const includeIds = Array.isArray( value )
+						? value
+						: [ value ];
 					apiUrl += `&include=${ includeIds.join( ',' ) }`;
 				}
 
@@ -216,7 +223,9 @@ const ObjectSelectField = ( {
 				// Extract prefill data from the same response if we have selected values.
 				let prefillData: ObjectOption[] = [];
 				if ( value ) {
-					const includeIds = Array.isArray( value ) ? value : [ value ];
+					const includeIds = Array.isArray( value )
+						? value
+						: [ value ];
 					prefillData = allOptions.filter( ( item ) =>
 						includeIds.includes( item.id )
 					);

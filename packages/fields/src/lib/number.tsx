@@ -20,6 +20,7 @@ const NumberField = ( {
 			}
 			// @ts-ignore
 			__nextHasNoMarginBottom={ true }
+			__next40pxDefaultSize={ true }
 		/>
 	);
 };

@@ -10,14 +10,15 @@ const Header = () => {
 	const { setEditorId } = useEditor();
 
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
-	const { callToActions, isLoading } = useSelect( ( select ) => {
-		const sel = select( callToActionStore );
-		// Call to Action List & Load Status.
-		return {
-			callToActions: sel.getCallToActions(),
-			isLoading: sel.isResolving( 'getCallToActions' ),
-		};
-	}, [] );
+	const callToActions = useSelect(
+		( select ) => select( callToActionStore ).getCallToActions(),
+		[]
+	);
+	const isLoading = useSelect(
+		( select ) =>
+			select( callToActionStore ).isResolving( 'getCallToActions' ),
+		[]
+	);
 
 	const { createCallToAction } = useDispatch( callToActionStore );
 

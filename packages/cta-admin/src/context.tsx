@@ -120,15 +120,20 @@ export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
 	);
 
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
-	const { callToActions, isLoading, isDeleting } = useSelect( ( select ) => {
-		const sel = select( callToActionStore );
-		// CallToAction List & Load Status.
-		return {
-			callToActions: sel.getCallToActions(),
-			isLoading: sel.isResolving( 'getCallToActions' ),
-			isDeleting: sel.isResolving( 'deleteCallToAction' ),
-		};
-	}, [] );
+	const callToActions = useSelect(
+		( select ) => select( callToActionStore ).getCallToActions(),
+		[]
+	);
+	const isLoading = useSelect(
+		( select ) =>
+			select( callToActionStore ).isResolving( 'getCallToActions' ),
+		[]
+	);
+	const isDeleting = useSelect(
+		( select ) =>
+			select( callToActionStore ).isResolving( 'deleteCallToAction' ),
+		[]
+	);
 
 	// Get action dispatchers.
 	const { updateCallToAction, deleteCallToAction } =

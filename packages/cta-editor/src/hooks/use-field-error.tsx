@@ -67,13 +67,13 @@ export const useTabErrors = (
 	const { removeNotice } = useDispatch( noticesStore );
 	const { getTabFields } = useFields();
 
-	const { hasErrors, errorCount, errorIds } = useSelect(
+	const tabErrors = useSelect(
 		( select ) => {
 			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
 			const tabFields = getTabFields( tabName );
 			const fieldIds = new Set( tabFields.map( ( f ) => f.id ) );
 
-			const tabErrors = notices.filter( ( notice ) => {
+			return notices.filter( ( notice ) => {
 				if (
 					! notice.id?.startsWith(
 						`field-error-${ ctaId || 'new' }-`
@@ -87,15 +87,13 @@ export const useTabErrors = (
 				const fieldId = fieldMatch?.[ 1 ];
 				return fieldId && fieldIds.has( fieldId );
 			} );
-
-			return {
-				hasErrors: tabErrors.length > 0,
-				errorCount: tabErrors.length,
-				errorIds: tabErrors.map( ( n ) => n.id ),
-			};
 		},
-		[ ctaId, tabName, getTabFields ]
+		[ ctaId, tabName ]
 	);
+
+	const hasErrors = tabErrors.length > 0;
+	const errorCount = tabErrors.length;
+	const errorIds = tabErrors.map( ( n ) => n.id );
 
 	const clearTabErrors = useCallback( () => {
 		errorIds.forEach( ( id ) => removeNotice( id, NOTICE_CONTEXT ) );
@@ -132,11 +130,10 @@ export const useAllFieldErrors = (): {
 	);
 	const { removeNotice } = useDispatch( noticesStore );
 
-	const { errors, errorIds } = useSelect(
+	const errors = useSelect(
 		( select ) => {
 			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
 			const fieldErrors: Record< string, string > = {};
-			const ids: string[] = [];
 
 			notices.forEach( ( notice ) => {
 				const match = notice.id?.match(
@@ -144,11 +141,29 @@ export const useAllFieldErrors = (): {
 				);
 				if ( match ) {
 					fieldErrors[ match[ 1 ] ] = notice.content as string;
+				}
+			} );
+
+			return fieldErrors;
+		},
+		[ ctaId ]
+	);
+
+	const errorIds = useSelect(
+		( select ) => {
+			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
+			const ids: string[] = [];
+
+			notices.forEach( ( notice ) => {
+				const match = notice.id?.match(
+					new RegExp( `^field-error-${ ctaId || 'new' }-(.+)$` )
+				);
+				if ( match ) {
 					ids.push( notice.id );
 				}
 			} );
 
-			return { errors: fieldErrors, errorIds: ids };
+			return ids;
 		},
 		[ ctaId ]
 	);
