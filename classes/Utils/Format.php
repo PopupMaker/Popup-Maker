@@ -16,15 +16,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Format {
 
 	/**
-	 * @param        $time
-	 * @param string $format U|human
+	 * Format timestamp based on specified format
 	 *
-	 * @return false|int|mixed
+	 * @param int|string $time Unix timestamp or date string
+	 * @param string     $format Format type: 'U' for timestamp, 'human'/'human-readable' for readable format
+	 * @return ($format is 'human'|'human-readable' ? string : int|false) Formatted time or false on failure
 	 */
 	public static function time( $time, $format = 'U' ) {
 		if ( ! PUM_Utils_Time::is_timestamp( $time ) ) {
-			$time = strtotime( $time );
+			$time = strtotime( (string) $time );
+			if ( false === $time ) {
+				return false;
+			}
 		}
+
+		$time = (int) $time;
 
 		switch ( $format ) {
 			case 'human':
@@ -39,10 +45,11 @@ class PUM_Utils_Format {
 
 
 	/**
-	 * @param int|float $number
-	 * @param string    $format
+	 * Format number based on specified format
 	 *
-	 * @return int|string
+	 * @param int|float $number Number to format
+	 * @param string    $format Format type (currently only 'abbreviated' supported)
+	 * @return int|string Formatted number as integer for small values or string for abbreviated
 	 */
 	public static function number( $number, $format = '' ) {
 		switch ( $format ) {
@@ -56,10 +63,9 @@ class PUM_Utils_Format {
 	/**
 	 * Convert the timestamp to a nice time format
 	 *
-	 * @param int      $time
-	 * @param int|null $current
-	 *
-	 * @return mixed
+	 * @param int      $time Unix timestamp to format
+	 * @param int|null $current Current timestamp for comparison (defaults to current time)
+	 * @return string Human-readable time difference (filtered through WordPress)
 	 */
 	public static function human_time( $time, $current = null ) {
 		if ( empty( $current ) ) {
@@ -122,13 +128,12 @@ class PUM_Utils_Format {
 	}
 
 	/**
-	 * K, M number formatting
+	 * K, M number formatting for large numbers
 	 *
-	 * @param int|float $n
-	 * @param string    $point
-	 * @param string    $sep
-	 *
-	 * @return int|string
+	 * @param int|float        $n Number to abbreviate
+	 * @param non-empty-string $point Decimal point character
+	 * @param non-empty-string $sep Thousands separator character
+	 * @return int|string Returns 0 for negative numbers, formatted string for all positive values (e.g., "1.5K", "2.3M", "9,999")
 	 */
 	public static function abbreviated_number( $n, $point = '.', $sep = ',' ) {
 		if ( $n < 0 ) {
@@ -150,9 +155,8 @@ class PUM_Utils_Format {
 	 *
 	 * Used to prevent WP from adding <br> and <p> tags.
 	 *
-	 * @param string $str
-	 *
-	 * @return mixed
+	 * @param string $str Input string to clean
+	 * @return string Cleaned string with whitespace removed
 	 */
 	public static function strip_white_space( $str = '' ) {
 		return str_replace( [ "\t", "\r", "\n" ], '', $str );

@@ -38,14 +38,14 @@ class PUM_Utils_Logging {
 	/**
 	 * File system API.
 	 *
-	 * @var WP_Filesystem_Base|false
+	 * @var WP_Filesystem_Base|null
 	 */
 	private $fs;
 
 	/**
 	 * Log file content.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $content;
 
@@ -114,14 +114,15 @@ class PUM_Utils_Logging {
 	 * @return void
 	 */
 	public function init_fs() {
-		$this->fs = $this->file_system();
+		$fs       = $this->file_system();
+		$this->fs = false !== $fs ? $fs : null;
 
 		// If the file system is not set, we can't check if it's writable.
-		if ( ! $this->fs ) {
+		if ( null === $this->fs ) {
 			return;
 		}
 
-		$this->is_writable = false !== $this->fs && 'direct' === $this->fs->method;
+		$this->is_writable = 'direct' === $this->fs->method;
 
 		if ( ! $this->is_writable ) {
 			return;
@@ -129,14 +130,12 @@ class PUM_Utils_Logging {
 
 		$upload_dir = PUM_Helpers::get_upload_dir();
 
-		if ( ! $upload_dir ) {
+		if ( false === $upload_dir ) {
 			$this->is_writable = false;
+			return;
 		}
 
-		if (
-			! method_exists( $this->fs, 'is_writable' ) ||
-			! $this->fs->is_writable( $upload_dir['basedir'] )
-		) {
+		if ( ! $this->fs->is_writable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
 		}
 	}
@@ -175,15 +174,19 @@ class PUM_Utils_Logging {
 	 * @return void
 	 */
 	public function init() {
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || null === $this->fs ) {
 			return;
 		}
 
 		$upload_dir = \PopupMaker\get_upload_dir();
 
+		if ( false === $upload_dir ) {
+			return;
+		}
+
 		$file_token = get_option( 'pum_debug_log_token' );
 		if ( false === $file_token ) {
-			$file_token = uniqid( wp_rand(), true );
+			$file_token = uniqid( (string) wp_rand(), true );
 			update_option( 'pum_debug_log_token', $file_token );
 		}
 
@@ -220,17 +223,18 @@ class PUM_Utils_Logging {
 	/**
 	 * Retrieves the url to the file
 	 *
-	 * @returns string
+	 * @return string
 	 * @since 1.12.0
 	 */
 	public function get_file_url() {
-		return \PopupMaker\get_upload_dir_url( $this->filename );
+		$url = \PopupMaker\get_upload_dir_url( $this->filename );
+		return is_string( $url ) ? $url : '';
 	}
 
 	/**
 	 * Retrieve the log data
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_log() {
 		return $this->get_log_content();
@@ -240,6 +244,7 @@ class PUM_Utils_Logging {
 	 * Log message to file
 	 *
 	 * @param string $message The message to log.
+	 * @return void
 	 */
 	public function log( $message = '' ) {
 		$this->write_to_log( wp_date( 'Y-n-d H:i:s' ) . ' - ' . $message );
@@ -249,6 +254,7 @@ class PUM_Utils_Logging {
 	 * Log unique message to file.
 	 *
 	 * @param string $message The unique message to log.
+	 * @return void
 	 */
 	public function log_unique( $message = '' ) {
 		$contents = $this->get_log_content();
@@ -263,7 +269,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Get the log file contents.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_log_content() {
 		if ( ! isset( $this->content ) ) {
@@ -276,8 +282,8 @@ class PUM_Utils_Logging {
 	/**
 	 * Set the log file contents in memory.
 	 *
-	 * @param mixed $content The content to set.
-	 * @param bool  $save    Whether to save the content to the file immediately.
+	 * @param string $content The content to set.
+	 * @param bool   $save    Whether to save the content to the file immediately.
 	 * @return void
 	 */
 	private function set_log_content( $content, $save = false ) {
@@ -291,21 +297,21 @@ class PUM_Utils_Logging {
 	/**
 	 * Retrieve the contents of a file.
 	 *
-	 * @param string|boolean $file File to get contents of.
-	 *
-	 * @return string
+	 * @param string|false $file File path to get contents of, or false to use default log file.
+	 * @return string File contents or empty string on failure.
 	 */
 	protected function get_file( $file = false ) {
 		$file = $file ? $file : $this->file;
 
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || null === $this->fs ) {
 			return '';
 		}
 
 		$content = '';
 
 		if ( $this->fs->exists( $file ) ) {
-			$content = $this->fs->get_contents( $file );
+			$file_content = $this->fs->get_contents( $file );
+			$content      = is_string( $file_content ) ? $file_content : '';
 		}
 
 		return $content;
@@ -315,6 +321,7 @@ class PUM_Utils_Logging {
 	 * Write the log message
 	 *
 	 * @param string $message The message to write.
+	 * @return void
 	 */
 	protected function write_to_log( $message = '' ) {
 		if ( ! $this->enabled() ) {
@@ -333,13 +340,15 @@ class PUM_Utils_Logging {
 
 	/**
 	 * Save the current contents to file.
+	 *
+	 * @return void
 	 */
 	public function save_logs() {
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || null === $this->fs ) {
 			return;
 		}
 
-		$this->fs->put_contents( $this->file, $this->content, FS_CHMOD_FILE );
+		$this->fs->put_contents( $this->file, $this->content ?? '', FS_CHMOD_FILE );
 	}
 
 	/**
@@ -349,18 +358,20 @@ class PUM_Utils_Logging {
 	 */
 	public function count_lines() {
 		$file  = $this->get_log_content();
-		$lines = explode( "\r\n", $file );
+		$lines = explode( "\r\n", $file ?? '' );
 
 		return count( $lines );
 	}
 
 	/**
 	 * Truncates a log file to maximum of 250 lines.
+	 *
+	 * @return void
 	 */
 	public function truncate_log() {
 		$content           = $this->get_log_content();
-		$lines             = explode( "\r\n", $content );
-		$lines             = array_slice( $lines, 0, 250 ); // 50 is how many lines you want to keep
+		$lines             = explode( "\r\n", $content ?? '' );
+		$lines             = array_slice( $lines, 0, 250 ); // 250 is how many lines you want to keep
 		$truncated_content = implode( "\r\n", $lines );
 		$this->set_log_content( $truncated_content, true );
 	}
@@ -376,10 +387,12 @@ class PUM_Utils_Logging {
 
 	/**
 	 * Delete the log file.
+	 *
+	 * @return void
 	 */
 	public function clear_log() {
 		// Delete the file.
-		if ( $this->fs && method_exists( $this->fs, 'delete' ) ) {
+		if ( null !== $this->fs ) {
 			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@$this->fs->delete( $this->file );
 		}
@@ -392,9 +405,10 @@ class PUM_Utils_Logging {
 	/**
 	 * Log a deprecated notice.
 	 *
-	 * @param string $func_name Function name.
-	 * @param string $version Versoin deprecated.
-	 * @param string $replacement Replacement function (optional).
+	 * @param non-empty-string $func_name   Function name.
+	 * @param non-empty-string $version     Version deprecated.
+	 * @param string|null      $replacement Replacement function (optional).
+	 * @return void
 	 */
 	public function log_deprecated_notice( $func_name, $version, $replacement = null ) {
 		if ( ! is_null( $replacement ) ) {

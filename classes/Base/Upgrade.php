@@ -41,6 +41,8 @@ abstract class Upgrade implements \PopupMaker\Interfaces\Upgrade {
 
 	/**
 	 * Upgrade constructor.
+	 *
+	 * @return void
 	 */
 	public function __construct() {
 	}
@@ -106,18 +108,18 @@ abstract class Upgrade implements \PopupMaker\Interfaces\Upgrade {
 	abstract public function run();
 
 	/**
-	 * Run the upgrade.
+	 * Run the upgrade with stream support.
 	 *
-	 * @param \PopupMaker\Services\UpgradeStream $stream Stream.
+	 * @param \PopupMaker\Services\UpgradeStream $stream Stream for progress reporting and communication.
 	 *
-	 * @return bool|\WP_Error
+	 * @return bool|\WP_Error True on success, WP_Error on failure.
 	 */
 	public function stream_run( $stream ) {
 		$this->stream = $stream;
 
 		$return = $this->run();
 
-		unset( $this->stream );
+		$this->stream = null;
 
 		if ( is_bool( $return ) || is_wp_error( $return ) ) {
 			return $return;
@@ -140,14 +142,16 @@ abstract class Upgrade implements \PopupMaker\Interfaces\Upgrade {
 	 *      start_upgrades: Closure,
 	 *      complete_upgrades: Closure,
 	 *      start_task: Closure,
-	 *      update_task_progress:Closure,
+	 *      update_task_progress: Closure,
 	 *      complete_task: Closure
-	 * }&\stdClass) Stream.
+	 * }&\stdClass) Stream instance or mock object with no-op methods.
 	 */
 	public function stream() {
 		$noop =
 		/**
-		 * No-op.
+		 * No-op function for mock stream methods.
+		 *
+		 * @param mixed ...$args Variable arguments (ignored).
 		 *
 		 * @return void
 		 */

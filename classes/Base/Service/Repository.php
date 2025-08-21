@@ -15,7 +15,7 @@ use PopupMaker\Base\Model\Post;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Repository service.
+ * Repository service for managing Post-based entities.
  *
  * @since X.X.X
  * @template TPost of Post
@@ -24,23 +24,23 @@ defined( 'ABSPATH' ) || exit;
 abstract class Repository extends Service {
 
 	/**
-	 * Post type key.
+	 * Post type key for registration.
 	 *
-	 * @var string
+	 * @var non-empty-string
 	 */
 	protected $post_type_key;
 
 	/**
-	 * Post type.
+	 * Registered WordPress post type name.
 	 *
-	 * @var string
+	 * @var non-empty-string
 	 */
 	protected $post_type;
 
 	/**
-	 * Array of all items by ID.
+	 * Cache of instantiated items indexed by post ID.
 	 *
-	 * @var array<int,TPost>
+	 * @var array<int, TPost>
 	 */
 	protected $items_by_id = [];
 
@@ -64,20 +64,28 @@ abstract class Repository extends Service {
 	abstract public function instantiate_model_from_post( $post );
 
 	/**
-	 * Cache an item.
+	 * Cache an item in internal storage.
 	 *
-	 * @param TPost $item Item to cache.
-	 *
+	 * @param TPost $item Item to cache by ID for fast retrieval.
 	 * @return void
 	 */
 	protected function cache_item( $item ) {
-		$this->items_by_id[ $item->ID ?? $item->ID ] = $item;
+		$this->items_by_id[ $item->ID ] = $item;
 	}
 
 	/**
 	 * Get a list of all queried items.
 	 *
-	 * @return TPost[]
+	 * @param array<string, mixed> $args {
+	 *     Optional. WP_Query arguments for filtering posts.
+	 *
+	 *     @type string|string[] $post_type      Post type to query.
+	 *     @type int             $posts_per_page Number of posts to retrieve.
+	 *     @type string|string[] $post_status    Post status to query.
+	 *     @type string          $meta_key       Meta key to query.
+	 *     @type mixed           $meta_value     Meta value to query.
+	 * }
+	 * @return TPost[] Array of instantiated model objects matching the query.
 	 */
 	public function query( $args = [] ) {
 		$query_args = wp_parse_args( $args, [
@@ -87,9 +95,14 @@ abstract class Repository extends Service {
 
 		$query_results = new \WP_Query( $query_args );
 
+		/** @var TPost[] $items */
 		$items = [];
 
 		foreach ( $query_results->posts as $post ) {
+			if ( ! $post instanceof \WP_Post ) {
+				continue;
+			}
+
 			$item = $this->instantiate_model_from_post( $post );
 
 			if ( ! $item ) {
@@ -108,18 +121,20 @@ abstract class Repository extends Service {
 	/**
 	 * Get item by ID.
 	 *
-	 * @param int $item_id Item ID.
-	 *
-	 * @return TPost|null
+	 * @param int|numeric-string $item_id Item ID to retrieve.
+	 * @return TPost|null Model instance if found, null otherwise.
 	 */
 	public function get_by_id( $item_id = 0 ) {
-		// If item is an ID, get the object.
-		if ( is_numeric( $item_id ) && isset( $this->items_by_id[ $item_id ] ) ) {
+		// Convert to integer for consistent handling.
+		$item_id = (int) $item_id;
+
+		// If item is cached, get the object.
+		if ( isset( $this->items_by_id[ $item_id ] ) ) {
 			return $this->items_by_id[ $item_id ];
 		}
 
-		// Query for a call to action by post ID.
-		if ( is_numeric( $item_id ) ) {
+		// Query for a post by ID.
+		if ( $item_id > 0 ) {
 			$post = get_post( $item_id );
 
 			if ( $post && $post->post_type === $this->post_type ) {
@@ -139,11 +154,10 @@ abstract class Repository extends Service {
 	/**
 	 * Get item by custom field or column.
 	 *
-	 * @param string $field Field name (post column or meta key).
-	 * @param mixed  $value Field value.
-	 * @param string $type  'column' or 'meta'.
-	 *
-	 * @return TPost|null
+	 * @param non-empty-string $field Field name (post column like 'post_name' or meta key).
+	 * @param string|int|float $value Field value to search for.
+	 * @param 'column'|'meta'  $type Search type: 'column' for post table columns or 'meta' for post meta fields.
+	 * @return TPost|null Model instance if found, null otherwise.
 	 */
 	public function get_by_field( $field, $value, $type = 'column' ) {
 		if ( empty( $field ) || ( empty( $value ) && 0 !== $value && '0' !== $value ) ) {
@@ -167,11 +181,14 @@ abstract class Repository extends Service {
 		$query = new \WP_Query( $query_args );
 
 		if ( $query->have_posts() ) {
-			$item = $this->instantiate_model_from_post( $query->posts[0] );
-			if ( $item ) {
-				$this->cache_item( $item );
+			$post = $query->posts[0];
+			if ( $post instanceof \WP_Post ) {
+				$item = $this->instantiate_model_from_post( $post );
+				if ( $item ) {
+					$this->cache_item( $item );
+				}
+				return $item;
 			}
-			return $item;
 		}
 
 		return null;

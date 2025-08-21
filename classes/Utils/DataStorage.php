@@ -20,11 +20,12 @@ class PUM_Utils_DataStorage {
 	 *
 	 * Given a key, get the information from the database directly.
 	 *
-	 * @param string     $key The stored option key.
-	 * @param null|mixed $default_value Optional. A default value to retrieve should `$value` be empty.
-	 *                            Default null.
+	 * @template T
+	 * @param string $key The stored option key.
+	 * @param T      $default_value Optional. A default value to retrieve should `$value` be empty.
+	 *                                 Default null.
 	 *
-	 * @return mixed|false The stored data, value of `$default_value` if not null, otherwise false.
+	 * @return ($default_value is null ? string|int|float|bool|array<string, mixed>|object|false : T|string|int|float|bool|array<string, mixed>|object) The stored data, value of `$default_value` if not null, otherwise false.
 	 */
 	public static function get( $key, $default_value = null ) {
 		global $wpdb;
@@ -44,6 +45,8 @@ class PUM_Utils_DataStorage {
 	 *
 	 * @param string $key The option_name.
 	 * @param mixed  $value The value to store.
+	 *
+	 * @return void
 	 */
 	public static function write( $key, $value ) {
 		global $wpdb;
@@ -67,7 +70,7 @@ class PUM_Utils_DataStorage {
 	 *
 	 * @param mixed $value Value to store.
 	 *
-	 * @return array Formats array. First and last values will always be string ('%s').
+	 * @return array{0: '%s', 1: '%s'|'%d'|'%f', 2: '%s'} Formats array. First and last values will always be string ('%s').
 	 */
 	public static function get_data_formats( $value ) {
 

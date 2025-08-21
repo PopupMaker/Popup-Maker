@@ -21,7 +21,7 @@ class PUM_Utils_Shortcodes {
 	 *
 	 * @param string $shortcode_text Unprocessed string with shortcodes.
 	 *
-	 * @return string
+	 * @return string Processed shortcode content
 	 */
 	public static function clean_do_shortcode( $shortcode_text = '' ) {
 		ob_start();
@@ -42,7 +42,13 @@ class PUM_Utils_Shortcodes {
 	 *
 	 * @param string $content Content containing shortcodes.
 	 *
-	 * @return array Array of shortcodes found.
+	 * @return array<int, array{
+	 *     full_text: string,
+	 *     tag: string,
+	 *     atts: array<string, string|bool>,
+	 *     content: string,
+	 *     token: string
+	 * }> Array of shortcodes found with structured data
 	 */
 	public static function get_shortcodes_from_content( $content ) {
 		$pattern    = get_shortcode_regex();
@@ -79,10 +85,16 @@ class PUM_Utils_Shortcodes {
 	/**
 	 * Find specific shortcodes from given content.
 	 *
-	 * @param string       $content Content containing shortcodes.
-	 * @param string|array $shortcode_tags Shortcode tags to look for.
+	 * @param string          $content Content containing shortcodes.
+	 * @param string|string[] $shortcode_tags Shortcode tags to look for.
 	 *
-	 * @return array Array of shortcodes found.
+	 * @return array<int, array{
+	 *     full_text: string,
+	 *     tag: string,
+	 *     atts: array<string, string|bool>,
+	 *     content: string,
+	 *     token: string
+	 * }> Array of matching shortcodes with structured data
 	 */
 	public static function find_shortcodes_in_content( $content, $shortcode_tags = [] ) {
 		if ( ! is_array( $shortcode_tags ) ) {
@@ -103,11 +115,11 @@ class PUM_Utils_Shortcodes {
 	/**
 	 * Returns a string token for a given shortcode.
 	 *
-	 * @param string $tag Shortcode tag.
-	 * @param string $atts Array of shortcode attributes.
-	 * @param string $content Shortcodes inner content.
+	 * @param string                            $tag Shortcode tag.
+	 * @param array<string, string|bool>|string $atts Array of shortcode attributes or attribute string.
+	 * @param string                            $content Shortcodes inner content.
 	 *
-	 * @return string
+	 * @return string MD5 hash token for the shortcode
 	 */
 	public static function tokenize_shortcode( $tag, $atts = [], $content = '' ) {
 		if ( ! is_array( $atts ) ) {

@@ -46,33 +46,33 @@ class Post {
 	 *
 	 * @var string
 	 */
-	public $slug;
+	public $slug = '';
 
 	/**
 	 * Call To Action label.
 	 *
 	 * @var string
 	 */
-	public $title;
+	public $title = '';
 
 	/**
 	 * Call To Action status.
 	 *
 	 * @var string
 	 */
-	public $status;
+	public $status = '';
 
 	/**
 	 * Data version.
 	 *
 	 * @var int
 	 */
-	public $data_version;
+	public $data_version = 0;
 
 	/**
 	 * Build a post.
 	 *
-	 * @param \WP_Post|array<string,mixed> $post Post data.
+	 * @param WP_Post $post Post data.
 	 */
 	public function __construct( $post ) {
 		$this->post = $post;
@@ -99,7 +99,7 @@ class Post {
 	/**
 	 * Get edit link.
 	 *
-	 * @return string
+	 * @return string Empty string if user cannot edit post, otherwise admin edit URL.
 	 */
 	public function get_edit_link() {
 		if ( current_user_can( 'edit_post', $this->ID ) ) {
@@ -115,7 +115,7 @@ class Post {
 	 * @param string $key Meta key.
 	 * @param bool   $single Whether to return a single value.
 	 *
-	 * @return mixed
+	 * @return ($single is true ? mixed : mixed[])
 	 */
 	public function get_meta( $key, $single = true ) {
 		return get_post_meta( $this->ID, $key, $single );
@@ -127,7 +127,7 @@ class Post {
 	 * @param string $key Meta key.
 	 * @param mixed  $value Meta value.
 	 *
-	 * @return bool|int
+	 * @return int|bool Meta ID on success, true on update, false on failure.
 	 */
 	public function update_meta( $key, $value ) {
 		return update_post_meta( $this->ID, $key, $value );
@@ -136,7 +136,12 @@ class Post {
 	/**
 	 * Convert this call to action to an array.
 	 *
-	 * @return array<string,mixed>
+	 * @return array{
+	 *     ID: int,
+	 *     slug: string,
+	 *     title: string,
+	 *     status: string
+	 * }
 	 */
 	public function to_array() {
 		return [

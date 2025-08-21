@@ -70,7 +70,7 @@ function get_file_contents( $path ) {
  *
  * @since X.X.X
  *
- * @return bool|array An associated array with baseurl and basedir or false on failure
+ * @return array{basedir: string, baseurl: string}|false An associated array with baseurl and basedir or false on failure
  */
 function get_upload_dir() {
 	$upload_dir = wp_get_upload_dir();

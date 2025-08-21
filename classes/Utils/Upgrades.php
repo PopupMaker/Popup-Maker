@@ -21,7 +21,7 @@ class PUM_Utils_Upgrades {
 	protected $registry;
 
 	/**
-	 * @var self
+	 * @var self|null
 	 */
 	public static $instance;
 
@@ -49,7 +49,7 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Popup Maker db version.
 	 *
-	 * @var    string
+	 * @var    string|false
 	 */
 	public static $db_version;
 
@@ -88,7 +88,7 @@ class PUM_Utils_Upgrades {
 		// If no current db version, but prior install detected, set db version correctly.
 		// Here for backward compatibility.
 		if ( ! self::$db_version || self::$db_version < Popup_Maker::$DB_VER ) {
-			self::$db_version = Popup_Maker::$DB_VER;
+			self::$db_version = (string) Popup_Maker::$DB_VER;
 			update_option( 'pum_db_ver', self::$db_version );
 		}
 
@@ -108,7 +108,10 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
-	 * @param PUM_Upgrade_Registry $registry
+	 * Register core upgrade processes.
+	 *
+	 * @param PUM_Upgrade_Registry $registry The upgrade registry instance.
+	 * @return void
 	 */
 	public function register_processes( PUM_Upgrade_Registry $registry ) {
 
@@ -148,7 +151,9 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
-	 * @return bool
+	 * Check if v1.8 theme upgrade is needed.
+	 *
+	 * @return bool True if upgrade is needed, false otherwise.
 	 */
 	public function needs_v1_8_theme_upgrade() {
 		if ( pum_has_completed_upgrade( 'core-v1_8-themes' ) ) {
@@ -199,13 +204,11 @@ class PUM_Utils_Upgrades {
 	 * Registers a new upgrade routine.
 	 *
 	 * @param string $upgrade_id Upgrade ID.
-	 * @param array  $args       {
-	 *                           Arguments for registering a new upgrade routine.
-	 *
-	 * @type array   $rules      Array of true/false values.
-	 * @type string  $class      Batch processor class to use.
-	 * @type string  $file       File containing the upgrade processor class.
-	 * }
+	 * @param array{
+	 *     rules: bool[],
+	 *     class: string,
+	 *     file: string
+	 * } $args Arguments for registering a new upgrade routine.
 	 *
 	 * @return bool True if the upgrade routine was added, otherwise false.
 	 */
@@ -215,6 +218,8 @@ class PUM_Utils_Upgrades {
 
 	/**
 	 * Displays upgrade notices.
+	 *
+	 * @return void
 	 */
 	public function upgrade_notices() {
 		if ( ! $this->has_uncomplete_upgrades() || ! current_user_can( 'manage_options' ) ) {
@@ -234,9 +239,25 @@ class PUM_Utils_Upgrades {
 
 
 	/**
-	 * @param array $alerts
+	 * Add upgrade alert to the alerts list.
 	 *
-	 * @return array
+	 * @param array<int, array{
+	 *     code: string,
+	 *     type: string,
+	 *     html: string,
+	 *     priority: int,
+	 *     dismissible: bool,
+	 *     global: bool
+	 * }> $alerts Current alerts list.
+	 *
+	 * @return array<int, array{
+	 *     code: string,
+	 *     type: string,
+	 *     html: string,
+	 *     priority: int,
+	 *     dismissible: bool,
+	 *     global: bool
+	 * }> Updated alerts list.
 	 */
 	public function upgrade_alert( $alerts = [] ) {
 		if ( ! $this->has_uncomplete_upgrades() || ! current_user_can( 'manage_options' ) ) {
@@ -268,6 +289,8 @@ class PUM_Utils_Upgrades {
 	 * Renders the upgrade notification message.
 	 *
 	 * Message only, no form.
+	 *
+	 * @return void
 	 */
 	public function render_upgrade_notice() {
 		$resume_upgrade = $this->maybe_resume_upgrade();
@@ -288,6 +311,8 @@ class PUM_Utils_Upgrades {
 
 	/**
 	 * Renders the upgrade processing form for reuse.
+	 *
+	 * @return void
 	 */
 	public function render_form() {
 		$args = [
@@ -328,9 +353,14 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
-	 * For use when doing 'stepped' upgrade routines, to see if we need to start somewhere in the middle
+	 * Check if there's a partial upgrade that needs to be resumed.
 	 *
-	 * @return false|array   When nothing to resume returns false, otherwise starts the upgrade where it left off
+	 * For use when doing 'stepped' upgrade routines, to see if we need to start somewhere in the middle.
+	 *
+	 * @return array{
+	 *     upgrade_id: string,
+	 *     step: int
+	 * }|false When nothing to resume returns false, otherwise returns upgrade state data.
 	 */
 	public function maybe_resume_upgrade() {
 		$doing_upgrade = get_option( 'pum_doing_upgrade', [] );
@@ -347,7 +377,11 @@ class PUM_Utils_Upgrades {
 	 *
 	 * @param string $upgrade_id Upgrade ID.
 	 *
-	 * @return array|false Upgrade entry from the registry, otherwise false.
+	 * @return array{
+	 *     rules: bool[],
+	 *     class: string,
+	 *     file: string
+	 * }|false Upgrade entry from the registry, otherwise false.
 	 */
 	public function get_routine( $upgrade_id ) {
 		return $this->registry->get( $upgrade_id );
@@ -358,18 +392,22 @@ class PUM_Utils_Upgrades {
 	 *
 	 * Note: Unfiltered.
 	 *
-	 * @return array
+	 * @return array<string, array{
+	 *     rules: bool[],
+	 *     class: string,
+	 *     file: string
+	 * }> Associative array of upgrade ID => upgrade data.
 	 */
 	public function get_routines() {
 		return $this->registry->get_upgrades();
 	}
 
 	/**
-	 * Adds an upgrade action to the completed upgrades array
+	 * Adds an upgrade action to the completed upgrades array.
 	 *
-	 * @param  string $upgrade_id The action to add to the competed upgrades array
+	 * @param string $upgrade_id The action to add to the completed upgrades array.
 	 *
-	 * @return bool If the function was successfully added
+	 * @return bool True if the upgrade was successfully marked complete, false otherwise.
 	 */
 	public function set_upgrade_complete( $upgrade_id = '' ) {
 
@@ -392,9 +430,9 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
-	 * Get's the array of completed upgrade actions
+	 * Get's the array of completed upgrade actions.
 	 *
-	 * @return array The array of completed upgrades
+	 * @return array<int, string> The array of completed upgrade IDs.
 	 */
 	public function get_completed_upgrades() {
 		$completed_upgrades = get_option( 'pum_completed_upgrades' );
@@ -408,11 +446,11 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
-	 * Check if the upgrade routine has been run for a specific action
+	 * Check if the upgrade routine has been run for a specific action.
 	 *
-	 * @param string $upgrade_id The upgrade action to check completion for
+	 * @param string $upgrade_id The upgrade action to check completion for.
 	 *
-	 * @return bool If the action has been added to the completed actions array
+	 * @return bool True if the action has been completed, false otherwise.
 	 */
 	public function has_completed_upgrade( $upgrade_id = '' ) {
 		if ( empty( $upgrade_id ) ) {
@@ -425,9 +463,9 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
-	 * Conditional function to see if there are upgrades available.
+	 * Check if there are uncompleted upgrades available.
 	 *
-	 * @return bool
+	 * @return bool True if upgrades are needed, false otherwise.
 	 */
 	public function has_uncomplete_upgrades() {
 		return (bool) count( $this->get_uncompleted_upgrades() );
@@ -440,7 +478,11 @@ class PUM_Utils_Upgrades {
 	 * - It was previously complete.
 	 * - If any false values in the upgrades $rules array are found.
 	 *
-	 * @return array
+	 * @return array<string, array{
+	 *     rules: bool[],
+	 *     class: string,
+	 *     file: string
+	 * }> Associative array of upgrade ID => upgrade data.
 	 */
 	public function get_uncompleted_upgrades() {
 		$required_upgrades = $this->get_routines();
@@ -456,7 +498,9 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
-	 * Handles Ajax for processing a upgrade upgrade/que request.
+	 * Handles Ajax for processing an upgrade request.
+	 *
+	 * @return void
 	 */
 	public function process_upgrade_request() {
 
@@ -564,7 +608,7 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Returns the first key in the uncompleted upgrades.
 	 *
-	 * @return string|null
+	 * @return string|null The upgrade ID or null if no upgrades pending.
 	 */
 	public function get_current_upgrade_id() {
 		$upgrades = $this->get_uncompleted_upgrades();
@@ -575,9 +619,9 @@ class PUM_Utils_Upgrades {
 	}
 
 	/**
-	 * Returns the current upgrade.
+	 * Returns the current upgrade processor instance.
 	 *
-	 * @return bool|PUM_Interface_Batch_PrefetchProcess|PUM_Interface_Batch_Process
+	 * @return PUM_Interface_Batch_Process|PUM_Interface_Batch_PrefetchProcess|false False if no upgrade found.
 	 */
 	public function get_current_upgrade() {
 		$upgrade_id = $this->get_current_upgrade_id();
@@ -588,10 +632,10 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Gets the upgrade process object.
 	 *
-	 * @param string $upgrade_id
-	 * @param int    $step
+	 * @param string $upgrade_id The upgrade identifier.
+	 * @param int    $step       The current step number.
 	 *
-	 * @return bool|PUM_Interface_Batch_Process|PUM_Interface_Batch_PrefetchProcess
+	 * @return PUM_Interface_Batch_Process|PUM_Interface_Batch_PrefetchProcess|false The upgrade processor instance or false if not found.
 	 */
 	public function get_upgrade( $upgrade_id = '', $step = 1 ) {
 		$upgrade = $this->registry->get( $upgrade_id );
@@ -639,9 +683,9 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Add upgrades tab to tools page if there are upgrades available.
 	 *
-	 * @param array $tabs
+	 * @param array<string, string> $tabs Existing tabs array where key is tab ID and value is tab label.
 	 *
-	 * @return array
+	 * @return array<string, string> Updated tabs array.
 	 */
 	public function tools_page_tabs( $tabs = [] ) {
 
@@ -654,6 +698,8 @@ class PUM_Utils_Upgrades {
 
 	/**
 	 * Renders upgrade form on the tools page upgrade tab.
+	 *
+	 * @return void
 	 */
 	public function tools_page_tab_content() {
 		if ( ! $this->has_uncomplete_upgrades() ) {

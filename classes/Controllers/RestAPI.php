@@ -734,13 +734,13 @@ class RestAPI extends Controller {
 		$is_pro_active    = $is_pro_installed && is_plugin_active( 'popup-maker-pro/popup-maker-pro.php' );
 
 		$response_data = [
-			'is_valid'        => $is_active,
-			'license_key'     => $license_key,
-			'status'          => $license_service->get_license_status(),
-			'expires'         => ! empty( $license_status['expires'] ) ? $license_status['expires'] : null,
-			'pro_installed'   => $is_pro_installed,
+			'is_valid'         => $is_active,
+			'license_key'      => $license_key,
+			'status'           => $license_service->get_license_status(),
+			'expires'          => ! empty( $license_status['expires'] ) ? $license_status['expires'] : null,
+			'pro_installed'    => $is_pro_installed,
 			'is_pro_installed' => $is_pro_installed,
-			'is_pro_active'   => $is_pro_active,
+			'is_pro_active'    => $is_pro_active,
 		];
 
 		wp_send_json_success( $response_data );
