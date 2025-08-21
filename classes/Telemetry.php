@@ -158,6 +158,7 @@ class PUM_Telemetry {
 			'php_version'            => phpversion(),
 			'mysql_version'          => $wpdb->db_version(),
 			'is_localhost'           => self::is_localhost(),
+			'wp_env_type'            => wp_get_environment_type(),
 
 			// WP Install Info.
 			'url'                    => get_site_url(),
