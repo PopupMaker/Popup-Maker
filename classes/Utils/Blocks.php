@@ -32,7 +32,7 @@ class PUM_Utils_Blocks {
 
 		foreach ( $blocks as $block ) {
 			if ( in_array( $block['blockName'], [ 'core/columns', 'core/column' ], true ) ) {
-				$found_blocks = array_merge( $found_blocks, self::find_blocks( $block['innerBlocks'] ) );
+				$found_blocks = array_merge( $found_blocks, self::find_blocks( $block['innerBlocks'], $search_name ) );
 			}
 
 			if ( $search_name === $block['blockName'] ) {

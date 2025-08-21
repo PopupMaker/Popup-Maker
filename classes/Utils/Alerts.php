@@ -593,7 +593,7 @@ class PUM_Utils_Alerts {
 		<div class="pum-alerts">
 
 			<h3>
-				<img alt="" class="logo" src="<?php echo esc_attr( Popup_Maker::$URL ); ?>assets/images/mark.png" /> <?php printf( '%s%s (%s)', ( $global_only ? esc_html__( 'Popup Maker', 'popup-maker' ) . ' ' : '' ), esc_html__( 'Notifications', 'popup-maker' ), '<span class="pum-alert-count">' . esc_html( $count ) . '</span>' ); ?>
+				<img alt="" class="logo" src="<?php echo esc_attr( Popup_Maker::$URL ); ?>assets/images/mark.png" /> <?php printf( '%s%s (%s)', ( $global_only ? esc_html__( 'Popup Maker', 'popup-maker' ) . ' ' : '' ), esc_html__( 'Notifications', 'popup-maker' ), '<span class="pum-alert-count">' . esc_html( (string) $count ) . '</span>' ); ?>
 			</h3>
 
 			<p><?php __( 'Check out the following notifications from Popup Maker.', 'popup-maker' ); ?></p>
@@ -603,7 +603,7 @@ class PUM_Utils_Alerts {
 			add_filter( 'safe_style_css', [ __CLASS__, 'allow_inline_styles' ] );
 
 			foreach ( $alerts as $alert ) {
-				$expires     = 1 === $alert['dismissible'] ? '' : $alert['dismissible'];
+				$expires     = 1 === $alert['dismissible'] ? '' : (string) $alert['dismissible'];
 				$dismiss_url = add_query_arg(
 					[
 						'nonce'             => $nonce,
@@ -614,7 +614,7 @@ class PUM_Utils_Alerts {
 				);
 				?>
 
-				<div class="pum-alert-holder" data-code="<?php echo esc_attr( $alert['code'] ); ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php echo esc_attr( $alert['dismissible'] ); ?>">
+				<div class="pum-alert-holder" data-code="<?php echo esc_attr( $alert['code'] ); ?>" class="<?php echo $alert['dismissible'] ? 'is-dismissible' : ''; ?>" data-dismissible="<?php echo esc_attr( (string) $alert['dismissible'] ); ?>">
 
 					<div class="pum-alert <?php echo '' !== $alert['type'] ? 'pum-alert__' . esc_attr( $alert['type'] ) : ''; ?>">
 
@@ -637,7 +637,7 @@ class PUM_Utils_Alerts {
 								foreach ( $alert['actions'] as $action ) {
 									$link_text = ! empty( $action['primary'] ) && true === $action['primary'] ? '<strong>' . esc_html( $action['text'] ) . '</strong>' : esc_html( $action['text'] );
 									if ( 'link' === $action['type'] ) {
-										$url        = $action['href'];
+										$url        = $action['href'] ?? '#';
 										$attributes = 'target="_blank" rel="noreferrer noopener"';
 									} else {
 										$url = add_query_arg(

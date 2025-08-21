@@ -88,7 +88,7 @@ class PUM_Utils_Upgrades {
 		// If no current db version, but prior install detected, set db version correctly.
 		// Here for backward compatibility.
 		if ( ! self::$db_version || self::$db_version < Popup_Maker::$DB_VER ) {
-			self::$db_version = Popup_Maker::$DB_VER;
+			self::$db_version = (string) Popup_Maker::$DB_VER;
 			update_option( 'pum_db_ver', self::$db_version );
 		}
 

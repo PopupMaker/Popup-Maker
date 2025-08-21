@@ -146,12 +146,12 @@ class PUM_Utils_Template {
 	public static function render( $template, $args = [] ) {
 
 		if ( ! $template || ! file_exists( $template ) ) {
-			_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $template ) ), '1.0.0' );
+			_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $template ?: 'unknown' ) ), '1.0.0' );
 
 			return;
 		}
 
-		if ( $args && is_array( $args ) ) {
+		if ( $args ) {
 			// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 			extract( $args );
 		}
@@ -196,11 +196,14 @@ class PUM_Utils_Template {
 		/* @deprecated 1.8.0 */
 		do_action( 'get_template_part_' . $slug, $slug, $name );
 
-		self::render( $template, $args );
+		if ( $template ) {
+			self::render( $template, $args );
+		}
 
 		do_action( 'pum_after_template_part', $template, $slug, $name, $args );
 
-		return ob_get_clean();
+		$content = ob_get_clean();
+		return $content !== false ? $content : '';
 	}
 
 	/**
@@ -221,11 +224,14 @@ class PUM_Utils_Template {
 
 		do_action( 'pum_before_template', $template_name, $template, $args );
 
-		self::render( $template, $args );
+		if ( $template ) {
+			self::render( $template, $args );
+		}
 
 		do_action( 'pum_after_template', $template_name, $template, $args );
 
-		return ob_get_clean();
+		$content = ob_get_clean();
+		return $content !== false ? $content : '';
 	}
 
 	/**

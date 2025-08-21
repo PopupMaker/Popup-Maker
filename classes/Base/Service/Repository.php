@@ -70,7 +70,7 @@ abstract class Repository extends Service {
 	 * @return void
 	 */
 	protected function cache_item( $item ) {
-		$this->items_by_id[ $item->ID ?? $item->ID ] = $item;
+		$this->items_by_id[ $item->ID ] = $item;
 	}
 
 	/**
@@ -99,6 +99,10 @@ abstract class Repository extends Service {
 		$items = [];
 
 		foreach ( $query_results->posts as $post ) {
+			if ( ! $post instanceof \WP_Post ) {
+				continue;
+			}
+
 			$item = $this->instantiate_model_from_post( $post );
 
 			if ( ! $item ) {
@@ -121,13 +125,16 @@ abstract class Repository extends Service {
 	 * @return TPost|null Model instance if found, null otherwise.
 	 */
 	public function get_by_id( $item_id = 0 ) {
-		// If item is an ID, get the object.
-		if ( is_numeric( $item_id ) && isset( $this->items_by_id[ $item_id ] ) ) {
+		// Convert to integer for consistent handling.
+		$item_id = (int) $item_id;
+
+		// If item is cached, get the object.
+		if ( isset( $this->items_by_id[ $item_id ] ) ) {
 			return $this->items_by_id[ $item_id ];
 		}
 
-		// Query for a call to action by post ID.
-		if ( is_numeric( $item_id ) ) {
+		// Query for a post by ID.
+		if ( $item_id > 0 ) {
 			$post = get_post( $item_id );
 
 			if ( $post && $post->post_type === $this->post_type ) {
@@ -174,11 +181,14 @@ abstract class Repository extends Service {
 		$query = new \WP_Query( $query_args );
 
 		if ( $query->have_posts() ) {
-			$item = $this->instantiate_model_from_post( $query->posts[0] );
-			if ( $item ) {
-				$this->cache_item( $item );
+			$post = $query->posts[0];
+			if ( $post instanceof \WP_Post ) {
+				$item = $this->instantiate_model_from_post( $post );
+				if ( $item ) {
+					$this->cache_item( $item );
+				}
+				return $item;
 			}
-			return $item;
 		}
 
 		return null;

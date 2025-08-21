@@ -24,8 +24,13 @@ class PUM_Utils_Format {
 	 */
 	public static function time( $time, $format = 'U' ) {
 		if ( ! PUM_Utils_Time::is_timestamp( $time ) ) {
-			$time = strtotime( $time );
+			$time = strtotime( (string) $time );
+			if ( false === $time ) {
+				return false;
+			}
 		}
+
+		$time = (int) $time;
 
 		switch ( $format ) {
 			case 'human':

@@ -26,6 +26,6 @@ class PUM_Utils_Time {
 	 * @return bool True if the value is a valid Unix timestamp, false otherwise
 	 */
 	public static function is_timestamp( $timestamp ) {
-		return ( 1 === preg_match( '~^[1-9][0-9]*$~', $timestamp ) );
+		return ( 1 === preg_match( '~^[1-9][0-9]*$~', (string) $timestamp ) );
 	}
 }

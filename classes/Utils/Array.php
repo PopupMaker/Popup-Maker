@@ -241,7 +241,7 @@ class PUM_Utils_Array {
 
 		foreach ( $arr as $key => $value ) {
 			foreach ( $strings as $string ) {
-				if ( strpos( $key, $string ) === 0 ) {
+				if ( is_string( $string ) && strpos( (string) $key, $string ) === 0 ) {
 					unset( $arr[ $key ] );
 				}
 			}
@@ -268,10 +268,12 @@ class PUM_Utils_Array {
 
 		foreach ( $arr as $key => $value ) {
 			foreach ( $strings as $string ) {
-				$length = strlen( $string );
+				if ( is_string( $string ) ) {
+					$length = strlen( $string );
 
-				if ( substr( $key, - $length ) === $string ) {
-					unset( $arr[ $key ] );
+					if ( substr( $key, - $length ) === $string ) {
+						unset( $arr[ $key ] );
+					}
 				}
 			}
 		}
@@ -298,7 +300,7 @@ class PUM_Utils_Array {
 
 		foreach ( $arr as $key => $value ) {
 			foreach ( $strings as $string ) {
-				if ( strpos( $key, $string ) !== false ) {
+				if ( is_string( $string ) && strpos( (string) $key, $string ) !== false ) {
 					unset( $arr[ $key ] );
 				}
 			}
@@ -567,7 +569,11 @@ class PUM_Utils_Array {
 	 */
 	public static function maybe_json_attr( $value, $encode = false ) {
 		if ( is_object( $value ) || is_array( $value ) ) {
-			return $encode ? htmlspecialchars( wp_json_encode( $value ) ) : wp_json_encode( $value );
+			$json = wp_json_encode( $value );
+			if ( false === $json ) {
+				return false;
+			}
+			return $encode ? htmlspecialchars( $json ) : $json;
 		}
 
 		return $value;

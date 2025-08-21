@@ -202,7 +202,7 @@ class PUM_Utils_Fields {
 	 * @return array<string, mixed> Parsed and sorted fields array
 	 */
 	public static function parse_fields( $fields, $name = '%' ) {
-		if ( is_array( $fields ) && ! empty( $fields ) ) {
+		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $field_id => $field ) {
 				if ( ! is_array( $field ) || ! self::is_field( $field ) ) {
 					continue;
@@ -211,9 +211,13 @@ class PUM_Utils_Fields {
 				// Remap old settings.
 				if ( is_numeric( $field_id ) && ! empty( $field['id'] ) ) {
 					try {
-						$fields = PUM_Utils_Array::replace_key( $fields, $field_id, $field['id'] );
+						$updated_fields = PUM_Utils_Array::replace_key( $fields, $field_id, $field['id'] );
+						if ( is_array( $updated_fields ) ) {
+							$fields = $updated_fields;
+						}
 					} catch ( Exception $e ) {
-						$e;
+						// Exception handled by ignoring - field key replacement failed.
+						unset( $e );
 					}
 
 					$field_id = $field['id'];
@@ -277,11 +281,13 @@ class PUM_Utils_Fields {
 		if ( has_action( "pum_{$type}_field" ) ) {
 			do_action( "pum_{$type}_field", $args );
 		} else {
-			if ( method_exists( 'PUM_Form_Fields', $type . '_callback' ) ) {
+			$callback_method = $type . '_callback';
+			// @phpstan-ignore-next-line class.notFound
+			if ( class_exists( 'PUM_Form_Fields' ) && method_exists( 'PUM_Form_Fields', $callback_method ) ) {
 				/**
 				 * Check if renderer method exists and load that.
 				 */
-				$function_name = [ 'PUM_Form_Fields', $type . '_callback' ];
+				$function_name = [ 'PUM_Form_Fields', $callback_method ];
 			} elseif ( function_exists( "pum_{$type}_callback" ) ) {
 				/**
 				 * Check if function exists and load that.
@@ -297,7 +303,9 @@ class PUM_Utils_Fields {
 			/**
 			 * Call the determined method, passing the field args & $value to the callback.
 			 */
-			call_user_func_array( $function_name, [ $args ] );
+			if ( is_callable( $function_name ) ) {
+				call_user_func_array( $function_name, [ $args ] );
+			}
 		}
 	}
 
@@ -309,12 +317,12 @@ class PUM_Utils_Fields {
 	 */
 	public static function render_form_fields( $form ) {
 
-		$tabs     = $form->get_tabs();
-		$sections = $form->get_sections();
-		$fields   = $form->get_fields();
+		$tabs     = method_exists( $form, 'get_tabs' ) ? $form->get_tabs() : [];
+		$sections = method_exists( $form, 'get_sections' ) ? $form->get_sections() : [];
+		$fields   = method_exists( $form, 'get_fields' ) ? $form->get_fields() : [];
 
-		if ( $form->has_tabs() ) {
-			if ( $form->has_sections() ) {
+		if ( ! empty( $tabs ) ) {
+			if ( ! empty( $sections ) ) {
 				foreach ( $tabs as $tab_id => $tab_label ) {
 					foreach ( $sections as $section_id => $section_label ) {
 						foreach ( $fields[ $tab_id ][ $section_id ] as $field_id => $field_args ) {
@@ -398,7 +406,7 @@ class PUM_Utils_Fields {
 				$function_name = null;
 			}
 
-			if ( $function_name ) {
+			if ( $function_name && is_callable( $function_name ) ) {
 				/**
 				 * Call the determined method, passing the field args & $value to the callback.
 				 */

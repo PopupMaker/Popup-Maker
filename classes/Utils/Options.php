@@ -231,9 +231,8 @@ class PUM_Utils_Options {
 		$options = self::get_all();
 
 		foreach ( $remap_array as $key => $new_key ) {
-			$value = self::get( $key, false );
-			if ( ! empty( $value ) ) {
-				$options[ $new_key ] = $value;
+			if ( isset( $options[ $key ] ) ) {
+				$options[ $new_key ] = $options[ $key ];
 			}
 			unset( $options[ $key ] );
 		}

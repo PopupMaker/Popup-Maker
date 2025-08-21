@@ -51,7 +51,7 @@ class PUM_Utils_Sanitize {
 	 * @return string Sanitized measurement value with unit suffix if available
 	 */
 	public static function measure( $value = '', $args = [], $fields = [], $values = [] ) {
-		if ( isset( $values[ $args['id'] . '_unit' ] ) ) {
+		if ( isset( $args['id'] ) && isset( $values[ $args['id'] . '_unit' ] ) ) {
 			$value .= $values[ $args['id'] . '_unit' ];
 		}
 
