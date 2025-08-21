@@ -11,19 +11,22 @@ namespace PopupMaker\Base;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * HTTP Stream class.
+ * HTTP Server-Sent Events (SSE) Stream class.
+ *
+ * Provides functionality for streaming real-time data to clients via SSE protocol.
+ * Handles header configuration, buffer management, and message formatting.
  */
 class Stream {
 
 	/**
-	 * Stream name.
+	 * Stream name identifier for this SSE connection.
 	 *
-	 * @var string
+	 * @var non-empty-string
 	 */
 	protected $stream_name;
 
 	/**
-	 * Version.
+	 * Stream class version.
 	 *
 	 * @var string
 	 */
@@ -32,7 +35,7 @@ class Stream {
 	/**
 	 * Stream constructor.
 	 *
-	 * @param string $stream_name Stream name.
+	 * @param non-empty-string $stream_name Stream name identifier.
 	 */
 	public function __construct( $stream_name = 'stream' ) {
 		$this->stream_name = $stream_name;
@@ -40,6 +43,9 @@ class Stream {
 
 	/**
 	 * Start SSE stream.
+	 *
+	 * Configures PHP environment and sends initial headers for SSE connection.
+	 * Prevents execution if headers have already been sent.
 	 *
 	 * @return void
 	 */
@@ -67,6 +73,9 @@ class Stream {
 	/**
 	 * Send SSE headers.
 	 *
+	 * Sends required HTTP headers for Server-Sent Events protocol including
+	 * content type, stream name, caching directives, and connection settings.
+	 *
 	 * @return void
 	 */
 	public function send_headers() {
@@ -82,7 +91,8 @@ class Stream {
 	/**
 	 * Flush buffers.
 	 *
-	 * Uses a micro delay to prevent the stream from flushing too quickly.
+	 * Sends padding data to reach minimum buffer size for immediate flushing,
+	 * then flushes output buffers. Uses micro delay to prevent excessive flush rates.
 	 *
 	 * @return void
 	 */
@@ -101,7 +111,10 @@ class Stream {
 	/**
 	 * Send general message/data to the client.
 	 *
-	 * @param mixed $data Data to send.
+	 * Formats and sends data via SSE protocol. Automatically encodes non-string
+	 * data as JSON. Follows SSE specification for data messages.
+	 *
+	 * @param string|int|float|bool|array<string, mixed>|object $data Data to send (string, array, object, scalar).
 	 *
 	 * @return void
 	 */
@@ -118,8 +131,11 @@ class Stream {
 	/**
 	 * Send an event to the client.
 	 *
-	 * @param string $event Event name.
-	 * @param mixed  $data Data to send.
+	 * Sends a named event with optional data via SSE protocol. Follows SSE
+	 * specification for event messages with event type and data fields.
+	 *
+	 * @param non-empty-string                                  $event Event name identifier.
+	 * @param string|int|float|bool|array<string, mixed>|object $data Data to send with the event (string, array, object, scalar).
 	 *
 	 * @return void
 	 */
@@ -138,7 +154,10 @@ class Stream {
 	/**
 	 * Send an error to the client.
 	 *
-	 * @param array{message:string}|string $error Error message.
+	 * Sends error information as a specialized 'error' event.
+	 * Accepts either a simple error message string or structured error data.
+	 *
+	 * @param string|array{message: string, code?: int|string, details?: array<string, mixed>} $error Error message or structured error data.
 	 *
 	 * @return void
 	 */
@@ -149,7 +168,10 @@ class Stream {
 	/**
 	 * Check if the connection should abort.
 	 *
-	 * @return bool
+	 * Determines if the client has disconnected or the connection should be terminated.
+	 * Useful for long-running streams to detect client disconnection.
+	 *
+	 * @return bool True if connection is aborted, false if still active.
 	 */
 	public function should_abort() {
 		return (bool) connection_aborted();

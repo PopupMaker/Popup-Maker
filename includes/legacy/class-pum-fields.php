@@ -103,7 +103,7 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_label( $args );
 		?>
 
-		<input type="<?php echo esc_attr( $args['type'] ); ?>" placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>" class="<?php echo esc_attr( $args['size'] ); ?>-text" id="<?php echo esc_attr( $args['id'] ); ?>" name="<?php echo esc_attr( $args['name'] ); ?>" value="<?php echo esc_attr( stripslashes( $value ) ); ?>" 
+		<input type="<?php echo esc_attr( $args['type'] ); ?>" placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>" class="<?php echo esc_attr( $args['size'] ); ?>-text" id="<?php echo esc_attr( $args['id'] ); ?>" name="<?php echo esc_attr( $args['name'] ); ?>" value="<?php echo esc_attr( stripslashes( $value ) ); ?>"
 								<?php
 								if ( $args['required'] ) {
 									echo 'required'; }
@@ -135,7 +135,7 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_label( $args );
 		?>
 
-		<textarea placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>" class="<?php echo esc_attr( $args['size'] ); ?>-text" id="<?php echo esc_attr( $args['id'] ); ?>" name="<?php echo esc_attr( $args['name'] ); ?>" cols="<?php echo esc_attr( $args['cols'] ); ?>" rows="<?php echo esc_attr( $args['rows'] ); ?>" 
+		<textarea placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>" class="<?php echo esc_attr( $args['size'] ); ?>-text" id="<?php echo esc_attr( $args['id'] ); ?>" name="<?php echo esc_attr( $args['name'] ); ?>" cols="<?php echo esc_attr( $args['cols'] ); ?>" rows="<?php echo esc_attr( $args['rows'] ); ?>"
 											<?php
 											if ( $args['required'] ) {
 												echo 'required'; }
@@ -202,7 +202,8 @@ class PUM_Fields extends Popmake_Fields {
 		$this->field_label( $args );
 		?>
 
-		<select id="<?php echo esc_attr( $args['id'] ); ?>" name="<?php echo esc_attr( $args['name'] ); ?>" data-placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>" data-allow-clear="true" <?php echo esc_attr( $multiple ); ?> <?php
+		<select id="<?php echo esc_attr( $args['id'] ); ?>" name="<?php echo esc_attr( $args['name'] ); ?>" data-placeholder="<?php echo esc_attr( $args['placeholder'] ); ?>" data-allow-clear="true" <?php echo esc_attr( $multiple ); ?>
+		<?php
 		if ( $args['required'] ) {
 			echo 'required'; }
 		?>
@@ -281,7 +282,8 @@ class PUM_Fields extends Popmake_Fields {
 
 				$checked = isset( $values[ $key ] );
 				?>
-				<input name="<?php echo esc_attr( $args['name'] ); ?>[<?php echo esc_attr( $key ); ?>]" id="<?php echo esc_attr( $args['id'] . '_' . $key ); ?>" type="checkbox" value="<?php echo esc_html( $option ); ?>" <?php checked( true, $checked ); ?> <?php
+				<input name="<?php echo esc_attr( $args['name'] ); ?>[<?php echo esc_attr( $key ); ?>]" id="<?php echo esc_attr( $args['id'] . '_' . $key ); ?>" type="checkbox" value="<?php echo esc_html( $option ); ?>" <?php checked( true, $checked ); ?>
+				<?php
 				if ( $option['disabled'] ) {
 					echo 'disabled="disabled"'; }
 				?>
@@ -453,7 +455,7 @@ class PUM_Fields extends Popmake_Fields {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo PUM_Utils_Array::maybe_json_attr( $value, true );
 			?>
-			" 
+			"
 			<?php
 			if ( $args['required'] ) {
 				echo 'required'; }

@@ -19,10 +19,13 @@ class PUM_Utils_Blocks {
 	/**
 	 * Find blocks with matching name in given list of blocks.
 	 *
-	 * @param array  $blocks Array of blocks.
-	 * @param string $search_name Block name to look for.
+	 * Recursively searches through WordPress block structures, including nested blocks
+	 * within core/columns and core/column containers.
 	 *
-	 * @return array
+	 * @param array<string, mixed>[] $blocks Array of WordPress block structures.
+	 * @param string                 $search_name Block name to look for (supports wildcards like 'pum/*').
+	 *
+	 * @return array<string, mixed>[] Array of matching WordPress blocks.
 	 */
 	public static function find_blocks( $blocks, $search_name = 'pum/*' ) {
 		$found_blocks = [];

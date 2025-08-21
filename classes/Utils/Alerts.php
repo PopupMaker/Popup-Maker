@@ -16,7 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Alerts {
 
 	/**
+	 * Initialize the alerts system by setting up hooks and filters.
 	 *
+	 * @return void
 	 */
 	public static function init() {
 		add_action( 'admin_init', [ __CLASS__, 'hooks' ] );
@@ -39,6 +41,8 @@ class PUM_Utils_Alerts {
 
 	/**
 	 * Append alert count to Popup Maker menu item.
+	 *
+	 * @return void
 	 */
 	public static function append_alert_count() {
 		global $menu;
@@ -52,9 +56,41 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
-	 * @param array $alerts
+	 * Add translation request alert based on user's browser language preferences.
 	 *
-	 * @return array
+	 * @param array<int, array{
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 *     html?: string,
+	 *     priority?: int,
+	 *     dismissible?: bool|string|int,
+	 *     global?: bool,
+	 *     actions?: array<int, array{
+	 *         text: string,
+	 *         type: string,
+	 *         action: string,
+	 *         href?: string,
+	 *         primary?: bool
+	 *     }>
+	 * }> $alerts
+	 *
+	 * @return array<int, array{
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 *     html?: string,
+	 *     priority?: int,
+	 *     dismissible?: bool|string|int,
+	 *     global?: bool,
+	 *     actions?: array<int, array{
+	 *         text: string,
+	 *         type: string,
+	 *         action: string,
+	 *         href?: string,
+	 *         primary?: bool
+	 *     }>
+	 * }>
 	 */
 	public static function translation_request( $alerts = [] ) {
 
@@ -223,9 +259,41 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
-	 * @param array $alerts
+	 * Add "What's New" alerts for major version updates.
 	 *
-	 * @return array
+	 * @param array<int, array{
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 *     html?: string,
+	 *     priority?: int,
+	 *     dismissible?: bool|string|int,
+	 *     global?: bool,
+	 *     actions?: array<int, array{
+	 *         text: string,
+	 *         type: string,
+	 *         action: string,
+	 *         href?: string,
+	 *         primary?: bool
+	 *     }>
+	 * }> $alerts
+	 *
+	 * @return array<int, array{
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 *     html?: string,
+	 *     priority?: int,
+	 *     dismissible?: bool|string|int,
+	 *     global?: bool,
+	 *     actions?: array<int, array{
+	 *         text: string,
+	 *         type: string,
+	 *         action: string,
+	 *         href?: string,
+	 *         primary?: bool
+	 *     }>
+	 * }>
 	 */
 	public static function whats_new_alerts( $alerts = [] ) {
 
@@ -263,9 +331,41 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
-	 * @param array $alerts
+	 * Add alerts for available plugin integrations based on detected plugins.
 	 *
-	 * @return array
+	 * @param array<int, array{
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 *     html?: string,
+	 *     priority?: int,
+	 *     dismissible?: bool|string|int,
+	 *     global?: bool,
+	 *     actions?: array<int, array{
+	 *         text: string,
+	 *         type: string,
+	 *         action: string,
+	 *         href?: string,
+	 *         primary?: bool
+	 *     }>
+	 * }> $alerts
+	 *
+	 * @return array<int, array{
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 *     html?: string,
+	 *     priority?: int,
+	 *     dismissible?: bool|string|int,
+	 *     global?: bool,
+	 *     actions?: array<int, array{
+	 *         text: string,
+	 *         type: string,
+	 *         action: string,
+	 *         href?: string,
+	 *         primary?: bool
+	 *     }>
+	 * }>
 	 */
 	public static function integration_alerts( $alerts = [] ) {
 
@@ -316,7 +416,9 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
-	 * Hook into relevant WP actions.
+	 * Hook into relevant WP actions for displaying admin notices.
+	 *
+	 * @return void
 	 */
 	public static function hooks() {
 		if ( is_admin() && current_user_can( 'edit_posts' ) ) {
@@ -343,8 +445,8 @@ class PUM_Utils_Alerts {
 	/**
 	 * Allow additional style properties for notice alerts.
 	 *
-	 * @param array $styles Array of allowed style properties.
-	 * @return array
+	 * @param string[] $styles Array of allowed style properties.
+	 * @return string[]
 	 */
 	public static function allow_inline_styles( $styles ) {
 		$styles[] = 'display';
@@ -359,9 +461,9 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
-	 * Return array of allowed html tags.
+	 * Return array of allowed html tags for wp_kses.
 	 *
-	 * @return array
+	 * @return array<string, array<string, bool>>
 	 */
 	public static function allowed_tags() {
 		return array_merge_recursive(
@@ -460,6 +562,8 @@ class PUM_Utils_Alerts {
 
 	/**
 	 * Render admin alerts if available.
+	 *
+	 * @return void
 	 */
 	public static function admin_notices() {
 		if ( ! self::should_show_alerts() ) {
@@ -581,7 +685,24 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
-	 * @return array
+	 * Get only alerts marked as global.
+	 *
+	 * @return array<int, array{
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 *     html: string,
+	 *     priority: int,
+	 *     dismissible: bool|string|int,
+	 *     global: bool,
+	 *     actions?: array<int, array{
+	 *         text: string,
+	 *         type: string,
+	 *         action: string,
+	 *         href?: string,
+	 *         primary?: bool
+	 *     }>
+	 * }>
 	 */
 	public static function get_global_alerts() {
 		$alerts = self::get_alerts();
@@ -598,7 +719,24 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
-	 * @return array
+	 * Get all alerts with defaults applied and filtered by dismissal status.
+	 *
+	 * @return array<int, array{
+	 *     code: string,
+	 *     message: string,
+	 *     type: string,
+	 *     html: string,
+	 *     priority: int,
+	 *     dismissible: bool|string|int,
+	 *     global: bool,
+	 *     actions?: array<int, array{
+	 *         text: string,
+	 *         type: string,
+	 *         action: string,
+	 *         href?: string,
+	 *         primary?: bool
+	 *     }>
+	 * }>
 	 */
 	public static function get_alerts() {
 
@@ -639,7 +777,9 @@ class PUM_Utils_Alerts {
 
 
 	/**
-	 * Handles if alert was dismissed AJAX
+	 * Handles alert dismissal via AJAX.
+	 *
+	 * @return void
 	 */
 	public static function ajax_handler() {
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'pum_alerts_action' ) ) {
@@ -664,9 +804,10 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
-	 * Handles if alert was dismissed by page reload instead of AJAX
+	 * Handles alert dismissal by page reload instead of AJAX.
 	 *
 	 * @since 1.11.0
+	 * @return void
 	 */
 	public static function php_handler() {
 		if ( ! isset( $_REQUEST['pum_dismiss_alert'] ) ) {
@@ -742,7 +883,7 @@ class PUM_Utils_Alerts {
 	/**
 	 * Returns an array of dismissed alert groups.
 	 *
-	 * @return array
+	 * @return array<string, bool|int>
 	 */
 	public static function dismissed_alerts() {
 		$user_id = get_current_user_id();

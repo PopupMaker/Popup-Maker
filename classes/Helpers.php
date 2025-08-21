@@ -36,7 +36,7 @@ class PUM_Helpers {
 	 *
 	 * @param string $content Content potentially containing shortcodes.
 	 *
-	 * @return array
+	 * @return array<int,array<string,mixed>>
 	 */
 	public static function get_shortcodes_from_content( $content ) {
 		return PUM_Utils_Shortcodes::get_shortcodes_from_content( $content );
@@ -47,7 +47,7 @@ class PUM_Helpers {
 	 *
 	 * Accounts for various adblock bypass options.
 	 *
-	 * @return bool|string
+	 * @return string|false
 	 */
 	public static function get_cache_dir_url() {
 		$upload_dir = \PopupMaker\get_upload_dir_url();
@@ -94,7 +94,7 @@ class PUM_Helpers {
 	 * @since 1.10.0
 	 * @deprecated X.X.X Use \PopupMaker\get_upload_dir instead.
 	 *
-	 * @return bool|array An associated array with baseurl and basedir or false on failure
+	 * @return array An associated array with baseurl and basedir or false on failure
 	 */
 	public static function get_upload_dir() {
 		return \PopupMaker\get_upload_dir();
@@ -102,6 +102,9 @@ class PUM_Helpers {
 
 	/**
 	 * @deprecated 1.10.0 Use \PopupMaker\get_upload_dir_url instead.
+	 *
+	 * @param string $path A path to append to end of upload directory URL.
+	 * @return string|false The uploads directory URL or false on failure
 	 */
 	public static function upload_dir_url( $path = '' ) {
 		return \PopupMaker\get_upload_dir_url( $path );
@@ -110,8 +113,8 @@ class PUM_Helpers {
 	/**
 	 * Sort array by priority value
 	 *
-	 * @param $a
-	 * @param $b
+	 * @param array{priority?: int} $a
+	 * @param array{priority?: int} $b
 	 *
 	 * @return int
 	 * @see        PUM_Utils_Array::sort_by_priority instead.
@@ -126,11 +129,11 @@ class PUM_Helpers {
 	/**
 	 * Sort nested arrays with various options.
 	 *
-	 * @param array  $arr
-	 * @param string $type
-	 * @param bool   $reverse
+	 * @param array<string,mixed> $arr
+	 * @param string              $type
+	 * @param bool                $reverse
 	 *
-	 * @return array
+	 * @return array<string,mixed>
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::sort instead.
 	 */
@@ -138,6 +141,14 @@ class PUM_Helpers {
 		return PUM_Utils_Array::sort( $arr, $type, $reverse );
 	}
 
+	/**
+	 * Query posts for selectlist options.
+	 *
+	 * @param string|string[]     $post_type Post type(s) to query.
+	 * @param array<string,mixed> $args Query arguments.
+	 * @param bool                $include_total Whether to include total count in results.
+	 * @return ($include_total is true ? array{items: array<int,string>, total_count: int} : array<int,string>)
+	 */
 	public static function post_type_selectlist_query( $post_type, $args = [], $include_total = false ) {
 		// Normalize post_type input - handles string, comma-separated string, or array
 		$post_types = wp_parse_list( $post_type );
@@ -191,6 +202,14 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
+	/**
+	 * Query taxonomy terms for selectlist options.
+	 *
+	 * @param string[]|string     $taxonomies Taxonomy name(s) to query.
+	 * @param array<string,mixed> $args Query arguments.
+	 * @param bool                $include_total Whether to include total count in results.
+	 * @return ($include_total is true ? array{items: array<int,string>, total_count: int} : array<int,string>)
+	 */
 	public static function taxonomy_selectlist_query( $taxonomies = [], $args = [], $include_total = false ) {
 		if ( empty( $taxonomies ) ) {
 			$taxonomies = [ 'category' ];
@@ -251,10 +270,12 @@ class PUM_Helpers {
 
 
 	/**
-	 * @param array $args
-	 * @param bool  $include_total
+	 * Query users for selectlist options.
 	 *
-	 * @return array|mixed
+	 * @param array<string,mixed> $args Query arguments.
+	 * @param bool                $include_total Whether to include total count in results.
+	 *
+	 * @return ($include_total is true ? array{items: array<int,string>, total_count: int} : array<int,string>)
 	 */
 	public static function user_selectlist_query( $args = [], $include_total = false ) {
 
@@ -293,6 +314,11 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
+	/**
+	 * Get popup themes for selectlist options.
+	 *
+	 * @return array<int,string> Theme ID => title mapping
+	 */
 	public static function popup_theme_selectlist() {
 
 		$themes = [];
@@ -304,6 +330,12 @@ class PUM_Helpers {
 		return $themes;
 	}
 
+	/**
+	 * Get popups for selectlist options.
+	 *
+	 * @param array<string,mixed> $args Query arguments.
+	 * @return array<string,string> Popup ID => title mapping
+	 */
 	public static function popup_selectlist( $args = [] ) {
 		$popup_list = [];
 

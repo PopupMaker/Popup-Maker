@@ -11,7 +11,9 @@ namespace PopupMaker\Base;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Localized service class.
+ * Base service class for dependency injection.
+ *
+ * Provides container access for all services implementing the service interface.
  *
  * @template TContainer of \PopupMaker\Plugin\Core
  */

@@ -18,9 +18,18 @@ class PUM_Utils_I10n {
 	/**
 	 * Fetches translation status data from WordPress.org API.
 	 *
-	 * Stores it for 1 week.
+	 * Stores it for 1 week. Returns empty array on API failures.
 	 *
-	 * @return array
+	 * @return array<string, array{
+	 *     language: string,
+	 *     native_name: string,
+	 *     english_name: string,
+	 *     iso: string[],
+	 *     version: string,
+	 *     updated: string,
+	 *     package: string,
+	 *     autoupdate: bool
+	 * }>|array{} Translation data keyed by language code or empty array on error
 	 */
 	public static function translation_status() {
 		$translations = get_transient( 'pum_alerts_translation_status' );
@@ -48,7 +57,7 @@ class PUM_Utils_I10n {
 	/**
 	 * Get locales matching the HTTP accept language header.
 	 *
-	 * @return array List of locales.
+	 * @return string[] List of locales, empty array if none found
 	 */
 	public static function get_non_en_accepted_wp_locales_from_header() {
 		$res = [];
@@ -95,7 +104,15 @@ class PUM_Utils_I10n {
 	}
 
 	/**
-	 * @return array
+	 * Get available WordPress translations.
+	 *
+	 * @return array<string, array{
+	 *     language: string,
+	 *     native_name: string,
+	 *     english_name: string,
+	 *     iso: string[],
+	 *     strings?: array<string, string>
+	 * }> Available translations keyed by locale
 	 */
 	public static function available_locales() {
 		static $available_locales;
@@ -152,10 +169,9 @@ class PUM_Utils_I10n {
 	}
 
 	/**
-	 * Given a HTTP Accept-Language header $header
-	 * returns all the locales in it.
+	 * Given a HTTP Accept-Language header returns all the locales in it.
 	 *
-	 * @return array Matched locales.
+	 * @return string[] Matched locales.
 	 */
 	public static function get_http_locales() {
 		$locale_part_re = '[a-z]{2,}';

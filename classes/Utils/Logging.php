@@ -38,14 +38,14 @@ class PUM_Utils_Logging {
 	/**
 	 * File system API.
 	 *
-	 * @var WP_Filesystem_Base|false
+	 * @var WP_Filesystem_Base|null
 	 */
 	private $fs;
 
 	/**
 	 * Log file content.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	private $content;
 
@@ -220,7 +220,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Retrieves the url to the file
 	 *
-	 * @returns string
+	 * @return string
 	 * @since 1.12.0
 	 */
 	public function get_file_url() {
@@ -230,7 +230,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Retrieve the log data
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_log() {
 		return $this->get_log_content();
@@ -240,6 +240,7 @@ class PUM_Utils_Logging {
 	 * Log message to file
 	 *
 	 * @param string $message The message to log.
+	 * @return void
 	 */
 	public function log( $message = '' ) {
 		$this->write_to_log( wp_date( 'Y-n-d H:i:s' ) . ' - ' . $message );
@@ -249,6 +250,7 @@ class PUM_Utils_Logging {
 	 * Log unique message to file.
 	 *
 	 * @param string $message The unique message to log.
+	 * @return void
 	 */
 	public function log_unique( $message = '' ) {
 		$contents = $this->get_log_content();
@@ -263,7 +265,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Get the log file contents.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function get_log_content() {
 		if ( ! isset( $this->content ) ) {
@@ -276,8 +278,8 @@ class PUM_Utils_Logging {
 	/**
 	 * Set the log file contents in memory.
 	 *
-	 * @param mixed $content The content to set.
-	 * @param bool  $save    Whether to save the content to the file immediately.
+	 * @param string $content The content to set.
+	 * @param bool   $save    Whether to save the content to the file immediately.
 	 * @return void
 	 */
 	private function set_log_content( $content, $save = false ) {
@@ -291,9 +293,8 @@ class PUM_Utils_Logging {
 	/**
 	 * Retrieve the contents of a file.
 	 *
-	 * @param string|boolean $file File to get contents of.
-	 *
-	 * @return string
+	 * @param string|false $file File path to get contents of, or false to use default log file.
+	 * @return string File contents or empty string on failure.
 	 */
 	protected function get_file( $file = false ) {
 		$file = $file ? $file : $this->file;
@@ -315,6 +316,7 @@ class PUM_Utils_Logging {
 	 * Write the log message
 	 *
 	 * @param string $message The message to write.
+	 * @return void
 	 */
 	protected function write_to_log( $message = '' ) {
 		if ( ! $this->enabled() ) {
@@ -333,6 +335,8 @@ class PUM_Utils_Logging {
 
 	/**
 	 * Save the current contents to file.
+	 *
+	 * @return void
 	 */
 	public function save_logs() {
 		if ( ! $this->enabled() ) {
@@ -356,6 +360,8 @@ class PUM_Utils_Logging {
 
 	/**
 	 * Truncates a log file to maximum of 250 lines.
+	 *
+	 * @return void
 	 */
 	public function truncate_log() {
 		$content           = $this->get_log_content();
@@ -376,6 +382,8 @@ class PUM_Utils_Logging {
 
 	/**
 	 * Delete the log file.
+	 *
+	 * @return void
 	 */
 	public function clear_log() {
 		// Delete the file.
@@ -392,9 +400,10 @@ class PUM_Utils_Logging {
 	/**
 	 * Log a deprecated notice.
 	 *
-	 * @param string $func_name Function name.
-	 * @param string $version Versoin deprecated.
-	 * @param string $replacement Replacement function (optional).
+	 * @param non-empty-string $func_name   Function name.
+	 * @param non-empty-string $version     Version deprecated.
+	 * @param string|null      $replacement Replacement function (optional).
+	 * @return void
 	 */
 	public function log_deprecated_notice( $func_name, $version, $replacement = null ) {
 		if ( ! is_null( $replacement ) ) {

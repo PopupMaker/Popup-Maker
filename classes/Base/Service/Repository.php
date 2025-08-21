@@ -15,7 +15,7 @@ use PopupMaker\Base\Model\Post;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Repository service.
+ * Repository service for managing Post-based entities.
  *
  * @since X.X.X
  * @template TPost of Post
@@ -24,23 +24,23 @@ defined( 'ABSPATH' ) || exit;
 abstract class Repository extends Service {
 
 	/**
-	 * Post type key.
+	 * Post type key for registration.
 	 *
-	 * @var string
+	 * @var non-empty-string
 	 */
 	protected $post_type_key;
 
 	/**
-	 * Post type.
+	 * Registered WordPress post type name.
 	 *
-	 * @var string
+	 * @var non-empty-string
 	 */
 	protected $post_type;
 
 	/**
-	 * Array of all items by ID.
+	 * Cache of instantiated items indexed by post ID.
 	 *
-	 * @var array<int,TPost>
+	 * @var array<int, TPost>
 	 */
 	protected $items_by_id = [];
 
@@ -64,10 +64,9 @@ abstract class Repository extends Service {
 	abstract public function instantiate_model_from_post( $post );
 
 	/**
-	 * Cache an item.
+	 * Cache an item in internal storage.
 	 *
-	 * @param TPost $item Item to cache.
-	 *
+	 * @param TPost $item Item to cache by ID for fast retrieval.
 	 * @return void
 	 */
 	protected function cache_item( $item ) {
@@ -77,7 +76,16 @@ abstract class Repository extends Service {
 	/**
 	 * Get a list of all queried items.
 	 *
-	 * @return TPost[]
+	 * @param array<string, mixed> $args {
+	 *     Optional. WP_Query arguments for filtering posts.
+	 *
+	 *     @type string|string[] $post_type      Post type to query.
+	 *     @type int             $posts_per_page Number of posts to retrieve.
+	 *     @type string|string[] $post_status    Post status to query.
+	 *     @type string          $meta_key       Meta key to query.
+	 *     @type mixed           $meta_value     Meta value to query.
+	 * }
+	 * @return TPost[] Array of instantiated model objects matching the query.
 	 */
 	public function query( $args = [] ) {
 		$query_args = wp_parse_args( $args, [
@@ -87,6 +95,7 @@ abstract class Repository extends Service {
 
 		$query_results = new \WP_Query( $query_args );
 
+		/** @var TPost[] $items */
 		$items = [];
 
 		foreach ( $query_results->posts as $post ) {
@@ -108,9 +117,8 @@ abstract class Repository extends Service {
 	/**
 	 * Get item by ID.
 	 *
-	 * @param int $item_id Item ID.
-	 *
-	 * @return TPost|null
+	 * @param int|numeric-string $item_id Item ID to retrieve.
+	 * @return TPost|null Model instance if found, null otherwise.
 	 */
 	public function get_by_id( $item_id = 0 ) {
 		// If item is an ID, get the object.
@@ -139,11 +147,10 @@ abstract class Repository extends Service {
 	/**
 	 * Get item by custom field or column.
 	 *
-	 * @param string $field Field name (post column or meta key).
-	 * @param mixed  $value Field value.
-	 * @param string $type  'column' or 'meta'.
-	 *
-	 * @return TPost|null
+	 * @param non-empty-string $field Field name (post column like 'post_name' or meta key).
+	 * @param string|int|float $value Field value to search for.
+	 * @param 'column'|'meta'  $type Search type: 'column' for post table columns or 'meta' for post meta fields.
+	 * @return TPost|null Model instance if found, null otherwise.
 	 */
 	public function get_by_field( $field, $value, $type = 'column' ) {
 		if ( empty( $field ) || ( empty( $value ) && 0 !== $value && '0' !== $value ) ) {

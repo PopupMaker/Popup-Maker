@@ -43,7 +43,7 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	/**
 	 * Function that returns array of fields by group.
 	 *
-	 * @return array
+	 * @return array<string, array<string, mixed>[]> Array of field groups where each group contains field configurations
 	 */
 	abstract public function fields(): array;
 
@@ -66,7 +66,7 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	 * Handle the CTA action.
 	 *
 	 * @param \PopupMaker\Models\CallToAction $call_to_action Call to action object.
-	 * @param array                           $extra_args     Optional. Additional data passed to the handler (will include popup_id).
+	 * @param array<string, mixed>            $extra_args Optional. Additional data passed to the handler (will include popup_id).
 	 *
 	 * @return void
 	 */
@@ -75,7 +75,7 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	/**
 	 * Validate CTA settings array before saving.
 	 *
-	 * @param array $settings The raw settings array to validate.
+	 * @param array<string, mixed> $settings The raw settings array to validate.
 	 *
 	 * @return true|\WP_Error|\WP_Error[] True if valid, WP_Error if validation fails.
 	 */
@@ -84,12 +84,13 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	/**
 	 * Validate required fields.
 	 *
-	 * @param array $settings The raw settings array to validate.
+	 * @param array<string, mixed> $settings The raw settings array to validate.
 	 *
 	 * @return true|\WP_Error|\WP_Error[] True if valid, WP_Error if validation fails.
 	 */
 	public function validate_required_fields( array $settings ): \WP_Error|array|bool {
 		// Default implementation: validate required fields.
+		/** @var string[] $errors */
 		$errors = [];
 		$fields = $this->fields();
 
@@ -148,7 +149,12 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 	 *
 	 * Used to pass configs to JavaScript.
 	 *
-	 * @return array
+	 * @return array{
+	 *     key: string,
+	 *     label: string,
+	 *     login_required: bool,
+	 *     fields: array<string, array<string, mixed>[]>
+	 * }
 	 */
 	public function as_array(): array {
 		return [
@@ -176,6 +182,7 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 			\PopupMaker\safe_redirect( $fallback_url );
 		} else {
 			// Default fallback.
+			/** @var string[] $cta_args */
 			$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ 'cta', 'pid' ] );
 			$url      = remove_query_arg( $cta_args );
 			\PopupMaker\safe_redirect( $url );
