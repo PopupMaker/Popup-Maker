@@ -2,7 +2,7 @@
 /**
  * PHP Stan bootstrap file.
  *
- * @package ContentControl
+ * @package PopupMaker
  */
 
 if ( ! defined( 'WP_CLI' ) ) {

@@ -66,8 +66,7 @@ class Upgrader extends Service {
 			add_query_arg(
 				[
 					'post_type' => 'popup',
-					// TODO This should be set to the Pro upgrade page?
-					'page'      => 'pum-settings',
+					'page'      => 'pum-settings#go-pro',
 				],
 				admin_url( 'edit.php' )
 			)
