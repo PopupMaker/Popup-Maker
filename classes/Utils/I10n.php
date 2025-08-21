@@ -37,17 +37,51 @@ class PUM_Utils_I10n {
 		if ( ! $translations ) {
 			$response = wp_remote_get( 'https://api.wordpress.org/translations/plugins/1.0/?slug=popup-maker&version=' . Popup_Maker::$VER );
 
-			$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+			// Check for WP_Error from wp_remote_get().
+			if ( is_wp_error( $response ) ) {
+				return [];
+			}
+
+			// Validate HTTP response code.
+			$response_code = wp_remote_retrieve_response_code( $response );
+			if ( 200 !== $response_code ) {
+				return [];
+			}
+
+			// Get response body safely.
+			$response_body_raw = wp_remote_retrieve_body( $response );
+			if ( empty( $response_body_raw ) ) {
+				return [];
+			}
+
+			// Safely decode JSON.
+			$response_body = json_decode( $response_body_raw, true );
+			if ( null === $response_body || ! is_array( $response_body ) ) {
+				return [];
+			}
+
+			// Ensure translations key exists and is array.
+			if ( ! isset( $response_body['translations'] ) || ! is_array( $response_body['translations'] ) ) {
+				return [];
+			}
 
 			$translations = $response_body['translations'];
 
 			set_transient( 'pum_alerts_translation_status', $translations, 604800 );
 		}
 
+		// Ensure $translations is array before processing.
+		if ( ! is_array( $translations ) ) {
+			return [];
+		}
+
 		$ret = [];
 
 		foreach ( $translations as $translation ) {
-			$ret[ $translation['language'] ] = $translation;
+			// Validate translation structure before accessing.
+			if ( is_array( $translation ) && isset( $translation['language'] ) && is_string( $translation['language'] ) ) {
+				$ret[ $translation['language'] ] = $translation;
+			}
 		}
 
 		return $ret;
@@ -68,37 +102,36 @@ class PUM_Utils_I10n {
 			return $res;
 		}
 
-		if ( is_array( $http_locales ) ) {
-			foreach ( $http_locales as $http_locale ) {
-				$http_locale = explode( '-', $http_locale );
+		// Process locales if available.
+		foreach ( $http_locales as $http_locale ) {
+			$http_locale = explode( '-', $http_locale );
 
-				$lang   = $http_locale[0];
-				$region = ! empty( $http_locale[1] ) ? $http_locale[1] : null;
+			$lang   = $http_locale[0];
+			$region = ! empty( $http_locale[1] ) ? $http_locale[1] : null;
 
-				if ( is_null( $region ) ) {
-					$region = $lang;
-				}
-
-				/*
-				 * Discard English -- it's the default for all browsers,
-				 * ergo not very reliable information
-				 */
-				if ( 'en' === $lang ) {
-					continue;
-				}
-
-				// Region should be uppercase.
-				$region = strtoupper( $region );
-
-				$mapped = self::map_locale( $lang, $region );
-
-				if ( $mapped ) {
-					$res[] = $mapped;
-				}
+			if ( is_null( $region ) ) {
+				$region = $lang;
 			}
 
-			$res = array_unique( $res );
+			/*
+			 * Discard English -- it's the default for all browsers,
+			 * ergo not very reliable information
+			 */
+			if ( 'en' === $lang ) {
+				continue;
+			}
+
+			// Region should be uppercase.
+			$region = strtoupper( $region );
+
+			$mapped = self::map_locale( $lang, $region );
+
+			if ( $mapped ) {
+				$res[] = $mapped;
+			}
 		}
+
+		$res = array_unique( $res );
 
 		return $res;
 	}
@@ -119,7 +152,10 @@ class PUM_Utils_I10n {
 
 		if ( ! isset( $available_locales ) ) {
 			if ( ! function_exists( 'wp_get_available_translations' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+				$translation_install_path = ABSPATH . 'wp-admin/includes/translation-install.php';
+				if ( file_exists( $translation_install_path ) ) {
+					require_once $translation_install_path;
+				}
 			}
 
 			$available_locales = wp_get_available_translations();
@@ -159,9 +195,12 @@ class PUM_Utils_I10n {
 		}
 
 		foreach ( $available_locales as $locale ) {
-			list( $locale_lang, ) = preg_split( '/[_-]/', $locale );
-			if ( $lang === $locale_lang ) {
-				return $locale;
+			$locale_parts = preg_split( '/[_-]/', $locale );
+			if ( false !== $locale_parts && ! empty( $locale_parts ) ) {
+				$locale_lang = $locale_parts[0];
+				if ( $lang === $locale_lang ) {
+					return $locale;
+				}
 			}
 		}
 

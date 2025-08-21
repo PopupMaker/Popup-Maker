@@ -119,7 +119,7 @@ abstract class Upgrade implements \PopupMaker\Interfaces\Upgrade {
 
 		$return = $this->run();
 
-		unset( $this->stream );
+		$this->stream = null;
 
 		if ( is_bool( $return ) || is_wp_error( $return ) ) {
 			return $return;

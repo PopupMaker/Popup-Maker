@@ -56,10 +56,10 @@ class PUM_Helpers {
 		}
 
 		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
-			return trailingslashit( $upload_dir ) . 'pum';
+			return trailingslashit( (string) $upload_dir ) . 'pum';
 		}
 
-		return $upload_dir;
+		return (string) $upload_dir;
 	}
 
 	/**
@@ -94,10 +94,11 @@ class PUM_Helpers {
 	 * @since 1.10.0
 	 * @deprecated X.X.X Use \PopupMaker\get_upload_dir instead.
 	 *
-	 * @return array An associated array with baseurl and basedir or false on failure
+	 * @return array{basedir: string, baseurl: string}|false An associated array with upload directory data or false on failure
 	 */
 	public static function get_upload_dir() {
-		return \PopupMaker\get_upload_dir();
+		$result = \PopupMaker\get_upload_dir();
+		return is_array( $result ) ? $result : false;
 	}
 
 	/**
@@ -107,7 +108,8 @@ class PUM_Helpers {
 	 * @return string|false The uploads directory URL or false on failure
 	 */
 	public static function upload_dir_url( $path = '' ) {
-		return \PopupMaker\get_upload_dir_url( $path );
+		$result = \PopupMaker\get_upload_dir_url( $path );
+		return false === $result ? false : (string) $result;
 	}
 
 	/**
@@ -179,14 +181,16 @@ class PUM_Helpers {
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( wp_json_encode( $args ) );
+		$key = md5( wp_json_encode( $args ) ?: '' );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$query = new WP_Query( $args );
 
 			$posts = [];
 			foreach ( $query->posts as $post ) {
-				$posts[ $post->ID ] = $post->post_title;
+				if ( $post instanceof WP_Post ) {
+					$posts[ $post->ID ] = $post->post_title;
+				}
 			}
 
 			$results = [
@@ -218,42 +222,62 @@ class PUM_Helpers {
 		// Normalize taxonomy input - handles string, comma-separated string, or array
 		$taxonomies = wp_parse_list( $taxonomies );
 
-		$args = wp_parse_args(
-			$args,
-			[
-				'hide_empty' => false,
-				'number'     => 10,
-				'search'     => '',
-				'include'    => null,
-				'exclude'    => null,
-				'offset'     => 0,
-				'page'       => null,
-			]
-		);
+		// Ensure all taxonomy names are strings
+		$taxonomies = array_map( 'strval', $taxonomies );
 
-		$args['taxonomy'] = $taxonomies;
+		$defaults = [
+			'hide_empty' => false,
+			'number'     => 10,
+			'search'     => '',
+			'include'    => null,
+			'exclude'    => null,
+			'offset'     => 0,
+			'page'       => null,
+			'taxonomy'   => $taxonomies,
+		];
+
+		$args = wp_parse_args( $args, $defaults );
 
 		if ( $args['page'] ) {
 			$args['offset'] = ( $args['page'] - 1 ) * $args['number'];
 		}
 
+		// Remove page parameter as it's not a valid get_terms argument
+		unset( $args['page'] );
+
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( wp_json_encode( $args ) );
+		$key = md5( wp_json_encode( $args ) ?: '' );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$terms = [];
 
-			foreach ( get_terms( $args ) as $term ) {
-				$terms[ $term->term_id ] = $term->name;
+			$term_results = get_terms( $args );
+			if ( ! is_wp_error( $term_results ) && is_array( $term_results ) ) {
+				foreach ( $term_results as $term ) {
+					if ( $term instanceof WP_Term ) {
+						$terms[ $term->term_id ] = $term->name;
+					}
+				}
 			}
 
-			$total_args = $args;
-			unset( $total_args['number'] );
-			unset( $total_args['offset'] );
+			$total_args = [
+				'taxonomy'   => $taxonomies,
+				'hide_empty' => (bool) ( $args['hide_empty'] ?? false ),
+			];
 
-			$total_args['taxonomy'] = $taxonomies;
+			if ( ! empty( $args['search'] ) ) {
+				$total_args['search'] = (string) $args['search'];
+			}
+
+			if ( ! empty( $args['include'] ) ) {
+				$total_args['include'] = $args['include'];
+			}
+
+			if ( ! empty( $args['exclude'] ) ) {
+				$total_args['exclude'] = $args['exclude'];
+			}
 
 			$results = [
 				'items'       => $terms,
@@ -290,7 +314,7 @@ class PUM_Helpers {
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( wp_json_encode( $args ) );
+		$key = md5( wp_json_encode( $args ) ?: '' );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$query = new WP_User_Query( $args );

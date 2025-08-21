@@ -114,14 +114,15 @@ class PUM_Utils_Logging {
 	 * @return void
 	 */
 	public function init_fs() {
-		$this->fs = $this->file_system();
+		$fs       = $this->file_system();
+		$this->fs = false !== $fs ? $fs : null;
 
 		// If the file system is not set, we can't check if it's writable.
-		if ( ! $this->fs ) {
+		if ( null === $this->fs ) {
 			return;
 		}
 
-		$this->is_writable = false !== $this->fs && 'direct' === $this->fs->method;
+		$this->is_writable = 'direct' === $this->fs->method;
 
 		if ( ! $this->is_writable ) {
 			return;
@@ -129,14 +130,12 @@ class PUM_Utils_Logging {
 
 		$upload_dir = PUM_Helpers::get_upload_dir();
 
-		if ( ! $upload_dir ) {
+		if ( false === $upload_dir ) {
 			$this->is_writable = false;
+			return;
 		}
 
-		if (
-			! method_exists( $this->fs, 'is_writable' ) ||
-			! $this->fs->is_writable( $upload_dir['basedir'] )
-		) {
+		if ( ! $this->fs->is_writable( $upload_dir['basedir'] ) ) {
 			$this->is_writable = false;
 		}
 	}
@@ -175,15 +174,19 @@ class PUM_Utils_Logging {
 	 * @return void
 	 */
 	public function init() {
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || null === $this->fs ) {
 			return;
 		}
 
 		$upload_dir = \PopupMaker\get_upload_dir();
 
+		if ( false === $upload_dir ) {
+			return;
+		}
+
 		$file_token = get_option( 'pum_debug_log_token' );
 		if ( false === $file_token ) {
-			$file_token = uniqid( wp_rand(), true );
+			$file_token = uniqid( (string) wp_rand(), true );
 			update_option( 'pum_debug_log_token', $file_token );
 		}
 
@@ -224,7 +227,8 @@ class PUM_Utils_Logging {
 	 * @since 1.12.0
 	 */
 	public function get_file_url() {
-		return \PopupMaker\get_upload_dir_url( $this->filename );
+		$url = \PopupMaker\get_upload_dir_url( $this->filename );
+		return is_string( $url ) ? $url : '';
 	}
 
 	/**
@@ -299,14 +303,15 @@ class PUM_Utils_Logging {
 	protected function get_file( $file = false ) {
 		$file = $file ? $file : $this->file;
 
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || null === $this->fs ) {
 			return '';
 		}
 
 		$content = '';
 
 		if ( $this->fs->exists( $file ) ) {
-			$content = $this->fs->get_contents( $file );
+			$file_content = $this->fs->get_contents( $file );
+			$content      = is_string( $file_content ) ? $file_content : '';
 		}
 
 		return $content;
@@ -339,11 +344,11 @@ class PUM_Utils_Logging {
 	 * @return void
 	 */
 	public function save_logs() {
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || null === $this->fs ) {
 			return;
 		}
 
-		$this->fs->put_contents( $this->file, $this->content, FS_CHMOD_FILE );
+		$this->fs->put_contents( $this->file, $this->content ?? '', FS_CHMOD_FILE );
 	}
 
 	/**
@@ -353,7 +358,7 @@ class PUM_Utils_Logging {
 	 */
 	public function count_lines() {
 		$file  = $this->get_log_content();
-		$lines = explode( "\r\n", $file );
+		$lines = explode( "\r\n", $file ?? '' );
 
 		return count( $lines );
 	}
@@ -365,8 +370,8 @@ class PUM_Utils_Logging {
 	 */
 	public function truncate_log() {
 		$content           = $this->get_log_content();
-		$lines             = explode( "\r\n", $content );
-		$lines             = array_slice( $lines, 0, 250 ); // 50 is how many lines you want to keep
+		$lines             = explode( "\r\n", $content ?? '' );
+		$lines             = array_slice( $lines, 0, 250 ); // 250 is how many lines you want to keep
 		$truncated_content = implode( "\r\n", $lines );
 		$this->set_log_content( $truncated_content, true );
 	}
@@ -387,7 +392,7 @@ class PUM_Utils_Logging {
 	 */
 	public function clear_log() {
 		// Delete the file.
-		if ( $this->fs && method_exists( $this->fs, 'delete' ) ) {
+		if ( null !== $this->fs ) {
 			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			@$this->fs->delete( $this->file );
 		}
