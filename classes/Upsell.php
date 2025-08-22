@@ -30,12 +30,11 @@ class PUM_Upsell {
 	 * @since 1.14.0
 	 */
 	public static function notice_bar_display() {
-		$pro_is_active    = \PopupMaker\plugin( 'license' )->is_license_active();
 		$license_tier     = \PopupMaker\plugin( 'license' )->get_license_tier();
 		$pro_is_active    = \PopupMaker\plugin()->is_pro_active();
 		$pro_is_installed = \PopupMaker\plugin()->is_pro_installed();
 
-		if ( pum_is_admin_page() && ( ! $pro_is_active || 'pro_plus' !== $license_tier ) ) {
+		if ( pum_is_admin_page() && ! $pro_is_active ) {
 			// Temporarily disable for CTA post type screens.
 			if ( isset( $_GET['page'] ) && 'popup-maker-call-to-actions' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
