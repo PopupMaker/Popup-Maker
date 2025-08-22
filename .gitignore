@@ -28,6 +28,7 @@ phpcs-report.xml
 **/build-types/**/*
 node_modules
 release
+releases
 dist
 /vendor
 /vendor-prefixed
