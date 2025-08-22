@@ -250,7 +250,9 @@ const ObjectSelectField = ( {
 				return null;
 			}
 
-			return list.find( ( suggestion ) => suggestion.id === id );
+			return list.find(
+				( suggestion ) => suggestion.id.toString() === id.toString()
+			);
 		};
 
 		const found = findInList( suggestions );

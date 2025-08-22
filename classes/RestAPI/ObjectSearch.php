@@ -360,10 +360,7 @@ class ObjectSearch extends WP_REST_Controller {
 				'description' => __( 'IDs to include in results (integers for standard objects, strings for custom entities)', 'popup-maker' ),
 				'required'    => false,
 				'items'       => [
-					'oneOf' => [
-						[ 'type' => 'integer' ],
-						[ 'type' => 'string' ],
-					],
+					'type' => [ 'integer', 'string' ],
 				],
 			],
 			'exclude'     => [
@@ -371,10 +368,7 @@ class ObjectSearch extends WP_REST_Controller {
 				'description' => __( 'IDs to exclude from results (integers for standard objects, strings for custom entities)', 'popup-maker' ),
 				'required'    => false,
 				'items'       => [
-					'oneOf' => [
-						[ 'type' => 'integer' ],
-						[ 'type' => 'string' ],
-					],
+					'type' => [ 'integer', 'string' ],
 				],
 			],
 			'paged'       => [
