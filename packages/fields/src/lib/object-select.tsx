@@ -245,22 +245,20 @@ const ObjectSelectField = ( {
 	}, [ usePopupMakerAPI, value, queryText, entityType ] );
 
 	const findSuggestion = ( id: number | string ) => {
-		const found =
-			suggestions &&
-			suggestions.find(
-				( suggestion ) => suggestion.id.toString() === id.toString()
-			);
+		const findInList = ( list: ObjectOption[] | null ) => {
+			if ( ! list ) {
+				return null;
+			}
 
+			return list.find( ( suggestion ) => suggestion.id === id );
+		};
+
+		const found = findInList( suggestions );
 		if ( found ) {
 			return found;
 		}
 
-		return (
-			prefill &&
-			prefill.find(
-				( suggestion ) => suggestion.id.toString() === id.toString()
-			)
-		);
+		return findInList( prefill );
 	};
 
 	const values = ( () => {

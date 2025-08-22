@@ -872,6 +872,23 @@ class PUM_Fields extends Popmake_Fields {
 		return $this->objectselect_sanitize( $value, $args );
 	}
 
+	public function customselect_sanitize( $value = [], $args = [] ) {
+		// Don't use wp_parse_id_list for custom entities - preserve string IDs.
+		if ( ! is_array( $value ) ) {
+			$value = [ $value ];
+		}
+
+		// Filter out empty values and sanitize each value as text.
+		$sanitized = array_filter( array_map( 'sanitize_text_field', $value ) );
+
+		// Return single value if not multiple, array otherwise.
+		if ( ! empty( $args['multiple'] ) ) {
+			return array_values( $sanitized );
+		}
+
+		return ! empty( $sanitized ) ? reset( $sanitized ) : '';
+	}
+
 	/**
 	 * TODO: Finish adding the following field types for HTML & underscore.js
 	 */

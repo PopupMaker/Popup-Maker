@@ -5,6 +5,7 @@ import { __, sprintf } from '@popup-maker/i18n';
 import {
 	CheckboxField,
 	ColorField,
+	CustomSelectField,
 	DateField,
 	MeasureField,
 	MulticheckField,
@@ -30,6 +31,8 @@ const FieldComponent = ( fieldProps: FieldPropsWithOnChange ): JSX.Element => {
 			return <CheckboxField { ...fieldProps } />;
 		case 'color':
 			return <ColorField { ...fieldProps } />;
+		case 'customselect':
+			return <CustomSelectField { ...fieldProps } />;
 		case 'date':
 			return <DateField { ...fieldProps } />;
 		case 'measure':

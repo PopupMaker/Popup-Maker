@@ -131,6 +131,11 @@ class ObjectSearch extends WP_REST_Controller {
 					$user_role = $request->get_param( 'object_key' );
 					$results   = $this->search_users( $user_role, $request, $included, $excluded );
 					break;
+
+				case 'custom_entity':
+					// Custom entities are handled by the popup_maker/object_search filter below.
+					// Leave results empty so filter handlers can populate them.
+					break;
 			}
 		}
 
@@ -336,9 +341,9 @@ class ObjectSearch extends WP_REST_Controller {
 		return [
 			'object_type' => [
 				'type'        => 'string',
-				'description' => __( 'Type of object to search (post_type, taxonomy, user)', 'popup-maker' ),
+				'description' => __( 'Type of object to search (post_type, taxonomy, user, custom_entity)', 'popup-maker' ),
 				'required'    => true,
-				'enum'        => [ 'post_type', 'taxonomy', 'user' ],
+				'enum'        => [ 'post_type', 'taxonomy', 'user', 'custom_entity' ],
 			],
 			'object_key'  => [
 				'type'        => 'string',
@@ -352,18 +357,24 @@ class ObjectSearch extends WP_REST_Controller {
 			],
 			'include'     => [
 				'type'        => 'array',
-				'description' => __( 'IDs to include in results', 'popup-maker' ),
+				'description' => __( 'IDs to include in results (integers for standard objects, strings for custom entities)', 'popup-maker' ),
 				'required'    => false,
 				'items'       => [
-					'type' => 'integer',
+					'oneOf' => [
+						[ 'type' => 'integer' ],
+						[ 'type' => 'string' ],
+					],
 				],
 			],
 			'exclude'     => [
 				'type'        => 'array',
-				'description' => __( 'IDs to exclude from results', 'popup-maker' ),
+				'description' => __( 'IDs to exclude from results (integers for standard objects, strings for custom entities)', 'popup-maker' ),
 				'required'    => false,
 				'items'       => [
-					'type' => 'integer',
+					'oneOf' => [
+						[ 'type' => 'integer' ],
+						[ 'type' => 'string' ],
+					],
 				],
 			],
 			'paged'       => [

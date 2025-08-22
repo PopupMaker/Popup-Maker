@@ -25,6 +25,7 @@
 	"sideEffects": false,
 	"dependencies": {
 		"@popup-maker/components": "*",
+		"@popup-maker/core-data": "*",
 		"@popup-maker/i18n": "*",
 		"@popup-maker/utils": "*",
 		"@wordpress/components": "^29.12.0",

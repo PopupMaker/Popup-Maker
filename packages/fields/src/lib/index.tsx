@@ -1,5 +1,6 @@
 export { default as CheckboxField } from './checkbox';
 export { default as ColorField } from './color';
+export { default as CustomSelectField } from './custom-select';
 export { default as DateField } from './date';
 export { default as Field } from './field';
 export { default as Fields } from './fields';

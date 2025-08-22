@@ -124,6 +124,15 @@ export interface UserSelectFieldProps
 	entityKind: 'user';
 }
 
+export interface CustomSelectFieldProps extends FieldBaseProps {
+	type: 'customselect';
+	placeholder?: string;
+	value?: string | string[];
+	multiple?: boolean;
+	entityType: string;
+	apiEndpoint?: string;
+}
+
 export interface RadioFieldProps extends FieldBaseProps {
 	type: 'radio';
 	options: Option[];
@@ -174,6 +183,7 @@ export interface TokenSelectFieldProps extends FieldBaseProps {
  */
 export type FieldProps =
 	| CheckboxFieldProps
+	| CustomSelectFieldProps
 	| DateFieldProps
 	| HexColorFieldProps
 	| HiddenFieldProps
@@ -214,6 +224,7 @@ export type PartialFieldProps = AtLeast< FieldProps, MinFieldProps >;
  */
 export type IntermediaryFieldProps =
 	| AtLeast< CheckboxFieldProps, MinFieldProps >
+	| AtLeast< CustomSelectFieldProps, MinFieldProps | 'entityType' >
 	| AtLeast< DateFieldProps, MinFieldProps >
 	| AtLeast< HexColorFieldProps, MinFieldProps >
 	| AtLeast< HiddenFieldProps, MinFieldProps >
@@ -240,6 +251,7 @@ export type IntermediaryFieldProps =
 export type FieldPropsMap = {
 	checkbox: CheckboxFieldProps;
 	color: HexColorFieldProps;
+	customselect: CustomSelectFieldProps;
 	date: DateFieldProps;
 	email: TextFieldProps;
 	hidden: HiddenFieldProps;
