@@ -206,7 +206,8 @@ class PUM_Analytics {
 	 * @return array The updates pum_vars
 	 */
 	public static function pum_vars( $vars = [] ) {
-		$vars['analytics_route'] = self::get_analytics_route();
+		$vars['analytics_enabled'] = self::analytics_enabled();
+		$vars['analytics_route']   = self::get_analytics_route();
 		if ( function_exists( 'rest_url' ) ) {
 			$vars['analytics_api'] = esc_url_raw( rest_url( self::get_analytics_namespace() ) );
 		} else {

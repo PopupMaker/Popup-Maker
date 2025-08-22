@@ -95,13 +95,7 @@
 		},
 	};
 
-	if (
-		( typeof pum_vars.disable_tracking === 'undefined' ||
-			! pum_vars.disable_tracking ) &&
-		// Check for extensions disabling core tracking events.
-		( typeof pum_vars.disable_core_tracking === 'undefined' ||
-			! pum_vars.disable_core_tracking )
-	) {
+	if ( pum_vars.analytics_enabled ) {
 		// Only popups from the editor should fire analytics events.
 		$( document )
 			/**
