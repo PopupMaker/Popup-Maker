@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-15T10:00:00Z",
+  "layoutType": "newsletter",
+  "description": "Newsletter signup popup patterns",
+  "patterns": {
+    "group-wrapper": {
+      "name": "Main group wrapper",
+      "original": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"48px\"}},\"border\":{\"radius\":\"12px\"},\"position\":{\"type\":\"relative\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"520px\"},\"className\":\"pum-newsletter-hero\"} -->",
+      "validated": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"48px\"}},\"border\":{\"radius\":\"12px\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"520px\"},\"className\":\"pum-newsletter-hero\"} -->",
+      "corrections": ["removed invalid position style", "simplified structure"],
+      "confidence": 0.95
+    },
+    "heading-hero": {
+      "name": "Hero headline",
+      "original": "<!-- wp:heading {\"textAlign\":\"center\",\"level\":1,\"style\":{\"typography\":{\"fontSize\":\"36px\",\"fontWeight\":\"700\",\"lineHeight\":\"1.2\"},\"spacing\":{\"margin\":{\"bottom\":\"12px\"}}}} -->",
+      "validated": "<!-- wp:heading {\"textAlign\":\"center\",\"level\":1,\"style\":{\"typography\":{\"fontSize\":\"36px\",\"fontWeight\":\"700\",\"lineHeight\":\"1.2\"},\"spacing\":{\"margin\":{\"bottom\":\"12px\"}}}} -->",
+      "corrections": [],
+      "confidence": 1.0
+    },
+    "paragraph-subheading": {
+      "name": "Hero subheading paragraph",
+      "original": "<!-- wp:paragraph {\"align\":\"center\",\"style\":{\"typography\":{\"fontSize\":\"20px\",\"fontWeight\":\"400\",\"lineHeight\":\"1.4\"},\"color\":{\"text\":\"#555555\"},\"spacing\":{\"margin\":{\"bottom\":\"32px\"}}}} -->",
+      "validated": "<!-- wp:paragraph {\"align\":\"center\",\"style\":{\"typography\":{\"fontSize\":\"20px\",\"fontWeight\":\"400\",\"lineHeight\":\"1.4\"},\"color\":{\"text\":\"#555555\"},\"spacing\":{\"margin\":{\"bottom\":\"32px\"}}}} -->",
+      "corrections": [],
+      "confidence": 1.0
+    },
+    "image-icon": {
+      "name": "Newsletter icon image",
+      "original": "<!-- wp:image {\"align\":\"center\",\"width\":\"100px\",\"height\":\"100px\",\"sizeSlug\":\"thumbnail\",\"style\":{\"border\":{\"radius\":\"50%\"},\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "validated": "<!-- wp:image {\"align\":\"center\",\"width\":100,\"height\":100,\"sizeSlug\":\"thumbnail\",\"style\":{\"border\":{\"radius\":\"50%\"},\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "corrections": ["converted string dimensions to numbers"],
+      "confidence": 0.98
+    },
+    "html-form": {
+      "name": "Newsletter form HTML block",
+      "original": "<!-- wp:html -->",
+      "validated": "<!-- wp:html -->",
+      "corrections": [],
+      "confidence": 1.0
+    }
+  },
+  "commonCorrections": {
+    "quoteEscaping": "Convert single quotes to double quotes in JSON",
+    "dimensionTypes": "Convert string dimensions to numbers (width, height)",
+    "invalidCSS": "Remove CSS properties not supported in blocks",
+    "positionStyles": "Remove position styles that cause validation errors"
+  },
+  "statistics": {
+    "timesUsed": 0,
+    "successRate": 1.0,
+    "lastValidation": "2024-01-15T10:00:00Z",
+    "totalCorrections": 0,
+    "avgConfidence": 0.986
+  }
+}

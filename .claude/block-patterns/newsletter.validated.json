@@ -1,0 +1,88 @@
+{
+  "version": "1.1.0",
+  "lastUpdated": "2025-08-22T04:30:00.000Z",
+  "layoutType": "newsletter",
+  "description": "Newsletter signup popup patterns - Updated with working validated patterns",
+  "patterns": {
+    "group-wrapper": {
+      "name": "Main group wrapper",
+      "original": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"48px\"}},\"border\":{\"radius\":\"12px\"},\"position\":{\"type\":\"relative\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"520px\"},\"className\":\"pum-newsletter-hero\"} -->",
+      "validated": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"48px\"}},\"border\":{\"radius\":\"12px\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"520px\"},\"className\":\"pum-newsletter-hero\"} -->",
+      "corrections": [
+        "removed invalid position style that breaks WordPress validation"
+      ],
+      "confidence": 0.98
+    },
+    "group-with-gap": {
+      "name": "Flex group with gap styling",
+      "original": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"28px\"},\"blockGap\":\"12px\"}}} -->",
+      "validated": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"28px\"},\"blockGap\":\"12px\"}}} -->",
+      "corrections": [
+        "synchronized gap style from HTML with blockGap attribute"
+      ],
+      "confidence": 0.99
+    },
+    "group-trust-indicators": {
+      "name": "Trust indicators flex group",
+      "original": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"blockGap\":\"16px\",\"margin\":{\"top\":\"20px\"}}}} -->",
+      "validated": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"blockGap\":\"16px\",\"margin\":{\"top\":\"20px\"}}}} -->",
+      "corrections": [
+        "added blockGap attribute to match HTML gap style"
+      ],
+      "confidence": 0.99
+    },
+    "heading-hero": {
+      "name": "Hero headline",
+      "original": "<!-- wp:heading {\"textAlign\":\"center\",\"level\":1,\"style\":{\"typography\":{\"fontSize\":\"36px\",\"fontWeight\":\"700\",\"lineHeight\":\"1.2\"},\"spacing\":{\"margin\":{\"bottom\":\"12px\"}}}} -->",
+      "validated": "<!-- wp:heading {\"textAlign\":\"center\",\"level\":1,\"style\":{\"typography\":{\"fontSize\":\"36px\",\"fontWeight\":\"700\",\"lineHeight\":\"1.2\"},\"spacing\":{\"margin\":{\"bottom\":\"12px\"}}}} -->",
+      "corrections": [],
+      "confidence": 1
+    },
+    "paragraph-subheading": {
+      "name": "Hero subheading paragraph",
+      "original": "<!-- wp:paragraph {\"align\":\"center\",\"style\":{\"typography\":{\"fontSize\":\"20px\",\"fontWeight\":\"400\",\"lineHeight\":\"1.4\"},\"color\":{\"text\":\"#555555\"},\"spacing\":{\"margin\":{\"bottom\":\"32px\"}}}} -->",
+      "validated": "<!-- wp:paragraph {\"align\":\"center\",\"style\":{\"typography\":{\"fontSize\":\"20px\",\"fontWeight\":\"400\",\"lineHeight\":\"1.4\"},\"color\":{\"text\":\"#555555\"},\"spacing\":{\"margin\":{\"bottom\":\"32px\"}}}} -->",
+      "corrections": [],
+      "confidence": 1
+    },
+    "image-icon": {
+      "name": "Newsletter icon image",
+      "original": "<!-- wp:image {\"align\":\"center\",\"width\":\"100px\",\"height\":\"100px\",\"sizeSlug\":\"thumbnail\",\"style\":{\"border\":{\"radius\":\"50%\"},\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "validated": "<!-- wp:image {\"align\":\"center\",\"width\":\"100px\",\"height\":\"100px\",\"sizeSlug\":\"thumbnail\",\"style\":{\"border\":{\"radius\":\"50%\"},\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "corrections": [
+        "keep width/height as strings to match WordPress expectations"
+      ],
+      "confidence": 0.95
+    },
+    "list-benefits": {
+      "name": "Benefits list with custom class",
+      "original": "<!-- wp:list {\"style\":{\"typography\":{\"fontSize\":\"14px\"},\"spacing\":{\"padding\":{\"left\":\"0\"}},\"color\":{\"text\":\"#666666\"}},\"className\":\"pum-benefits-list\"} -->",
+      "validated": "<!-- wp:list {\"style\":{\"typography\":{\"fontSize\":\"14px\"},\"spacing\":{\"padding\":{\"left\":\"0\"}},\"color\":{\"text\":\"#666666\"}},\"className\":\"pum-benefits-list\"} -->",
+      "corrections": [
+        "preserved custom className for benefits styling"
+      ],
+      "confidence": 0.98
+    },
+    "html-form": {
+      "name": "Newsletter form HTML block",
+      "original": "<!-- wp:html -->",
+      "validated": "<!-- wp:html -->",
+      "corrections": [],
+      "confidence": 1
+    }
+  },
+  "commonCorrections": {
+    "blockGapSync": "Extract gap styles from HTML and add blockGap attribute to block comments",
+    "positionRemoval": "Remove position styles that cause WordPress validation errors",
+    "classPreservation": "Preserve custom classes while ensuring WordPress core classes",
+    "dimensionHandling": "Keep width/height as strings when that's what WordPress expects",
+    "styleAttributeSync": "Synchronize HTML style attributes with block comment attributes"
+  },
+  "statistics": {
+    "timesUsed": 2,
+    "successRate": 1,
+    "lastValidation": "2025-08-22T04:30:00.000Z",
+    "totalCorrections": 5,
+    "avgConfidence": 0.98
+  }
+}

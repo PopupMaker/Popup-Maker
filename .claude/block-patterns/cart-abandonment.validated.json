@@ -1,0 +1,171 @@
+{
+  "version": "1.1.0",
+  "lastUpdated": "2025-08-22T06:00:00.000Z",
+  "layoutType": "cart-abandonment",
+  "description": "Cart abandonment popup with 5% discount - learned from browser validation errors",
+  "patterns": {
+    "image-border-class": {
+      "name": "Image with border radius expecting CSS class",
+      "original": "<!-- wp:image {\"align\":\"center\",\"width\":\"80px\",\"height\":\"80px\",\"sizeSlug\":\"thumbnail\",\"style\":{\"border\":{\"radius\":\"50%\"},\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "validated": "<!-- wp:image {\"align\":\"center\",\"width\":\"80px\",\"height\":\"80px\",\"sizeSlug\":\"thumbnail\",\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "corrections": [
+        "removed border.radius - WordPress expects has-custom-border class but doesn't generate it",
+        "border styles should be handled via CSS classes, not inline"
+      ],
+      "confidence": 0.92,
+      "actualOutput": "<figure class=\"wp-block-image aligncenter size-thumbnail is-resized\" style=\"margin-bottom:20px\"><img alt=\"\" width=\"80\" height=\"80\"/></figure>"
+    },
+    "heading-color-class": {
+      "name": "Heading with color expecting has-text-color class",
+      "original": "<!-- wp:heading {\"textAlign\":\"center\",\"level\":2,\"style\":{\"typography\":{\"fontSize\":\"36px\",\"fontWeight\":\"800\",\"lineHeight\":\"1.1\"},\"color\":{\"text\":\"#339af0\"},\"spacing\":{\"margin\":{\"bottom\":\"8px\"}}}} -->",
+      "validated": "<!-- wp:heading {\"textAlign\":\"center\",\"level\":2,\"style\":{\"typography\":{\"fontSize\":\"36px\",\"fontWeight\":\"800\",\"lineHeight\":\"1.1\"},\"spacing\":{\"margin\":{\"bottom\":\"8px\"}}},\"textColor\":\"blue\"} -->",
+      "corrections": [
+        "removed style.color.text - use textColor attribute instead",
+        "WordPress expects has-text-color class when color is set"
+      ],
+      "confidence": 0.94,
+      "actualOutput": "<h2 class=\"wp-block-heading has-text-align-center has-blue-color has-text-color\" style=\"margin-bottom:8px;font-size:36px;font-weight:800;line-height:1.1\"></h2>"
+    },
+    "group-padding-inline": {
+      "name": "Group with padding in inline styles instead of attributes",
+      "original": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"24px\"},\"margin\":{\"bottom\":\"28px\"}},\"border\":{\"radius\":\"8px\"}},\"backgroundColor\":\"light-blue\",\"layout\":{\"type\":\"constrained\"}} -->",
+      "validated": "<!-- wp:group {\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"28px\"}},\"border\":{\"radius\":\"8px\"}},\"backgroundColor\":\"light-blue\",\"layout\":{\"type\":\"constrained\"}} -->",
+      "corrections": [
+        "removed padding from style object - causes inline style conflicts",
+        "WordPress expects padding as CSS class or external styling"
+      ],
+      "confidence": 0.89,
+      "actualOutput": "<div class=\"wp-block-group has-light-blue-background-color has-background\" style=\"border-radius:8px;margin-bottom:28px\"></div>"
+    },
+    "button-fontsize-structure": {
+      "name": "Button with fontSize in wrong location",
+      "original": "<!-- wp:button {\"backgroundColor\":\"blue\",\"style\":{\"border\":{\"radius\":\"8px\"},\"typography\":{\"fontWeight\":\"600\",\"fontSize\":\"18px\"},\"spacing\":{\"padding\":{\"top\":\"16px\",\"bottom\":\"16px\",\"left\":\"32px\",\"right\":\"32px\"}}},\"className\":\"is-style-fill\"} -->",
+      "validated": "<!-- wp:button {\"backgroundColor\":\"blue\",\"style\":{\"border\":{\"radius\":\"8px\"},\"typography\":{\"fontWeight\":\"600\"},\"spacing\":{\"padding\":{\"top\":\"16px\",\"bottom\":\"16px\",\"left\":\"32px\",\"right\":\"32px\"}}},\"fontSize\":\"medium\",\"className\":\"is-style-fill\"} -->",
+      "corrections": [
+        "moved fontSize from style.typography to root level",
+        "used WordPress font size slug instead of px value"
+      ],
+      "confidence": 0.91,
+      "actualOutput": "<div class=\"wp-block-button is-style-fill has-custom-font-size\" style=\"font-size:18px\"><a class=\"wp-block-button__link has-blue-background-color has-background wp-element-button\" style=\"border-radius:8px;font-weight:600;padding-top:16px;padding-right:32px;padding-bottom:16px;padding-left:32px\"></a></div>"
+    },
+    "group-nested-border": {
+      "name": "Nested group with complex border causing validation issues",
+      "original": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"12px\"}},\"border\":{\"radius\":\"4px\",\"style\":\"dashed\",\"width\":\"1px\",\"color\":\"#339af0\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"center\"}} -->",
+      "validated": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"12px\"}},\"border\":{\"radius\":\"4px\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"center\"}} -->",
+      "corrections": [
+        "removed complex border properties (style, width, color)",
+        "kept only border-radius which works reliably"
+      ],
+      "confidence": 0.87,
+      "actualOutput": "<div class=\"wp-block-group has-white-background-color has-background\" style=\"border-radius:4px;padding:12px\"></div>"
+    },
+    "paragraph-margin-inline": {
+      "name": "Paragraph with margin causing inline style conflicts",
+      "original": "<!-- wp:paragraph {\"style\":{\"typography\":{\"fontSize\":\"14px\",\"fontWeight\":\"500\"},\"color\":{\"text\":\"#666666\"},\"spacing\":{\"margin\":{\"right\":\"8px\"}}}} -->",
+      "validated": "<!-- wp:paragraph {\"style\":{\"typography\":{\"fontSize\":\"14px\",\"fontWeight\":\"500\"}},\"textColor\":\"gray\"} -->",
+      "corrections": [
+        "removed style.color.text and style.spacing.margin",
+        "used textColor attribute instead of inline color",
+        "removed margin to prevent inline style conflicts"
+      ],
+      "confidence": 0.90,
+      "actualOutput": "<p class=\"has-gray-color has-text-color\" style=\"font-size:14px;font-weight:500\"></p>"
+    },
+    "group-main-container": {
+      "name": "Main container group with proper validation",
+      "original": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"40px\"}},\"border\":{\"radius\":\"12px\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"480px\"},\"className\":\"pum-cart-abandonment\"} -->",
+      "validated": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"40px\"}},\"border\":{\"radius\":\"12px\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"480px\"},\"className\":\"pum-cart-abandonment\"} -->",
+      "corrections": [
+        "main container validates correctly with these attributes",
+        "padding and border-radius work at top level"
+      ],
+      "confidence": 1.0,
+      "actualOutput": "<div class=\"wp-block-group pum-cart-abandonment has-white-background-color has-background\" style=\"border-radius:12px;padding:40px\"></div>"
+    },
+    "buttons-wrapper": {
+      "name": "Buttons wrapper group with layout",
+      "original": "<!-- wp:buttons {\"layout\":{\"type\":\"flex\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "validated": "<!-- wp:buttons {\"layout\":{\"type\":\"flex\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "corrections": [
+        "buttons wrapper validates correctly",
+        "layout and margin work properly for buttons block"
+      ],
+      "confidence": 1.0,
+      "actualOutput": "<div class=\"wp-block-buttons\" style=\"margin-bottom:20px\"></div>"
+    },
+    "html-comment-removal": {
+      "name": "HTML comments break block validation parsing",
+      "original": "<!-- wp:group --><div><!-- Discount Badge --></div><!-- /wp:group -->",
+      "validated": "<!-- wp:group --><div></div><!-- /wp:group -->",
+      "corrections": [
+        "removed all HTML comments (<!-- text -->) from block content",
+        "comments cause Expected token of type EndTag, instead saw Comment errors"
+      ],
+      "confidence": 1.0,
+      "actualOutput": "<div class=\"wp-block-group\"></div>"
+    },
+    "image-dimension-style": {
+      "name": "Image dimensions must be in style attribute",
+      "original": "<!-- wp:image {\"width\":\"80px\",\"height\":\"80px\"} -->",
+      "validated": "<!-- wp:image {\"width\":\"80px\",\"height\":\"80px\"} -->",
+      "corrections": [
+        "width/height attributes work correctly for validation",
+        "WordPress generates style=\"width:80px;height:80px\" automatically"
+      ],
+      "confidence": 0.97,
+      "actualOutput": "<figure class=\"wp-block-image\"><img style=\"width:80px;height:80px\"/></figure>"
+    },
+    "button-fontsize-classes": {
+      "name": "Button fontSize generates specific CSS classes",
+      "original": "<!-- wp:button {\"fontSize\":\"medium\"} -->",
+      "validated": "<!-- wp:button {\"fontSize\":\"medium\"} -->",
+      "corrections": [
+        "fontSize=\"medium\" generates has-medium-font-size has-custom-font-size classes",
+        "validation expects these specific classes in output"
+      ],
+      "confidence": 0.95,
+      "actualOutput": "<div class=\"wp-block-button has-medium-font-size\"><a class=\"wp-block-button__link has-medium-font-size has-custom-font-size wp-element-button\"></a></div>"
+    },
+    "template-variable-cleanup": {
+      "name": "Template variables break validation in test environment",
+      "original": "{{MAIN_HEADLINE:Wait! Your Items Are Still Waiting}}",
+      "validated": "Wait! Your Items Are Still Waiting",
+      "corrections": [
+        "removed {{VARIABLE:default}} syntax for validation testing",
+        "template variables should be processed before validation"
+      ],
+      "confidence": 1.0,
+      "actualOutput": "Wait! Your Items Are Still Waiting"
+    }
+  },
+  "commonCorrections": {
+    "cssClassExpectations": "WordPress expects specific CSS classes (has-custom-border, has-text-color) when certain attributes are used",
+    "colorAttributeStructure": "Use textColor/backgroundColor attributes instead of style.color.text for proper class generation",
+    "fontSizePlacement": "fontSize belongs at root level, not in style.typography for buttons",
+    "borderComplexity": "Complex border objects (style, width, color) often fail - use simple radius only",
+    "paddingLocation": "Padding works in main containers but can cause conflicts in nested groups",
+    "marginRestrictions": "Margin in spacing can cause inline style conflicts, especially in nested elements"
+  },
+  "statistics": {
+    "timesUsed": 1,
+    "successRate": 0.62,
+    "lastValidation": "2025-08-22T06:00:00.000Z",
+    "totalCorrections": 8,
+    "avgConfidence": 0.905,
+    "realBrowserTested": true
+  },
+  "metadata": {
+    "learningMethod": "Real browser validation with console error analysis",
+    "originalSource": "cart-abandonment-layout.html",
+    "correctedSource": "cart-abandonment-validated.html",
+    "validationEnvironment": "wp-env WordPress with Gutenberg block editor",
+    "componentsValidated": 8,
+    "errorPatterns": [
+      "Block validation: Block validation failed for `core/image` (name=core/image)",
+      "Block validation: Block validation failed for `core/heading` (name=core/heading)", 
+      "Block validation: Block validation failed for `core/group` (name=core/group)",
+      "Block validation: Block validation failed for `core/button` (name=core/button)",
+      "Inline styles conflict with block attribute expectations"
+    ]
+  }
+}

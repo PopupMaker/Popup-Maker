@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-15T10:00:00Z",
+  "layoutType": "discount",
+  "description": "Exit intent discount popup patterns",
+  "patterns": {
+    "group-main": {
+      "name": "Main discount group",
+      "original": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"40px\"}},\"border\":{\"radius\":\"8px\"}},\"backgroundColor\":\"red\",\"textColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"450px\"}} -->",
+      "validated": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"40px\"}},\"border\":{\"radius\":\"8px\"}},\"backgroundColor\":\"red\",\"textColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"450px\"}} -->",
+      "corrections": [],
+      "confidence": 1.0
+    },
+    "heading-urgent": {
+      "name": "Urgent headline",
+      "original": "<!-- wp:heading {\"textAlign\":\"center\",\"level\":1,\"style\":{\"typography\":{\"fontSize\":\"28px\",\"fontWeight\":\"700\"},\"spacing\":{\"margin\":{\"bottom\":\"8px\"}}}} -->",
+      "validated": "<!-- wp:heading {\"textAlign\":\"center\",\"level\":1,\"style\":{\"typography\":{\"fontSize\":\"28px\",\"fontWeight\":\"700\"},\"spacing\":{\"margin\":{\"bottom\":\"8px\"}}}} -->",
+      "corrections": [],
+      "confidence": 1.0
+    },
+    "group-coupon": {
+      "name": "Coupon code display group",
+      "original": "<!-- wp:group {\"style\":{\"border\":{\"width\":\"2px\",\"style\":\"dashed\",\"color\":\"#ffffff\"},\"spacing\":{\"padding\":{\"all\":\"20px\"}},\"border\":{\"radius\":\"4px\"}},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"center\"}} -->",
+      "validated": "<!-- wp:group {\"style\":{\"border\":{\"width\":\"2px\",\"style\":\"dashed\",\"color\":\"#ffffff\"},\"spacing\":{\"padding\":{\"all\":\"20px\"}},\"borderRadius\":\"4px\"},\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"center\"}} -->",
+      "corrections": ["simplified border radius property"],
+      "confidence": 0.92
+    },
+    "button-cta": {
+      "name": "Call-to-action button",
+      "original": "<!-- wp:button {\"backgroundColor\":\"white\",\"textColor\":\"red\",\"style\":{\"border\":{\"radius\":\"25px\"},\"typography\":{\"fontWeight\":\"600\"}},\"className\":\"is-style-fill\"} -->",
+      "validated": "<!-- wp:button {\"backgroundColor\":\"white\",\"textColor\":\"red\",\"style\":{\"border\":{\"radius\":\"25px\"},\"typography\":{\"fontWeight\":\"600\"}},\"className\":\"is-style-fill\"} -->",
+      "corrections": [],
+      "confidence": 1.0
+    }
+  },
+  "commonCorrections": {
+    "borderRadius": "Use borderRadius instead of nested border.radius",
+    "flexProperties": "Ensure flex layout properties are valid",
+    "colorValues": "Validate hex color codes",
+    "buttonStyles": "Ensure button style classes are supported"
+  },
+  "statistics": {
+    "timesUsed": 0,
+    "successRate": 1.0,
+    "lastValidation": "2024-01-15T10:00:00Z",
+    "totalCorrections": 0,
+    "avgConfidence": 0.98
+  }
+}

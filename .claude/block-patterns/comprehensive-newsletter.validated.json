@@ -1,0 +1,130 @@
+{
+  "version": "1.2.0",
+  "lastUpdated": "2025-08-22T05:15:00.000Z",
+  "layoutType": "comprehensive-newsletter",
+  "description": "Complete newsletter signup popup with all components - learned from browser validation",
+  "patterns": {
+    "group-main-wrapper": {
+      "name": "Main newsletter container with position fix",
+      "original": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"48px\"}},\"border\":{\"radius\":\"12px\"},\"position\":{\"type\":\"relative\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"520px\"},\"className\":\"pum-newsletter-hero\"} -->",
+      "validated": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"48px\"}},\"border\":{\"radius\":\"12px\"}},\"backgroundColor\":\"white\",\"layout\":{\"type\":\"constrained\",\"contentSize\":\"520px\"},\"className\":\"pum-newsletter-hero\"} -->",
+      "corrections": [
+        "removed position style that breaks WordPress validation",
+        "preserved padding, border-radius, and layout settings"
+      ],
+      "confidence": 0.98,
+      "learnedAt": "2025-08-22T05:15:00.000Z"
+    },
+    "paragraph-badge": {
+      "name": "Hero badge with complex styling",
+      "original": "<!-- wp:paragraph {\"align\":\"center\",\"style\":{\"typography\":{\"fontSize\":\"12px\",\"fontWeight\":\"600\",\"textTransform\":\"uppercase\",\"letterSpacing\":\"1px\"},\"color\":{\"text\":\"#007cba\"},\"spacing\":{\"margin\":{\"bottom\":\"16px\"}},\"elements\":{\"link\":{\"color\":{\"text\":\"#007cba\"}}}},\"backgroundColor\":\"blue\",\"className\":\"pum-hero-badge\"} -->",
+      "validated": "<!-- wp:paragraph {\"align\":\"center\",\"style\":{\"typography\":{\"fontSize\":\"12px\",\"fontWeight\":\"600\",\"textTransform\":\"uppercase\",\"letterSpacing\":\"1px\"},\"color\":{\"text\":\"#007cba\"},\"spacing\":{\"margin\":{\"bottom\":\"16px\"}},\"elements\":{\"link\":{\"color\":{\"text\":\"#007cba\"}}}},\"backgroundColor\":\"blue\",\"className\":\"pum-hero-badge\"} -->",
+      "corrections": [
+        "complex typography styling validated successfully",
+        "elements.link color inheritance working correctly"
+      ],
+      "confidence": 1.0,
+      "learnedAt": "2025-08-22T05:15:00.000Z"
+    },
+    "image-newsletter-icon": {
+      "name": "Newsletter icon with dimensions and border-radius",
+      "original": "<!-- wp:image {\"align\":\"center\",\"width\":\"100px\",\"height\":\"100px\",\"sizeSlug\":\"thumbnail\",\"style\":{\"border\":{\"radius\":\"50%\"},\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "validated": "<!-- wp:image {\"align\":\"center\",\"width\":\"100px\",\"height\":\"100px\",\"sizeSlug\":\"thumbnail\",\"style\":{\"border\":{\"radius\":\"50%\"},\"spacing\":{\"margin\":{\"bottom\":\"20px\"}}}} -->",
+      "corrections": [
+        "keep width/height as strings - WordPress expects this format",
+        "border-radius percentage values work correctly"
+      ],
+      "confidence": 0.95,
+      "learnedAt": "2025-08-22T05:15:00.000Z"
+    },
+    "group-social-proof": {
+      "name": "Flex group with gap and margin spacing",
+      "original": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"28px\"},\"blockGap\":\"12px\"}}} -->",
+      "validated": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"nowrap\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"28px\"},\"blockGap\":\"12px\"}}} -->",
+      "corrections": [
+        "blockGap correctly synced with HTML gap style",
+        "flex layout properties validated successfully"
+      ],
+      "confidence": 0.99,
+      "learnedAt": "2025-08-22T05:15:00.000Z"
+    },
+    "list-benefits": {
+      "name": "Benefits list with custom class and zero padding",
+      "original": "<!-- wp:list {\"style\":{\"typography\":{\"fontSize\":\"14px\"},\"spacing\":{\"padding\":{\"left\":\"0\"}},\"color\":{\"text\":\"#666666\"}},\"className\":\"pum-benefits-list\"} -->",
+      "validated": "<!-- wp:list {\"style\":{\"typography\":{\"fontSize\":\"14px\"},\"spacing\":{\"padding\":{\"left\":\"0\"}},\"color\":{\"text\":\"#666666\"}},\"className\":\"pum-benefits-list\"} -->",
+      "corrections": [
+        "custom className preserved for benefits styling",
+        "zero left padding works correctly with WordPress"
+      ],
+      "confidence": 0.98,
+      "learnedAt": "2025-08-22T05:15:00.000Z"
+    },
+    "list-item-benefit": {
+      "name": "Individual benefit list item with margin",
+      "original": "<!-- wp:list-item {\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"4px\"}}}} -->",
+      "validated": "<!-- wp:list-item {\"style\":{\"spacing\":{\"margin\":{\"bottom\":\"4px\"}}}} -->",
+      "corrections": [
+        "list-item specific margin styling supported"
+      ],
+      "confidence": 1.0,
+      "learnedAt": "2025-08-22T05:15:00.000Z"
+    },
+    "group-trust-indicators": {
+      "name": "Trust indicators flex wrap group",
+      "original": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"blockGap\":\"16px\",\"margin\":{\"top\":\"20px\"}}}} -->",
+      "validated": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexWrap\":\"wrap\",\"justifyContent\":\"center\"},\"style\":{\"spacing\":{\"blockGap\":\"16px\",\"margin\":{\"top\":\"20px\"}}}} -->",
+      "corrections": [
+        "flexWrap wrap property works correctly",
+        "blockGap attribute properly synchronized"
+      ],
+      "confidence": 0.99,
+      "learnedAt": "2025-08-22T05:15:00.000Z"
+    },
+    "html-newsletter-form": {
+      "name": "Raw HTML form block",
+      "original": "<!-- wp:html -->",
+      "validated": "<!-- wp:html -->",
+      "corrections": [
+        "HTML blocks always validate successfully"
+      ],
+      "confidence": 1.0,
+      "learnedAt": "2025-08-22T05:15:00.000Z"
+    }
+  },
+  "commonCorrections": {
+    "positionRemoval": "Remove position styles (relative/absolute) that break WordPress validation",
+    "blockGapSync": "Ensure blockGap attribute matches CSS gap styles in HTML",
+    "stringDimensions": "Keep width/height as strings when WordPress expects that format",
+    "flexProperties": "Validate all flex layout properties including flexWrap and justifyContent",
+    "customClasses": "Preserve custom className attributes for component styling",
+    "complexTypography": "Support complex typography with textTransform, letterSpacing, etc.",
+    "linkInheritance": "Use elements.link for proper color inheritance in links"
+  },
+  "statistics": {
+    "timesUsed": 1,
+    "successRate": 1.0,
+    "lastValidation": "2025-08-22T05:15:00.000Z",
+    "totalCorrections": 8,
+    "avgConfidence": 0.985,
+    "browserValidated": true,
+    "playwrightTested": true
+  },
+  "metadata": {
+    "learningMethod": "browser-based validation with Playwright",
+    "originalSource": "broken-content.html with position issues",
+    "correctedSource": "final-corrected-content-v2.html",
+    "validationEnvironment": "wp-env WordPress 6.x with Gutenberg",
+    "componentsValidated": 8,
+    "complexityLevel": "advanced",
+    "featuresCovered": [
+      "complex typography",
+      "flex layouts",
+      "custom classes", 
+      "list styling",
+      "image dimensions",
+      "nested groups",
+      "HTML blocks",
+      "color inheritance"
+    ]
+  }
+}

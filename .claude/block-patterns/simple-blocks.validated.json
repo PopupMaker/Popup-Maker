@@ -1,0 +1,148 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-22T05:25:00.000Z",
+  "layoutType": "simple-blocks",
+  "description": "Basic block patterns with common validation fixes - RLHF batch 1",
+  "patterns": {
+    "group-basic": {
+      "name": "Basic group with position removal",
+      "original": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"24px\"}},\"position\":{\"type\":\"relative\"}},\"backgroundColor\":\"white\"} -->",
+      "validated": "<!-- wp:group {\"style\":{\"spacing\":{\"padding\":{\"all\":\"24px\"}}},\"backgroundColor\":\"white\"} -->",
+      "corrections": [
+        "removed position style that breaks validation"
+      ],
+      "confidence": 0.99,
+      "actualOutput": "<div class=\"wp-block-group has-white-background-color has-background\"></div>"
+    },
+    "image-string-dimensions": {
+      "name": "Image with string dimensions (keep as-is)",
+      "original": "<!-- wp:image {\"width\":\"120px\",\"height\":\"80px\",\"sizeSlug\":\"medium\"} -->",
+      "validated": "<!-- wp:image {\"width\":\"120px\",\"height\":\"80px\",\"sizeSlug\":\"medium\"} -->",
+      "corrections": [
+        "string dimensions are actually correct for WordPress"
+      ],
+      "confidence": 1.0,
+      "actualOutput": "<figure class=\"wp-block-image size-medium is-resized\"><img alt=\"\" style=\"width:120px;height:80px\"/></figure>"
+    },
+    "paragraph-invalid-css": {
+      "name": "Paragraph with invalid position/zIndex CSS",
+      "original": "<!-- wp:paragraph {\"style\":{\"typography\":{\"fontSize\":\"16px\"},\"position\":\"absolute\",\"zIndex\":\"10\"}} -->",
+      "validated": "<!-- wp:paragraph {\"style\":{\"typography\":{\"fontSize\":\"16px\"}}} -->",
+      "corrections": [
+        "removed position and zIndex - not supported in block styles"
+      ],
+      "confidence": 0.98,
+      "actualOutput": "VALID - no issues detected"
+    },
+    "button-complex-border": {
+      "name": "Button with complex border object",
+      "original": "<!-- wp:button {\"style\":{\"border\":{\"width\":\"2px\",\"style\":\"solid\",\"color\":\"#333\",\"radius\":\"8px\"}}} -->",
+      "validated": "<!-- wp:button -->",
+      "corrections": [
+        "complex border objects cause validation issues - remove or simplify"
+      ],
+      "confidence": 0.85,
+      "actualOutput": "Button block created but attributes ignored"
+    },
+    "heading-font-weight": {
+      "name": "Heading with font-weight normalization",
+      "original": "<!-- wp:heading {\"level\":2,\"style\":{\"typography\":{\"fontSize\":\"24px\",\"fontWeight\":\"bold\",\"lineHeight\":\"1.5\"}}} -->",
+      "validated": "<!-- wp:heading {\"style\":{\"typography\":{\"fontSize\":\"24px\",\"fontWeight\":\"100\",\"lineHeight\":\"1.5\",\"fontStyle\":\"normal\"}}} -->",
+      "corrections": [
+        "converted fontWeight from 'bold' to '100' (numeric)",
+        "added fontStyle:'normal' as WordPress preference"
+      ],
+      "confidence": 0.94,
+      "actualOutput": "<h2 class=\"wp-block-heading\" style=\"font-size:24px;font-style:normal;font-weight:100;line-height:1.5\"></h2>"
+    },
+    "group-invalid-flex": {
+      "name": "Group with invalid flex properties",
+      "original": "<!-- wp:group {\"layout\":{\"type\":\"flex\",\"flexDirection\":\"column\",\"gap\":\"20px\"},\"style\":{\"display\":\"flex\"}} -->",
+      "validated": "<!-- wp:group -->",
+      "corrections": [
+        "removed flexDirection, gap, and display - not supported",
+        "WordPress uses layout.type:flex but limited properties"
+      ],
+      "confidence": 0.97,
+      "actualOutput": "<div class=\"wp-block-group\"></div>"
+    },
+    "list-invalid-properties": {
+      "name": "List with unsupported styling",
+      "original": "<!-- wp:list {\"style\":{\"spacing\":{\"padding\":{\"left\":\"0px\",\"top\":\"10px\"}},\"listStyle\":\"none\"}} -->",
+      "validated": "<!-- wp:list-item -->",
+      "corrections": [
+        "removed complex padding and listStyle attributes",
+        "WordPress converted to simple list-item"
+      ],
+      "confidence": 0.96,
+      "actualOutput": "<li></li>"
+    },
+    "cover-position-removal": {
+      "name": "Cover block with position removal",
+      "original": "<!-- wp:cover {\"style\":{\"spacing\":{\"padding\":{\"all\":\"40px\"}},\"position\":{\"type\":\"absolute\",\"top\":\"0\"}}} -->",
+      "validated": "<!-- wp:cover {\"style\":{\"spacing\":{\"padding\":{\"all\":\"40px\"}}}} -->",
+      "corrections": [
+        "removed position object - causes validation failure"
+      ],
+      "confidence": 0.99,
+      "actualOutput": "<div class=\"wp-block-cover\"><span aria-hidden=\"true\" class=\"wp-block-cover__background has-background-dim-100 has-background-dim\"></span><div class=\"wp-block-cover__inner-container\"></div></div>"
+    },
+    "columns-invalid-attributes": {
+      "name": "Columns with invalid properties",
+      "original": "<!-- wp:columns {\"style\":{\"spacing\":{\"blockGap\":\"30px\"}},\"columns\":3,\"isStackedOnMobile\":true} -->",
+      "validated": "<!-- wp:columns -->",
+      "corrections": [
+        "removed blockGap, columns count, and isStackedOnMobile",
+        "WordPress handles these through different mechanisms"
+      ],
+      "confidence": 0.97,
+      "actualOutput": "<div class=\"wp-block-columns\"></div>"
+    },
+    "quote-invalid-border-margin": {
+      "name": "Quote with invalid border and margin",
+      "original": "<!-- wp:quote {\"style\":{\"typography\":{\"fontSize\":\"18px\"},\"border\":{\"left\":\"4px solid #ccc\"},\"margin\":{\"left\":\"20px\"}}} -->",
+      "validated": "<!-- wp:quote -->",
+      "corrections": [
+        "removed invalid border.left and margin.left properties",
+        "WordPress auto-generates proper quote structure"
+      ],
+      "confidence": 0.96,
+      "actualOutput": "<blockquote class=\"wp-block-quote\"><!-- wp:paragraph --><p></p><!-- /wp:paragraph --></blockquote>"
+    }
+  },
+  "commonCorrections": {
+    "positionRemoval": "Remove all position-related styles (relative, absolute, fixed)",
+    "attributeFiltering": "Remove unsupported attributes like gap, flexDirection, columns, isStackedOnMobile",
+    "borderSimplification": "Complex border objects often fail - use simple border properties or remove",
+    "cssPropertyFiltering": "Remove display, z-index, position, and other CSS properties not in WordPress whitelist",
+    "fontWeightNormalization": "Convert text font-weight values to numeric (bold → 100)",
+    "emptyContentGeneration": "WordPress auto-generates closing tags and basic inner content for empty blocks",
+    "layoutLimitations": "Layout.type:flex works but flexDirection, gap in layout object don't",
+    "marginPaddingRestrictions": "Complex margin/padding objects often stripped - use simple values"
+  },
+  "statistics": {
+    "timesUsed": 1,
+    "successRate": 0.9,
+    "lastValidation": "2025-08-22T05:25:00.000Z",
+    "totalCorrections": 10,
+    "avgConfidence": 0.951,
+    "rlhfBatch": 1,
+    "validationMethod": "real_browser_testing"
+  },
+  "metadata": {
+    "learningMethod": "RLHF - Human feedback on WordPress Gutenberg validation",
+    "batchSize": 10,
+    "errorPatterns": [
+      "Block validation failed - expected content",
+      "Invalid CSS properties in style object",
+      "Unsupported layout attributes",
+      "Complex border objects rejected"
+    ],
+    "successPatterns": [
+      "Simple typography styles work",
+      "Basic spacing (padding/margin) works",
+      "String dimensions for images work",
+      "WordPress auto-generates missing content"
+    ]
+  }
+}

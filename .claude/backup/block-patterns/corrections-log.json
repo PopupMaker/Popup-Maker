@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-22T03:33:53.298Z",
+  "description": "Learning history and validation statistics",
+  "globalStatistics": {
+    "totalValidations": 2,
+    "successfulValidations": 2,
+    "failedValidations": 0,
+    "patternsLearned": 2,
+    "avgProcessingTime": 0,
+    "lastLearningSession": null
+  },
+  "correctionPatterns": {
+    "quoteEscaping": {
+      "description": "Fix unescaped quotes in JSON attributes",
+      "frequency": 0,
+      "pattern": "Replace single quotes with double quotes in block attributes",
+      "confidence": 0.95
+    },
+    "dimensionConversion": {
+      "description": "Convert string dimensions to numbers",
+      "frequency": 0,
+      "pattern": "Convert \"100px\" to 100, \"50%\" stays as string",
+      "confidence": 0.98
+    },
+    "cssFiltering": {
+      "description": "Remove invalid CSS properties",
+      "frequency": 0,
+      "pattern": "Remove position, z-index, and other unsupported CSS",
+      "confidence": 0.9
+    },
+    "borderSimplification": {
+      "description": "Simplify border style objects",
+      "frequency": 0,
+      "pattern": "Convert nested border objects to flat properties",
+      "confidence": 0.92
+    }
+  },
+  "learningQueue": [],
+  "sessionHistory": []
+}

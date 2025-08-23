@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 const fs = require( 'fs' );
 const path = require( 'path' );
@@ -168,6 +169,7 @@ class PluginReleaseBuilder {
 			this.outputDir,
 			`${ this.pluginName }_${ this.version }.zip`
 		);
+
 		if ( fs.existsSync( existingZip ) ) {
 			if ( this.options.verbose ) {
 				console.log(
@@ -179,8 +181,25 @@ class PluginReleaseBuilder {
 			}
 			fs.unlinkSync( existingZip );
 		}
-	}
 
+		// Clean any existing zip files for -latest.zip
+		const latestZip = path.join(
+			this.outputDir,
+			`${ this.pluginName }-latest.zip`
+		);
+
+		if ( fs.existsSync( latestZip ) ) {
+			if ( this.options.verbose ) {
+				console.log(
+					`Removing existing zip: ${ path.relative(
+						this.projectRoot,
+						latestZip
+					) }`
+				);
+			}
+			fs.unlinkSync( latestZip );
+		}
+	}
 
 	copyDistributionFiles() {
 		if ( ! this.options.quiet ) {
@@ -217,7 +236,6 @@ class PluginReleaseBuilder {
 
 			files.forEach( ( file ) => {
 				const relativePath = path.relative( this.projectRoot, file );
-				const dest = path.join( this.buildPath, relativePath );
 
 				// Skip if it's the build directory itself or node_modules
 				if (
@@ -228,6 +246,7 @@ class PluginReleaseBuilder {
 					return;
 				}
 
+				const dest = path.join( this.buildPath, relativePath );
 				// Ensure destination directory exists
 				const destDir = path.dirname( dest );
 				if ( ! fs.existsSync( destDir ) ) {
@@ -258,7 +277,7 @@ class PluginReleaseBuilder {
 		}
 	}
 
-	createZipFile() {
+	createZipFiles() {
 		if ( ! this.options.quiet ) {
 			console.log( '\n=== Creating release zip ===' );
 		}
@@ -276,10 +295,16 @@ class PluginReleaseBuilder {
 
 		fs.renameSync( this.buildPath, pluginDir );
 
-		// Create zip file
+		// Create latest zip file
 		this.executeCommand(
-			`zip -r "${ zipName }" "${ this.pluginName }"`,
-			`Creating zip file`
+			`zip -r "${ this.pluginName }-latest.zip" "${ this.pluginName }"`,
+			`Creating latest zip file`
+		);
+
+		// Copy (cp) to versioned zip file
+		this.executeCommand(
+			`cp "${ this.pluginName }-latest.zip" "${ zipName }"`,
+			`Creating versioned zip file`
 		);
 
 		// Move zip to output directory if different from project root
@@ -292,7 +317,10 @@ class PluginReleaseBuilder {
 
 		// Always show the final result
 		console.log(
-			`\n✅ Release created: ${ path.relative( process.cwd(), zipPath ) }`
+			`\n✅ Release created: \n- ${ path.relative(
+				process.cwd(),
+				`${ this.pluginName }-latest.zip`
+			) } \n- ${ path.relative( process.cwd(), zipPath ) }`
 		);
 
 		return zipPath;
@@ -324,12 +352,13 @@ class PluginReleaseBuilder {
 
 		try {
 			this.cleanBuildArtifacts();
-			
+
 			// Run composer and npm builds in parallel for significant time savings
 			await this.runParallelBuilds();
-			
+
 			this.copyDistributionFiles();
-			const zipPath = this.createZipFile();
+			// eslint-disable-next-line no-unused-vars
+			const _zipPath = this.createZipFiles();
 			this.cleanup();
 
 			if ( ! this.options.quiet ) {
@@ -350,12 +379,14 @@ class PluginReleaseBuilder {
 
 		// Create promises for parallel execution
 		const buildPromises = [];
-		
+
 		// Add composer install promise if not skipped
 		if ( ! this.options.skipComposer ) {
 			buildPromises.push(
-				this.runComposerInstall().catch( error => {
-					throw new Error( `Composer install failed: ${ error.message }` );
+				this.runComposerInstall().catch( ( error ) => {
+					throw new Error(
+						`Composer install failed: ${ error.message }`
+					);
 				} )
 			);
 		}
@@ -363,16 +394,17 @@ class PluginReleaseBuilder {
 		// Add npm build promise if not skipped
 		if ( ! this.options.skipNpm ) {
 			buildPromises.push(
-				this.runNpmBuild().catch( error => {
+				this.runNpmBuild().catch( ( error ) => {
 					throw new Error( `NPM build failed: ${ error.message }` );
 				} )
 			);
 		}
 
 		// Wait for all builds to complete
+		// eslint-disable-next-line no-useless-catch
 		try {
 			await Promise.all( buildPromises );
-			
+
 			const duration = ( ( Date.now() - startTime ) / 1000 ).toFixed( 1 );
 			if ( ! this.options.quiet ) {
 				console.log( `✅ Parallel builds completed in ${ duration }s` );
@@ -388,7 +420,9 @@ class PluginReleaseBuilder {
 			const composerPath = path.join( this.projectRoot, 'composer.json' );
 			if ( ! fs.existsSync( composerPath ) ) {
 				if ( ! this.options.quiet ) {
-					console.log( 'No composer.json found, skipping Composer install' );
+					console.log(
+						'No composer.json found, skipping Composer install'
+					);
 				}
 				resolve();
 				return;
@@ -403,12 +437,15 @@ class PluginReleaseBuilder {
 			}
 
 			try {
-				const result = execSync( 'composer install -o --no-dev --classmap-authoritative --', {
-					cwd: this.projectRoot,
-					stdio: this.options.verbose ? 'inherit' : 'pipe',
-					encoding: 'utf8',
-					env: { ...process.env },
-				} );
+				const result = execSync(
+					'composer install -o --no-dev --classmap-authoritative',
+					{
+						cwd: this.projectRoot,
+						stdio: this.options.verbose ? 'inherit' : 'pipe',
+						encoding: 'utf8',
+						env: { ...process.env },
+					}
+				);
 
 				if ( this.options.quiet ) {
 					console.log( '✅' );
@@ -421,6 +458,18 @@ class PluginReleaseBuilder {
 				if ( this.options.quiet || ! this.options.verbose ) {
 					console.log( '❌' );
 				}
+				
+				console.error( `\n❌ Composer install failed:` );
+				if ( error.stdout ) {
+					console.error( 'STDOUT:' );
+					console.error( error.stdout.toString() );
+				}
+				if ( error.stderr ) {
+					console.error( 'STDERR:' );
+					console.error( error.stderr.toString() );
+				}
+				console.error( `Exit code: ${ error.status }` );
+				
 				reject( error );
 			}
 		} );
@@ -430,13 +479,21 @@ class PluginReleaseBuilder {
 		return new Promise( ( resolve, reject ) => {
 			// Check if package.json has build scripts
 			let buildCommand;
-			if ( this.packageJSON.scripts && this.packageJSON.scripts[ 'build:production' ] ) {
-				buildCommand = 'npm run build:production --';
-			} else if ( this.packageJSON.scripts && this.packageJSON.scripts.build ) {
-				buildCommand = 'NODE_ENV=production npm run build --';
+			if (
+				this.packageJSON.scripts &&
+				this.packageJSON.scripts[ 'build:production' ]
+			) {
+				buildCommand = 'npm run build:production';
+			} else if (
+				this.packageJSON.scripts &&
+				this.packageJSON.scripts.build
+			) {
+				buildCommand = 'NODE_ENV=production npm run build';
 			} else {
 				if ( ! this.options.quiet ) {
-					console.log( 'No build scripts found in package.json, skipping npm build' );
+					console.log(
+						'No build scripts found in package.json, skipping npm build'
+					);
 				}
 				resolve();
 				return;
@@ -469,6 +526,18 @@ class PluginReleaseBuilder {
 				if ( this.options.quiet || ! this.options.verbose ) {
 					console.log( '❌' );
 				}
+				
+				console.error( `\n❌ NPM build failed:` );
+				if ( error.stdout ) {
+					console.error( 'STDOUT:' );
+					console.error( error.stdout.toString() );
+				}
+				if ( error.stderr ) {
+					console.error( 'STDERR:' );
+					console.error( error.stderr.toString() );
+				}
+				console.error( `Exit code: ${ error.status }` );
+				
 				reject( error );
 			}
 		} );
@@ -548,7 +617,7 @@ Options:
   --zip-name <name>       Zip file name override (default: {plugin-name}_{version}.zip)
   --output-dir <path>     Output directory for zip file (default: project root)
   --keep-build           Keep build directory after creating zip
-  --skip-composer        Skip composer install step  
+  --skip-composer        Skip composer install step
   --skip-npm             Skip npm build step
   --quiet                Minimal output (progress only)
   --verbose              Show detailed output from build commands
@@ -567,7 +636,7 @@ Examples:
 if ( require.main === module ) {
 	const options = parseArgs();
 	const builder = new PluginReleaseBuilder( options );
-	builder.build().catch( error => {
+	builder.build().catch( ( error ) => {
 		console.error( `\n❌ Release build failed:`, error.message );
 		process.exit( 1 );
 	} );

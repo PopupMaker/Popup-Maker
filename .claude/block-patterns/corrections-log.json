@@ -1,0 +1,140 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-08-22T06:06:35.898Z",
+  "description": "Learning history and validation statistics",
+  "globalStatistics": {
+    "totalValidations": 39,
+    "successfulValidations": 24,
+    "failedValidations": 15,
+    "patternsLearned": 8,
+    "avgProcessingTime": 180,
+    "lastLearningSession": "2025-08-22T06:00:00.000Z"
+  },
+  "correctionPatterns": {
+    "quoteEscaping": {
+      "description": "Fix unescaped quotes in JSON attributes",
+      "frequency": 0,
+      "pattern": "Replace single quotes with double quotes in block attributes",
+      "confidence": 0.95
+    },
+    "dimensionConversion": {
+      "description": "Convert string dimensions to numbers",
+      "frequency": 1,
+      "pattern": "Keep dimensions as strings - WordPress expects \"120px\" format",
+      "confidence": 0.99
+    },
+    "cssFiltering": {
+      "description": "Remove invalid CSS properties",
+      "frequency": 6,
+      "pattern": "Remove position, z-index, display, and other unsupported CSS",
+      "confidence": 0.95
+    },
+    "borderSimplification": {
+      "description": "Simplify border style objects",
+      "frequency": 2,
+      "pattern": "Convert nested border objects to flat properties or remove entirely",
+      "confidence": 0.96
+    },
+    "positionRemoval": {
+      "description": "Remove position styles that break WordPress validation",
+      "frequency": 7,
+      "pattern": "Remove position:relative/absolute from block styles",
+      "confidence": 0.99
+    },
+    "attributeFiltering": {
+      "description": "Remove unsupported block attributes",
+      "frequency": 5,
+      "pattern": "Remove gap, flexDirection, columns, isStackedOnMobile, listStyle, margin attributes",
+      "confidence": 0.97
+    },
+    "fontWeightNormalization": {
+      "description": "Convert font-weight values to WordPress standards",
+      "frequency": 1,
+      "pattern": "Convert fontWeight:bold to fontWeight:100 (numeric values)",
+      "confidence": 0.94
+    },
+    "emptyContentHandling": {
+      "description": "Handle blocks without content that need closing tags",
+      "frequency": 8,
+      "pattern": "WordPress auto-generates proper closing tags and inner content",
+      "confidence": 1
+    },
+    "cssClassGeneration": {
+      "description": "WordPress auto-generates CSS classes based on block attributes",
+      "frequency": 5,
+      "pattern": "Border attributes generate has-custom-border class, color attributes generate has-text-color class",
+      "confidence": 0.98
+    },
+    "inlineStyleRestrictions": {
+      "description": "Inline styles vs block attributes placement rules",
+      "frequency": 7,
+      "pattern": "Padding should be in style object, not inline styles. FontSize in style.typography, not top-level",
+      "confidence": 0.96
+    },
+    "buttonAttributeStructure": {
+      "description": "Button block specific attribute structure requirements",
+      "frequency": 3,
+      "pattern": "fontSize goes in style object, not root level. Use style.typography.fontSize",
+      "confidence": 0.94
+    },
+    "htmlCommentRemoval": {
+      "description": "HTML comments break block validation parsing",
+      "frequency": 8,
+      "pattern": "Remove all HTML comments (<!-- text -->) from block content - cause parsing failures",
+      "confidence": 1
+    },
+    "templateVariableCleanup": {
+      "description": "Template variables break validation in test environment",
+      "frequency": 12,
+      "pattern": "Remove {{VARIABLE:default}} syntax for validation testing - use plain text",
+      "confidence": 1
+    },
+    "buttonFontSizeClasses": {
+      "description": "Button fontSize attribute generates specific CSS classes",
+      "frequency": 1,
+      "pattern": "fontSize=\"medium\" must generate has-medium-font-size has-custom-font-size classes",
+      "confidence": 0.95
+    },
+    "missingCssClassGeneration": {
+      "description": "WordPress auto-generates CSS classes that must be expected",
+      "frequency": 6,
+      "pattern": "Border styles → has-custom-border, has-border-color. Color styles → has-text-color. Custom font sizes → has-custom-font-size",
+      "confidence": 0.98
+    },
+    "duplicateParagraphTags": {
+      "description": "Paragraph validation creating nested <p> tags",
+      "frequency": 4,
+      "pattern": "WordPress generates extra paragraph wrapper causing <p><p>content</p></p> structure",
+      "confidence": 0.92
+    },
+    "mainContainerPaddingConflict": {
+      "description": "Main container padding causes inline style conflicts",
+      "frequency": 1,
+      "pattern": "Remove padding from main container style attribute - WordPress expects padding:40px removed",
+      "confidence": 0.94
+    }
+  },
+  "learningQueue": [],
+  "sessionHistory": [
+    {
+      "sessionId": "learning_session_20250822",
+      "timestamp": "2025-08-22T05:15:00.000Z",
+      "validationsPerformed": 4,
+      "successfulCorrections": 3,
+      "newPatternsLearned": 1,
+      "patternsRefined": 2,
+      "avgProcessingTime": 150,
+      "notes": "Discovered position style removal pattern, refined CSS filtering accuracy"
+    },
+    {
+      "sessionId": "cart_abandonment_validation_20250822",
+      "timestamp": "2025-08-22T06:00:00.000Z",
+      "validationsPerformed": 12,
+      "successfulCorrections": 4,
+      "newPatternsLearned": 3,
+      "patternsRefined": 4,
+      "avgProcessingTime": 220,
+      "notes": "Discovered CSS class generation rules, inline style restrictions, button structure requirements from cart abandonment layout validation"
+    }
+  ]
+}
