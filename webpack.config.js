@@ -90,6 +90,10 @@ const config = {
 				plugin.constructor.name !== 'MiniCssExtractPlugin' &&
 				plugin.constructor.name !== 'RtlCssPlugin'
 		),
+		// Force all modules into single chunks per entry - eliminates dynamic import chunks
+		new ( require( 'webpack' ).optimize.LimitChunkCountPlugin )( {
+			maxChunks: 1,
+		} ),
 		new MiniCssExtractPlugin( {
 			filename: ( { chunk } ) => {
 				if ( chunk.name && chunk.name.includes( 'style' ) ) {
