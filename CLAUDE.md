@@ -397,6 +397,37 @@ const { settings, getSetting, updateSettings, saveSettings } = useSettings();
 
 DO NOT FORGET:
 - Inline comments must end in full-stops, exclamation marks, or question marks (Squiz.Commenting.InlineComment.InvalidEndChar)
+- **NEVER use strict PHP types on methods hooked to third-party actions/filters** - Use defensive validation instead
+
+#### Defensive Hook Callbacks
+
+When hooking methods to third-party WordPress actions/filters, avoid strict PHP type declarations. Third-party plugins can change their hook signatures causing fatal errors.
+
+**❌ Brittle (Will break on EDD/WC updates):**
+```php
+public function my_callback( int $id, string $status ): void {
+    // Fatal error if plugin passes wrong types
+}
+```
+
+**✅ Defensive (Survives plugin updates):**
+```php
+public function my_callback( $id, $status = '' ) {
+    // Validate inputs gracefully.
+    if ( ! is_numeric( $id ) || ! is_string( $status ) ) {
+        return; // Silent failure, no site breakage
+    }
+    
+    $id = (int) $id; // Safe conversion
+    // Rest of logic...
+}
+```
+
+**Pattern for all third-party hooks:**
+- Validate inputs at method start with early returns
+- Use safe type conversion: `(int)`, `(string)`, `(array)`
+- Provide sensible defaults for optional parameters
+- Never assume third-party parameter structure/types
 
 ### JavaScript
 
