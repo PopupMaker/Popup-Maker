@@ -138,7 +138,7 @@ class PUM_AssetCache {
 				do_action( 'pum_admin_enqueue_scripts' );
 			}, 10 );
 
-			add_action( 'wp_enqueue_scripts', [ __CLASS__, 'localize_bundled_scripts' ], 15 );
+			add_action( 'wp_print_scripts', [ __CLASS__, 'localize_bundled_scripts' ], 10 );
 
 			// Prevent reinitialization.
 			self::$initialized = true;
@@ -980,6 +980,24 @@ class PUM_AssetCache {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if a script is enqueued.
+	 *
+	 * @param string $handle The script handle.
+	 * @param string $status The script status.
+	 *
+	 * @return bool
+	 *
+	 * @since X.X.X
+	 */
+	public static function script_is( $handle, $status = 'enqueued' ) {
+		if ( in_array( $handle, self::$enqueued_scripts, true ) ) {
+			return true;
+		}
+
+		return wp_script_is( $handle, $status );
 	}
 
 	/**

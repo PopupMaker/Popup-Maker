@@ -142,6 +142,21 @@ function pum_enqueue_script( $handle, $src = '', $deps = [], $version = null, $i
 }
 
 /**
+ * Check if a script is enqueued.
+ *
+ * @param string $handle The script handle.
+ * @param string $status The script status.
+ *
+ * @return bool
+ *
+ * @since X.X.X
+ */
+function pum_script_is( $handle, $status = 'enqueued' ) {
+	return PUM_AssetCache::script_is( $handle, $status );
+}
+
+
+/**
  * Enqueue a style for possible caching.
  *
  * @param string   $handle The style handle.

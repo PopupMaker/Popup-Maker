@@ -32,10 +32,12 @@ class Assets extends Controller {
 	 */
 	public function init() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ], 1 );
-		add_action( 'wp_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ], 1 );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'register_scripts' ], 1 );
+
+		add_action( 'wp_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
 		add_action( 'admin_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
+
 		// Add a hook to fix old handles that might be enqueueed and not loaded, load their replacements.
 		add_action( 'wp_enqueue_scripts', [ $this, 'fix_old_handles' ], 1 );
 		add_action( 'wp_footer', [ $this, 'print_global_vars' ], 10 ); // wp_print_footer_scripts is at 20.
@@ -428,7 +430,7 @@ class Assets extends Controller {
 
 			$bundled = (bool) $package_data['bundled'];
 
-			if ( wp_script_is( $handle, 'enqueued' ) ) {
+			if ( pum_script_is( $handle, 'enqueued' ) || wp_script_is( $handle, 'enqueued' ) ) {
 				$this->should_print_global_vars = true;
 
 				if ( isset( $package_data['styles'] ) && $package_data['styles'] ) {
