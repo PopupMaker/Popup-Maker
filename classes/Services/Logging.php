@@ -417,6 +417,72 @@ class Logging extends Service {
 	}
 
 	/**
+	 * Log an informational message.
+	 *
+	 * @param string $message The message to log.
+	 *
+	 * @return void
+	 */
+	public function info( $message = '' ) {
+		$this->log( '[INFO] ' . $message );
+	}
+
+	/**
+	 * Log unique informational message.
+	 *
+	 * @param string $message The message to log.
+	 *
+	 * @return void
+	 */
+	public function log_unique_info( $message = '' ) {
+		$this->log_unique( '[INFO] ' . $message );
+	}
+
+	/**
+	 * Log a warning message.
+	 *
+	 * @param string $message The message to log.
+	 *
+	 * @return void
+	 */
+	public function warning( $message = '' ) {
+		$this->log( '[WARNING] ' . $message );
+	}
+
+	/**
+	 * Log unique warning message.
+	 *
+	 * @param string $message The message to log.
+	 *
+	 * @return void
+	 */
+	public function log_unique_warning( $message = '' ) {
+		$this->log_unique( '[WARNING] ' . $message );
+	}
+
+	/**
+	 * Log an error message.
+	 *
+	 * @param string $message The message to log.
+	 *
+	 * @return void
+	 */
+	public function error( $message = '' ) {
+		$this->log( '[ERROR] ' . $message );
+	}
+
+	/**
+	 * Log unique error message.
+	 *
+	 * @param string $message The message to log.
+	 *
+	 * @return void
+	 */
+	public function log_unique_error( $message = '' ) {
+		$this->log_unique( '[ERROR] ' . $message );
+	}
+
+	/**
 	 * Log a deprecated notice.
 	 *
 	 * @param string $func_name Function name.
