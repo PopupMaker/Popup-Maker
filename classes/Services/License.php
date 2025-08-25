@@ -43,12 +43,31 @@ class License extends Service {
 	 */
 	const OPTION_KEY = 'popup_maker_license';
 
+	/**
+	 * Settings key.
+	 *
+	 * @var string
+	 */
 	const SETTINGS_KEY = 'popup_maker_pro_license_key';
+
+	/**
+	 * Loss delay transient.
+	 *
+	 * @var string
+	 */
+	const DELAY_TRANSIENT = 'popup_maker_license_loss_delay';
+
+	/**
+	 * Loss check transient.
+	 *
+	 * @var string
+	 */
+	const CHECK_TRANSIENT = 'popup_maker_license_loss_check';
 
 	/**
 	 * License data
 	 *
-	 * @var array{key:string|null,status:array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null}|null
+	 * @var array{key:string|null,status:array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null,auto_activation?:array{enabled:bool,first_activated:string|null,last_seen:string|null,key_missing_since:string|null,key_hash:string|null}}|null
 	 */
 	private $license_data;
 
@@ -76,21 +95,150 @@ class License extends Service {
 	}
 
 	/**
-	 * Autoregister license.
+	 * Autoregister license with simplified security approach.
+	 *
+	 * For auto-activated licenses:
+	 * - Never stores the actual key in database (uses placeholder)
+	 * - Simple detection and setup without complex monitoring
+	 * - Self-healing: automatically corrects DB state if needed
+	 * - Detects loss of auto-activation for debugging
 	 *
 	 * @return void
 	 */
 	public function autoregister() {
-		$key = defined( '\POPUP_MAKER_LICENSE_KEY' ) && '' !== \POPUP_MAKER_LICENSE_KEY ? \POPUP_MAKER_LICENSE_KEY : false;
+		$constant_key = defined( 'POPUP_MAKER_LICENSE_KEY' ) && '' !== POPUP_MAKER_LICENSE_KEY ? POPUP_MAKER_LICENSE_KEY : false;
+		$license_data = $this->get_license_data();
 
-		if ( $key && $key !== $this->get_license_key() ) {
-			try {
-				$this->maybe_activate_license( $key );
-			// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-			} catch ( \Exception $e ) {
-				// Do nothing.
+		// Handle new auto-activation setup.
+		if ( $constant_key ) {
+			// Clear any existing delay transients when key is detected.
+			$this->clear_transients();
+
+			$this->ensure_auto_activation_setup( $constant_key );
+		} else {
+			$is_auto_activated = isset( $license_data['auto_activation']['enabled'] );
+			$constant_lost     = ! empty( $license_data['auto_activation']['constant_lost_at'] );
+
+			// If auto-activation is enabled and constant is not lost, handle loss.
+			if ( $is_auto_activated && ! $constant_lost ) {
+				$this->handle_auto_activation_loss_with_delay();
 			}
 		}
+	}
+
+	/**
+	 * Clear transients.
+	 *
+	 * @return void
+	 */
+	private function clear_transients(): void {
+		delete_transient( self::DELAY_TRANSIENT );
+		delete_transient( self::CHECK_TRANSIENT );
+	}
+
+	/**
+	 * Handle loss of auto-activation constant with transient-based delay.
+	 *
+	 * Uses simple transient system to delay loss detection by 5 minutes,
+	 * preventing false positives during plugin updates and WordPress operations.
+	 *
+	 * @return void
+	 */
+	private function handle_auto_activation_loss_with_delay(): void {
+		// If delay transient exists, we're still waiting - do nothing
+		if ( get_transient( self::DELAY_TRANSIENT ) ) {
+			return;
+		}
+
+		// If check transient doesn't exist, start the delay period (first detection)
+		if ( ! get_transient( self::CHECK_TRANSIENT ) ) {
+			set_transient( self::DELAY_TRANSIENT, true, 10 );
+			set_transient( self::CHECK_TRANSIENT, true, 0 ); // Non-expiring transient
+			return;
+		}
+
+		// Delay expired and we still don't have the constant - mark as lost
+		$this->handle_auto_activation_loss();
+
+		// Clean up the check transient
+		delete_transient( self::CHECK_TRANSIENT );
+	}
+
+	/**
+	 * Ensure auto-activation is properly set up with simplified approach.
+	 *
+	 * @param string $key The license key from constant.
+	 *
+	 * @return void
+	 */
+	private function ensure_auto_activation_setup( string $key ): void {
+		$license_data = $this->get_license_data();
+		$db_key       = isset( $license_data['key'] ) ? $license_data['key'] : '';
+
+		// Self-healing: ensure DB has placeholder, not real key
+		if ( '***AUTO***' !== $db_key || empty( $license_data['auto_activation']['enabled'] ) ) {
+			$license_data = [
+				'key'             => '***AUTO***',
+				'status'          => $license_data['status'] ?? null, // Preserve existing status
+				'auto_activation' => [
+					'enabled' => true,
+				],
+			];
+
+			$this->update_license_data( $license_data );
+
+			// Activate using the constant key if not already active
+			if ( ! $this->is_license_active() ) {
+				try {
+					$this->maybe_activate_license( $key );
+				// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+				} catch ( \Exception $e ) {
+					// Do nothing on activation failure.
+				}
+			}
+		} elseif ( ! empty( $license_data['auto_activation']['constant_lost_at'] ) ) {
+			// Constant was restored - clear the loss timestamp and grace period
+			unset( $license_data['auto_activation']['constant_lost_at'] );
+			$this->update_license_data( $license_data );
+
+			// Clear delay transients since constant is back
+			$this->clear_transients();
+
+			// Log restoration for debugging
+			\PopupMaker\logging()->info( 'Auto-activation constant POPUP_MAKER_LICENSE_KEY was restored at ' . gmdate( 'Y-m-d H:i:s' ) );
+		}
+	}
+
+	/**
+	 * Handle loss of auto-activation constant.
+	 *
+	 * Tracks when auto-activation is lost for debugging and monitoring.
+	 * Updates the license data with loss information and clears transients.
+	 * Also clears license status to reflect the loss in UI.
+	 *
+	 * @return void
+	 */
+	private function handle_auto_activation_loss(): void {
+		$license_data = $this->get_license_data();
+
+		// Mark as lost and clear license status so UI reflects the change
+		$license_data['auto_activation']['constant_lost_at'] = gmdate( 'Y-m-d H:i:s' );
+
+		// Mark as lost and clear license status so UI reflects the change
+		$license_data['auto_activation']['enabled'] = false;
+
+		// Clear the key and status so UI shows inactive.
+		$license_data['key']    = '';
+		$license_data['status'] = null; // Clear cached status so UI shows inactive
+
+		// Update the license data.
+		$this->update_license_data( $license_data );
+
+		// Clear the check transient since we've now marked it as lost
+		$this->clear_transients();
+
+		// Log for debugging
+		\PopupMaker\logging()->warning( 'Auto-activation constant POPUP_MAKER_LICENSE_KEY was removed at ' . $current_time );
 	}
 
 	/**
@@ -107,13 +255,14 @@ class License extends Service {
 	/**
 	 * Get license data.
 	 *
-	 * @return array{key:string|null,status:array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null}
+	 * @return array{key:string|null,status:array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null,auto_activation?:array{enabled:bool,constant_lost_at?:string|null}}
 	 */
 	public function get_license_data() {
 		if ( ! isset( $this->license_data ) ) {
 			$this->license_data = \get_option( self::OPTION_KEY, [
-				'key'    => '',
-				'status' => null,
+				'key'             => '',
+				'status'          => null,
+				'auto_activation' => null,
 			] );
 		}
 
@@ -123,7 +272,7 @@ class License extends Service {
 	/**
 	 * Update license data.
 	 *
-	 * @param array{key:string|null,status:array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null} $license_data License data.
+	 * @param array{key:string|null,status:array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null,auto_activation?:array{enabled:bool,constant_lost_at?:string|null}} $license_data License data.
 	 *
 	 * @return bool
 	 */
@@ -138,7 +287,10 @@ class License extends Service {
 	}
 
 	/**
-	 * Get license key.
+	 * Get license key for display purposes.
+	 *
+	 * For auto-activated licenses, this always returns the constant value
+	 * or placeholder - never exposes real keys from database.
 	 *
 	 * @uses \PopupMaker\Services\License::get_license_data() For source of truth.
 	 *
@@ -146,7 +298,37 @@ class License extends Service {
 	 */
 	public function get_license_key(): string {
 		$license_data = $this->get_license_data();
+
+		// Handle auto-activated licenses securely
+		if ( ! empty( $license_data['auto_activation']['enabled'] ) ) {
+			// For auto-activated, always return constant or placeholder
+			return defined( 'POPUP_MAKER_LICENSE_KEY' ) && ! empty( POPUP_MAKER_LICENSE_KEY )
+				? POPUP_MAKER_LICENSE_KEY
+				: $license_data['key']; // Will be '***AUTO***' placeholder
+		}
+
+		// Return regular stored key
 		return ! empty( $license_data['key'] ) ? $license_data['key'] : '';
+	}
+
+	/**
+	 * Get raw license key for internal API calls only.
+	 *
+	 * This method should NEVER be used for display purposes.
+	 * For auto-activated licenses, it always retrieves from the constant.
+	 *
+	 * @return string|null
+	 */
+	private function get_raw_license_key(): ?string {
+		$license_data = $this->get_license_data();
+
+		// For auto-activated licenses, always use the constant
+		if ( ! empty( $license_data['auto_activation']['enabled'] ) ) {
+			return defined( 'POPUP_MAKER_LICENSE_KEY' ) && ! empty( POPUP_MAKER_LICENSE_KEY ) ? POPUP_MAKER_LICENSE_KEY : null;
+		}
+
+		// For regular licenses, use stored key
+		return ! empty( $license_data['key'] ) ? $license_data['key'] : null;
 	}
 
 	/**
@@ -388,7 +570,7 @@ class License extends Service {
 	 * @return bool
 	 */
 	public function refresh_license_status(): bool {
-		$key = $this->get_license_key();
+		$key = $this->get_raw_license_key();
 
 		if ( empty( $key ) ) {
 			return false;
@@ -414,7 +596,7 @@ class License extends Service {
 	 * @throws \Exception If there is an error.
 	 */
 	private function api_call( string $action, ?array $params = null ): array|null {
-		$key = $this->get_license_key();
+		$key = $this->get_raw_license_key();
 
 		if ( empty( $key ) ) {
 			return null;
@@ -642,12 +824,19 @@ class License extends Service {
 	 * Side effect:
 	 * - This will remove the license if the key is empty.
 	 * - This will update the license key if its different from the current key.
+	 * - Auto-activated licenses cannot be modified via this method.
 	 *
 	 * @param string $key License key.
 	 *
 	 * @return bool
 	 */
 	public function maybe_update_license_key( string $key ): bool {
+		// Prevent modification of auto-activated licenses
+		$license_data = $this->get_license_data();
+		if ( ! empty( $license_data['auto_activation']['enabled'] ) ) {
+			return false;
+		}
+
 		if ( empty( $key ) ) {
 			$this->remove_license();
 			return true;
@@ -696,13 +885,48 @@ class License extends Service {
 	/**
 	 * Check if license is auto-activated via POPUP_MAKER_LICENSE_KEY constant.
 	 *
+	 * Uses database flag for reliable detection even when constant is removed.
+	 *
 	 * @return bool
 	 */
-	public function is_auto_activated() {
-		$constant_key = defined( 'POPUP_MAKER_LICENSE_KEY' ) && ! empty( POPUP_MAKER_LICENSE_KEY ) ? POPUP_MAKER_LICENSE_KEY : null;
-		$current_key  = $this->get_license_key();
+	public function is_auto_activated(): bool {
+		$license_data = $this->get_license_data();
+		return ! empty( $license_data['auto_activation']['enabled'] );
+	}
 
-		return $constant_key && $current_key === $constant_key && $this->is_license_active();
+	/**
+	 * Get auto-activation info for debugging.
+	 *
+	 * @return array{enabled:bool,constant_present:bool,db_key:string,constant_lost_at:string|null,status:string}|null
+	 */
+	public function get_auto_activation_info(): ?array {
+		$license_data = $this->get_license_data();
+
+		if ( ! isset( $license_data['auto_activation']['enabled'] ) ) {
+			return null;
+		}
+
+		$constant_key     = defined( 'POPUP_MAKER_LICENSE_KEY' ) && ! empty( POPUP_MAKER_LICENSE_KEY ) ? POPUP_MAKER_LICENSE_KEY : null;
+		$constant_present = null !== $constant_key;
+		$constant_lost_at = $license_data['auto_activation']['constant_lost_at'] ?? null;
+
+		// Determine status
+		$status = 'unknown';
+		if ( $constant_present ) {
+			$status = $constant_lost_at ? 'restored' : 'active';
+		} elseif ( $constant_lost_at ) {
+			$status = 'lost';
+		} else {
+			$status = 'missing';
+		}
+
+		return [
+			'enabled'          => true,
+			'constant_present' => $constant_present,
+			'db_key'           => $license_data['key'] ?? '',
+			'constant_lost_at' => $constant_lost_at,
+			'status'           => $status,
+		];
 	}
 
 	/**
@@ -811,11 +1035,25 @@ class License extends Service {
 			$is_pro_active    = $this->container->is_pro_active();
 			$pro_version      = $this->container->get_pro_version();
 
+			// Check for auto-activation status messages
+			$messages = ! empty( $license_status['error_message'] ) ? [ $license_status['error_message'] ] : [];
+
+			// Add auto-activation disconnect message if applicable
+			$auto_info = $license_service->get_auto_activation_info();
+			if ( ! empty( $auto_info['constant_lost_at'] ) ) {
+				$lost_date  = $auto_info['constant_lost_at'];
+				$messages[] = sprintf(
+					/* translators: the date and time of the auto-activation disconnect */
+					__( 'Auto-activation was disconnected on %s. The POPUP_MAKER_LICENSE_KEY constant was removed from your configuration.', 'popup-maker' ),
+					date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $lost_date ) )
+				);
+			}
+
 			// Pass anything we want to the template here.
 			$args['current_values'][ self::SETTINGS_KEY ] = [
 				'key'              => $license_key,
 				'status'           => $status_mapping['status'],
-				'messages'         => ! empty( $license_status['error_message'] ) ? [ $license_status['error_message'] ] : [],
+				'messages'         => $messages,
 				'expires'          => $license_service->get_license_expiration(),
 				'classes'          => $status_mapping['classes'],
 				'license_tier'     => $license_tier,
