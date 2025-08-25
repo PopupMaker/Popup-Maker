@@ -103,9 +103,6 @@ export const parseOldArgsToProps = (
 
 	//* Dependencies
 
-	let entityKind = 'postType';
-	let entityType = '';
-
 	// Prop modifications & remappings go here.
 	switch ( fieldProps.type ) {
 		case 'checkbox':
@@ -125,6 +122,13 @@ export const parseOldArgsToProps = (
 
 		case 'license_key':
 			return fieldProps;
+
+		case 'customselect':
+			// customselect is a new field type, return as-is
+			return {
+				...fieldProps,
+				entityType: fieldProps.entityType ?? 'custom',
+			};
 
 		case 'text':
 		case 'email':
@@ -211,25 +215,29 @@ export const parseOldArgsToProps = (
 			fieldProps.placeholder = args?.placeholder ?? '';
 
 			if ( args.type === 'postselect' ) {
-				entityKind = 'postType';
-				entityType = args?.post_type ?? 'post';
+				return {
+					...fieldProps,
+					entityKind: 'postType',
+					entityType: args?.post_type ?? 'post',
+				};
 			} else if ( args.type === 'taxonomyselect' ) {
-				entityKind = 'taxonomy';
-				entityType = args?.taxonomy ?? 'category';
+				return {
+					...fieldProps,
+					entityKind: 'taxonomy',
+					entityType: args?.taxonomy ?? 'category',
+				};
 			} else if ( args.type === 'userselect' ) {
-				entityKind = 'user';
-				entityType = 'user';
-			} else {
-				// @ts-ignore
-				entityKind = args?.post_type ? 'postType' : 'taxonomy';
-				// @ts-ignore
-				entityType = args?.post_type ?? args?.taxonomy;
+				return {
+					...fieldProps,
+					entityKind: 'user',
+					entityType: 'user',
+				};
 			}
 
 			return {
 				...fieldProps,
-				entityKind,
-				entityType,
+				entityKind: 'postType',
+				entityType: 'post',
 			};
 
 		case 'textarea':
@@ -430,6 +438,11 @@ export const parseFieldProps = (
 		case 'color':
 			return {
 				...fieldProps,
+			};
+		case 'customselect':
+			return {
+				...fieldProps,
+				entityType: fieldProps.entityType ?? 'custom',
 			};
 		case 'multicheck':
 			return {

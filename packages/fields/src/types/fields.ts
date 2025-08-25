@@ -224,7 +224,7 @@ export type PartialFieldProps = AtLeast< FieldProps, MinFieldProps >;
  */
 export type IntermediaryFieldProps =
 	| AtLeast< CheckboxFieldProps, MinFieldProps >
-	| AtLeast< CustomSelectFieldProps, MinFieldProps | 'entityType' >
+	| AtLeast< CustomSelectFieldProps, MinFieldProps >
 	| AtLeast< DateFieldProps, MinFieldProps >
 	| AtLeast< HexColorFieldProps, MinFieldProps >
 	| AtLeast< HiddenFieldProps, MinFieldProps >
