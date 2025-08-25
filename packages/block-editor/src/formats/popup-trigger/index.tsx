@@ -228,6 +228,7 @@ export const settings: WPFormat = {
 	title,
 	tagName: 'span',
 	className: 'popup-trigger',
+	object: false,
 	attributes: {
 		popupId: 'data-popup-id',
 		doDefault: 'data-do-default',

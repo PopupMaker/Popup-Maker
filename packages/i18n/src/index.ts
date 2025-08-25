@@ -23,7 +23,7 @@ export const sprintf = (
 	format: string,
 	...args: Array< string | number >
 ) => {
-	return i18n.sprintf( format, ...args );
+	return i18n.sprintf( format, ...( args as [] ) );
 };
 
 export const __ = ( text: string, domain: TextDomain ) => {
