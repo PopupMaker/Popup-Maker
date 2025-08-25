@@ -10,6 +10,9 @@ import { debounce, useInstanceId } from '@wordpress/compose';
 
 import { noop } from '@popup-maker/utils';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { WordPressWindow as _WP } from '@popup-maker/types';
+
 type Props< T extends string > = {
 	label?: string | React.ReactNode;
 	placeholder?: string;
@@ -18,24 +21,6 @@ type Props< T extends string > = {
 	className?: clsx.ClassValue;
 	minHeight?: number;
 };
-
-export interface WindowWP {
-	oldEditor: {
-		initialize: ( id: string, settings: any ) => void;
-		remove: ( id: string ) => void;
-	};
-	blocks?: unknown;
-	ajax: {
-		get: ( action: string, data: any ) => Promise< any >;
-		post: ( action: string, data: any ) => Promise< any >;
-		nonce: string;
-	};
-	api?: {
-		settings?: {
-			nonce: string;
-		};
-	};
-}
 
 declare global {
 	interface Window {
@@ -47,7 +32,6 @@ declare global {
 				settings: any;
 			};
 		};
-		wp: WindowWP;
 	}
 }
 
