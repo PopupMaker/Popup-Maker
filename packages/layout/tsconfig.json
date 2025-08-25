@@ -1,17 +1,16 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"outDir": "./build-types",
-		"tsBuildInfoFile": "./tsconfig.tsbuildinfo",
-		"declarationDir": "./build-types"
+		"rootDir": "src",
+		"outDir": "build",
+		"declarationDir": "build-types"
 	},
+	"include": [ "./src/**/*" ],
 	"references": [
 		{ "path": "../components" },
 		{ "path": "../i18n" },
 		{ "path": "../icons" },
 		{ "path": "../types" },
 		{ "path": "../use-query-params" }
-	],
-	"include": [ "src/**/*.ts", "src/**/*.tsx" ],
-	"exclude": [ "node_modules", "build", "build-types" ]
+	]
 }
