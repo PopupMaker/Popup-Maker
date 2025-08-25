@@ -120,28 +120,19 @@ interface WidthPanelProps {
 	setAttributes: ( attrs: Partial< ButtonAttributes > ) => void;
 }
 
-/**
- * Fill missing types from block editor store.
- */
-interface BlockEditorSelectors {
-	getBlock: ( clientId: string ) => BlockInstance;
-	getBlockRootClientId: ( clientId: string ) => string;
-	getBlockIndex: ( clientId: string ) => number;
-}
-
 function useEnter( props: { content: string; clientId: string } ) {
 	const { replaceBlocks, selectionChange } = useDispatch( blockEditorStore );
-	const { getBlock, getBlockRootClientId, getBlockIndex } = useSelect(
-		( select ) => {
-			const store = select( blockEditorStore ) as BlockEditorSelectors;
-
-			return {
-				getBlock: store.getBlock,
-				getBlockRootClientId: store.getBlockRootClientId,
-				getBlockIndex: store.getBlockIndex,
-			};
-		},
-		[ props.clientId ]
+	const getBlock = useSelect(
+		( select ) => select( blockEditorStore ).getBlock,
+		[]
+	);
+	const getBlockRootClientId = useSelect(
+		( select ) => select( blockEditorStore ).getBlockRootClientId,
+		[]
+	);
+	const getBlockIndex = useSelect(
+		( select ) => select( blockEditorStore ).getBlockIndex,
+		[]
 	);
 
 	const propsRef = useRef( props );
@@ -336,17 +327,11 @@ function ButtonEdit( props: ButtonEditProps ) {
 	const isLinkTag = 'a' === TagName;
 
 	// Get available CTAs from the store
-	const { selectedCTA } = useSelect(
-		( select ) => ( {
-			ctas: select( callToActionStore ).getCallToActions(),
-			selectedCTA: ctaId
+	const selectedCTA = useSelect(
+		( select ) =>
+			ctaId
 				? select( callToActionStore ).getCallToAction( ctaId )
 				: undefined,
-			// recentlyFetchedCtas:
-			// 	select( CALL_TO_ACTION_STORE ).isDispatching(
-			// 		'getCallToActions'
-			// 	),
-		} ),
 		[ ctaId ]
 	);
 
