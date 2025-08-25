@@ -31,9 +31,8 @@
 	"wpScript": true,
 	"sideEffects": false,
 	"dependencies": {
-		"@wordpress/i18n": "^5.16.0"
+		"@wordpress/i18n": "^6.2.0"
 	},
-	"devDependencies": {},
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",

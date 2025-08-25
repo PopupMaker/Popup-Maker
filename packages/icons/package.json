@@ -44,17 +44,17 @@
 		"build-storybook": "storybook build"
 	},
 	"dependencies": {
-		"@wordpress/primitives": "^4.14.0"
+		"@wordpress/primitives": "^4.29.0"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
 	},
 	"devDependencies": {
+		"@storybook/addon-actions": "^8.4.7",
 		"@storybook/addon-essentials": "^8.4.7",
 		"@storybook/addon-interactions": "^8.4.7",
 		"@storybook/addon-links": "^8.4.7",
 		"@storybook/addon-onboarding": "^8.4.7",
-		"@storybook/addon-actions": "^8.4.7",
 		"@storybook/blocks": "^8.4.7",
 		"@storybook/react": "^8.4.7",
 		"@storybook/react-webpack5": "^8.4.7",

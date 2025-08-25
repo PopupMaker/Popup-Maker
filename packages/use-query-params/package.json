@@ -23,10 +23,18 @@
 	"exports": {
 		".": {
 			"types": "./build-types/src/index.d.ts",
-			"default": "./build/src/index.js"
+			"default": "./build/src/index.js",
+			"adapters": "./build/src/adapters"
 		}
 	},
 	"wpScript": true,
+	"wpScriptModuleExports": {
+		".": {
+			"types": "./build-types/src/index.d.ts",
+			"default": "./build/src/index.js",
+			"adapters": "./build/src/adapters"
+		}
+	},
 	"sideEffects": true,
 	"dependencies": {
 		"serialize-query-params": "^2.0.2",

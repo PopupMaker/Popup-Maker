@@ -30,9 +30,8 @@
 	"wpScript": true,
 	"sideEffects": false,
 	"dependencies": {
-		"@wordpress/element": "^6.17.0"
+		"@wordpress/element": "^6.29.0"
 	},
-	"peerDependencies": {},
 	"scripts": {
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",

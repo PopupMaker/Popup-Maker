@@ -34,10 +34,10 @@
 		"@popup-maker/icons": "*",
 		"@popup-maker/types": "*",
 		"@popup-maker/use-query-params": "*",
-		"@wordpress/components": "^30.0.0",
-		"@wordpress/compose": "^7.27.0",
-		"@wordpress/element": "^6.27.0",
-		"@wordpress/icons": "^10.27.0",
+		"@wordpress/components": "^30.2.0",
+		"@wordpress/compose": "^7.29.0",
+		"@wordpress/element": "^6.29.0",
+		"@wordpress/icons": "^10.29.0",
 		"clsx": "^2.1.1"
 	},
 	"devDependencies": {
