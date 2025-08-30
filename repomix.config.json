@@ -36,7 +36,9 @@
 			"**/node_modules/**/*",
 			"**/build/**/*",
 			"**/build-types/**/*",
-			"**/*.tsbuildinfo"
+			"**/*.tsbuildinfo",
+			"**/tests/**/*",
+			"**/__tests__/**/*"
 		]
 	},
 	"security": {
