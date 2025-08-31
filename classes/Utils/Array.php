@@ -207,6 +207,16 @@ class PUM_Utils_Array {
 	 * @return array<string, mixed>
 	 */
 	public static function pluck( $arr, $keys = [] ) {
+		// Convert objects to arrays to prevent fatal errors.
+		if ( is_object( $arr ) ) {
+			$arr = (array) $arr;
+		}
+
+		// Return empty array if input is not array-like.
+		if ( ! is_array( $arr ) ) {
+			return [];
+		}
+
 		return self::pluck_keys_containing( $arr, $keys );
 	}
 
@@ -218,6 +228,16 @@ class PUM_Utils_Array {
 	 * @return array<string, mixed>
 	 */
 	public static function pluck_keys_containing( $arr, $strings = [] ) {
+		// Convert objects to arrays to prevent fatal errors.
+		if ( is_object( $arr ) ) {
+			$arr = (array) $arr;
+		}
+
+		// Return empty array if input is not array-like.
+		if ( ! is_array( $arr ) ) {
+			return [];
+		}
+
 		$to_be_removed = self::remove_keys_containing( $arr, $strings );
 
 		return array_diff_key( $arr, $to_be_removed );
@@ -291,6 +311,16 @@ class PUM_Utils_Array {
 	public static function remove_keys_containing( $arr, $strings = [] ) {
 
 		if ( ! $strings ) {
+			return $arr;
+		}
+
+		// Convert objects to arrays to prevent fatal errors.
+		if ( is_object( $arr ) ) {
+			$arr = (array) $arr;
+		}
+
+		// Return input unchanged if not array-like.
+		if ( ! is_array( $arr ) ) {
 			return $arr;
 		}
 
