@@ -17,6 +17,11 @@ const config = defineConfig( {
 	globalSetup: fileURLToPath(
 		new URL( './config/global-setup.ts', 'file:' + __filename ).href
 	),
+	use: {
+		...baseConfig.use,
+		baseURL: process.env.WP_BASE_URL || 'http://localhost:8880',
+	},
+	webServer: undefined, // Don't auto-start wp-env, handle manually
 	projects: [
 		{
 			name: 'chromium',
