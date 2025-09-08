@@ -14,6 +14,8 @@
 // This is the code to be injected into popup-maker.php by EDD Watermark.
 // Do not include the <?php tag when injecting.
 
+// --- CUT HERE ---
+
 /**
  * Self-hosted update system for distributions outside wordpress.org.
  *
