@@ -106,7 +106,7 @@ class License extends Service {
 	 * @return void
 	 */
 	public function autoregister() {
-		$constant_key = defined( 'POPUP_MAKER_LICENSE_KEY' ) && '' !== POPUP_MAKER_LICENSE_KEY ? POPUP_MAKER_LICENSE_KEY : false;
+		$constant_key = defined( 'POPUP_MAKER_PRO_LICENSE' ) && '' !== POPUP_MAKER_PRO_LICENSE ? POPUP_MAKER_PRO_LICENSE : false;
 		$license_data = $this->get_license_data();
 
 		// Handle new auto-activation setup.
@@ -205,7 +205,7 @@ class License extends Service {
 			$this->clear_transients();
 
 			// Log restoration for debugging
-			\PopupMaker\logging()->info( 'Auto-activation constant POPUP_MAKER_LICENSE_KEY was restored at ' . gmdate( 'Y-m-d H:i:s' ) );
+			\PopupMaker\logging()->info( 'Auto-activation constant POPUP_MAKER_PRO_LICENSE was restored at ' . gmdate( 'Y-m-d H:i:s' ) );
 		}
 	}
 
@@ -237,8 +237,10 @@ class License extends Service {
 		// Clear the check transient since we've now marked it as lost
 		$this->clear_transients();
 
+		$current_time = gmdate( 'Y-m-d H:i:s' );
+
 		// Log for debugging
-		\PopupMaker\logging()->warning( 'Auto-activation constant POPUP_MAKER_LICENSE_KEY was removed at ' . $current_time );
+		\PopupMaker\logging()->warning( 'Auto-activation constant POPUP_MAKER_PRO_LICENSE was removed at ' . $current_time );
 	}
 
 	/**
@@ -302,8 +304,8 @@ class License extends Service {
 		// Handle auto-activated licenses securely
 		if ( ! empty( $license_data['auto_activation']['enabled'] ) ) {
 			// For auto-activated, always return constant or placeholder
-			return defined( 'POPUP_MAKER_LICENSE_KEY' ) && ! empty( POPUP_MAKER_LICENSE_KEY )
-				? POPUP_MAKER_LICENSE_KEY
+			return defined( 'POPUP_MAKER_PRO_LICENSE' ) && ! empty( POPUP_MAKER_PRO_LICENSE )
+				? POPUP_MAKER_PRO_LICENSE
 				: $license_data['key']; // Will be '***AUTO***' placeholder
 		}
 
@@ -324,7 +326,7 @@ class License extends Service {
 
 		// For auto-activated licenses, always use the constant
 		if ( ! empty( $license_data['auto_activation']['enabled'] ) ) {
-			return defined( 'POPUP_MAKER_LICENSE_KEY' ) && ! empty( POPUP_MAKER_LICENSE_KEY ) ? POPUP_MAKER_LICENSE_KEY : null;
+			return defined( 'POPUP_MAKER_PRO_LICENSE' ) && ! empty( POPUP_MAKER_PRO_LICENSE ) ? POPUP_MAKER_PRO_LICENSE : null;
 		}
 
 		// For regular licenses, use stored key
@@ -883,7 +885,7 @@ class License extends Service {
 	}
 
 	/**
-	 * Check if license is auto-activated via POPUP_MAKER_LICENSE_KEY constant.
+	 * Check if license is auto-activated via POPUP_MAKER_PRO_LICENSE constant.
 	 *
 	 * Uses database flag for reliable detection even when constant is removed.
 	 *
@@ -906,7 +908,7 @@ class License extends Service {
 			return null;
 		}
 
-		$constant_key     = defined( 'POPUP_MAKER_LICENSE_KEY' ) && ! empty( POPUP_MAKER_LICENSE_KEY ) ? POPUP_MAKER_LICENSE_KEY : null;
+		$constant_key     = defined( 'POPUP_MAKER_PRO_LICENSE' ) && ! empty( POPUP_MAKER_PRO_LICENSE ) ? POPUP_MAKER_PRO_LICENSE : null;
 		$constant_present = null !== $constant_key;
 		$constant_lost_at = $license_data['auto_activation']['constant_lost_at'] ?? null;
 
@@ -1044,7 +1046,7 @@ class License extends Service {
 				$lost_date  = $auto_info['constant_lost_at'];
 				$messages[] = sprintf(
 					/* translators: the date and time of the auto-activation disconnect */
-					__( 'Auto-activation was disconnected on %s. The POPUP_MAKER_LICENSE_KEY constant was removed from your configuration.', 'popup-maker' ),
+					__( 'Auto-activation was disconnected on %s. The POPUP_MAKER_PRO_LICENSE constant was removed from your configuration.', 'popup-maker' ),
 					date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $lost_date ) )
 				);
 			}

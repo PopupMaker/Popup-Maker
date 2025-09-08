@@ -107,6 +107,6 @@ if ( ! defined( 'POPUP_MAKER_UPGRADE_DEBUG_LOGGING' ) ) {
 	define( 'POPUP_MAKER_UPGRADE_DEBUG_LOGGING', true );
 }
 
-if ( ! defined( 'POPUP_MAKER_LICENSE_KEY' ) ) {
-	define( 'POPUP_MAKER_LICENSE_KEY', '' );
+if ( ! defined( 'POPUP_MAKER_PRO_LICENSE' ) ) {
+	define( 'POPUP_MAKER_PRO_LICENSE', '' );
 }
