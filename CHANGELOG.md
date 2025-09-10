@@ -24,6 +24,7 @@ This update begins the process of modernizing our codebase while polishing exist
 
 **Improvements**
 
+-   Refactored core analytics to prevent duplicate conversion tracking when Pro is active.
 -   Block editor is now the default for new popups, replacing the previous opt-in beta approach for a more streamlined editing experience.
     -   Added "Use Classic Editor" setting for users who prefer the traditional popup editor interface.
     -   Existing users who previously disabled the block editor will see a one-time migration notice with options to continue using the block editor or switch to classic.

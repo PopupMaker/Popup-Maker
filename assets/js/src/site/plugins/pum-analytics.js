@@ -123,35 +123,38 @@
 		 * Track form submission conversions
 		 */
 		$( function () {
+			// Store reference so Pro can unhook it
+			window.PUM.coreFormAnalyticsHandler = function ( form, args ) {
+				// If the submission has already been counted in the backend, we can bail early.
+				if ( args.ajax === false ) {
+					return;
+				}
+
+				// If no popup is included in the args, we can bail early since we only record conversions within popups.
+				if ( args.popup.length === 0 ) {
+					return;
+				}
+				var data = {
+					pid:
+						parseInt(
+							args.popup.popmake( 'getSettings' ).id,
+							10
+						) || null,
+					event: 'conversion',
+				};
+
+				// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
+				if (
+					data.pid > 0 &&
+					! $( 'body' ).hasClass( 'single-popup' )
+				) {
+					window.PUM_Analytics.beacon( data );
+				}
+			};
+
 			window.PUM.hooks.addAction(
 				'pum.integration.form.success',
-				function ( form, args ) {
-					// If the submission has already been counted in the backend, we can bail early.
-					if ( args.ajax === false ) {
-						return;
-					}
-
-					// If no popup is included in the args, we can bail early since we only record conversions within popups.
-					if ( args.popup.length === 0 ) {
-						return;
-					}
-					var data = {
-						pid:
-							parseInt(
-								args.popup.popmake( 'getSettings' ).id,
-								10
-							) || null,
-						event: 'conversion',
-					};
-
-					// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
-					if (
-						data.pid > 0 &&
-						! $( 'body' ).hasClass( 'single-popup' )
-					) {
-						window.PUM_Analytics.beacon( data );
-					}
-				}
+				window.PUM.coreFormAnalyticsHandler
 			);
 		} );
 	}
