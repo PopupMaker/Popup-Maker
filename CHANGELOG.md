@@ -21,6 +21,7 @@ This update begins the process of modernizing our codebase while polishing exist
     -   Upgrade to Popup Maker Pro or Pro+ to use them outside popups, for quick import/export, or to create WooCommerce add to cart & apply discount buttons.
 -   Conversion tracking for all internal popup links enabling better analysis of popup performance and user engagement.
 -   New `On Conversion` cookie event to disable popups once they convert.
+-   New Bricks Builder form integration for conversion tracking, form based cookies, closing popups after submission, and more.
 
 **Improvements**
 

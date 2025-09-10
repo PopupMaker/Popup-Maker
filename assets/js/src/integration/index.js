@@ -1,3 +1,4 @@
+import './bricksbuilder';
 import './calderaforms';
 import './contactform7';
 import './fluentforms';
