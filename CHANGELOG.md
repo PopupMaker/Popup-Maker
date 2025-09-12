@@ -23,6 +23,10 @@ This update begins the process of modernizing our codebase while polishing exist
 -   New `On Conversion` cookie event to disable popups once they convert.
 -   New Bricks Builder form integration for conversion tracking, form based cookies, closing popups after submission, and more.
 
+**Security**
+
+-   Minor:Removed Easy Modal v2 [modal] shortcode compatibility mode as it has been deprecated for a long and was recently reported to include an unescaped title output.
+
 **Improvements**
 
 -   Refactored core analytics to prevent duplicate conversion tracking when Pro is active.
