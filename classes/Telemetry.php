@@ -146,7 +146,7 @@ class PUM_Telemetry {
 			}
 		}
 
-		return [
+		$data = [
 			// UID.
 			'uid'                    => self::get_uuid(),
 
@@ -189,6 +189,17 @@ class PUM_Telemetry {
 			'sizes'                  => $sizes,
 			'sounds'                 => $sounds,
 		];
+
+		/**
+		 * Filter telemetry data before sending.
+		 *
+		 * Allows extensions like Pro to add additional telemetry data.
+		 *
+		 * @since 1.20.0
+		 *
+		 * @param array $data Telemetry data array.
+		 */
+		return apply_filters( 'pum_telemetry_data', $data );
 	}
 
 	/**
