@@ -8,6 +8,8 @@
 
 use function PopupMaker\plugin;
 
+// TODO REVIEW THIS FILE.
+
 /**
  * Handles displaying promotional text throughout plugin UI
  */
@@ -86,7 +88,7 @@ class PUM_Upsell {
 	public static function popup_promotional_fields( $tabs = [] ) {
 		if ( ! pum_extension_enabled( 'forced-interaction' ) && ! pum_extension_enabled( 'pro' ) ) {
 			/* translators: %s url to product page. */
-			$message = sprintf( __( 'Want to disable the close button? Check out <a href="%s" target="_blank">Forced Interaction</a>!', 'popup-maker' ), 'https://wppopupmaker.com/extensions/forced-interaction/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=upsell&utm_content=close-button-settings' );
+			$message = sprintf( __( 'Want to disable the close button? Check out <a href="%s" target="_blank">Popup Maker Pro</a>!', 'popup-maker' ), 'https://wppopupmaker.com/pricing/?utm_source=plugin-theme-editor&utm_medium=text-link&utm_campaign=upsell&utm_content=close-button-settings' );
 
 			// TODO Rewrite this for PM Pro instead of extension.
 
