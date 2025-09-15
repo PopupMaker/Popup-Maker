@@ -19,42 +19,55 @@ const readmeFilePath = 'readme.txt';
 
 let changelogContent = fs.readFileSync( changelogFilePath, 'utf8' );
 
-// Improved pattern to capture unreleased changes
-const unreleasedPattern = /^## Unreleased\s([\s\S]*?)(?=\n## |\n$)/m;
-const unreleasedMatch = changelogContent.match( unreleasedPattern );
+// Extract unreleased changes using string manipulation for reliability
+const unreleasedStart = changelogContent.indexOf( '## Unreleased' );
+const nextVersionStart = changelogContent.indexOf(
+	'## v',
+	unreleasedStart + 1
+);
 
-if ( ! unreleasedMatch ) {
-	console.error( 'No unreleased changes found in CHANGELOG.md.' );
+if ( unreleasedStart === -1 ) {
+	console.error( 'No "## Unreleased" section found in CHANGELOG.md.' );
 	process.exit( 1 );
 }
 
-const unreleasedChanges = unreleasedMatch[ 1 ]
-	.trim()
-	.split( '\n' )
-	.filter( ( line ) => line.trim() !== '' );
-const changeCount = unreleasedChanges.length;
-
-// Format unreleased changes into a numbered list if verbose option is used
-if ( isVerbose ) {
-	const formattedConsoleChanges = unreleasedChanges
-		.map(
-			( change, index ) =>
-				`${ index + 1 }. ${ change.replace( /^\*\s*/, '' ) }`
-		)
-		.join( '\n' );
-	console.log( 'Unreleased Changes:\n' + formattedConsoleChanges );
+if ( nextVersionStart === -1 ) {
+	console.error(
+		'No version section found after "## Unreleased" in CHANGELOG.md.'
+	);
+	process.exit( 1 );
 }
 
-// Format unreleased changes into a bullet list for files
-const formattedFileChanges = unreleasedChanges
-	.map( ( change ) => `* ${ change.replace( /^\*\s*/, '' ) }` )
-	.join( '\n' );
+// Extract content between "## Unreleased\n\n" and the next "## v" section
+const unreleasedContentStart = unreleasedStart + '## Unreleased\n\n'.length;
+const unreleasedChangesText = changelogContent
+	.substring( unreleasedContentStart, nextVersionStart )
+	.trim();
 
-// Update CHANGELOG.md with new version
-const updatedChangelog = changelogContent.replace(
-	unreleasedPattern,
-	`## Unreleased\n\n## v${ newVersion } - ${ releaseDate }\n\n${ formattedFileChanges }`
-);
+// Count meaningful lines (non-empty, non-heading) for reporting
+const unreleasedLines = unreleasedChangesText
+	.split( '\n' )
+	.filter( ( line ) => {
+		const trimmed = line.trim();
+		return trimmed !== '' && ! /^\*\*.*\*\*$/.test( trimmed );
+	} );
+const changeCount = unreleasedLines.length;
+
+// Format unreleased changes for console output if verbose option is used
+if ( isVerbose ) {
+	console.log( 'Unreleased Changes:\n' + unreleasedChangesText );
+}
+
+// Use the original formatting for files (preserve structure)
+const formattedFileChanges = unreleasedChangesText;
+
+// Update CHANGELOG.md with new version using string manipulation
+const beforeUnreleased = changelogContent.substring( 0, unreleasedStart );
+const afterUnreleased = changelogContent.substring( nextVersionStart );
+const updatedChangelog =
+	beforeUnreleased +
+	`## Unreleased\n\n## v${ newVersion } - ${ releaseDate }\n\n${ formattedFileChanges }\n\n` +
+	afterUnreleased;
 
 fs.writeFileSync( changelogFilePath, updatedChangelog, 'utf8' );
 
@@ -63,7 +76,7 @@ const readmeContent = fs.readFileSync( readmeFilePath, 'utf8' );
 
 // Find the changelog section and first version entry
 const changelogPattern =
-	/== Changelog ==\n\nFor the latest updates and release information:.*?\n\n(= v\d+\.\d+\.\d+ - \d{4}-\d{2}-\d{2} =)/s;
+	/== Changelog ==\n\nFor the latest updates and release information:.*?\n\n(= v?\d+\.\d+\.\d+ - \d{4}-\d{2}-\d{2} =)/s;
 const changelogMatch = readmeContent.match( changelogPattern );
 
 if ( ! changelogMatch ) {
@@ -71,8 +84,13 @@ if ( ! changelogMatch ) {
 	process.exit( 1 );
 }
 
+// Detect if existing entries use "v" prefix and match that format
+const firstVersionEntry = changelogMatch[ 1 ];
+const usesVPrefix = firstVersionEntry.includes( '= v' );
+const versionPrefix = usesVPrefix ? 'v' : '';
+
 // Create the new version entry
-const newVersionEntry = `= v${ newVersion } - ${ releaseDate } =\n\n${ formattedFileChanges }\n\n`;
+const newVersionEntry = `= ${ versionPrefix }${ newVersion } - ${ releaseDate } =\n\n${ formattedFileChanges }\n\n`;
 
 // Insert the new version entry before the first existing version
 const newChangelog = readmeContent.replace(
