@@ -203,7 +203,7 @@ class PUM_Utils_Template {
 		do_action( 'pum_after_template_part', $template, $slug, $name, $args );
 
 		$content = ob_get_clean();
-		return $content !== false ? $content : '';
+		return false !== $content ? $content : '';
 	}
 
 	/**
@@ -231,7 +231,7 @@ class PUM_Utils_Template {
 		do_action( 'pum_after_template', $template_name, $template, $args );
 
 		$content = ob_get_clean();
-		return $content !== false ? $content : '';
+		return false !== $content ? $content : '';
 	}
 
 	/**

@@ -98,7 +98,7 @@ class Popmake_Fields {
 	 *
 	 * @param $id
 	 * @param $title
-	 * @param null  $callback
+	 * @param null $callback
 	 */
 	public function register_section( $id, $title, $callback = null ) {
 		$this->add_section(

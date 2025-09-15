@@ -106,7 +106,7 @@ function get_data_version( $key ) {
 					'post_type'      => 'popup',
 					'post_status'    => 'any',
 					'posts_per_page' => 1,
-					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 					'meta_key'       => 'popup_settings',
 				] );
 			if ( ! empty( $query ) ) {

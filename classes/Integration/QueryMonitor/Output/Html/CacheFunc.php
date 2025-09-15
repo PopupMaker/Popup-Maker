@@ -9,6 +9,9 @@ namespace PopupMaker\Integration\QueryMonitor\Output\Html;
 
 use QM_Output_Html;
 
+/**
+ * Query Monitor output class for function cache.
+ */
 class CacheFunc extends QM_Output_Html {
 
 	/**
@@ -92,7 +95,7 @@ class CacheFunc extends QM_Output_Html {
 					echo '<tr>';
 					echo '<td class="qm-ltr">' . esc_html( $key ) . '</td>';
 					echo '<td>' . esc_html( $entry['hook'] ) . '</td>';
-					echo '<td>' . $value_preview . '</td>';
+					echo '<td>' . wp_kses_post( $value_preview ) . '</td>';
 					echo '<td>' . esc_html( number_format( $entry['timestamp'], 4 ) ) . '</td>';
 					echo '</tr>';
 				}

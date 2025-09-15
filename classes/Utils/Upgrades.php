@@ -204,11 +204,11 @@ class PUM_Utils_Upgrades {
 	 * Registers a new upgrade routine.
 	 *
 	 * @param string $upgrade_id Upgrade ID.
-	 * @param array{
-	 *     rules: bool[],
-	 *     class: string,
-	 *     file: string
-	 * } $args Arguments for registering a new upgrade routine.
+	 * @param array  $args Arguments for registering a new upgrade routine. {
+	 *     @type bool[] $rules Upgrade rules.
+	 *     @type string $class Upgrade class name.
+	 *     @type string $file  Upgrade file path.
+	 * }
 	 *
 	 * @return bool True if the upgrade routine was added, otherwise false.
 	 */
@@ -241,14 +241,14 @@ class PUM_Utils_Upgrades {
 	/**
 	 * Add upgrade alert to the alerts list.
 	 *
-	 * @param array<int, array{
-	 *     code: string,
-	 *     type: string,
-	 *     html: string,
-	 *     priority: int,
-	 *     dismissible: bool,
-	 *     global: bool
-	 * }> $alerts Current alerts list.
+	 * @param array $alerts Current alerts list. {
+	 *     @type string $code        Alert code.
+	 *     @type string $type        Alert type.
+	 *     @type string $html        Alert HTML.
+	 *     @type int    $priority    Alert priority.
+	 *     @type bool   $dismissible Dismissible setting.
+	 *     @type bool   $global      Global alert.
+	 * }
 	 *
 	 * @return array<int, array{
 	 *     code: string,

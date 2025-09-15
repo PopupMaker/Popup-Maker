@@ -48,7 +48,7 @@ class PUM_Integration_Form_BricksBuilder extends PUM_Abstract_Integration_Form {
 	 * @return array
 	 */
 	public function get_forms( $force_refresh = false ) {
-		$cache_key = 'pum_bricks_forms_v2';
+		$cache_key   = 'pum_bricks_forms_v2';
 		$cache_group = 'popup_maker';
 
 		// Try to get cached forms first.
@@ -70,7 +70,7 @@ class PUM_Integration_Form_BricksBuilder extends PUM_Abstract_Integration_Form {
 		global $wpdb;
 
 		// Query for posts that contain Bricks form elements.
-		$results = $wpdb->get_results(
+		$results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
 				"SELECT DISTINCT p.ID, p.post_title, pm.meta_value
 				FROM {$wpdb->posts} p
@@ -208,7 +208,7 @@ class PUM_Integration_Form_BricksBuilder extends PUM_Abstract_Integration_Form {
 	 * Clear the forms cache.
 	 */
 	public function clear_forms_cache() {
-		$cache_key = 'pum_bricks_forms_v2';
+		$cache_key   = 'pum_bricks_forms_v2';
 		$cache_group = 'popup_maker';
 
 		wp_cache_delete( $cache_key, $cache_group );

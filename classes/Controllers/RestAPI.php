@@ -525,8 +525,8 @@ class RestAPI extends Controller {
 			$post_type,
 			'stats',
 			[
-				'get_callback'    => function ( $object ) {
-					$cta = \PopupMaker\get_cta_by_id( $object['id'] );
+				'get_callback'    => function ( $obj ) {
+					$cta = \PopupMaker\get_cta_by_id( $obj['id'] );
 					return [
 						'conversions' => $cta->get_event_count( 'conversion' ),
 					];

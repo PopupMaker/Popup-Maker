@@ -7,6 +7,8 @@
  * @copyright (c) 2024, Code Atlantic LLC.
  */
 
+// phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
+
 namespace PopupMaker\Services\Repository;
 
 use PUM_Model_Popup as Popup;

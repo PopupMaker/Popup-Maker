@@ -36,21 +36,6 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 	public $ajax_rendering = true;
 
 	/**
-	 * Instance of CallToActions library.
-	 *
-	 * @var PUM_CallToActions
-	 */
-	private $calltoactions;
-
-	/**
-	 * Constructor override.
-	 */
-	public function __construct() {
-		parent::__construct();
-		// add_filter( 'pum_shortcode_ui_vars', [ $this, 'shortcode_ui_vars' ] );
-	}
-
-	/**
 	 * The shortcode tag.
 	 */
 	public function tag() {
@@ -174,40 +159,6 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 				'main' => [],
 			],
 		];
-
-		/**
-		 * Fields for call to actions are organized only by one grouping to allow support for the block editor sidebar.
-		 *
-		 * Because of this we need to remap these to the proper subtabs in our larger fields array.
-		 *
-		 * Further we are also adding field dependencies to each field so they only show for their appropriate types.
-		 */
-		/*
-		foreach ( $this->calltoactions->get_all() as $key => $callToAction ) {
-			/**
-			 * Instance of a CallToAction object.
-			 *
-			 *  @var PUM_Abstract_CallToAction $callToAction
-			 */
-
-			/*
-			foreach ( $callToAction->get_fields() as $tab => $tab_fields ) {
-				foreach ( $tab_fields as $field_id => $field ) {
-					// Set the fields dependencies to include the type matching.
-					if ( ! isset( $field['dependencies']['type'] ) || ! is_array( $field['dependencies']['type'] ) ) {
-						$field['dependencies']['type'] = [];
-					}
-
-					// Set the fields dependencies to include the type matching.
-					$field['dependencies']['type'][] = $key;
-
-					// Add the field to the correct tab in the fields array.
-					$fields[ $tab ]['main'][ $field_id ] = $field;
-				}
-			}
-		}
-
-		*/
 
 		return $fields;
 	}

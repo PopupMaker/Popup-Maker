@@ -32,9 +32,9 @@ function popmake_generate_theme_styles( $popup_theme_id = 0 ) {
  * @since      1.8.0
  *
  * @param      $group
- * @param null  $popup_theme_id
- * @param null  $key
- * @param null  $default_value
+ * @param null $popup_theme_id
+ * @param null $key
+ * @param null $default_value
  *
  * @return mixed
  */
@@ -372,9 +372,9 @@ function popmake_get_popup_themes_data() {
  * @remove     2.0.0
  *
  * @param      $group
- * @param int   $popup_theme_id ID number of the popup to retrieve a overlay meta for
- * @param null  $key
- * @param null  $default_value
+ * @param int  $popup_theme_id ID number of the popup to retrieve a overlay meta for
+ * @param null $key
+ * @param null $default_value
  *
  * @return mixed array|string of the popup overlay meta
  */
@@ -390,9 +390,9 @@ function popmake_get_popup_theme_meta_group( $group, $popup_theme_id = null, $ke
  * @remove     2.0.0
  *
  * @param      $group
- * @param null  $popup_theme_id
- * @param null  $key
- * @param null  $default_value
+ * @param null $popup_theme_id
+ * @param null $key
+ * @param null $default_value
  *
  * @return mixed
  */

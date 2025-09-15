@@ -58,22 +58,16 @@ class PUM_Utils_Alerts {
 	/**
 	 * Add translation request alert based on user's browser language preferences.
 	 *
-	 * @param array<int, array{
-	 *     code: string,
-	 *     message: string,
-	 *     type: string,
-	 *     html?: string,
-	 *     priority?: int,
-	 *     dismissible?: bool|string|int,
-	 *     global?: bool,
-	 *     actions?: array<int, array{
-	 *         text: string,
-	 *         type: string,
-	 *         action: string,
-	 *         href?: string,
-	 *         primary?: bool
-	 *     }>
-	 * }> $alerts
+	 * @param array $alerts {
+	 *     @type string $code             Alert code.
+	 *     @type string $message          Alert message.
+	 *     @type string $type             Alert type.
+	 *     @type string $html             Optional. Alert HTML.
+	 *     @type int    $priority         Optional. Alert priority.
+	 *     @type mixed  $dismissible      Optional. Dismissible setting.
+	 *     @type bool   $global           Optional. Global alert.
+	 *     @type array  $actions          Optional. Alert actions.
+	 * }
 	 *
 	 * @return array<int, array{
 	 *     code: string,
@@ -261,22 +255,16 @@ class PUM_Utils_Alerts {
 	/**
 	 * Add "What's New" alerts for major version updates.
 	 *
-	 * @param array<int, array{
-	 *     code: string,
-	 *     message: string,
-	 *     type: string,
-	 *     html?: string,
-	 *     priority?: int,
-	 *     dismissible?: bool|string|int,
-	 *     global?: bool,
-	 *     actions?: array<int, array{
-	 *         text: string,
-	 *         type: string,
-	 *         action: string,
-	 *         href?: string,
-	 *         primary?: bool
-	 *     }>
-	 * }> $alerts
+	 * @param array $alerts {
+	 *     @type string $code             Alert code.
+	 *     @type string $message          Alert message.
+	 *     @type string $type             Alert type.
+	 *     @type string $html             Optional. Alert HTML.
+	 *     @type int    $priority         Optional. Alert priority.
+	 *     @type mixed  $dismissible      Optional. Dismissible setting.
+	 *     @type bool   $global           Optional. Global alert.
+	 *     @type array  $actions          Optional. Alert actions.
+	 * }
 	 *
 	 * @return array<int, array{
 	 *     code: string,
@@ -333,22 +321,16 @@ class PUM_Utils_Alerts {
 	/**
 	 * Add alerts for available plugin integrations based on detected plugins.
 	 *
-	 * @param array<int, array{
-	 *     code: string,
-	 *     message: string,
-	 *     type: string,
-	 *     html?: string,
-	 *     priority?: int,
-	 *     dismissible?: bool|string|int,
-	 *     global?: bool,
-	 *     actions?: array<int, array{
-	 *         text: string,
-	 *         type: string,
-	 *         action: string,
-	 *         href?: string,
-	 *         primary?: bool
-	 *     }>
-	 * }> $alerts
+	 * @param array $alerts {
+	 *     @type string $code             Alert code.
+	 *     @type string $message          Alert message.
+	 *     @type string $type             Alert type.
+	 *     @type string $html             Optional. Alert HTML.
+	 *     @type int    $priority         Optional. Alert priority.
+	 *     @type mixed  $dismissible      Optional. Dismissible setting.
+	 *     @type bool   $global           Optional. Global alert.
+	 *     @type array  $actions          Optional. Alert actions.
+	 * }
 	 *
 	 * @return array<int, array{
 	 *     code: string,
