@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Blocks
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class Blocks extends Controller {
 

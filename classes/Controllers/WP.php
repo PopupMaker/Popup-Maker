@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * WP controller class.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class WP extends Controller {
 

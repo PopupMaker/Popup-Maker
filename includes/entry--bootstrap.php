@@ -11,7 +11,7 @@
  *   - Deprecated & moved to the -deprecated directory, merged fewer files.
  *   - Legacy functions will be moved to -legacy directory.
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC

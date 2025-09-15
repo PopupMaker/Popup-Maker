@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Compatibility controller class.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class Compatibility extends Controller {
 

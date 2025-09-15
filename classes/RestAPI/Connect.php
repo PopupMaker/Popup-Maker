@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * Implements multi-layer security with authentication, signature verification,
  * and referrer validation.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class Connect extends WP_REST_Controller {
 

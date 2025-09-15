@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Abstract base class for all Popup Maker extensions.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 abstract class Extension extends Container {
 

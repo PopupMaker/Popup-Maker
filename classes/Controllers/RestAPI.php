@@ -17,7 +17,7 @@ use WP_REST_Request;
 /**
  * REST controller.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class RestAPI extends Controller {
 

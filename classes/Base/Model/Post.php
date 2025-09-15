@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Post
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class Post {
 

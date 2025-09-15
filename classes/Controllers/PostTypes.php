@@ -15,7 +15,7 @@ use function PopupMaker\get_data_version;
 /**
  * Post type controller.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class PostTypes extends Controller {
 
@@ -143,7 +143,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $args Popup post type args.
 		 *
-		 * @since X.X.X
+		 * @since 1.21.0
 		 */
 		$popup_args = apply_filters( 'popup_maker/popup_post_type_args', $popup_args );
 
@@ -152,7 +152,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $args Popup post type args.
 		 *`
-		 * @deprecated X.X.X
+		 * @deprecated 1.21.0
 		 */
 		$popup_args = apply_filters( 'popmake_popup_post_type_args', $popup_args );
 
@@ -221,7 +221,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $args Popup theme post type args.
 		 *
-		 * @since X.X.X
+		 * @since 1.21.0
 		 */
 		$popup_theme_args = apply_filters( 'popup_maker/popup_theme_post_type_args', $popup_theme_args );
 
@@ -230,7 +230,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $args Popup theme post type args.
 		 *`
-		 * @deprecated X.X.X
+		 * @deprecated 1.21.0
 		 */
 		$popup_theme_args = apply_filters( 'popmake_popup_theme_post_type_args', $popup_theme_args );
 
@@ -294,7 +294,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $args CTA post type args.
 		 *
-		 * @since X.X.X
+		 * @since 1.21.0
 		 */
 		$cta_args = apply_filters( 'popup_maker/cta_post_type_args', $cta_args );
 
@@ -326,7 +326,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $category_args Popup category taxonomy args.
 		 *
-		 * @since X.X.X
+		 * @since 1.21.0
 		 */
 		$category_args = apply_filters( 'popup_maker/popup_category_tax_args', $category_args );
 
@@ -335,7 +335,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $category_args Popup category taxonomy args.
 		 *`
-		 * @deprecated X.X.X
+		 * @deprecated 1.21.0
 		 */
 		$category_args = apply_filters( 'popmake_category_args', $category_args );
 
@@ -371,7 +371,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $tag_args Popup tag taxonomy args.
 		 *
-		 * @since X.X.X
+		 * @since 1.21.0
 		 */
 		$tag_args = apply_filters( 'popup_maker/popup_tag_tax_args', $tag_args );
 
@@ -380,7 +380,7 @@ class PostTypes extends Controller {
 		 *
 		 * @param array<string,mixed> $tag_args Popup tag taxonomy args.
 		 *`
-		 * @deprecated X.X.X
+		 * @deprecated 1.21.0
 		 */
 		$tag_args = apply_filters( 'popmake_tag_args', $tag_args );
 
@@ -436,7 +436,7 @@ class PostTypes extends Controller {
 		 * @param string $plural Plural label.
 		 * @param string $post_type Post type.
 		 *
-		 * @since X.X.X
+		 * @since 1.21.0
 		 */
 		$labels = apply_filters( 'popup_maker/post_type_labels', $labels, $singular, $plural, $post_type );
 

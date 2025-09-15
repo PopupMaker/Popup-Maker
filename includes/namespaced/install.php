@@ -2,7 +2,7 @@
 /**
  * Core functions.
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *     installed_on: string,
  * } : string|null)
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_current_install_info( $key = null ) {
 	/**
@@ -51,7 +51,7 @@ function get_current_install_info( $key = null ) {
  *
  * @return string|false
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function detect_previous_install_version() {
 	$version = get_option( 'pum_ver' );
@@ -73,7 +73,7 @@ function detect_previous_install_version() {
  *
  * @return string
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function detect_initial_install_version() {
 	$oldest_known = config( 'version' );
@@ -113,7 +113,7 @@ function detect_initial_install_version() {
  *
  * @return string
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function detect_initial_install_date() {
 	// 1. Current time. (fresh install)
@@ -136,7 +136,7 @@ function detect_initial_install_date() {
 /**
  * Cleanup old install data.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function cleanup_old_install_data() {
 	// Delete old install data.

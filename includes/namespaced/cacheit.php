@@ -69,7 +69,7 @@ defined( 'ABSPATH' ) || exit;
  *     return pum_cache_func( __FUNCTION__, null, func_get_args());
  * }
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @param string|'get_cacheit_counts' $fn_name  Unique name for the function call.
  * @param callable|false|null         $callback Function to compute the result if not cached, false to get cached result, or null to clear cache.

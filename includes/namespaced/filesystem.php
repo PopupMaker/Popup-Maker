@@ -2,7 +2,7 @@
 /**
  * System functions.
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2025, Code Atlantic LLC
@@ -68,7 +68,7 @@ function get_file_contents( $path ) {
 /**
  * Gets the Uploads directory
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @return array{basedir: string, baseurl: string}|false An associated array with baseurl and basedir or false on failure
  */
@@ -87,7 +87,7 @@ function get_upload_dir() {
 /**
  * Gets the uploads directory URL
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @param string $path A path to append to end of upload directory URL.
  * @return bool|string The uploads directory URL or false on failure
@@ -104,7 +104,7 @@ function get_upload_dir_url( $path = '' ) {
 	/**
 	 * Filter the uploads directory URL.
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 *
 	 * @param string $url The uploads directory URL.
 	 * @return string The filtered uploads directory URL.
@@ -121,7 +121,7 @@ function get_upload_dir_url( $path = '' ) {
 /**
  * Gets the uploads directory path
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @param string $path A path to append to end of upload directory URL.
  * @return bool|string The uploads directory path or false on failure
@@ -138,7 +138,7 @@ function get_upload_dir_path( $path = '' ) {
 	/**
 	 * Filter the uploads directory path.
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 *
 	 * @param string $dir The uploads directory path.
 	 * @return string The filtered uploads directory path.

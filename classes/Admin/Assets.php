@@ -16,7 +16,7 @@ class PUM_Admin_Assets {
 	/**
 	 * @var string
 	 *
-	 * @deprecated X.X.X
+	 * @deprecated 1.21.0
 	 */
 	public static $suffix = '';
 

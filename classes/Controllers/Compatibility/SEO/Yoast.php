@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Yoast
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class Yoast extends Controller {
 

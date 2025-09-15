@@ -12,7 +12,7 @@ use function PopupMaker\config;
  * Main Popup_Maker Class
  *
  * @since 1.0
- * @deprecated X.X.X
+ * @deprecated 1.21.0
  */
 class Popup_Maker {
 
@@ -86,7 +86,7 @@ class Popup_Maker {
 	/**
 	 * @var null|PUM_Model_Popup
 	 *
-	 * @deprecated X.X.X
+	 * @deprecated 1.21.0
 	 */
 	public $current_popup;
 

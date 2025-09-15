@@ -104,7 +104,7 @@ class PUM_Site_Popups {
 	 * @uses `pum_preload_popup` filter
 	 * @uses `popmake_preload_popup` filter
 	 *
-	 * @deprecated X.X.X see \PopupMaker\Controllers\Frontend\Popups::preload_popups
+	 * @deprecated 1.21.0 see \PopupMaker\Controllers\Frontend\Popups::preload_popups
 	 */
 	public static function load_popups() {
 		if ( is_admin() ) {
@@ -161,7 +161,7 @@ class PUM_Site_Popups {
 	 *
 	 * @param int $popup_id The popup's ID.
 	 * @since 1.15
-	 * @deprecated X.X.X Use \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->preload_popup_by_id_if_enabled
+	 * @deprecated 1.21.0 Use \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->preload_popup_by_id_if_enabled
 	 */
 	public static function preload_popup_by_id_if_enabled( $popup_id ) {
 		if ( ! in_array( (int) $popup_id, self::$loaded_ids, true ) ) {
@@ -243,7 +243,7 @@ class PUM_Site_Popups {
 	 *
 	 * @return string|bool
 	 *
-	 * @deprecated X.X.X
+	 * @deprecated 1.21.0
 	 */
 	public static function get_cache_content( $popup_id ) {
 		return \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_content_cache( $popup_id );

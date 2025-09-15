@@ -2,7 +2,7 @@
 /**
  * Core functions.
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string,mixed> Default settings.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_default_settings() {
 	return [
@@ -30,7 +30,7 @@ function get_default_settings() {
  *
  * @return array<string,mixed> Default call to action settings.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_default_call_to_action_settings() {
 	return [

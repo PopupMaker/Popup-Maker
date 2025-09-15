@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Call To Action service.
  *
- * @since X.X.X
+ * @since 1.21.0
  * @template-extends Repository<\PopupMaker\Models\CallToAction>
  */
 class CallToActions extends Repository {

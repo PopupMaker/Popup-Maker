@@ -162,7 +162,7 @@ function PopMake() {
  * @return Popup_Maker
  *
  * @since      1.8.0
- * @deprecated X.X.X
+ * @deprecated 1.21.0
  */
 function pum() {
 	return Popup_Maker::instance();

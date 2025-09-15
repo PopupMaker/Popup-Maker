@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Popups service.
  *
- * @since X.X.X
+ * @since 1.21.0
  * @template-extends Repository<Popup>
  */
 class Popups extends Repository {

@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class I18n
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class I18n extends Controller {
 

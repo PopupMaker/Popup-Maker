@@ -10,7 +10,7 @@
  * Class PUM_Utils_Logging
  *
  * @since 1.8.0
- * @deprecated X.X.X Use \PopupMaker\logging() instead.
+ * @deprecated 1.21.0 Use \PopupMaker\logging() instead.
  */
 class PUM_Utils_Logging {
 
@@ -59,7 +59,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Get instance.
 	 *
-	 * @deprecated X.X.X Use \PopupMaker\plugin()->get( 'logging' ) instead.
+	 * @deprecated 1.21.0 Use \PopupMaker\plugin()->get( 'logging' ) instead.
 	 *
 	 * @return \PopupMaker\Services\Logging
 	 */
@@ -85,7 +85,7 @@ class PUM_Utils_Logging {
 	/**
 	 * Check if logging is disabled.
 	 *
-	 * @deprecated X.X.X Use \PopupMaker\logging()->disabled() instead.
+	 * @deprecated 1.21.0 Use \PopupMaker\logging()->disabled() instead.
 	 *
 	 * @return bool
 	 */

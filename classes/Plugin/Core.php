@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Plugin
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 final class Core extends \PopupMaker\Plugin\Container {
 
@@ -110,7 +110,7 @@ final class Core extends \PopupMaker\Plugin\Container {
 			 * @param string $version The old version.
 			 *
 			 * @since 1.8.0
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			do_action( 'pum_update_core_version', $data['version'] );
 

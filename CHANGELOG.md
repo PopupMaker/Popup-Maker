@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.21.0 - 2025-09-15
+
 This update begins the process of modernizing our codebase while polishing existing stuff & adding new features.
 
 **Minimum Requirements Change**

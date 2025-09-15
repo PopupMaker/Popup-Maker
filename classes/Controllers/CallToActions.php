@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class CallToActions
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class CallToActions extends Controller {
 
@@ -52,7 +52,7 @@ class CallToActions extends Controller {
 		 *
 		 * @return string The resolved CTA identifier.
 		 *
-		 * @since X.X.X
+		 * @since 1.21.0
 		 */
 		$cta_uuid = apply_filters( 'popup_maker/cta_identifier', $cta_uuid );
 

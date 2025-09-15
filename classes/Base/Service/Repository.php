@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Repository service for managing Post-based entities.
  *
- * @since X.X.X
+ * @since 1.21.0
  * @template TPost of Post
  * @template-extends Service<\PopupMaker\Plugin\Core>
  */

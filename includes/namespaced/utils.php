@@ -2,7 +2,7 @@
 /**
  * Utility functions.
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string Converted string.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function camel_case_to_snake_case( $str ) {
 	return strtolower( preg_replace( '/(?<!^)[A-Z]/', '_$0', $str ) );
@@ -33,7 +33,7 @@ function camel_case_to_snake_case( $str ) {
  *
  * @return string Converted string.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function snake_case_to_camel_case( $str ) {
 	return lcfirst( str_replace( '_', '', ucwords( $str, '_' ) ) );
@@ -48,7 +48,7 @@ function snake_case_to_camel_case( $str ) {
  *
  * @return mixed|null
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function fetch_key_from_array( $key, $data, $key_case = null ) {
 	// If key is .notation, then we need to traverse the array.

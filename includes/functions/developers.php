@@ -101,7 +101,7 @@ function pum_track_conversion_event( $popup_id = 0, $args = [] ) {
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function pum_register_script( $handle, $src, $deps = [], $version = null, $in_footer = true ) {
 	return PUM_AssetCache::register_script( $handle, $src, $deps, $version, $in_footer );
@@ -118,7 +118,7 @@ function pum_register_script( $handle, $src, $deps = [], $version = null, $in_fo
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function pum_register_style( $handle, $src, $deps = [], $version = false, $media = 'all' ) {
 	return PUM_AssetCache::register_style( $handle, $src, $deps, $version, $media );
@@ -135,7 +135,7 @@ function pum_register_style( $handle, $src, $deps = [], $version = false, $media
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function pum_enqueue_script( $handle, $src = '', $deps = [], $version = null, $in_footer = false ) {
 	return PUM_AssetCache::enqueue_script( $handle, $src, $deps, $version, $in_footer );
@@ -149,7 +149,7 @@ function pum_enqueue_script( $handle, $src = '', $deps = [], $version = null, $i
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function pum_script_is( $handle, $status = 'enqueued' ) {
 	return PUM_AssetCache::script_is( $handle, $status );
@@ -167,7 +167,7 @@ function pum_script_is( $handle, $status = 'enqueued' ) {
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function pum_enqueue_style( $handle, $src = '', $deps = [], $version = null, $media = false ) {
 	return PUM_AssetCache::enqueue_style( $handle, $src, $deps, $version, $media );
@@ -180,7 +180,7 @@ function pum_enqueue_style( $handle, $src = '', $deps = [], $version = null, $me
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function pum_dequeue_script( $handle ) {
 	return PUM_AssetCache::dequeue_script( $handle );
@@ -193,7 +193,7 @@ function pum_dequeue_script( $handle ) {
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function pum_dequeue_style( $handle ) {
 	return PUM_AssetCache::dequeue_style( $handle );
@@ -209,7 +209,7 @@ function pum_dequeue_style( $handle ) {
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function pum_localize_script( $handle, $object_name, $value ) {
 	return PUM_AssetCache::localize_script( $handle, $object_name, $value );

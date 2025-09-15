@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Handles license management endpoints for Pro upgrade workflow.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class License extends WP_REST_Controller {
 

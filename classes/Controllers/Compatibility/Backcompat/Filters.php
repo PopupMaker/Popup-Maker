@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Filters
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class Filters extends Controller {
 
@@ -46,7 +46,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string> $supports Popup supports.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_args['supports'] = apply_filters( 'popmake_popup_supports', $popup_args['supports'] );
 		}
@@ -57,7 +57,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string,mixed> $popup_args Popup post type args.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_args = apply_filters( 'popmake_popup_post_type_args', $popup_args );
 		}
@@ -68,7 +68,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string,mixed> $popup_args Popup post type args.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_args = apply_filters( 'pum_popup_post_type_args', $popup_args );
 		}
@@ -90,7 +90,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string,mixed> $labels Popup theme labels.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_theme_args['labels'] = apply_filters( 'popmake_popup_theme_labels', $popup_theme_args['labels'] );
 		}
@@ -101,7 +101,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string> $supports Popup theme supports.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_theme_args['supports'] = apply_filters( 'popmake_popup_theme_supports', $popup_theme_args['supports'] );
 		}
@@ -112,7 +112,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string,mixed> $args Popup theme post type args.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_theme_args = apply_filters( 'popmake_popup_theme_post_type_args', [] );
 		}
@@ -134,7 +134,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string,mixed> $labels Category labels.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_category_tax_args['labels'] = apply_filters( 'popmake_category_labels', $popup_category_tax_args['labels'] );
 		}
@@ -145,7 +145,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string,mixed> $popup_category_tax_args Category args.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_category_tax_args = apply_filters( 'popmake_category_args', $popup_category_tax_args );
 		}
@@ -167,7 +167,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string,mixed> $labels Tag labels.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_tag_tax_args['labels'] = apply_filters( 'popmake_tag_labels', $popup_tag_tax_args['labels'] );
 		}
@@ -178,7 +178,7 @@ class Filters extends Controller {
 			 *
 			 * @param array<string,mixed> $popup_tag_tax_args Tag args.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$popup_tag_tax_args = apply_filters( 'popmake_tag_args', $popup_tag_tax_args );
 		}
@@ -204,7 +204,7 @@ class Filters extends Controller {
 			 * @param string $singular Singular label.
 			 * @param string $plural Plural label.
 			 *
-			 * @deprecated X.X.X
+			 * @deprecated 1.21.0
 			 */
 			$post_type_labels = apply_filters( 'popmake_post_type_labels', $post_type_labels, $singular, $plural );
 		}

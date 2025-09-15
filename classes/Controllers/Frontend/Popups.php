@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Assets controller.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class Popups extends Controller {
 

@@ -2,7 +2,7 @@
 /**
  * Link Call To Action class.
  *
- * @since       X.X.X
+ * @since       1.21.0
  * @package     PopupMaker
  * @copyright   Copyright (c) 2024, Code Atlantic LLC
  */

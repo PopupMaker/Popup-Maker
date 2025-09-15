@@ -17,7 +17,7 @@ use function PopupMaker\plugin;
  *
  * @return Popup|null
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_current_popup() {
 	return get_global( 'current_popup', null );
@@ -28,14 +28,14 @@ function get_current_popup() {
  *
  * @param Popup|null $popup
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function set_current_popup( $popup ) {
 	set_global( 'current_popup', $popup );
 	/**
 	 * Here for backward compatibility.
 	 *
-	 * @deprecated X.X.X
+	 * @deprecated 1.21.0
 	 */
 	pum()->current_popup = $popup;
 }

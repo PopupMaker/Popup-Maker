@@ -13,7 +13,7 @@ namespace PopupMaker\Plugin;
  *
  * @template-extends \PopupMaker\Base\Controller<\PopupMaker\Plugin\Core>
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 abstract class Controller extends \PopupMaker\Base\Controller {
 

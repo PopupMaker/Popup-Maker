@@ -120,7 +120,7 @@ class PUM {
  * @package   PopupMaker
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  *
- * @deprecated X.X.X
+ * @deprecated 1.21.0
  */
 class PUM_Types {
 	/**
@@ -129,7 +129,7 @@ class PUM_Types {
 	 *
 	 * @return mixed
 	 *
-	 * @deprecated X.X.X
+	 * @deprecated 1.21.0
 	 */
 	public static function post_type_labels( $singular, $plural ) {
 		return \PopupMaker\plugin()->get_controller( 'PostTypes' )->post_type_labels( $singular, $plural );

@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_post_type_key( $type ) {
 	return plugin( 'PostTypes' )->get_type_key( $type );
@@ -33,7 +33,7 @@ function get_post_type_key( $type ) {
  *
  * @return array<string,string>
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_post_type_labels( $post_type ) {
 	if ( ! post_type_exists( $post_type ) ) {
@@ -57,7 +57,7 @@ function get_post_type_labels( $post_type ) {
  *
  * @return string
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_post_type_label( $post_type, $key ) {
 	$labels = get_post_type_labels( $post_type );

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class CallToAction
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 

@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * This class maintains a global set of all registered call to action types.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class CallToActionTypes extends Service {
 

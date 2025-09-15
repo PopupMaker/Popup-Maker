@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void If the function was successfully added
  *
  * @since 1.7.0
- * @deprecated X.X.X Use \PopupMaker\mark_upgrade_complete() instead.
+ * @deprecated 1.21.0 Use \PopupMaker\mark_upgrade_complete() instead.
  */
 function pum_set_upgrade_complete( $upgrade_id = '' ) {
 	\PopupMaker\mark_upgrade_complete( $upgrade_id );
@@ -32,7 +32,7 @@ function pum_set_upgrade_complete( $upgrade_id = '' ) {
  * @return array The array of completed upgrades
  *
  * @since 1.7.0
- * @deprecated X.X.X Use \PopupMaker\get_completed_upgrades() instead.
+ * @deprecated 1.21.0 Use \PopupMaker\get_completed_upgrades() instead.
  */
 function pum_get_completed_upgrades() {
 	return \PopupMaker\get_completed_upgrades();
@@ -46,7 +46,7 @@ function pum_get_completed_upgrades() {
  * @return bool  If the action has been added to the completed actions array
  *
  * @since 1.7.0
- * @deprecated X.X.X Use \PopupMaker\is_upgrade_complete() instead.
+ * @deprecated 1.21.0 Use \PopupMaker\is_upgrade_complete() instead.
  */
 function pum_has_completed_upgrade( $upgrade_id = '' ) {
 	return \PopupMaker\is_upgrade_complete( $upgrade_id );

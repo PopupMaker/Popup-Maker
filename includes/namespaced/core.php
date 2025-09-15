@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return array<string,string> Default permissions.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_default_permissions() {
 	return [
@@ -32,7 +32,7 @@ function get_default_permissions() {
  *
  * @return \PopupMaker\Services\Globals
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_globals_store() {
 	return \PopupMaker\plugin( 'globals' );
@@ -46,7 +46,7 @@ function get_globals_store() {
  *
  * @return mixed
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_global( $key, $default_value = null ) {
 	return get_globals_store()->get( $key, $default_value );
@@ -58,7 +58,7 @@ function get_global( $key, $default_value = null ) {
  * @param string $key Key.
  * @param mixed  $value Value.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function set_global( $key, $value ) {
 	get_globals_store()->set( $key, $value );
@@ -91,7 +91,7 @@ function get_upgrade_link( $utm_args = [] ) {
 /**
  * Get logging service.
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @return \PopupMaker\Services\Logging
  */

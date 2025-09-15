@@ -19,7 +19,7 @@ class PUM_Helpers {
 	/**
 	 * Process do_shortcode without allowing printed side effects.
 	 *
-	 * @deprecated X.X.X Use PUM_Utils_Shortcodes::clean_do_shortcode
+	 * @deprecated 1.21.0 Use PUM_Utils_Shortcodes::clean_do_shortcode
 	 *
 	 * @param string $shortcode_text Unprocessed string with shortcodes.
 	 *
@@ -66,7 +66,7 @@ class PUM_Helpers {
 	 * Gets the uploads directory path
 	 *
 	 * @since 1.10
-	 * @deprecated X.X.X Use \PopupMaker\get_upload_dir_path instead.
+	 * @deprecated 1.21.0 Use \PopupMaker\get_upload_dir_path instead.
 	 *
 	 * @param string $path A path to append to end of upload directory URL.
 	 * @return bool|string The uploads directory path or false on failure
@@ -79,7 +79,7 @@ class PUM_Helpers {
 	 * Gets the uploads directory URL
 	 *
 	 * @since 1.10
-	 * @deprecated X.X.X Use \PopupMaker\get_upload_dir_url instead.
+	 * @deprecated 1.21.0 Use \PopupMaker\get_upload_dir_url instead.
 	 *
 	 * @param string $path A path to append to end of upload directory URL.
 	 * @return bool|string The uploads directory URL or false on failure
@@ -92,7 +92,7 @@ class PUM_Helpers {
 	 * Gets the Uploads directory
 	 *
 	 * @since 1.10.0
-	 * @deprecated X.X.X Use \PopupMaker\get_upload_dir instead.
+	 * @deprecated 1.21.0 Use \PopupMaker\get_upload_dir instead.
 	 *
 	 * @return array{basedir: string, baseurl: string}|false An associated array with upload directory data or false on failure
 	 */

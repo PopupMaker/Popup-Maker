@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Admin Plugins Page
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class PluginsPage extends Controller {
 

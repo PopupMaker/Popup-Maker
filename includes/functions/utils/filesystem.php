@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the filesystem object.
  *
- * @deprecated X.X.X
+ * @deprecated 1.21.0
  *
  * @return \WP_Filesystem_Base|false
  */
@@ -24,7 +24,7 @@ function pum_get_fs() {
 /**
  * Get the contents of a file.
  *
- * @deprecated X.X.X
+ * @deprecated 1.21.0
  *
  * @param string $path The path to the file.
  *

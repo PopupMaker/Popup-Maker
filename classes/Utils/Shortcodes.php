@@ -2,7 +2,7 @@
 /**
  * Shortcodes helper class.
  *
- * @since       X.X.X
+ * @since       1.21.0
  * @package     PUM
  * @copyright   Copyright (c) 2020, Code Atlantic LLC
  */

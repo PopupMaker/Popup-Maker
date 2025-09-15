@@ -19,7 +19,7 @@ use function apply_filters;
  *
  * @return int[]
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function current_data_versions() {
 	return apply_filters( 'popup_maker/current_data_versions', [
@@ -42,7 +42,7 @@ function current_data_versions() {
  *
  * @return int[]
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function get_data_versions() {
 	$versioning = \get_option( 'popup_maker_data_versioning', [] );
@@ -58,7 +58,7 @@ function get_data_versions() {
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function set_data_version( $key, $version ) {
 	$versioning = get_data_versions();
@@ -75,7 +75,7 @@ function set_data_version( $key, $version ) {
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 function set_data_versions( $versioning ) {
 	$versioning = wp_parse_args( $versioning, get_data_versions() );
@@ -90,7 +90,7 @@ function set_data_versions( $versioning ) {
  *
  * @return int|bool
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @todo Add support for all data types.
  */
@@ -182,7 +182,7 @@ function get_data_version( $key ) {
  *
  * @return void
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @todo This is placeholder for future v2 migrations.
  */
@@ -210,7 +210,7 @@ function maybe_force_v2_migrations( $old_version ) {
  *
  * @return string
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @todo Add support for all upgrade types.
  */
@@ -227,7 +227,7 @@ function get_upgrade_name( $upgrade ) {
  *
  * @return string[]
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @todo migrate functionality from class to here.
  */
@@ -246,7 +246,7 @@ function get_completed_upgrades() {
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @todo migrate functionality from class to here.
  */
@@ -261,7 +261,7 @@ function set_completed_upgrades( $upgrades ) {
  *
  * @return void
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @todo migrate functionality from class to here.
  */
@@ -310,7 +310,7 @@ function mark_upgrade_complete( $upgrade ) {
  *
  * @return bool
  *
- * @since X.X.X
+ * @since 1.21.0
  *
  * @todo migrate functionality from class to here.
  */

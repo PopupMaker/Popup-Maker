@@ -808,7 +808,7 @@ class PUM_AssetCache {
 	 *
 	 * @return string|false Asset contents on success, false on failure.
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	private static function get_asset_contents( $src ) {
 		$scheme = wp_parse_url( $src, PHP_URL_SCHEME );
@@ -830,7 +830,7 @@ class PUM_AssetCache {
 	 *
 	 * @var array{src:string,deps:array,version:string,in_footer:bool}[]
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static $registered_scripts = [];
 
@@ -839,7 +839,7 @@ class PUM_AssetCache {
 	 *
 	 * @var array{src:string,deps:array,version:string,media:string}[]
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static $registered_styles = [];
 
@@ -848,7 +848,7 @@ class PUM_AssetCache {
 	 *
 	 * @var string[]
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static $enqueued_scripts = [];
 
@@ -857,7 +857,7 @@ class PUM_AssetCache {
 	 *
 	 * @var string[]
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static $enqueued_styles = [];
 
@@ -866,7 +866,7 @@ class PUM_AssetCache {
 	 *
 	 * @var array<string,array{object_name:string,value:mixed}[]>
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static $localized_scripts = [];
 
@@ -881,7 +881,7 @@ class PUM_AssetCache {
 	 *
 	 * @return bool
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static function register_script( $handle, $src, $deps = [], $version = null, $in_footer = false, $merge_priority = 5 ) {
 		// Implement internal store of scripts. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
@@ -920,7 +920,7 @@ class PUM_AssetCache {
 	 *
 	 * @return bool
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static function register_style( $handle, $src, $deps = [], $version = null, $media = 'all', $merge_priority = 5 ) {
 		// Implement internal store of styles. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
@@ -959,7 +959,7 @@ class PUM_AssetCache {
 	 *
 	 * @return bool
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static function enqueue_script( $handle, $src = '', $deps = [], $version = null, $in_footer = false ) {
 		// Implement internal store of scripts. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
@@ -990,7 +990,7 @@ class PUM_AssetCache {
 	 *
 	 * @return bool
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static function script_is( $handle, $status = 'enqueued' ) {
 		if ( in_array( $handle, self::$enqueued_scripts, true ) ) {
@@ -1011,7 +1011,7 @@ class PUM_AssetCache {
 	 *
 	 * @return bool
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static function enqueue_style( $handle, $src = '', $deps = [], $version = null, $media = 'all' ) {
 		// Implement internal store of styles. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
@@ -1041,7 +1041,7 @@ class PUM_AssetCache {
 	 *
 	 * @return bool
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static function dequeue_script( $handle ) {
 		if ( in_array( $handle, self::$enqueued_scripts, true ) ) {
@@ -1065,7 +1065,7 @@ class PUM_AssetCache {
 	 *
 	 * @return bool
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static function dequeue_style( $handle ) {
 		if ( in_array( $handle, self::$enqueued_styles, true ) ) {
@@ -1092,7 +1092,7 @@ class PUM_AssetCache {
 	 *
 	 * @return bool
 	 *
-	 * @since X.X.X
+	 * @since 1.21.0
 	 */
 	public static function localize_script( $handle, $object_name, $value ) {
 		if ( ! isset( self::$localized_scripts[ $handle ] ) ) {

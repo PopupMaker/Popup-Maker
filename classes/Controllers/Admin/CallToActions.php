@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Call to Actions Controller.
  *
- * @since X.X.X
+ * @since 1.21.0
  */
 class CallToActions extends Controller {
 
