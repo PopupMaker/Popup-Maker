@@ -7,9 +7,6 @@
  */
 
 use function PopupMaker\plugin;
-
-// TODO REVIEW THIS FILE.
-
 /**
  * Handles displaying promotional text throughout plugin UI
  */
