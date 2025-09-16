@@ -47,8 +47,8 @@ class PUM_Utils_Format {
 	/**
 	 * Format number based on specified format
 	 *
-	 * @param int|float $number Number to format
-	 * @param string    $format Format type (currently only 'abbreviated' supported)
+	 * @param int|float|string $number Number to format
+	 * @param string           $format Format type (currently only 'abbreviated' supported)
 	 * @return int|string Formatted number as integer for small values or string for abbreviated
 	 */
 	public static function number( $number, $format = '' ) {
@@ -130,13 +130,17 @@ class PUM_Utils_Format {
 	/**
 	 * K, M number formatting for large numbers
 	 *
-	 * @param int|float        $n Number to abbreviate
+	 * @param int|float|string $n Number to abbreviate
 	 * @param non-empty-string $point Decimal point character
 	 * @param non-empty-string $sep Thousands separator character
-	 * @return int|string Returns 0 for negative numbers, formatted string for all positive values (e.g., "1.5K", "2.3M", "9,999")
+	 * @return int|string Returns 0 for negative or non-numeric values, formatted string for all positive values (e.g., "1.5K", "2.3M", "9,999")
 	 */
 	public static function abbreviated_number( $n, $point = '.', $sep = ',' ) {
-		if ( $n < 0 ) {
+		// Convert to float and validate
+		$n = (float) $n;
+
+		// Check if the conversion resulted in a valid number
+		if ( ! is_numeric( $n ) || $n < 0 ) {
 			return 0;
 		}
 

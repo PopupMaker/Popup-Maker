@@ -49,7 +49,7 @@ interface CallToAction {
 	 *
 	 * @return true|\WP_Error|\WP_Error[] True if valid, WP_Error if validation fails.
 	 */
-	public function validate_settings( array $settings ): \WP_Error|array|bool;
+	public function validate_settings( array $settings );
 
 	/**
 	 * Returns an array that represents the cta.

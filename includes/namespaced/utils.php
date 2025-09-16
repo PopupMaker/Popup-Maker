@@ -155,7 +155,7 @@ function safe_redirect( $url, $status = 302 ) {
  * @param array{size:string,title:string,class:string} $args       The arguments for the progress bar.
  * @return void
  */
-function progress_bar( float|int $percentage, array $args = [] ): void {
+function progress_bar( $percentage, $args = [] ) {
 
 	$args = wp_parse_args( $args, [
 		'size'            => null,

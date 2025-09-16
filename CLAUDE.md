@@ -429,6 +429,35 @@ public function my_callback( $id, $status = '' ) {
 - Provide sensible defaults for optional parameters
 - Never assume third-party parameter structure/types
 
+#### PHP 7.4 Compatibility Requirements
+
+**CRITICAL**: All code must be compatible with PHP 7.4+ for production releases.
+
+**❌ Forbidden (PHP 8.0+ only):**
+- Union types: `string|int`, `array|null`, `object|string`
+- Mixed type: `mixed` (introduced in PHP 8.0)
+- Named arguments: `func(param: $value)`
+- Match expressions: `match($value) { ... }`
+
+**✅ Safe for PHP 7.4:**
+- Nullable types: `?string`, `?array`, `?object`
+- Standard types: `string`, `int`, `array`, `object`, `bool`
+- Elvis operator: `$value ?: 'default'`
+- Null coalescing: `$value ?? 'default'`
+- Null coalescing assignment: `$value ??= 'default'` (PHP 7.4+)
+
+**Emergency Fix Pattern:**
+If union types are accidentally introduced and cause crashes:
+```regex
+# Remove all union return types
+Find: \):\s*[a-zA-Z_\\]+(?:\|[a-zA-Z_\\]+)+
+Replace: )
+
+# Remove all union parameter types
+Find: ([,(]\s*)[a-zA-Z_\\]+(?:\|[a-zA-Z_\\]+)+(\s+)(\$\w+)
+Replace: $1$3
+```
+
 ### JavaScript
 
 DO NOT FORGET:

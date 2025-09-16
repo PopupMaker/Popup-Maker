@@ -90,7 +90,7 @@ class Link extends \PopupMaker\Base\CallToAction {
 	 *
 	 * @return true|\WP_Error|\WP_Error[] True if valid, WP_Error if validation fails.
 	 */
-	public function validate_settings( array $settings ): \WP_Error|array|bool {
+	public function validate_settings( array $settings ) {
 		if ( empty( $settings['url'] ) ) {
 			return new \WP_Error( 'missing_url', __( 'URL is required', 'popup-maker' ), [
 				'field' => 'url',

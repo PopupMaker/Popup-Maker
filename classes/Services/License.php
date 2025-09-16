@@ -342,7 +342,7 @@ class License extends Service {
 	 *
 	 * @return array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null
 	 */
-	public function get_license_status_data( ?bool $refresh = false ): array|null {
+	public function get_license_status_data( ?bool $refresh = false ) {
 		if ( $refresh ) {
 			$this->refresh_license_status();
 		}
@@ -551,7 +551,7 @@ class License extends Service {
 	 *
 	 * @return string|null|\DateTime
 	 */
-	public function get_license_expiration( ?bool $as_datetime = false ): \DateTime|string|null {
+	public function get_license_expiration( ?bool $as_datetime = false ) {
 		$status_data = $this->get_license_status_data();
 
 		if ( empty( $status_data ) ) {
@@ -597,7 +597,7 @@ class License extends Service {
 	 *
 	 * @throws \Exception If there is an error.
 	 */
-	private function api_call( string $action, ?array $params = null ): array|null {
+	private function api_call( string $action, ?array $params = null ) {
 		$key = $this->get_raw_license_key();
 
 		if ( empty( $key ) ) {
@@ -655,7 +655,7 @@ class License extends Service {
 	 *
 	 * @throws \Exception If there is an error.
 	 */
-	private function check_license_status(): array|null {
+	private function check_license_status() {
 		return $this->api_call( 'check_license' );
 	}
 
