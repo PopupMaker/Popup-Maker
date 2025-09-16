@@ -1,0 +1,1091 @@
+/*!******************************************************************************
+ * Copyright (c) 2019, Code Atlantic LLC
+ ******************************************************************************/
+
+@keyframes blink {
+	0% {
+		opacity: .9;
+	}
+
+	50% {
+		opacity: .5;
+	}
+}
+
+@keyframes glow {
+	0% {
+		opacity: 0.6;
+		transform: scale(1);
+	}
+
+	100% {
+		opacity: 0.8;
+		transform: scale(1.02);
+	}
+}
+
+.wrap-licenses {
+
+	.form-table,
+	thead,
+	tbody,
+	tfoot,
+	tr,
+	td,
+	th,
+	caption {
+		display: block;
+	}
+
+	.form-table tr {
+		float: left;
+		margin: 0 15px 15px 0;
+		background: #fff;
+		border: 1px solid #ccc;
+		width: 30.5%;
+		max-width: 350px;
+		padding: 14px;
+		min-height: 220px;
+		position: relative;
+		box-sizing: border-box;
+	}
+
+	.form-table th {
+		background: #f9f9f9;
+		padding: 14px;
+		border-bottom: 1px solid #ccc;
+		margin: -14px -14px 20px;
+		width: 100%;
+	}
+
+	.form-table td {
+		padding: 0;
+	}
+
+	td input.regular-text {
+		margin: 0 0 8px;
+		width: 100%;
+	}
+
+	.popmake-license-data[class*='popmake-license-'] {
+		position: absolute;
+		background: #fafafa;
+		padding: 14px;
+		border-top: 1px solid #eee;
+		margin: 20px -14px -14px;
+		min-height: 67px;
+		width: 100%;
+		bottom: 14px;
+		box-sizing: border-box;
+	}
+
+	.popmake-license-data[class*='popmake-license-'] a {
+		color: #444;
+	}
+
+	.popmake-license-data[class*='popmake-license-'] a:hover {
+		text-decoration: none;
+	}
+
+	.popmake-license-data.license-expires-soon-notice {
+		background-color: #00a0d2;
+		color: #fff;
+		border-color: #00a0d2;
+	}
+
+	.popmake-license-data.popmake-license-valid {}
+
+	.popmake-license-data.popmake-license-expired {
+		background-color: #e24e4e;
+		color: #fff;
+		border-color: #e24e4e;
+	}
+
+	.popmake-license-data.popmake-license-error,
+	.popmake-license-data.popmake-license-missing,
+	.popmake-license-data.popmake-license-invalid,
+	.popmake-license-data.popmake-license-site_inactive,
+	.popmake-license-data.popmake-license-item_name_mismatch {
+		background-color: #ffebcd;
+		border-color: #ffebcd;
+	}
+
+	.popmake-license-data p {
+		font-size: 13px;
+		margin-top: 0;
+	}
+
+	.popmake-license-data.license-expires-soon-notice a,
+	.popmake-license-data.popmake-license-expired a {
+		color: #fff;
+	}
+
+	.popmake-license-data.license-expires-soon-notice a:hover,
+	.popmake-license-data.popmake-license-expired a:hover {
+		text-decoration: none;
+	}
+
+	p.submit {
+		clear: both;
+	}
+}
+
+// License tab content spacing
+#pum-settings_licenses.tab-content {
+	padding-top: 8px;
+}
+
+// Pro License Interface (Content Control exact styling)
+.pum-field-pro_license {
+	margin-top: -8px !important;
+
+	max-width: 1200px;
+
+	// License Content Container (like Content Control's main section)
+	.pum-pro-license-content {
+		background: #fff;
+		border: 1px solid #c3c4c7;
+		border-radius: 4px;
+		padding: 20px;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+
+		// Pro Licensing Header Section (like Content Control)
+		.pum-pro-license-header {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin: -20px -20px 20px -20px;
+			padding: 12px 20px;
+			border-bottom: 1px solid #dcdcde;
+			border-radius: 4px 4px 0 0;
+			background: #f9f9f9;
+			background: linear-gradient(to right, rgb(248, 250, 252), rgb(249, 250, 251));
+
+			// Pro+ header styling
+			&.pro-plus {
+				background: linear-gradient(135deg, #ebe7fe 0%, #f2f2f3 100%);
+				border-bottom-color: #d6ccff;
+			}
+
+			.pum-license-logo {
+				height: 40px;
+				width: 40px;
+				flex-shrink: 0;
+			}
+
+			.pum-license-header-text {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+
+				h3 {
+					margin: 0;
+					font-size: 20px;
+					font-weight: 500;
+					color: #1d2327;
+					line-height: 1.2;
+				}
+
+				.pum-license-subtitle {
+					font-size: 13px;
+					color: #8267f6;
+					font-weight: 500;
+				}
+			}
+
+
+			.pum-license-status-badge {
+				display: inline-flex;
+				align-items: center;
+				padding: .6em 1em;
+				border-radius: 20px;
+				font-size: 14px;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				margin-left: auto;
+
+				svg {
+					width: 1em;
+					height: 1em;
+				}
+
+
+				.crown-icon {
+					margin-right: 10px;
+					color: #fbd803;
+					fill: #fbd803;
+				}
+
+				.star-icon {
+					margin-left: 10px;
+					// color: #fff;
+					color: #fbd803;
+					stroke: #fbd803;
+					animation: blink 1.5s infinite ease-in-out;
+				}
+
+				.lightning-icon {
+					margin-left: 10px;
+					color: #fbd803;
+					stroke: #fbd803;
+					animation: blink 1.5s infinite ease-in-out;
+				}
+
+				&.active {
+					background: linear-gradient(to right, #1dbe61, #179b4e);
+					color: #fff;
+					box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+
+					// Pro+ active badge styling
+					&.pro-plus {
+						background: linear-gradient(to right, #8267f6, #7356f5);
+					}
+				}
+
+				&.deactivated {
+					background: linear-gradient(to right, #8267F6, #7356f5);
+					color: #fff;
+					// border: 1px solid #ffc107;
+
+					.crown-icon {
+						color: #fff;
+						fill: #fff;
+					}
+
+					// Pro+ deactivated badge styling
+					&.pro-plus {
+						// Pro+ specific styling for deactivated state
+					}
+				}
+
+				&.expired,
+				&.error {
+					background: #fce8e6;
+					color: #8a2424;
+					// border: 1px solid #d63638;
+
+					// Pro+ expired/error badge styling
+					&.pro-plus {
+						// Pro+ specific styling for error states
+					}
+				}
+			}
+		}
+
+		// License Field Area - Main flex container
+		.pum-flex {
+			display: flex;
+		}
+
+		.pum-flex--column {
+			flex-direction: column;
+		}
+
+		.pum-flex--row {
+			flex-direction: row;
+		}
+
+		.pum-flex--gap-l {
+			gap: 24px;
+		}
+
+		.pum-flex--gap-m {
+			gap: 16px;
+		}
+
+		.pum-flex--gap-s {
+			gap: 8px;
+		}
+
+		.pum-flex--gap-xs {
+			gap: 5px;
+		}
+
+		// Main heading like Content Control
+		.pum-license-heading {
+			margin: 0;
+			font-size: 18px;
+			font-weight: 600;
+			color: #1d2327;
+		}
+
+		// Description text
+		.pum-license-description {
+			margin: 0;
+			font-size: 1.2em;
+			color: #646970;
+			line-height: 1.5;
+
+			svg {
+				width: 16px;
+				height: 16px;
+				vertical-align: middle;
+				margin-right: 4px;
+
+				&.lightning-icon {
+					color: #fbd803;
+					stroke: #fbd803;
+				}
+			}
+		}
+
+		// Pro+ Status Section
+		.pum-pro-plus-status {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 16px;
+			margin: 16px 0;
+			background: #f6f3ff;
+			border: 1px solid #d6ccff;
+			border-radius: 4px;
+
+			.dollar-icon {
+				width: 24px;
+				height: 24px;
+				color: #8267f6;
+				flex-shrink: 0;
+			}
+
+			strong {
+				margin: 0;
+				color: #1d2327;
+				font-size: 14px;
+				line-height: 1.2;
+			}
+
+			p {
+				margin: 0;
+				color: #646970;
+				font-size: 13px;
+				line-height: 1.4;
+			}
+		}
+
+		.pum-license-input-label {
+			font-size: 13px;
+			font-weight: 600;
+
+			strong {
+				font-weight: 800;
+			}
+		}
+
+		// Input section exactly like Content Control
+		.pum-license-input-wrapper {
+
+			.pum-license-input-group {
+				display: flex;
+				gap: 0;
+				// max-width: 600px;
+
+				input[type="text"] {
+					flex: 1;
+					// height: 36px;
+					// padding: 8px 12px;
+					color: rgb(26, 25, 27);
+					border: 1px solid rgb(217, 215, 218);
+					border-right: none;
+					border-radius: 3px 0 0 3px;
+					font-size: 14px;
+					background: #fff;
+					padding: 0.75rem 1rem;
+					font-size: 0.875rem;
+					line-height: 1.25rem;
+					margin-right: -1px;
+					max-width: 300px;
+
+
+					&:focus {
+						border-color: #0073aa;
+						outline: 2px solid transparent;
+						box-shadow: 0 0 0 1px #0073aa;
+						z-index: 1;
+						position: relative;
+					}
+
+					&:disabled {
+						background: #f6f7f7;
+						color: #646970;
+					}
+
+				}
+
+				.pum-license-buttons {
+					display: flex;
+					// align-items: stretch;
+					flex-wrap: wrap;
+					// gap: 12px;
+					justify-content: flex-start;
+
+					.button {
+						padding: 0.75rem 1rem;
+						margin: 0;
+						border-radius: 0;
+						font-size: 14px;
+						line-height: 1;
+						border-left: none;
+
+						&:last-child:not(.pum-install-pro-button) {
+							border-radius: 0 3px 3px 0;
+						}
+					}
+
+					// Install Pro Button with glowing effect
+					.pum-install-pro-button {
+						padding: 0.75rem 1.5rem;
+						font-weight: 700;
+						font-size: 14px;
+						text-transform: uppercase;
+						letter-spacing: 0.5px;
+						border-radius: 6px !important;
+						border: 2px solid transparent;
+						margin-left: 12px;
+						position: relative;
+						background: linear-gradient(135deg, #1dbe61 0%, #179b4e 100%);
+						color: #fff;
+						box-shadow: 0 0 0 0 rgba(29, 190, 97, 0.4);
+						animation: blink 1.5s infinite ease-in-out;
+						transition: all 0.3s ease;
+						display: flex;
+						align-items: center;
+						gap: 8px;
+
+						.download-icon,
+						.power-icon {
+							width: 16px;
+							height: 16px;
+							stroke-width: 2.5;
+						}
+
+						.power-icon {
+							// Slightly different styling for activation vs installation
+							stroke-width: 2;
+						}
+
+						&::before {
+							content: '';
+							position: absolute;
+							top: -4px;
+							left: -4px;
+							right: -4px;
+							bottom: -4px;
+							background: linear-gradient(135deg, rgba(29, 190, 97, 0.3), rgba(23, 155, 78, 0.3));
+							border-radius: 10px;
+							z-index: -1;
+							opacity: 0.8;
+							animation: glow 2s infinite ease-in-out alternate;
+						}
+
+						&:hover {
+							background: linear-gradient(135deg, #179b4e 0%, #1dbe61 100%);
+							transform: translateY(-1px);
+							box-shadow: 0 4px 12px rgba(29, 190, 97, 0.3);
+						}
+
+						&.pum-install-pro-plus {
+							background: linear-gradient(135deg, #8267f6 0%, #7356f5 100%);
+							box-shadow: 0 0 0 0 rgba(130, 103, 246, 0.4);
+
+							&::before {
+								background: linear-gradient(135deg, rgba(130, 103, 246, 0.3), rgba(115, 86, 245, 0.3));
+							}
+
+							&:hover {
+								background: linear-gradient(135deg, #7356f5 0%, #8267f6 100%);
+								box-shadow: 0 4px 12px rgba(130, 103, 246, 0.3);
+							}
+						}
+
+						// Disabled state - stop animations but keep visual appearance
+						&:disabled {
+							opacity: 0.7;
+							cursor: not-allowed;
+							animation: none;
+							transform: none;
+
+							&::before {
+								animation: none;
+								opacity: 0.4;
+							}
+
+							&:hover {
+								transform: none;
+								box-shadow: 0 0 0 0 rgba(29, 190, 97, 0.4);
+							}
+
+							&.pum-install-pro-plus:hover {
+								box-shadow: 0 0 0 0 rgba(130, 103, 246, 0.4);
+							}
+						}
+					}
+
+					.button-primary {
+						background: #0073aa;
+						border-color: #0073aa;
+						color: #fff;
+
+						&:hover:not(:disabled) {
+							background: #005a87;
+							border-color: #005a87;
+						}
+
+						&:disabled {
+							background: #c3c4c7 !important;
+							border-color: #c3c4c7 !important;
+							color: #fff !important;
+							cursor: not-allowed;
+						}
+					}
+
+					.button-secondary {
+						background: #f6f7f7;
+						border-color: #8c8f94;
+						color: #50575e;
+
+						&:hover {
+							background: #f0f0f1;
+							border-color: #787c82;
+						}
+					}
+
+					.pum-license-delete {
+						background: #d63638;
+						border-color: #d63638;
+						color: #fff;
+
+						&:hover {
+							background: #b32d2e;
+							border-color: #b32d2e;
+						}
+					}
+
+					.pum-license-status {
+						display: flex;
+						align-items: center;
+						padding: 0 12px;
+						font-size: 13px;
+						font-weight: 500;
+						border: 1px solid #8c8f94;
+
+						&.active,
+						&.pum-license-valid {
+							background: #d7f5d0;
+							color: #2d5016;
+							border-color: #7ad03a;
+						}
+
+						&.deactivated,
+						&.pum-license-deactivated {
+							background: #fff3cd;
+							color: #856404;
+							border-color: #ffc107;
+						}
+
+						&.inactive {
+							background: #fce8e6;
+							color: #8a2424;
+							border-color: #d63638;
+						}
+					}
+				}
+			}
+		}
+
+		// Success/error messages
+		.pum-license-messages {
+			margin: 16px 0;
+
+			p {
+				margin: 8px 0;
+				font-size: 14px;
+
+				&.success {
+					color: #00a32a;
+				}
+
+				&.error {
+					color: #d63638;
+				}
+			}
+		}
+
+		// Upgrade text like Content Control
+		.pum-license-upgrade-text {
+			font-size: 1.2em;
+			color: #646970;
+
+			a {
+				color: #1dbe61;
+				text-decoration: none;
+
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+
+		// Separator
+		hr.pum-license-separator {
+			margin: 0 0;
+			border: none;
+			height: 1px;
+			background: #dcdcde;
+		}
+
+		.pum-license-details {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			padding: 1rem;
+			font-size: 15px;
+			border: 1px solid;
+			border-radius: 4px;
+
+			background: #f2f2f3;
+
+			.pum-license-details-header {
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+				align-items: center;
+
+				h4 {
+					margin: 0;
+					font-size: 1.2em;
+				}
+
+				svg {
+					width: 1.4em;
+					height: 1.4em;
+				}
+			}
+
+
+
+			th {
+				text-align: left;
+				font-weight: 500;
+			}
+
+			td {
+				font-weight: 700;
+				text-align: right;
+
+				svg {
+					width: 1em;
+					height: 1em;
+					top: 2px;
+					position: relative;
+
+					&.crown-icon {
+						// color: #fbd803;
+						// fill: #fbd803;
+						stroke: #fbd803;
+					}
+				}
+			}
+
+			.pum-license-status {
+
+				&::before {
+					content: "";
+					display: inline-block;
+					border-radius: 9999px;
+					width: 0.5rem;
+					height: 0.5rem;
+					position: relative;
+					top: -1px;
+					margin-right: 0.25em;
+				}
+			}
+
+			.pum-pro-status {
+
+				&::before {
+					content: "";
+					display: inline-block;
+					border-radius: 9999px;
+					width: 0.5rem;
+					height: 0.5rem;
+					position: relative;
+					top: -1px;
+					margin-right: 0.25em;
+				}
+			}
+
+
+			&--active {
+				background: linear-gradient(135deg, rgb(233, 252, 241) 0%, rgb(242, 242, 243) 100%);
+				border-color: rgb(188, 245, 212);
+
+
+				.pum-license-status::before {
+					background-color: rgb(29, 190, 97);
+				}
+
+				.pum-pro-status {
+					&--active::before {
+						background-color: rgb(29, 190, 97);
+					}
+
+					&--installed::before {
+						background-color: rgb(29, 190, 97);
+						opacity: 0.5;
+					}
+
+					&--not-installed::before {
+						background-color: #dc3545;
+					}
+				}
+
+				.pum-license-details-header h4,
+				.pum-license-status {
+					color: #2d5016;
+				}
+
+
+				svg {
+					// fill: #2d5016;
+					stroke: #2d5016;
+				}
+
+
+			}
+
+			&--pro-plus {
+				background: linear-gradient(135deg, rgb(235, 231, 254) 0%, rgb(242, 242, 243) 100%);
+				border-color: rgb(195, 183, 251);
+
+				.pum-license-status::before {
+					background-color: rgb(130, 103, 246);
+				}
+
+				.pum-pro-status {
+					&--active::before {
+						background-color: rgb(130, 103, 246);
+					}
+
+					&--installed::before {
+						background-color: rgb(130, 103, 246);
+						opacity: 0.5;
+					}
+
+					&--not-installed::before {
+						background-color: #dc3545;
+					}
+				}
+
+				.pum-license-details-header h4,
+				.pum-license-status {
+					color: rgb(39, 10, 169);
+				}
+
+
+				svg {
+					stroke: rgb(130, 103, 246) !important;
+				}
+			}
+		}
+
+		// Features section exactly like Content Control
+		.pum-pro-features {
+			.pum-feature-heading::before {
+				content: "●";
+				color: #00a32a;
+				margin-right: 0.5em;
+				font-size: .6em;
+				position: relative;
+				top: -2px;
+			}
+
+			.pum-features-heading {
+				margin: 0 0 20px 0;
+				font-size: 16px;
+				font-weight: 600;
+				color: #1d2327;
+				text-align: center;
+				line-height: 1.4;
+
+				span {
+					display: block;
+					margin-top: 5px;
+				}
+
+				a {
+					color: #0073aa;
+					text-decoration: none;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+			}
+
+			.pum-features-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 0 32px;
+
+				.pum-pro-plus-badge {
+					background: #8267f6;
+					color: #fff;
+					padding: 2px 6px;
+					border-radius: 4px;
+					font-size: 12px;
+					margin-left: 0.5em;
+				}
+
+				.pum-feature-column {
+					background: #f8f9fa;
+					border: 1px solid #dcdcde;
+					border-radius: 4px;
+					padding: 16px;
+
+					h4 {
+						margin: 0 0 12px 0;
+						font-size: 16px;
+						font-weight: 600;
+						color: #1d2327;
+					}
+
+					ul {
+						margin: 0;
+						padding: 0;
+						list-style: none;
+
+						li {
+							margin: 0 0 12px 0;
+							display: flex;
+							align-items: flex-start;
+							gap: 8px;
+							font-size: 14px;
+							line-height: 1.4;
+
+							img.feature-icon {
+								width: 14px;
+								height: 14px;
+								margin-top: 3px;
+								flex-shrink: 0;
+							}
+
+							div {
+								flex: 1;
+							}
+
+							strong {
+								display: block;
+								color: #1d2327;
+								font-weight: 600;
+							}
+
+							&:last-child {
+								margin-bottom: 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.pum-license-callout {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 16px;
+		border: 1px solid;
+
+		svg {
+			width: 16px;
+			height: 16px;
+			vertical-align: middle;
+			// margin-right: 4px;
+
+			&.lightning-icon {
+				color: #fbd803;
+				stroke: #fbd803;
+			}
+		}
+
+		span {
+			flex: 1;
+		}
+
+		&--activated {
+			background: linear-gradient(135deg, rgb(233, 252, 241) 0%, rgb(242, 242, 243) 100%);
+			border-color: rgb(188, 245, 212);
+			border-radius: 4px;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 1.5;
+			color: rgb(17, 111, 56);
+
+		}
+
+
+		&--deactivated {
+			background: linear-gradient(135deg, #ebe7fe 0%, #f2f2f3 100%);
+			border-color: #d6ccff;
+			border-radius: 4px;
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 1.5;
+
+			.info-icon {
+				color: #270aa9;
+			}
+
+		}
+
+
+	}
+
+	$purple-light: rgb(235, 231, 254);
+	$pro-plus-border-color: rgb(195, 183, 251);
+	$pro-plus-bg-gradient: linear-gradient(135deg, rgb(235, 231, 254) 0%, rgb(242, 242, 243) 100%);
+	$pro-plus-accent-color: rgb(130, 103, 246);
+	$dark-purple: rgb(39, 10, 169);
+
+	.feature-icon {
+		opacity: 0.5;
+		color: inherit;
+	}
+
+	.pum-license-tier-pro {
+		.pro-feature {
+			.feature-icon {
+				opacity: 1;
+				color: #00a32a;
+			}
+		}
+
+		.pro-plus-enhanced-feature {
+			.feature-icon {
+				// opacity: 0.5;
+				color: #00a32a;
+			}
+		}
+
+		.pro-plus-exclusive-feature {
+			.feature-icon {
+				color: #8267f6;
+			}
+		}
+	}
+
+	.pum-pro-license-content.pum-license-tier-pro-plus {
+
+		.pum-license-callout--activated {
+			background: $pro-plus-bg-gradient;
+			border-color: rgb(195, 183, 251);
+			color: rgb(39, 10, 169);
+		}
+
+		.feature-icon {
+			opacity: 1;
+		}
+
+		.pro-feature {
+			.feature-icon {
+				color: #00a32a;
+			}
+		}
+
+		.pro-plus-enhanced-feature {
+			.feature-icon {
+				color: #00a32a;
+			}
+		}
+
+		.pro-plus-exclusive-feature {
+			.feature-icon {
+				color: #8267f6;
+			}
+		}
+
+
+		.pum-pro-features {
+
+			.pum-features-heading span {
+				color: $pro-plus-accent-color;
+			}
+
+			.pum-features-grid {
+				.pum-feature-column {
+					border-color: $pro-plus-border-color;
+					background: $pro-plus-bg-gradient;
+				}
+			}
+
+
+			.pum-pro-plus-badge {
+				background: $purple-light;
+				color: rgb(39, 10, 169);
+				padding: 2px 6px;
+				border-radius: 4px;
+				font-size: 12px;
+			}
+		}
+
+
+	}
+
+
+	// Bottom text outside container (like Content Control)
+	.pum-license-footer-text {
+		margin: 16px 0 0 0;
+		font-size: 13px;
+		color: #646970;
+		font-style: italic;
+	}
+
+
+	// Mobile responsiveness
+	@media (max-width: 782px) {
+		.pum-pro-license-content {
+			padding: 16px;
+
+			.pum-license-input-wrapper {
+				.pum-license-input-group {
+					flex-direction: column;
+
+					input[type="text"] {
+						border-radius: 3px;
+						border-right: 1px solid #8c8f94;
+						// margin-bottom: 8px;
+						// height: 40px;
+					}
+
+					.pum-license-buttons {
+						justify-content: flex-start;
+						gap: 8px;
+
+						.button {
+							border-radius: 3px;
+							border-left: 1px solid #8c8f94;
+							margin-right: 8px;
+							padding: 0.75rem 1rem;
+						}
+
+						.pum-install-pro-button {
+							margin-left: 0;
+							margin-top: 8px;
+							width: 100%;
+							justify-content: center;
+						}
+					}
+				}
+			}
+
+			.pum-pro-features {
+				.pum-features-grid {
+					grid-template-columns: 1fr;
+					gap: 16px 0;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,67 @@
+.popup-maker-app-header {
+	background-color: #fff;
+	border-bottom: 1px solid #ddd;
+	padding-right: 20px;
+
+	display: flex;
+	align-items: center;
+	gap: 20px;
+
+	.branding {
+		margin: 0 20px;
+
+		a {
+			display: flex;
+			align-items: center;
+			color: inherit;
+			text-decoration: none;
+		}
+
+		img {
+			margin-right: 10px;
+			max-height: 1.25em;
+		}
+	}
+
+	.tabs {
+		flex-grow: 1;
+	}
+
+	.components-tab-panel__tabs-item {
+		font-size: 1.125em;
+		height: 60px;
+		color: #1e1e1e;
+		text-decoration: none;
+
+		&.is-active {
+			box-shadow:
+				inset 0 0 0 var(--wp-admin-border-width-focus) #0000,
+				inset 0 -4px 0 0 var(--wp-admin-theme-color);
+		}
+
+		&:hover {
+			color: var(--wp-admin-theme-color);
+		}
+	}
+
+	.components-tab-panel__tabs-item {
+		&.upgrade {
+			margin-left: auto;
+
+			svg {
+				margin-right: 5px;
+			}
+
+			&:hover {
+				svg path {
+					fill: var(--wp-admin-theme-color);
+				}
+			}
+		}
+
+		&.support-link {
+			margin-left: auto;
+		}
+	}
+}
+

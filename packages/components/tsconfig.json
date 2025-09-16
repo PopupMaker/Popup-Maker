@@ -1,0 +1,26 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "src",
+		"outDir": "build",
+		"declarationDir": "build-types",
+		"paths": {
+			"@popup-maker/types": [ "../types/src" ]
+		}
+	},
+	"include": [ "./src/**/*" ],
+	"references": [
+		{
+			"path": "../core-data"
+		},
+		{
+			"path": "../i18n"
+		},
+		{
+			"path": "../types"
+		},
+		{
+			"path": "../utils"
+		}
+	]
+}

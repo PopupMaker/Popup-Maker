@@ -1,0 +1,100 @@
+.pum-icon {
+	&--block-manager {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--block {
+		path {
+			stroke: currentColor;
+		}
+		rect {
+			stroke: currentColor;
+			fill: currentColor;
+		}
+	}
+
+	&--check-all {
+		path {
+			fill: currentColor;
+		}
+	}
+
+	&--controlled-content {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--custom-redirect {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--filter-lines {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--incognito {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--license-key {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--locked-user {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--mark-colored {
+		path.pum-mark--center-path,
+		path:not(.pum-mark--center-path) {
+			fill: currentColor;
+		}
+	}
+
+	&--monitor {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--permissions {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--protected-message {
+		path {
+			stroke: currentColor;
+		}
+		rect {
+			fill: currentColor;
+			stroke: none;
+		}
+	}
+
+	&--protected-redirect {
+		path {
+			stroke: currentColor;
+		}
+	}
+
+	&--upgrade {
+		path {
+			fill: currentColor;
+		}
+	}
+}

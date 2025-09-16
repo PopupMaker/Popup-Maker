@@ -1,0 +1,11 @@
+watch:
+    files:
+        - ./popup-maker.php
+    directories:
+        - ./classes/
+        - ./includes/
+        - ./tests/php/tests/
+
+notifications:
+    passingTests: false
+    failingTests: false

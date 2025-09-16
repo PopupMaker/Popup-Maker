@@ -1,0 +1,67 @@
+{
+	"name": "@popup-maker/use-query-params",
+	"version": "1.0.0",
+	"description": "Popup Maker Use Query Params",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"private": true,
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/use-query-params/README.md",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/use-query-params"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/src/index.js",
+	"types": "build-types/src/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/src/index.d.ts",
+			"default": "./build/src/index.js",
+			"adapters": "./build/src/adapters"
+		}
+	},
+	"wpScript": true,
+	"wpScriptModuleExports": {
+		".": {
+			"types": "./build-types/src/index.d.ts",
+			"default": "./build/src/index.js",
+			"adapters": "./build/src/adapters"
+		}
+	},
+	"sideEffects": true,
+	"dependencies": {
+		"serialize-query-params": "^2.0.2",
+		"use-query-params": "^2.2.1"
+	},
+	"peerDependencies": {
+		"react-router": "^6.0.0 || ^7.0.0"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"adapters",
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
+}

@@ -1,0 +1,29 @@
+
+.popup-maker-call-to-actions-page {
+	// Header styles are now handled by @popup-maker/layout components
+	.popup-maker-app-content {
+		padding: 20px;
+	}
+
+	.components-base-control__label,
+	.components-input-control__label,
+	.components-toggle-control__label,
+	.components-checkbox-control__label {
+		text-transform: none !important;
+		font-weight: 500 !important;
+		font-size: 13px !important;
+	}
+}
+
+.branding-pro-tag {
+	background-color: #007cba;
+	border-radius: 1em;
+	color: #fff;
+	font-size: 13px;
+	display: inline-block;
+	line-height: 1;
+	padding: 5px 8px;
+	vertical-align: middle;
+	text-align: center;
+	margin: 0 10px;
+}

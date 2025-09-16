@@ -1,43 +1,54 @@
 {
 	"name": "popupmaker/popup-maker",
 	"description": "The easiest way to create any popup imaginable with WordPress.",
-	"version": "1.20.6",
 	"type": "wordpress-plugin",
+	"author": "Code Atlantic LLC",
 	"license": "GPL-2.0-or-later",
-	"keywords": [
-		"popup maker",
-		"pum",
-		"wp popup maker"
-	],
 	"homepage": "https://wppopupmaker.com/",
 	"support": {
 		"issues": "https://wppopupmaker.com/support"
 	},
-	"minimum-stability": "dev",
 	"prefer-stable": true,
+	"minimum-stability": "dev",
 	"require": {
+		"php": ">=7.4",
 		"composer/installers": "v2.3.0",
 		"code-atlantic/prerequisite-checks": "^1.3.1",
-		"code-atlantic/wp-autoloader": "^1.0.0"
+		"code-atlantic/wp-autoloader": "^1.1.0",
+		"pimple/pimple": "v3.5.0"
 	},
 	"require-dev": {
-		"squizlabs/php_codesniffer": "^3.10.2",
+		"php": ">=7.4 || ^8.0",
 		"code-atlantic/coding-standards": "1.1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "v1.0.0",
-		"phpstan/phpstan": "^1.11.11",
-		"szepeviktor/phpstan-wordpress": "v1.3.5",
-		"phpstan/extension-installer": "^1.4.1",
-		"phpunit/phpunit": "^7.5.20",
-		"phpcompatibility/phpcompatibility-wp": "^2.1.5",
-		"php-stubs/generator": "v0.8.4"
+		"phpstan/phpstan": "^2.0.3",
+		"szepeviktor/phpstan-wordpress": "2.0.2",
+		"phpstan/extension-installer": "^1.4.3",
+		"phpunit/phpunit": "^10.5.38",
+		"mockery/mockery": "^1.6.12",
+		"brain/monkey": "^2.6.2",
+		"phpcompatibility/phpcompatibility-wp": "^2.1.7"
+	},
+	"autoload": {
+		"psr-4": {
+			"PopupMaker\\": "classes/"
+		},
+		"classmap": [
+			"vendor-prefixed"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"PopupMaker\\Tests\\": "tests/unit/"
+		}
 	},
 	"scripts": {
 		"format": "vendor/bin/phpcbf --standard=.phpcs.xml.dist --report-summary --report-source",
 		"lint": "vendor/bin/phpcs --standard=.phpcs.xml.dist",
 		"lint:report": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml",
-		"generate-stubs": "vendor/bin/generate-stubs --finder=./bin/generate-stubs.php --out=popup-maker.stub --stats --force --include-inaccessible-class-nodes",
+		"generate-stubs": "./bin/generate-stubs.sh",
 		"install-strauss": [
-			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.19.2/strauss.phar"
+			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.22.4/strauss.phar"
 		],
 		"clean-vendor-prefix-folder": [
 			"rm -rf vendor-prefixed/**/*"
@@ -59,22 +70,9 @@
 			"@install-strauss",
 			"@php strauss.phar"
 		],
-		"tests": "vendor/bin/phpunit --configuration tests/unit/phpunit.xml --no-coverage",
-		"coverage": "vendor/bin/phpunit --configuration tests/unit/phpunit.xml --coverage-html coverage/unit/",
+		"tests": "vendor/bin/phpunit --configuration ./tests/php/phpunit.xml --no-coverage",
+		"coverage": "vendor/bin/phpunit --configuration ./tests/php/phpunit.xml --coverage-html coverage/unit/",
 		"test:watch": "vendor/bin/phpunit-watcher watch < /dev/tty"
-	},
-	"autoload": {
-		"psr-4": {
-			"PopupMaker\\": "classes/"
-		},
-		"classmap": [
-			"vendor-prefixed"
-		]
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"PopupMaker\\Tests\\": "tests/unit/"
-		}
 	},
 	"extra": {
 		"exclude-from-classmap": [
@@ -87,22 +85,18 @@
 			"constant_prefix": "POPUPMAKER_",
 			"packages": [
 				"code-atlantic/prerequisite-checks",
-				"code-atlantic/wp-autoloader"
+				"code-atlantic/wp-autoloader",
+				"pimple/pimple"
 			],
 			"exclude_from_copy": {
 				"packages": [
 					"composer/installers"
-				],
-				"namespaces": [],
-				"file_patterns": []
-			},
-			"delete_vendor_packages": true
+				]
+			}
 		}
 	},
 	"config": {
-		"platform": {
-			"php": "7.4"
-		},
+		"platform-check": false,
 		"allow-plugins": {
 			"composer/installers": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,

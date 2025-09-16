@@ -9,25 +9,25 @@ on:
         required: true
         default: 'develop'
         type: string
-      
+
       version_suffix:
         description: 'Version identifier (defaults to branch name + timestamp)'
         required: false
         type: string
         default: ''
-      
+
       run_tests:
         description: 'Run test suite'
         required: false
         type: boolean
         default: false
-      
+
       run_linting:
         description: 'Run code linting'
         required: false
         type: boolean
         default: false
-      
+
       notify_slack:
         description: 'Send Slack notification when complete'
         required: false
@@ -48,29 +48,29 @@ jobs:
     outputs:
       build_version: ${{ steps.version.outputs.version }}
       plugin_info: ${{ steps.info.outputs.plugin_info }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}
-      
+
       - name: Extract plugin information
         id: info
         run: |
           PLUGIN_SLUG=$(node -p "require('./package.json').name || 'popup-maker'")
           PLUGIN_NAME=$(node -p "require('./package.json').displayName || 'Popup Maker'")
-          
+
           echo "plugin_info={\"slug\":\"${PLUGIN_SLUG}\",\"name\":\"${PLUGIN_NAME}\"}" >> $GITHUB_OUTPUT
           echo "📦 Building: ${PLUGIN_NAME} (${PLUGIN_SLUG})"
-      
+
       - name: Generate build version
         id: version
         run: |
           REF_NAME="${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}"
           VERSION_SUFFIX="${{ github.event.inputs.version_suffix }}"
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-          
+
           if [ -n "$VERSION_SUFFIX" ]; then
             # User provided custom version - use as-is
             BUILD_VERSION="${VERSION_SUFFIX}"
@@ -82,7 +82,7 @@ jobs:
             BUILD_VERSION="${CLEAN_REF}"
             echo "🌿 Using ref-based version: ${BUILD_VERSION}"
           fi
-          
+
           echo "version=${BUILD_VERSION}" >> $GITHUB_OUTPUT
           echo "🏗️ Build version: ${BUILD_VERSION}"
 
@@ -94,20 +94,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: validate
     if: github.event.inputs.run_tests == 'true' || github.event.inputs.run_linting == 'true'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}
-      
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.0'
           tools: composer:v2
           coverage: none
-      
+
       - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
@@ -117,12 +117,12 @@ jobs:
           key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             composer-${{ runner.os }}-
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Cache npm dependencies
         id: npm-cache
         uses: actions/cache@v4
@@ -134,41 +134,41 @@ jobs:
           key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             npm-${{ runner.os }}-
-      
+
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies for quality checks..."
           composer install --no-interaction --no-progress
-          
+
           if [ "${{ steps.npm-cache.outputs.cache-hit }}" != "true" ]; then
             echo "📦 Installing npm dependencies..."
             npm ci
           else
             echo "✅ npm dependencies restored from cache"
           fi
-      
+
       - name: PHP Linting
         if: github.event.inputs.run_linting == 'true'
         run: |
           echo "🔍 Running PHP Code Sniffer..."
           composer run lint || echo "⚠️ PHP linting failed but continuing..."
-      
+
       - name: JavaScript Linting
         if: github.event.inputs.run_linting == 'true'
         run: |
           echo "🔍 Running ESLint..."
           npm run lint:js || echo "⚠️ JavaScript linting failed but continuing..."
-      
+
       - name: Run Tests
         if: github.event.inputs.run_tests == 'true'
         run: |
           echo "🧪 Running tests..."
-          
+
           # PHP tests if available
           if [ -f "composer.json" ] && grep -q '"test"' composer.json; then
             composer run tests || echo "⚠️ PHP tests failed but continuing..."
           fi
-          
+
           # JavaScript tests if available
           if [ -f "package.json" ] && grep -q '"test"' package.json; then
             npm run test:unit || echo "⚠️ JavaScript tests failed but continuing..."
@@ -190,20 +190,20 @@ jobs:
       commit_hash: ${{ steps.build_info.outputs.commit_hash }}
       commit_short: ${{ steps.build_info.outputs.commit_short }}
       changelog_content: ${{ steps.build_info.outputs.changelog_content }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}
-      
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.0'
           tools: composer:v2
           coverage: none
-      
+
       - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
@@ -213,12 +213,12 @@ jobs:
           key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             composer-${{ runner.os }}-
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Cache npm dependencies
         id: npm-cache-build
         uses: actions/cache@v4
@@ -230,36 +230,36 @@ jobs:
           key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             npm-${{ runner.os }}-
-      
+
       - name: Capture build information
         id: build_info
         run: |
           # Capture commit information BEFORE modifying files
           COMMIT_HASH=$(git rev-parse HEAD)
           COMMIT_SHORT=$(git rev-parse --short HEAD)
-          
+
           echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
           echo "commit_short=${COMMIT_SHORT}" >> $GITHUB_OUTPUT
-          
+
           # Extract changelog content using update-changelog.js script
           if [ -f "CHANGELOG.md" ] && [ -f "bin/update-changelog.js" ]; then
             echo "📝 Extracting changelog using update-changelog.js..."
-            
+
             # Use the official script to get formatted changelog content
             # We use a dummy version to trigger extraction without file modification
             CHANGELOG_CONTENT=$(node bin/update-changelog.js "0.0.0-build" --verbose 2>/dev/null | grep -A 100 "Unreleased Changes:" | tail -n +2 || true)
-            
+
             # If the script approach fails, fall back to direct parsing
             if [ -z "$CHANGELOG_CONTENT" ]; then
               echo "Script extraction failed, using direct CHANGELOG.md parsing..."
-              
+
               # Extract Unreleased section directly
               CHANGELOG_CONTENT=$(awk '/^## Unreleased/,/^## [^U]/ {
                 if (/^## Unreleased/) next
                 if (/^## [^U]/) exit
                 if (/^\*\*/ || /^-   / || /^   -/) print
               }' CHANGELOG.md | head -10)
-              
+
               # Clean up formatting for Slack
               if [ -n "$CHANGELOG_CONTENT" ]; then
                 CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | sed 's/^-   /• /' | sed 's/^   -/  - /' | grep -v '^\*\*')
@@ -268,7 +268,7 @@ jobs:
               # Convert numbered list to bullet points for Slack
               CHANGELOG_CONTENT=$(echo "$CHANGELOG_CONTENT" | sed 's/^[0-9]\+\. /• /' | head -8)
             fi
-            
+
             # Fallback to git commits if still empty
             if [ -z "$CHANGELOG_CONTENT" ]; then
               echo "CHANGELOG.md empty, using recent commits as fallback..."
@@ -281,72 +281,72 @@ jobs:
             echo "Missing CHANGELOG.md or bin/update-changelog.js, using recent commits..."
             CHANGELOG_CONTENT=$(git log --oneline -4 --pretty=format:"• %s" | head -4)
           fi
-          
+
           # Save changelog content (handle multiline)
           echo "changelog_content<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          
+
           echo "📋 Commit: ${COMMIT_SHORT}"
           echo "📝 Changelog lines: $(echo "$CHANGELOG_CONTENT" | wc -l)"
-      
+
       - name: Prepare test version files
         run: |
           BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
           PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
           PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
-          
+
           echo "📝 Preparing test build version ${BUILD_VERSION}..."
-          
+
           # Create temporary version files (don't commit)
           # Update version in main plugin file
           sed "s/Version:.*$/Version:           ${BUILD_VERSION}/" popup-maker.php > popup-maker.php.tmp
           sed "s/define( 'POPMAKE_VERSION'.*$/define( 'POPMAKE_VERSION', '${BUILD_VERSION}' );/" popup-maker.php.tmp > popup-maker.php.new
           mv popup-maker.php.new popup-maker.php
           rm popup-maker.php.tmp
-          
+
           # Update package.json version (temporarily)
           node -e "
             const pkg = require('./package.json');
             pkg.version = '$BUILD_VERSION';
             require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2));
           "
-          
+
           # Update readme.txt stable tag (temporarily)
           if [ -f "readme.txt" ]; then
             sed "s/Stable tag:.*$/Stable tag: ${BUILD_VERSION}/" readme.txt > readme.txt.tmp
             mv readme.txt.tmp readme.txt
           fi
-          
+
           echo "✅ Version files prepared (not committed)"
-      
+
       - name: Install production dependencies
         run: |
           echo "📦 Installing production dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-          
+
           if [ "${{ steps.npm-cache-build.outputs.cache-hit }}" != "true" ]; then
             echo "📦 Installing npm dependencies..."
             npm ci --include=dev  # Need dev deps for build
           else
             echo "✅ npm dependencies restored from cache"
           fi
-      
+
       - name: Build production assets
         run: |
           echo "🏗️ Building production assets..."
           npm run build:production
           echo "✅ Production build complete"
-      
+
       - name: Create test package
         id: package
         run: |
           BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
           PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
           PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
-          
+
           echo "📦 Creating test package..."
-          
+
           # Use build-release.js if available
           if [ -f "bin/build-release.js" ]; then
             node bin/build-release.js --zip-name "${PLUGIN_SLUG}_${BUILD_VERSION}.zip"
@@ -354,10 +354,10 @@ jobs:
           else
             # Fallback packaging
             echo "⚠️ No build-release.js found, using fallback..."
-            
+
             rm -rf build
             mkdir -p build/${PLUGIN_SLUG}
-            
+
             # Copy files (exclude development files)
             rsync -av --exclude-from='.distignore' \
               --exclude='build/' \
@@ -368,18 +368,18 @@ jobs:
               --exclude='package*' \
               --exclude='webpack.config.js' \
               ./ build/${PLUGIN_SLUG}/
-            
+
             cd build
             PACKAGE_NAME="${PLUGIN_SLUG}_${BUILD_VERSION}.zip"
             zip -r "../${PACKAGE_NAME}" ${PLUGIN_SLUG}/
             cd ..
           fi
-          
+
           # Generate checksum
           if [ -f "$PACKAGE_NAME" ]; then
             sha256sum "$PACKAGE_NAME" > "${PACKAGE_NAME}.sha256"
             FILE_SIZE=$(ls -lh "$PACKAGE_NAME" | awk '{print $5}')
-            
+
             echo "✅ Test package created: $PACKAGE_NAME ($FILE_SIZE)"
             echo "package_name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
             echo "file_size=${FILE_SIZE}" >> $GITHUB_OUTPUT
@@ -387,7 +387,7 @@ jobs:
             echo "❌ Failed to create test package"
             exit 1
           fi
-      
+
       - name: Upload test package
         id: upload
         uses: actions/upload-artifact@v4
@@ -395,7 +395,7 @@ jobs:
           name: ${{ fromJson(needs.validate.outputs.plugin_info).slug }}-${{ needs.validate.outputs.build_version }}
           path: ${{ steps.package.outputs.package_name }}
           retention-days: 30
-      
+
       - name: Set artifact info for summary
         id: upload_info
         run: |
@@ -403,7 +403,7 @@ jobs:
           PLUGIN_SLUG=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).slug")
           BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
           ARTIFACT_NAME="${PLUGIN_SLUG}-${BUILD_VERSION}"
-          
+
           echo "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
           echo "📋 Artifact name: ${ARTIFACT_NAME}"
 
@@ -415,7 +415,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate, quality-checks, build]
     if: always() && github.event.inputs.notify_slack == 'true'
-    
+
     steps:
       - name: Send success notification
         if: needs.build.result == 'success'
@@ -473,7 +473,7 @@ jobs:
                   "type": "section",
                   "fields": [
                     {
-                      "type": "mrkdwn", 
+                      "type": "mrkdwn",
                       "text": "<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|📋 Build Details>"
                     },
                     {
@@ -481,7 +481,7 @@ jobs:
                       "text": "<https://github.com/${{ github.repository }}/blob/${{ github.event.inputs.ref || 'develop' }}/CHANGELOG.md|📖 Full Changelog>"
                     },
                     {
-                      "type": "mrkdwn", 
+                      "type": "mrkdwn",
                       "text": "<https://github.com/${{ github.repository }}/commit/${{ needs.build.outputs.commit_hash }}|🔗 Source Commit>"
                     },
                     {
@@ -503,7 +503,7 @@ jobs:
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV }}
-      
+
       - name: Send failure notification
         if: needs.build.result != 'success'
         uses: 8398a7/action-slack@v3
@@ -580,31 +580,31 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate, quality-checks, build]
     if: always()
-    
+
     steps:
       # Note: GitHub API artifact downloads require 'actions' scope which workflow tokens don't have
       # We'll provide clear instructions to the artifacts section instead
-      
+
       - name: Generate summary
         run: |
           BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
           PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
           PLUGIN_NAME=$(echo "$PLUGIN_INFO" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).name")
-          
+
           echo "# 🔨 Test Build Summary for ${PLUGIN_NAME}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${BUILD_VERSION}" >> $GITHUB_STEP_SUMMARY
           echo "**Source:** ${{ github.event.inputs.ref || 'develop' }}" >> $GITHUB_STEP_SUMMARY
           echo "**Requested by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Status indicators
           if [ "${{ needs.validate.result }}" == "success" ]; then
             echo "✅ **Validation**: Passed" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ **Validation**: Failed" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           if [ "${{ needs.quality-checks.result }}" == "success" ]; then
             echo "✅ **Quality Checks**: Passed" >> $GITHUB_STEP_SUMMARY
           elif [ "${{ needs.quality-checks.result }}" == "skipped" ]; then
@@ -612,16 +612,16 @@ jobs:
           else
             echo "⚠️ **Quality Checks**: Issues found (build continued)" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           if [ "${{ needs.build.result }}" == "success" ]; then
             echo "✅ **Build**: Successful" >> $GITHUB_STEP_SUMMARY
           else
             echo "❌ **Build**: Failed" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📥 Test Package" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ needs.build.result }}" == "success" ]; then
             echo "📦 **Package:** \`${{ needs.build.outputs.package_name }}\`" >> $GITHUB_STEP_SUMMARY
             echo "📏 **Size:** ${{ needs.build.outputs.file_size || 'Unknown' }}" >> $GITHUB_STEP_SUMMARY
@@ -629,7 +629,7 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "## ⬇️ Download Instructions" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
+
             # Show direct download URL if available
             if [ -n "${{ needs.build.outputs.artifact_url }}" ]; then
               echo "### 🎯 Direct Download" >> $GITHUB_STEP_SUMMARY
@@ -654,7 +654,7 @@ jobs:
           else
             echo "❌ No test package was created due to build failure." >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📝 Build Information" >> $GITHUB_STEP_SUMMARY
           echo "**Source:** [\`${{ github.event.inputs.ref || 'develop' }}\`](https://github.com/${{ github.repository }}/tree/${{ github.event.inputs.ref || 'develop' }})" >> $GITHUB_STEP_SUMMARY

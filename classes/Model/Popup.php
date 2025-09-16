@@ -1124,6 +1124,22 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$network_total = ! $network_total ? $site_total : $network_total + 1;
 			update_site_option( 'pum_site_total_' . $keys[0] . '_count', $network_total );
 		}
+
+		if ( 'conversion' === $event || 'open' === $event ) {
+			$open_count       = (int) $this->get_event_count( 'open', 'current' );
+			$conversion_count = (int) $this->get_event_count( 'conversion', 'current' );
+			$this->update_meta( 'popup_conversion_rate', ( $open_count > 0 && $conversion_count >= 0 ) ? ( $conversion_count / $open_count ) : 0 );
+
+			$site_total_opens       = (int) get_option( 'pum_total_open_count', 0 );
+			$site_total_conversions = (int) get_option( 'pum_total_conversion_count', 0 );
+			update_option( 'pum_overall_conversion_rate', ( $site_total_opens > 0 && $site_total_conversions >= 0 ) ? ( $site_total_conversions / $site_total_opens ) : 0 );
+
+			if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+				$network_total_opens       = (int) get_site_option( 'pum_site_total_open_count', 0 );
+				$network_total_conversions = (int) get_site_option( 'pum_site_total_conversion_count', 0 );
+				update_site_option( 'pum_overall_conversion_rate', ( $network_total_opens > 0 && $network_total_conversions >= 0 ) ? ( $network_total_conversions / $network_total_opens ) : 0 );
+			}
+		}
 	}
 
 	/**
@@ -1199,22 +1215,14 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @param array $a Array with `timestamp` key for comparison.
 	 * @param array $b Array with `timestamp` key for comparison.
 	 *
-	 * @return bool
+	 * @return int
 	 */
 	public function compare_resets( $a, $b ) {
 		$a = (float) $a['timestamp'];
 		$b = (float) $b['timestamp'];
 
-		// TODO Replace this with PHP 7.4 `<=>` operator once we drop support for PHP 5.6.
-		// return (float) $a['timestamp'] <=> (float) $b['timestamp'];
-
-		if ( $a < $b ) {
-			return -1;
-		} elseif ( $a > $b ) {
-			return 1;
-		} else {
-			return 0;
-		}
+		// Sort in descending order (newest first) to get the most recent reset
+		return $b <=> $a;
 	}
 
 	/**

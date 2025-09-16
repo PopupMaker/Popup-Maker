@@ -1,0 +1,74 @@
+{
+	"name": "@popup-maker/cta-editor",
+	"version": "1.0.0-beta.10",
+	"description": "Popup Maker CTA editor implementation",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/cta-editor/README.md",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/cta-editor"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"wpScript": true,
+	"dependencies": {
+		"@popup-maker/components": "*",
+		"@popup-maker/core-data": "*",
+		"@popup-maker/fields": "*",
+		"@popup-maker/i18n": "*",
+		"@popup-maker/registry": "*",
+		"@popup-maker/use-query-params": "*",
+		"@popup-maker/utils": "*",
+		"@wordpress/components": "^30.2.0",
+		"@wordpress/data": "^10.29.0",
+		"@wordpress/dom-ready": "^4.29.0",
+		"@wordpress/element": "^6.29.0",
+		"@wordpress/hooks": "^4.29.0",
+		"@wordpress/icons": "^10.29.0",
+		"@wordpress/url": "^4.29.0",
+		"clsx": "^2.1.1",
+		"lodash": "4.17.21"
+	},
+	"devDependencies": {
+		"@jest/globals": "^29.7.0",
+		"@popup-maker/types": "*",
+		"@testing-library/react": "^16.2.0"
+	},
+	"peerDependencies": {
+		"react": "^18.3.1"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
+}

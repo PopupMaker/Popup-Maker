@@ -1,21 +1,21 @@
 /**
  * Adds needed backward compatibility for older versions of jQuery
  */
-( function( $ ) {
+( function ( $ ) {
 	'use strict';
 	if ( $.fn.on === undefined ) {
-		$.fn.on = function( types, sel, fn ) {
+		$.fn.on = function ( types, sel, fn ) {
 			return this.delegate( sel, types, fn );
 		};
 	}
 	if ( $.fn.off === undefined ) {
-		$.fn.off = function( types, sel, fn ) {
+		$.fn.off = function ( types, sel, fn ) {
 			return this.undelegate( sel, types, fn );
 		};
 	}
 
 	if ( $.fn.bindFirst === undefined ) {
-		$.fn.bindFirst = function( which, handler ) {
+		$.fn.bindFirst = function ( which, handler ) {
 			var $el = $( this ),
 				events,
 				registered;
@@ -32,7 +32,7 @@
 	}
 
 	if ( $.fn.outerHtml === undefined ) {
-		$.fn.outerHtml = function() {
+		$.fn.outerHtml = function () {
 			var $el = $( this ).clone(),
 				$temp = $( '<div/>' ).append( $el );
 
@@ -41,7 +41,7 @@
 	}
 
 	if ( $.fn.isInViewport === undefined ) {
-		$.fn.isInViewport = function() {
+		$.fn.isInViewport = function () {
 			var elementTop = $( this ).offset().top;
 			var elementBottom = elementTop + $( this ).outerHeight();
 
@@ -53,7 +53,7 @@
 	}
 
 	if ( Date.now === undefined ) {
-		Date.now = function() {
+		Date.now = function () {
 			return new Date().getTime();
 		};
 	}

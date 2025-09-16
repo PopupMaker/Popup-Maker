@@ -16,7 +16,7 @@
 	<arg value="ps"/>
 
 	<!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-	<config name="testVersion" value="7.2-" />
+	<config name="testVersion" value="7.4-" />
 	<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
 	<config name="minimum_supported_wp_version" value="5.8"/>
 	<config name="text_domain" value="popup-maker, default" />

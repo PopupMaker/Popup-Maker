@@ -1,0 +1,48 @@
+{
+	"name": "@popup-maker/types",
+	"version": "1.0.0-beta.2",
+	"description": "Popup Maker Types",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/types/README.md",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/types"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"types": "src/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./src/index.d.ts"
+		}
+	},
+	"wpScript": true,
+	"sideEffects": false,
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
+}

@@ -26,9 +26,9 @@ function pum_popup( $popup_id = null ) {
  * @deprecated 1.4
  *
  * @param $group
- * @param int   $popup_id ID number of the popup to retrieve a overlay meta for
- * @param null  $key
- * @param null  $default_value
+ * @param int  $popup_id ID number of the popup to retrieve a overlay meta for
+ * @param null $key
+ * @param null $default_value
  *
  * @return mixed array|string
  */

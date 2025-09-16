@@ -1,0 +1,10 @@
+import './bricksbuilder';
+import './calderaforms';
+import './contactform7';
+import './fluentforms';
+import './formidableforms';
+import './gravityforms';
+import './mc4wp';
+import './ninjaforms';
+import './wpforms';
+import './wsforms';

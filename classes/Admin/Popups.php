@@ -6,6 +6,8 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
+use function PopupMaker\progress_bar;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -1084,9 +1086,9 @@ class PUM_Admin_Popups {
 			<?php do_action( 'pum_popup_analytics_metabox_before', $post->ID ); ?>
 
 			<?php
-			$opens           = $popup->get_event_count( 'open' );
+			$views           = $popup->get_event_count( 'open' );
 			$conversions     = $popup->get_event_count( 'conversion' );
-			$conversion_rate = $opens > 0 && $opens >= $conversions ? $conversions / $opens * 100 : 0;
+			$conversion_rate = $views > 0 && $views >= $conversions ? $conversions / $views * 100 : 0;
 			?>
 
 			<div id="pum-popup-analytics" class="pum-popup-analytics">
@@ -1095,7 +1097,7 @@ class PUM_Admin_Popups {
 					<tbody>
 					<tr>
 						<td><?php esc_html_e( 'Opens', 'popup-maker' ); ?></td>
-						<td><?php echo esc_html( $opens ); ?></td>
+						<td><?php echo esc_html( $views ); ?></td>
 					</tr>
 					<tr>
 						<td><?php esc_html_e( 'Conversions', 'popup-maker' ); ?></td>
@@ -1116,10 +1118,10 @@ class PUM_Admin_Popups {
 								?>
 								<br />
 								<small>
-									<strong><?php esc_html_e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo esc_html( function_exists( 'wp_date' ) ? wp_date( 'm-d-Y H:i', $reset['timestamp'] ) : date( 'm-d-Y H:i', $reset['timestamp'] ) ); ?>
-									<br /> <strong><?php esc_html_e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo esc_html( $reset['opens'] ); ?>
+									<strong><?php esc_html_e( 'Last Reset', 'popup-maker' ); ?>:</strong> <?php echo esc_html( function_exists( 'wp_date' ) ? wp_date( 'm-d-Y H:i', $reset['timestamp'] ) : gmdate( 'm-d-Y H:i', $reset['timestamp'] ) ); ?>
+									<br /> <strong><?php esc_html_e( 'Previous Opens', 'popup-maker' ); ?>:</strong> <?php echo esc_html( $reset['views'] ?? 0 ); ?>
 
-									<?php if ( $reset['conversions'] > 0 ) : ?>
+									<?php if ( ( $reset['conversions'] ?? 0 ) > 0 ) : ?>
 										<br />
 										<strong><?php esc_html_e( 'Previous Conversions', 'popup-maker' ); ?>:</strong> <?php echo esc_html( $reset['conversions'] ); ?>
 									<?php endif; ?>
@@ -1199,15 +1201,16 @@ class PUM_Admin_Popups {
 	 */
 	public static function dashboard_columns( $_columns ) {
 		wp_enqueue_style( 'pum-admin-general' );
+		wp_enqueue_style( 'popup-maker-popup-admin' );
+
 		$columns = [
-			'cb'              => '<input type="checkbox"/>',
-			'title'           => __( 'Name', 'popup-maker' ),
-			'enabled'         => __( 'Enabled', 'popup-maker' ),
-			'popup_title'     => __( 'Title', 'popup-maker' ),
-			'class'           => __( 'CSS Class', 'popup-maker' ),
-			'opens'           => __( 'Opens', 'popup-maker' ),
-			'conversions'     => __( 'Conversions', 'popup-maker' ),
-			'conversion_rate' => __( 'Conversion Rate', 'popup-maker' ),
+			'cb'          => '<input type="checkbox"/>',
+			'title'       => __( 'Name', 'popup-maker' ),
+			'enabled'     => __( 'Enabled', 'popup-maker' ),
+			'popup_title' => __( 'Title', 'popup-maker' ),
+			'class'       => __( 'CSS Class', 'popup-maker' ),
+			'views'       => __( 'Views', 'popup-maker' ),
+			'conversions' => __( 'Conversions', 'popup-maker' ),
 		];
 
 		// Add the date column preventing our own translation.
@@ -1276,27 +1279,49 @@ class PUM_Admin_Popups {
 				case 'class':
 					echo '<pre style="display:inline-block;margin:0;"><code>popmake-' . absint( $post_id ) . '</code></pre>';
 					break;
-				case 'opens':
+				case 'views':
 					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
-						echo esc_html( $popup->get_event_count( 'open' ) );
+						$open_count = $popup->get_event_count( 'open' );
+						if ( ! $open_count ) {
+							$open_count = 0;
+						}
+
+						$open_count = pum_format_number( $open_count );
+
+						echo '<div class="pum-col-content">';
+						echo '<strong>' . esc_html( $open_count ) . '</strong>';
+						echo '<span>' . esc_html__( 'impressions', 'popup-maker' ) . '</span>';
+						echo '</div>';
 					}
 					break;
+
 				case 'conversions':
 					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
-						echo esc_html( $popup->get_event_count( 'conversion' ) );
-					}
-					break;
-				case 'conversion_rate':
-					if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
-						$opens       = $popup->get_event_count( 'open' );
-						$conversions = $popup->get_event_count( 'conversion' );
+						$views       = (int) $popup->get_event_count( 'open' );
+						$conversions = (int) $popup->get_event_count( 'conversion' );
 
-						if ( $opens > 0 && $opens >= $conversions ) {
-							$conversion_rate = round( $conversions / $opens * 100, 2 );
+						if ( $views > 0 && $views >= $conversions ) {
+							$conversion_rate = round( $conversions / $views * 100, 2 );
 						} else {
 							$conversion_rate = 0;
 						}
-						echo esc_html( $conversion_rate . '%' );
+
+						$conversions = pum_format_number( $conversions );
+
+						echo '<div class="pum-col-content">';
+
+						// Progress bar with percentage.
+						if ( ! $conversion_rate || ! is_numeric( $conversion_rate ) ) {
+							echo '<strong>' . esc_html__( 'N/A', 'popup-maker' ) . '</strong>';
+						} else {
+							echo '<strong>' . esc_html( $conversions ) . '</strong>';
+							progress_bar( $conversion_rate, [
+								'size'  => 'small',
+								'title' => esc_html__( 'Calculated Conversion Rate', 'popup-maker' ),
+							] );
+						}
+
+						echo '</div>';
 					}
 					break;
 			}
@@ -1327,7 +1352,7 @@ class PUM_Admin_Popups {
 	 */
 	public static function sortable_columns( $columns ) {
 		$columns['popup_title'] = 'popup_title';
-		$columns['opens']       = 'opens';
+		$columns['views']       = 'views';
 		$columns['conversions'] = 'conversions';
 
 		return $columns;
@@ -1356,7 +1381,7 @@ class PUM_Admin_Popups {
 							]
 						);
 						break;
-					case 'opens':
+					case 'views':
 						if ( ! pum_extension_enabled( 'popup-analytics' ) ) {
 							$vars = array_merge(
 								$vars,

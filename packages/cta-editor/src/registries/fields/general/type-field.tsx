@@ -1,0 +1,112 @@
+import { __ } from '@popup-maker/i18n';
+import { addFilter, applyFilters } from '@wordpress/hooks';
+import { SelectControl } from '@wordpress/components';
+// import { FieldPanel, FieldRow } from '@popup-maker/components';
+
+import type { CallToAction } from '@popup-maker/core-data';
+
+// UNUSED, here for reference.
+
+export const callToActionTypeOptions: {
+	value: Exclude< CallToAction[ 'settings' ][ 'type' ], undefined > | '';
+	label: string;
+	disabled?: boolean;
+	[ key: string ]: any;
+}[] = applyFilters( 'popupMaker.callToActionEditor.typeOptions', [
+	{
+		value: '',
+		label: __( 'Select a type', 'popup-maker' ),
+	},
+	{
+		value: 'link',
+		label: __( 'Link', 'popup-maker' ),
+	},
+	// {
+	// 	value: 'openPopup',
+	// 	label: __( 'Open Popup (Available in Pro)', 'popup-maker' ),
+	// 	disabled: true,
+	// },
+	// {
+	// 	value: 'addToCart',
+	// 	label: __( 'Add to Cart (Available in Pro+)', 'popup-maker' ),
+	// 	disabled: true,
+	// },
+	// {
+	// 	value: 'applyDiscount',
+	// 	label: __( 'Apply Discount (Available in Pro+)', 'popup-maker' ),
+	// 	disabled: true,
+	// },
+] ) as {
+	value: Exclude< CallToAction[ 'settings' ][ 'type' ], undefined > | '';
+	label: string;
+	disabled?: boolean;
+	[ key: string ]: any;
+}[];
+
+const TypeField = ( {
+	settings,
+	updateSettings,
+}: {
+	settings: CallToAction[ 'settings' ];
+	updateSettings: ( settings: Partial< CallToAction[ 'settings' ] > ) => void;
+} ) => {
+	// const instanceId = useInstanceId( TypeField );
+
+	if ( callToActionTypeOptions.length === 1 ) {
+		return null;
+	}
+
+	return (
+		<>
+			{ /* <FieldPanel title={ __( 'Type', 'popup-maker' ) }>
+			<FieldRow label={ __( 'Call to Action type', 'popup-maker' ) }> */ }
+			<SelectControl
+				// id={ `popup-maker-call-to-action-type-${ instanceId }` }
+				label={ __( 'Action Type', 'popup-maker' ) }
+				options={ callToActionTypeOptions }
+				value={ settings.type ?? '' }
+				onChange={ ( type ) => updateSettings( { type } ) }
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			/>
+			{ /* </FieldRow> */ }
+			{ /* </FieldPanel> */ }
+		</>
+	);
+};
+
+export const initTypeField = () => {
+	addFilter(
+		'popupMaker.callToActionEditor.tabFields',
+		'popup-maker',
+		(
+			fields: Record<
+				string,
+				{ id: string; priority: number; component: React.JSX.Element }[]
+			>,
+			settings: CallToAction[ 'settings' ],
+			updateSettings: (
+				settings: Partial< CallToAction[ 'settings' ] >
+			) => void
+		) => {
+			const componentProps = {
+				settings,
+				updateSettings,
+			};
+
+			return {
+				...fields,
+				general: [
+					{
+						id: 'type',
+						priority: 3,
+						component: <TypeField { ...componentProps } />,
+					},
+					...( fields?.general ?? [] ),
+				],
+			};
+		}
+	);
+};
+
+export default initTypeField;

@@ -105,142 +105,171 @@ class PUM_Admin_Ajax {
 			$exclude = array_merge( $include, $exclude );
 		}
 
-		switch ( $object_type ) {
-			case 'post_type':
-				$post_type = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['object_key'] ) ) : 'post';
+		/**
+		 * Filter object search results for unknown or custom object types.
+		 *
+		 * Allows plugins to handle custom object types that aren't natively supported.
+		 *
+		 * @param array{items:array,total_count:int}|null  $results     Current search results with 'items' and 'total_count'.
+		 * @param string $object_type The object type being searched.
+		 * @param array  $request     The full request parameters.
+		 *
+		 * @return array{items:array,total_count:int}|null $results
+		 */
+		$pre_results = apply_filters( 'popup_maker/pre_object_search', null, $object_type, $_REQUEST );
 
-				if ( ! empty( $include ) ) {
-					$include_query = PUM_Helpers::post_type_selectlist_query(
+		// If early results are returned, skip the rest of the logic.
+		if ( null !== $pre_results ) {
+			$results = $pre_results;
+		} else {
+			switch ( $object_type ) {
+				case 'post_type':
+					$post_type = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['object_key'] ) ) : 'post';
+
+					if ( ! empty( $include ) ) {
+						$include_query = PUM_Helpers::post_type_selectlist_query(
+							$post_type,
+							[
+								'post__in'       => $include,
+								'posts_per_page' => - 1,
+							],
+							true
+						);
+
+						foreach ( $include_query['items'] as $id => $name ) {
+							$results['items'][] = [
+								'id'   => $id,
+								'text' => "$name (ID: $id)",
+							];
+						}
+
+						$results['total_count'] += (int) $include_query['total_count'];
+					}
+
+					$query = PUM_Helpers::post_type_selectlist_query(
 						$post_type,
 						[
-							'post__in'       => $include,
-							'posts_per_page' => - 1,
+							's'              => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : null,
+							'paged'          => ! empty( $_REQUEST['paged'] ) ? absint( wp_unslash( $_REQUEST['paged'] ) ) : null,
+							'post__not_in'   => $exclude,
+							'posts_per_page' => 10,
 						],
 						true
 					);
 
-					foreach ( $include_query['items'] as $id => $name ) {
+					foreach ( $query['items'] as $id => $name ) {
 						$results['items'][] = [
 							'id'   => $id,
 							'text' => "$name (ID: $id)",
 						];
 					}
 
-					$results['total_count'] += (int) $include_query['total_count'];
-				}
+					$results['total_count'] += (int) $query['total_count'];
+					break;
 
-				$query = PUM_Helpers::post_type_selectlist_query(
-					$post_type,
-					[
-						's'              => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : null,
-						'paged'          => ! empty( $_REQUEST['paged'] ) ? absint( wp_unslash( $_REQUEST['paged'] ) ) : null,
-						'post__not_in'   => $exclude,
-						'posts_per_page' => 10,
-					],
-					true
-				);
+				case 'taxonomy':
+					$taxonomy = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['object_key'] ) ) : 'category';
 
-				foreach ( $query['items'] as $id => $name ) {
-					$results['items'][] = [
-						'id'   => $id,
-						'text' => "$name (ID: $id)",
-					];
-				}
+					if ( ! empty( $include ) ) {
+						$include_query = PUM_Helpers::taxonomy_selectlist_query(
+							$taxonomy,
+							[
+								'include' => $include,
+								'number'  => 0,
+							],
+							true
+						);
 
-				$results['total_count'] += (int) $query['total_count'];
-				break;
+						foreach ( $include_query['items'] as $id => $name ) {
+							$results['items'][] = [
+								'id'   => $id,
+								'text' => "$name (ID: $id)",
+							];
+						}
 
-			case 'taxonomy':
-				$taxonomy = ! empty( $_REQUEST['object_key'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['object_key'] ) ) : 'category';
+						$results['total_count'] += (int) $include_query['total_count'];
+					}
 
-				if ( ! empty( $include ) ) {
-					$include_query = PUM_Helpers::taxonomy_selectlist_query(
+					$query = PUM_Helpers::taxonomy_selectlist_query(
 						$taxonomy,
 						[
-							'include' => $include,
-							'number'  => 0,
+							'search'  => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : null,
+							'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( wp_unslash( $_REQUEST['paged'] ) ) : null,
+							'exclude' => $exclude,
+							'number'  => 10,
 						],
 						true
 					);
 
-					foreach ( $include_query['items'] as $id => $name ) {
+					foreach ( $query['items'] as $id => $name ) {
 						$results['items'][] = [
 							'id'   => $id,
 							'text' => "$name (ID: $id)",
 						];
 					}
 
-					$results['total_count'] += (int) $include_query['total_count'];
-				}
+					$results['total_count'] += (int) $query['total_count'];
+					break;
+				case 'user':
+					if ( ! current_user_can( 'list_users' ) ) {
+						wp_send_json_error();
+					}
 
-				$query = PUM_Helpers::taxonomy_selectlist_query(
-					$taxonomy,
-					[
-						'search'  => ! empty( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) : null,
-						'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( wp_unslash( $_REQUEST['paged'] ) ) : null,
-						'exclude' => $exclude,
-						'number'  => 10,
-					],
-					true
-				);
+					$user_role = ! empty( $_REQUEST['object_key'] ) ? sanitize_key( wp_unslash( $_REQUEST['object_key'] ) ) : null;
 
-				foreach ( $query['items'] as $id => $name ) {
-					$results['items'][] = [
-						'id'   => $id,
-						'text' => "$name (ID: $id)",
-					];
-				}
+					if ( ! empty( $include ) ) {
+						$include_query = PUM_Helpers::user_selectlist_query(
+							[
+								'role'    => $user_role,
+								'include' => $include,
+								'number'  => - 1,
+							],
+							true
+						);
 
-				$results['total_count'] += (int) $query['total_count'];
-				break;
-			case 'user':
-				if ( ! current_user_can( 'list_users' ) ) {
-					wp_send_json_error();
-				}
+						foreach ( $include_query['items'] as $id => $name ) {
+							$results['items'][] = [
+								'id'   => $id,
+								'text' => "$name (ID: $id)",
+							];
+						}
 
-				$user_role = ! empty( $_REQUEST['object_key'] ) ? sanitize_key( wp_unslash( $_REQUEST['object_key'] ) ) : null;
+						$results['total_count'] += (int) $include_query['total_count'];
+					}
 
-				if ( ! empty( $include ) ) {
-					$include_query = PUM_Helpers::user_selectlist_query(
+					$query = PUM_Helpers::user_selectlist_query(
 						[
 							'role'    => $user_role,
-							'include' => $include,
-							'number'  => - 1,
+							'search'  => ! empty( $_REQUEST['s'] ) ? '*' . sanitize_key( wp_unslash( $_REQUEST['s'] ) ) . '*' : null,
+							'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( wp_unslash( $_REQUEST['paged'] ) ) : null,
+							'exclude' => $exclude,
+							'number'  => 10,
 						],
 						true
 					);
 
-					foreach ( $include_query['items'] as $id => $name ) {
+					foreach ( $query['items'] as $id => $name ) {
 						$results['items'][] = [
 							'id'   => $id,
 							'text' => "$name (ID: $id)",
 						];
 					}
 
-					$results['total_count'] += (int) $include_query['total_count'];
-				}
-
-				$query = PUM_Helpers::user_selectlist_query(
-					[
-						'role'    => $user_role,
-						'search'  => ! empty( $_REQUEST['s'] ) ? '*' . sanitize_key( wp_unslash( $_REQUEST['s'] ) ) . '*' : null,
-						'paged'   => ! empty( $_REQUEST['paged'] ) ? absint( wp_unslash( $_REQUEST['paged'] ) ) : null,
-						'exclude' => $exclude,
-						'number'  => 10,
-					],
-					true
-				);
-
-				foreach ( $query['items'] as $id => $name ) {
-					$results['items'][] = [
-						'id'   => $id,
-						'text' => "$name (ID: $id)",
-					];
-				}
-
-				$results['total_count'] += (int) $query['total_count'];
-				break;
+					$results['total_count'] += (int) $query['total_count'];
+					break;
+			}
 		}
+
+		/**
+		 * Filter object search results for unknown or custom object types.
+		 *
+		 * Allows plugins to handle custom object types that aren't natively supported.
+		 *
+		 * @param array  $results     Current search results with 'items' and 'total_count'.
+		 * @param string $object_type The object type being searched.
+		 * @param array  $request     The full request parameters.
+		 */
+		$results = apply_filters( 'popup_maker/object_search', $results, $object_type, $_REQUEST );
 
 		// Take out keys which were only used to deduplicate.
 		$results['items'] = array_values( $results['items'] );

@@ -1,0 +1,75 @@
+{
+	"name": "@popup-maker/icons",
+	"version": "1.0.0-beta.2",
+	"description": "Reusable icons for Popup Maker",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup maker",
+		"data",
+		"redux"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/HEAD/packages/icons#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/icons"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index.js",
+	"module": "src/index.js",
+	"types": "build-types/index.d.ts",
+	"sideEffects": [
+		"*.scss",
+		"*.css"
+	],
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"wpScript": true,
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update",
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build"
+	},
+	"dependencies": {
+		"@wordpress/primitives": "^4.29.0"
+	},
+	"peerDependencies": {
+		"react": "^18.3.1"
+	},
+	"devDependencies": {
+		"@storybook/addon-actions": "^8.4.7",
+		"@storybook/addon-essentials": "^8.4.7",
+		"@storybook/addon-interactions": "^8.4.7",
+		"@storybook/addon-links": "^8.4.7",
+		"@storybook/addon-onboarding": "^8.4.7",
+		"@storybook/blocks": "^8.4.7",
+		"@storybook/react": "^8.4.7",
+		"@storybook/react-webpack5": "^8.4.7",
+		"@storybook/testing-library": "^0.2.2",
+		"storybook": "^8.4.7"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
+}

@@ -1,0 +1,60 @@
+{
+	"name": "@popup-maker/fields",
+	"version": "1.0.0-beta.2",
+	"description": "Dynamic react field rendering.",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup maker",
+		"components"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/HEAD/packages/fields#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/fields"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index.js",
+	"module": "src/index.js",
+	"types": "build-types/index.d.ts",
+	"wpScript": true,
+	"sideEffects": false,
+	"dependencies": {
+		"@popup-maker/components": "*",
+		"@popup-maker/core-data": "*",
+		"@popup-maker/i18n": "*",
+		"@popup-maker/utils": "*",
+		"@wordpress/components": "^30.2.0",
+		"@wordpress/compose": "^7.29.0",
+		"@wordpress/core-data": "^7.29.0",
+		"@wordpress/data": "^10.29.0",
+		"@wordpress/element": "^6.29.0",
+		"@wordpress/hooks": "^4.29.0",
+		"@wordpress/html-entities": "^4.29.0",
+		"classnames": "^2.5.1"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
+}

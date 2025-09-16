@@ -73,7 +73,7 @@ abstract class PUM_Abstract_Database {
 
 			// Leaving this flagged for caching to optimize in future.
 			if ( $this->wp_version >= 6.2 ) {
-				$table_found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %i', $this->table_name() ) );
+				$table_found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $this->table_name() ) );
 			} else {
 				// Ignored because these are identifiersas we still support <=6.2
 				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared

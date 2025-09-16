@@ -1,14 +1,14 @@
-( function( $ ) {
+( function ( $ ) {
 	'use strict';
 
 	var conditions = {
-		get_conditions: function() {
+		get_conditions: function () {
 			return window.pum_popup_settings_editor.conditions_selectlist;
 		},
-		not_operand_checkbox: function( $element ) {
+		not_operand_checkbox: function ( $element ) {
 			$element = $element || $( '.pum-not-operand' );
 
-			return $element.each( function() {
+			return $element.each( function () {
 				var $this = $( this ),
 					$input = $this.find( 'input' );
 
@@ -17,10 +17,10 @@
 				conditions.toggle_not_operand( $this );
 			} );
 		},
-		toggle_not_operand: function( $element ) {
+		toggle_not_operand: function ( $element ) {
 			$element = $element || $( '.pum-not-operand' );
 
-			return $element.each( function() {
+			return $element.each( function () {
 				var $this = $( this ),
 					$input = $this.find( 'input' ),
 					// $is        = $this.find('.is'),
@@ -39,7 +39,7 @@
 			} );
 		},
 		template: {
-			editor: function( args ) {
+			editor: function ( args ) {
 				var data = $.extend(
 					true,
 					{},
@@ -56,7 +56,7 @@
 					data
 				);
 			},
-			group: function( args ) {
+			group: function ( args ) {
 				var data = $.extend(
 						true,
 						{},
@@ -80,7 +80,7 @@
 					data
 				);
 			},
-			facet: function( args ) {
+			facet: function ( args ) {
 				var data = $.extend(
 					true,
 					{},
@@ -99,7 +99,7 @@
 					data
 				);
 			},
-			settings: function( args, values ) {
+			settings: function ( args, values ) {
 				var fields = [],
 					data = $.extend(
 						true,
@@ -129,7 +129,7 @@
 				}
 
 				// Replace the array with rendered fields.
-				_.each( data.fields, function( field, fieldID ) {
+				_.each( data.fields, function ( field, fieldID ) {
 					field = PUM_Admin.models.field( field );
 
 					if ( typeof field.meta !== 'object' ) {
@@ -167,7 +167,7 @@
 					fields: fields,
 				} );
 			},
-			selectbox: function( args ) {
+			selectbox: function ( args ) {
 				var data = $.extend(
 					true,
 					{},
@@ -207,7 +207,7 @@
 			},
 		},
 		groups: {
-			add: function( editor, target, not_operand ) {
+			add: function ( editor, target, not_operand ) {
 				var $editor = $( editor ),
 					data = {
 						index: $editor.find( '.facet-group-wrap' ).length,
@@ -225,7 +225,7 @@
 					.append( conditions.template.group( data ) );
 				$editor.addClass( 'has-conditions' );
 			},
-			remove: function( $group ) {
+			remove: function ( $group ) {
 				var $editor = $group.parents( '.facet-builder' );
 
 				$group
@@ -239,14 +239,12 @@
 				if ( $editor.find( '.facet-group-wrap' ).length === 0 ) {
 					$editor.removeClass( 'has-conditions' );
 
-					$( '#pum-first-condition' )
-						.val( null )
-						.trigger( 'change' );
+					$( '#pum-first-condition' ).val( null ).trigger( 'change' );
 				}
 			},
 		},
 		facets: {
-			add: function( $group, target, not_operand ) {
+			add: function ( $group, target, not_operand ) {
 				var data = {
 					group: $group.data( 'index' ),
 					index: $group.find( '.facet' ).length,
@@ -259,7 +257,7 @@
 					.find( '.facet-list' )
 					.append( conditions.template.facet( data ) );
 			},
-			remove: function( $facet ) {
+			remove: function ( $facet ) {
 				var $group = $facet.parents( '.facet-group-wrap' );
 
 				$facet.remove();
@@ -271,18 +269,15 @@
 				}
 			},
 		},
-		renumber: function() {
-			$( '.facet-builder .facet-group-wrap' ).each( function() {
+		renumber: function () {
+			$( '.facet-builder .facet-group-wrap' ).each( function () {
 				var $group = $( this ),
-					groupIndex = $group
-						.parent()
-						.children()
-						.index( $group );
+					groupIndex = $group.parent().children().index( $group );
 
 				$group
 					.data( 'index', groupIndex )
 					.find( '.facet' )
-					.each( function() {
+					.each( function () {
 						var $facet = $( this ),
 							facetIndex = $facet
 								.parent()
@@ -292,7 +287,7 @@
 						$facet
 							.data( 'index', facetIndex )
 							.find( '[name]' )
-							.each( function() {
+							.each( function () {
 								this.name = this.name.replace(
 									/popup_settings\[conditions\]\[\d*?\]\[\d*?\]/,
 									'popup_settings[conditions][' +
@@ -320,14 +315,14 @@
 	window.PUM_Admin.conditions = conditions;
 
 	$( document )
-		.on( 'pum_init', function() {
+		.on( 'pum_init', function () {
 			conditions.renumber();
 			conditions.toggle_not_operand();
 		} )
 		.on(
 			'select2:select pumselect2:select',
 			'#pum-first-condition',
-			function( event ) {
+			function ( event ) {
 				var $field = $( this ),
 					$editor = $field.parents( '.facet-builder' ).eq( 0 ),
 					target = $field.val(),
@@ -345,37 +340,37 @@
 				$( document ).trigger( 'pum_init' );
 			}
 		)
-		.on( 'click', '.facet-builder .pum-not-operand', function() {
+		.on( 'click', '.facet-builder .pum-not-operand', function () {
 			conditions.not_operand_checkbox( $( this ) );
 		} )
-		.on( 'change', '.facet-builder .facet-target select', function(
-			event
-		) {
-			var $this = $( this ),
-				$facet = $this.parents( '.facet' ),
-				target = $this.val(),
-				data = {
-					target: target,
-				};
+		.on(
+			'change',
+			'.facet-builder .facet-target select',
+			function ( event ) {
+				var $this = $( this ),
+					$facet = $this.parents( '.facet' ),
+					target = $this.val(),
+					data = {
+						target: target,
+					};
 
-			if ( target === '' || target === $facet.data( 'target' ) ) {
-				return;
+				if ( target === '' || target === $facet.data( 'target' ) ) {
+					return;
+				}
+
+				$facet
+					.data( 'target', target )
+					.find( '.facet-settings' )
+					.html( conditions.template.settings( data ) );
+				$( document ).trigger( 'pum_init' );
 			}
-
-			$facet
-				.data( 'target', target )
-				.find( '.facet-settings' )
-				.html( conditions.template.settings( data ) );
-			$( document ).trigger( 'pum_init' );
-		} )
+		)
 		.on(
 			'click',
 			'.facet-builder .facet-group-wrap:last-child .and .add-facet',
-			function() {
+			function () {
 				conditions.groups.add(
-					$( this )
-						.parents( '.facet-builder' )
-						.eq( 0 )
+					$( this ).parents( '.facet-builder' ).eq( 0 )
 				);
 				$( document ).trigger( 'pum_init' );
 			}
@@ -383,21 +378,15 @@
 		.on(
 			'click',
 			'.facet-builder .add-or .add-facet:not(.disabled)',
-			function() {
+			function () {
 				conditions.facets.add(
-					$( this )
-						.parents( '.facet-group-wrap' )
-						.eq( 0 )
+					$( this ).parents( '.facet-group-wrap' ).eq( 0 )
 				);
 				$( document ).trigger( 'pum_init' );
 			}
 		)
-		.on( 'click', '.facet-builder .remove-facet', function() {
-			conditions.facets.remove(
-				$( this )
-					.parents( '.facet' )
-					.eq( 0 )
-			);
+		.on( 'click', '.facet-builder .remove-facet', function () {
+			conditions.facets.remove( $( this ).parents( '.facet' ).eq( 0 ) );
 			$( document ).trigger( 'pum_init' );
 		} );
 } )( jQuery );

@@ -1,0 +1,59 @@
+{
+	"name": "@popup-maker/block-editor",
+	"version": "1.0.0",
+	"description": "Popup Maker Block Editor",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"private": true,
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/block-editor/README.md",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/block-editor"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"publishConfig": {
+		"access": "restricted"
+	},
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"dependencies": {
+		"@popup-maker/components": "*",
+		"@popup-maker/core-data": "*",
+		"@popup-maker/i18n": "*",
+		"@popup-maker/icons": "*",
+		"@wordpress/a11y": "^4.29.0",
+		"@wordpress/base-styles": "^6.5.0",
+		"@wordpress/block-editor": "^15.2.0",
+		"@wordpress/components": "^30.2.0",
+		"@wordpress/compose": "^7.29.0",
+		"@wordpress/data": "^10.29.0",
+		"@wordpress/element": "^6.29.0",
+		"@wordpress/hooks": "^4.29.0",
+		"@wordpress/html-entities": "^4.29.0",
+		"@wordpress/keycodes": "^4.29.0",
+		"@wordpress/rich-text": "^7.29.0",
+		"clsx": "2.1.1"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	}
+}

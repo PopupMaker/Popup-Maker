@@ -18,19 +18,21 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return bool
  */
 function pum_is_admin_page() {
-	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
+	if ( ! is_admin() ) {
 		return false;
 	}
 
 	$typenow = pum_typenow();
 
-	$tests = [
-		'popup' === $typenow,
-		'popup_theme' === $typenow,
-		! empty( $GLOBALS['hook_suffix'] ) && in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages, true ),
-	];
+	if ( 'popup' === $typenow || 'popup_theme' === $typenow ) {
+		return true;
+	}
 
-	return in_array( true, $tests, true );
+	if ( ! empty( $GLOBALS['hook_suffix'] ) && in_array( $GLOBALS['hook_suffix'], PUM_Admin_Pages::$pages, true ) ) {
+		return true;
+	}
+
+	return false;
 }
 
 
@@ -38,18 +40,14 @@ function pum_is_admin_page() {
  * Determines whether the current admin page is the All Popups page.
  *
  * @since 1.12
+ *
  * @return bool True if current page is All Popups page.
  */
 function pum_is_all_popups_page() {
 	$screen = get_current_screen();
-
-	$tests = [
-		pum_is_admin_page(),
-		'edit-popup' === $screen->id,
-		pum_typenow() === 'popup',
-	];
-
-	return ! in_array( false, $tests, true );
+	return pum_is_admin_page()
+		&& 'edit-popup' === $screen->id
+		&& pum_typenow() === 'popup';
 }
 
 /**
@@ -62,14 +60,9 @@ function pum_is_all_popups_page() {
 function pum_is_popup_editor() {
 	global $pagenow;
 
-	$tests = [
-		is_admin(),
-		pum_is_admin_page(),
-		'popup' === pum_typenow(),
-		in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ),
-	];
-
-	return ! in_array( false, $tests, true );
+	return pum_is_admin_page()
+		&& 'popup' === pum_typenow()
+		&& in_array( $pagenow, [ 'post-new.php', 'post.php' ], true );
 }
 
 /**
@@ -82,14 +75,9 @@ function pum_is_popup_editor() {
 function pum_is_popup_theme_editor() {
 	global $pagenow;
 
-	$tests = [
-		is_admin(),
-		pum_is_admin_page(),
-		'popup_theme' === pum_typenow(),
-		in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ),
-	];
-
-	return ! in_array( false, $tests, true );
+	return pum_is_admin_page()
+		&& 'popup_theme' === pum_typenow()
+		&& in_array( $pagenow, [ 'post-new.php', 'post.php' ], true );
 }
 
 /**

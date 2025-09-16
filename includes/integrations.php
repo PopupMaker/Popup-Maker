@@ -14,6 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Ninja Forms Integration
 require_once 'integrations/class-pum-ninja-forms.php';
 
+// TODO Migrate all of this into controllers :(
+/**
+ * Initialize Integrations.
+ */
 function pum_initialize_integrations() {
 	// WooCommerce Integration
 	if ( function_exists( 'WC' ) || class_exists( 'WooCommerce' ) ) {

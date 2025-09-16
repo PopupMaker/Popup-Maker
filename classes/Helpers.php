@@ -16,45 +16,30 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PUM_Helpers {
 
+	/**
+	 * Process do_shortcode without allowing printed side effects.
+	 *
+	 * @deprecated 1.21.0 Use PUM_Utils_Shortcodes::clean_do_shortcode
+	 *
+	 * @param string $shortcode_text Unprocessed string with shortcodes.
+	 *
+	 * @return string
+	 */
 	public static function do_shortcode( $shortcode_text = '' ) {
-		ob_start();
-
-		$content = do_shortcode( $shortcode_text );
-
-		$ob_content = ob_get_clean();
-
-		if ( ! empty( $ob_content ) ) {
-			$content .= $ob_content;
-		}
-
-		return $content;
+		return PUM_Utils_Shortcodes::clean_do_shortcode( $shortcode_text );
 	}
 
+	/**
+	 * Get all shortcodes from given content.
+	 *
+	 * @deprecated 1.14
+	 *
+	 * @param string $content Content potentially containing shortcodes.
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
 	public static function get_shortcodes_from_content( $content ) {
-		$pattern    = get_shortcode_regex();
-		$shortcodes = [];
-		if ( preg_match_all( '/' . $pattern . '/s', $content, $matches ) ) {
-			foreach ( $matches[0] as $key => $value ) {
-				$shortcodes[ $key ] = [
-					'full_text' => $value,
-					'tag'       => $matches[2][ $key ],
-					'atts'      => shortcode_parse_atts( $matches[3][ $key ] ),
-					'content'   => $matches[5][ $key ],
-				];
-
-				if ( ! empty( $shortcodes[ $key ]['atts'] ) ) {
-					foreach ( $shortcodes[ $key ]['atts'] as $attr_name => $attr_value ) {
-						// Filter numeric keys as they are valueless/truthy attributes.
-						if ( is_numeric( $attr_name ) ) {
-							$shortcodes[ $key ]['atts'][ $attr_value ] = true;
-							unset( $shortcodes[ $key ]['atts'][ $attr_name ] );
-						}
-					}
-				}
-			}
-		}
-
-		return $shortcodes;
+		return PUM_Utils_Shortcodes::get_shortcodes_from_content( $content );
 	}
 
 	/**
@@ -62,105 +47,76 @@ class PUM_Helpers {
 	 *
 	 * Accounts for various adblock bypass options.
 	 *
-	 * @return bool|string
+	 * @return string|false
 	 */
 	public static function get_cache_dir_url() {
-		$upload_dir = self::get_upload_dir_url();
+		$upload_dir = \PopupMaker\get_upload_dir_url();
 		if ( false === $upload_dir ) {
 			return false;
 		}
 
 		if ( ! pum_get_option( 'bypass_adblockers', false ) ) {
-			return trailingslashit( $upload_dir ) . 'pum';
+			return trailingslashit( (string) $upload_dir ) . 'pum';
 		}
 
-		return $upload_dir;
+		return (string) $upload_dir;
 	}
 
 	/**
 	 * Gets the uploads directory path
 	 *
 	 * @since 1.10
+	 * @deprecated 1.21.0 Use \PopupMaker\get_upload_dir_path instead.
+	 *
 	 * @param string $path A path to append to end of upload directory URL.
 	 * @return bool|string The uploads directory path or false on failure
 	 */
 	public static function get_upload_dir_path( $path = '' ) {
-		$upload_dir = self::get_upload_dir();
-		if ( false !== $upload_dir && isset( $upload_dir['basedir'] ) ) {
-			$dir = $upload_dir['basedir'];
-			if ( ! empty( $path ) ) {
-				$dir = trailingslashit( $dir ) . $path;
-			}
-			return $dir;
-		} else {
-			return false;
-		}
+		return \PopupMaker\get_upload_dir_path( $path );
 	}
 
 	/**
 	 * Gets the uploads directory URL
 	 *
 	 * @since 1.10
+	 * @deprecated 1.21.0 Use \PopupMaker\get_upload_dir_url instead.
+	 *
 	 * @param string $path A path to append to end of upload directory URL.
 	 * @return bool|string The uploads directory URL or false on failure
 	 */
 	public static function get_upload_dir_url( $path = '' ) {
-		$upload_dir = self::get_upload_dir();
-		if ( false !== $upload_dir && isset( $upload_dir['baseurl'] ) ) {
-			$url = preg_replace( '/^https?:/', '', $upload_dir['baseurl'] );
-			if ( null === $url ) {
-				return false;
-			}
-			if ( ! empty( $path ) ) {
-				$url = trailingslashit( $url ) . $path;
-			}
-			return $url;
-		} else {
-			return false;
-		}
+		return \PopupMaker\get_upload_dir_url( $path );
 	}
 
 	/**
 	 * Gets the Uploads directory
 	 *
-	 * @since 1.10
-	 * @return bool|array An associated array with baseurl and basedir or false on failure
+	 * @since 1.10.0
+	 * @deprecated 1.21.0 Use \PopupMaker\get_upload_dir instead.
+	 *
+	 * @return array{basedir: string, baseurl: string}|false An associated array with upload directory data or false on failure
 	 */
 	public static function get_upload_dir() {
-		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-			$wp_upload_dir = wp_get_upload_dir();
-		} else {
-			$wp_upload_dir = wp_upload_dir();
-		}
-
-		if ( isset( $wp_upload_dir['error'] ) && false !== $wp_upload_dir['error'] ) {
-			pum_log_message( sprintf( 'Getting uploads directory failed. Error given: %s', esc_html( $wp_upload_dir['error'] ) ) );
-			return false;
-		} else {
-			return $wp_upload_dir;
-		}
+		$result = \PopupMaker\get_upload_dir();
+		return is_array( $result ) ? $result : false;
 	}
 
 	/**
-	 * @deprecated Use get_upload_dir_url instead.
+	 * @deprecated 1.10.0 Use \PopupMaker\get_upload_dir_url instead.
+	 *
+	 * @param string $path A path to append to end of upload directory URL.
+	 * @return string|false The uploads directory URL or false on failure
 	 */
 	public static function upload_dir_url( $path = '' ) {
-		$upload_dir = wp_upload_dir();
-		$upload_dir = $upload_dir['baseurl'];
-		$upload_dir = preg_replace( '/^https?:/', '', $upload_dir );
-
-		if ( ! empty( $path ) ) {
-			$upload_dir = trailingslashit( $upload_dir ) . $path;
-		}
-
-		return $upload_dir;
+		$result = \PopupMaker\get_upload_dir_url( $path );
+		return false === $result ? false : (string) $result;
 	}
 
 	/**
 	 * Sort array by priority value
 	 *
-	 * @param $a
-	 * @param $b
+	 * @param array{priority?: int} $a
+	 * @param array{priority?: int} $b
 	 *
 	 * @return int
 	 * @see        PUM_Utils_Array::sort_by_priority instead.
@@ -175,11 +131,11 @@ class PUM_Helpers {
 	/**
 	 * Sort nested arrays with various options.
 	 *
-	 * @param array  $arr
-	 * @param string $type
-	 * @param bool   $reverse
+	 * @param array<string,mixed> $arr
+	 * @param string              $type
+	 * @param bool                $reverse
 	 *
-	 * @return array
+	 * @return array<string,mixed>
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::sort instead.
 	 */
@@ -187,13 +143,26 @@ class PUM_Helpers {
 		return PUM_Utils_Array::sort( $arr, $type, $reverse );
 	}
 
+	/**
+	 * Query posts for selectlist options.
+	 *
+	 * @param string|string[]     $post_type Post type(s) to query.
+	 * @param array<string,mixed> $args Query arguments.
+	 * @param bool                $include_total Whether to include total count in results.
+	 * @return ($include_total is true ? array{items: array<int,string>, total_count: int} : array<int,string>)
+	 */
 	public static function post_type_selectlist_query( $post_type, $args = [], $include_total = false ) {
+		// Normalize post_type input - handles string, comma-separated string, or array
+		$post_types = wp_parse_list( $post_type );
+
+		// If only one post type, pass as string for consistency with WP_Query expectations
+		$normalized_post_type = count( $post_types ) === 1 ? $post_types[0] : $post_types;
 
 		$args = wp_parse_args(
 			$args,
 			[
 				'posts_per_page'         => 10,
-				'post_type'              => $post_type,
+				'post_type'              => $normalized_post_type,
 				'post__in'               => null,
 				'post__not_in'           => null,
 				'post_status'            => null,
@@ -212,14 +181,16 @@ class PUM_Helpers {
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( wp_json_encode( $args ) );
+		$key = md5( wp_json_encode( $args ) ?: '' );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$query = new WP_Query( $args );
 
 			$posts = [];
 			foreach ( $query->posts as $post ) {
-				$posts[ $post->ID ] = $post->post_title;
+				if ( $post instanceof WP_Post ) {
+					$posts[ $post->ID ] = $post->post_title;
+				}
 			}
 
 			$results = [
@@ -235,47 +206,78 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
+	/**
+	 * Query taxonomy terms for selectlist options.
+	 *
+	 * @param string[]|string     $taxonomies Taxonomy name(s) to query.
+	 * @param array<string,mixed> $args Query arguments.
+	 * @param bool                $include_total Whether to include total count in results.
+	 * @return ($include_total is true ? array{items: array<int,string>, total_count: int} : array<int,string>)
+	 */
 	public static function taxonomy_selectlist_query( $taxonomies = [], $args = [], $include_total = false ) {
 		if ( empty( $taxonomies ) ) {
 			$taxonomies = [ 'category' ];
 		}
 
-		$args = wp_parse_args(
-			$args,
-			[
-				'hide_empty' => false,
-				'number'     => 10,
-				'search'     => '',
-				'include'    => null,
-				'exclude'    => null,
-				'offset'     => 0,
-				'page'       => null,
-			]
-		);
+		// Normalize taxonomy input - handles string, comma-separated string, or array
+		$taxonomies = wp_parse_list( $taxonomies );
 
-		$args['taxonomy'] = $taxonomies;
+		// Ensure all taxonomy names are strings
+		$taxonomies = array_map( 'strval', $taxonomies );
+
+		$defaults = [
+			'hide_empty' => false,
+			'number'     => 10,
+			'search'     => '',
+			'include'    => null,
+			'exclude'    => null,
+			'offset'     => 0,
+			'page'       => null,
+			'taxonomy'   => $taxonomies,
+		];
+
+		$args = wp_parse_args( $args, $defaults );
 
 		if ( $args['page'] ) {
 			$args['offset'] = ( $args['page'] - 1 ) * $args['number'];
 		}
 
+		// Remove page parameter as it's not a valid get_terms argument
+		unset( $args['page'] );
+
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( wp_json_encode( $args ) );
+		$key = md5( wp_json_encode( $args ) ?: '' );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$terms = [];
 
-			foreach ( get_terms( $args ) as $term ) {
-				$terms[ $term->term_id ] = $term->name;
+			$term_results = get_terms( $args );
+			if ( ! is_wp_error( $term_results ) && is_array( $term_results ) ) {
+				foreach ( $term_results as $term ) {
+					if ( $term instanceof WP_Term ) {
+						$terms[ $term->term_id ] = $term->name;
+					}
+				}
 			}
 
-			$total_args = $args;
-			unset( $total_args['number'] );
-			unset( $total_args['offset'] );
+			$total_args = [
+				'taxonomy'   => $taxonomies,
+				'hide_empty' => (bool) ( $args['hide_empty'] ?? false ),
+			];
 
-			$total_args['taxonomy'] = $taxonomies;
+			if ( ! empty( $args['search'] ) ) {
+				$total_args['search'] = (string) $args['search'];
+			}
+
+			if ( ! empty( $args['include'] ) ) {
+				$total_args['include'] = $args['include'];
+			}
+
+			if ( ! empty( $args['exclude'] ) ) {
+				$total_args['exclude'] = $args['exclude'];
+			}
 
 			$results = [
 				'items'       => $terms,
@@ -292,10 +294,12 @@ class PUM_Helpers {
 
 
 	/**
-	 * @param array $args
-	 * @param bool  $include_total
+	 * Query users for selectlist options.
 	 *
-	 * @return array|mixed
+	 * @param array<string,mixed> $args Query arguments.
+	 * @param bool                $include_total Whether to include total count in results.
+	 *
+	 * @return ($include_total is true ? array{items: array<int,string>, total_count: int} : array<int,string>)
 	 */
 	public static function user_selectlist_query( $args = [], $include_total = false ) {
 
@@ -310,7 +314,7 @@ class PUM_Helpers {
 		// Query Caching.
 		static $queries = [];
 
-		$key = md5( wp_json_encode( $args ) );
+		$key = md5( wp_json_encode( $args ) ?: '' );
 
 		if ( ! isset( $queries[ $key ] ) ) {
 			$query = new WP_User_Query( $args );
@@ -334,6 +338,11 @@ class PUM_Helpers {
 		return ! $include_total ? $results['items'] : $results;
 	}
 
+	/**
+	 * Get popup themes for selectlist options.
+	 *
+	 * @return array<int,string> Theme ID => title mapping
+	 */
 	public static function popup_theme_selectlist() {
 
 		$themes = [];
@@ -345,6 +354,12 @@ class PUM_Helpers {
 		return $themes;
 	}
 
+	/**
+	 * Get popups for selectlist options.
+	 *
+	 * @param array<string,mixed> $args Query arguments.
+	 * @return array<string,string> Popup ID => title mapping
+	 */
 	public static function popup_selectlist( $args = [] ) {
 		$popup_list = [];
 

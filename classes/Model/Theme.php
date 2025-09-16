@@ -276,7 +276,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		/** @deprecated 1.8.0 filter */
 		$styles = (array) apply_filters( 'popmake_generate_theme_styles', (array) $styles, $this->ID, $this->get_deprecated_settings() );
 
-		return (array) apply_filters( 'pum_theme_get_generated_styles', (array) $styles, $this->ID );
+		return (array) apply_filters( 'pum_theme_get_generated_styles', (array) $styles, $this->ID, $this );
 	}
 
 	public function get_deprecated_settings() {
@@ -301,7 +301,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * Retrieve settings in the form of deprecated grouped arrays.
 	 *
 	 * @param      $group
-	 * @param null  $key
+	 * @param null $key
 	 *
 	 * @return mixed
 	 */

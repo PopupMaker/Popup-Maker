@@ -1,0 +1,40 @@
+{
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"targetDefaults": {
+		"build:tsc": {
+			"outputs": [
+				"{projectRoot}/build,build-types,tsconfig.tsbuildinfo"
+			],
+			"cache": true,
+			"dependsOn": [ "^build:tsc" ]
+		},
+		"build:types": {
+			"outputs": [
+				"{projectRoot}/build,build-types,tsconfig.tsbuildinfo"
+			],
+			"cache": true,
+			"dependsOn": [ "^build:types" ]
+		},
+		"watch:tsc": {
+			"outputs": [
+				"{projectRoot}/build,build-types,tsconfig.tsbuildinfo"
+			],
+			"cache": true
+		},
+		"lint": {
+			"cache": true
+		},
+		"format": {
+			"cache": true
+		}
+	},
+	"defaultBase": "develop",
+	"plugins": [
+		{
+			"plugin": "@nx/playwright/plugin",
+			"options": {
+				"targetName": "e2e"
+			}
+		}
+	]
+}

@@ -1,0 +1,41 @@
+{
+	"name": "@popup-maker/dashboard",
+	"version": "1.0.0",
+	"description": "Popup Maker WP Admin dashboard implementation",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/dashboard/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/dashboard"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"dependencies": {
+		"@wordpress/element": "^6.29.0",
+		"@wordpress/hooks": "^4.29.0"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	}
+}

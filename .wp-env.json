@@ -1,10 +1,29 @@
 {
 	"plugins": [ "." ],
+	"themes": [ "./test/emptytheme" ],
+	"port": 8880,
+	"testsPort": 8890,
 	"env": {
 		"development": {
+			"phpmyadminPort": 9000,
+			"plugins": [
+				"https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"
+			],
 			"config": {
 				"WP_DEBUG": true,
-				"WP_DEBUG_LOG": true
+				"WP_DEBUG_LOG": true,
+				"WP_DEBUG_DISPLAY": false,
+				"SCRIPT_DEBUG": true,
+				"WP_ENVIRONMENT_TYPE": "development"
+			}
+		},
+		"tests": {
+			"plugins": [
+				"https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"
+			],
+			"mappings": {
+				"wp-content/plugins/popup-maker": ".",
+				"wp-content/mu-plugins": "./test/e2e/mu-plugins"
 			}
 		}
 	}

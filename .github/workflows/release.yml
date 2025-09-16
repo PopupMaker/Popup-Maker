@@ -8,31 +8,31 @@ on:
         description: 'Release version (e.g., 1.19.0)'
         required: true
         type: string
-      
+
       changelog_message:
         description: 'Additional changelog notes (optional)'
         required: false
         type: string
         default: ''
-      
+
       pre_release:
         description: 'Pre-release (skip master merge, tag develop)'
         required: false
         type: boolean
         default: false
-      
+
       deploy_wordpress:
         description: 'Deploy to WordPress.org SVN'
         required: false
         type: boolean
         default: false
-      
+
       dry_run_svn:
         description: 'Dry-run SVN deployment (test without committing)'
         required: false
         type: boolean
         default: false
-      
+
       skip_quality_checks:
         description: 'Skip quality checks (emergency use only)'
         required: false
@@ -56,7 +56,7 @@ jobs:
       plugin_name: ${{ steps.info.outputs.plugin_name }}
       release_version: ${{ steps.version.outputs.version }}
       is_prerelease: ${{ steps.version.outputs.is_prerelease }}
-    
+
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4
@@ -64,35 +64,35 @@ jobs:
           ref: develop
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Git
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Release"
-      
+
       - name: Extract plugin information
         id: info
         run: |
           PLUGIN_SLUG=$(node -p "require('./package.json').name || 'popup-maker'")
           PLUGIN_NAME=$(node -p "require('./package.json').displayName || 'Popup Maker'")
-          
+
           echo "plugin_slug=${PLUGIN_SLUG}" >> $GITHUB_OUTPUT
           echo "plugin_name=${PLUGIN_NAME}" >> $GITHUB_OUTPUT
-          
+
           echo "📦 Plugin: ${PLUGIN_NAME} (${PLUGIN_SLUG})"
-      
+
       - name: Validate version and branches
         id: version
         run: |
           VERSION="${{ github.event.inputs.version || github.event.client_payload.version }}"
           IS_PRERELEASE="${{ github.event.inputs.pre_release }}"
-          
+
           # Validate semantic versioning
           if ! echo "$VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9\.]+)?(\+[a-zA-Z0-9\.]+)?$'; then
             echo "❌ Invalid version format: $VERSION"
             exit 1
           fi
-          
+
           # Check for pre-release indicators
           if echo "$VERSION" | grep -E '\-(alpha|beta|rc|dev)' || [ "$IS_PRERELEASE" == "true" ]; then
             echo "is_prerelease=true" >> $GITHUB_OUTPUT
@@ -101,24 +101,24 @@ jobs:
             echo "is_prerelease=false" >> $GITHUB_OUTPUT
             echo "✅ Production release: $VERSION"
           fi
-          
+
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          
+
           # Verify branches exist
           if ! git show-ref --verify --quiet refs/heads/develop; then
             echo "❌ Develop branch not found"
             exit 1
           fi
-          
+
           if [ "$IS_PRERELEASE" != "true" ] && ! git show-ref --verify --quiet refs/heads/master; then
             echo "❌ Master branch not found"
             exit 1
           fi
-          
+
           # Update local branches
           git fetch origin develop:develop
           [ "$IS_PRERELEASE" != "true" ] && git fetch origin master:master
-          
+
           echo "✅ Version and branches validated: $VERSION"
 
   # ============================================================================
@@ -129,20 +129,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: validate
     if: github.event.inputs.skip_quality_checks != 'true'
-    
+
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4
         with:
           ref: develop
-      
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.0'
           tools: composer:v2
           coverage: none
-      
+
       - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
@@ -152,12 +152,12 @@ jobs:
           key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             composer-${{ runner.os }}-
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Cache npm dependencies
         id: npm-cache
         uses: actions/cache@v4
@@ -169,35 +169,35 @@ jobs:
           key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             npm-${{ runner.os }}-
-      
+
       - name: Install dependencies
         run: |
           composer install --no-interaction --no-progress
-          
+
           if [ "${{ steps.npm-cache.outputs.cache-hit }}" != "true" ]; then
             echo "📦 Installing npm dependencies..."
             npm ci
           else
             echo "✅ npm dependencies restored from cache"
           fi
-      
+
       - name: Run quality checks
         run: |
           echo "🔍 Running PHP linting..."
           composer run lint || echo "⚠️ PHP linting issues found"
-          
+
           echo "🔍 Running JavaScript linting..."
           npm run lint:js || echo "⚠️ JavaScript linting issues found"
-          
+
           echo "🧪 Running tests..."
           if grep -q '"test"' composer.json; then
             composer run tests || echo "⚠️ PHP tests failed"
           fi
-          
+
           if grep -q '"test:unit"' package.json; then
             npm run test:unit || echo "⚠️ JavaScript tests failed"
           fi
-          
+
           echo "✅ Quality checks completed (warnings may exist for releases)"
 
   # ============================================================================
@@ -211,7 +211,7 @@ jobs:
     outputs:
       release_tag: ${{ steps.merge.outputs.tag }}
       changelog_content: ${{ steps.changelog.outputs.content }}
-    
+
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4
@@ -219,63 +219,63 @@ jobs:
           ref: develop
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Git
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action Release"
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Create release branch and update version
         id: release
         run: |
           VERSION="${{ needs.validate.outputs.release_version }}"
           IS_PRERELEASE="${{ needs.validate.outputs.is_prerelease }}"
-          
+
           echo "🌿 Creating release branch: release/${VERSION}"
           git checkout -b "release/${VERSION}"
-          
+
           # Update version in plugin files
           sed -i "s/Version:.*$/Version:           ${VERSION}/" popup-maker.php
           sed -i "s/define( 'POPMAKE_VERSION'.*$/define( 'POPMAKE_VERSION', '${VERSION}' );/" popup-maker.php
-          
+
           # Update package.json
           npm version ${VERSION} --no-git-tag-version --allow-same-version
-          
+
           # Update readme.txt
           if [ -f "readme.txt" ]; then
             sed -i "s/Stable tag:.*$/Stable tag: ${VERSION}/" readme.txt
           fi
-          
+
           echo "✅ Version updated to ${VERSION}"
-      
+
       - name: Update changelog
         id: changelog
         run: |
           VERSION="${{ needs.validate.outputs.release_version }}"
           CHANGELOG_MESSAGE="${{ github.event.inputs.changelog_message }}"
-          
+
           if [ -f "bin/update-changelog.js" ]; then
             echo "📝 Updating changelog with script..."
             node bin/update-changelog.js --version "${VERSION}" --message "${CHANGELOG_MESSAGE}"
           elif [ -f "CHANGELOG.md" ]; then
             echo "📝 Updating changelog manually..."
             DATE=$(date +%Y-%m-%d)
-            
+
             # Get recent commits for changelog
             RECENT_COMMITS=$(git log --pretty=format:"- %s" --since="1 month ago" | head -10)
-            
+
             # Create changelog entry
             if [ -n "$CHANGELOG_MESSAGE" ]; then
               CHANGELOG_ENTRY="$CHANGELOG_MESSAGE"
             else
               CHANGELOG_ENTRY="$RECENT_COMMITS"
             fi
-            
+
             # Add to changelog
             {
               head -n 3 CHANGELOG.md
@@ -287,7 +287,7 @@ jobs:
               tail -n +4 CHANGELOG.md
             } > CHANGELOG.tmp
             mv CHANGELOG.tmp CHANGELOG.md
-            
+
             # Save for output
             echo "content<<EOF" >> $GITHUB_OUTPUT
             echo "$CHANGELOG_ENTRY" >> $GITHUB_OUTPUT
@@ -295,7 +295,7 @@ jobs:
           else
             echo "content=Release ${VERSION}" >> $GITHUB_OUTPUT
           fi
-          
+
           # Update readme.txt changelog
           if [ -f "readme.txt" ]; then
             if [ -n "$CHANGELOG_MESSAGE" ]; then
@@ -303,7 +303,7 @@ jobs:
             else
               ENTRY_TEXT="New release with improvements"
             fi
-            
+
             awk -v version="${VERSION}" -v date="${DATE}" -v entry="${ENTRY_TEXT}" '
               /^== Changelog ==/ {
                 print
@@ -319,22 +319,22 @@ jobs:
               { print }
             ' readme.txt > readme.tmp && mv readme.tmp readme.txt
           fi
-      
+
       - name: Commit release preparation
         run: |
           VERSION="${{ needs.validate.outputs.release_version }}"
-          
+
           git add -A
           git commit -m "Prepare release ${VERSION} - Update version numbers, changelog and readme"
-          
+
           echo "✅ Release preparation committed"
-      
+
       - name: Merge to master and create tag
         id: merge
         run: |
           VERSION="${{ needs.validate.outputs.release_version }}"
           IS_PRERELEASE="${{ needs.validate.outputs.is_prerelease }}"
-          
+
           if [ "$IS_PRERELEASE" == "true" ]; then
             echo "🏷️ Pre-release: Tagging develop branch directly"
             git checkout develop
@@ -342,36 +342,36 @@ jobs:
             git tag -a "v${VERSION}" -m "Pre-release ${VERSION}"
             git push origin develop
             git push origin "v${VERSION}"
-            
+
             # Clean up release branch
             git branch -d "release/${VERSION}"
-            
+
             echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
           else
             echo "🔀 Production release: Following git-flow (develop → master → tag → sync)"
-            
+
             # Merge to master
             git checkout master
             git merge --no-ff "release/${VERSION}" -m "Release ${VERSION} - Production release: merge from develop via release branch"
-            
+
             # Tag the release
             git tag -a "v${VERSION}" -m "Release ${VERSION}"
-            
+
             # Merge back to develop
             git checkout develop
             git merge --no-ff master -m "Sync release ${VERSION} from master"
-            
+
             # Push everything
             git push origin master
             git push origin develop
             git push origin "v${VERSION}"
-            
+
             # Clean up release branch
             git branch -d "release/${VERSION}"
-            
+
             echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
           fi
-          
+
           echo "✅ Git flow completed"
 
   # ============================================================================
@@ -384,25 +384,25 @@ jobs:
     outputs:
       package_name: ${{ steps.package.outputs.package_name }}
       file_size: ${{ steps.package.outputs.file_size }}
-    
+
     steps:
       - name: Checkout release tag
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.git-flow.outputs.release_tag }}
-      
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.0'
           tools: composer:v2
           coverage: none
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Cache npm dependencies
         id: npm-cache-build
         uses: actions/cache@v4
@@ -414,42 +414,42 @@ jobs:
           key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             npm-${{ runner.os }}-
-      
+
       - name: Install production dependencies
         run: |
           echo "📦 Installing production dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-          
+
           if [ "${{ steps.npm-cache-build.outputs.cache-hit }}" != "true" ]; then
             echo "📦 Installing npm dependencies..."
             npm ci --include=dev
           else
             echo "✅ npm dependencies restored from cache"
           fi
-      
+
       - name: Build production assets
         run: |
           echo "🏗️ Building production assets..."
           npm run build:production
           echo "✅ Production build complete"
-      
+
       - name: Create release package
         id: package
         run: |
           VERSION="${{ needs.validate.outputs.release_version }}"
           PLUGIN_SLUG="${{ needs.validate.outputs.plugin_slug }}"
-          
+
           echo "📦 Creating release package..."
-          
+
           if [ -f "bin/build-release.js" ]; then
             node bin/build-release.js --zip-name "${PLUGIN_SLUG}_${VERSION}.zip"
             PACKAGE_NAME="${PLUGIN_SLUG}_${VERSION}.zip"
           else
             echo "⚠️ Using fallback packaging..."
-            
+
             rm -rf build
             mkdir -p build/${PLUGIN_SLUG}
-            
+
             rsync -av --exclude-from='.distignore' \
               --exclude='build/' \
               --exclude='node_modules/' \
@@ -459,21 +459,21 @@ jobs:
               --exclude='package*' \
               --exclude='webpack.config.js' \
               ./ build/${PLUGIN_SLUG}/
-            
+
             cd build
             PACKAGE_NAME="${PLUGIN_SLUG}_${VERSION}.zip"
             zip -r "../${PACKAGE_NAME}" ${PLUGIN_SLUG}/
             cd ..
           fi
-          
+
           # Generate checksum and get file size
           sha256sum "$PACKAGE_NAME" > "${PACKAGE_NAME}.sha256"
           FILE_SIZE=$(ls -lh "$PACKAGE_NAME" | awk '{print $5}')
-          
+
           echo "✅ Release package created: $PACKAGE_NAME ($FILE_SIZE)"
           echo "package_name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
           echo "file_size=${FILE_SIZE}" >> $GITHUB_OUTPUT
-      
+
       - name: Upload release artifact
         uses: actions/upload-artifact@v4
         with:
@@ -490,18 +490,18 @@ jobs:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     needs: [validate, git-flow, build]
-    
+
     steps:
       - name: Checkout tag
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.git-flow.outputs.release_tag }}
-      
+
       - name: Download release artifact
         uses: actions/download-artifact@v4
         with:
           name: ${{ needs.validate.outputs.plugin_slug }}-${{ needs.validate.outputs.release_version }}-release
-      
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -509,17 +509,17 @@ jobs:
           name: ${{ needs.validate.outputs.plugin_name }} ${{ needs.git-flow.outputs.release_tag }}
           body: |
             # ${{ needs.validate.outputs.plugin_name }} ${{ needs.git-flow.outputs.release_tag }}
-            
+
             ${{ needs.git-flow.outputs.changelog_content }}
-            
+
             ## 📦 Installation
-            
+
             1. Download the plugin ZIP file below
             2. Upload to WordPress via Plugins → Add New → Upload Plugin
             3. Activate the plugin
-            
+
             ---
-            
+
             **Full Changelog**: https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md
           files: |
             ${{ needs.build.outputs.package_name }}
@@ -538,13 +538,13 @@ jobs:
     if: |
       (github.event.inputs.deploy_wordpress == 'true' || github.event.inputs.dry_run_svn == 'true') &&
       needs.validate.outputs.is_prerelease != 'true'
-    
+
     steps:
       - name: Checkout tag
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.git-flow.outputs.release_tag }}
-      
+
       - name: Deploy to WordPress.org using 10up action
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
@@ -564,7 +564,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate, git-flow, build, github-release, wordpress-deploy]
     if: always() && needs.github-release.result == 'success'
-    
+
     steps:
       - name: Send team notification
         uses: 8398a7/action-slack@v3
@@ -640,7 +640,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate, git-flow, build, github-release]
     if: always() && (needs.validate.result == 'failure' || needs.git-flow.result == 'failure' || needs.build.result == 'failure' || needs.github-release.result == 'failure')
-    
+
     steps:
       - name: Send failure notification
         uses: 8398a7/action-slack@v3
@@ -714,7 +714,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate, git-flow, build, github-release, wordpress-deploy]
     if: always()
-    
+
     steps:
       - name: Generate summary
         run: |
@@ -722,43 +722,43 @@ jobs:
           PLUGIN_NAME="${{ needs.validate.outputs.plugin_name }}"
           RELEASE_TAG="${{ needs.git-flow.outputs.release_tag }}"
           IS_PRERELEASE="${{ needs.validate.outputs.is_prerelease }}"
-          
+
           echo "# 🚀 Release Summary for ${PLUGIN_NAME} ${RELEASE_TAG}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Release info
           echo "**Version:** ${VERSION}" >> $GITHUB_STEP_SUMMARY
           echo "**Type:** $( [ "$IS_PRERELEASE" == "true" ] && echo "Pre-release" || echo "Production Release" )" >> $GITHUB_STEP_SUMMARY
           echo "**Tag:** ${RELEASE_TAG}" >> $GITHUB_STEP_SUMMARY
           echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Status indicators
           echo "## 📊 Process Status" >> $GITHUB_STEP_SUMMARY
-          
+
           [ "${{ needs.validate.result }}" == "success" ] && echo "✅ **Validation**: Passed" >> $GITHUB_STEP_SUMMARY || echo "❌ **Validation**: Failed" >> $GITHUB_STEP_SUMMARY
-          
+
           [ "${{ needs.git-flow.result }}" == "success" ] && echo "✅ **Git Flow**: Completed" >> $GITHUB_STEP_SUMMARY || echo "❌ **Git Flow**: Failed" >> $GITHUB_STEP_SUMMARY
-          
+
           [ "${{ needs.build.result }}" == "success" ] && echo "✅ **Build**: Successful" >> $GITHUB_STEP_SUMMARY || echo "❌ **Build**: Failed" >> $GITHUB_STEP_SUMMARY
-          
+
           [ "${{ needs.github-release.result }}" == "success" ] && echo "✅ **GitHub Release**: Created" >> $GITHUB_STEP_SUMMARY || echo "❌ **GitHub Release**: Failed" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ "${{ github.event.inputs.deploy_wordpress }}" == "true" ]; then
             [ "${{ needs.wordpress-deploy.result }}" == "success" ] && echo "✅ **WordPress.org**: Deployed" >> $GITHUB_STEP_SUMMARY || echo "❌ **WordPress.org**: Failed" >> $GITHUB_STEP_SUMMARY
           else
             echo "⏭️ **WordPress.org**: Not requested" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Links section
           if [ "${{ needs.github-release.result }}" == "success" ]; then
             echo "## 🔗 Release Links" >> $GITHUB_STEP_SUMMARY
             echo "- [📦 GitHub Release](https://github.com/${{ github.repository }}/releases/tag/${RELEASE_TAG})" >> $GITHUB_STEP_SUMMARY
             echo "- [🌐 WordPress.org Plugin](https://wordpress.org/plugins/${{ needs.validate.outputs.plugin_slug }}/)" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📝 Changelog" >> $GITHUB_STEP_SUMMARY
           echo "${{ needs.git-flow.outputs.changelog_content }}" >> $GITHUB_STEP_SUMMARY

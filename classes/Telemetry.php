@@ -146,7 +146,7 @@ class PUM_Telemetry {
 			}
 		}
 
-		return [
+		$data = [
 			// UID.
 			'uid'                    => self::get_uuid(),
 
@@ -158,6 +158,7 @@ class PUM_Telemetry {
 			'php_version'            => phpversion(),
 			'mysql_version'          => $wpdb->db_version(),
 			'is_localhost'           => self::is_localhost(),
+			'wp_env_type'            => wp_get_environment_type(),
 
 			// WP Install Info.
 			'url'                    => get_site_url(),
@@ -173,7 +174,7 @@ class PUM_Telemetry {
 			'open_count'             => get_option( 'pum_total_open_count', 0 ),
 
 			// Popup Maker Settings.
-			'block_editor_enabled'   => pum_get_option( 'gutenberg_support_enabled' ),
+			'block_editor_enabled'   => ! pum_get_option( 'enable_classic_editor', false ),
 			'bypass_ad_blockers'     => pum_get_option( 'bypass_adblockers' ),
 			'disable_taxonomies'     => pum_get_option( 'disable_popup_category_tag' ),
 			'disable_asset_cache'    => pum_get_option( 'disable_asset_caching' ),
@@ -188,6 +189,17 @@ class PUM_Telemetry {
 			'sizes'                  => $sizes,
 			'sounds'                 => $sounds,
 		];
+
+		/**
+		 * Filter telemetry data before sending.
+		 *
+		 * Allows extensions like Pro to add additional telemetry data.
+		 *
+		 * @since 1.20.0
+		 *
+		 * @param array $data Telemetry data array.
+		 */
+		return apply_filters( 'pum_telemetry_data', $data );
 	}
 
 	/**

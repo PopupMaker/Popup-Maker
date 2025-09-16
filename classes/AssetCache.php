@@ -117,6 +117,29 @@ class PUM_AssetCache {
 				add_action( 'init', [ __CLASS__, 'admin_notice_check' ] );
 			}
 
+			// Run our own action for enqueuing scripts via our API.
+			add_action( 'wp_enqueue_scripts', function () {
+				do_action( 'pum_register_scripts' );
+			}, 0 );
+
+			// Run our own action for enqueuing scripts via our API.
+			add_action( 'wp_enqueue_scripts', function () {
+				do_action( 'pum_enqueue_scripts' );
+			}, 10 );
+
+			// Run our own action for enqueuing scripts via our API.
+			add_action( 'admin_enqueue_scripts', function () {
+				do_action( 'pum_register_scripts' );
+				do_action( 'pum_admin_register_scripts' );
+			}, 0 );
+
+			// Run our own action for enqueuing scripts via our API.
+			add_action( 'admin_enqueue_scripts', function () {
+				do_action( 'pum_admin_enqueue_scripts' );
+			}, 10 );
+
+			add_action( 'wp_print_scripts', [ __CLASS__, 'localize_bundled_scripts' ], 10 );
+
 			// Prevent reinitialization.
 			self::$initialized = true;
 		}
@@ -301,7 +324,7 @@ class PUM_AssetCache {
 		global $wp_filesystem;
 
 		// Load core scripts so we can eliminate another stylesheet.
-		$core_js = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'assets/js/site' . self::$suffix . '.js' );
+		$core_js = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'dist/assets/site.js' );
 
 		/**
 		 *  0 Core
@@ -420,7 +443,7 @@ class PUM_AssetCache {
 		global $wp_filesystem;
 
 		// Include core styles so we can eliminate another stylesheet.
-		$core_css = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'assets/css/pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css' );
+		$core_css = $wp_filesystem->get_contents( Popup_Maker::$DIR . 'dist/assets/site' . ( is_rtl() ? '-rtl' : '' ) . '.css' );
 
 		/**
 		 *  0 Core
@@ -775,5 +798,392 @@ class PUM_AssetCache {
 			update_option( '_pum_writeable_notice_dismissed', true );
 			pum_update_option( 'disable_asset_caching', false );
 		}
+	}
+
+
+	/**
+	 * Retrieve asset contents while ignoring SSL verification errors.
+	 *
+	 * @param string $src URL or path to the asset.
+	 *
+	 * @return string|false Asset contents on success, false on failure.
+	 *
+	 * @since 1.21.0
+	 */
+	private static function get_asset_contents( $src ) {
+		$scheme = wp_parse_url( $src, PHP_URL_SCHEME );
+
+		if ( in_array( $scheme, [ 'http', 'https' ], true ) ) {
+				$response = wp_remote_get( $src, [ 'sslverify' => false ] );
+
+			if ( ! is_wp_error( $response ) ) {
+					return wp_remote_retrieve_body( $response );
+			}
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		return file_get_contents( $src );
+	}
+
+	/**
+	 * Stores registered scripts.
+	 *
+	 * @var array{src:string,deps:array,version:string,in_footer:bool}[]
+	 *
+	 * @since 1.21.0
+	 */
+	public static $registered_scripts = [];
+
+	/**
+	 * Stores registered styles.
+	 *
+	 * @var array{src:string,deps:array,version:string,media:string}[]
+	 *
+	 * @since 1.21.0
+	 */
+	public static $registered_styles = [];
+
+	/**
+	 * Stores enqueued scripts.
+	 *
+	 * @var string[]
+	 *
+	 * @since 1.21.0
+	 */
+	public static $enqueued_scripts = [];
+
+	/**
+	 * Stores dependencies from bundled scripts.
+	 *
+	 * @var string[]
+	 *
+	 * @since 1.21.0
+	 */
+	public static $bundled_script_deps = [];
+
+	/**
+	 * Stores dependencies from bundled styles.
+	 *
+	 * @var string[]
+	 *
+	 * @since 1.21.0
+	 */
+	public static $bundled_style_deps = [];
+
+	/**
+	 * Stores enqueued styles.
+	 *
+	 * @var string[]
+	 *
+	 * @since 1.21.0
+	 */
+	public static $enqueued_styles = [];
+
+	/**
+	 * Stores localized scripts. Multiple for the same handle.
+	 *
+	 * @var array<string,array{object_name:string,value:mixed}[]>
+	 *
+	 * @since 1.21.0
+	 */
+	public static $localized_scripts = [];
+
+	/**
+	 * Register a script for possible caching.
+	 *
+	 * @param string $handle The script handle.
+	 * @param string $src The script src.
+	 * @param array  $deps The script dependencies.
+	 * @param string $version The script version.
+	 * @param bool   $in_footer Whether to enqueue the script in the footer.
+	 *
+	 * @return bool
+	 *
+	 * @since 1.21.0
+	 */
+	public static function register_script( $handle, $src, $deps = [], $version = null, $in_footer = false, $merge_priority = 5 ) {
+		// Implement internal store of scripts. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
+		self::$registered_scripts[ $handle ] = [
+			'src'       => $src,
+			'deps'      => $deps,
+			'version'   => $version,
+			'in_footer' => $in_footer,
+		];
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_register_script( $handle, $src, $deps, $version, $in_footer );
+		} else {
+			// Collect all dependencies for bundled scripts (filter later when bundle is registered).
+			if ( ! empty( $deps ) ) {
+				self::$bundled_script_deps = array_merge( self::$bundled_script_deps, $deps );
+			}
+
+			add_filter( 'pum_generated_js', function ( $js = [] ) use ( $handle, $src, $merge_priority ): array {
+				$js[ $handle ] = [
+					'content'  => self::get_asset_contents( $src ),
+					'priority' => $merge_priority,
+				];
+
+				return $js;
+			} );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Register a style for possible caching.
+	 *
+	 * @param string $handle The style handle.
+	 * @param string $src The style src.
+	 * @param array  $deps The style dependencies.
+	 * @param string $version The style version.
+	 * @param string $media The style media.
+	 *
+	 * @return bool
+	 *
+	 * @since 1.21.0
+	 */
+	public static function register_style( $handle, $src, $deps = [], $version = null, $media = 'all', $merge_priority = 5 ) {
+		// Implement internal store of styles. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
+		self::$registered_styles[ $handle ] = [
+			'src'     => $src,
+			'deps'    => $deps,
+			'version' => $version,
+			'media'   => $media,
+		];
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_register_style( $handle, $src, $deps, $version, $media );
+		} else {
+			// Collect all dependencies for bundled styles (filter later when bundle is registered).
+			if ( ! empty( $deps ) ) {
+				self::$bundled_style_deps = array_merge( self::$bundled_style_deps, $deps );
+			}
+
+			add_filter( 'pum_generated_css', function ( $css = [] ) use ( $handle, $src, $merge_priority ): array {
+				$css[ $handle ] = [
+					'content'  => self::get_asset_contents( $src ),
+					'priority' => $merge_priority,
+				];
+
+				return $css;
+			} );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Enqueue a script for possible caching.
+	 *
+	 * @param string $handle The script handle.
+	 * @param string $src The script src.
+	 * @param array  $deps The script dependencies.
+	 * @param string $version The script version.
+	 * @param bool   $in_footer Whether to enqueue the script in the footer.
+	 *
+	 * @return bool
+	 *
+	 * @since 1.21.0
+	 */
+	public static function enqueue_script( $handle, $src = '', $deps = [], $version = null, $in_footer = false ) {
+		// Implement internal store of scripts. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
+		if ( ! empty( $src ) ) {
+			self::$registered_scripts[ $handle ] = [
+				'src'       => $src,
+				'deps'      => $deps,
+				'version'   => $version,
+				'in_footer' => $in_footer,
+			];
+		}
+
+		self::$enqueued_scripts[] = $handle;
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_enqueue_script( $handle );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if a script is enqueued.
+	 *
+	 * @param string $handle The script handle.
+	 * @param string $status The script status.
+	 *
+	 * @return bool
+	 *
+	 * @since 1.21.0
+	 */
+	public static function script_is( $handle, $status = 'enqueued' ) {
+		if ( in_array( $handle, self::$enqueued_scripts, true ) ) {
+			return true;
+		}
+
+		return wp_script_is( $handle, $status );
+	}
+
+	/**
+	 * Enqueue a style for possible caching.
+	 *
+	 * @param string $handle The style handle.
+	 * @param string $src The style src.
+	 * @param array  $deps The style dependencies.
+	 * @param string $version The style version.
+	 * @param string $media The style media.
+	 *
+	 * @return bool
+	 *
+	 * @since 1.21.0
+	 */
+	public static function enqueue_style( $handle, $src = '', $deps = [], $version = null, $media = 'all' ) {
+		// Implement internal store of styles. AssetCache will be built using this if enabled, otherwised passed to wp_register_* directly.
+		if ( ! empty( $src ) ) {
+			self::$registered_styles[ $handle ] = [
+				'src'     => $src,
+				'deps'    => $deps,
+				'version' => $version,
+				'media'   => $media,
+			];
+		}
+
+		self::$enqueued_styles[] = $handle;
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_enqueue_style( $handle );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Dequeue a script.
+	 *
+	 * @param string $handle The script handle.
+	 *
+	 * @return bool
+	 *
+	 * @since 1.21.0
+	 */
+	public static function dequeue_script( $handle ) {
+		if ( in_array( $handle, self::$enqueued_scripts, true ) ) {
+			self::$enqueued_scripts = array_diff( self::$enqueued_scripts, [ $handle ] );
+
+			// Temporary until we handle this in a global way.
+			if ( ! self::enabled() ) {
+				wp_dequeue_script( $handle );
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Dequeue a style.
+	 *
+	 * @param string $handle The style handle.
+	 *
+	 * @return bool
+	 *
+	 * @since 1.21.0
+	 */
+	public static function dequeue_style( $handle ) {
+		if ( in_array( $handle, self::$enqueued_styles, true ) ) {
+			self::$enqueued_styles = array_diff( self::$enqueued_styles, [ $handle ] );
+
+			// Temporary until we handle this in a global way.
+			if ( ! self::enabled() ) {
+				wp_dequeue_style( $handle );
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Localize a script.
+	 *
+	 * @param string $handle      Script handle the data will be attached to.
+	 * @param string $object_name Name for the JavaScript object. Passed directly, so it should be qualified JS variable.
+	 *                            Example: '/[a-zA-Z0-9_]+/'.
+	 * @param array  $value       The data itself. The data can be either a single or multi-dimensional array.
+	 *
+	 * @return bool
+	 *
+	 * @since 1.21.0
+	 */
+	public static function localize_script( $handle, $object_name, $value ) {
+		if ( ! isset( self::$localized_scripts[ $handle ] ) ) {
+			self::$localized_scripts[ $handle ] = [];
+		}
+
+		self::$localized_scripts[ $handle ][] = [
+			'object' => $object_name,
+			'value'  => $value,
+		];
+
+		// Temporary until we handle this in a global way.
+		if ( ! self::enabled() ) {
+			wp_localize_script( $handle, $object_name, $value );
+		}
+
+		return true;
+	}
+
+	public static function localize_bundled_scripts() {
+		if ( ! self::enabled() ) {
+			return;
+		}
+
+		// Localize all registered scripts that have vars under the main plugin handle.
+		foreach ( self::$localized_scripts as $handle => $var_sets ) {
+			foreach ( $var_sets as $vars ) {
+				wp_localize_script( 'popup-maker-site', $vars['object'], $vars['value'] );
+			}
+		}
+	}
+
+	/**
+	 * Get all dependencies from bundled scripts.
+	 *
+	 * @return string[] Array of script dependencies.
+	 *
+	 * @since 1.21.0
+	 */
+	public static function get_bundled_script_dependencies() {
+		// Filter out self-references, main bundle, and other bundled scripts to prevent circular dependencies.
+		$filtered_deps = array_filter( self::$bundled_script_deps, function ( $dep ) {
+			return 'popup-maker-site' !== $dep &&
+					! isset( self::$registered_scripts[ $dep ] );
+		});
+
+		return array_unique( $filtered_deps );
+	}
+
+	/**
+	 * Get all dependencies from bundled styles.
+	 *
+	 * @return string[] Array of style dependencies.
+	 *
+	 * @since 1.21.0
+	 */
+	public static function get_bundled_style_dependencies() {
+		// Filter out self-references, main bundle, and other bundled styles to prevent circular dependencies.
+		$filtered_deps = array_filter( self::$bundled_style_deps, function ( $dep ) {
+			return 'popup-maker-site' !== $dep &&
+					! isset( self::$registered_styles[ $dep ] );
+		});
+
+		return array_unique( $filtered_deps );
 	}
 }

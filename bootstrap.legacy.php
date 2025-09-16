@@ -23,7 +23,6 @@ defined( 'ABSPATH' ) || exit;
  * @return array
  *
  * @since 1.20.0
- * @deprecated 1.20.0 - Use composer autoloader instead.
  */
 function pum_get_deprecated_autoloaders() {
 	static $deprecated_autoloaders;
@@ -69,7 +68,8 @@ function pum_autoloader( $class_name ) {
 
 	if ( count( $pum_autoloaders ) === 0 ) {
 		// Unregister this autoloader if there are no deprecated autoloaders .
-		spl_autoload_unregister( 'pum_autoloader' );
+		// spl_autoload_unregister( 'pum_autoloader' );
+		return;
 	}
 
 	// Deprecated newsletter autoloader, remove this in future.
@@ -106,12 +106,24 @@ function pum_autoloader( $class_name ) {
 spl_autoload_register( 'pum_autoloader' ); // Register autoloader
 
 /**
+ * Plugin functions loader.
+ */
+require_once __DIR__ . '/includes/entry--legacy.php';
+
+/**
  * Triggers the initialization of the Popup Maker plugin and extensions.
  *
  * @since      1.0.0
  * @deprecated 1.7.0
  */
-function popmake_initialize() {
+function pum_init_legacy() {
+	if ( ! \PopupMaker\check_prerequisites() ) {
+		return;
+	}
+
+	// Get Popup Maker
+	pum();
+
 	// Disable Unlimited Themes extension if active.
 	remove_action( 'popmake_initialize', 'popmake_ut_initialize' );
 
@@ -119,6 +131,8 @@ function popmake_initialize() {
 	do_action( 'pum_initialize' );
 	do_action( 'popmake_initialize' );
 }
+
+add_action( 'plugins_loaded', 'pum_init_legacy', 9 );
 
 /**
  * The main function responsible for returning the one true Popup_Maker
@@ -148,6 +162,7 @@ function PopMake() {
  * @return Popup_Maker
  *
  * @since      1.8.0
+ * @deprecated 1.21.0
  */
 function pum() {
 	return Popup_Maker::instance();

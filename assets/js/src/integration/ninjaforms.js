@@ -9,14 +9,28 @@
 
 	const initialize_nf_support = () => {
 		/** Ninja Forms Support */
-		if ( typeof Marionette !== 'undefined' && typeof nfRadio !== 'undefined' && false === pumNFController ) {
+		if (
+			typeof Marionette !== 'undefined' &&
+			typeof nfRadio !== 'undefined' &&
+			false === pumNFController
+		) {
 			pumNFController = Marionette.Object.extend( {
 				initialize: function () {
-					this.listenTo( nfRadio.channel( 'forms' ), 'submit:response', this.popupMaker );
+					this.listenTo(
+						nfRadio.channel( 'forms' ),
+						'submit:response',
+						this.popupMaker
+					);
 				},
-				popupMaker: function ( response, textStatus, jqXHR, formIdentifier ) {
+				popupMaker: function (
+					response,
+					textStatus,
+					jqXHR,
+					formIdentifier
+				) {
 					const $form = $( '#nf-form-' + formIdentifier + '-cont' ),
-						[ formId, formInstanceId = null ] = formIdentifier.split( '_' ),
+						[ formId, formInstanceId = null ] =
+							formIdentifier.split( '_' ),
 						settings = {};
 
 					// Bail if submission failed.
@@ -41,13 +55,26 @@
 					 *
 					 * This is here for backward compatibility with form actions prior to v1.9.
 					 */
-					if (response.data && response.data.actions) {
-						settings.openpopup = 'undefined' !== typeof response.data.actions.openpopup;
-						settings.openpopup_id = settings.openpopup ? parseInt( response.data.actions.openpopup ) : 0;
-						settings.closepopup = 'undefined' !== typeof response.data.actions.closepopup;
-						settings.closedelay = settings.closepopup ? parseInt( response.data.actions.closepopup ) : 0;
-						if ( settings.closepopup && response.data.actions.closedelay ) {
-							settings.closedelay = parseInt( response.data.actions.closedelay );
+					if ( response.data && response.data.actions ) {
+						settings.openpopup =
+							'undefined' !==
+							typeof response.data.actions.openpopup;
+						settings.openpopup_id = settings.openpopup
+							? parseInt( response.data.actions.openpopup )
+							: 0;
+						settings.closepopup =
+							'undefined' !==
+							typeof response.data.actions.closepopup;
+						settings.closedelay = settings.closepopup
+							? parseInt( response.data.actions.closepopup )
+							: 0;
+						if (
+							settings.closepopup &&
+							response.data.actions.closedelay
+						) {
+							settings.closedelay = parseInt(
+								response.data.actions.closedelay
+							);
 						}
 					}
 

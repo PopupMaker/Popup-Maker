@@ -1,0 +1,363 @@
+---
+alwaysApply: true
+---
+
+# Popup Maker Integration & Addon Development Guide
+
+This document provides guidelines and best practices for developers creating add-ons for or integrating with the Popup Maker plugin. Following these rules will ensure compatibility, stability, and a better user experience.
+
+## General Best Practices
+
+### 1. Naming and Prefixes
+
+-   **DO** use the `pum_` or `PUM_` prefix for your functions, classes, and hooks to maintain consistency with the core plugin's standards.
+-   **DO NOT** use the older `popmake_` prefix. This is for legacy code and is being phased out. New integrations should avoid it to prevent conflicts and ensure future compatibility.
+-   **DO** use the `PopupMaker\` namespace for new, modern integrations where appropriate, following the structure seen in the `classes/` directory.
+
+### 2. Backwards Compatibility
+
+-   **DO** check for the existence of Popup Maker functions and classes before calling them to prevent fatal errors if the core plugin is not active.
+
+    ```php
+    if (function_exists('pum_get_popup')) {
+        // Your code here
+    }
+    ```
+
+-   **DO NOT** use deprecated functions or classes. Refer to the "Deprecated Code" section of this guide.
+
+### 3. Enqueueing Assets
+
+-   **DO** use the `pum_enqueue_script` and `pum_enqueue_style` functions for your assets. This allows your scripts and styles to be included in Popup Maker's Asset Cache for optimized performance.
+    *Reference: `classes/AssetCache.php`*
+
+    ```php
+    // Example of enqueueing an extension's script
+    function my_extension_enqueue_assets() {
+        pum_enqueue_script('my-extension-script', plugins_url('/js/my-script.js', __FILE__), ['popup-maker-site']);
+    }
+    add_action('pum_enqueue_scripts', 'my_extension_enqueue_assets');
+    ```
+
+-   **DO NOT** enqueue your own copies of libraries that Popup Maker already includes, such as jQuery or jQuery UI. Use the registered handles as dependencies.
+
+## PHP Integrations: Hooks & Filters
+
+Popup Maker is highly extensible through its actions and filters.
+
+### 1. Adding Custom Triggers, Cookies, and Conditions
+
+-   **DO** use the following filters to register your custom items. This ensures they appear correctly in the Popup Editor UI.
+    -   `pum_registered_triggers`
+    -   `pum_registered_cookies`
+    -   `pum_registered_conditions`
+
+-   **Example:** Adding a custom trigger.
+    *Reference: `classes/Triggers.php`*
+
+    ```php
+    function my_custom_triggers($triggers) {
+        $triggers['my_custom_trigger'] = [
+            'name'   => __('My Custom Trigger', 'my-plugin'),
+            'fields' => [
+                'general' => [
+                    'my_setting' => [
+                        'label' => __('My Setting', 'my-plugin'),
+                        'type'  => 'text',
+                    ],
+                ],
+            ],
+        ];
+        return $triggers;
+    }
+    add_filter('pum_registered_triggers', 'my_custom_triggers');
+    ```
+
+### 2. Modifying Popup & Theme Settings
+
+-   **DO** use the `pum_popup_settings_fields` and `pum_theme_settings_fields` filters to add new settings tabs, sections, and fields to the respective editors.
+-   **DO NOT** add meta boxes directly. The UI is rendered dynamically via JavaScript based on these filters.
+    *Reference: `classes/Admin/Popups.php` & `classes/Admin/Themes.php`*
+
+### 3. Interacting with Popups
+
+-   **DO** use the `pum_get_popup($popup_id)` and `pum_get_theme($theme_id)` functions to get popup and theme objects (`PUM_Model_Popup` and `PUM_Model_Theme`).
+-   **DO** use the methods on the returned objects to get or update settings (e.g., `$popup->get_setting('my_setting')`).
+-   **DO NOT** use `get_post_meta` or `update_post_meta` directly unless absolutely necessary. The object methods include data parsing and migration logic.
+    *Reference: `classes/Model/Popup.php` & `classes/Model/Theme.php`*
+
+## JavaScript Integrations
+
+The frontend JavaScript is moving towards a modern, hook-based system.
+
+### 1. JavaScript Hooks
+
+-   **DO** use the `PUM.hooks` event manager for JavaScript actions and filters. It is available on any page where Popup Maker scripts are loaded.
+    *Reference: `assets/js/src/site/plugins/pum-hooks.js`*
+
+-   **Example:** Firing code after a popup opens.
+
+    ```javascript
+    (function ($) {
+        // Ensure PUM.hooks is available.
+        if (window.PUM && window.PUM.hooks) {
+            PUM.hooks.addAction('pum.popup.afterOpen', function (data) {
+                // Your code here. `data.popup` contains the jQuery object for the popup.
+                console.log(data.popup.attr('id') + ' was opened.');
+            });
+        }
+    }(jQuery));
+    ```
+-   **Key JS Hooks**: `pum.popup.beforeOpen`, `pum.popup.afterOpen`, `pum.popup.beforeClose`, `pum.popup.afterClose`, `pum.integration.form.success`.
+
+### 2. Interacting with Popups via JS
+
+-   **DO** use the global `PUM` object to interact with popups.
+
+    ```javascript
+    // Open a popup
+    PUM.open(123);
+
+    // Close a popup
+    PUM.close(123);
+
+    // Get popup settings
+    const settings = PUM.getSettings(123);
+    ```
+
+-   **DO NOT** rely on the older `$.fn.popmake` methods directly if a `PUM.*` equivalent exists. `PUM.*` provides a more stable, public-facing API.
+    *Reference: `assets/js/src/site/plugins/pum.js`*
+
+## Form Integrations
+
+To integrate a new form plugin with Popup Maker's **Form Submission** trigger and cookie:
+
+-   **DO** fire the `pum.integration.form.success` JavaScript action after a successful submission.
+
+-   **Example:**
+    *Reference: `assets/js/src/integration/contactform7.js`*
+
+    ```javascript
+    (function ($) {
+        // Example for a generic AJAX form success event.
+        $(document).on('my_form_plugin_success', function (event, form, responseData) {
+            var $form = $(form);
+            var formId = $form.data('formId');
+            var formInstanceId = $form.data('instanceId');
+
+            // The PUM.integrations.formSubmission function handles the rest.
+            window.PUM.integrations.formSubmission($form, {
+                formProvider: 'my_form_plugin',
+                formId: formId,
+                formInstanceId: formInstanceId,
+                extras: {
+                    // Include any extra data that might be useful for other integrations.
+                    responseData: responseData
+                }
+            });
+        });
+    }(jQuery));
+    ```
+
+## Deprecation Guide: What Not To Use
+
+To ensure your extension works with future versions of Popup Maker, avoid using the following:
+
+-   **Functions prefixed with `popmake_`**: These are from versions prior to v1.4 and are being removed. Use the `pum_` equivalent.
+-   **The `the_popup_content` filter**: Use `pum_popup_content` instead.
+-   **The `pum_popup_get_classes` filter**: Use `pum_popup_container_classes` instead.
+-   **The `popmake_get_the_popup_data_attr` filter**: Use `pum_popup_data_attr` instead.
+-   **The `PUM_Activator` class**: Use the more robust `PUM_Extension_Activation` class found in `/includes/pum-sdk/`.
+-   **Directly creating meta boxes** in the Popup or Theme editor. Use the appropriate `pum_popup_settings_fields` or `pum_theme_settings_fields` filters.
+
+## Modern Development (React & Data Stores)
+
+The Popup Maker admin interface is transitioning to a modern, React-based architecture using `@wordpress/data` stores. While the API for this is still evolving, be aware of this direction.
+
+-   **Data Stores:** New data is being managed in stores found in the `packages/core-data` directory. These handle state for Popups, Themes, Settings, and more.
+-   **React Components:** Admin pages like "Call to Actions" are built entirely in React. Future extensions will be able to register components, tabs, and fields into these interfaces.
+-   **DO** look at the `packages/cta-admin/` and `packages/cta-editor/` directories for examples of how to build admin interfaces that integrate with these new data stores.
+-   **DO** look at the `packages/core-data/docs/data-store-patterns.md` file for an in-depth guide on how to interact with the data stores.
+
+By adhering to these guidelines, you'll be building on a stable, forward-compatible foundation, ensuring your users have a seamless experience with Popup Maker and your extension.An ideal `cursor-rules.mdc` file for Popup Maker would guide third-party developers on best practices, ensuring their extensions are compatible, stable, and forward-looking. Based on the provided codebase, here are the rules and guidelines for integrating with Popup Maker.
+
+---
+
+# Popup Maker Integration & Addon Development Guide
+
+This document provides guidelines and best practices for developers creating add-ons for or integrating with the Popup Maker plugin. Following these rules will ensure compatibility, stability, and a better user experience.
+
+## General Best Practices
+
+### 1. Naming and Prefixes
+
+-   **DO** use the `pum_` or `PUM_` prefix for your functions, classes, and hooks to maintain consistency with the core plugin's standards.
+-   **DO NOT** use the older `popmake_` prefix. This is for legacy code and is being phased out. New integrations should avoid it to prevent conflicts and ensure future compatibility.
+-   **DO** use the `PopupMaker\` namespace for new, modern integrations where appropriate, following the structure seen in the `classes/` directory.
+
+### 2. Backwards Compatibility
+
+-   **DO** check for the existence of Popup Maker functions and classes before calling them to prevent fatal errors if the core plugin is not active.
+
+    ```php
+    if (function_exists('pum_get_popup')) {
+        // Your code here
+    }
+    ```
+
+-   **DO NOT** use deprecated functions or classes. Refer to the "Deprecated Code" section of this guide.
+
+### 3. Enqueueing Assets
+
+-   **DO** use the `pum_enqueue_script` and `pum_enqueue_style` functions for your assets. This allows your scripts and styles to be included in Popup Maker's Asset Cache for optimized performance.
+    *Reference: `classes/AssetCache.php`*
+
+    ```php
+    // Example of enqueueing an extension's script
+    function my_extension_enqueue_assets() {
+        pum_enqueue_script('my-extension-script', plugins_url('/js/my-script.js', __FILE__), ['popup-maker-site']);
+    }
+    add_action('pum_enqueue_scripts', 'my_extension_enqueue_assets');
+    ```
+
+-   **DO NOT** enqueue your own copies of libraries that Popup Maker already includes, such as jQuery or jQuery UI. Use the registered handles as dependencies.
+
+## PHP Integrations: Hooks & Filters
+
+Popup Maker is highly extensible through its actions and filters.
+
+### 1. Adding Custom Triggers, Cookies, and Conditions
+
+-   **DO** use the following filters to register your custom items. This ensures they appear correctly in the Popup Editor UI.
+    -   `pum_registered_triggers`
+    -   `pum_registered_cookies`
+    -   `pum_registered_conditions`
+
+-   **Example:** Adding a custom trigger.
+    *Reference: `classes/Triggers.php`*
+
+    ```php
+    function my_custom_triggers($triggers) {
+        $triggers['my_custom_trigger'] = [
+            'name'   => __('My Custom Trigger', 'my-plugin'),
+            'fields' => [
+                'general' => [
+                    'my_setting' => [
+                        'label' => __('My Setting', 'my-plugin'),
+                        'type'  => 'text',
+                    ],
+                ],
+            ],
+        ];
+        return $triggers;
+    }
+    add_filter('pum_registered_triggers', 'my_custom_triggers');
+    ```
+
+### 2. Modifying Popup & Theme Settings
+
+-   **DO** use the `pum_popup_settings_fields` and `pum_theme_settings_fields` filters to add new settings tabs, sections, and fields to the respective editors.
+-   **DO NOT** add meta boxes directly. The UI is rendered dynamically via JavaScript based on these filters.
+    *Reference: `classes/Admin/Popups.php` & `classes/Admin/Themes.php`*
+
+### 3. Interacting with Popups
+
+-   **DO** use the `pum_get_popup($popup_id)` and `pum_get_theme($theme_id)` functions to get popup and theme objects (`PUM_Model_Popup` and `PUM_Model_Theme`).
+-   **DO** use the methods on the returned objects to get or update settings (e.g., `$popup->get_setting('my_setting')`).
+-   **DO NOT** use `get_post_meta` or `update_post_meta` directly unless absolutely necessary. The object methods include data parsing and migration logic.
+    *Reference: `classes/Model/Popup.php` & `classes/Model/Theme.php`*
+
+## JavaScript Integrations
+
+The frontend JavaScript is moving towards a modern, hook-based system.
+
+### 1. JavaScript Hooks
+
+-   **DO** use the `PUM.hooks` event manager for JavaScript actions and filters. It is available on any page where Popup Maker scripts are loaded.
+    *Reference: `assets/js/src/site/plugins/pum-hooks.js`*
+
+-   **Example:** Firing code after a popup opens.
+
+    ```javascript
+    (function ($) {
+        // Ensure PUM.hooks is available.
+        if (window.PUM && window.PUM.hooks) {
+            PUM.hooks.addAction('pum.popup.afterOpen', function (data) {
+                // Your code here. `data.popup` contains the jQuery object for the popup.
+                console.log(data.popup.attr('id') + ' was opened.');
+            });
+        }
+    }(jQuery));
+    ```
+-   **Key JS Hooks**: `pum.popup.beforeOpen`, `pum.popup.afterOpen`, `pum.popup.beforeClose`, `pum.popup.afterClose`, `pum.integration.form.success`.
+
+### 2. Interacting with Popups via JS
+
+-   **DO** use the global `PUM` object to interact with popups.
+
+    ```javascript
+    // Open a popup
+    PUM.open(123);
+
+    // Close a popup
+    PUM.close(123);
+
+    // Get popup settings
+    const settings = PUM.getSettings(123);
+    ```
+
+-   **DO NOT** rely on the older `$.fn.popmake` methods directly if a `PUM.*` equivalent exists. `PUM.*` provides a more stable, public-facing API.
+    *Reference: `assets/js/src/site/plugins/pum.js`*
+
+## Form Integrations
+
+To integrate a new form plugin with Popup Maker's **Form Submission** trigger and cookie:
+
+-   **DO** fire the `pum.integration.form.success` JavaScript action after a successful submission.
+
+-   **Example:**
+    *Reference: `assets/js/src/integration/contactform7.js`*
+
+    ```javascript
+    (function ($) {
+        // Example for a generic AJAX form success event.
+        $(document).on('my_form_plugin_success', function (event, form, responseData) {
+            var $form = $(form);
+            var formId = $form.data('formId');
+            var formInstanceId = $form.data('instanceId');
+
+            // The PUM.integrations.formSubmission function handles the rest.
+            window.PUM.integrations.formSubmission($form, {
+                formProvider: 'my_form_plugin',
+                formId: formId,
+                formInstanceId: formInstanceId,
+                extras: {
+                    // Include any extra data that might be useful for other integrations.
+                    responseData: responseData
+                }
+            });
+        });
+    }(jQuery));
+    ```
+
+## Deprecation Guide: What Not To Use
+
+To ensure your extension works with future versions of Popup Maker, avoid using the following:
+
+-   **Functions prefixed with `popmake_`**: These are from versions prior to v1.4 and are being removed. Use the `pum_` equivalent.
+-   **The `the_popup_content` filter**: Use `pum_popup_content` instead.
+-   **The `pum_popup_get_classes` filter**: Use `pum_popup_container_classes` instead.
+-   **The `popmake_get_the_popup_data_attr` filter**: Use `pum_popup_data_attr` instead.
+-   **The `PUM_Activator` class**: Use the more robust `PUM_Extension_Activation` class found in `/includes/pum-sdk/`.
+-   **Directly creating meta boxes** in the Popup or Theme editor. Use the appropriate `pum_popup_settings_fields` or `pum_theme_settings_fields` filters.
+
+## Modern Development (React & Data Stores)
+
+The Popup Maker admin interface is transitioning to a modern, React-based architecture using `@wordpress/data` stores. While the API for this is still evolving, be aware of this direction.
+
+-   **Data Stores:** New data is being managed in stores found in the `packages/core-data` directory. These handle state for Popups, Themes, Settings, and more.
+-   **React Components:** Admin pages like "Call to Actions" are built entirely in React. Future extensions will be able to register components, tabs, and fields into these interfaces.
+-   **DO** look at the `packages/cta-admin/` and `packages/cta-editor/` directories for examples of how to build admin interfaces that integrate with these new data stores.
+-   **DO** look at the `packages/core-data/docs/data-store-patterns.md` file for an in-depth guide on how to interact with the data stores.
+
+By adhering to these guidelines, you'll be building on a stable, forward-compatible foundation, ensuring your users have a seamless experience with Popup Maker and your extension.

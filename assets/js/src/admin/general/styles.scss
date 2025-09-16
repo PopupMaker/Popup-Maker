@@ -1,0 +1,355 @@
+/************************************************************
+ * Copyright (c) 2020, Code Atlantic LLC
+ ************************************************************/
+
+$plugin-prefix: "pum";
+$custom-select2-selector: "pumselect2";
+$tab-color: #e4e4e4;
+
+// Shared modules.
+@import "styles/modules/general";
+@import "styles/modules/fields";
+@import "styles/modules/select2";
+@import "styles/modules/tabs";
+@import "styles/modules/modal";
+@import "styles/modules/alerts";
+@import "styles/partials/mixins";
+@import "styles/partials/fields";
+@import "styles/partials/marketing";
+@import "styles/partials/deprecated";
+
+/************
+Styles for upgrade notice bar
+************/
+
+@media screen and (max-width: 1023px) {
+	.pum-notice-bar {
+		display: none !important;
+	}
+}
+
+:has(> .pum-notice-bar-wrapper) {
+	padding-top: 1.5em;
+}
+
+.pum-notice-bar-wrapper {
+	position: absolute;
+	z-index: 10;
+	visibility: hidden;
+	width: fit-content;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+
+	.pum-notice-bar {
+		display: flex;
+		justify-content: center;
+		background: linear-gradient(135deg, #ebe7fe 0%, #f6f6f7 100%);
+		border-top: 3px solid #8267f6;
+		border-left: 1px solid #d6ccff;
+		border-right: 1px solid #d6ccff;
+		border-bottom: 1px solid #d6ccff;
+		border-radius: 0 0 6px 6px;
+		color: #270aa9;
+		padding: 7px;
+		max-height: 100px;
+		visibility: visible;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+		a {
+			color: #7356f5;
+			font-weight: 600;
+			text-decoration: none;
+
+			&:hover {
+				color: #8267f6;
+				text-decoration: underline;
+			}
+		}
+	}
+}
+
+/************
+Styles for our log viewers
+************/
+#log-viewer {
+	background-color: #fff;
+	border: 1px solid #e5e5e5;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	padding: 5px 20px;
+	margin: 20px 0;
+}
+
+#log-viewer pre {
+	font-family: monospace;
+	white-space: pre-wrap;
+}
+
+/************
+Styles for welcome screen
+************/
+.pum-welcome-wrapper {
+	margin: 0;
+	padding: 10px;
+	background-color: #fff;
+
+	@media only screen and (min-width: 600px) {
+		max-width: 500px;
+		margin: 40px auto 0;
+		padding: 40px 30px;
+	}
+
+	ul {
+		list-style: disc;
+		padding-left: 20px;
+	}
+
+	.pum-welcome-signature {
+		margin-top: 20px;
+		font-style: italic;
+		display: flex;
+		align-items: center;
+
+		img {
+			margin-right: 10px;
+			width: 60px;
+			border-radius: 100px;
+		}
+	}
+
+	.pum-welcome-cta {
+		margin-top: 30px;
+	}
+}
+
+/************
+Styles for toggle buttons
+************/
+.pum-toggle-button {
+	position: relative;
+	width: 36px;
+	height: 18px;
+
+	label {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #fff;
+		transition: background-color 0.2s ease;
+		border-radius: 9px;
+		border: 1px solid #1e1e1e;
+
+		&::before {
+			position: absolute;
+			content: "";
+			height: 14px;
+			width: 14px;
+			left: 2px;
+			bottom: 1px;
+			background-color: #1e1e1e;
+			transition: 0.2s ease;
+			border-radius: 50%;
+		}
+	}
+
+	input {
+		opacity: 0;
+		width: 0;
+		height: 0;
+
+		&:focus+label {
+			box-shadow: 2px 2px 7px #2196f3;
+		}
+
+		&:checked+label {
+			background-color: #9ab927;
+		}
+
+		&:checked+label::before {
+			background-color: #fff;
+			transform: translateX(15px);
+		}
+	}
+}
+
+.wp-core-ui .button-with-icon {
+	display: inline-flex;
+	align-items: center;
+}
+
+.wp-list-table .type-popup .row-actions {
+	color: #999;
+}
+
+.pum-flex-row {
+	display: flex;
+
+	.pum-flex-column {
+		flex: 1;
+
+		&.pum-flex-quarter {
+			max-width: 25% !important;
+
+			&:nth-child(4n + 1) {
+				padding-left: 0;
+			}
+
+			&:nth-child(4n + 4) {
+				padding-right: 0;
+			}
+		}
+
+		&.pum-flex-third {
+			max-width: 33.333% !important;
+
+			&:nth-child(3n + 1) {
+				padding-left: 0;
+			}
+
+			&:nth-child(3n + 3) {
+				padding-right: 0;
+			}
+		}
+
+		&.pum-flex-half {
+			max-width: 50% !important;
+
+			&:nth-child(2n + 1) {
+				padding-left: 0;
+			}
+
+			&:nth-child(2n + 2) {
+				padding-right: 0;
+			}
+		}
+
+		&.pum-flex-three-quarter {
+			max-width: 75% !important;
+		}
+
+		padding: 1%;
+
+		label,
+		input {
+			display: block;
+			width: 100%;
+		}
+	}
+}
+
+.pum-tabbed-form {
+	.pum-field {
+		position: relative;
+		margin: 0 0 24px;
+
+		label,
+		.pum-desc {
+			display: block;
+		}
+
+		label {
+			margin-bottom: 4px;
+		}
+
+		.pum-desc {
+			margin-top: 4px;
+			margin-bottom: 0;
+		}
+	}
+
+	.pumselect2-container--default {
+		width: 100% !important;
+	}
+
+	.pum-field-select2 select {
+		width: 100%;
+	}
+
+	label {
+		display: block;
+		font-weight: bold;
+		font-size: 1.1em;
+	}
+
+	.pum-field.checkbox {
+		label {
+			&.pum-desc {
+				display: inline;
+				font-weight: inherit;
+				font-size: inherit;
+				margin: 0 0 1em;
+			}
+		}
+	}
+
+	.pum-required {
+		label::after {
+			color: #a00;
+			content: "*";
+			margin-left: 5px;
+		}
+	}
+}
+
+.edit-php.post-type-popup .wrap .nav-tab-wrapper .page-title-action,
+.edit-php.post-type-popup_theme .wrap .nav-tab-wrapper .page-title-action,
+.popup_page_pum-extensions .wrap .nav-tab-wrapper .page-title-action {
+	top: 7px;
+	margin-left: 5px;
+
+	@media only screen and (min-width: 0px) and (max-width: 783px) {
+		display: none !important;
+	}
+}
+
+/************
+Styles for upgrade tab
+************/
+
+.nav-tab.pum-upgrade-tab-pro {
+	font-weight: 500 !important;
+	color: #1dbe61 !important;
+	border: 1px solid #bcf5d4;
+	border-bottom: 2px solid transparent;
+	background: rgba(29, 190, 97, 0.05);
+
+	&:hover {
+		color: #179b4e !important;
+		border-color: #1dbe61;
+		border-bottom-color: #1dbe61;
+		background: rgba(29, 190, 97, 0.08);
+	}
+
+	&.nav-tab-active {
+		color: #179b4e !important;
+		border-color: #1dbe61;
+		border-bottom-color: #1dbe61;
+		background: rgba(29, 190, 97, 0.1);
+	}
+}
+
+.nav-tab.pum-upgrade-tab-pro-plus {
+	font-weight: 500 !important;
+	color: #8267f6 !important;
+	border: 1px solid #d6ccff;
+	border-bottom: 2px solid transparent;
+	background: rgba(130, 103, 246, 0.05);
+
+	&:hover {
+		color: #7356f5 !important;
+		border-color: #8267f6;
+		border-bottom-color: #8267f6;
+		background: rgba(130, 103, 246, 0.08);
+	}
+
+	&.nav-tab-active {
+		color: #7356f5 !important;
+		border-color: #8267f6;
+		border-bottom-color: #8267f6;
+		background: rgba(130, 103, 246, 0.1);
+	}
+}

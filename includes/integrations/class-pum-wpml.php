@@ -39,7 +39,7 @@ class PUM_WPML_Integration {
 
 	/**
 	 * @param      $popup
-	 * @param null  $popup_id
+	 * @param null $popup_id
 	 *
 	 * @return \PUM_Model_Popup
 	 */

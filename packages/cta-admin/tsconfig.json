@@ -1,0 +1,61 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "src",
+		"outDir": "build",
+		"declarationDir": "build-types",
+		"paths": {
+			"@popup-maker/components": [ "../components/src" ],
+			"@popup-maker/core-data": [ "../core-data/src" ],
+			"@popup-maker/cta-editor": [ "../cta-editor/src" ],
+			"@popup-maker/data": [ "../data/src" ],
+			"@popup-maker/fields": [ "../fields/src" ],
+			"@popup-maker/i18n": [ "../i18n/src" ],
+			"@popup-maker/icons": [ "../icons/src" ],
+			"@popup-maker/layout": [ "../layout/src" ],
+			"@popup-maker/registry": [ "../registry/src" ],
+			"@popup-maker/types": [ "../types/src" ],
+			"@popup-maker/use-query-params": [ "../use-query-params/src" ],
+			"@popup-maker/utils": [ "../utils/src" ]
+		}
+	},
+	"include": [ "./src/**/*" ],
+	"references": [
+		{
+			"path": "../components"
+		},
+		{
+			"path": "../core-data"
+		},
+		{
+			"path": "../cta-editor"
+		},
+		{
+			"path": "../data"
+		},
+		{
+			"path": "../fields"
+		},
+		{
+			"path": "../i18n"
+		},
+		{
+			"path": "../icons"
+		},
+		{
+			"path": "../layout"
+		},
+		{
+			"path": "../registry"
+		},
+		{
+			"path": "../types"
+		},
+		{
+			"path": "../use-query-params"
+		},
+		{
+			"path": "../utils"
+		}
+	]
+}

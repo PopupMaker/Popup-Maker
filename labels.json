@@ -1,150 +1,150 @@
 [
-  {
-    "name": "component-admin",
-    "color": "#0066cc"
-  },
-  {
-    "name": "component-conditions",
-    "color": "#005cb8"
-  },
-  {
-    "name": "component-cookies",
-    "color": "#0052a3"
-  },
-  {
-    "name": "component-front-end",
-    "color": "#00478f"
-  },
-  {
-    "name": "component-popup",
-    "color": "#003d7a"
-  },
-  {
-    "name": "component-theme",
-    "color": "#003366"
-  },
-  {
-    "name": "component-triggers",
-    "color": "#1a75d1"
-  },
-  {
-    "name": "integration-extension",
-    "color": "#98e076"
-  },
-  {
-    "name": "integration-forms",
-    "color": "#95e9f9"
-  },
-  {
-    "name": "integration-other",
-    "color": "#8a498b"
-  },
-  {
-    "name": "priority-high",
-    "color": "#ff000d"
-  },
-  {
-    "name": "priority-low",
-    "color": "#ffcccf"
-  },
-  {
-    "name": "priority-medium",
-    "color": "#ff666e"
-  },
-  {
-    "name": "scope-accessibility",
-    "color": "#ffe1cc"
-  },
-  {
-    "name": "scope-build",
-    "color": "#ffd1b3"
-  },
-  {
-    "name": "scope-dependency",
-    "color": "#ffc299"
-  },
-  {
-    "name": "scope-developer-apis",
-    "color": "#ffb380"
-  },
-  {
-    "name": "scope-marketing",
-    "color": "#e55d00"
-  },
-  {
-    "name": "scope-mu",
-    "color": "#fea466"
-  },
-  {
-    "name": "scope-performance",
-    "color": "#fe954d"
-  },
-  {
-    "name": "scope-reliability",
-    "color": "#fe8533"
-  },
-  {
-    "name": "scope-support",
-    "color": "#fe761a"
-  },
-  {
-    "name": "scope-ui",
-    "color": "#fe6700"
-  },
-  {
-    "name": "scope-unit-tests",
-    "color": "#b74a00"
-  },
-  {
-    "name": "scope-ux",
-    "color": "#cb5200"
-  },
-  {
-    "name": "type-bug",
-    "color": "#d60601"
-  },
-  {
-    "name": "type-duplicate",
-    "color": "#eeeeee"
-  },
-  {
-    "name": "type-epic",
-    "color": "#3E4B9E"
-  },
-  {
-    "name": "type-feature",
-    "color": "#95d85f"
-  },
-  {
-    "name": "type-improvement",
-    "color": "#e28eb7"
-  },
-  {
-    "name": "type-regression",
-    "color": "#ffccd2"
-  },
-  {
-    "name": "type-request",
-    "color": "#d4c5f9"
-  },
-  {
-    "name": "workflow-needs-code-review",
-    "color": "#8fef34"
-  },
-  {
-    "name": "workflow-needs-docs",
-    "color": "#ca2680"
-  },
-  {
-    "name": "workflow-needs-reporter-feedback",
-    "color": "#2a8088"
-  },
-  {
-    "name": "workflow-needs-testing",
-    "color": "#bf09e8"
-  },
-  {
-    "name": "workflow-no-action",
-    "color": "#f3f3f3"
-  }
+	{
+		"name": "component-admin",
+		"color": "#0066cc"
+	},
+	{
+		"name": "component-conditions",
+		"color": "#005cb8"
+	},
+	{
+		"name": "component-cookies",
+		"color": "#0052a3"
+	},
+	{
+		"name": "component-front-end",
+		"color": "#00478f"
+	},
+	{
+		"name": "component-popup",
+		"color": "#003d7a"
+	},
+	{
+		"name": "component-theme",
+		"color": "#003366"
+	},
+	{
+		"name": "component-triggers",
+		"color": "#1a75d1"
+	},
+	{
+		"name": "integration-extension",
+		"color": "#98e076"
+	},
+	{
+		"name": "integration-forms",
+		"color": "#95e9f9"
+	},
+	{
+		"name": "integration-other",
+		"color": "#8a498b"
+	},
+	{
+		"name": "priority-high",
+		"color": "#ff000d"
+	},
+	{
+		"name": "priority-low",
+		"color": "#ffcccf"
+	},
+	{
+		"name": "priority-medium",
+		"color": "#ff666e"
+	},
+	{
+		"name": "scope-accessibility",
+		"color": "#ffe1cc"
+	},
+	{
+		"name": "scope-build",
+		"color": "#ffd1b3"
+	},
+	{
+		"name": "scope-dependency",
+		"color": "#ffc299"
+	},
+	{
+		"name": "scope-developer-apis",
+		"color": "#ffb380"
+	},
+	{
+		"name": "scope-marketing",
+		"color": "#e55d00"
+	},
+	{
+		"name": "scope-mu",
+		"color": "#fea466"
+	},
+	{
+		"name": "scope-performance",
+		"color": "#fe954d"
+	},
+	{
+		"name": "scope-reliability",
+		"color": "#fe8533"
+	},
+	{
+		"name": "scope-support",
+		"color": "#fe761a"
+	},
+	{
+		"name": "scope-ui",
+		"color": "#fe6700"
+	},
+	{
+		"name": "scope-unit-tests",
+		"color": "#b74a00"
+	},
+	{
+		"name": "scope-ux",
+		"color": "#cb5200"
+	},
+	{
+		"name": "type-bug",
+		"color": "#d60601"
+	},
+	{
+		"name": "type-duplicate",
+		"color": "#eeeeee"
+	},
+	{
+		"name": "type-epic",
+		"color": "#3E4B9E"
+	},
+	{
+		"name": "type-feature",
+		"color": "#95d85f"
+	},
+	{
+		"name": "type-improvement",
+		"color": "#e28eb7"
+	},
+	{
+		"name": "type-regression",
+		"color": "#ffccd2"
+	},
+	{
+		"name": "type-request",
+		"color": "#d4c5f9"
+	},
+	{
+		"name": "workflow-needs-code-review",
+		"color": "#8fef34"
+	},
+	{
+		"name": "workflow-needs-docs",
+		"color": "#ca2680"
+	},
+	{
+		"name": "workflow-needs-reporter-feedback",
+		"color": "#2a8088"
+	},
+	{
+		"name": "workflow-needs-testing",
+		"color": "#bf09e8"
+	},
+	{
+		"name": "workflow-no-action",
+		"color": "#f3f3f3"
+	}
 ]

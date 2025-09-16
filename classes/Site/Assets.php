@@ -60,8 +60,8 @@ class PUM_Site_Assets {
 		self::$cache_url = PUM_Helpers::get_cache_dir_url();
 		self::$debug     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 		self::$suffix    = self::$debug ? '' : '.min';
-		self::$js_url    = Popup_Maker::$URL . 'assets/js/';
-		self::$css_url   = Popup_Maker::$URL . 'assets/css/';
+		self::$js_url    = Popup_Maker::$URL . 'dist/assets/';
+		self::$css_url   = Popup_Maker::$URL . 'dist/assets/';
 
 		// Register assets early.
 		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'register_styles' ], 9 );
@@ -74,7 +74,7 @@ class PUM_Site_Assets {
 		add_action( 'pum_preload_popup', [ __CLASS__, 'enqueue_popup_assets' ] );
 		add_filter( 'wp_enqueue_scripts', [ __CLASS__, 'enqueue_page_assets' ] );
 
-		add_action( 'wp_enqueue_scripts', [ __CLASS__, 'fix_broken_extension_scripts' ], 100 );
+		// add_action( 'wp_enqueue_scripts', [ __CLASS__, 'fix_broken_extension_scripts' ], 100 );
 
 		// Allow forcing assets to load.
 		add_action( 'wp_head', [ __CLASS__, 'check_force_script_loading' ] );
@@ -87,10 +87,10 @@ class PUM_Site_Assets {
 			wp_dequeue_script( 'pum_newsletter_script' );
 			wp_dequeue_style( 'pum-newsletter-styles' );
 
-			wp_enqueue_style( 'pum-newsletter-styles', PUM_AWEBER_INTEGRATION_URL . '/includes/pum-newsletters/newsletter-styles' . self::$suffix . '.css', [], PUM_AWEBER_INTEGRATION_VER );
+			wp_enqueue_style( 'pum-newsletter-styles', PUM_AWEBER_INTEGRATION_URL . '/includes/pum-newsletters/newsletter-styles.css', [], PUM_AWEBER_INTEGRATION_VER );
 			wp_enqueue_script(
 				'pum_newsletter_script',
-				PUM_AWEBER_INTEGRATION_URL . '/includes/pum-newsletters/newsletter-scripts' . self::$suffix . '.js',
+				PUM_AWEBER_INTEGRATION_URL . '/includes/pum-newsletters/newsletter-scripts.js',
 				[
 					'jquery',
 					'popup-maker-site',
@@ -117,8 +117,8 @@ class PUM_Site_Assets {
 			wp_dequeue_script( 'pum-newsletter-site' );
 			wp_dequeue_style( 'pum-newsletter-site' );
 
-			wp_enqueue_style( 'pum-newsletter-site', PUM_NEWSLETTER_URL . 'assets/css/pum-newsletter-site' . self::$suffix . '.css', null, PUM_NEWSLETTER_VERSION );
-			wp_enqueue_script( 'pum-newsletter-site', PUM_NEWSLETTER_URL . 'assets/js/pum-newsletter-site' . self::$suffix . '.js', [ 'jquery' ], PUM_NEWSLETTER_VERSION, true );
+			wp_enqueue_style( 'pum-newsletter-site', PUM_NEWSLETTER_URL . 'assets/css/pum-newsletter-site.css', null, PUM_NEWSLETTER_VERSION );
+			wp_enqueue_script( 'pum-newsletter-site', PUM_NEWSLETTER_URL . 'assets/js/pum-newsletter-site.js', [ 'jquery' ], PUM_NEWSLETTER_VERSION, true );
 			wp_localize_script(
 				'pum-newsletter-site',
 				'pum_sub_vars',
@@ -196,11 +196,18 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-js' );
 			}
 
-			$cached_script_deps = apply_filters( 'pum_site_cached_scripts_dependencies', [
+			// Get base dependencies and merge with collected dependencies from bundled scripts.
+			$base_deps = [
 				'jquery',
 				'jquery-ui-core',
 				'jquery-ui-position',
-			] );
+				'wp-hooks',
+			];
+
+			$bundled_deps = PUM_AssetCache::get_bundled_script_dependencies();
+			$merged_deps  = array_unique( array_merge( $base_deps, $bundled_deps ) );
+
+			$cached_script_deps = apply_filters( 'pum_site_cached_scripts_dependencies', $merged_deps );
 
 			wp_register_script(
 				'popup-maker-site',
@@ -214,7 +221,7 @@ class PUM_Site_Assets {
 		} else {
 			wp_register_script(
 				'popup-maker-site',
-				self::$js_url . 'site' . self::$suffix . '.js?defer',
+				self::$js_url . 'site.js?defer',
 				[
 					'jquery',
 					'jquery-ui-core',
@@ -228,7 +235,7 @@ class PUM_Site_Assets {
 		do_action( 'pum_registered_scripts' );
 
 		if ( popmake_get_option( 'enable_easy_modal_compatibility_mode', false ) ) {
-			wp_register_script( 'popup-maker-easy-modal-importer-site', self::$js_url . 'popup-maker-easy-modal-importer-site' . self::$suffix . '?defer', [ 'popup-maker-site' ], POPMAKE_VERSION, true );
+			wp_register_script( 'popup-maker-easy-modal-importer-site', self::$js_url . 'popup-maker-easy-modal-importer-site.js?defer', [ 'popup-maker-site' ], POPMAKE_VERSION, true );
 		}
 
 		self::localize_scripts();
@@ -340,22 +347,22 @@ class PUM_Site_Assets {
 	 * @return array
 	 */
 	public static function get_popup_settings() {
-		$loaded = PUM_Site_Popups::get_loaded_popups();
+		$popups = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups();
 
 		$settings = [];
 
-		$current_popup = pum()->current_popup;
+		// Get current popup to restore later.
+		$current_popup = \PopupMaker\get_current_popup();
 
-		if ( $loaded->have_posts() ) {
-			while ( $loaded->have_posts() ) :
-				$loaded->next_post();
-				pum()->current_popup = $loaded->post;
-				$popup               = pum_get_popup( $loaded->post->ID );
+		if ( $popups ) {
+			foreach ( $popups as $popup ) {
+				\PopupMaker\set_current_popup( $popup );
 				// Set the key to the CSS id of this popup for easy lookup.
 				$settings[ 'pum-' . $popup->ID ] = $popup->get_public_settings();
-			endwhile;
+			}
 
-			pum()->current_popup = $current_popup;
+			// Restore current popup.
+			\PopupMaker\set_current_popup( $current_popup );
 		}
 
 		return $settings;
@@ -375,13 +382,16 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-css' );
 			}
 
-			$cached_style_deps = apply_filters( 'pum_site_cached_styles_dependencies', [] );
+			// Get collected dependencies from bundled styles.
+			$bundled_style_deps = PUM_AssetCache::get_bundled_style_dependencies();
+
+			$cached_style_deps = apply_filters( 'pum_site_cached_styles_dependencies', $bundled_style_deps );
 
 			wp_register_style( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, $cached_style_deps, Popup_Maker::$VER );
 
 			do_action( 'pum_registered_cached_styles' );
 		} else {
-			wp_register_style( 'popup-maker-site', self::$css_url . 'pum-site' . ( is_rtl() ? '-rtl' : '' ) . self::$suffix . '.css', [], Popup_Maker::$VER );
+			wp_register_style( 'popup-maker-site', self::$css_url . 'site' . ( is_rtl() ? '-rtl' : '' ) . '.css', [], Popup_Maker::$VER );
 			self::inline_styles();
 		}
 

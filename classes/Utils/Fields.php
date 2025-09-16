@@ -16,10 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Utils_Fields {
 
 	/**
-	 * @param $fields
-	 * @param $field_id
+	 * Get a specific field from a flattened fields array
 	 *
-	 * @return bool|mixed
+	 * @param array<string, mixed> $fields Fields array or nested fields structure
+	 * @param string               $field_id Field identifier to retrieve
+	 * @return array{type: string, id?: string, label?: string, std?: mixed}|false Field configuration array or false if not found
 	 */
 	public static function get_field( $fields, $field_id ) {
 		$fields = static::flatten_fields_array( $fields );
@@ -28,9 +29,10 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * @param array $fields
+	 * Get default values for all fields in a form
 	 *
-	 * @return array
+	 * @param array<string, mixed> $fields Fields configuration array
+	 * @return array<string, mixed> Field ID => default value mapping
 	 */
 	public static function get_form_default_values( $fields = [] ) {
 		$fields = static::flatten_fields_array( $fields );
@@ -39,9 +41,10 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * @param array $fields
+	 * Extract default values from field configurations
 	 *
-	 * @return array
+	 * @param array<string, mixed> $fields Flattened fields array
+	 * @return array<string, mixed> Field ID => default value mapping
 	 */
 	public static function get_field_default_values( $fields = [] ) {
 		$defaults = [];
@@ -60,9 +63,10 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * @param $tabs
+	 * Flatten a nested field structure into a single-level array
 	 *
-	 * @return array
+	 * @param array<string, mixed> $tabs Nested tabs/sections/fields structure
+	 * @return array<string, mixed> Flattened field ID => field config mapping
 	 */
 	public static function flatten_fields_array( $tabs ) {
 		$fields = [];
@@ -73,7 +77,7 @@ class PUM_Utils_Fields {
 				continue;
 			} else {
 				foreach ( $tab_sections as $section_id => $section_fields ) {
-					if ( self::is_field( $tab_sections ) ) {
+					if ( self::is_field( $section_fields ) ) {
 						$fields[ $section_id ] = $section_fields;
 						continue;
 					}
@@ -90,9 +94,10 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * @param $field
+	 * Parse and merge field configuration with defaults
 	 *
-	 * @return array
+	 * @param array<string, mixed> $field Field configuration array
+	 * @return array<string, mixed> Complete field configuration with all defaults applied
 	 */
 	public static function parse_field( $field ) {
 		return wp_parse_args(
@@ -149,10 +154,11 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * @param       $fields
-	 * @param array  $args
+	 * Parse tab-based field structure with optional sections
 	 *
-	 * @return mixed
+	 * @param array<string, mixed>                      $fields Tab-based fields structure
+	 * @param array{has_sections?: bool, name?: string} $args Parsing configuration options
+	 * @return array<string, mixed> Parsed fields structure
 	 */
 	public static function parse_tab_fields( $fields, $args = [] ) {
 		$args = wp_parse_args(
@@ -166,7 +172,7 @@ class PUM_Utils_Fields {
 		if ( $args['has_sections'] ) {
 			foreach ( $fields as $tab_id => $tab_sections ) {
 				foreach ( $tab_sections as $section_id => $section_fields ) {
-					if ( self::is_field( $section_fields ) ) {
+					if ( is_array( $section_fields ) && self::is_field( $section_fields ) ) {
 						// Allow for flat tabs with no sections.
 						$section_id     = 'main';
 						$section_fields = [
@@ -174,7 +180,9 @@ class PUM_Utils_Fields {
 						];
 					}
 
-					$fields[ $tab_id ][ $section_id ] = self::parse_fields( $section_fields, $args['name'] );
+					if ( is_array( $section_fields ) ) {
+						$fields[ $tab_id ][ $section_id ] = self::parse_fields( $section_fields, $args['name'] );
+					}
 				}
 			}
 		} else {
@@ -187,13 +195,14 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * @param array  $fields
-	 * @param string $name
+	 * Parse and validate individual fields array
 	 *
-	 * @return mixed
+	 * @param array<string, mixed> $fields Fields array to parse
+	 * @param string               $name Name format template for field naming
+	 * @return array<string, mixed> Parsed and sorted fields array
 	 */
 	public static function parse_fields( $fields, $name = '%' ) {
-		if ( is_array( $fields ) && ! empty( $fields ) ) {
+		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $field_id => $field ) {
 				if ( ! is_array( $field ) || ! self::is_field( $field ) ) {
 					continue;
@@ -202,9 +211,13 @@ class PUM_Utils_Fields {
 				// Remap old settings.
 				if ( is_numeric( $field_id ) && ! empty( $field['id'] ) ) {
 					try {
-						$fields = PUM_Utils_Array::replace_key( $fields, $field_id, $field['id'] );
+						$updated_fields = PUM_Utils_Array::replace_key( $fields, $field_id, $field['id'] );
+						if ( is_array( $updated_fields ) ) {
+							$fields = $updated_fields;
+						}
 					} catch ( Exception $e ) {
-						$e;
+						// Exception handled by ignoring - field key replacement failed.
+						unset( $e );
 					}
 
 					$field_id = $field['id'];
@@ -226,11 +239,10 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * Checks if an array is a field.
+	 * Checks if an array is a field configuration
 	 *
-	 * @param array $arr
-	 *
-	 * @return bool
+	 * @param array<string, mixed> $arr Array to test
+	 * @return bool True if array represents a field configuration
 	 */
 	public static function is_field( $arr = [] ) {
 		$field_tests = [
@@ -242,18 +254,20 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * Checks if an array is a section.
+	 * Checks if an array is a section (not a field)
 	 *
-	 * @param array $arr
-	 *
-	 * @return bool
+	 * @param array<string, mixed> $arr Array to test
+	 * @return bool True if array represents a section (not a field)
 	 */
 	public static function is_section( $arr = [] ) {
 		return ! self::is_field( $arr );
 	}
 
 	/**
-	 * @param array $args
+	 * Render a single field using appropriate callback
+	 *
+	 * @param array{type?: string} $args Field configuration arguments
+	 * @return void
 	 */
 	public static function render_field( $args = [] ) {
 		$args = static::parse_field( $args );
@@ -267,11 +281,13 @@ class PUM_Utils_Fields {
 		if ( has_action( "pum_{$type}_field" ) ) {
 			do_action( "pum_{$type}_field", $args );
 		} else {
-			if ( method_exists( 'PUM_Form_Fields', $type . '_callback' ) ) {
+			$callback_method = $type . '_callback';
+			// @phpstan-ignore-next-line class.notFound
+			if ( class_exists( 'PUM_Form_Fields' ) && method_exists( 'PUM_Form_Fields', $callback_method ) ) {
 				/**
 				 * Check if renderer method exists and load that.
 				 */
-				$function_name = [ 'PUM_Form_Fields', $type . '_callback' ];
+				$function_name = [ 'PUM_Form_Fields', $callback_method ];
 			} elseif ( function_exists( "pum_{$type}_callback" ) ) {
 				/**
 				 * Check if function exists and load that.
@@ -287,21 +303,26 @@ class PUM_Utils_Fields {
 			/**
 			 * Call the determined method, passing the field args & $value to the callback.
 			 */
-			call_user_func_array( $function_name, [ $args ] );
+			if ( is_callable( $function_name ) ) {
+				call_user_func_array( $function_name, [ $args ] );
+			}
 		}
 	}
 
 	/**
-	 * @param PUM_Form $form
+	 * Render all fields within a form structure
+	 *
+	 * @param object $form Form object containing fields
+	 * @return void
 	 */
 	public static function render_form_fields( $form ) {
 
-		$tabs     = $form->get_tabs();
-		$sections = $form->get_sections();
-		$fields   = $form->get_fields();
+		$tabs     = method_exists( $form, 'get_tabs' ) ? $form->get_tabs() : [];
+		$sections = method_exists( $form, 'get_sections' ) ? $form->get_sections() : [];
+		$fields   = method_exists( $form, 'get_fields' ) ? $form->get_fields() : [];
 
-		if ( $form->has_tabs() ) {
-			if ( $form->has_sections() ) {
+		if ( ! empty( $tabs ) ) {
+			if ( ! empty( $sections ) ) {
 				foreach ( $tabs as $tab_id => $tab_label ) {
 					foreach ( $sections as $section_id => $section_label ) {
 						foreach ( $fields[ $tab_id ][ $section_id ] as $field_id => $field_args ) {
@@ -324,12 +345,11 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * Sanitizes an array of field values.
+	 * Sanitize an array of field values using field configurations
 	 *
-	 * @param $fields
-	 * @param $values
-	 *
-	 * @return mixed
+	 * @param array<string, mixed> $values Field values to sanitize (field_id => value mapping)
+	 * @param array<string, mixed> $fields Field configurations for sanitization rules
+	 * @return array<string, mixed> Sanitized field values
 	 */
 	public static function sanitize_fields( $values, $fields = [] ) {
 
@@ -353,12 +373,13 @@ class PUM_Utils_Fields {
 	}
 
 	/**
-	 * @param array $args
-	 * @param mixed $value
-	 * @param array $fields
-	 * @param array $values
+	 * Sanitize a single field value using its configuration
 	 *
-	 * @return mixed|null
+	 * @param array{type?: string} $args Field configuration arguments
+	 * @param mixed                $value Value to sanitize
+	 * @param array<string, mixed> $fields All field configurations for context
+	 * @param array<string, mixed> $values All field values for context
+	 * @return mixed Sanitized field value
 	 */
 	public static function sanitize_field( $args, $value = null, $fields = [], $values = [] ) {
 
@@ -385,7 +406,7 @@ class PUM_Utils_Fields {
 				$function_name = null;
 			}
 
-			if ( $function_name ) {
+			if ( $function_name && is_callable( $function_name ) ) {
 				/**
 				 * Call the determined method, passing the field args & $value to the callback.
 				 */

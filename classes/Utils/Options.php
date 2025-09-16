@@ -25,7 +25,7 @@ class PUM_Utils_Options {
 	/**
 	 * Keeps static copy of the options during runtime.
 	 *
-	 * @var null|array
+	 * @var array<string, string|int|bool|array<string, mixed>|null>|null
 	 */
 	private static $data;
 
@@ -33,6 +33,7 @@ class PUM_Utils_Options {
 	 * Initialize Options on run.
 	 *
 	 * @param bool $force
+	 * @return void
 	 */
 	public static function init( $force = false ) {
 		global $popmake_options;
@@ -50,7 +51,7 @@ class PUM_Utils_Options {
 	 *
 	 * Retrieves all plugin settings
 	 *
-	 * @return array settings
+	 * @return array<string, string|int|bool|array<string, mixed>|null> settings
 	 */
 	public static function get_all() {
 		$settings = get_option( self::$prefix . 'settings', [] );
@@ -69,10 +70,11 @@ class PUM_Utils_Options {
 	 *
 	 * Looks to see if the specified setting exists, returns default if not
 	 *
+	 * @template T
 	 * @param string $key
-	 * @param bool   $default_value
+	 * @param T      $default_value
 	 *
-	 * @return mixed
+	 * @return T
 	 */
 	public static function get( $key = '', $default_value = false ) {
 		// Passive initialization.
@@ -90,10 +92,10 @@ class PUM_Utils_Options {
 	 * Warning: Passing in an empty, false or null string value will remove
 	 *          the key from the _options array.
 	 *
-	 * @param string          $key   The Key to update
-	 * @param string|bool|int $value The value to set the key to
+	 * @param string                                    $key The Key to update
+	 * @param string|int|bool|array<string, mixed>|null $value The value to set the key to
 	 *
-	 * @return boolean True if updated, false if not.
+	 * @return bool True if updated, false if not.
 	 */
 	public static function update( $key = '', $value = false ) {
 		// Passive initialization.
@@ -111,7 +113,7 @@ class PUM_Utils_Options {
 		}
 
 		// First let's grab the current settings
-		$options = get_option( self::$prefix . 'settings' );
+		$options = get_option( self::$prefix . 'settings', [] );
 
 		// Let's let devs alter that value coming in
 		$value = apply_filters( self::$prefix . 'update_option', $value, $key );
@@ -131,7 +133,7 @@ class PUM_Utils_Options {
 	/**
 	 * Update the entire settings array from a new array.
 	 *
-	 * @param array $new_options
+	 * @param array<string, string|int|bool|array<string, mixed>|null> $new_options
 	 *
 	 * @return bool
 	 */
@@ -155,7 +157,7 @@ class PUM_Utils_Options {
 	/**
 	 * Merge the new options into the settings array.
 	 *
-	 * @param array $new_options
+	 * @param array<string, string|int|bool|array<string, mixed>|null> $new_options
 	 *
 	 * @return bool
 	 */
@@ -183,9 +185,9 @@ class PUM_Utils_Options {
 	 *
 	 * Removes a setting value in both the db and the global variable.
 	 *
-	 * @param string|array $keys The Key/s to delete
+	 * @param string|array<int, string> $keys The Key/s to delete
 	 *
-	 * @return boolean True if updated, false if not.
+	 * @return bool True if updated, false if not.
 	 */
 	public static function delete( $keys = '' ) {
 		// Passive initialization.
@@ -221,7 +223,7 @@ class PUM_Utils_Options {
 	/**
 	 * Remaps option keys.
 	 *
-	 * @param array $remap_array an array of $old_key => $new_key values.
+	 * @param array<string, string> $remap_array an array of $old_key => $new_key values.
 	 *
 	 * @return bool
 	 */
@@ -229,9 +231,8 @@ class PUM_Utils_Options {
 		$options = self::get_all();
 
 		foreach ( $remap_array as $key => $new_key ) {
-			$value = self::get( $key, false );
-			if ( ! empty( $value ) ) {
-				$options[ $new_key ] = $value;
+			if ( isset( $options[ $key ] ) ) {
+				$options[ $new_key ] = $options[ $key ];
 			}
 			unset( $options[ $key ] );
 		}

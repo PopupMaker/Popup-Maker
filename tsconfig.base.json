@@ -1,0 +1,49 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": false,
+		"allowSyntheticDefaultImports": true,
+		"jsx": "preserve",
+		"target": "esnext",
+		"module": "esnext",
+		"lib": [ "dom", "esnext" ],
+		"skipLibCheck": true,
+		"declaration": true,
+		"declarationMap": true,
+		"composite": true,
+		"emitDeclarationOnly": false,
+		"isolatedModules": true,
+		/* Strict Type-Checking Options */
+		"strict": true,
+		/* This is done on a per package basis currently. */
+		"noImplicitAny": false,
+		/* Additional Checks */
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		// "importsNotUsedAsValues": "error",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		/* Module Resolution Options */
+		"moduleResolution": "node",
+		/* This needs to be false so our types are possible to consume without setting this */
+		"esModuleInterop": false,
+		"resolveJsonModule": true,
+		"strictNullChecks": true,
+		"types": [ "node", "react", "jest", "@testing-library/jest-dom" ]
+	},
+	"exclude": [
+		"node_modules",
+		"**/node_modules/*",
+		"build",
+		"dist",
+		"build-types",
+		"**/*.js",
+		"**/assets/**",
+		"**/build/**",
+		"**/dist/**",
+		"**/vendor/**",
+		"**/test/**"
+	]
+}

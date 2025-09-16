@@ -149,7 +149,7 @@ class PUM_Admin_Onboarding {
 		wp_enqueue_style( 'wp-pointer' );
 
 		// Add pointers script to queue. Add custom script.
-		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'assets/js/admin-pointer.js', [ 'wp-pointer' ], Popup_Maker::$VER, true );
+		wp_enqueue_script( 'pum-pointer', Popup_Maker::$URL . 'dist/assets/admin-pointer.js', [ 'wp-pointer' ], Popup_Maker::$VER, true );
 
 		// Add pointer options to script.
 		wp_localize_script( 'pum-pointer', 'pumPointers', $valid_pointers );
@@ -366,10 +366,6 @@ class PUM_Admin_Onboarding {
 				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=pum-settings_misc' ),
 			],
 			[
-				'msg'  => "Want to use the block editor to create your popups? Enable it over on Popup Maker's settings page.",
-				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings' ),
-			],
-			[
 				'msg'  => 'Using the Popup Maker menu in your admin bar, you can open and close popups, check conditions, reset cookies, and more!',
 				'link' => 'https://wppopupmaker.com/docs/problem-solving/turning-on-the-popups-admin-bar/',
 			],
@@ -378,6 +374,16 @@ class PUM_Admin_Onboarding {
 				'link' => 'https://wppopupmaker.com/docs/menu/open-a-popup-from-a-wordpress-nav-menu/',
 			],
 		];
+
+		if (
+			'enabled' !== get_option( 'pum_gutenberg_legacy_choice', 'new_user' ) &&
+			! pum_get_option( 'enable_classic_editor', false )
+		) {
+			$tips[] = [
+				'msg'  => "Prefer the classic editor? You can disable the block editor and use the classic editor for popups in Popup Maker's settings page.",
+				'link' => admin_url( 'edit.php?post_type=popup&page=pum-settings' ),
+			];
+		}
 
 		if ( 7 < pum_count_popups() ) {
 			$tips[] = [

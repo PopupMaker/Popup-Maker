@@ -19,6 +19,11 @@ class PUM_Admin_BlockEditor {
 	 * Initialize
 	 */
 	public static function init() {
+		// Always register block categories, regardless of block playground
+		// Support both WordPress 5.8+ and older versions
+		add_filter( 'block_categories_all', [ __CLASS__, 'register_block_categories' ], 10, 2 );
+		// add_filter( 'block_categories', [ __CLASS__, 'register_block_categories_legacy' ], 10, 2 );
+
 		// Bail early if the Block Playground is active and ahead of core.
 		if ( defined( 'PUM_BLOCK_PLAYGROUND' ) && version_compare( PUM_BLOCK_PLAYGROUND, self::$version, '>' ) ) {
 			return;
@@ -27,11 +32,8 @@ class PUM_Admin_BlockEditor {
 		// TODO Test if this is needed in core or not.
 		add_action( 'enqueue_block_editor_assets', [ 'PUM_Site_Assets', 'register_styles' ] );
 		add_action( 'enqueue_block_editor_assets', [ __CLASS__, 'register_editor_assets' ] );
-
+		add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
 		add_action( 'wp_loaded', [ __CLASS__, 'add_attributes_to_registered_blocks' ], 999 );
-
-		// Here for future use.
-		// add_action( 'enqueue_block_assets', [ __CLASS__, 'register_block_assets' ] );
 	}
 
 	/**
@@ -43,70 +45,98 @@ class PUM_Admin_BlockEditor {
 	 * @since 1.10.0
 	 */
 	public static function register_editor_assets( $hook ) {
-
-		$screen = get_current_screen();
-
-		$build_path = 'dist/block-editor/';
-
-		$script_path       = $build_path . 'block-editor.js';
-		$script_asset_path = $build_path . 'block-editor.asset.php';
-		$script_asset      = file_exists( Popup_Maker::$DIR . $script_asset_path ) ? require Popup_Maker::$DIR . $script_asset_path : [
-			'dependencies' => [],
-			'version'      => Popup_Maker::$VER,
-		];
-		$script_url        = plugins_url( $script_path, Popup_Maker::$FILE );
-		$script_deps       = $script_asset['dependencies'];
-
-		if ( 'widgets' !== $screen->id ) {
-			$script_deps = array_merge( $script_deps, [ 'wp-edit-post' ] );
+		if ( self::load_block_library() ) {
+			wp_enqueue_script( 'popup-maker-block-library' );
 		}
 
-		wp_enqueue_script( 'popup-maker-block-editor', $script_url, $script_deps, $script_asset['version'], true );
-
-		wp_localize_script(
-			'popup-maker-block-editor',
-			'pum_block_editor_vars',
-			[
-				'popups'                        => pum_get_all_popups(),
-				'popup_trigger_excluded_blocks' => apply_filters(
-					'pum_block_editor_popup_trigger_excluded_blocks',
-					[
-						'core/nextpage',
-					]
-				),
-			]
-		);
-
-		$editor_styles_path       = $build_path . 'block-editor-styles.css';
-		$editor_styles_asset_path = $build_path . 'block-editor-styles.asset.php';
-		$editor_styles_asset      = file_exists( Popup_Maker::$DIR . $editor_styles_asset_path ) ? require Popup_Maker::$DIR . $editor_styles_asset_path : [
-			'dependencies' => [],
-			'version'      => Popup_Maker::$VER,
-		];
-		wp_enqueue_style( 'popup-maker-block-editor', plugins_url( $editor_styles_path, Popup_Maker::$FILE ), [], $editor_styles_asset['version'] );
-
-		if ( function_exists( 'wp_set_script_translations' ) ) {
-			/**
-			 * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
-			 * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
-			 * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
-			 */
-			wp_set_script_translations( 'popup-maker-block-editor', 'popup-maker' );
-		}
+		wp_enqueue_script( 'popup-maker-block-editor' );
 	}
 
 	/**
-	 * Register assets for individual block styles
+	 * Register block assets.
+	 *
+	 * @param string $hook Current page hook.
 	 */
-	public static function register_block_assets() {
-		$build_path              = 'dist/block-editor/';
-		$block_styles_path       = $build_path . 'block-styles.css';
-		$block_styles_asset_path = $build_path . 'block-styles.asset.php';
-		$block_styles_asset      = file_exists( Popup_Maker::$DIR . $block_styles_asset_path ) ? require Popup_Maker::$DIR . $block_styles_asset_path : [
-			'dependencies' => [],
-			'version'      => Popup_Maker::$VER,
-		];
-		wp_enqueue_style( 'popup-maker-block-styles', plugins_url( $block_styles_path, Popup_Maker::$FILE ), [], $block_styles_asset['version'] );
+	public static function register_block_assets( $hook ) {
+		if ( self::load_block_library() ) {
+			wp_enqueue_script( 'popup-maker-block-library' );
+		}
+
+		wp_enqueue_style( 'popup-maker-block-library-style' );
+	}
+
+	/**
+	 * Check if the block editor is active.
+	 *
+	 * @param int|null $post_id Post ID.
+	 * @return bool
+	 */
+	public static function is_block_editor_active( $post_id = null ) {
+		// If no post ID is provided, attempt to get it from the global $pagenow.
+		global $pagenow;
+
+		// Check that we're on the post editing screen.
+		if ( 'post.php' !== $pagenow && 'post-new.php' !== $pagenow ) {
+			return false;
+		}
+
+		// Determine post type.
+		$post_type = null;
+
+		 // phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['post_type'] ) ) {
+			$post_type = sanitize_key( $_GET['post_type'] );
+		} elseif ( isset( $_GET['post'] ) ) {
+			$post_id   = (int) $_GET['post'];
+			$post_type = get_post_type( $post_id );
+		}
+		 // phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		if ( ! $post_type ) {
+			return false;
+		}
+
+		return use_block_editor_for_post_type( $post_type );
+	}
+
+	/**
+	 * Check if the block library should be loaded.
+	 *
+	 * @return bool
+	 */
+	private static function load_block_library() {
+		return apply_filters( 'popup_maker/block_editor/load_block_library', self::is_block_editor_active() && pum_is_popup_editor() );
+	}
+
+	/**
+	 * Register custom block categories.
+	 *
+	 * @param array                   $categories Array of block categories.
+	 * @param WP_Block_Editor_Context $editor_context Block editor context.
+	 * @return array Modified block categories.
+	 * @since 1.10.0
+	 */
+	public static function register_block_categories( $categories, $editor_context ) {
+		// Always add Popup Maker category for better discoverability
+
+		$insert_index = 3;
+
+		// https://pm.local/wp-admin/post.php?post=821&action=edit
+
+		// If in the popup editor insert at index 0.
+		if ( isset( $_GET['post'] ) && get_post_type( sanitize_text_field( wp_unslash( $_GET['post'] ) ) ) === 'popup' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$insert_index = 0;
+		}
+
+		array_splice( $categories, $insert_index, 0, [
+			[
+				'slug'  => 'popup-maker',
+				'title' => __( 'Popup Maker', 'popup-maker' ),
+				'icon'  => pum_asset_url( 'mark.svg' ),
+			],
+		] );
+
+		return $categories;
 	}
 
 	/**

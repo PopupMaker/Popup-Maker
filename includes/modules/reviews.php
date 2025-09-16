@@ -28,21 +28,8 @@ class PUM_Modules_Reviews {
 	 *
 	 */
 	public static function init() {
-		// add_action( 'init', array( __CLASS__, 'hooks' ) );
 		add_filter( 'pum_alert_list', [ __CLASS__, 'review_alert' ] );
 		add_action( 'wp_ajax_pum_review_action', [ __CLASS__, 'ajax_handler' ] );
-	}
-
-	/**
-	 * Hook into relevant WP actions.
-	 */
-	public static function hooks() {
-		if ( is_admin() && current_user_can( 'edit_posts' ) ) {
-			self::installed_on();
-			add_action( 'admin_notices', [ __CLASS__, 'admin_notices' ] );
-			add_action( 'network_admin_notices', [ __CLASS__, 'admin_notices' ] );
-			add_action( 'user_admin_notices', [ __CLASS__, 'admin_notices' ] );
-		}
 	}
 
 	/**
@@ -472,7 +459,7 @@ class PUM_Modules_Reviews {
 		<div class="notice notice-success is-dismissible pum-notice">
 
 			<p>
-				<img class="logo" src="<?php echo esc_attr( POPMAKE_URL ); ?>/assets/images/icon-256x256.jpg" />
+				<img class="logo" src="<?php echo esc_attr( POPMAKE_URL ); ?>/assets/images/mark.svg" />
 				<strong>
 					<?php echo esc_html( $trigger['message'] ); ?>
 					<br />

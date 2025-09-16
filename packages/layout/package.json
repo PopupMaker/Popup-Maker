@@ -1,0 +1,67 @@
+{
+	"name": "@popup-maker/layout",
+	"version": "1.0.0",
+	"description": "Popup Maker shared layout components for admin interfaces",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker",
+		"layout",
+		"admin"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/layout/README.md",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/layout"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"wpScript": true,
+	"dependencies": {
+		"@popup-maker/components": "*",
+		"@popup-maker/i18n": "*",
+		"@popup-maker/icons": "*",
+		"@popup-maker/types": "*",
+		"@popup-maker/use-query-params": "*",
+		"@wordpress/components": "^30.2.0",
+		"@wordpress/compose": "^7.29.0",
+		"@wordpress/element": "^6.29.0",
+		"@wordpress/icons": "^10.29.0",
+		"clsx": "^2.1.1"
+	},
+	"devDependencies": {
+		"@types/wordpress__components": "^23.8.0",
+		"@types/wordpress__compose": "^6.1.0",
+		"@types/wordpress__element": "^2.14.1"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
+}

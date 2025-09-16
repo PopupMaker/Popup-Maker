@@ -1,0 +1,48 @@
+{
+	"name": "@popup-maker/admin-marketing",
+	"version": "1.0.0",
+	"description": "Popup Maker Admin marketing implementation",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"private": true,
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/admin-marketing/README.md",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/admin-marketing"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"publishConfig": {
+		"access": "restricted"
+	},
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@types/jquery": "^3.5.32"
+	},
+	"peerDependencies": {
+		"jquery": "^3.5.32"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	}
+}

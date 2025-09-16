@@ -1,0 +1,30 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "src",
+		"outDir": "build",
+		"declarationDir": "build-types",
+		"paths": {
+			"@popup-maker/components": [ "../components/src" ],
+			"@popup-maker/core-data": [ "../core-data/src" ],
+			"@popup-maker/cta-editor": [ "../cta-editor/src" ],
+			"@popup-maker/i18n": [ "../i18n/src" ]
+		}
+	},
+	"include": [ "src/**/*.{ts,tsx}", "src/**/*.json" ],
+	"types": [ "jquery" ],
+	"references": [
+		{
+			"path": "../i18n"
+		},
+		{
+			"path": "../components"
+		},
+		{
+			"path": "../core-data"
+		},
+		{
+			"path": "../cta-editor"
+		}
+	]
+}

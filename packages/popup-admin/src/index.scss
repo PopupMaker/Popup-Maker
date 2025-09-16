@@ -1,0 +1,146 @@
+// Popup Analytics Table Styles
+.wp-list-table {
+
+    // Enabled column
+    th.column-enabled {
+        width: 80px;
+    }
+
+    th.column-views,
+    th.column-interactions,
+    th.column-conversions,
+    th.column-purchases,
+    th.column-revenue {
+        width: 150px;
+    }
+
+    td.column-conversions {
+        .pum-col-content {
+            max-width: 15ch;
+        }
+    }
+
+
+    // Analytics column headers - center the text
+    th.column-views,
+    th.column-conversions {
+
+        // Handle sortable columns
+        >a {}
+    }
+
+    // Analytics column content - center the container, left-align the content
+    td.column-views,
+    td.column-conversions {
+        line-height: 1.2;
+
+        strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        span {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    }
+
+    // Column-specific colors
+    td.column-views>.pum-col-content>strong {
+        color: #1e3a8a;
+    }
+
+    td.column-conversions>.pum-col-content>strong {
+        color: #581c87;
+    }
+
+    // Conversion rate progress bar
+    td.column-conversions {
+        .pum-progress-bar {
+            max-width: 150px;
+        }
+    }
+
+    .pum-progress-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        // margin-bottom: 4px;
+
+        &__inner {
+            flex-grow: 1;
+            position: relative;
+            height: 8px;
+            background-color: #cccccc;
+            border-radius: 8px;
+            overflow: hidden;
+
+            .pum-progress-fill {
+                position: absolute;
+                left: 0;
+                top: 0;
+                background-color: #374151;
+                height: 100%;
+                border-radius: 8px;
+                transition: width 0.3s ease;
+            }
+        }
+
+        strong {
+            flex-shrink: 0;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 0;
+            // min-width: 35px;
+            text-align: right;
+        }
+
+        i,
+        i::before {
+            margin-left: -4px;
+            font-size: 16px;
+            line-height: 14px;
+            width: 16px;
+            height: 16px;
+            color: #6b7280;
+        }
+
+        &--small {
+            font-size: 12px;
+
+            // gap: 4px;
+
+            .pum-progress-bar__inner {
+                height: 4px;
+                border-radius: 4px;
+
+                .pum-progress-fill {
+                    border-radius: 4px;
+                }
+            }
+
+            strong {
+                font-size: 1em !important;
+            }
+
+            i,
+            i::before {
+                font-size: 1em;
+                line-height: .95em;
+                width: 1em;
+                height: 1em;
+            }
+        }
+    }
+
+    td.column-views>.pum-col-content>strong {
+        color: #1e3a8a;
+    }
+
+    td.column-conversions .pum-progress-bar>strong {
+        color: #581c87;
+    }
+}

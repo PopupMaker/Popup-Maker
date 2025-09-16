@@ -111,8 +111,6 @@ class PUM_Extension_Updater {
 		/**
 		 * Fires after the $edd_plugin_data is setup.
 		 *
-		 * @since x.x.x
-		 *
 		 * @param array $edd_plugin_data Array of EDD SL plugin data.
 		 */
 		do_action( 'post_edd_sl_plugin_updater_setup', $edd_plugin_data );

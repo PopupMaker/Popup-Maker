@@ -13,40 +13,43 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Adds an upgrade action to the completed upgrades array
  *
- * @since 1.7.0
- *
  * @see PUM_Utils_Upgrades::set_upgrade_complete
  *
  * @param  string $upgrade_id The action to add to the competed upgrades array
  *
- * @return bool If the function was successfully added
+ * @return void If the function was successfully added
+ *
+ * @since 1.7.0
+ * @deprecated 1.21.0 Use \PopupMaker\mark_upgrade_complete() instead.
  */
 function pum_set_upgrade_complete( $upgrade_id = '' ) {
-	return PUM_Utils_Upgrades::instance()->set_upgrade_complete( $upgrade_id );
+	\PopupMaker\mark_upgrade_complete( $upgrade_id );
 }
 
 /**
  * Get's the array of completed upgrade actions
  *
- * @since 1.7.0
- *
  * @return array The array of completed upgrades
+ *
+ * @since 1.7.0
+ * @deprecated 1.21.0 Use \PopupMaker\get_completed_upgrades() instead.
  */
 function pum_get_completed_upgrades() {
-	return PUM_Utils_Upgrades::instance()->get_completed_upgrades();
+	return \PopupMaker\get_completed_upgrades();
 }
 
 /**
  * Check if the upgrade routine has been run for a specific action
  *
- * @since 1.7.0
- *
  * @param  string $upgrade_id The upgrade action to check completion for
  *
  * @return bool  If the action has been added to the completed actions array
+ *
+ * @since 1.7.0
+ * @deprecated 1.21.0 Use \PopupMaker\is_upgrade_complete() instead.
  */
 function pum_has_completed_upgrade( $upgrade_id = '' ) {
-	return PUM_Utils_Upgrades::instance()->has_completed_upgrade( $upgrade_id );
+	return \PopupMaker\is_upgrade_complete( $upgrade_id );
 }
 
 /**

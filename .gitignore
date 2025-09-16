@@ -28,14 +28,22 @@ phpcs-report.xml
 **/build-types/**/*
 node_modules
 release
+releases
 dist
-vendor
-vendor-prefixed
+/vendor
+/vendor-prefixed
 .nx
 npm-debug.log
+/*.stub
+
+# Webpack cache
+.webpack-cache
+.webpack-cache-legacy
 
 # Coverage
+artifacts
 coverage
+test-results
 
 # Logs
 logs
@@ -51,7 +59,12 @@ packages/*/lib
 strauss.phar
 *.zip
 .DS_Store
+repomix-output.md
+repomix-output.json
+repomix-output.txt
 
-# Packages
-/packages/*
-!/packages/README.md
+.cursorrules
+
+
+.nx/cache
+.nx/workspace-data

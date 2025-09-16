@@ -41,6 +41,7 @@ class PUM_Site_Popups {
 	 * Hook the initialize method to the WP init action.
 	 */
 	public static function init() {
+		return;
 
 		// Preload the $loaded query.
 		add_action( 'init', [ __CLASS__, 'init_state' ] );
@@ -102,6 +103,8 @@ class PUM_Site_Popups {
 	 *
 	 * @uses `pum_preload_popup` filter
 	 * @uses `popmake_preload_popup` filter
+	 *
+	 * @deprecated 1.21.0 see \PopupMaker\Controllers\Frontend\Popups::preload_popups
 	 */
 	public static function load_popups() {
 		if ( is_admin() ) {
@@ -158,6 +161,7 @@ class PUM_Site_Popups {
 	 *
 	 * @param int $popup_id The popup's ID.
 	 * @since 1.15
+	 * @deprecated 1.21.0 Use \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->preload_popup_by_id_if_enabled
 	 */
 	public static function preload_popup_by_id_if_enabled( $popup_id ) {
 		if ( ! in_array( (int) $popup_id, self::$loaded_ids, true ) ) {
@@ -197,7 +201,7 @@ class PUM_Site_Popups {
 	}
 
 	/**
-	 * REWRITE THIS
+	 * @deprecated 1.8.0
 	 */
 	public static function load_popup( $id ) {
 		if ( did_action( 'wp_head' ) && ! in_array( (int) $id, self::$loaded_ids, true ) ) {
@@ -238,8 +242,12 @@ class PUM_Site_Popups {
 	 * @param $popup_id
 	 *
 	 * @return string|bool
+	 *
+	 * @deprecated 1.21.0
 	 */
 	public static function get_cache_content( $popup_id ) {
+		return \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_content_cache( $popup_id );
+
 		return isset( self::$cached_content[ $popup_id ] ) ? self::$cached_content[ $popup_id ] : false;
 	}
 }

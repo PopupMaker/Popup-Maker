@@ -1,0 +1,50 @@
+{
+	"output": {
+		"filePath": "repomix-output.md",
+		"style": "markdown",
+		"headerText": "Popup Maker core plugin",
+		"parsableStyle": false,
+		"fileSummary": true,
+		"directoryStructure": true,
+		"removeComments": false,
+		"removeEmptyLines": false,
+		"topFilesLength": 200,
+		"showLineNumbers": false,
+		"copyToClipboard": false
+	},
+	"include": [
+		"assets/**/*",
+		"classes/**/*",
+		"includes/**/*",
+		"packages/**/*",
+		"templates/**/*",
+		"composer.json",
+		"package.json",
+		"builtin-themes.xml",
+		"CHANGELOG.md",
+		"readme.md",
+		"readme.txt",
+		"TODO.md",
+		"tsconfig.*",
+		"webpack.*",
+		"*.php"
+	],
+	"ignore": {
+		"useGitignore": true,
+		"useDefaultPatterns": true,
+		"customPatterns": [
+			"**/node_modules/**/*",
+			"**/build/**/*",
+			"**/build-types/**/*",
+			"**/*.tsbuildinfo",
+			"**/tests/**/*",
+			"**/__tests__/**/*"
+		]
+	},
+	"security": {
+		"enableSecurityCheck": true
+	},
+	"tokenCount": {
+		"encoding": "o200k_base"
+	}
+}

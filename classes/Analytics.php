@@ -83,12 +83,10 @@ class PUM_Analytics {
 	 * @param array $args
 	 */
 	public static function track( $args = [] ) {
+		// TODO: Remove this to support beacon for CTA conversions.
 		if ( empty( $args['pid'] ) || $args['pid'] <= 0 ) {
 			return;
 		}
-
-		// $uuid = isset( $_COOKIE['__pum'] ) ? sanitize_text_field( $_COOKIE['__pum'] ) : false;
-		// $session = $uuid && isset( $_COOKIE[ $uuid ] ) ? PUM_Utils_Array::safe_json_decode( $_COOKIE[ $uuid ] ) : false;
 
 		$event = sanitize_text_field( $args['event'] );
 
@@ -179,7 +177,7 @@ class PUM_Analytics {
 			apply_filters(
 				'pum_analytics_rest_route_args',
 				[
-					'methods'             => 'GET',
+					'methods'             => [ 'GET', 'POST' ],
 					'callback'            => [ __CLASS__, 'analytics_endpoint' ],
 					'permission_callback' => '__return_true',
 					'args'                => [
@@ -208,7 +206,8 @@ class PUM_Analytics {
 	 * @return array The updates pum_vars
 	 */
 	public static function pum_vars( $vars = [] ) {
-		$vars['analytics_route'] = self::get_analytics_route();
+		$vars['analytics_enabled'] = self::analytics_enabled();
+		$vars['analytics_route']   = self::get_analytics_route();
 		if ( function_exists( 'rest_url' ) ) {
 			$vars['analytics_api'] = esc_url_raw( rest_url( self::get_analytics_namespace() ) );
 		} else {

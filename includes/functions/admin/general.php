@@ -20,6 +20,14 @@ function pum_typenow() {
 		return $GLOBALS['typenow'];
 	}
 
+	// Try get_current_screen() first as it's the most reliable for admin screens
+	if ( function_exists( 'get_current_screen' ) ) {
+		$screen = get_current_screen();
+		if ( ! empty( $screen->post_type ) ) {
+			return $screen->post_type;
+		}
+	}
+
 	// Ignored because these are used for current page detection only.
 	// phpcs:disable WordPress.Security.NonceVerification
 
@@ -27,7 +35,10 @@ function pum_typenow() {
 	// try to pick it up from the query string
 	if ( ! empty( $_GET['post_type'] ) ) {
 		return sanitize_key( wp_unslash( $_GET['post_type'] ) );
-	} elseif ( ! empty( $_GET['post'] ) && absint( $_GET['post'] ) > 0 ) {
+	}
+
+	$post = null;
+	if ( ! empty( $_GET['post'] ) && absint( $_GET['post'] ) > 0 ) {
 		$post = get_post( absint( $_GET['post'] ) );
 	} elseif ( ! empty( $_POST['post_ID'] ) && absint( $_POST['post_ID'] ) > 0 ) {
 		$post = get_post( absint( $_POST['post_ID'] ) );

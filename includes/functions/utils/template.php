@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Allows passing arguments that will be globally accessible in the templates.
  *
- * @param string $slug
- * @param string $name
- * @param array  $args
+ * @param string $slug The slug of the template part.
+ * @param string $name The name of the template part.
+ * @param array  $args The arguments to pass to the template part.
  *
  * @return string
  */
@@ -31,9 +31,9 @@ function pum_get_template_part( $slug, $name = null, $args = null ) {
  *
  * Allows passing arguments that will be globally accessible in the templates.
  *
- * @param string $slug
- * @param string $name
- * @param array  $args
+ * @param string $slug The slug of the template part.
+ * @param string $name The name of the template part.
+ * @param array  $args The arguments to pass to the template part.
  */
 function pum_template_part( $slug, $name = null, $args = [] ) {
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -43,8 +43,8 @@ function pum_template_part( $slug, $name = null, $args = [] ) {
 /**
  * Gets the rendered contents of the specified templates file.
  *
- * @param $template_name
- * @param array         $args
+ * @param string $template_name The name of the template.
+ * @param array  $args The arguments to pass to the template.
  *
  * @return string
  */
@@ -57,8 +57,8 @@ function pum_get_template( $template_name, $args = [] ) {
  *
  * @deprecated Likely a better way @see pum_template_part()
  *
- * @param string $template_name Template file name with extension: file-name.php
- * @param array  $args (default: array())
+ * @param string $template_name Template file name with extension: file-name.php The name of the template.
+ * @param array  $args (default: array()) The arguments to pass to the template.
  */
 function pum_load_template( $template_name, $args = [] ) {
 	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

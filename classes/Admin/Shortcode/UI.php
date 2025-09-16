@@ -67,7 +67,7 @@ class PUM_Admin_Shortcode_UI {
 		add_filter( 'mce_external_plugins', [ __CLASS__, 'mce_external_plugins' ] );
 
 		// Add core site styles for form previews.
-		add_editor_style( Popup_Maker::$URL . 'assets/css/pum-site.min.css' );
+		add_editor_style( Popup_Maker::$URL . 'dist/assets/site.css' );
 
 		// Process live previews.
 		add_action( 'wp_ajax_pum_do_shortcode', [ __CLASS__, 'do_shortcode' ] );
@@ -100,7 +100,7 @@ class PUM_Admin_Shortcode_UI {
 	 */
 	public static function enqueue_scripts() {
 		// Register editor styles.
-		add_editor_style( PUM_Admin_Assets::$css_url . 'pum-admin-editor-styles' . PUM_Admin_Assets::$suffix . '.css' );
+		add_editor_style( PUM_Admin_Assets::$css_url . 'admin-editor-styles.css' );
 
 		wp_enqueue_style( 'pum-admin-shortcode-ui' );
 		wp_enqueue_script( 'pum-admin-shortcode-ui' );
@@ -173,7 +173,7 @@ class PUM_Admin_Shortcode_UI {
 		return array_merge(
 			$plugin_array,
 			[
-				'pum_shortcodes' => add_query_arg( [ 'version' => Popup_Maker::$VER ], PUM_Admin_Assets::$js_url . 'mce-buttons' . PUM_Admin_Assets::$suffix . '.js' ),
+				'pum_shortcodes' => add_query_arg( [ 'version' => Popup_Maker::$VER ], PUM_Admin_Assets::$js_url . 'mce-buttons.js' ),
 			]
 		);
 	}

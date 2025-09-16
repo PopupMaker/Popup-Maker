@@ -159,7 +159,7 @@ class PUM_Shortcode_PopupTrigger extends PUM_Shortcode {
 		$classes    = esc_attr( $atts['classes'] );
 		$do_default = esc_attr( $atts['do_default'] );
 		// Escaped using notes here: https://wordpress.stackexchange.com/a/357349/63942.
-		$esc_content = PUM_Helpers::do_shortcode( force_balance_tags( wp_kses_post( $content ) ) );
+		$esc_content = PUM_Utils_Shortcodes::clean_do_shortcode( force_balance_tags( wp_kses_post( $content ) ) );
 
 		$return = "<$tag class='pum-trigger  popmake-$id  $classes' data-do-default='$do_default'>$esc_content</$tag>";
 

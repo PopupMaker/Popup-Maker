@@ -85,6 +85,9 @@ class PUM_Cookies {
 				'on_popup_open'                   => [
 					'name' => __( 'On Popup Open', 'popup-maker' ),
 				],
+				'on_popup_conversion'             => [
+					'name' => __( 'On Popup Conversion', 'popup-maker' ),
+				],
 				'form_submission'                 => [
 					'name'   => __( 'Form Submission', 'popup-maker' ),
 					'fields' => array_merge_recursive(

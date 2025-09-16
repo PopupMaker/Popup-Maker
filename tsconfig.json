@@ -1,0 +1,72 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"paths": {}
+	},
+	"include": [ "src/**/*" ],
+	"exclude": [
+		"**/node_modules/**",
+		"**/vendor/**",
+		"**/tests/**",
+		"**/build/**",
+		"**/dist/**",
+		"**/build-types/**"
+	],
+	"references": [
+		{
+			"path": "./packages/admin-bar"
+		},
+		{
+			"path": "./packages/admin-marketing"
+		},
+		{
+			"path": "./packages/block-editor"
+		},
+		{
+			"path": "./packages/block-library"
+		},
+		{
+			"path": "./packages/components"
+		},
+		{
+			"path": "./packages/core-data"
+		},
+		{
+			"path": "./packages/cta-admin"
+		},
+		{
+			"path": "./packages/cta-editor"
+		},
+		{
+			"path": "./packages/data"
+		},
+		{
+			"path": "./packages/fields"
+		},
+		{
+			"path": "./packages/i18n"
+		},
+		{
+			"path": "./packages/icons"
+		},
+		{
+			"path": "./packages/layout"
+		},
+		{
+			"path": "./packages/popup-admin"
+		},
+		{
+			"path": "./packages/registry"
+		},
+		{
+			"path": "./packages/types"
+		},
+		{
+			"path": "./packages/use-query-params"
+		},
+		{
+			"path": "./packages/utils"
+		}
+	]
+}

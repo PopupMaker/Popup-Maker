@@ -1,0 +1,185 @@
+// This variable is repeated across Button, Buttons, and Buttons editor styles.
+$blocks-block__margin: 0.5em;
+
+// Use our CTA button class but maintain the same styling structure
+.wp-block-popup-maker-cta-button__link {
+	align-content: center;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: inline-block;
+	height: 100%;
+	text-align: center;
+	width: 100%;
+	word-break: break-word;
+
+	&.aligncenter,
+	&.has-text-align-center {
+		text-align: center;
+	}
+
+	&.alignright,
+	&.has-text-align-right {
+		/*rtl:ignore*/
+		text-align: right;
+	}
+
+	&.alignleft,
+	&.has-text-align-left {
+		/*rtl:ignore*/
+		text-align: left;
+	}
+}
+
+// Keep low specificity for theme.json compatibility
+:where(.wp-block-popup-maker-cta-button__link) {
+	border-radius: 9999px;
+	box-shadow: none;
+	padding: 1rem 2.25rem;
+	text-decoration: none;
+}
+
+// Inherit text decoration
+.wp-block-popup-maker-cta-button[style*="text-decoration"] .wp-block-popup-maker-cta-button__link {
+	text-decoration: inherit;
+}
+
+// Width controls - updated for our namespace
+.wp-block-popup-maker-cta-buttons>.wp-block-popup-maker-cta-button {
+	&.has-custom-width {
+		max-width: none;
+
+		.wp-block-popup-maker-cta-button__link {
+			width: 100%;
+		}
+	}
+
+	&.has-custom-font-size {
+		.wp-block-popup-maker-cta-button__link {
+			font-size: inherit;
+		}
+	}
+
+	&.wp-block-popup-maker-cta-button__width-25 {
+		width: calc(25% - (var(--wp--style--block-gap, #{$blocks-block__margin}) * 0.75));
+	}
+
+	&.wp-block-popup-maker-cta-button__width-50 {
+		width: calc(50% - (var(--wp--style--block-gap, #{$blocks-block__margin}) * 0.5));
+	}
+
+	&.wp-block-popup-maker-cta-button__width-75 {
+		width: calc(75% - (var(--wp--style--block-gap, #{$blocks-block__margin}) * 0.25));
+	}
+
+	&.wp-block-popup-maker-cta-button__width-100 {
+		width: 100%;
+		flex-basis: 100%;
+	}
+}
+
+// Vertical buttons layout
+.wp-block-popup-maker-cta-buttons.is-vertical>.wp-block-popup-maker-cta-button {
+	&.wp-block-popup-maker-cta-button__width-25 {
+		width: 25%;
+	}
+
+	&.wp-block-popup-maker-cta-button__width-50 {
+		width: 50%;
+	}
+
+	&.wp-block-popup-maker-cta-button__width-75 {
+		width: 75%;
+	}
+}
+
+// Style variations
+.wp-block-popup-maker-cta-button.is-style-squared,
+.wp-block-popup-maker-cta-button__link.wp-block-popup-maker-cta-button.is-style-squared {
+	border-radius: 0;
+}
+
+.wp-block-popup-maker-cta-button.no-border-radius,
+.wp-block-popup-maker-cta-button__link.no-border-radius {
+	border-radius: 0 !important;
+}
+
+// Outline style variation with global styles compatibility
+:root {
+
+	:where(.wp-block-popup-maker-cta-button) {
+		font-family: inherit;
+		font-size: var(--wp--preset--font-size--medium);
+		font-style: normal;
+		line-height: inherit;
+	}
+
+	/* Default button styles where not another style is applied */
+	:where(.wp-block-popup-maker-cta-button:not(.is-style-outline))>.wp-block-popup-maker-cta-button__link:not(.is-style-outline) {
+		background-color: var(--wp--preset--color--contrast);
+		color: var(--wp--preset--color--base);
+		border-color: var(--wp--preset--color--contrast);
+	}
+
+	/* Hover styles for default (fill) button - works with theme colors */
+	:where(.wp-block-popup-maker-cta-button:not(.is-style-outline))>.wp-block-popup-maker-cta-button__link:not(.is-style-outline):hover {
+		background-color: color-mix(in srgb, var(--wp--preset--color--contrast) 85%, transparent);
+		border-color: transparent;
+		color: var(--wp--preset--color--base);
+	}
+
+	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link),
+	:where(.wp-block-popup-maker-cta-button .wp-block-popup-maker-cta-button__link.is-style-outline) {
+		border: 1px solid currentColor;
+		padding: calc(1rem - 1px) calc(2.25rem - 1px);
+	}
+
+	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link:not(.has-text-color)),
+	:where(.wp-block-popup-maker-cta-button .wp-block-popup-maker-cta-button__link.is-style-outline:not(.has-text-color)) {
+		color: currentColor;
+	}
+
+	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link:not(.has-background)),
+	:where(.wp-block-popup-maker-cta-button .wp-block-popup-maker-cta-button__link.is-style-outline:not(.has-background)) {
+		background-color: transparent;
+		background-image: none;
+	}
+
+	/* Hover styles for outline button - works with theme colors */
+	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link.wp-block-popup-maker-cta-button__link:not(.has-background):hover) {
+		background-color: color-mix(in srgb, var(--wp--preset--color--contrast) 5%, transparent);
+	}
+}
+
+// Universal hover styles that work with custom colors set by users
+.wp-block-popup-maker-cta-button__link:hover {
+	// For buttons with custom background colors (inline styles)
+	&[style*="background-color"]:not(.is-style-outline) {
+		filter: brightness(0.85);
+	}
+
+	// For buttons with custom background colors using CSS classes
+	&.has-background:not(.is-style-outline):hover {
+		filter: brightness(0.85);
+	}
+
+	// For outline buttons with custom colors
+	&.is-style-outline:hover {
+		filter: brightness(1.05);
+	}
+}
+
+// Fallback hover styles for browsers that don't support color-mix
+@supports not (background-color: color-mix(in srgb, red 50%, blue)) {
+	:where(.wp-block-popup-maker-cta-button:not(.is-style-outline))>.wp-block-popup-maker-cta-button__link:not(.is-style-outline):hover {
+		filter: brightness(0.85);
+	}
+
+	:where(.wp-block-popup-maker-cta-button.is-style-outline > .wp-block-popup-maker-cta-button__link.wp-block-popup-maker-cta-button__link:not(.has-background):hover) {
+		filter: brightness(1.05);
+	}
+}
+
+.wp-block-popup-maker-cta-button {
+	cursor: text;
+	position: relative;
+}

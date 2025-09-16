@@ -1,0 +1,18 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "src",
+		"outDir": "build",
+		"declarationDir": "build-types",
+		"paths": {
+			"@popup-maker/i18n": [ "../i18n/src" ]
+		}
+	},
+	"include": [ "./src/**/*" ],
+	"types": [ "jquery" ],
+	"references": [
+		{
+			"path": "../i18n"
+		}
+	]
+}

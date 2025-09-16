@@ -1,0 +1,51 @@
+{
+	"name": "@popup-maker/data",
+	"version": "1.0.0-beta.1",
+	"description": "Data registry for Popup Maker.",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker",
+		"data",
+		"redux"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/data#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/data"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"main": "build/index.js",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"wpScript": true,
+	"sideEffects": true,
+	"dependencies": {
+		"@popup-maker/core-data": "*",
+		"@wordpress/core-data": "^7.29.0",
+		"@wordpress/data": "^10.29.0",
+		"@wordpress/hooks": "^4.29.0",
+		"@wordpress/notices": "^5.29.0"
+	},
+	"scripts": {
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	}
+}

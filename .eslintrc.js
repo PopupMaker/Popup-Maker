@@ -11,26 +11,23 @@ const eslintConfig = {
 		window: 'readonly',
 	},
 	env: {
-		browser: true,
 		jquery: true,
 	},
-	settings: {
-		jsdoc: {
-			mode: 'typescript',
-		},
-		'import/resolver': {
-			node: {
-				moduleDirectory: [ 'node_modules' ],
+	rules: {
+		'@wordpress/i18n-text-domain': [
+			'error',
+			{
+				allowedTextDomain: [ 'popup-maker' ],
 			},
-		},
+		],
+		'import/no-unresolved': [
+			'error',
+			{
+				// Hate it but this is most reliable way to handle it since its already loaded.
+				ignore: [ 'jquery' ],
+			},
+		],
 	},
-	parserOptions: {
-		requireConfigFile: false,
-		babelOptions: {
-			presets: [ require.resolve( '@wordpress/babel-preset-default' ) ],
-		},
-	},
-	rules: {},
 	overrides: [
 		{
 			// Turns off some of esnext rules for our assets JS until we migrate to babel or other.
@@ -48,7 +45,7 @@ const eslintConfig = {
 				'no-var': 'off',
 				'object-shorthand': 'off',
 				'wrap-iife': 'off',
-				camelcase: 'any',
+				camelcase: 0,
 			},
 		},
 	],
