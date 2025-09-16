@@ -196,12 +196,18 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-js' );
 			}
 
-			$cached_script_deps = apply_filters( 'pum_site_cached_scripts_dependencies', [
+			// Get base dependencies and merge with collected dependencies from bundled scripts.
+			$base_deps = [
 				'jquery',
 				'jquery-ui-core',
 				'jquery-ui-position',
 				'wp-hooks',
-			] );
+			];
+
+			$bundled_deps = PUM_AssetCache::get_bundled_script_dependencies();
+			$merged_deps  = array_unique( array_merge( $base_deps, $bundled_deps ) );
+
+			$cached_script_deps = apply_filters( 'pum_site_cached_scripts_dependencies', $merged_deps );
 
 			wp_register_script(
 				'popup-maker-site',
@@ -376,7 +382,10 @@ class PUM_Site_Assets {
 				$cached = get_option( 'pum-has-cached-css' );
 			}
 
-			$cached_style_deps = apply_filters( 'pum_site_cached_styles_dependencies', [] );
+			// Get collected dependencies from bundled styles.
+			$bundled_style_deps = PUM_AssetCache::get_bundled_style_dependencies();
+
+			$cached_style_deps = apply_filters( 'pum_site_cached_styles_dependencies', $bundled_style_deps );
 
 			wp_register_style( 'popup-maker-site', self::$cache_url . '/' . PUM_AssetCache::generate_cache_filename( 'pum-site-styles' ) . '.css?generated=' . $cached, $cached_style_deps, Popup_Maker::$VER );
 

@@ -853,6 +853,24 @@ class PUM_AssetCache {
 	public static $enqueued_scripts = [];
 
 	/**
+	 * Stores dependencies from bundled scripts.
+	 *
+	 * @var string[]
+	 *
+	 * @since 1.21.0
+	 */
+	public static $bundled_script_deps = [];
+
+	/**
+	 * Stores dependencies from bundled styles.
+	 *
+	 * @var string[]
+	 *
+	 * @since 1.21.0
+	 */
+	public static $bundled_style_deps = [];
+
+	/**
 	 * Stores enqueued styles.
 	 *
 	 * @var string[]
@@ -896,6 +914,11 @@ class PUM_AssetCache {
 		if ( ! self::enabled() ) {
 			wp_register_script( $handle, $src, $deps, $version, $in_footer );
 		} else {
+			// Collect all dependencies for bundled scripts (filter later when bundle is registered).
+			if ( ! empty( $deps ) ) {
+				self::$bundled_script_deps = array_merge( self::$bundled_script_deps, $deps );
+			}
+
 			add_filter( 'pum_generated_js', function ( $js = [] ) use ( $handle, $src, $merge_priority ): array {
 				$js[ $handle ] = [
 					'content'  => self::get_asset_contents( $src ),
@@ -935,6 +958,11 @@ class PUM_AssetCache {
 		if ( ! self::enabled() ) {
 			wp_register_style( $handle, $src, $deps, $version, $media );
 		} else {
+			// Collect all dependencies for bundled styles (filter later when bundle is registered).
+			if ( ! empty( $deps ) ) {
+				self::$bundled_style_deps = array_merge( self::$bundled_style_deps, $deps );
+			}
+
 			add_filter( 'pum_generated_css', function ( $css = [] ) use ( $handle, $src, $merge_priority ): array {
 				$css[ $handle ] = [
 					'content'  => self::get_asset_contents( $src ),
@@ -1123,5 +1151,39 @@ class PUM_AssetCache {
 				wp_localize_script( 'popup-maker-site', $vars['object'], $vars['value'] );
 			}
 		}
+	}
+
+	/**
+	 * Get all dependencies from bundled scripts.
+	 *
+	 * @return string[] Array of script dependencies.
+	 *
+	 * @since 1.21.0
+	 */
+	public static function get_bundled_script_dependencies() {
+		// Filter out self-references, main bundle, and other bundled scripts to prevent circular dependencies.
+		$filtered_deps = array_filter( self::$bundled_script_deps, function ( $dep ) {
+			return 'popup-maker-site' !== $dep &&
+					! isset( self::$registered_scripts[ $dep ] );
+		});
+
+		return array_unique( $filtered_deps );
+	}
+
+	/**
+	 * Get all dependencies from bundled styles.
+	 *
+	 * @return string[] Array of style dependencies.
+	 *
+	 * @since 1.21.0
+	 */
+	public static function get_bundled_style_dependencies() {
+		// Filter out self-references, main bundle, and other bundled styles to prevent circular dependencies.
+		$filtered_deps = array_filter( self::$bundled_style_deps, function ( $dep ) {
+			return 'popup-maker-site' !== $dep &&
+					! isset( self::$registered_styles[ $dep ] );
+		});
+
+		return array_unique( $filtered_deps );
 	}
 }
