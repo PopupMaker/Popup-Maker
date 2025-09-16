@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 6.6
 Tested up to: 6.8.1
 Requires PHP: 7.4
-Stable tag: 1.21.0
+Stable tag: 1.21.1
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,11 @@ For the latest updates and release information:
 * Join our [community](https://wppopupmaker.com/community/) for important release announcements and discussions
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
+
+= 1.21.1 - 2025-09-16 =
+
+-   Fix: PHP 7.4 errors due to strict function return types with union types that are not supported.
+-   Fix: Ensure bundled scripts & styles dependencies are properly loaded.
 
 = 1.21.0 - 2025-09-15 =
 

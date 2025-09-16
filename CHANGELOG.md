@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.21.1 - 2025-09-16
+
 -   Fix: PHP 7.4 errors due to strict function return types with union types that are not supported.
 -   Fix: Ensure bundled scripts & styles dependencies are properly loaded.
 
