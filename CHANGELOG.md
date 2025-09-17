@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+-   Fix: PHP warning "Undefined property: stdClass::$post_content" in Assets.php when post object lacks post_content property.
+
 ## v1.21.1 - 2025-09-16
 
 -   Fix: PHP 7.4 errors due to strict function return types with union types that are not supported.
