@@ -176,5 +176,6 @@
 		return conditionCallbacks[ conditionId ] ?? false;
 	};
 
-	// $.fn.popmake.conditions = $.fn.popmake.conditions || getConditions();
+	// Initialize legacy conditions object for backward compatibility.
+	$.fn.popmake.conditions = $.fn.popmake.conditions || {};
 } )( jQuery, document );

@@ -3,6 +3,7 @@
 ## Unreleased
 
 -   Fix: PHP warning "Undefined property: stdClass::$post_content" in Assets.php when post object lacks post_content property.
+-   Fix: Restore missing initialization of $.fn.popmake.conditions object for backward compatibility with legacy extensions.
 
 ## v1.21.1 - 2025-09-16
 
