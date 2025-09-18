@@ -142,6 +142,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build",
+		"fonts:update": "node bin/update-google-fonts.js",
 		"wp-env": "wp-env"
 	},
 	"workspaces": [
