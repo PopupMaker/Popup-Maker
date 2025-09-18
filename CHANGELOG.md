@@ -2,8 +2,11 @@
 
 ## Unreleased
 
--   Fix: PHP warning "Undefined property: stdClass::$post_content" in Assets.php when post object lacks post_content property.
--   Fix: Restore missing initialization of $.fn.popmake.conditions object for backward compatibility with legacy extensions.
+**Fixes**
+
+-   Fixed Beaver Builder compatibility issue that appeared in v1.21.0, special thanks to @robbymccullough at Beaver Buidler for the assist
+-   Fixed PHP warning "Undefined property: stdClass::$post_content" in Assets.php when post object lacks post_content property.
+-   Fixed Restore missing initialization of $.fn.popmake.conditions object for backward compatibility You with legacy extensions.
 
 ## v1.21.1 - 2025-09-16
 
@@ -77,8 +80,8 @@ This update begins the process of modernizing our codebase while polishing exist
 
 ## v1.20.6 - 2025-08-14
 
-* Fix: WordPress 4.9 compatibility by checking has_blocks() function existence before calling it.
-* Fix: WordPress 4.9 compatibility by checking wp_date() function existence before calling it.
+-   Fix: WordPress 4.9 compatibility by checking has_blocks() function existence before calling it.
+-   Fix: WordPress 4.9 compatibility by checking wp_date() function existence before calling it.
 
 ## v1.20.5 - 2025-05-30
 
