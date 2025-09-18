@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.21.2 - 2025-09-18
+
 **Fixes**
 
 -   Fixed Beaver Builder compatibility issue that appeared in v1.21.0, special thanks to @robbymccullough at Beaver Buidler for the assist
@@ -9,6 +11,8 @@
 -   Fixed Restore missing initialization of $.fn.popmake.conditions object for backward compatibility You with legacy extensions.
 
 ## v1.21.1 - 2025-09-16
+
+**Fixes**
 
 -   Fix: PHP 7.4 errors due to strict function return types with union types that are not supported.
 -   Fix: Ensure bundled scripts & styles dependencies are properly loaded.
@@ -20,7 +24,7 @@ This update begins the process of modernizing our codebase while polishing exist
 **Minimum Requirements Change**
 
 -   PHP: 7.4+
--   WordPress: 6.5+
+-   WordPress: 6.6+
 
 **Features**
 

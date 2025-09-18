@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 6.6
 Tested up to: 6.8.2
 Requires PHP: 7.4
-Stable tag: 1.21.1
+Stable tag: 1.21.2
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -238,10 +238,20 @@ For the latest updates and release information:
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
 
+= 1.21.2 - 2025-09-18 =
+
+**Fixes**
+
+-   Fixed Beaver Builder compatibility issue that appeared in v1.21.0, special thanks to @robbymccullough at Beaver Buidler for the assist
+-   Fixed PHP warning "Undefined property: stdClass::$post_content" in Assets.php when post object lacks post_content property.
+-   Fixed Restore missing initialization of $.fn.popmake.conditions object for backward compatibility You with legacy extensions.
+
 = 1.21.1 - 2025-09-16 =
 
--   Fix: PHP 7.4 errors due to strict function return types with union types that are not supported.
--   Fix: Ensure bundled scripts & styles dependencies are properly loaded.
+**Fixes**
+
+-   PHP 7.4 errors due to strict function return types with union types that are not supported.
+-   Ensure bundled scripts & styles dependencies are properly loaded.
 
 = 1.21.0 - 2025-09-15 =
 
@@ -250,7 +260,7 @@ This update begins the process of modernizing our codebase while polishing exist
 **Minimum Requirements Change**
 
 -   PHP: 7.4+
--   WordPress: 6.5+
+-   WordPress: 6.6+
 
 **Features**
 
