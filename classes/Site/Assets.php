@@ -136,7 +136,7 @@ class PUM_Site_Assets {
 	public static function enqueue_page_assets() {
 		global $post;
 
-		if ( ! empty( $post ) && has_shortcode( $post->post_content, 'pum_sub_form' ) ) {
+		if ( ! empty( $post ) && isset( $post->post_content ) && has_shortcode( $post->post_content, 'pum_sub_form' ) ) {
 			wp_enqueue_script( 'popup-maker-site' );
 			wp_enqueue_style( 'popup-maker-site' );
 		}
