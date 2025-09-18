@@ -3,7 +3,7 @@
  * Plugin Name:       Popup Maker
  * Plugin URI:        https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&utm_medium=plugin-uri
  * Description:       Easily create & style popups with any content. Theme editor to quickly style your popups. Add forms, social media boxes, videos & more.
- * Version:           1.21.1
+ * Version:           1.21.2
  * Requires PHP:      7.4
  * Requires at least: 6.6
  * Author:            Popup Maker
@@ -56,7 +56,7 @@ function popup_maker_config( $key = null ) {
 			// Translations for these strings should be handled at the point of display.
 			'name'           => 'Popup Maker',
 			'slug'           => 'popup-maker',
-			'version'        => '1.21.1',
+			'version'        => '1.21.2',
 			'option_prefix'  => 'popup_maker',
 			'text_domain'    => 'popup-maker',
 			'fullname'       => 'Popup Maker',
