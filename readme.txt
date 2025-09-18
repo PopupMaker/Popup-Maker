@@ -11,11 +11,11 @@ Stable tag: 1.21.1
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
-Want to boost sales & marketing efforts? Using popups are a great way to increase conversions! Use your favorite forms & builder, keep your data.
+Want to boost sales & marketing efforts? Use your favorite forms & builder. Unlimited popups & impressions, keep your data, no monthly subscription.
 
 == Description ==
 
-<h3>📈 Drive More Sales, Leads & Email List Opt-Ins Using Popups</h3>
+<h3>📈 Drive More Sales, Leads & Email List Opt-Ins Using Popup Maker</h3>
 
 **Popup Maker™**, rated as the **[best WordPress popup plugin](https://wppopupmaker.com/conversion-optimization/best-wordpress-popup-plugins/)** by our community of 780,000+ users, empowers you to create stunning popups, modals, and overlays in minutes. Whether you're a beginner or a pro, our versatile toolkit makes it easy to boost your WordPress site's engagement.
 
