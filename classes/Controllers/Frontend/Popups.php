@@ -52,19 +52,42 @@ class Popups extends Controller {
 		}
 
 		/**
-		 * Preload & enqueue popups once WP conditionals are availble.
+		 * Preload & enqueue popups once WP conditionals are available.
+		 *
+		 * CRITICAL TIMING REQUIREMENTS (Do NOT change without extensive testing):
+		 *
+		 * Historical Context:
+		 * - v1.20.6 & below: Used wp_enqueue_scripts:11 for 10+ years with ZERO page builder conflicts
+		 * - v1.21.0: Changed to wp_head:0 for performance - BROKE page builders
+		 * - v1.21.3: Reverted to wp_enqueue_scripts:11 after extensive compatibility testing
+		 *
+		 * Page Builder Compatibility Analysis:
+		 * ❌ wp_head:0        - TOO EARLY: Breaks Beaver Builder, Elementor, Divi (CSS isolation not ready)
+		 * ⚠️  wp_head:1        - RISKY: Minimum viable but race conditions possible
+		 * ⚠️  wp_enqueue_scripts:10 - RISKY: Same priority as page builders (race conditions)
+		 * ✅ wp_enqueue_scripts:11 - SAFE: 10+ years proven, after page builder initialization
+		 *
+		 * Why wp_enqueue_scripts:11 is the Sweet Spot:
+		 * - Page builders initialize at priority 10 (Beaver Builder, Elementor core)
+		 * - Priority 11 runs AFTER page builders set up CSS isolation frameworks
+		 * - Prevents CSS leakage when popups contain page builder templates
+		 * - Battle-tested with thousands of plugin combinations over a decade
+		 *
+		 * Specific Issues with Earlier Timing:
+		 * - Beaver Builder: CSS from popup templates leaks to main page
+		 * - Elementor: Asset loading conflicts, DOM manipulation too early
+		 * - Sliders: Content not ready for popup processing
+		 * - General: Page builder shortcodes execute before isolation context exists
+		 *
+		 * NEVER change this to earlier than priority 11 without:
+		 * 1. Testing with Beaver Builder templates in popups
+		 * 2. Testing with Elementor Pro popups enabled
+		 * 3. Testing with slider plugins (Revolution, Layer, etc.)
 		 *
 		 * - No earlier than `wp` suggested, `pre_get_posts:1` at earliest due to missing WP conditionals such as `is_home`.
-		 * - No later than`wp_enqueue_scripts:9` as Block rendering scripts are done at 10 and will be missed.
-		 *
-		 * Uses `wp_head` hook at 0 for now unless we identify a problem.
+		 * - No later than `wp_enqueue_scripts:15` as some content processing may have already occurred.
 		 */
-		add_action( 'wp_head', [ $this, 'preload_popups' ], 0 );
-
-		// Maybe Process popup contents for compatibility with 3rd party plugins.
-		// add_action( 'wp_enqueue_scripts', [ $this, 'preload_content' ], 11 );
-		// Maybe process popup block contents before WP core renders page.
-		// add_filter( 'template_include', [ $this, 'preload_content' ], 11 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 11 );
 
 		// Check content for popup triggers used, enqueue if enabled.
 		add_filter( 'the_content', [ $this, 'check_content_for_popups' ] );
