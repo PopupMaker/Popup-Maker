@@ -79,6 +79,8 @@ var pum_debug_mode = false,
 				// Render Logo
 				pum_debug.logo();
 
+				console.log( 'init popups ✔' );
+
 				console.debug( vars.debug_mode_enabled );
 				console.log( vars.debug_started_at, new Date() );
 				console.info( vars.debug_more_info );

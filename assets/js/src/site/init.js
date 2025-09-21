@@ -1,11 +1,11 @@
 /**
  * Initialize Popup Maker.
- * Version 1.8
+ * Version 1.21
  */
 ( function ( $, document, undefined ) {
 	'use strict';
 	// Defines the current version.
-	$.fn.popmake.version = 1.8;
+	$.fn.popmake.version = 1.21;
 
 	// Stores the last open popup.
 	$.fn.popmake.last_open_popup = null;
@@ -14,7 +14,6 @@
 	window.ajaxurl = window.pum_vars.ajaxurl;
 
 	window.PUM.init = function () {
-		console.log( 'init popups ✔' );
 		$( document ).trigger( 'pumBeforeInit' );
 		$( '.pum' ).popmake();
 		$( document ).trigger( 'pumInitialized' );
