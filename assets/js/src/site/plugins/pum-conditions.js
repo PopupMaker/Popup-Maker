@@ -154,11 +154,11 @@
 
 		popupConditionCallbacks = window.PUM.hooks.applyFilters(
 			'popupMaker.conditionCallbacks',
-			{}
+			$.fn.popmake.conditions || {}
 		);
 
 		// Set the conditions on the Popup Maker object for backwards compatibility.
-		$.fn.popmake.conditionCallbacks = popupConditionCallbacks;
+		$.fn.popmake.conditions = popupConditionCallbacks;
 
 		return popupConditionCallbacks;
 	};
@@ -177,5 +177,6 @@
 	};
 
 	// Initialize legacy conditions object for backward compatibility.
+	$.fn.popmake = $.fn.popmake || {};
 	$.fn.popmake.conditions = $.fn.popmake.conditions || {};
 } )( jQuery, document );
