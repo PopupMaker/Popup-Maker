@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 6.6
 Tested up to: 6.8.2
 Requires PHP: 7.4
-Stable tag: 1.21.2
+Stable tag: 1.21.3
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,14 @@ For the latest updates and release information:
 * Join our [community](https://wppopupmaker.com/community/) for important release announcements and discussions
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
+
+= 1.21.3 - 2025-09-21 =
+
+**Fixes**
+
+-   Fixed page builder compatibility issues by reverting popup preloading timing to wp_enqueue_scripts:11 (matching v1.20.6 behavior).
+-   Fixed delayed initialization of $.fn.popmake.triggers object for proper backward compatibility with legacy extensions.
+-   Fixed prevent popup init console notice when Debug Mode is not enabled.
 
 = 1.21.2 - 2025-09-18 =
 
