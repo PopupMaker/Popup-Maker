@@ -5,6 +5,7 @@
 **Fixes**
 
 -   Fixed page builder compatibility issues by reverting popup preloading timing to wp_enqueue_scripts:11 (matching v1.20.6 behavior).
+-   Delayed initialization of $.fn.popmake.triggers object for better backward compatibility with legacy extensions.
 
 ## v1.21.2 - 2025-09-18
 

@@ -210,6 +210,9 @@
 			},
 		} );
 
+		// Merge with legacy triggers.
+		popupTriggers = $.extend( popupTriggers, $.fn.popmake.triggers );
+
 		// Set the triggers on the Popup Maker object for backwards compatibility.
 		$.fn.popmake.triggers = popupTriggers;
 
@@ -231,4 +234,8 @@
 			}
 		}
 	} );
+
+	// Initialize legacy conditions object for backward compatibility.
+	$.fn.popmake = $.fn.popmake || {};
+	$.fn.popmake.triggers = $.fn.popmake.triggers || {};
 } )( jQuery, document );
