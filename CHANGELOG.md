@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed issue with conditions not working properly when advanced cookie rules were enabled in Advanced Targeting.
+
 ## v1.21.3 - 2025-09-21
 
 **Fixes**

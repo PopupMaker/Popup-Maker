@@ -154,11 +154,8 @@
 
 		popupConditionCallbacks = window.PUM.hooks.applyFilters(
 			'popupMaker.conditionCallbacks',
-			$.fn.popmake.conditions || {}
+			{}
 		);
-
-		// Set the conditions on the Popup Maker object for backwards compatibility.
-		$.fn.popmake.conditions = popupConditionCallbacks;
 
 		return popupConditionCallbacks;
 	};
