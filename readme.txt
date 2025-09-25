@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 6.6
 Tested up to: 6.8.2
 Requires PHP: 7.4
-Stable tag: 1.21.3
+Stable tag: 1.21.4
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,22 @@ For the latest updates and release information:
 * Join our [community](https://wppopupmaker.com/community/) for important release announcements and discussions
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
+
+= 1.21.4 - 2025-09-25 =
+
+**Improvements**
+
+-   Prevented misleading "Lite" messaging when extensions are active. Extension functionality will continue to work as expected.
+
+**Fixes**
+
+-   Fixed Editor role users not being able to edit popups and themes, changing default permissions from `manage_options` to `edit_others_posts`.
+-   Fixed issue with conditions not working properly when advanced cookie rules were enabled in Advanced Targeting.
+-   Fixed popup titles being cleared when editing popups.
+
+**Developers**
+
+-   Added `popup_maker/permissions` filter to allow customization of user permissions for Popup Maker functionality.
 
 = 1.21.3 - 2025-09-21 =
 
