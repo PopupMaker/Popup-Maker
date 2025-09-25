@@ -283,9 +283,9 @@ class PostTypes extends Controller {
 			'map_meta_cap'      => true,
 			'delete_with_user'  => false,
 			'capabilities'      => [
-				'create_posts' => $this->container->get_permission( 'edit_popups' ),
-				'edit_posts'   => $this->container->get_permission( 'edit_popups' ),
-				'delete_posts' => $this->container->get_permission( 'edit_popups' ),
+				'create_posts' => $this->container->get_permission( 'edit_ctas' ),
+				'edit_posts'   => $this->container->get_permission( 'edit_ctas' ),
+				'delete_posts' => $this->container->get_permission( 'edit_ctas' ),
 			],
 		];
 

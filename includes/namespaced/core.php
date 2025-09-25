@@ -18,13 +18,25 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.21.0
  */
 function get_default_permissions() {
-	return [
-		// Settings.
-		'edit_ctas'         => 'manage_options',
-		'edit_popups'       => 'manage_options',
-		'edit_popup_themes' => 'manage_options',
+	$permissions = [
+		// Allow editors to manage popups and themes.
+		'edit_ctas'         => 'edit_others_posts',
+		'edit_popups'       => 'edit_others_posts',
+		'edit_popup_themes' => 'edit_others_posts',
+		// Keep admin-only for plugin settings.
 		'manage_settings'   => 'manage_options',
 	];
+
+	/**
+	 * Filter: popup_maker/permissions
+	 *
+	 * Allows customization of user permissions for Popup Maker functionality.
+	 *
+	 * @param array<string,string> $permissions Permission mappings.
+	 *
+	 * @since 1.21.1
+	 */
+	return apply_filters( 'popup_maker/permissions', $permissions );
 }
 
 /**

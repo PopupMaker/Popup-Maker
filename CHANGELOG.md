@@ -8,7 +8,14 @@
 
 **Fixes**
 
+-   Fixed Editor role users not being able to edit popups by changing default permissions from `manage_options` to `edit_others_posts`.
+-   Fixed Call to Actions menu not showing for Editors by updating admin page capability from hardcoded `manage_options` to dynamic `edit_ctas` permission.
+-   Fixed CTA post type capabilities to use `edit_ctas` permission instead of `edit_popups` for consistency.
 -   Fixed issue with conditions not working properly when advanced cookie rules were enabled in Advanced Targeting.
+
+**Developers**
+
+-   Added `popup_maker/permissions` filter to allow customization of user permissions for Popup Maker functionality.
 
 ## v1.21.3 - 2025-09-21
 

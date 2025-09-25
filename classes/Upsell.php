@@ -29,15 +29,6 @@ class PUM_Upsell {
 	 * @since 1.14.0
 	 */
 	public static function notice_bar_display() {
-		$pro_is_active = \PopupMaker\plugin()->is_pro_active();
-
-		$license_service = \PopupMaker\plugin( 'license' );
-		$license_tier    = $license_service->get_license_tier();
-		$license_status  = $license_service->get_license_status();
-
-		$active_extensions  = pum_enabled_extensions();
-		$has_active_add_ons = ! empty( $active_extensions );
-
 		if ( pum_is_admin_page() ) {
 			// Temporarily disable for CTA post type screens.
 			if ( isset( $_GET['page'] ) && 'popup-maker-call-to-actions' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -50,52 +41,8 @@ class PUM_Upsell {
 				return;
 			}
 
-			// Decide which upsell (if any) should appear.
-			$message      = '';
-			$upgrade_link = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
-
-			if ( 'valid' === $license_status ) {
-				if ( 'pro_plus' === $license_tier ) {
-					return;
-				}
-
-				$detected_integrations = self::detect_pro_plus_integrations();
-
-				if ( ! empty( $detected_integrations['ecommerce'] ) ) {
-					$platforms = self::format_integration_list( $detected_integrations['ecommerce'] );
-					$message   = sprintf(
-						/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
-						esc_html__( 'Automate %1$s campaigns with %2$sPopup Maker Pro+ Ecommerce%3$s - unlock cart actions, revenue attribution, and precision targeting.', 'popup-maker' ),
-						$platforms,
-						'<a href="' . esc_url( $upgrade_link ) . '">',
-						'</a>'
-					);
-				} elseif ( ! empty( $detected_integrations['lms'] ) ) {
-					$platforms = self::format_integration_list( $detected_integrations['lms'] );
-					$message   = sprintf(
-						/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
-						esc_html__( 'Deliver targeted funnels for %1$s with %2$sPopup Maker Pro+ LMS%3$s - track enrollments, issue rewards, and automate course journeys.', 'popup-maker' ),
-						$platforms,
-						'<a href="' . esc_url( $upgrade_link ) . '">',
-						'</a>'
-					);
-				} else {
-					$message = sprintf(
-						/* translators: %s - Wraps ending in link to pro settings page. */
-						esc_html__( 'Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, revenue attribution, and enhanced targeting.', 'popup-maker' ),
-						'<a href="' . esc_url( $upgrade_link ) . '">',
-						'</a>'
-					);
-				}
-			} elseif ( ! $pro_is_active && ! $has_active_add_ons && ! \PopupMaker\plugin()->has_extensions() ) {
-				// TODO: In the future, show targeted upgrade messaging for extension users.
-				$message = sprintf(
-					/* translators: %s - Wraps ending in link to pro settings page. */
-					esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
-					'<a href="' . esc_url( $upgrade_link ) . '">',
-					'</a>'
-				);
-			}
+			// Generate appropriate upsell message.
+			$message = self::generate_upgrade_message();
 
 			if ( empty( $message ) ) {
 				return;
@@ -131,34 +78,137 @@ class PUM_Upsell {
 	 * @return array<string, string[]>
 	 */
 	private static function detect_pro_plus_integrations() {
+		$detection_map = [
+			'ecommerce' => [
+				'WooCommerce'            => __( 'WooCommerce', 'popup-maker' ),
+				'Easy_Digital_Downloads' => __( 'Easy Digital Downloads', 'popup-maker' ),
+			],
+			'lms'       => [
+				'LifterLMS' => __( 'LifterLMS', 'popup-maker' ),
+			],
+		];
+
 		$integrations = [
 			'ecommerce' => [],
 			'lms'       => [],
 		];
 
-		if ( class_exists( 'WooCommerce' ) ) {
-			$integrations['ecommerce'][] = esc_html__( 'WooCommerce', 'popup-maker' );
-		}
-
-		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
-			$integrations['ecommerce'][] = esc_html__( 'Easy Digital Downloads', 'popup-maker' );
-		}
-
-		/*
-		if ( defined( 'SURECART_DIR' ) && SURECART_DIR ) {
-			$integrations['ecommerce'][] = esc_html__( 'SureCart', 'popup-maker' );
-		}
-
-		if ( defined( 'PMPRO_DIR' ) && PMPRO_DIR ) {
-			$integrations['ecommerce'][] = esc_html__( 'Paid Memberships Pro', 'popup-maker' );
-		}
-		*/
-
-		if ( class_exists( 'LifterLMS' ) ) {
-			$integrations['lms'][] = esc_html__( 'LifterLMS', 'popup-maker' );
+		foreach ( $detection_map as $category => $plugins ) {
+			foreach ( $plugins as $class => $label ) {
+				if ( class_exists( $class ) ) {
+					$integrations[ $category ][] = $label;
+				}
+			}
 		}
 
 		return array_filter( $integrations );
+	}
+
+	/**
+	 * Generate appropriate upgrade message based on current license and plugin status.
+	 *
+	 * @return string Upgrade message or empty string if no message should be shown.
+	 */
+	private static function generate_upgrade_message() {
+		$license_service = \PopupMaker\plugin( 'license' );
+		$license_tier    = $license_service->get_license_tier();
+		$license_status  = $license_service->get_license_status();
+		$pro_is_active   = \PopupMaker\plugin()->is_pro_active();
+
+		$active_extensions  = pum_enabled_extensions();
+		$has_active_add_ons = ! empty( $active_extensions );
+
+		/**
+		 * 1. Pro Plus users with valid license see nothing.
+		 * 2. Pro users with valid license get targeted integration messaging.
+		 * 3. Pro users with invalid license get general upgrade messaging.
+		 * 4. Free users or users with invalid license get general upgrade messaging.
+		 * 5. Extension users get no message for now.
+		 * 6. Extension users without valid license get no message for now.
+		 */
+
+		// 1. Pro Plus users with valid license see nothing.
+		if ( 'valid' === $license_status && 'pro_plus' === $license_tier ) {
+			return '';
+		}
+
+		// 2. Pro users with valid license get targeted integration messaging.
+		if ( 'valid' === $license_status && 'pro' === $license_tier ) {
+			return self::get_pro_integration_message();
+		}
+
+		// 3. Pro users with invalid license get general upgrade messaging.
+		if ( $pro_is_active && 'valid' !== $license_status ) {
+			return self::get_free_upgrade_message();
+		}
+
+		// 4. Free users get general upgrade messaging.
+		if ( ! $pro_is_active && ! $has_active_add_ons ) {
+			return self::get_free_upgrade_message();
+		}
+
+		// 5 & 6. Extension users get no message for now (regardless of license status).
+		if ( $has_active_add_ons ) {
+			return '';
+		}
+
+		// Fallback (should not reach here).
+		return '';
+	}
+
+	/**
+	 * Get upgrade message for Pro users based on detected integrations.
+	 *
+	 * @return string Targeted upgrade message.
+	 */
+	private static function get_pro_integration_message() {
+		$upgrade_link          = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
+		$detected_integrations = self::detect_pro_plus_integrations();
+
+		if ( ! empty( $detected_integrations['ecommerce'] ) ) {
+			$platforms = self::format_integration_list( $detected_integrations['ecommerce'] );
+			return sprintf(
+				/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
+				esc_html__( 'Automate %1$s campaigns with %2$sPopup Maker Pro+ Ecommerce%3$s - unlock cart actions, revenue attribution, and precision targeting.', 'popup-maker' ),
+				$platforms,
+				'<a href="' . esc_url( $upgrade_link ) . '">',
+				'</a>'
+			);
+		}
+
+		if ( ! empty( $detected_integrations['lms'] ) ) {
+			$platforms = self::format_integration_list( $detected_integrations['lms'] );
+			return sprintf(
+				/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
+				esc_html__( 'Deliver targeted funnels for %1$s with %2$sPopup Maker Pro+ LMS%3$s - track enrollments, issue rewards, and automate course journeys.', 'popup-maker' ),
+				$platforms,
+				'<a href="' . esc_url( $upgrade_link ) . '">',
+				'</a>'
+			);
+		}
+
+		// Generic Pro+ upgrade message.
+		return sprintf(
+			/* translators: %s - Wraps ending in link to pro settings page. */
+			esc_html__( 'Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, revenue attribution, and enhanced targeting.', 'popup-maker' ),
+			'<a href="' . esc_url( $upgrade_link ) . '">',
+			'</a>'
+		);
+	}
+
+	/**
+	 * Get upgrade message for free users.
+	 *
+	 * @return string General upgrade message.
+	 */
+	private static function get_free_upgrade_message() {
+		$upgrade_link = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
+		return sprintf(
+			/* translators: %s - Wraps ending in link to pro settings page. */
+			esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
+			'<a href="' . esc_url( $upgrade_link ) . '">',
+			'</a>'
+		);
 	}
 
 	/**
@@ -322,6 +372,7 @@ class PUM_Upsell {
 				}
 			} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 				// Use default configuration if license service unavailable.
+				unset( $e ); // Prevent unused variable warning.
 			}
 
 			$tabs = [
