@@ -132,6 +132,10 @@ class PUM_Admin_Popups {
 		global $post, $pagenow, $typenow;
 
 		if ( ( function_exists( 'has_blocks' ) && has_blocks( $post ) ) || ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post ) ) ) {
+			// Add hidden field to preserve popup title in block editor.
+			if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ) ) {
+				echo '<input type="hidden" name="popup_title" value="' . esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ) . '" />';
+			}
 			return;
 		}
 
@@ -336,8 +340,11 @@ class PUM_Admin_Popups {
 			$popup->reset_counts();
 		}
 
-		$title = ! empty( $_POST['popup_title'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['popup_title'] ) ) ) : '';
-		$popup->update_meta( 'popup_title', $title );
+		// Only update the popup title if the field was submitted (not present in block editor).
+		if ( isset( $_POST['popup_title'] ) ) {
+			$title = trim( sanitize_text_field( wp_unslash( $_POST['popup_title'] ) ) );
+			$popup->update_meta( 'popup_title', $title );
+		}
 
 		// Ignored because this is a dynamic array and has sanitization applid to keys before usage.
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
