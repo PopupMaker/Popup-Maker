@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## v1.21.4 - 2025-09-25
+
+**Improvements**
+
+-   Prevented misleading "Lite" messaging when extensions are active. Extension functionality will continue to work as expected.
+
+**Fixes**
+
+-   Fixed Editor role users not being able to edit popups and themes, changing default permissions from `manage_options` to `edit_others_posts`.
+-   Fixed issue with conditions not working properly when advanced cookie rules were enabled in Advanced Targeting.
+-   Fixed popup titles being cleared when editing popups.
+
+**Developers**
+
+-   Added `popup_maker/permissions` filter to allow customization of user permissions for Popup Maker functionality.
+
 ## v1.21.3 - 2025-09-21
 
 **Fixes**

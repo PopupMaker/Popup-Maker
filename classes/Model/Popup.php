@@ -459,6 +459,11 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 
 			if ( ! empty( $deprecated_values ) ) {
 				foreach ( $deprecated_values as $old_key => $value ) {
+					// Skip count fields that don't belong in close settings.
+					if ( 'close' === $group && in_array( $old_key, [ 'count', 'count_total' ], true ) ) {
+						continue;
+					}
+
 					if ( ! isset( $group_values[ $old_key ] ) ) {
 						$group_values[ $old_key ] = $value;
 					}

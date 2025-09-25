@@ -241,7 +241,6 @@ class PUM_Admin_Templates {
 		<?php
 		$license_service   = \PopupMaker\plugin( 'license' );
 		$is_auto_activated = $license_service->is_auto_activated();
-		$license_status    = $license_service->get_license_status_data();
 
 		?>
 
@@ -263,7 +262,7 @@ class PUM_Admin_Templates {
 			// Get license tier (pro or pro_plus).
 			var licenseTier = (data.value && data.value.license_tier) ? data.value.license_tier : 'pro';
 			var isProPlus = licenseTier === 'pro_plus';
-			
+
 			// Get Pro installation status.
 			var isProInstalled = (data.value && data.value.is_pro_installed) ? data.value.is_pro_installed : false;
 			var isProActive = (data.value && data.value.is_pro_active) ? data.value.is_pro_active : false;
@@ -367,8 +366,10 @@ class PUM_Admin_Templates {
 									<# } #>
 								<# } else if (isDeactivated) { #>
 									<?php esc_html_e( 'Your Pro license is valid but deactivated on this site.', 'popup-maker' ); ?>
+								<# } else if (data.value && data.value.has_extensions) { #>
+									<?php esc_html_e( 'You are currently using Popup Maker with extensions — keep enjoying the enhanced features!', 'popup-maker' ); ?> 🚀
 								<# } else { #>
-									<?php esc_html_e( 'You are currently using Popup Maker Lite — no license key required. Enjoy!', 'popup-maker' ); ?> 😄
+									<?php esc_html_e( 'You are currently using Popup Maker Free — no license key required. Enjoy!', 'popup-maker' ); ?> 😄
 								<# } #>
 							</p>
 						</div>

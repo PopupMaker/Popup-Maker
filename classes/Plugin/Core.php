@@ -427,4 +427,24 @@ final class Core extends \PopupMaker\Plugin\Container {
 	public function is_license_active() {
 		return $this->get( 'license' )->is_license_active();
 	}
+
+	/**
+	 * Check if any Popup Maker extensions are active.
+	 *
+	 * @return boolean
+	 */
+	public function has_extensions() {
+		$enabled_extensions = pum_enabled_extensions();
+		return ! empty( $enabled_extensions );
+	}
+
+	/**
+	 * Check if any Pro+ addons are active.
+	 *
+	 * @return boolean
+	 */
+	public function has_pro_plus_addons() {
+		// Pro+ addons include ecommerce-popups and lms-popups.
+		return pum_extension_enabled( 'ecommerce-popups' ) || pum_extension_enabled( 'lms-popups' );
+	}
 }

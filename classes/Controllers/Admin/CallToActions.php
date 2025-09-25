@@ -42,7 +42,7 @@ class CallToActions extends Controller {
 			'edit.php?post_type=popup',
 			__( 'Call to Actions', 'popup-maker' ),
 			__( 'Call to Actions', 'popup-maker' ),
-			'manage_options',
+			$this->container->get_permission( 'edit_ctas' ),
 			'popup-maker-call-to-actions',
 			[ $this, 'render_page' ]
 		);
@@ -111,8 +111,8 @@ class CallToActions extends Controller {
 
 		// Basic rendering with tracking
 		return sprintf(
-			'<div class="popup-maker-cta" 
-                data-cta-id="%s" 
+			'<div class="popup-maker-cta"
+                data-cta-id="%s"
                 data-instance-id="%s">%s</div>',
 			esc_attr( $cta_id ),
 			esc_attr( $instance_id ),
