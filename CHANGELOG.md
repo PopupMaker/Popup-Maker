@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.21.4 - 2025-09-25
+
 **Improvements**
 
 -   Prevented misleading "Lite" messaging when extensions are active. Extension functionality will continue to work as expected.
