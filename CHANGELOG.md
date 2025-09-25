@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Improvements**
+
+-   Prevented misleading "Lite" messaging when extensions are active. Extension functionality will continue to work as expected.
+
 **Fixes**
 
 -   Fixed issue with conditions not working properly when advanced cookie rules were enabled in Advanced Targeting.

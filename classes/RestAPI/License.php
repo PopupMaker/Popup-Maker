@@ -142,14 +142,16 @@ class License extends WP_REST_Controller {
 		$license_service = \PopupMaker\plugin( 'license' );
 
 		$response_data = [
-			'license_key'      => $license_service->get_license_key(),
-			'status'           => $license_service->get_license_status(),
-			'status_data'      => $license_service->get_license_status_data(),
-			'is_active'        => $license_service->is_license_active(),
-			'is_pro_installed' => \PopupMaker\plugin()->is_pro_installed(),
-			'is_pro_active'    => \PopupMaker\plugin()->is_pro_active(),
-			'can_upgrade'      => false,
-			'connect_info'     => null,
+			'license_key'         => $license_service->get_license_key(),
+			'status'              => $license_service->get_license_status(),
+			'status_data'         => $license_service->get_license_status_data(),
+			'is_active'           => $license_service->is_license_active(),
+			'is_pro_installed'    => \PopupMaker\plugin()->is_pro_installed(),
+			'is_pro_active'       => \PopupMaker\plugin()->is_pro_active(),
+			'has_extensions'      => \PopupMaker\plugin()->has_extensions(),
+			'has_pro_plus_addons' => \PopupMaker\plugin()->has_pro_plus_addons(),
+			'can_upgrade'         => false,
+			'connect_info'        => null,
 		];
 
 		// Add upgrade information if license is valid but Pro isn't installed.

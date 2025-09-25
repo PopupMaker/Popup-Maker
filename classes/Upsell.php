@@ -29,11 +29,16 @@ class PUM_Upsell {
 	 * @since 1.14.0
 	 */
 	public static function notice_bar_display() {
-		$license_tier     = \PopupMaker\plugin( 'license' )->get_license_tier();
-		$pro_is_active    = \PopupMaker\plugin()->is_pro_active();
-		$pro_is_installed = \PopupMaker\plugin()->is_pro_installed();
+		$pro_is_active = \PopupMaker\plugin()->is_pro_active();
 
-		if ( pum_is_admin_page() && ! $pro_is_active ) {
+		$license_service = \PopupMaker\plugin( 'license' );
+		$license_tier    = $license_service->get_license_tier();
+		$license_status  = $license_service->get_license_status();
+
+		$active_extensions  = pum_enabled_extensions();
+		$has_active_add_ons = ! empty( $active_extensions );
+
+		if ( pum_is_admin_page() ) {
 			// Temporarily disable for CTA post type screens.
 			if ( isset( $_GET['page'] ) && 'popup-maker-call-to-actions' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
@@ -45,14 +50,58 @@ class PUM_Upsell {
 				return;
 			}
 
-			wp_enqueue_style( 'pum-admin-general' );
+			// Decide which upsell (if any) should appear.
+			$message      = '';
 			$upgrade_link = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
-			$message      = sprintf(
-				/* translators: %s - Wraps ending in link to pro settings page. */
-				esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
-				'<a href="' . esc_url( $upgrade_link ) . '">',
-				'</a>'
-			);
+
+			if ( 'valid' === $license_status ) {
+				if ( 'pro_plus' === $license_tier ) {
+					return;
+				}
+
+				$detected_integrations = self::detect_pro_plus_integrations();
+
+				if ( ! empty( $detected_integrations['ecommerce'] ) ) {
+					$platforms = self::format_integration_list( $detected_integrations['ecommerce'] );
+					$message   = sprintf(
+						/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
+						esc_html__( 'Automate %1$s campaigns with %2$sPopup Maker Pro+ Ecommerce%3$s - unlock cart actions, revenue attribution, and precision targeting.', 'popup-maker' ),
+						$platforms,
+						'<a href="' . esc_url( $upgrade_link ) . '">',
+						'</a>'
+					);
+				} elseif ( ! empty( $detected_integrations['lms'] ) ) {
+					$platforms = self::format_integration_list( $detected_integrations['lms'] );
+					$message   = sprintf(
+						/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
+						esc_html__( 'Deliver targeted funnels for %1$s with %2$sPopup Maker Pro+ LMS%3$s - track enrollments, issue rewards, and automate course journeys.', 'popup-maker' ),
+						$platforms,
+						'<a href="' . esc_url( $upgrade_link ) . '">',
+						'</a>'
+					);
+				} else {
+					$message = sprintf(
+						/* translators: %s - Wraps ending in link to pro settings page. */
+						esc_html__( 'Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, revenue attribution, and enhanced targeting.', 'popup-maker' ),
+						'<a href="' . esc_url( $upgrade_link ) . '">',
+						'</a>'
+					);
+				}
+			} elseif ( ! $pro_is_active && ! $has_active_add_ons && ! \PopupMaker\plugin()->has_extensions() ) {
+				// TODO: In the future, show targeted upgrade messaging for extension users.
+				$message = sprintf(
+					/* translators: %s - Wraps ending in link to pro settings page. */
+					esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
+					'<a href="' . esc_url( $upgrade_link ) . '">',
+					'</a>'
+				);
+			}
+
+			if ( empty( $message ) ) {
+				return;
+			}
+
+			wp_enqueue_style( 'pum-admin-general' );
 			?>
 			<div class="pum-notice-bar-wrapper">
 				<div class="pum-notice-bar">
@@ -74,6 +123,73 @@ class PUM_Upsell {
 			</div>
 			<?php
 		}
+	}
+
+	/**
+	 * Detect installed plugins that align with Pro+ addons.
+	 *
+	 * @return array<string, string[]>
+	 */
+	private static function detect_pro_plus_integrations() {
+		$integrations = [
+			'ecommerce' => [],
+			'lms'       => [],
+		];
+
+		if ( class_exists( 'WooCommerce' ) ) {
+			$integrations['ecommerce'][] = esc_html__( 'WooCommerce', 'popup-maker' );
+		}
+
+		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
+			$integrations['ecommerce'][] = esc_html__( 'Easy Digital Downloads', 'popup-maker' );
+		}
+
+		/*
+		if ( defined( 'SURECART_DIR' ) && SURECART_DIR ) {
+			$integrations['ecommerce'][] = esc_html__( 'SureCart', 'popup-maker' );
+		}
+
+		if ( defined( 'PMPRO_DIR' ) && PMPRO_DIR ) {
+			$integrations['ecommerce'][] = esc_html__( 'Paid Memberships Pro', 'popup-maker' );
+		}
+		*/
+
+		if ( class_exists( 'LifterLMS' ) ) {
+			$integrations['lms'][] = esc_html__( 'LifterLMS', 'popup-maker' );
+		}
+
+		return array_filter( $integrations );
+	}
+
+	/**
+	 * Convert detected platform names into a readable list.
+	 *
+	 * @param string[] $items List of platform names.
+	 * @return string
+	 */
+	private static function format_integration_list( array $items ) {
+		$items = array_values( array_filter( $items ) );
+
+		if ( empty( $items ) ) {
+			return '';
+		}
+
+		if ( function_exists( 'wp_sprintf_l' ) ) {
+			return wp_sprintf_l( '%l', $items );
+		}
+
+		$count = count( $items );
+		if ( 1 === $count ) {
+			return $items[0];
+		}
+
+		$last = array_pop( $items );
+		return sprintf(
+			/* translators: 1: List of platforms, 2: Last platform. */
+			esc_html__( '%1$s and %2$s', 'popup-maker' ),
+			implode( esc_html__( ', ', 'popup-maker' ), $items ),
+			$last
+		);
 	}
 
 	/**
