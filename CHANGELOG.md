@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed potential error when get_current_screen() is not available.
+
 ## v1.21.4 - 2025-09-25
 
 **Improvements**

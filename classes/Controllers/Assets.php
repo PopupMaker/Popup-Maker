@@ -249,7 +249,7 @@ class Assets extends Controller {
 
 		$packages = $this->get_packages();
 
-		$screen = is_admin() ? get_current_screen() : false;
+		$screen = ( is_admin() && function_exists( 'get_current_screen' ) ) ? get_current_screen() : false;
 		$rtl    = is_rtl() ? '-rtl' : '';
 
 		foreach ( $packages as $package => $package_data ) {
