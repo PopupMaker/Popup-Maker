@@ -33,6 +33,35 @@ Then, move on to our [Setting up your local environment](https://github.com/Popu
 -   [iFrame Resizer](https://github.com/davidjbradshaw/iframe-resizer) - Force cross domain iframes to size to content
 -   [mobile-detect.js](https://github.com/hgoebl/mobile-detect.js) - Detect the device by comparing patterns against a given User-Agent string
 
+## Developer Tools
+
+### Release Preparation
+
+The `bin/prepare-release.js` script automates the complete release workflow:
+
+```bash
+# Patch release (1.21.4 → 1.21.5)
+node bin/prepare-release.js
+
+# Minor release (1.21.4 → 1.22.0)
+node bin/prepare-release.js --minor
+
+# Specific version
+node bin/prepare-release.js 2.1.0
+
+# Test without changes
+node bin/prepare-release.js --dry-run
+```
+
+**Features:**
+- 🔄 Automatic version increments or specific versions
+- 🌿 Git flow integration (release branches and tags)
+- 📝 Updates versions in all files and changelog
+- 🔨 Builds release assets
+- 🚀 Interactive push options
+
+See `bin/README.md` for complete documentation.
+
 ## Deployment
 
 This is a WordPress plugin that is hosted on the WordPress.org SVN repo.
