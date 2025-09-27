@@ -4,6 +4,7 @@
 
 **Fixes**
 
+-   Fixed accessibility tab trapping JavaScript error "trigger is not a function" when using keyboard navigation in popups.
 -   Fixed potential error when get_current_screen() is not available.
 
 ## v1.21.4 - 2025-09-25
