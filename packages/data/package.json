@@ -1,6 +1,6 @@
 {
 	"name": "@popup-maker/data",
-	"version": "1.0.0-beta.1",
+	"version": "1.0.0",
 	"description": "Data registry for Popup Maker.",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
