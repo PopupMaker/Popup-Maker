@@ -180,6 +180,48 @@ function checkNpmAuth() {
 }
 
 /**
+ * Check if there are unreleased changes in CHANGELOG.md
+ * For patch releases, we only bump if there are actual changes to release
+ */
+function hasUnreleasedChanges() {
+    const changelogPath = path.join(__dirname, '..', 'CHANGELOG.md');
+
+    if (!fs.existsSync(changelogPath)) {
+        warning('CHANGELOG.md not found - proceeding with patch release');
+        return true;
+    }
+
+    try {
+        const changelog = fs.readFileSync(changelogPath, 'utf8');
+
+        // Look for "## Unreleased" section with actual content
+        const unreleasedMatch = changelog.match(/## Unreleased\s*(.*?)(?=##|$)/s);
+
+        if (!unreleasedMatch) {
+            return false;
+        }
+
+        const unreleasedSection = unreleasedMatch[1].trim();
+
+        // Check if there's actual content (not just empty lines or section headers)
+        const hasContent = unreleasedSection
+            .split('\n')
+            .some(line => {
+                const trimmed = line.trim();
+                return trimmed &&
+                       !trimmed.startsWith('**') && // Skip section headers like **Fixes**
+                       !trimmed.startsWith('##') && // Skip any nested headers
+                       trimmed !== '';
+            });
+
+        return hasContent;
+    } catch (error) {
+        warning(`Error reading CHANGELOG.md: ${error.message} - proceeding with release`);
+        return true;
+    }
+}
+
+/**
  * Main execution function
  */
 function main() {
@@ -211,6 +253,22 @@ function main() {
     if (publishablePackages.length === 0) {
         warning('No publishable packages found!');
         return;
+    }
+
+    // For patch releases, check if there are unreleased changes
+    if (versionType === 'patch') {
+        const hasChanges = hasUnreleasedChanges();
+
+        if (!hasChanges) {
+            warning('📄 No unreleased changes found in CHANGELOG.md');
+            warning('🚫 Patch releases require unreleased changes to justify the release');
+            log('\n💡 Patch releases are for quick fixes that need to go out immediately.');
+            log('   For planned releases, use minor or major version bumps instead.');
+            log('\n   To proceed anyway, use: node bin/bump-and-publish-packages.js --version-type=minor');
+            return;
+        }
+
+        info('✅ Found unreleased changes in CHANGELOG.md - proceeding with patch release');
     }
 
     log(`\n📦 Will bump and publish ${publishablePackages.length} packages:`);
