@@ -144,6 +144,10 @@
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build",
 		"fonts:update": "node bin/update-google-fonts.js",
+		"packages:bump": "node bin/bump-and-publish-packages.js --dry-run",
+		"packages:bump:minor": "node bin/bump-and-publish-packages.js --version-type=minor",
+		"packages:bump:patch": "node bin/bump-and-publish-packages.js --version-type=patch",
+		"packages:bump:major": "node bin/bump-and-publish-packages.js --version-type=major",
 		"wp-env": "wp-env"
 	},
 	"workspaces": [
