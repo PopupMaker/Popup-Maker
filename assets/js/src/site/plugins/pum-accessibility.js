@@ -45,14 +45,14 @@ var PUM_Accessibility;
 					if ( focusedItemIndex === 0 ) {
 						focusableItems
 							.get( numberOfFocusableItems - 1 )
-							.trigger( 'focus' );
+							.focus();
 						e.preventDefault();
 					}
 				} else {
 					//forward tab
 					// if focused on the last item and user preses tab, go to the first focusable item
 					if ( focusedItemIndex === numberOfFocusableItems - 1 ) {
-						focusableItems.get( 0 ).trigger( 'focus' );
+						focusableItems.get( 0 ).focus();
 						e.preventDefault();
 					}
 				}

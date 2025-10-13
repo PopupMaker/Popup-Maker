@@ -1,6 +1,9 @@
-# Unified Plugin Release Builder
+# Plugin Release Tools
 
-This directory contains a unified build script that can be shared across all your WordPress plugins to standardize the release process.
+This directory contains tools for managing WordPress plugin releases:
+
+- **prepare-release.js** - Automates the complete release workflow with git flow
+- **build-release.js** - Unified build script for creating release packages
 
 ## Features
 
@@ -12,7 +15,56 @@ This directory contains a unified build script that can be shared across all you
 -   **Error Handling**: Comprehensive error handling and logging
 -   **Production Ready**: Handles Composer and npm production builds
 
-## Quick Start
+## Release Preparation Script
+
+### Quick Start
+
+The **prepare-release.js** script automates the complete release workflow including version management, changelog updates, and git flow integration.
+
+```bash
+# Patch release (1.21.4 → 1.21.5)
+node bin/prepare-release.js
+
+# Minor release (1.21.4 → 1.22.0)
+node bin/prepare-release.js --minor
+
+# Major release (1.21.4 → 2.0.0)
+node bin/prepare-release.js --major
+
+# Specific version
+node bin/prepare-release.js 2.1.0
+
+# Test without changes
+node bin/prepare-release.js --dry-run
+
+# See all options
+node bin/prepare-release.js --help
+```
+
+### What It Does
+
+1. ✅ Validates git status and git flow availability
+2. 🌿 Creates git flow release branch
+3. 📝 Updates versions in all files (via `update-versions.js`)
+4. 📋 Updates changelog (via `update-changelog.js`)
+5. 📦 Updates `package-lock.json`
+6. 🔨 Builds release assets (`npm run release`)
+7. 💾 Commits changes with standardized message
+8. 🏁 Finishes git flow release with tag
+9. 🚀 Offers to push changes
+
+### Options
+
+- `[version]` - Specific version number (e.g., `1.21.5`)
+- `--major` - Increment major version (X+1.0.0)
+- `--minor` - Increment minor version (X.Y+1.0)
+- `--patch` - Increment patch version (X.Y.Z+1) [default]
+- `--dry-run` - Show what would be done without making changes
+- `--no-build` - Skip the release build step
+- `--auto` - Skip all confirmations (dangerous!)
+- `--help` - Show detailed help
+
+## Build Release Script
 
 ### Basic Usage
 

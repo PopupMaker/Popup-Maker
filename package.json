@@ -1,6 +1,6 @@
 {
 	"name": "popup-maker",
-	"version": "1.21.4",
+	"version": "1.21.5",
 	"description": "WordPress Popup Plugin",
 	"author": "Code Atlantic LLC",
 	"license": "GPL-2.0-or-later",
@@ -87,6 +87,7 @@
 		"copy-webpack-plugin": "^12.0.2",
 		"glob": "^11.0.2",
 		"mini-css-extract-plugin": "^2.9.2",
+		"minimist": "^1.2.8",
 		"nx": "20.3.4",
 		"path": "^0.12.7",
 		"prettier": "npm:wp-prettier@3.0.3",
@@ -143,6 +144,10 @@
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build",
 		"fonts:update": "node bin/update-google-fonts.js",
+		"packages:bump": "node bin/bump-and-publish-packages.js --dry-run",
+		"packages:bump:minor": "node bin/bump-and-publish-packages.js --version-type=minor",
+		"packages:bump:patch": "node bin/bump-and-publish-packages.js --version-type=patch",
+		"packages:bump:major": "node bin/bump-and-publish-packages.js --version-type=major",
 		"wp-env": "wp-env"
 	},
 	"workspaces": [

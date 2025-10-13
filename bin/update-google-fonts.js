@@ -67,25 +67,23 @@ function fetchFromUrl( url ) {
 }
 
 /**
- * Transform Google API format to Popup Maker format
+ * Transform Google API format to optimized Popup Maker format
+ * Only includes family and variants to reduce file size from 1.5MB to ~75KB
  */
 function transformToPopupMakerFormat( apiData ) {
-	console.log( '🔄 Transforming data to Popup Maker format...' );
+	console.log( '🔄 Transforming data to optimized Popup Maker format...' );
 
-	const transformed = {
-		kind: apiData.kind,
-		items: apiData.items.map( ( font ) => ( {
+	const transformed = {};
+
+	apiData.items.forEach( ( font ) => {
+		transformed[ font.family ] = {
 			family: font.family,
 			variants: font.variants,
-			subsets: font.subsets,
-			version: font.version,
-			lastModified: font.lastModified,
-			files: font.files,
-			category: font.category,
-		} ) ),
-	};
+		};
+	} );
 
-	console.log( `✅ Transformed ${ transformed.items.length } fonts` );
+	console.log( `✅ Transformed ${ Object.keys( transformed ).length } fonts` );
+	console.log( `📦 Optimized structure: family + variants only` );
 	return transformed;
 }
 
@@ -122,8 +120,13 @@ async function main() {
 		saveToFile( transformedData );
 
 		console.log( '\n🎉 Google Fonts JSON update completed!' );
-		console.log( `📊 Total fonts: ${ transformedData.items.length }` );
+		console.log( `📊 Total fonts: ${ Object.keys( transformedData ).length }` );
 		console.log( `📅 Last updated: ${ new Date().toISOString() }` );
+
+		// Calculate file size
+		const stats = fs.statSync( FONTS_JSON_PATH );
+		const fileSizeKB = ( stats.size / 1024 ).toFixed( 2 );
+		console.log( `📏 File size: ${ fileSizeKB } KB (optimized from ~1.5MB)` );
 	} catch ( error ) {
 		console.error( '\n❌ Error updating Google Fonts JSON:' );
 		console.error( `   ${ error.message }` );

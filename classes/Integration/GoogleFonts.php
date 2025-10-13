@@ -9,79 +9,50 @@
 class PUM_Integration_GoogleFonts {
 
 	/**
-	 * @var string
-	 */
-	private static $default_api_key = 'AIzaSyA1Q0uFOhEh3zv_Pk31FqlACArFquyBeQU';
-
-	/**
-	 * @var string
-	 */
-	public static $api_key;
-
-	/**
+	 * In-memory cache for font list to avoid repeated file reads per request.
 	 *
+	 * @var array|null
+	 */
+	private static $font_cache = null;
+
+	/**
+	 * Initialize the integration.
 	 */
 	public static function init() {
-		// Set the API key based on options first then default second.
-		self::$api_key = pum_get_option( 'google_fonts_api_key', self::$default_api_key );
-
 		add_filter( 'pum_theme_font_family_options', [ __CLASS__, 'font_family_options' ], 20 );
 	}
 
 	/**
-	 * Loads a static backup list of Google Fonts in case the API is not responding.
+	 * Fetch list of Google Fonts from local JSON file.
 	 *
-	 * @return array|mixed|object
-	 */
-	public static function load_backup_fonts() {
-		$json_data = file_get_contents( Popup_Maker::$DIR . 'includes/google-fonts.json' );
-
-		return json_decode( $json_data, true );
-	}
-
-	/**
-	 * Fetch list of Google Fonts or fallback to local list.
+	 * Uses in-memory cache to avoid repeated file reads per request.
+	 * The JSON file is updated periodically via bin/update-google-fonts.js.
 	 *
-	 * @param string $sort
+	 * @param string $sort Unused - kept for backward compatibility.
 	 *
-	 * @return array|mixed
+	 * @return array Font list with structure: ['Family Name' => ['family' => 'Family Name', 'variants' => [...]]]
 	 */
 	public static function fetch_fonts( $sort = 'alpha' ) {
-		$font_list = get_site_transient( 'pum_google_fonts_list' );
-
-		if ( false !== $font_list ) {
-			return $font_list;
+		// Return cached fonts if already loaded.
+		if ( null !== self::$font_cache ) {
+			return self::$font_cache;
 		}
 
-		$google_api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=' . self::$api_key . '&sort=' . $sort;
-		$response       = wp_remote_get( $google_api_url, [ 'sslverify' => false ] );
+		// Load fonts from optimized JSON file.
+		$json_file = Popup_Maker::$DIR . 'includes/google-fonts.json';
 
-		if ( ! is_wp_error( $response ) ) {
-			$body = wp_remote_retrieve_body( $response );
-			$data = json_decode( $body, true );
+		if ( ! file_exists( $json_file ) ) {
+			self::$font_cache = [];
+			return self::$font_cache;
 		}
 
-		// Store transient for a long time after fetching from Google to save API key hits.
-		$transient_time = self::$api_key === self::$default_api_key ? 8 * WEEK_IN_SECONDS : 1 * WEEK_IN_SECONDS;
+		$json_data = file_get_contents( $json_file );
+		$font_list = json_decode( $json_data, true );
 
-		if ( ! empty( $data['errors'] ) || empty( $data['items'] ) ) {
-			$data = self::load_backup_fonts();
-			// Store transient for short period.
-			$transient_time = 1 * DAY_IN_SECONDS;
-		}
+		// Cache the result for this request.
+		self::$font_cache = is_array( $font_list ) ? $font_list : [];
 
-		$items     = $data['items'];
-		$font_list = [];
-
-		if ( count( $items ) ) {
-			foreach ( $items as $item ) {
-				$font_list[ $item['family'] ] = $item;
-			}
-		}
-
-		set_site_transient( 'pum_google_fonts_list', $font_list, $transient_time );
-
-		return $font_list;
+		return self::$font_cache;
 	}
 
 	/**
@@ -92,7 +63,7 @@ class PUM_Integration_GoogleFonts {
 	 * @return array
 	 */
 	public static function font_family_options( $options ) {
-		// If Google Fonts are disabled, return early preventing transient creation and font fetching.
+		// If Google Fonts are disabled, return early preventing font loading.
 		if ( pum_get_option( 'disable_google_font_loading', false ) ) {
 			return $options;
 		}
