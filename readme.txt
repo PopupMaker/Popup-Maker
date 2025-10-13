@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 6.6
 Tested up to: 6.8.2
 Requires PHP: 7.4
-Stable tag: 1.21.4
+Stable tag: 1.21.5
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,17 @@ For the latest updates and release information:
 * Join our [community](https://wppopupmaker.com/community/) for important release announcements and discussions
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
+
+= 1.21.5 - 2025-10-13 =
+
+**Improvements**
+
+-   Optimized Google Fonts integration by eliminating database transients and API calls in favor of direct JSON loading with in-memory caching. This resolves reported database crashes from large font data and improves performance by 83% (file size reduced from 1.5MB to 255KB) while eliminating all database overhead.
+
+**Fixes**
+
+-   Fixed accessibility tab trapping JavaScript error "trigger is not a function" when using keyboard navigation in popups.
+-   Fixed potential error when get_current_screen() is not available.
 
 = 1.21.4 - 2025-09-25 =
 
