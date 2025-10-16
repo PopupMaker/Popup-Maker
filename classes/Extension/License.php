@@ -278,6 +278,11 @@ class PUM_Extension_License {
 			return;
 		}
 
+		// If the key is starred (displayed for security), get the original key from database.
+		if ( strpos( $license, '*' ) !== false ) {
+			$license = $this->license;
+		}
+
 		// Data to send to the API
 		$api_params = [
 			'edd_action'  => 'activate_license',
@@ -311,7 +316,6 @@ class PUM_Extension_License {
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 	}
-
 
 	/**
 	 * Deactivate the license key

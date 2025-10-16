@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed issue where license keys were being saved with *** asterisks instead of the actual key.
+
 ## v1.21.5 - 2025-10-13
 
 **Improvements**

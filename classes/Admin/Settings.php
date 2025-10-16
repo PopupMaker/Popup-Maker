@@ -250,6 +250,11 @@ class PUM_Admin_Settings {
 						$old = PUM_Utils_Options::get( $key );
 						$new = trim( $value );
 
+						// If the value is starred (displayed for security), keep the existing unstarred value.
+						if ( strpos( $new, '*' ) !== false ) {
+							$new = $old;
+						}
+
 						if ( $old && $old !== $new ) {
 							delete_option( str_replace( '_license_key', '_license_active', $key ) );
 							if ( ! empty( $field['options']['activation_callback'] ) ) {
@@ -257,7 +262,7 @@ class PUM_Admin_Settings {
 							}
 						}
 
-						$settings[ $key ] = is_string( $value ) ? trim( $value ) : $value;
+						$settings[ $key ] = $new;
 						// Activate / deactivate license keys maybe?
 						break;
 				}
