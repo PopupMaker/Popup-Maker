@@ -332,10 +332,6 @@ class PUM_Extension_License {
 			return;
 		}
 
-		if ( ! isset( $_POST['pum_settings'][ $this->item_shortname . '_license_key' ] ) ) {
-			return;
-		}
-
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
