@@ -198,11 +198,22 @@ class PUM_Admin_Templates {
 			<#
 			var isActive = data.value.status === 'valid';
 			var shouldMask = isActive && data.value.key && data.value.key.length > 6;
-			var shouldDisable = isActive || data.value.auto_activated;
+			var usingProLicense = data.value.using_pro_license || false;
+			var proLicenseTier = data.value.pro_license_tier || '';
+			var shouldDisable = isActive || data.value.auto_activated || usingProLicense;
 			var displayValue = shouldMask ? data.value.key.substring(0,3) + '*'.repeat(data.value.key.length - 6) + data.value.key.slice(-3) : data.value.key;
 			#>
 
-			<# if (data.value.auto_activated) { #>
+			<# if (usingProLicense) { #>
+			<!-- Using Pro license: no input field, just notice -->
+			<p class="description" style="color: #0073aa; font-weight: 500; margin: 0;">
+				<# if (proLicenseTier === 'pro_plus') { #>
+				<?php esc_html_e( 'This extension is covered by your Pro+ license. No separate activation needed!', 'popup-maker' ); ?>
+				<# } else { #>
+				<?php esc_html_e( 'This extension is covered by your Pro license. No separate activation needed!', 'popup-maker' ); ?>
+				<# } #>
+			</p>
+			<# } else if (data.value.auto_activated) { #>
 			<!-- Auto-activated license: readonly field with notice -->
 			<input class="{{data.size}}-text" id="{{data.id}}" name="{{data.name}}" value="{{displayValue}}" autocomplete="off" readonly style="background: #f1f1f1;" {{{data.meta}}}/>
 			<p class="description" style="color: #0073aa; font-weight: 500;">
@@ -218,7 +229,7 @@ class PUM_Admin_Templates {
 			<# } #>
 			<# } #>
 
-			<# if (data.value.key !== '') { #>
+			<# if (data.value.key !== '' && !usingProLicense) { #>
 			<?php wp_nonce_field( 'pum_license_activation', 'pum_license_activation_nonce' ); ?>
 			<# if (data.value.status === 'valid') { #>
 			<span class="pum-license-status"><?php esc_html_e( 'Active', 'popup-maker' ); ?></span>
@@ -229,7 +240,7 @@ class PUM_Admin_Templates {
 			<# } #>
 			<# } #>
 
-			<# if (data.value.messages && data.value.messages.length) { #>
+			<# if (data.value.messages && data.value.messages.length && !usingProLicense) { #>
 			<div class="pum-license-messages">
 				<# for(var i=0; i < data.value.messages.length; i++) { #>
 				<p>{{{data.value.messages[i]}}}</p>

@@ -97,7 +97,7 @@ class PUM_Extension_License {
 
 		$this->item_shortname = 'popmake_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 		$this->version        = $_version;
-		$this->license        = trim( PUM_Utils_Options::get( $this->item_shortname . '_license_key', '' ) );
+		$this->license        = $this->get_effective_license_key();
 		$this->author         = $_author;
 		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
 
@@ -118,6 +118,80 @@ class PUM_Extension_License {
 		// Setup hooks
 		$this->includes();
 		$this->hooks();
+	}
+
+	/**
+	 * Get effective license key (Pro key if available, else extension-specific key).
+	 *
+	 * @return string
+	 */
+	private function get_effective_license_key() {
+		// Check if Pro license is active.
+		if ( $this->has_active_pro_license() ) {
+			return $this->get_pro_license_key();
+		}
+
+		// Fallback to extension-specific key.
+		return trim( PUM_Utils_Options::get( $this->item_shortname . '_license_key', '' ) );
+	}
+
+	/**
+	 * Check if Pro/Pro+ license key exists (active or not).
+	 *
+	 * This prevents users from managing extension licenses when a Pro key
+	 * is present, even if that Pro key is currently deactivated.
+	 *
+	 * @return bool
+	 */
+	private function has_active_pro_license() {
+		if ( ! function_exists( '\PopupMaker\plugin' ) ) {
+			return false;
+		}
+
+		try {
+			$license_service = \PopupMaker\plugin()->get( 'license' );
+			$license_key     = $license_service->get_license_key();
+			// Check if Pro key exists and is not empty.
+			return ! empty( $license_key );
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * Get Pro license key.
+	 *
+	 * @return string
+	 */
+	private function get_pro_license_key() {
+		if ( ! function_exists( '\PopupMaker\plugin' ) ) {
+			return '';
+		}
+
+		try {
+			$license_service = \PopupMaker\plugin()->get( 'license' );
+			return $license_service->get_license_key();
+		} catch ( \Exception $e ) {
+			return '';
+		}
+	}
+
+	/**
+	 * Get Pro license tier (pro or pro_plus).
+	 *
+	 * @return string
+	 */
+	private function get_pro_license_tier() {
+		if ( ! $this->has_active_pro_license() ) {
+			return '';
+		}
+
+		try {
+			$license_service = \PopupMaker\plugin()->get( 'license' );
+			return $license_service->get_license_tier();
+		} catch ( \Exception $e ) {
+			return '';
+		}
 	}
 
 	/**
@@ -195,7 +269,7 @@ class PUM_Extension_License {
 		}
 
 		// Setup the updater
-		$popmake_updater = new PUM_Extension_Updater( $this->api_url, $this->file, $args );
+		new PUM_Extension_Updater( $this->api_url, $this->file, $args );
 	}
 
 
@@ -232,6 +306,8 @@ class PUM_Extension_License {
 			'options' => [
 				'is_valid_license_option' => $this->item_shortname . '_license_active',
 				'activation_callback'     => [ $this, 'activate_license' ],
+				'using_pro_license'       => $this->has_active_pro_license(),
+				'pro_license_tier'        => $this->get_pro_license_tier(),
 			],
 		];
 
@@ -245,6 +321,11 @@ class PUM_Extension_License {
 	 * @return  void
 	 */
 	public function activate_license() {
+		// Skip activation if using Pro license.
+		if ( $this->has_active_pro_license() ) {
+			return;
+		}
+
 		if ( ! isset( $_POST['pum_settings_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
 			return;
 		}
@@ -324,6 +405,11 @@ class PUM_Extension_License {
 	 * @return  void
 	 */
 	public function deactivate_license() {
+		// Skip deactivation if using Pro license.
+		if ( $this->has_active_pro_license() ) {
+			return;
+		}
+
 		if ( ! isset( $_POST['pum_settings_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['pum_settings_nonce'] ) ), 'pum_settings_nonce' ) ) {
 			return;
 		}
@@ -380,6 +466,10 @@ class PUM_Extension_License {
 	 * @return  void
 	 */
 	public function weekly_license_check() {
+		// Skip weekly check if using Pro license.
+		if ( $this->has_active_pro_license() ) {
+			return;
+		}
 
 		// Simply checking existence.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing

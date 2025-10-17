@@ -950,12 +950,17 @@ class PUM_Admin_Settings {
 						// Handle other license keys using the legacy system
 						$license = get_option( $field['options']['is_valid_license_option'] );
 
+						$using_pro_license = ! empty( $field['options']['using_pro_license'] );
+						$pro_license_tier  = ! empty( $field['options']['pro_license_tier'] ) ? $field['options']['pro_license_tier'] : '';
+
 						$settings[ $key ] = [
-							'key'      => \PopupMaker\plugin( 'license' )->star_key( trim( $value ) ),
-							'status'   => PUM_Licensing::get_status( $license, ! empty( $value ) ),
-							'messages' => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
-							'expires'  => PUM_Licensing::get_license_expiration( $license ),
-							'classes'  => PUM_Licensing::get_status_classes( $license ),
+							'key'               => \PopupMaker\plugin( 'license' )->star_key( trim( $value ) ),
+							'status'            => PUM_Licensing::get_status( $license, ! empty( $value ) ),
+							'messages'          => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
+							'expires'           => PUM_Licensing::get_license_expiration( $license ),
+							'classes'           => PUM_Licensing::get_status_classes( $license ),
+							'using_pro_license' => $using_pro_license,
+							'pro_license_tier'  => $pro_license_tier,
 						];
 						break;
 				}
