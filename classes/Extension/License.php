@@ -127,7 +127,7 @@ class PUM_Extension_License {
 	 */
 	private function get_effective_license_key() {
 		// Check if Pro license is active.
-		if ( $this->has_active_pro_license() ) {
+		if ( $this->has_pro_license() ) {
 			return $this->get_pro_license_key();
 		}
 
@@ -143,7 +143,7 @@ class PUM_Extension_License {
 	 *
 	 * @return bool
 	 */
-	private function has_active_pro_license() {
+	private function has_pro_license() {
 		if ( ! function_exists( '\PopupMaker\plugin' ) ) {
 			return false;
 		}
@@ -182,7 +182,7 @@ class PUM_Extension_License {
 	 * @return string
 	 */
 	private function get_pro_license_tier() {
-		if ( ! $this->has_active_pro_license() ) {
+		if ( ! $this->has_pro_license() ) {
 			return '';
 		}
 
@@ -306,7 +306,7 @@ class PUM_Extension_License {
 			'options' => [
 				'is_valid_license_option' => $this->item_shortname . '_license_active',
 				'activation_callback'     => [ $this, 'activate_license' ],
-				'using_pro_license'       => $this->has_active_pro_license(),
+				'using_pro_license'       => $this->has_pro_license(),
 				'pro_license_tier'        => $this->get_pro_license_tier(),
 			],
 		];
@@ -322,7 +322,7 @@ class PUM_Extension_License {
 	 */
 	public function activate_license() {
 		// Skip activation if using Pro license.
-		if ( $this->has_active_pro_license() ) {
+		if ( $this->has_pro_license() ) {
 			return;
 		}
 
@@ -359,9 +359,9 @@ class PUM_Extension_License {
 			return;
 		}
 
-		// If the key is starred (displayed for security), get the original key from database.
+		// If the key is starred (displayed for security), get the original extension key from database.
 		if ( strpos( $license, '*' ) !== false ) {
-			$license = $this->license;
+			$license = $this->get_effective_license_key();
 		}
 
 		// Data to send to the API
@@ -406,7 +406,7 @@ class PUM_Extension_License {
 	 */
 	public function deactivate_license() {
 		// Skip deactivation if using Pro license.
-		if ( $this->has_active_pro_license() ) {
+		if ( $this->has_pro_license() ) {
 			return;
 		}
 
@@ -467,7 +467,7 @@ class PUM_Extension_License {
 	 */
 	public function weekly_license_check() {
 		// Skip weekly check if using Pro license.
-		if ( $this->has_active_pro_license() ) {
+		if ( $this->has_pro_license() ) {
 			return;
 		}
 
