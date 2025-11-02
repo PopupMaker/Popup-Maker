@@ -6,6 +6,7 @@
 
 -   Fixed license key not deactivating properly.
 -   Fixed issue where license keys were being saved with *** asterisks instead of the actual key.
+-   Fixed issue where filter `replace_editor` was being used as an action without returning the value.
 
 ## v1.21.5 - 2025-10-13
 
