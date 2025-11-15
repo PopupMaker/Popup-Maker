@@ -32,7 +32,7 @@ class PostTypes extends Controller {
 		// Control block editor usage on per popup post type basis.
 		add_filter( 'use_block_editor_for_post_type', [ $this, 'use_block_editor_for_post_type' ], 10, 2 );
 		// Blanket disable block editor for popup post types if setting is enabled.
-		add_action( 'replace_editor', [ $this, 'replace_editor' ], 10, 2 );
+		add_filter( 'replace_editor', [ $this, 'replace_editor' ], 10, 2 );
 	}
 
 	/**
@@ -541,14 +541,14 @@ class PostTypes extends Controller {
 	/**
 	 * Replace the editor interface when classic editor is forced.
 	 *
-	 * @param bool    $replace   Whether to replace the editor.
-	 * @param WP_Post $post      The post object.
-	 * @return void
+	 * @param bool     $replace Whether to replace the editor.
+	 * @param \WP_Post $post    The post object.
+	 * @return bool Whether to replace the editor.
 	 */
 	public function replace_editor( $replace, $post ) {
 		// Only handle our post types.
 		if ( ! in_array( $post->post_type, [ 'popup', 'popup_theme' ], true ) ) {
-			return;
+			return $replace;
 		}
 
 		// If classic editor is enabled, ensure we're using classic interface.
@@ -557,5 +557,7 @@ class PostTypes extends Controller {
 			remove_action( 'admin_enqueue_scripts', 'wp_enqueue_editor' );
 			remove_action( 'admin_footer', 'wp_enqueue_editor' );
 		}
+
+		return $replace;
 	}
 }
