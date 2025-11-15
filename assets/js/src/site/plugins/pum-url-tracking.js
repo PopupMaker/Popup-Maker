@@ -54,6 +54,20 @@
 				var $link = $( this ),
 					href = $link.attr( 'href' );
 
+				// Check if this is a special URL scheme that shouldn't have query params.
+				if ( self.isSpecialUrlScheme( href ) ) {
+					// Add data attribute for tracking without modifying the URL.
+					$link.attr( 'data-popup-id', pid );
+
+					// Add click tracking for analytics without modifying the URL.
+					$link.on( 'click.pum_special_url_tracking', function () {
+						// Trigger conversion event for analytics tracking.
+						$popup.trigger( 'pumConversion' );
+					} );
+
+					return;
+				}
+
 				// Only process internal URLs.
 				if ( self.isInternalUrl( href ) ) {
 					// Start with base URL parameters.
@@ -76,6 +90,21 @@
 		},
 
 		/**
+		 * Check if URL uses a special scheme that doesn't support query parameters.
+		 *
+		 * @param {string} url The URL to check.
+		 * @return {boolean} True if special scheme, false otherwise.
+		 */
+		isSpecialUrlScheme: function ( url ) {
+			if ( ! url ) {
+				return false;
+			}
+
+			// Check for special URL schemes (mailto:, tel:, sms:, etc.).
+			return /^(mailto|tel|sms|ftp|ftps|skype|facetime):/i.test( url );
+		},
+
+		/**
 		 * Check if URL is internal to the current site.
 		 *
 		 * @param {string} url The URL to check.
@@ -83,11 +112,6 @@
 		 */
 		isInternalUrl: function ( url ) {
 			if ( ! url || url === '#' || url.indexOf( '#' ) === 0 ) {
-				return false;
-			}
-
-			// Exclude special URL schemes (mailto:, tel:, sms:, etc.).
-			if ( /^(mailto|tel|sms|ftp|ftps|skype|facetime):/i.test( url ) ) {
 				return false;
 			}
 
