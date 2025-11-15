@@ -4,7 +4,7 @@
 
 **Fixes**
 
--   Fixed popup ID tracking parameter being incorrectly appended to special URL schemes (mailto:, tel:, sms:, etc.) which broke email and phone links.
+-   Fixed popup ID tracking parameter being incorrectly appended to special URL schemes (mailto:, tel:, sms:, etc.) which broke email and phone links. These links now maintain their functionality while still being tracked for analytics via conversion events.
 
 ## v1.21.3 - 2025-09-21
 
