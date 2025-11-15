@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed popup ID tracking parameter being incorrectly appended to special URL schemes (mailto:, tel:, sms:, etc.) which broke email and phone links.
+
 ## v1.21.3 - 2025-09-21
 
 **Fixes**
