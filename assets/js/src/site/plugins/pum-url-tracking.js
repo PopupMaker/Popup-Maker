@@ -86,6 +86,11 @@
 				return false;
 			}
 
+			// Exclude special URL schemes (mailto:, tel:, sms:, etc.).
+			if ( /^(mailto|tel|sms|ftp|ftps|skype|facetime):/i.test( url ) ) {
+				return false;
+			}
+
 			// Handle relative URLs.
 			if ( url.indexOf( '/' ) === 0 && url.indexOf( '//' ) !== 0 ) {
 				return true;
