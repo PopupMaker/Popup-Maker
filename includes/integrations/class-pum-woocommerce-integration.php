@@ -25,43 +25,45 @@ class PUM_Woocommerce_Integration {
 		$results = [];
 
 		foreach ( $settings['selected'] as $key ) {
-			$results[] = is_wc_endpoint_url( $key );
+			$results[] = \is_wc_endpoint_url( $key );
 		}
 
 		return in_array( true, $results, true );
 	}
 
 	public static function register_conditions( $conditions = [] ) {
+        // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		$woocommerce_text = __( 'WooCommerce', 'woocommerce' );
 
 		// Add Additional Conditions
 		$conditions['is_woocommerce']  = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-			'name'     => __( 'All WooCommerce', 'popup-maker' ),
+			'group'    => $woocommerce_text,
+			'name'     => __( 'Any WooCommerce Page', 'popup-maker' ),
 			'callback' => 'is_woocommerce',
 		];
 		$conditions['is_shop']         = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-			'name'     => __( 'Shop Page', 'popup-maker' ),
+			'group'    => $woocommerce_text,
+			'name'     => __( 'Any Shop Page', 'popup-maker' ),
 			'callback' => 'is_shop',
 		];
 		$conditions['is_cart']         = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+			'group'    => $woocommerce_text,
 			'name'     => __( 'Cart Page', 'popup-maker' ),
 			'callback' => 'is_cart',
 		];
 		$conditions['is_checkout']     = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+			'group'    => $woocommerce_text,
 			'name'     => __( 'Checkout Page', 'popup-maker' ),
 			'callback' => 'is_checkout',
 		];
 		$conditions['is_account_page'] = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+			'group'    => $woocommerce_text,
 			'name'     => __( 'Account Page', 'popup-maker' ),
 			'callback' => 'is_account_page',
 		];
 
 		$conditions['is_wc_endpoint_url'] = [
-			'group'    => __( 'WooCommerce', 'woocommerce' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+			'group'    => $woocommerce_text,
 			'name'     => __( 'Is Endpoint', 'popup-maker' ),
 			'fields'   => [
 				'selected' => [
@@ -86,6 +88,7 @@ class PUM_Woocommerce_Integration {
 						'delete-payment-method'      => 'delete-payment-method',
 						'set-default-payment-method' => 'set-default-payment-method',
 						'subscriptions'              => 'subscriptions',
+						// Any additional endpoints go in Pro.
 					],
 				],
 			],
