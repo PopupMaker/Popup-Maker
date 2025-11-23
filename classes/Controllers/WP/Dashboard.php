@@ -58,7 +58,7 @@ class Dashboard extends Controller {
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
 			return;
 		}
 
@@ -72,6 +72,11 @@ class Dashboard extends Controller {
 	 * @return void
 	 */
 	public function render_basic_analytics_widget() {
+		// Only users with permission to edit popups should see this widget.
+		if ( ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
+			return;
+		}
+
 		$upgrade_link = 'https://wppopupmaker.com/pricing/?utm_source=wp-dashboard&utm_medium=dashboard&utm_campaign=upgrade-to-pro';
 		// Get analytics data
 
