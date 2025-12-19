@@ -5,6 +5,7 @@ import './fluentforms';
 import './formidableforms';
 import './gravityforms';
 import './mc4wp';
+import './newsletter';
 import './ninjaforms';
 import './wpforms';
 import './wsforms';
