@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Features**
+
+-   Added Newsletter plugin (thenewsletterplugin.com) form integration for success detection and conversion tracking.
+
 **Fixes**
 
 -   Fixed Divi 4 block editor compatibility issue where the popup editor would fail to load when the block editor was enabled. The classic editor is now automatically enforced for Divi 4 users.

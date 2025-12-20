@@ -42,6 +42,7 @@ class PUM_Integrations {
 				'contactform7'    => new PUM_Integration_Form_ContactForm7(),
 				'calderaforms'    => new PUM_Integration_Form_CalderaForms(),
 				'mc4wp'           => new PUM_Integration_Form_MC4WP(),
+				'newsletter'      => new PUM_Integration_Form_Newsletter(),
 				'wpforms'         => new PUM_Integration_Form_WPForms(),
 				'wsforms'         => new PUM_Integration_Form_WSForms(),
 				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
