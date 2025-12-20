@@ -30,7 +30,12 @@ class PUM_Integrations {
 	public static $form_submission;
 
 	/**
-	 * Initializes all form plugin and page builder integrations.
+	 * Register available form and page-builder integrations and attach related WordPress hooks.
+	 *
+	 * Populates the class integrations registry, sets preload state for the settings page, and registers
+	 * filters and actions used by integrations (settings fields, asset preloading, conditions, popup args,
+	 * generated JS/CSS, popup settings, and initialization hooks). Also initializes integration-specific
+	 * Google Fonts handling.
 	 */
 	public static function init() {
 		self::$integrations = apply_filters(

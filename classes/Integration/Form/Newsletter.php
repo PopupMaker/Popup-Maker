@@ -32,7 +32,10 @@ class PUM_Integration_Form_Newsletter extends PUM_Abstract_Integration_Form {
 	public $key = 'newsletter';
 
 	/**
-	 * Hook for non-AJAX form submissions.
+	 * Register the Newsletter subscription hook used to process non-AJAX form submissions.
+	 *
+	 * Hooks `newsletter_user_post_subscribe` to this class's on_success method so server-side
+	 * submission processing and conversion tracking can run when a user subscribes via the Newsletter plugin.
 	 */
 	public function __construct() {
 		// Fires after a user successfully subscribes.
@@ -40,61 +43,59 @@ class PUM_Integration_Form_Newsletter extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
-	 * Text label that will be used throughout the various options screens.
+	 * Provides the display label for this integration.
 	 *
-	 * @return string
+	 * @return string The localized label "Newsletter".
 	 */
 	public function label() {
 		return __( 'Newsletter', 'popup-maker' );
 	}
 
 	/**
-	 * Should return true when the required form plugin is active.
+	 * Determine whether the Newsletter plugin is active.
 	 *
-	 * @return bool
+	 * @return bool true if the Newsletter plugin is active, false otherwise.
 	 */
 	public function enabled() {
 		return defined( 'NEWSLETTER_VERSION' ) || class_exists( 'Newsletter' );
 	}
 
 	/**
-	 * Newsletter uses shortcodes, not discrete forms.
+	 * Provide available Newsletter forms for integration; Newsletter uses shortcodes so there are none.
 	 *
-	 * @return array
+	 * @return array An empty array because the Newsletter plugin exposes forms via shortcodes rather than discrete form instances.
 	 */
 	public function get_forms() {
 		return [];
 	}
 
 	/**
-	 * Return a single form by ID.
+	 * Retrieve a Newsletter form by its ID (not supported for Newsletter shortcodes).
 	 *
-	 * @param string $id Form ID.
-	 *
-	 * @return mixed
+	 * @param string $id Form ID (unused).
+	 * @return null Always null because the Newsletter plugin uses shortcodes rather than discrete forms.
 	 */
 	public function get_form( $id ) {
 		return null;
 	}
 
 	/**
-	 * Returns an array of options for a select list.
+	 * Provide select list options for available Newsletter forms.
 	 *
-	 * @return array
+	 * @return array An empty array because Newsletter uses shortcodes and does not expose discrete selectable forms.
 	 */
 	public function get_form_selectlist() {
 		return [];
 	}
 
 	/**
-	 * Handle form submission success.
+	 * Handle form submission success for Newsletter integrations on the server.
 	 *
-	 * For AJAX submissions, success is detected client-side via MutationObserver.
-	 * For non-AJAX submissions, we handle conversion tracking here.
+	 * Processes non-AJAX subscription submissions, records a conversion when a popup ID is present,
+	 * and logs an integrated form submission with the provider key.
 	 *
-	 * @param object $user Newsletter user object.
-	 *
-	 * @return object
+	 * @param object $user Newsletter user object that was created or updated.
+	 * @return object The same Newsletter user object passed in.
 	 */
 	public function on_success( $user ) {
 		// Only process server-side for non-AJAX requests.
