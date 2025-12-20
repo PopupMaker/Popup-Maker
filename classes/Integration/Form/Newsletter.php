@@ -12,6 +12,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Class PUM_Integration_Form_Newsletter
+ *
+ * Integrates with "The Newsletter Plugin" for form submission tracking.
+ *
+ * Newsletter uses fetch-based AJAX and replaces the form innerHTML with
+ * a success message. They don't fire any JavaScript events, so we use
+ * MutationObserver on the client side to detect success.
+ *
+ * Server-side, we hook into the success action for non-AJAX submissions
+ * and conversion tracking when popup ID is available.
  */
 class PUM_Integration_Form_Newsletter extends PUM_Abstract_Integration_Form {
 
@@ -26,6 +35,7 @@ class PUM_Integration_Form_Newsletter extends PUM_Abstract_Integration_Form {
 	 * Hook for non-AJAX form submissions.
 	 */
 	public function __construct() {
+		// Fires after a user successfully subscribes.
 		add_action( 'newsletter_user_post_subscribe', [ $this, 'on_success' ], 10, 1 );
 	}
 
@@ -77,13 +87,17 @@ class PUM_Integration_Form_Newsletter extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
-	 * Handle non-AJAX form submission success.
+	 * Handle form submission success.
+	 *
+	 * For AJAX submissions, success is detected client-side via MutationObserver.
+	 * For non-AJAX submissions, we handle conversion tracking here.
 	 *
 	 * @param object $user Newsletter user object.
 	 *
 	 * @return object
 	 */
 	public function on_success( $user ) {
+		// Only process server-side for non-AJAX requests.
 		if ( ! $this->should_process_submission() ) {
 			return $user;
 		}
@@ -105,4 +119,3 @@ class PUM_Integration_Form_Newsletter extends PUM_Abstract_Integration_Form {
 		return $user;
 	}
 }
-
