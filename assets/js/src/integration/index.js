@@ -3,6 +3,7 @@ import './calderaforms';
 import './contactform7';
 import './fluentforms';
 import './formidableforms';
+import './forminator';
 import './gravityforms';
 import './mc4wp';
 import './newsletter';
