@@ -47,6 +47,7 @@ class PUM_Integrations {
 				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
 				'fluentforms'     => new PUM_Integration_Form_FluentForms(),
 				'bricksbuilder'   => new PUM_Integration_Form_BricksBuilder(),
+				'htmlforms'       => new PUM_Integration_Form_HTMLForms(),
 				// Builders.
 				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
 				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
