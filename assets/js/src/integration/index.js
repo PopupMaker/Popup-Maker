@@ -1,3 +1,4 @@
+import './beaverbuilder';
 import './bricksbuilder';
 import './calderaforms';
 import './contactform7';
