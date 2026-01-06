@@ -67,7 +67,7 @@
 		"@jest/globals": "^29.7.0",
 		"@nx/playwright": "20.3.3",
 		"@nx/storybook": "20.3.3",
-		"@playwright/test": "^1.50.1",
+		"@playwright/test": "^1.56.1",
 		"@popup-maker/custom-templated-path-webpack-plugin": "file:./packages/custom-templated-path-webpack-plugin",
 		"@popup-maker/dependency-extraction-webpack-plugin": "file:./packages/dependency-extraction-webpack-plugin",
 		"@popup-maker/types": "file:./packages/types",
