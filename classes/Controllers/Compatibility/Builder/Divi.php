@@ -72,6 +72,16 @@ class Divi extends Controller {
 
 		// Enable Visual Builder for popup post type.
 		add_filter( 'et_fb_is_enabled', [ $this, 'enable_fb_for_popups' ], 10, 2 );
+
+		// Fix z-index issues when builder is active.
+		add_action( 'wp_head', [ $this, 'fix_divi_zindex' ], 999 );
+
+		// Remove admin debug trigger when builder is active.
+		add_filter( 'pum_popup_data_attr', [ $this, 'remove_admin_debug_trigger' ], 1001, 2 );
+		add_filter( 'pum_popup_get_public_settings', [ $this, 'remove_admin_debug_trigger_settings' ], 1001, 2 );
+
+		// Fix Divi button visibility in admin.
+		add_action( 'admin_head', [ $this, 'fix_divi_button_visibility' ] );
 	}
 
 	/**
@@ -301,5 +311,83 @@ class Divi extends Controller {
 		}
 
 		return 0;
+	}
+
+
+	/**
+	 * Fix z-index issues when builder is active.
+	 *
+	 * @return void
+	 */
+	public function fix_divi_zindex() {
+		if ( ! $this->is_divi_builder_request() ) {
+			return;
+		}
+
+		echo '<style>
+			/* Ensure popup overlay is below Divi builder UI */
+			.pum-overlay { z-index: 9999 !important; }
+			/* Ensure Divi builder UI is above popup */
+			#et-fb-app { z-index: 100000 !important; }
+			.et-fb-root { z-index: 100000 !important; }
+		</style>';
+	}
+
+	/**
+	 * Remove admin debug trigger when builder is active.
+	 *
+	 * @param array $data_attr Popup data attributes.
+	 * @param int   $popup_id  Popup ID.
+	 * @return array Modified data attributes.
+	 */
+	public function remove_admin_debug_trigger( $data_attr, $popup_id ) {
+		if ( ! $this->is_divi_builder_request() ) {
+			return $data_attr;
+		}
+		if ( isset( $data_attr['triggers'] ) ) {
+			foreach ( $data_attr['triggers'] as $key => $trigger ) {
+				if ( 'admin_debug' === $trigger['type'] ) {
+					unset( $data_attr['triggers'][ $key ] );
+				}
+			}
+		}
+		return $data_attr;
+	}
+
+	/**
+	 * Remove admin debug trigger from public settings when builder is active.
+	 *
+	 * @param array           $settings Popup settings.
+	 * @param PUM_Model_Popup $popup    Popup model.
+	 * @return array Modified settings.
+	 */
+	public function remove_admin_debug_trigger_settings( $settings, $popup ) {
+		if ( ! $this->is_divi_builder_request() ) {
+			return $settings;
+		}
+		if ( isset( $settings['triggers'] ) ) {
+			foreach ( $settings['triggers'] as $key => $trigger ) {
+				if ( 'admin_debug' === $trigger['type'] ) {
+					unset( $settings['triggers'][ $key ] );
+				}
+			}
+		}
+		return $settings;
+	}
+
+	/**
+	 * Fix Divi button visibility in admin.
+	 *
+	 * @return void
+	 */
+	public function fix_divi_button_visibility() {
+		$screen = get_current_screen();
+		if ( ! $screen || 'popup' !== $screen->post_type ) {
+			return;
+		}
+
+		echo '<style>
+			.et_pb_toggle_builder_wrapper { opacity: 1 !important; visibility: visible !important; }
+		</style>';
 	}
 }
