@@ -47,6 +47,7 @@ class PUM_Integrations {
 				'wsforms'         => new PUM_Integration_Form_WSForms(),
 				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
 				'fluentforms'     => new PUM_Integration_Form_FluentForms(),
+				'beaverbuilder'   => new PUM_Integration_Form_BeaverBuilder(),
 				'bricksbuilder'   => new PUM_Integration_Form_BricksBuilder(),
 				'forminator'      => new PUM_Integration_Form_Forminator(),
 				'elementor'       => new PUM_Integration_Form_Elementor(),
