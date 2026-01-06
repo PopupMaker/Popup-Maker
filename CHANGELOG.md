@@ -26,6 +26,7 @@
 
 **Improvements**
 
+-   Added HTML Forms integration for form submission tracking and popup triggering. Supports both server-side PHP tracking and client-side JavaScript events for comprehensive form interaction monitoring.
 -   Optimized Google Fonts integration by eliminating database transients and API calls in favor of direct JSON loading with in-memory caching. This resolves reported database crashes from large font data and improves performance by 83% (file size reduced from 1.5MB to 255KB) while eliminating all database overhead.
 
 **Fixes**
