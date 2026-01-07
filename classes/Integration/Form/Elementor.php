@@ -90,7 +90,8 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 		$forms = [];
 
 		foreach ( $results as $result ) {
-			$form_name = $result->form_name;
+			$element_id = $result->element_id;
+			$form_name  = $result->form_name;
 
 			// Get post title if available.
 			$post_title = '';
@@ -101,10 +102,10 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 				}
 			}
 
-			$forms[ $form_name ] = [
-				'id'         => $form_name,
+			$forms[ $element_id ] = [
+				'id'         => $element_id,
 				'name'       => $form_name,
-				'element_id' => $result->element_id,
+				'element_id' => $element_id,
 				'post_id'    => $result->post_id,
 				'post_title' => $post_title,
 			];

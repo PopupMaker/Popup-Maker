@@ -11,10 +11,12 @@
 		'.elementor-form',
 		function ( event, response ) {
 			const $form = $( this )[ 0 ];
-			const formId =
-				$form.getAttribute( 'data-form_name' ) ||
-				$form.getAttribute( 'data-settings' )?.form_name ||
-				'unknown';
+
+			// Get form_id from hidden input field.
+			const formIdInput = $form.querySelector( 'input[name="form_id"]' );
+			const formId = formIdInput
+				? formIdInput.value
+				: $form.getAttribute( 'name' ) || 'unknown';
 
 			window.PUM.integrations.formSubmission( $form, {
 				formProvider,
