@@ -4,6 +4,7 @@
 
 **Features**
 
+-   Added Elementor Pro Forms integration for success detection and conversion tracking. Uses Elementor's submission database for dynamic form discovery and element_id-based tracking.
 -   Added Newsletter plugin (thenewsletterplugin.com) form integration for success detection and conversion tracking. **Note:** Newsletter forms must use `[newsletter_form ajax="true"]` shortcode to enable AJAX submission mode for the integration to work.
 
 **Improvements**

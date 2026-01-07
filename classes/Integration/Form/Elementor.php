@@ -22,6 +22,7 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 	 */
 	public function __construct() {
 		add_action( 'elementor_pro/forms/new_record', [ $this, 'on_success' ], 10, 2 );
+		add_action( 'elementor_pro/forms/new_record', [ $this, 'clear_forms_cache' ], 999 );
 	}
 
 	/**
@@ -102,6 +103,7 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 				}
 			}
 
+			// Use element_id as the unique identifier.
 			$forms[ $element_id ] = [
 				'id'         => $element_id,
 				'name'       => $form_name,
@@ -142,10 +144,10 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 		$form_selectlist = [ 'any' => __( 'Any Elementor Form', 'popup-maker' ) ];
 
 		foreach ( $forms as $form ) {
-			$label                        = $form['name'];
-			$form_selectlist[ $form['id'] ] = sprintf(
+			// Use element_id as the unique identifier (system adds provider prefix).
+			$form_selectlist[ $form['element_id'] ] = sprintf(
 				'%s (in %s)',
-				$label,
+				$form['name'],
 				$form['post_title']
 			);
 		}
@@ -176,6 +178,22 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 				'form_id'       => $form_name ? $form_name : 'unknown',
 			]
 		);
+	}
+
+	/**
+	 * Clear cached forms list when new form is submitted.
+	 * Only clears in admin context to avoid performance impact on frontend.
+	 *
+	 * @since 1.21.6
+	 */
+	public function clear_forms_cache() {
+		// Only clear cache in admin to avoid unnecessary queries on frontend.
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		wp_cache_delete( 'pum_elementor_forms', 'popup_maker' );
+		delete_transient( 'pum_elementor_forms' );
 	}
 
 	/**
