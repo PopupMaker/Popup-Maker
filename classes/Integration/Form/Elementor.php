@@ -70,11 +70,17 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 			}
 		}
 
+		// Use Elementor's Query class to get table name.
+		if ( ! class_exists( '\\ElementorPro\\Modules\\Forms\\Submissions\\Database\\Query' ) ) {
+			return [];
+		}
+
 		global $wpdb;
 
-		// Query Elementor's submission table for distinct form names.
-		$table_name = $wpdb->prefix . 'e_submissions';
-		$results    = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$query      = \ElementorPro\Modules\Forms\Submissions\Database\Query::get_instance();
+		$table_name = $query->get_table_submissions();
+
+		$results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			"SELECT DISTINCT form_name, element_id, post_id
 			FROM {$table_name}
 			WHERE form_name IS NOT NULL AND form_name != ''
