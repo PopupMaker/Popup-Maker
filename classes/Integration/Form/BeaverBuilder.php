@@ -44,20 +44,37 @@ class PUM_Integration_Form_BeaverBuilder extends PUM_Abstract_Integration_Form {
 	 * @return array
 	 */
 	public function get_forms() {
-		return array(
-			array(
+		return [
+			[
 				'ID'         => 'contact_any',
 				'post_title' => 'Any Contact Form',
-			),
-			array(
+			],
+			[
 				'ID'         => 'subscribe_any',
 				'post_title' => 'Any Subscribe Form',
-			),
-			array(
+			],
+			[
 				'ID'         => 'login_any',
 				'post_title' => 'Any Login Form',
-			),
-		);
+			],
+		];
+	}
+
+	/**
+	 * Get a single form by ID.
+	 *
+	 * @param string $id Form ID.
+	 *
+	 * @return mixed
+	 */
+	public function get_form( $id ) {
+		$forms = $this->get_forms();
+		foreach ( $forms as $form ) {
+			if ( $form['ID'] === $id ) {
+				return $form;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -66,11 +83,11 @@ class PUM_Integration_Form_BeaverBuilder extends PUM_Abstract_Integration_Form {
 	 * @return array
 	 */
 	public function get_form_selectlist() {
-		return array(
+		return [
 			'contact_any'   => 'Any Contact Form',
 			'subscribe_any' => 'Any Subscribe Form',
 			'login_any'     => 'Any Login Form',
-		);
+		];
 	}
 
 	/**
@@ -81,7 +98,7 @@ class PUM_Integration_Form_BeaverBuilder extends PUM_Abstract_Integration_Form {
 	 *
 	 * @return array
 	 */
-	public function custom_scripts( $js = array() ) {
+	public function custom_scripts( $js = [] ) {
 		return $js;
 	}
 
@@ -92,7 +109,7 @@ class PUM_Integration_Form_BeaverBuilder extends PUM_Abstract_Integration_Form {
 	 *
 	 * @return array
 	 */
-	public function custom_styles( $css = array() ) {
+	public function custom_styles( $css = [] ) {
 		return $css;
 	}
 }
