@@ -4,6 +4,7 @@
 
 **Features**
 
+-   Added Beaver Builder Forms integration for success detection and conversion tracking. Supports Contact, Subscribe, and Login form modules. **Note:** Beaver Builder forms are not centrally registered, so the integration tracks by form type (contact/subscribe/login) rather than individual forms.
 -   Added Newsletter plugin (thenewsletterplugin.com) form integration for success detection and conversion tracking. **Note:** Newsletter forms must use `[newsletter_form ajax="true"]` shortcode to enable AJAX submission mode for the integration to work.
 
 **Improvements**
