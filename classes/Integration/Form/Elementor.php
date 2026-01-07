@@ -44,7 +44,7 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 
 	/**
 	 * Get all Elementor forms from the database.
-	 * Elementor stores forms as widgets in post meta, so we need to query for posts with form widgets.
+	 * Queries Elementor's submission table for unique form names.
 	 *
 	 * @param bool $force_refresh Whether to force refresh the cache.
 	 *
@@ -72,78 +72,41 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 
 		global $wpdb;
 
-		// Query for posts that contain Elementor form widgets.
-		$results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				"SELECT DISTINCT p.ID, p.post_title, pm.meta_value
-				FROM {$wpdb->posts} p
-				INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
-				WHERE pm.meta_key = %s
-				AND pm.meta_value LIKE %s
-				AND p.post_status = 'publish'",
-				'_elementor_data',
-				'%"widgetType":"form"%'
-			)
+		// Query Elementor's submission table for distinct form names.
+		$table_name = $wpdb->prefix . 'e_submissions';
+		$results    = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			"SELECT DISTINCT form_name, element_id, post_id
+			FROM {$table_name}
+			WHERE form_name IS NOT NULL AND form_name != ''
+			ORDER BY form_name ASC"
 		);
 
 		$forms = [];
 
 		foreach ( $results as $result ) {
-			$elementor_data = json_decode( $result->meta_value, true );
-			if ( is_array( $elementor_data ) ) {
-				$forms = array_merge( $forms, $this->extract_forms_from_elementor_data( $elementor_data, $result->ID, $result->post_title ) );
+			$form_name = $result->form_name;
+
+			// Get post title if available.
+			$post_title = '';
+			if ( ! empty( $result->post_id ) ) {
+				$post = get_post( $result->post_id );
+				if ( $post ) {
+					$post_title = $post->post_title;
+				}
 			}
+
+			$forms[ $form_name ] = [
+				'id'         => $form_name,
+				'name'       => $form_name,
+				'element_id' => $result->element_id,
+				'post_id'    => $result->post_id,
+				'post_title' => $post_title,
+			];
 		}
 
 		// Cache the results for 1 hour.
 		wp_cache_set( $cache_key, $forms, $cache_group, HOUR_IN_SECONDS );
 		set_transient( $cache_key, $forms, HOUR_IN_SECONDS );
-
-		return $forms;
-	}
-
-	/**
-	 * Recursively extract form widgets from Elementor data structure.
-	 *
-	 * @param array  $elements Elementor elements array.
-	 * @param int    $post_id Post ID containing the form.
-	 * @param string $post_title Post title for reference.
-	 *
-	 * @return array
-	 */
-	private function extract_forms_from_elementor_data( $elements, $post_id, $post_title ) {
-		$forms = [];
-
-		foreach ( $elements as $element ) {
-			// Check if this is a form widget.
-			if ( isset( $element['widgetType'] ) && 'form' === $element['widgetType'] ) {
-				$form_name = '';
-
-				// Extract form_name from settings.
-				if ( isset( $element['settings']['form_name'] ) ) {
-					$form_name = $element['settings']['form_name'];
-				}
-
-				// Fallback to element ID if no form_name.
-				if ( empty( $form_name ) && isset( $element['id'] ) ) {
-					$form_name = 'Form ' . $element['id'];
-				}
-
-				if ( ! empty( $form_name ) ) {
-					$forms[ $form_name ] = [
-						'id'         => $form_name,
-						'name'       => $form_name,
-						'post_id'    => $post_id,
-						'post_title' => $post_title,
-					];
-				}
-			}
-
-			// Recursively check child elements.
-			if ( isset( $element['elements'] ) && is_array( $element['elements'] ) ) {
-				$forms = array_merge( $forms, $this->extract_forms_from_elementor_data( $element['elements'], $post_id, $post_title ) );
-			}
-		}
 
 		return $forms;
 	}
