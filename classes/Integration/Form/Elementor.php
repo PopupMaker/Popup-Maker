@@ -54,6 +54,19 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 	}
 
 	/**
+	 * Return a single form by ID.
+	 *
+	 * Elementor forms are widget instances, not centrally registered.
+	 *
+	 * @param string $id
+	 *
+	 * @return mixed
+	 */
+	public function get_form( $id ) {
+		return null;
+	}
+
+	/**
 	 * Returns an array of options for a select list.
 	 *
 	 * Should be in the format of $formId => $formLabel
