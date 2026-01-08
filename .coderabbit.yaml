@@ -28,11 +28,5 @@ reviews:
   # Auto-incremental reviews when new commits pushed
   auto_incremental_review: true
 
-# Language-specific settings
-language:
-  php:
-    level: codebase
-  javascript:
-    level: codebase
-  typescript:
-    level: codebase
+# Review language
+language: en-US
