@@ -16,10 +16,49 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 	public $key = 'bitform';
 
 	/**
-	 * Constructor hooks into Bit Form success action.
+	 * Stored popup ID from form submission.
+	 *
+	 * @var int|false
+	 */
+	protected $stored_popup_id = false;
+
+	/**
+	 * Constructor hooks into Bit Form success action and filters POST data.
 	 */
 	public function __construct() {
 		add_action( 'bitform_submit_success', [ $this, 'on_success' ], 10, 3 );
+		add_action( 'init', [ $this, 'filter_post_data' ], 5 );
+	}
+
+	/**
+	 * Store and remove Popup Maker fields from POST data before Bit Form processing.
+	 *
+	 * Bit Form iterates all POST data expecting only their defined fields.
+	 * We store the popup ID in memory before removing it from POST to prevent warnings.
+	 */
+	public function filter_post_data() {
+		// Only filter if this is a Bit Form submission.
+		if ( ! isset( $_POST['bitforms_id'] ) ) {
+			return;
+		}
+
+		// Store popup ID before removing from POST.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$this->stored_popup_id = isset( $_POST['pum_form_popup_id'] ) ? absint( $_POST['pum_form_popup_id'] ) : false;
+
+		// Remove our hidden field to prevent Bit Form warnings.
+		unset( $_POST['pum_form_popup_id'] );
+	}
+
+	/**
+	 * Get popup ID from stored value.
+	 *
+	 * Overrides parent to use stored value since we remove it from POST.
+	 *
+	 * @return int|false
+	 */
+	public function get_popup_id() {
+		return $this->stored_popup_id > 0 ? $this->stored_popup_id : false;
 	}
 
 	/**
@@ -48,7 +87,7 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 	public function get_forms() {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared
 		$forms = $wpdb->get_results(
 			"SELECT id, form_name FROM {$wpdb->prefix}bitforms_form ORDER BY form_name ASC"
 		);
