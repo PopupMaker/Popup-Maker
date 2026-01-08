@@ -39,10 +39,10 @@ if ( ! fs.existsSync( changelogPath ) ) {
 const changelogContent = fs.readFileSync( changelogPath, 'utf8' );
 
 /**
- * Extract content for a specific version
- * @param {string} content - Full changelog content
- * @param {string} version - Version to extract (e.g., "1.0.3")
- * @return {string|null} - Extracted content or null if not found
+ * Extract the changelog section for a specific released version.
+ * @param {string} content - The full CHANGELOG.md text.
+ * @param {string} version - The version identifier to locate (e.g., "1.0.3").
+ * @returns {string|null} The trimmed changelog content for the given version, or `null` if the version is not present.
  */
 function extractVersionContent( content, version ) {
 	// Support multiple version formats: ## v1.0.3, ## 1.0.3, etc.
@@ -56,9 +56,11 @@ function extractVersionContent( content, version ) {
 }
 
 /**
- * Extract unreleased changes
- * @param {string} content - Full changelog content
- * @return {string|null} - Extracted unreleased content or null if not found
+ * Extract the content under the "Unreleased" section of a changelog.
+ *
+ * Captures the text after the "## Unreleased" heading up to the next "##" heading or end of file and trims surrounding whitespace.
+ * @param {string} content - Full changelog text.
+ * @returns {string|null} The trimmed content of the "Unreleased" section, or `null` if the section is missing or empty.
  */
 function extractUnreleasedContent( content ) {
 	const unreleasedPattern = /^## Unreleased\s*([\s\S]*?)(?=\n## |\n$)/m;
@@ -72,9 +74,10 @@ function extractUnreleasedContent( content ) {
 }
 
 /**
- * Extract latest released version content
- * @param {string} content - Full changelog content
- * @return {object|null} - Object with version and content, or null if not found
+ * Find the first released version entry after the "Unreleased" section and return its version and associated changelog text.
+ *
+ * @param {string} content - Complete CHANGELOG.md text.
+ * @returns {{version: string, content: string}|null} An object with `version` (semantic version string) and `content` (trimmed section text) when a released version is found, `null` otherwise.
  */
 function extractLatestVersion( content ) {
 	// Find the first version heading after "Unreleased"
@@ -93,10 +96,13 @@ function extractLatestVersion( content ) {
 }
 
 /**
- * Format content for GitHub release body
- * @param {string} content - Raw changelog content
- * @param {string} version - Version number
- * @return {string} - Formatted content
+ * Prepare changelog content for use as a GitHub release body.
+ *
+ * Normalizes list formatting and trims surrounding whitespace. If `content` is falsy,
+ * returns a header that includes `version` and the message "No changelog content available."
+ * @param {string} content - Raw changelog content to format.
+ * @param {string} version - Version label used when no content is available.
+ * @returns {string} Formatted changelog text suitable for a GitHub release body.
  */
 function formatForGitHubRelease( content, version ) {
 	if ( ! content ) {
