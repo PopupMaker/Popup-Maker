@@ -64,6 +64,8 @@
 		"@code-atlantic/browserslist-config": "^1.0.1",
 		"@code-atlantic/eslint-plugin": "^1.3.1",
 		"@code-atlantic/stylelint-config": "^1.3.0",
+		"@commitlint/cli": "^20.3.0",
+		"@commitlint/config-conventional": "^20.3.0",
 		"@jest/globals": "^29.7.0",
 		"@nx/playwright": "20.3.3",
 		"@nx/storybook": "20.3.3",
@@ -86,6 +88,7 @@
 		"@wordpress/scripts": "^27.9.0",
 		"copy-webpack-plugin": "^12.0.2",
 		"glob": "^11.0.2",
+		"husky": "^9.1.7",
 		"mini-css-extract-plugin": "^2.9.2",
 		"minimist": "^1.2.8",
 		"nx": "20.3.4",
@@ -128,6 +131,12 @@
 		"start": "wp-scripts start --config webpack.config.js --config webpack.old.config.js",
 		"start:hot": "wp-scripts start --hot --config webpack.config.js",
 		"release": "node bin/build-release.js",
+		"prepare-release": "node bin/prepare-release.js",
+		"prepare-release:patch": "node bin/prepare-release.js --patch",
+		"prepare-release:minor": "node bin/prepare-release.js --minor",
+		"prepare-release:major": "node bin/prepare-release.js --major",
+		"changelog:update": "node bin/update-changelog.js",
+		"version:update": "node bin/update-versions.js",
 		"cache:stats": "node bin/webpack-cache-manager.js stats",
 		"cache:clean": "node bin/webpack-cache-manager.js clean",
 		"cache:validate": "node bin/webpack-cache-manager.js validate",
@@ -150,7 +159,8 @@
 		"packages:bump:minor": "node bin/bump-and-publish-packages.js --version-type=minor",
 		"packages:bump:patch": "node bin/bump-and-publish-packages.js --version-type=patch",
 		"packages:bump:major": "node bin/bump-and-publish-packages.js --version-type=major",
-		"wp-env": "wp-env"
+		"wp-env": "wp-env",
+		"prepare": "husky"
 	},
 	"workspaces": [
 		"./packages/*"
