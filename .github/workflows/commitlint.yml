@@ -1,0 +1,62 @@
+name: Commitlint
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+    push:
+        branches: [develop]
+
+jobs:
+    commitlint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # Fetch all history for commit analysis
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Validate commits
+              run: |
+                  # For PRs, check all commits in the PR
+                  if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+                    npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+                  else
+                    # For pushes, check the last commit
+                    npx commitlint --from HEAD~1 --to HEAD --verbose
+                  fi
+
+            - name: Post helpful message on failure
+              if: failure() && github.event_name == 'pull_request'
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: `## ❌ Commit Message Format Error
+
+                      Your commits don't follow the conventional commit format. Please use:
+
+                      \`\`\`
+                      type(scope): subject
+
+                      [optional body]
+
+                      [optional footer]
+                      \`\`\`
+
+                      **Valid types:** feat, fix, perf, refactor, docs, style, test, chore, ci, revert
+                      **Valid scopes:** core, admin, editor, cta, triggers, analytics, api, deps, docs, release
+                      **Example:** \`feat(triggers): add exit intent detection\`
+
+                      See: https://www.conventionalcommits.org/`
+                      })
