@@ -2,6 +2,11 @@
  * Copyright (c) 2024, WP Popup Maker
  ******************************************************************************/
 
+/**
+ * Bit Form integration for Popup Maker.
+ *
+ * Tracks form submissions and triggers popup conversions.
+ */
 {
 	const formProvider = 'bitform';
 	const $ = window.jQuery;
