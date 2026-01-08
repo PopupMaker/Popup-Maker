@@ -158,7 +158,7 @@ jobs:
         continue-on-error: true
         id: eslint
         run: |
-          echo "${{ steps.changed-js.outputs.all_changed_files }}" | xargs npm run lint:js -- --format=compact
+          echo "${{ steps.changed-js.outputs.all_changed_files }}" | xargs npm run lint:js:changed --
 
       - name: Run Stylelint on changed files
         if: steps.changed-css.outputs.any_changed == 'true'
