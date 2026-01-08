@@ -140,6 +140,10 @@ class PUM_AssetCache {
 
 			add_action( 'wp_print_scripts', [ __CLASS__, 'localize_bundled_scripts' ], 10 );
 
+			// Hook into WordPress script/style attribute filters for ID obfuscation.
+			add_filter( 'wp_script_attributes', [ __CLASS__, 'obfuscate_script_ids' ], 10, 1 );
+			add_filter( 'wp_style_attributes', [ __CLASS__, 'obfuscate_style_ids' ], 10, 1 );
+
 			// Prevent reinitialization.
 			self::$initialized = true;
 		}
@@ -1185,5 +1189,143 @@ class PUM_AssetCache {
 		});
 
 		return array_unique( $filtered_deps );
+	}
+
+	/**
+	 * Obfuscate script tag ID attributes for ad-blocker bypass.
+	 *
+	 * Masks the HTML id attribute of enqueued script tags to avoid ad-blocker
+	 * detection while preserving internal WordPress handles for dependency management.
+	 *
+	 * Only runs on frontend when bypass_adblockers setting is enabled.
+	 *
+	 * @since 1.21.0
+	 *
+	 * @param array $attributes Script tag attributes.
+	 * @return array Modified attributes with obfuscated ID if applicable.
+	 */
+	public static function obfuscate_script_ids( $attributes ) {
+		// Only run on frontend when bypass is enabled.
+		if ( is_admin() || ! pum_get_option( 'bypass_adblockers', false ) ) {
+			return $attributes;
+		}
+
+		if ( empty( $attributes['id'] ) ) {
+			return $attributes;
+		}
+
+		// WordPress adds '-js' suffix to handle for script IDs.
+		$original_id = $attributes['id'];
+		$handle      = str_replace( '-js', '', $original_id );
+
+		// Check if this is a Popup Maker handle that should be obfuscated.
+		if ( self::should_obfuscate_handle( $handle ) ) {
+			$obfuscated_id    = self::generate_obfuscated_id( $handle );
+			$attributes['id'] = $obfuscated_id;
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Obfuscate style tag ID attributes for ad-blocker bypass.
+	 *
+	 * Masks the HTML id attribute of enqueued style tags to avoid ad-blocker
+	 * detection while preserving internal WordPress handles for dependency management.
+	 *
+	 * Only runs on frontend when bypass_adblockers setting is enabled.
+	 *
+	 * @since 1.21.0
+	 *
+	 * @param array $attributes Style tag attributes.
+	 * @return array Modified attributes with obfuscated ID if applicable.
+	 */
+	public static function obfuscate_style_ids( $attributes ) {
+		// Only run on frontend when bypass is enabled.
+		if ( is_admin() || ! pum_get_option( 'bypass_adblockers', false ) ) {
+			return $attributes;
+		}
+
+		if ( empty( $attributes['id'] ) ) {
+			return $attributes;
+		}
+
+		// WordPress adds '-css' suffix to handle for style IDs.
+		$original_id = $attributes['id'];
+		$handle      = str_replace( '-css', '', $original_id );
+
+		// Check if this is a Popup Maker handle that should be obfuscated.
+		if ( self::should_obfuscate_handle( $handle ) ) {
+			$obfuscated_id    = self::generate_obfuscated_id( $handle );
+			$attributes['id'] = $obfuscated_id . '-css'; // Keep -css suffix for styles.
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Check if a script/style handle should be obfuscated.
+	 *
+	 * Determines if the given handle matches Popup Maker patterns and should
+	 * have its ID attribute obfuscated. Excludes admin scripts from obfuscation.
+	 *
+	 * @since 1.21.0
+	 *
+	 * @param string $handle Script or style handle.
+	 * @return bool True if handle should be obfuscated, false otherwise.
+	 */
+	public static function should_obfuscate_handle( $handle ) {
+		// Obfuscate frontend Popup Maker handles only.
+		$patterns = [
+			'popup-maker-',  // Modern packages.
+			'pum-',          // Legacy handles (but not admin).
+		];
+
+		foreach ( $patterns as $pattern ) {
+			if ( 0 === strpos( $handle, $pattern ) ) {
+				// Exclude admin scripts.
+				if ( false !== strpos( $handle, 'admin' ) ) {
+					return false;
+				}
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Generate obfuscated ID for script/style tag.
+	 *
+	 * Reuses the same logic as cache filename generation for consistency.
+	 * Respects the adblock_bypass_url_method setting.
+	 *
+	 * Methods:
+	 * - 'random': MD5 hash of site URL + handle (consistent per install)
+	 * - 'custom': User-defined prefix + sanitized handle suffix
+	 *
+	 * @since 1.21.0
+	 *
+	 * @param string $handle Original script/style handle.
+	 * @return string Obfuscated ID.
+	 */
+	public static function generate_obfuscated_id( $handle ) {
+		$site_url = get_site_url();
+		$method   = pum_get_option( 'adblock_bypass_url_method', 'random' );
+
+		switch ( $method ) {
+			case 'random':
+				// Use same hash method as cache filenames for consistency.
+				return md5( $site_url . $handle );
+
+			case 'custom':
+				// Use custom prefix with sanitized handle suffix.
+				$prefix = pum_get_option( 'adblock_bypass_custom_filename', 'pm' );
+				$suffix = preg_replace( '/^(popup-maker-|pum-)/', '', $handle );
+				return sanitize_html_class( $prefix . '-' . $suffix );
+
+			default:
+				return $handle; // Fallback to original.
+		}
 	}
 }
