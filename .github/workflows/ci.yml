@@ -1,0 +1,315 @@
+name: CI - Code Quality
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+  workflow_dispatch:
+
+env:
+  WP_VERSION: 6.1.1
+
+# Cancels all previous workflow runs for the same branch that have not yet completed.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================================
+  # PHP Code Quality - PHPCS & PHPStan
+  # ============================================================================
+  php-quality:
+    name: PHP ${{ matrix.php-version }} - Code Quality
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get changed PHP files
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+        with:
+          files: |
+            **/*.php
+          files_ignore: |
+            vendor/**
+            vendor-prefixed/**
+            tests/**
+            node_modules/**
+
+      - name: Setup cache extensions
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: 'curl, zip'
+          key: php-${{ matrix.php-version }}-ext
+
+      - name: Cache extensions
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
+      - name: Setup PHP
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: curl, zip
+          tools: composer, cs2pr, phpcs
+          coverage: none
+
+      - name: Get composer cache directory
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install composer dependencies
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: composer update --no-interaction --optimize-autoloader --ignore-platform-reqs
+
+      - name: Run PHPCS on changed files
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: phpcs
+        continue-on-error: true
+        run: |
+          echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' > .changed-files.txt
+          vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml --file-list=.changed-files.txt
+
+      - name: Show PHPCS results in PR
+        if: steps.changed-files.outputs.any_changed == 'true' && always() && steps.phpcs.outcome == 'failure'
+        run: cs2pr ./phpcs-report.xml
+
+      - name: Run PHPStan
+        if: steps.changed-files.outputs.any_changed == 'true' && matrix.php-version == '8.2'
+        continue-on-error: true
+        run: composer phpstan
+
+      - name: Check for PHPCS failures
+        if: steps.changed-files.outputs.any_changed == 'true' && steps.phpcs.outcome == 'failure'
+        run: exit 1
+
+  # ============================================================================
+  # JavaScript/TypeScript Code Quality
+  # ============================================================================
+  js-quality:
+    name: JS/TS Code Quality
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get changed JS/TS files
+        id: changed-js
+        uses: tj-actions/changed-files@v41
+        with:
+          files: |
+            **/*.js
+            **/*.ts
+            **/*.tsx
+            **/*.jsx
+          files_ignore: |
+            node_modules/**
+            vendor/**
+            dist/**
+            build/**
+            coverage/**
+
+      - name: Get changed CSS/SCSS files
+        id: changed-css
+        uses: tj-actions/changed-files@v41
+        with:
+          files: |
+            **/*.css
+            **/*.scss
+          files_ignore: |
+            node_modules/**
+            vendor/**
+            dist/**
+            build/**
+
+      - name: Setup Node.js
+        if: steps.changed-js.outputs.any_changed == 'true' || steps.changed-css.outputs.any_changed == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: steps.changed-js.outputs.any_changed == 'true' || steps.changed-css.outputs.any_changed == 'true'
+        run: npm ci
+
+      - name: Run ESLint on changed files
+        if: steps.changed-js.outputs.any_changed == 'true'
+        continue-on-error: true
+        id: eslint
+        run: |
+          echo "${{ steps.changed-js.outputs.all_changed_files }}" | xargs npm run lint:js -- --format=compact
+
+      - name: Run Stylelint on changed files
+        if: steps.changed-css.outputs.any_changed == 'true'
+        continue-on-error: true
+        id: stylelint
+        run: |
+          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs npm run lint:style -- --formatter=compact
+
+      - name: Run TypeScript type checking
+        if: steps.changed-js.outputs.any_changed == 'true'
+        continue-on-error: true
+        id: tsc
+        run: npm run build:tsc
+
+      - name: Check for linting failures
+        if: (steps.changed-js.outputs.any_changed == 'true' || steps.changed-css.outputs.any_changed == 'true') && (steps.eslint.outcome == 'failure' || steps.stylelint.outcome == 'failure' || steps.tsc.outcome == 'failure')
+        run: |
+          echo "❌ Code quality checks failed:"
+          [[ "${{ steps.eslint.outcome }}" == "failure" ]] && echo "  - ESLint found issues"
+          [[ "${{ steps.stylelint.outcome }}" == "failure" ]] && echo "  - Stylelint found issues"
+          [[ "${{ steps.tsc.outcome }}" == "failure" ]] && echo "  - TypeScript type errors"
+          exit 1
+
+  # ============================================================================
+  # Build Validation
+  # ============================================================================
+  build-validation:
+    name: Build Validation
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate dependency tree
+        continue-on-error: true
+        id: dep-tree
+        run: npm run validate:dep-tree
+
+      - name: Build project
+        id: build
+        run: npm run build
+
+      - name: Check for build failures
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "❌ Build failed - webpack compilation errors detected"
+          exit 1
+
+      - name: Report dependency tree issues
+        if: steps.dep-tree.outcome == 'failure'
+        run: |
+          echo "⚠️ Dependency tree validation found issues"
+          echo "Run 'npm run validate:dep-tree:fix' locally to resolve"
+
+  # ============================================================================
+  # Security Scanning (Optional but Recommended)
+  # ============================================================================
+  security:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install composer dependencies
+        run: composer update --no-interaction --ignore-platform-reqs
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run composer audit
+        continue-on-error: true
+        run: composer audit || echo "⚠️ Composer audit found vulnerabilities"
+
+      - name: Run npm audit
+        continue-on-error: true
+        run: npm audit --audit-level=high || echo "⚠️ NPM audit found vulnerabilities"
+
+  # ============================================================================
+  # PHPUnit Tests (DISABLED - Enable when test suite is comprehensive)
+  # ============================================================================
+  phpunit:
+    name: PHPUnit - PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+    if: false # Disabled until test suite is more comprehensive
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2']
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: curl, mysql, zip
+          coverage: xdebug
+
+      - name: Install composer dependencies
+        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
+
+      - name: Install WordPress test environment
+        run: bash bin/install-wp-tests.sh wordpress_test root 'password' mysql
+
+      - name: Run PHPUnit tests
+        run: composer tests

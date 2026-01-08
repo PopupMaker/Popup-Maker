@@ -46,6 +46,7 @@
 		"format": "vendor/bin/phpcbf --standard=.phpcs.xml.dist --report-summary --report-source",
 		"lint": "vendor/bin/phpcs --standard=.phpcs.xml.dist",
 		"lint:report": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml",
+		"lint:changed": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml --file-list=.changed-files.txt",
 		"generate-stubs": "./bin/generate-stubs.sh",
 		"install-strauss": [
 			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.22.4/strauss.phar"
