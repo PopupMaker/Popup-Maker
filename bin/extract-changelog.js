@@ -39,15 +39,27 @@ if ( ! fs.existsSync( changelogPath ) ) {
 const changelogContent = fs.readFileSync( changelogPath, 'utf8' );
 
 /**
+ * Escape regex metacharacters in a string
+ * @param {string} str - String to escape
+ * @return {string} - Escaped string safe for use in RegExp
+ */
+function escapeRegex( str ) {
+	return str.replace( /[.+*?^$[\](){}|\\]/g, '\\$&' );
+}
+
+/**
  * Extract content for a specific version
  * @param {string} content - Full changelog content
  * @param {string} version - Version to extract (e.g., "1.0.3")
  * @return {string|null} - Extracted content or null if not found
  */
 function extractVersionContent( content, version ) {
+	// Escape version string to handle metacharacters like dots and plus signs
+	const escapedVersion = escapeRegex( version );
+
 	// Support multiple version formats: ## v1.0.3, ## 1.0.3, etc.
 	const versionPattern = new RegExp(
-		`^## (?:v)?${ version }(?:\\s*-\\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\\s*\\n([\\s\\S]*?)(?=\\n## |\\n$)`,
+		`^## (?:v)?${ escapedVersion }(?:\\s*-\\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\\s*\\n([\\s\\S]*?)(?=\\n## |\\n$)`,
 		'm'
 	);
 

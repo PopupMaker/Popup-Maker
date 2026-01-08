@@ -38,25 +38,40 @@ jobs:
               uses: actions/github-script@v7
               with:
                   script: |
-                      github.rest.issues.createComment({
+                      // Check for existing commitlint error comment
+                      const comments = await github.rest.issues.listComments({
                         issue_number: context.issue.number,
                         owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: `## ❌ Commit Message Format Error
+                        repo: context.repo.repo
+                      });
 
-                      Your commits don't follow the conventional commit format. Please use:
+                      const marker = '## ❌ Commit Message Format Error';
+                      const existingComment = comments.data.find(comment =>
+                        comment.body.includes(marker)
+                      );
 
-                      \`\`\`
-                      type(scope): subject
+                      // Only post if no existing comment found
+                      if (!existingComment) {
+                        await github.rest.issues.createComment({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          body: `## ❌ Commit Message Format Error
 
-                      [optional body]
+                        Your commits don't follow the conventional commit format. Please use:
 
-                      [optional footer]
-                      \`\`\`
+                        \`\`\`
+                        type(scope): subject
 
-                      **Valid types:** feat, fix, perf, refactor, docs, style, test, chore, ci, revert
-                      **Valid scopes:** core, admin, editor, cta, triggers, analytics, api, deps, docs, release
-                      **Example:** \`feat(triggers): add exit intent detection\`
+                        [optional body]
 
-                      See: https://www.conventionalcommits.org/`
-                      })
+                        [optional footer]
+                        \`\`\`
+
+                        **Valid types:** feat, fix, perf, refactor, docs, style, test, chore, ci, revert
+                        **Valid scopes:** core, admin, editor, cta, triggers, analytics, api, deps, docs, release
+                        **Example:** \`feat(triggers): add exit intent detection\`
+
+                        See: https://www.conventionalcommits.org/`
+                        });
+                      }
