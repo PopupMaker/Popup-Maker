@@ -10,7 +10,6 @@ reviews:
   auto_review:
     enabled: true
     base_branches:
-      - master
       - develop
 
   # Collapse file walkthrough in PR comments
