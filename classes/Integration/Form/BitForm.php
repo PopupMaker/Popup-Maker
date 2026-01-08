@@ -38,6 +38,7 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 	 */
 	public function filter_post_data() {
 		// Only filter if this is a Bit Form submission.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( ! isset( $_POST['bitforms_id'] ) ) {
 			return;
 		}
