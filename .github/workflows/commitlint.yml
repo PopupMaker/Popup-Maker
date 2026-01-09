@@ -109,11 +109,6 @@ jobs:
                         - \`improve(popup): enhance animation speed options\`
                         - \`fix(forms): resolve Contact Form 7 tracking issue\`
 
-                        ### AI Attribution Forbidden
-                        Do not include AI attribution lines like:
-                        - \`Co-Authored-By: Claude <noreply@anthropic.com>\`
-                        - \`🤖 Generated with [Claude Code](https://claude.ai/code)\`
-
                         See: https://www.conventionalcommits.org/`
                         });
                       }
