@@ -73,5 +73,7 @@ module.exports = {
 		],
 		'subject-max-length': [ 2, 'always', 72 ],
 		'body-max-line-length': [ 2, 'always', 100 ],
+		// Warn instead of error for case - allows proper nouns, project names, etc.
+		'subject-case': [ 1, 'never', [ 'upper-case' ] ],
 	},
 };
