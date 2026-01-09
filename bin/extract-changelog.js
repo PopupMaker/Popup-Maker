@@ -75,7 +75,8 @@ function extractVersionContent( content, version ) {
  */
 function extractUnreleasedContent( content ) {
 	// Handles both LF and CRLF line endings
-	const unreleasedPattern = /^## Unreleased\s*([\s\S]*?)(?=\r?\n## |\r?\n?$)/m;
+	const unreleasedPattern =
+		/^## Unreleased\s*([\s\S]*?)(?=\r?\n## |\r?\n?$)/m;
 	const match = content.match( unreleasedPattern );
 
 	if ( ! match || ! match[ 1 ].trim() ) {
@@ -98,7 +99,9 @@ function extractLatestVersion( content ) {
 	const unreleasedMatch = content.match( /^## Unreleased\s*\r?\n/m );
 
 	// Search for version after Unreleased, or from start if no Unreleased section exists
-	const searchStart = unreleasedMatch ? unreleasedMatch.index + unreleasedMatch[ 0 ].length : 0;
+	const searchStart = unreleasedMatch
+		? unreleasedMatch.index + unreleasedMatch[ 0 ].length
+		: 0;
 	const searchContent = content.slice( searchStart );
 
 	// Find first semver version in the search content
