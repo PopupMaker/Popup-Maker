@@ -1,0 +1,125 @@
+name: Request Release Approval
+
+on:
+  repository_dispatch:
+    types: [request-approval]
+
+jobs:
+  send-approval-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract changelog for version
+        id: changelog
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+
+          # Try multiple changelog extraction methods for robustness
+          CHANGELOG=""
+
+          # Method 1: Extract from changelog.txt (WordPress style)
+          if [ -f "changelog.txt" ]; then
+            CHANGELOG=$(sed -n "/^= $VERSION/,/^= [0-9]/p" changelog.txt | head -n -1 | tail -n +2)
+          fi
+
+          # Method 2: Extract from CHANGELOG.md if changelog.txt failed
+          if [ -z "$CHANGELOG" ] && [ -f "CHANGELOG.md" ]; then
+            CHANGELOG=$(sed -n "/^## \[$VERSION\]/,/^## \[/p" CHANGELOG.md | head -n -1 | tail -n +2)
+          fi
+
+          # Method 3: Fallback to readme.txt
+          if [ -z "$CHANGELOG" ] && [ -f "readme.txt" ]; then
+            CHANGELOG=$(sed -n "/^= $VERSION/,/^= [0-9]/p" readme.txt | head -n -1 | tail -n +2)
+          fi
+
+          # Truncate to 500 chars for Slack message
+          CHANGELOG=$(echo "$CHANGELOG" | head -c 500)
+
+          # Escape for JSON
+          CHANGELOG=$(echo "$CHANGELOG" | jq -Rs .)
+
+          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+
+      - name: Send Slack approval request
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV }}
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          PLUGIN="${{ github.event.repository.name }}"
+          ARTIFACT="${{ github.event.client_payload.artifact }}"
+          REPO="${{ github.event.repository.name }}"
+          DOWNLOAD_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          CHANGELOG=${{ steps.changelog.outputs.changelog }}
+
+          # Build action value JSON (escaped for Slack)
+          ACTION_VALUE=$(jq -nc \
+            --arg repo "$REPO" \
+            --arg version "$VERSION" \
+            --arg artifact "$ARTIFACT" \
+            --arg plugin "$PLUGIN" \
+            '{repo: $repo, version: $version, artifact: $artifact, plugin: $plugin}')
+
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d @- << EOF
+          {
+            "text": "🔔 Release Approval Required: ${PLUGIN} v${VERSION}",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "🔔 Release Approval Required",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {"type": "mrkdwn", "text": "*Plugin:*\n${PLUGIN}"},
+                  {"type": "mrkdwn", "text": "*Version:*\n${VERSION}"}
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Changelog Preview:*\n${CHANGELOG:1:-1}"
+                }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📦 View Build", "emoji": true},
+                    "url": "${DOWNLOAD_URL}"
+                  }
+                ]
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "✅ Approve & Deploy", "emoji": true},
+                    "style": "primary",
+                    "action_id": "approve_release",
+                    "value": "${ACTION_VALUE}"
+                  },
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "❌ Reject", "emoji": true},
+                    "style": "danger",
+                    "action_id": "reject_release",
+                    "value": "${ACTION_VALUE}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF

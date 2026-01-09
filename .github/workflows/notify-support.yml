@@ -1,0 +1,118 @@
+name: Notify Support Team
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  notify-support:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract customer-facing changelog
+        id: changelog
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          BODY="${{ github.event.release.body }}"
+
+          # Filter to customer-facing changes only (bullet points)
+          # Remove technical details, keep user-facing items
+          CHANGELOG=$(echo "$BODY" | grep -E "^[-*•]|^\s+[-*•]" | head -10)
+
+          # If no bullet points found, try to extract from body
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG=$(echo "$BODY" | head -10)
+          fi
+
+          # Escape for JSON and truncate
+          CHANGELOG=$(echo "$CHANGELOG" | head -c 800)
+
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Determine release type
+        id: release_type
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+
+          # Check for pre-release indicators
+          if [[ "$TAG" =~ -alpha || "$TAG" =~ -beta || "$TAG" =~ -rc ]]; then
+            echo "type=Pre-release" >> $GITHUB_OUTPUT
+            echo "emoji=🧪" >> $GITHUB_OUTPUT
+          else
+            echo "type=Stable" >> $GITHUB_OUTPUT
+            echo "emoji=🚀" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send to #support-updates
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_SUPPORT }}
+        run: |
+          PLUGIN="${{ github.event.repository.name }}"
+          VERSION="${{ github.event.release.tag_name }}"
+          RELEASE_URL="${{ github.event.release.html_url }}"
+          RELEASE_TYPE="${{ steps.release_type.outputs.type }}"
+          EMOJI="${{ steps.release_type.outputs.emoji }}"
+          CHANGELOG='${{ steps.changelog.outputs.changelog }}'
+
+          # Escape changelog for JSON
+          CHANGELOG_ESCAPED=$(echo "$CHANGELOG" | jq -Rs . | sed 's/^"//;s/"$//')
+
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d @- << EOF
+          {
+            "text": "${EMOJI} ${PLUGIN} ${VERSION} Released",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "${EMOJI} ${PLUGIN} ${VERSION} Released",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {"type": "mrkdwn", "text": "*Release Type:*\n${RELEASE_TYPE}"},
+                  {"type": "mrkdwn", "text": "*Version:*\n${VERSION}"}
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*What's New for Customers:*\n${CHANGELOG_ESCAPED}"
+                }
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Support Team Actions:*\n• Review changelog for common customer questions\n• Update support docs if needed\n• Monitor HelpScout for related tickets"
+                }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📖 Full Changelog", "emoji": true},
+                    "url": "${RELEASE_URL}"
+                  },
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📥 Download ZIP", "emoji": true},
+                    "url": "${RELEASE_URL}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
