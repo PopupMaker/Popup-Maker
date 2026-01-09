@@ -4,6 +4,7 @@ import './contactform7';
 import './fluentforms';
 import './formidableforms';
 import './gravityforms';
+import './happyforms';
 import './mc4wp';
 import './newsletter';
 import './ninjaforms';
