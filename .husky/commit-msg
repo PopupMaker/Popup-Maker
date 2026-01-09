@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+# Reject commits with AI attribution
+COMMIT_MSG_FILE="$1"
+
+if grep -qE "(Co-Authored-By: Claude|Generated with.*Claude Code|🤖 Generated with)" "$COMMIT_MSG_FILE"; then
+  echo ""
+  echo "❌ Commit rejected: AI attribution detected"
+  echo ""
+  echo "Please remove AI attribution lines like:"
+  echo "  - Co-Authored-By: Claude <noreply@anthropic.com>"
+  echo "  - 🤖 Generated with [Claude Code](https://claude.ai/code)"
+  echo ""
+  exit 1
+fi
+
+npx --no -- commitlint --edit "$1"

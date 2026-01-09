@@ -1,0 +1,119 @@
+name: Commitlint
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+    push:
+        branches: [develop]
+
+jobs:
+    commitlint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0 # Fetch all history for commit analysis
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Check for AI attribution
+              run: |
+                  # Check commits for AI attribution
+                  if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+                    COMMITS=$(git log --format=%H ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+                  else
+                    COMMITS=$(git log --format=%H HEAD~1..HEAD)
+                  fi
+
+                  AI_FOUND=false
+                  for commit in $COMMITS; do
+                    if git log --format=%B -n 1 $commit | grep -qE "(Co-Authored-By: Claude|Generated with.*Claude Code|🤖 Generated with)"; then
+                      echo "❌ AI attribution found in commit: $commit"
+                      echo "   Message:"
+                      git log --format=%B -n 1 $commit | head -5
+                      echo ""
+                      AI_FOUND=true
+                    fi
+                  done
+
+                  if [ "$AI_FOUND" = true ]; then
+                    echo ""
+                    echo "❌ Commits rejected: AI attribution detected"
+                    echo ""
+                    echo "Please remove AI attribution lines like:"
+                    echo "  - Co-Authored-By: Claude <noreply@anthropic.com>"
+                    echo "  - 🤖 Generated with [Claude Code](https://claude.ai/code)"
+                    exit 1
+                  fi
+
+            - name: Validate commits
+              run: |
+                  # For PRs, check all commits in the PR
+                  if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+                    npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+                  else
+                    # For pushes, check the last commit
+                    npx commitlint --from HEAD~1 --to HEAD --verbose
+                  fi
+
+            - name: Post helpful message on failure
+              if: failure() && github.event_name == 'pull_request'
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      // Check for existing commitlint error comment
+                      const comments = await github.rest.issues.listComments({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo
+                      });
+
+                      const marker = '## ❌ Commit Validation Error';
+                      const existingComment = comments.data.find(comment =>
+                        comment.body.includes(marker)
+                      );
+
+                      // Only post if no existing comment found
+                      if (!existingComment) {
+                        await github.rest.issues.createComment({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          body: `## ❌ Commit Validation Error
+
+                        Your commits don't pass validation. Common issues:
+
+                        ### Format Requirements
+                        Commits must follow conventional commit format:
+
+                        \`\`\`
+                        type(scope): subject
+
+                        [optional body]
+
+                        [optional footer]
+                        \`\`\`
+
+                        **Valid types:** feat, fix, improve, perf, refactor, docs, style, test, build, ci, chore, revert
+                        **Valid scopes:** admin, conditions, cookies, frontend, popup, theme, triggers, forms, extensions, integrations, accessibility, performance, ui, ux, build, deps, tests, api, core, docs, release, support
+
+                        **Examples:**
+                        - \`feat(triggers): add exit intent detection\`
+                        - \`improve(popup): enhance animation speed options\`
+                        - \`fix(forms): resolve Contact Form 7 tracking issue\`
+
+                        ### AI Attribution Forbidden
+                        Do not include AI attribution lines like:
+                        - \`Co-Authored-By: Claude <noreply@anthropic.com>\`
+                        - \`🤖 Generated with [Claude Code](https://claude.ai/code)\`
+
+                        See: https://www.conventionalcommits.org/`
+                        });
+                      }
