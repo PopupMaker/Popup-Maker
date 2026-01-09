@@ -68,9 +68,12 @@ jobs:
                         [optional footer]
                         \`\`\`
 
-                        **Valid types:** feat, fix, perf, refactor, docs, style, test, chore, ci, revert
-                        **Valid scopes:** core, admin, editor, cta, triggers, analytics, api, deps, docs, release
-                        **Example:** \`feat(triggers): add exit intent detection\`
+                        **Valid types:** feat, fix, improve, perf, refactor, docs, style, test, build, ci, chore, revert
+                        **Valid scopes:** admin, conditions, cookies, frontend, popup, theme, triggers, forms, extensions, integrations, accessibility, performance, ui, ux, build, deps, tests, api, core, docs, release, support
+                        **Examples:**
+                        - \`feat(triggers): add exit intent detection\`
+                        - \`improve(popup): enhance animation speed options\`
+                        - \`fix(forms): resolve Contact Form 7 tracking issue\`
 
                         See: https://www.conventionalcommits.org/`
                         });
