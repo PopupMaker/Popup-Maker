@@ -65,7 +65,7 @@ class Assets extends Controller {
 				'varsName' => 'popupMakerAdminBar',
 				'vars'     => [
 					'i18n' => [
-						'instructions' => __( 'After clicking ok, click the element you need a CSS selector for.', 'popup-maker' ),
+						'instructions' => __( 'Click Start Selection, then click a page element (text, button, image, etc.) to get its CSS selector.', 'popup-maker' ),
 						'results'      => _x( 'Selector', 'JS alert for CSS get selector tool', 'popup-maker' ),
 						'close'        => _x( 'Close', 'JS alert for CSS get selector tool', 'popup-maker' ),
 						'copy'         => _x( 'Copy', 'JS alert for CSS get selector tool', 'popup-maker' ),
