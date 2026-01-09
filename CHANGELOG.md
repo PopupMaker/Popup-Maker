@@ -4,6 +4,12 @@
 
 **Features**
 
+-   Added [Forminator integration](https://wppopupmaker.com/form-integrations/forminator/) for form submission tracking and conversion analytics.
+
+## v1.21.5 - 2025-10-13
+
+**Features**
+
 -   Added Newsletter plugin (thenewsletterplugin.com) form integration for success detection and conversion tracking. **Note:** Newsletter forms must use `[newsletter_form ajax="true"]` shortcode to enable AJAX submission mode for the integration to work.
 
 **Improvements**
@@ -16,8 +22,6 @@
 -   Fixed license key not deactivating properly.
 -   Fixed issue where license keys were being saved as asterisks instead of the actual key.
 -   Fixed issue where filter `replace_editor` was being used as an action without returning the value.
-
-## v1.21.5 - 2025-10-13
 
 **Improvements**
 
