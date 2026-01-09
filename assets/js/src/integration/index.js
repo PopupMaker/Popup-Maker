@@ -6,6 +6,7 @@ import './fluentforms';
 import './formidableforms';
 import './forminator';
 import './gravityforms';
+import './happyforms';
 import './kaliForms';
 import './mc4wp';
 import './newsletter';
