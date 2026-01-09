@@ -9,12 +9,7 @@
     ".": {
       "component": "popup-maker",
       "changelog-path": "changelog.txt",
-      "changelog-type": "wordpress",
-      "extra-files": [
-        "popup-maker.php",
-        "readme.txt",
-        "includes/class-popmake.php"
-      ]
+      "changelog-type": "wordpress"
     }
   }
 }

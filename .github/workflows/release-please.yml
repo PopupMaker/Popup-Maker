@@ -22,13 +22,17 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
-      version: ${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}
+      # Only construct version when release is created to avoid malformed ".." strings
+      version: ${{ steps.release.outputs.release_created && format('{0}.{1}.{2}', steps.release.outputs.major, steps.release.outputs.minor, steps.release.outputs.patch) || '' }}
       pr: ${{ steps.release.outputs.pr }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Run Release Please
         id: release
-        uses: google-github-actions/release-please-action@v4
+        uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: .release-please-config.json
@@ -38,7 +42,35 @@ jobs:
         run: |
           echo "Release created: ${{ steps.release.outputs.release_created }}"
           echo "Tag: ${{ steps.release.outputs.tag_name }}"
-          echo "Version: ${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}"
           echo "PR: ${{ steps.release.outputs.pr }}"
           echo "All outputs:"
           echo '${{ toJSON(steps.release.outputs) }}'
+
+      # When a release is created, update version in all plugin files
+      # Uses the battle-tested update-versions.js script
+      - name: Setup Node.js
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm ci
+
+      - name: Update version in plugin files
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          VERSION="${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}"
+          echo "Updating all plugin files to version $VERSION"
+          npm run version:update -- "$VERSION"
+
+      - name: Commit version updates
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "chore(release): update version files to ${{ steps.release.outputs.tag_name }}"
+          git push
