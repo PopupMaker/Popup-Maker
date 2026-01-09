@@ -50,6 +50,7 @@ class PUM_Integrations {
 				'bricksbuilder'   => new PUM_Integration_Form_BricksBuilder(),
 				'forminator'      => new PUM_Integration_Form_Forminator(),
 				'elementor'       => new PUM_Integration_Form_Elementor(),
+				'kaliForms'       => new PUM_Integration_Form_KaliForms(),
 				// Page Builders.
 				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
 				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
