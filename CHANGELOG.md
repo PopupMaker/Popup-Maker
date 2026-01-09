@@ -4,6 +4,7 @@
 
 **Features**
 
+-   Added script and style ID obfuscation to bypass ad-blockers that target Popup Maker assets. Asset handles are now randomized on each page load to prevent blocking by handle-based filters.
 -   Added Newsletter plugin (thenewsletterplugin.com) form integration for success detection and conversion tracking. **Note:** Newsletter forms must use `[newsletter_form ajax="true"]` shortcode to enable AJAX submission mode for the integration to work.
 
 **Improvements**
