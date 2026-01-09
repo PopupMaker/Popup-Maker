@@ -1,9 +1,16 @@
 name: Release Please
 
 on:
-  push:
-    branches:
-      - develop
+  # Manual trigger for testing
+  workflow_dispatch:
+
+  # Weekly schedule (Monday 9am UTC) - Primary trigger
+  # Aggregates all commits since last release into a single PR
+  schedule:
+    - cron: '0 9 * * 1'
+
+  # NOTE: No push trigger - releases are weekly rollups, not per-commit
+  # For emergency patches, use: npm run prepare-release:patch -- --auto
 
 permissions:
   contents: write
