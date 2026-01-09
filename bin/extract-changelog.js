@@ -58,8 +58,9 @@ function extractVersionContent( content, version ) {
 	const escapedVersion = escapeRegex( version );
 
 	// Support multiple version formats: ## v1.0.3, ## 1.0.3, etc.
+	// Handles both LF and CRLF line endings
 	const versionPattern = new RegExp(
-		`^## (?:v)?${ escapedVersion }(?:\\s*-\\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\\s*\\n([\\s\\S]*?)(?=\\n## |\\n$)`,
+		`^## (?:v)?${ escapedVersion }(?:\\s*-\\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\\s*\\r?\\n([\\s\\S]*?)(?=\\r?\\n## |\\r?\\n?$)`,
 		'm'
 	);
 
@@ -73,7 +74,8 @@ function extractVersionContent( content, version ) {
  * @return {string|null} - Extracted unreleased content or null if not found
  */
 function extractUnreleasedContent( content ) {
-	const unreleasedPattern = /^## Unreleased\s*([\s\S]*?)(?=\n## |\n$)/m;
+	// Handles both LF and CRLF line endings
+	const unreleasedPattern = /^## Unreleased\s*([\s\S]*?)(?=\r?\n## |\r?\n?$)/m;
 	const match = content.match( unreleasedPattern );
 
 	if ( ! match || ! match[ 1 ].trim() ) {
@@ -89,9 +91,10 @@ function extractUnreleasedContent( content ) {
  * @return {object|null} - Object with version and content, or null if not found
  */
 function extractLatestVersion( content ) {
-	// Find the first version heading after "Unreleased"
+	// Find the first semver version heading in the file
+	// Handles both LF and CRLF line endings
 	const versionPattern =
-		/^## (?:v)?(\d+\.\d+\.\d+)(?:\s*-\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\s*\n([\s\S]*?)(?=\n## |\n$)/m;
+		/^## (?:v)?(\d+\.\d+\.\d+)(?:\s*-\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\s*\r?\n([\s\S]*?)(?=\r?\n## |\r?\n?$)/m;
 	const matches = content.match( versionPattern );
 
 	if ( ! matches ) {
