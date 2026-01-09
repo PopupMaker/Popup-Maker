@@ -91,11 +91,20 @@ function extractUnreleasedContent( content ) {
  * @return {object|null} - Object with version and content, or null if not found
  */
 function extractLatestVersion( content ) {
-	// Find the first semver version heading in the file
+	// Find the first version heading after Unreleased section
 	// Handles both LF and CRLF line endings
+
+	// First, locate the Unreleased section
+	const unreleasedMatch = content.match( /^## Unreleased\s*\r?\n/m );
+
+	// Search for version after Unreleased, or from start if no Unreleased section exists
+	const searchStart = unreleasedMatch ? unreleasedMatch.index + unreleasedMatch[ 0 ].length : 0;
+	const searchContent = content.slice( searchStart );
+
+	// Find first semver version in the search content
 	const versionPattern =
 		/^## (?:v)?(\d+\.\d+\.\d+)(?:\s*-\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\s*\r?\n([\s\S]*?)(?=\r?\n## |\r?\n?$)/m;
-	const matches = content.match( versionPattern );
+	const matches = searchContent.match( versionPattern );
 
 	if ( ! matches ) {
 		return null;
