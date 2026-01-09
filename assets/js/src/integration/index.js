@@ -1,3 +1,4 @@
+import './bitform';
 import './bricksbuilder';
 import './calderaforms';
 import './contactform7';
