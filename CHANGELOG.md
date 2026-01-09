@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Features**
+
+-   Added [Forminator integration](https://wppopupmaker.com/form-integrations/forminator/) for form submission tracking and conversion analytics.
+
 **Improvements**
 
 -   Optimized Google Fonts integration by eliminating database transients and API calls in favor of direct JSON loading with in-memory caching. This resolves reported database crashes from large font data and improves performance by 83% (file size reduced from 1.5MB to 255KB) while eliminating all database overhead.
