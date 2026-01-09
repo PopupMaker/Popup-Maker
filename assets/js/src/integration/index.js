@@ -1,6 +1,7 @@
 import './bricksbuilder';
 import './calderaforms';
 import './contactform7';
+import './elementor';
 import './fluentforms';
 import './formidableforms';
 import './gravityforms';
