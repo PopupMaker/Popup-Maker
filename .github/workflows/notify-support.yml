@@ -1,0 +1,203 @@
+name: Notify Support Team
+
+on:
+  release:
+    types: [published]
+
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to test (e.g., 1.22.0)'
+        required: true
+        default: '1.22.0-test'
+      release_body:
+        description: 'Simulated release body/changelog'
+        required: false
+        default: |
+          - Fixed popup display issue on mobile devices
+          - Improved animation performance
+          - Added new trigger: Scroll Depth
+      prerelease:
+        description: 'Simulate pre-release (alpha/beta/rc)?'
+        type: boolean
+        default: false
+      dry_run:
+        description: 'Dry run - output payload without sending to Slack'
+        type: boolean
+        default: true
+
+jobs:
+  notify-support:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set variables
+        id: vars
+        run: |
+          # Use release event or workflow_dispatch inputs
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+            echo "release_url=${{ github.event.release.html_url }}" >> $GITHUB_OUTPUT
+            echo "zip_url=${{ github.event.release.zipball_url }}" >> $GITHUB_OUTPUT
+            echo "dry_run=false" >> $GITHUB_OUTPUT
+
+            # Store release body for changelog extraction
+            cat << 'EOFBODY' > /tmp/release_body.txt
+          ${{ github.event.release.body }}
+          EOFBODY
+          else
+            VERSION="${{ inputs.version }}"
+            # Add prerelease suffix if checked
+            if [ "${{ inputs.prerelease }}" = "true" ]; then
+              VERSION="${VERSION}-beta.1"
+            fi
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "release_url=${{ github.server_url }}/${{ github.repository }}/releases/tag/$VERSION" >> $GITHUB_OUTPUT
+            echo "zip_url=${{ github.server_url }}/${{ github.repository }}/archive/refs/tags/$VERSION.zip" >> $GITHUB_OUTPUT
+            echo "dry_run=${{ inputs.dry_run }}" >> $GITHUB_OUTPUT
+
+            # Use input body
+            cat << 'EOFBODY' > /tmp/release_body.txt
+          ${{ inputs.release_body }}
+          EOFBODY
+          fi
+
+      - name: Extract customer-facing changelog
+        id: changelog
+        run: |
+          BODY=$(cat /tmp/release_body.txt)
+
+          # Filter to customer-facing changes only (bullet points)
+          # Remove technical details, keep user-facing items
+          # Using [[:space:]] for POSIX compatibility
+          CHANGELOG=$(echo "$BODY" | grep -E "^[-*•]|^[[:space:]]+[-*•]" | head -10)
+
+          # If no bullet points found, try to extract from body
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG=$(echo "$BODY" | head -10)
+          fi
+
+          # Truncate to 800 chars (UTF-8 safe using cut instead of head -c)
+          CHANGELOG=$(echo "$CHANGELOG" | cut -c 1-800)
+
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Determine release type
+        id: release_type
+        run: |
+          TAG="${{ steps.vars.outputs.version }}"
+
+          # Check for pre-release indicators
+          if [[ "$TAG" =~ -alpha || "$TAG" =~ -beta || "$TAG" =~ -rc ]]; then
+            echo "type=Pre-release" >> $GITHUB_OUTPUT
+            echo "emoji=🧪" >> $GITHUB_OUTPUT
+          else
+            echo "type=Stable" >> $GITHUB_OUTPUT
+            echo "emoji=🚀" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Slack payload
+        id: payload
+        run: |
+          PLUGIN="${{ github.event.repository.name }}"
+          VERSION="${{ steps.vars.outputs.version }}"
+          RELEASE_URL="${{ steps.vars.outputs.release_url }}"
+          ZIP_URL="${{ steps.vars.outputs.zip_url }}"
+          RELEASE_TYPE="${{ steps.release_type.outputs.type }}"
+          EMOJI="${{ steps.release_type.outputs.emoji }}"
+          CHANGELOG='${{ steps.changelog.outputs.changelog }}'
+
+          # Escape changelog for JSON
+          CHANGELOG_ESCAPED=$(echo "$CHANGELOG" | jq -Rs . | sed 's/^"//;s/"$//')
+
+          PAYLOAD=$(cat << EOFPAYLOAD
+          {
+            "text": "${EMOJI} ${PLUGIN} ${VERSION} Released",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "${EMOJI} ${PLUGIN} ${VERSION} Released",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {"type": "mrkdwn", "text": "*Release Type:*\n${RELEASE_TYPE}"},
+                  {"type": "mrkdwn", "text": "*Version:*\n${VERSION}"}
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*What's New for Customers:*\n${CHANGELOG_ESCAPED}"
+                }
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Support Team Actions:*\n• Review changelog for common customer questions\n• Update support docs if needed\n• Monitor HelpScout for related tickets"
+                }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📖 Full Changelog", "emoji": true},
+                    "url": "${RELEASE_URL}"
+                  },
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📥 Download ZIP", "emoji": true},
+                    "url": "${ZIP_URL}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOFPAYLOAD
+          )
+
+          # Store payload for use in next steps
+          echo "payload<<EOF" >> $GITHUB_OUTPUT
+          echo "$PAYLOAD" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Dry run - Show payload
+        if: steps.vars.outputs.dry_run == 'true'
+        run: |
+          echo "🧪 DRY RUN MODE - Would send this payload to Slack:"
+          echo ""
+          echo "========== SLACK PAYLOAD =========="
+          echo '${{ steps.payload.outputs.payload }}' | jq .
+          echo "==================================="
+          echo ""
+          echo "📊 Release Type: ${{ steps.release_type.outputs.type }}"
+          echo "🏷️ Version: ${{ steps.vars.outputs.version }}"
+          echo "📦 ZIP URL: ${{ steps.vars.outputs.zip_url }}"
+          echo ""
+          echo "✅ Dry run complete. No message sent to Slack."
+
+      - name: Send to #support-updates
+        if: steps.vars.outputs.dry_run != 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_SUPPORT }}
+        run: |
+          echo "📤 Sending support notification to Slack..."
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '${{ steps.payload.outputs.payload }}'
+          echo ""
+          echo "✅ Slack message sent to #support-updates!"
