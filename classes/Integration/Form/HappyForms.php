@@ -28,7 +28,8 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'HappyForms', 'popup-maker' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use HappyForms' own translations.
+		return __( 'HappyForms', 'happyforms' );
 	}
 
 	/**
