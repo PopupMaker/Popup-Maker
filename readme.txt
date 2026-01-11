@@ -114,6 +114,7 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 * [Formidable Forms](https://wppopupmaker.com/form-integrations/formidable-forms/) - advanced form builder with database views
 * [Forminator](https://wppopupmaker.com/form-integrations/forminator/) - free form builder by WPMU DEV
 * [Elementor Pro Forms](https://wppopupmaker.com/form-integrations/elementor-forms/) - native form builder for Elementor page builder
+* [Kali Forms](https://wppopupmaker.com/form-integrations/kali-forms/) - Gutenberg-native form builder with block editor support
 * and more!
 
 <h4>Email Marketing & CRM Integrations:</h4>
