@@ -250,6 +250,11 @@ class PUM_Admin_Settings {
 						$old = PUM_Utils_Options::get( $key );
 						$new = trim( $value );
 
+						// If the value is starred (displayed for security), keep the existing unstarred value.
+						if ( strpos( $new, '*' ) !== false ) {
+							$new = $old;
+						}
+
 						if ( $old && $old !== $new ) {
 							delete_option( str_replace( '_license_key', '_license_active', $key ) );
 							if ( ! empty( $field['options']['activation_callback'] ) ) {
@@ -257,7 +262,7 @@ class PUM_Admin_Settings {
 							}
 						}
 
-						$settings[ $key ] = is_string( $value ) ? trim( $value ) : $value;
+						$settings[ $key ] = $new;
 						// Activate / deactivate license keys maybe?
 						break;
 				}
@@ -628,6 +633,14 @@ class PUM_Admin_Settings {
 					],
 					'go-pro'     => [
 						'main' => [
+							'go_pro_hero'                 => [
+								'type'    => 'html',
+								'content' => self::field_go_pro_hero(),
+							],
+							'go_pro_features'             => [
+								'type'    => 'html',
+								'content' => self::field_go_pro_features(),
+							],
 							'popup_maker_pro_license_key' => [
 								'type' => 'pro_license',
 							],
@@ -698,6 +711,184 @@ class PUM_Admin_Settings {
 
 		<?php
 
+		return ob_get_clean();
+	}
+
+	/**
+	 * Generate Go Pro hero section with social proof.
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return string HTML content for the hero section.
+	 */
+	public static function field_go_pro_hero() {
+		ob_start();
+		?>
+		<div class="pum-go-pro-hero" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 30px; border-radius: 8px; margin: 20px 0; text-align: center;">
+			<h2 style="color: white; margin: 0 0 10px 0; font-size: 32px; font-weight: 700;">
+				<?php esc_html_e( 'Popup Maker Pro', 'popup-maker' ); ?>
+			</h2>
+			<p style="color: rgba(255,255,255,0.9); font-size: 18px; margin: 0 0 20px 0;">
+				<?php esc_html_e( 'Turn Visitors Into Customers', 'popup-maker' ); ?>
+			</p>
+			<div class="pum-social-proof" style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 20px;">
+				<div style="display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 24px;">👥</span>
+					<div style="text-align: left;">
+						<div style="font-size: 20px; font-weight: 700;">700K+</div>
+						<div style="font-size: 12px; opacity: 0.9;"><?php esc_html_e( 'Active Users', 'popup-maker' ); ?></div>
+					</div>
+				</div>
+				<div style="display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 24px;">📊</span>
+					<div style="text-align: left;">
+						<div style="font-size: 20px; font-weight: 700;">30B+</div>
+						<div style="font-size: 12px; opacity: 0.9;"><?php esc_html_e( 'Popups Served', 'popup-maker' ); ?></div>
+					</div>
+				</div>
+				<div style="display: flex; align-items: center; gap: 8px;">
+					<span style="font-size: 24px;">⭐</span>
+					<div style="text-align: left;">
+						<div style="font-size: 20px; font-weight: 700;">4.95★</div>
+						<div style="font-size: 12px; opacity: 0.9;"><?php esc_html_e( 'Average Rating', 'popup-maker' ); ?></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Generate Go Pro features section.
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return string HTML content for the features section.
+	 */
+	public static function field_go_pro_features() {
+		// Detect integrations for contextual messaging.
+		$integrations    = PUM_Admin_Helpers::get_detected_integrations();
+		$has_woocommerce = isset( $integrations['woocommerce'] );
+		$has_edd         = isset( $integrations['edd'] );
+		$has_lms         = isset( $integrations['lifterlms'] ) || isset( $integrations['learndash'] );
+		$has_ecommerce   = $has_woocommerce || $has_edd;
+		$is_pro_active   = \PopupMaker\plugin( 'license' )->is_license_active();
+
+		ob_start();
+		?>
+		<div class="pum-go-pro-features" style="background: #f9fafb; padding: 30px; border-radius: 8px; margin: 20px 0;">
+
+			<?php if ( ! $is_pro_active ) : ?>
+				<h3 style="margin: 0 0 20px 0; font-size: 20px; color: #1e293b;">
+					<?php esc_html_e( 'Unlock Powerful Features', 'popup-maker' ); ?>
+				</h3>
+
+				<div class="pum-features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+					<div class="pum-feature-card" style="background: white; padding: 20px; border-radius: 6px; border-left: 4px solid #667eea;">
+						<h4 style="margin: 0 0 10px 0; font-size: 16px; color: #1e293b;">⚡ <?php esc_html_e( 'Exit Intent Triggers', 'popup-maker' ); ?></h4>
+						<p style="margin: 0; color: #64748b; font-size: 14px;">
+							<?php esc_html_e( 'Capture visitors before they leave your site with intelligent exit detection.', 'popup-maker' ); ?>
+						</p>
+					</div>
+
+					<div class="pum-feature-card" style="background: white; padding: 20px; border-radius: 6px; border-left: 4px solid #667eea;">
+						<h4 style="margin: 0 0 10px 0; font-size: 16px; color: #1e293b;">📊 <?php esc_html_e( 'Conversion Analytics', 'popup-maker' ); ?></h4>
+						<p style="margin: 0; color: #64748b; font-size: 14px;">
+							<?php esc_html_e( 'See which popups convert best with detailed performance metrics.', 'popup-maker' ); ?>
+						</p>
+					</div>
+
+					<div class="pum-feature-card" style="background: white; padding: 20px; border-radius: 6px; border-left: 4px solid #667eea;">
+						<h4 style="margin: 0 0 10px 0; font-size: 16px; color: #1e293b;">🎯 <?php esc_html_e( 'Advanced Targeting', 'popup-maker' ); ?></h4>
+						<p style="margin: 0; color: #64748b; font-size: 14px;">
+							<?php esc_html_e( 'Show the right popup to the right visitor with powerful conditions.', 'popup-maker' ); ?>
+						</p>
+					</div>
+
+					<div class="pum-feature-card" style="background: white; padding: 20px; border-radius: 6px; border-left: 4px solid #667eea;">
+						<h4 style="margin: 0 0 10px 0; font-size: 16px; color: #1e293b;">🔄 <?php esc_html_e( 'A/B Testing', 'popup-maker' ); ?></h4>
+						<p style="margin: 0; color: #64748b; font-size: 14px;">
+							<?php esc_html_e( 'Optimize conversion rates by testing different popup variations.', 'popup-maker' ); ?>
+						</p>
+					</div>
+
+					<div class="pum-feature-card" style="background: white; padding: 20px; border-radius: 6px; border-left: 4px solid #667eea;">
+						<h4 style="margin: 0 0 10px 0; font-size: 16px; color: #1e293b;">📱 <?php esc_html_e( 'Mobile-First Features', 'popup-maker' ); ?></h4>
+						<p style="margin: 0; color: #64748b; font-size: 14px;">
+							<?php esc_html_e( 'Scroll triggers, device targeting, and mobile-optimized displays.', 'popup-maker' ); ?>
+						</p>
+					</div>
+
+					<div class="pum-feature-card" style="background: white; padding: 20px; border-radius: 6px; border-left: 4px solid #667eea;">
+						<h4 style="margin: 0 0 10px 0; font-size: 16px; color: #1e293b;">🔌 <?php esc_html_e( 'Form Integrations', 'popup-maker' ); ?></h4>
+						<p style="margin: 0; color: #64748b; font-size: 14px;">
+							<?php esc_html_e( 'Connect with Gravity Forms, Elementor, Contact Form 7, and more.', 'popup-maker' ); ?>
+						</p>
+					</div>
+				</div>
+
+				<?php if ( $has_ecommerce ) : ?>
+					<div class="pum-proplus-pitch" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+						<h4 style="color: white; margin: 0 0 10px 0; font-size: 18px; font-weight: 700;">
+							💰 <?php esc_html_e( 'Pro+ for Ecommerce', 'popup-maker' ); ?>
+						</h4>
+						<p style="margin: 0 0 15px 0; font-size: 14px; opacity: 0.95;">
+							<?php
+							if ( $has_woocommerce ) {
+								esc_html_e( 'WooCommerce detected! Pro+ includes revenue tracking, cart abandonment recovery, and purchase-based targeting to maximize your store\'s conversions.', 'popup-maker' );
+							} elseif ( $has_edd ) {
+								esc_html_e( 'Easy Digital Downloads detected! Pro+ includes revenue tracking and purchase-based targeting to increase your digital product sales.', 'popup-maker' );
+							}
+							?>
+						</p>
+						<a href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'go-pro-tab', 'proplus-ecommerce-pitch' ) ); ?>"
+						   target="_blank"
+						   rel="noopener"
+						   style="display: inline-block; background: white; color: #d97706; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 14px;">
+							<?php esc_html_e( 'Learn More About Pro+', 'popup-maker' ); ?> →
+						</a>
+					</div>
+				<?php elseif ( $has_lms ) : ?>
+					<div class="pum-proplus-pitch" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+						<h4 style="color: white; margin: 0 0 10px 0; font-size: 18px; font-weight: 700;">
+							🎓 <?php esc_html_e( 'Pro+ for LMS', 'popup-maker' ); ?>
+						</h4>
+						<p style="margin: 0 0 15px 0; font-size: 14px; opacity: 0.95;">
+							<?php esc_html_e( 'LMS detected! Pro+ includes course enrollment targeting, student progress conditions, and revenue tracking to boost your online learning platform.', 'popup-maker' ); ?>
+						</p>
+						<a href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'go-pro-tab', 'proplus-lms-pitch' ) ); ?>"
+						   target="_blank"
+						   rel="noopener"
+						   style="display: inline-block; background: white; color: #6d28d9; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 600; font-size: 14px;">
+							<?php esc_html_e( 'Learn More About Pro+', 'popup-maker' ); ?> →
+						</a>
+					</div>
+				<?php endif; ?>
+
+				<div style="text-align: center;">
+					<a href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'go-pro-tab', 'see-all-features' ) ); ?>"
+					   target="_blank"
+					   rel="noopener"
+					   class="button button-primary button-hero"
+					   style="background: #667eea; border-color: #667eea; box-shadow: none; text-shadow: none; height: auto; line-height: 1; padding: 15px 30px; font-size: 16px;">
+						<?php esc_html_e( 'See All Pro Features', 'popup-maker' ); ?> →
+					</a>
+				</div>
+
+			<?php else : ?>
+				<div style="text-align: center; padding: 20px;">
+					<h3 style="margin: 0 0 10px 0; font-size: 20px; color: #1e293b;">
+						<?php esc_html_e( 'Manage Your Pro License', 'popup-maker' ); ?>
+					</h3>
+					<p style="margin: 0; color: #64748b; font-size: 14px;">
+						<?php esc_html_e( 'Enter your license key below to receive automatic updates and support.', 'popup-maker' ); ?>
+					</p>
+				</div>
+			<?php endif; ?>
+
+		</div>
+		<?php
 		return ob_get_clean();
 	}
 
@@ -945,12 +1136,17 @@ class PUM_Admin_Settings {
 						// Handle other license keys using the legacy system
 						$license = get_option( $field['options']['is_valid_license_option'] );
 
+						$using_pro_license = ! empty( $field['options']['using_pro_license'] );
+						$pro_license_tier  = ! empty( $field['options']['pro_license_tier'] ) ? $field['options']['pro_license_tier'] : '';
+
 						$settings[ $key ] = [
-							'key'      => \PopupMaker\plugin( 'license' )->star_key( trim( $value ) ),
-							'status'   => PUM_Licensing::get_status( $license, ! empty( $value ) ),
-							'messages' => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
-							'expires'  => PUM_Licensing::get_license_expiration( $license ),
-							'classes'  => PUM_Licensing::get_status_classes( $license ),
+							'key'               => \PopupMaker\plugin( 'license' )->star_key( trim( $value ) ),
+							'status'            => PUM_Licensing::get_status( $license, ! empty( $value ) ),
+							'messages'          => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
+							'expires'           => PUM_Licensing::get_license_expiration( $license ),
+							'classes'           => PUM_Licensing::get_status_classes( $license ),
+							'using_pro_license' => $using_pro_license,
+							'pro_license_tier'  => $pro_license_tier,
 						];
 						break;
 				}

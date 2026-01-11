@@ -69,6 +69,8 @@ export interface LicenseKeyFieldProps extends InputFieldProps {
 	messages?: string[];
 	status?: string;
 	expires?: string | number;
+	using_pro_license?: boolean;
+	pro_license_tier?: string;
 }
 
 export interface MeasureFieldProps

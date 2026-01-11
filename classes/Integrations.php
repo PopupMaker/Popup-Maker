@@ -42,12 +42,17 @@ class PUM_Integrations {
 				'contactform7'    => new PUM_Integration_Form_ContactForm7(),
 				'calderaforms'    => new PUM_Integration_Form_CalderaForms(),
 				'mc4wp'           => new PUM_Integration_Form_MC4WP(),
+				'newsletter'      => new PUM_Integration_Form_Newsletter(),
 				'wpforms'         => new PUM_Integration_Form_WPForms(),
 				'wsforms'         => new PUM_Integration_Form_WSForms(),
 				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
 				'fluentforms'     => new PUM_Integration_Form_FluentForms(),
 				'bricksbuilder'   => new PUM_Integration_Form_BricksBuilder(),
-				// Builders.
+				'forminator'      => new PUM_Integration_Form_Forminator(),
+				'elementor'       => new PUM_Integration_Form_Elementor(),
+				'kaliForms'       => new PUM_Integration_Form_KaliForms(),
+				'happyforms'      => new PUM_Integration_Form_HappyForms(),
+				// Page Builders.
 				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
 				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
 				// 'bricks'          => new PUM_Integration_Builder_Bricks(),

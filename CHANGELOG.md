@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+**Features**
+
+-   Added [Elementor Pro Forms integration](https://wppopupmaker.com/form-integrations/elementor-forms/) for form submission tracking and conversion analytics with support for targeting specific forms.
+-   Added [Forminator integration](https://wppopupmaker.com/form-integrations/forminator/) for form submission tracking and conversion analytics.
+-   Added [HappyForms integration](https://wppopupmaker.com/form-integrations/happyforms/) for form submission tracking and conversion analytics.
+-   Added [Kali Forms integration](https://wppopupmaker.com/form-integrations/kali-forms/) for form submission tracking and conversion analytics with native Gutenberg block support.
+-   Added Newsletter plugin (thenewsletterplugin.com) form integration for success detection and conversion tracking. **Note:** Newsletter forms must use `[newsletter_form ajax="true"]` shortcode to enable AJAX submission mode for the integration to work.
+
+**Improvements**
+
+-   Block library assets (CSS) loading unnecessarily on all front-end pages. WordPress now automatically loads these styles only when Popup Maker blocks are actually rendered.
+
+**Fixes**
+
+-   Fixed Divi 4 block editor compatibility issue where the popup editor would fail to load when the block editor was enabled. The classic editor is now automatically enforced for Divi 4 users.
+-   Fixed license key not deactivating properly.
+-   Fixed issue where license keys were being saved as asterisks instead of the actual key.
+-   Fixed issue where filter `replace_editor` was being used as an action without returning the value.
+
 ## v1.21.5 - 2025-10-13
 
 **Improvements**

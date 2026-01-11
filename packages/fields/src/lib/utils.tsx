@@ -360,6 +360,8 @@ export const parseFieldValue = < F extends FieldProps >(
 				status: 'empty',
 				expires: false,
 				classes: false,
+				using_pro_license: false,
+				pro_license_tier: '',
 				...parsedValue,
 			};
 
