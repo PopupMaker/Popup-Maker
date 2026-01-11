@@ -85,7 +85,7 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 		$query      = \ElementorPro\Modules\Forms\Submissions\Database\Query::get_instance();
 		$table_name = $query->get_table_submissions();
 
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT DISTINCT form_name, element_id, post_id
@@ -95,7 +95,6 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 				$table_name
 			)
 		);
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$forms = [];
 
