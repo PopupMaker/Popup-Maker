@@ -104,14 +104,15 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 
 <h4>Form Plugin Integrations:</h4>
 
-* Ninja Forms
-* Gravity Forms
-* Contact Form 7 (CF7)
-* WPForms
-* WSForm
-* Fluent Forms
-* Mailchimp for WordPress (MC4WP)
-* Formidable Forms
+* [Ninja Forms](https://wppopupmaker.com/form-integrations/ninja-forms/) - powerful drag & drop form builder
+* [Gravity Forms](https://wppopupmaker.com/form-integrations/gravity-forms/) - advanced WordPress forms with conditional logic
+* [Contact Form 7](https://wppopupmaker.com/form-integrations/contact-form-7/) (CF7) - simple contact forms
+* [WPForms](https://wppopupmaker.com/form-integrations/wpforms/) - beginner-friendly form plugin with templates
+* [WSForm](https://wppopupmaker.com/form-integrations/ws-forms/) - professional form builder with advanced features
+* [Fluent Forms](https://wppopupmaker.com/form-integrations/fluent-forms/) - conversational forms with multi-step layouts
+* [Mailchimp for WordPress](https://wppopupmaker.com/form-integrations/mailchimp-for-wordpress/) (MC4WP) - newsletter signup forms
+* [Formidable Forms](https://wppopupmaker.com/form-integrations/formidable-forms/) - advanced form builder with database views
+* [Forminator](https://wppopupmaker.com/form-integrations/forminator/) - free form builder by WPMU DEV
 * and more!
 
 <h4>Email Marketing & CRM Integrations:</h4>
