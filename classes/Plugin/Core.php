@@ -304,6 +304,18 @@ final class Core extends \PopupMaker\Plugin\Container {
 			}
 		);
 
+		$this->set(
+			'form_conversion_tracking',
+			/**
+			 * Get form conversion tracking service.
+			 *
+			 * @return \PopupMaker\Services\FormConversionTracking
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\FormConversionTracking( $container );
+			}
+		);
+
 		do_action( 'popup_maker/register_services', $this );
 	}
 
@@ -318,6 +330,10 @@ final class Core extends \PopupMaker\Plugin\Container {
 		// Initialize link click tracking.
 		$link_click_tracking = $this->get( 'link_click_tracking' );
 		$link_click_tracking->init();
+
+		// Initialize form conversion tracking.
+		$form_conversion_tracking = $this->get( 'form_conversion_tracking' );
+		$form_conversion_tracking->init();
 	}
 
 	/**
