@@ -68,7 +68,8 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Bit Form', 'popup-maker' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Bit Form's own translations.
+		return __( 'Bit Form', 'bit-form' );
 	}
 
 	/**
@@ -191,7 +192,10 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 		}
 
 		$popup_id = $this->get_popup_id();
-		$this->increase_conversion( $popup_id );
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
 		pum_integrated_form_submission(
 			[
