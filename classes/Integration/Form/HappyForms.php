@@ -133,15 +133,7 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 
 		$this->increase_conversion( $popup_id );
 
-		// Extract form ID defensively - HappyForms uses lowercase 'id'.
-		$form_id = null;
-		if ( is_array( $form ) ) {
-			if ( isset( $form['ID'] ) ) {
-				$form_id = (string) $form['ID'];
-			} elseif ( isset( $form['id'] ) ) {
-				$form_id = (string) $form['id'];
-			}
-		}
+		$form_id = isset( $form['id'] ) ? (string) $form['id'] : null;
 
 		pum_integrated_form_submission(
 			[
