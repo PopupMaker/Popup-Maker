@@ -48,11 +48,12 @@ class PUM_Integration_Form_Forminator extends PUM_Abstract_Integration_Form {
 	 * @return array<object{id:int,title:string}>
 	 */
 	public function get_forms() {
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || ! class_exists( 'Forminator_API' ) || ! method_exists( 'Forminator_API', 'get_forms' ) ) {
 			return [];
 		}
 
 		$forms = [];
+
 		$query = Forminator_API::get_forms( null, 1, 9999 );
 
 		if ( ! empty( $query ) && is_array( $query ) ) {
@@ -75,7 +76,7 @@ class PUM_Integration_Form_Forminator extends PUM_Abstract_Integration_Form {
 	 * @return object{id:int,title:string}|null
 	 */
 	public function get_form( $id ) {
-		if ( ! $this->enabled() ) {
+		if ( ! $this->enabled() || ! class_exists( 'Forminator_API' ) || ! method_exists( 'Forminator_API', 'get_form' ) ) {
 			return null;
 		}
 
