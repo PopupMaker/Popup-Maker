@@ -121,6 +121,13 @@ class PUM_Integration_Form_Forminator extends PUM_Abstract_Integration_Form {
 			return;
 		}
 
+		// Defensive validation for third-party hook compatibility.
+		if ( ! is_numeric( $form_id ) || $form_id <= 0 ) {
+			return;
+		}
+
+		$form_id = absint( $form_id );
+
 		$popup_id = $this->get_popup_id();
 		$this->increase_conversion( $popup_id );
 
