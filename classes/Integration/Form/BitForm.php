@@ -88,9 +88,12 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 	public function get_forms() {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$forms = $wpdb->get_results(
-			"SELECT id, form_name FROM {$wpdb->prefix}bitforms_form ORDER BY form_name ASC"
+			$wpdb->prepare(
+				'SELECT id, form_name FROM %i ORDER BY form_name ASC',
+				$wpdb->prefix . 'bitforms_form'
+			)
 		);
 
 		if ( ! $forms ) {
@@ -152,7 +155,8 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$form = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT id, form_name FROM {$wpdb->prefix}bitforms_form WHERE id = %d",
+				'SELECT id, form_name FROM %i WHERE id = %d',
+				$wpdb->prefix . 'bitforms_form',
 				$numeric_id
 			)
 		);

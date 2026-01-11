@@ -130,8 +130,8 @@ class Divi extends Controller {
 	/**
 	 * Force classic editor for popups when Divi 4 is active.
 	 *
-	 * This runs at priority 5 (before PostTypes filter at priority 10)
-	 * to ensure Divi 4's conflicting filters can't override our setting.
+	 * This runs at priority 999 (after Divi's priority 100)
+	 * to ensure our filter overrides Divi 4's conflicting filters.
 	 *
 	 * @param bool   $use_block_editor Whether to use the block editor.
 	 * @param string $post_type        The post type.
