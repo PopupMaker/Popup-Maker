@@ -186,12 +186,12 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 	 * @param mixed $form_data Form data.
 	 */
 	public function on_success( $form_id, $entry_id, $form_data ) {
-		if ( ! self::should_process_submission() ) {
+		if ( ! $this->should_process_submission() ) {
 			return;
 		}
 
-		$popup_id = self::get_popup_id();
-		self::increase_conversion( $popup_id );
+		$popup_id = $this->get_popup_id();
+		$this->increase_conversion( $popup_id );
 
 		pum_integrated_form_submission(
 			[
