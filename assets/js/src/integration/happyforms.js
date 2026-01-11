@@ -23,8 +23,11 @@
 			// Extract form ID from hidden input.
 			const formId = $form.find( '[name="happyforms_form_id"]' ).val();
 
-			// Generate instance ID from form element index (for multiple instances).
-			const formInstanceId = $( 'form.happyforms-form' ).index( $form ) + 1;
+			// Generate instance ID from form element index (for multiple instances of same form).
+			const $sameIdForms = $( 'form.happyforms-form' ).filter( function () {
+				return $( this ).find( '[name="happyforms_form_id"]' ).val() === formId;
+			} );
+			const formInstanceId = $sameIdForms.index( $form ) + 1;
 
 			// All the magic happens here.
 			window.PUM.integrations.formSubmission( $form, {
