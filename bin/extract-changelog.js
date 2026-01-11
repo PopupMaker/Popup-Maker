@@ -134,7 +134,6 @@ function formatForGitHubRelease( content, version ) {
 
 	// Ensure proper formatting for GitHub markdown
 	formatted = formatted
-		.replace( /^([^#\n*-])/gm, '$1' ) // Don't modify lines starting with #, *, or -
 		.replace( /^\s*[-*]\s+/gm, '- ' ) // Normalize bullet points
 		.trim();
 
