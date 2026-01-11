@@ -156,7 +156,8 @@ class PUM_Integration_Form_KaliForms extends PUM_Abstract_Integration_Form {
 
 			// Parse the data if it's a URL-encoded string.
 			if ( is_string( $raw_data ) ) {
-				parse_str( sanitize_text_field( $raw_data ), $data );
+				// Parse first to preserve URL encoding, then sanitize individual values.
+				parse_str( $raw_data, $data );
 
 				if ( isset( $data['pum_form_popup_id'] ) ) {
 					return absint( $data['pum_form_popup_id'] );
