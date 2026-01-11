@@ -47,6 +47,10 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 	 * Get all Elementor forms from the database.
 	 * Queries Elementor's submission table for unique form names.
 	 *
+	 * Performance note: The DISTINCT query on Elementor's submission table is cached
+	 * for 1 hour to minimize database load. On sites with high submission volumes
+	 * (thousands of entries), the initial cache population may take a few seconds.
+	 *
 	 * @param bool $force_refresh Whether to force refresh the cache.
 	 *
 	 * @return array
@@ -81,12 +85,17 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 		$query      = \ElementorPro\Modules\Forms\Submissions\Database\Query::get_instance();
 		$table_name = $query->get_table_submissions();
 
-		$results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			"SELECT DISTINCT form_name, element_id, post_id
-			FROM {$table_name}
-			WHERE form_name IS NOT NULL AND form_name != ''
-			ORDER BY form_name ASC"
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DISTINCT form_name, element_id, post_id
+				FROM %i
+				WHERE form_name IS NOT NULL AND form_name != ''
+				ORDER BY form_name ASC",
+				$table_name
+			)
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$forms = [];
 
@@ -145,10 +154,11 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 
 		foreach ( $forms as $form ) {
 			// Use element_id as the unique identifier (system adds provider prefix).
+			$location                               = ! empty( $form['post_title'] ) ? $form['post_title'] : __( 'Unknown Page', 'popup-maker' );
 			$form_selectlist[ $form['element_id'] ] = sprintf(
 				'%s (in %s)',
 				$form['name'],
-				$form['post_title']
+				$location
 			);
 		}
 
@@ -158,7 +168,7 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 	/**
 	 * Hooks in a success functions specific to this provider for non AJAX submission handling.
 	 *
-	 * @param \ElementorPro\Modules\Forms\Classes\Form_Record $record Form submission record.
+	 * @param \ElementorPro\Modules\Forms\Classes\Form_Record  $record Form submission record.
 	 * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $ajax_handler Ajax handler instance.
 	 */
 	public function on_success( $record, $ajax_handler ) {
@@ -203,7 +213,7 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 	/**
 	 * Load a custom script file to handle AJAX based submissions or other integrations with Popup Maker frontend.
 	 *
-	 * @param array $js
+	 * @param array $js JavaScript files array.
 	 *
 	 * @return array
 	 */
@@ -214,7 +224,7 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 	/**
 	 * Load custom styles for hacking some elements specifically inside popups, such as datepickers.
 	 *
-	 * @param array $css
+	 * @param array $css CSS files array.
 	 *
 	 * @return array
 	 */
