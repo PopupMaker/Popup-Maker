@@ -19,7 +19,7 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 	 * Constructor - Hook into HappyForms submission success action.
 	 */
 	public function __construct() {
-		add_action( 'happyforms_submission_success', [ $this, 'on_success' ], 10, 3 );
+		add_action( 'happyforms_submission_success', [ $this, 'on_success' ], 10, 2 );
 	}
 
 	/**
@@ -113,21 +113,35 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 	 *
 	 * @param array $submission The submission data.
 	 * @param array $form       The form data.
-	 * @param array $extra      Extra data (not currently used by HappyForms).
 	 */
-	public function on_success( $submission, $form, $extra ) {
+	public function on_success( $submission, $form ) {
 		if ( ! $this->should_process_submission() ) {
 			return;
 		}
 
 		$popup_id = $this->get_popup_id();
+
+		if ( ! $popup_id ) {
+			return;
+		}
+
 		$this->increase_conversion( $popup_id );
+
+		// Extract form ID defensively - HappyForms uses lowercase 'id'.
+		$form_id = null;
+		if ( is_array( $form ) ) {
+			if ( isset( $form['ID'] ) ) {
+				$form_id = (string) $form['ID'];
+			} elseif ( isset( $form['id'] ) ) {
+				$form_id = (string) $form['id'];
+			}
+		}
 
 		pum_integrated_form_submission(
 			[
 				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
-				'form_id'       => isset( $form['ID'] ) ? (string) $form['ID'] : null,
+				'form_id'       => $form_id,
 			]
 		);
 	}
