@@ -28,7 +28,7 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return 'HappyForms';
+		return __( 'HappyForms', 'popup-maker' );
 	}
 
 	/**
@@ -77,6 +77,11 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 	 * @return object{id:int,title:string}|false
 	 */
 	public function get_form( $id ) {
+		$id = absint( $id );
+		if ( ! $id ) {
+			return false;
+		}
+
 		$form_post = get_post( $id );
 
 		if ( ! $form_post || 'happyform' !== $form_post->post_type ) {
