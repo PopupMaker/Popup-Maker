@@ -52,6 +52,7 @@ class PUM_Integrations {
 				'elementor'       => new PUM_Integration_Form_Elementor(),
 				'kaliForms'       => new PUM_Integration_Form_KaliForms(),
 				'happyforms'      => new PUM_Integration_Form_HappyForms(),
+				'bitform'         => new PUM_Integration_Form_BitForm(),
 				// Page Builders.
 				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
 				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
