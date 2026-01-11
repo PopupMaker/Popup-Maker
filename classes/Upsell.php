@@ -171,12 +171,19 @@ class PUM_Upsell {
 	/**
 	 * Get the highest priority notice bar trigger that meets all conditions.
 	 *
+	 * Respects milestone cooldown periods to avoid fatigue (shown once per 90 days for milestone achievements).
+	 *
 	 * @since 1.21.3
 	 *
 	 * @return array|false Trigger array or false if no trigger matches.
 	 */
 	private static function get_current_notice_bar_trigger() {
-		$triggers = self::get_notice_bar_triggers();
+		$triggers           = self::get_notice_bar_triggers();
+		$last_milestone_key = get_user_meta( get_current_user_id(), '_pum_last_milestone_trigger', true );
+		$last_milestone_at  = get_user_meta( get_current_user_id(), '_pum_last_milestone_at', true );
+
+		// 90-day cooldown for milestone re-showing (allows seasonal re-engagement).
+		$milestone_cooldown = 90 * DAY_IN_SECONDS;
 
 		// Loop through groups by priority (highest first).
 		foreach ( $triggers as $group_key => $group ) {
@@ -184,6 +191,21 @@ class PUM_Upsell {
 			foreach ( $group['triggers'] as $trigger_key => $trigger ) {
 				// Check if all conditions are met.
 				if ( ! in_array( false, $trigger['conditions'], true ) ) {
+
+					// For milestone achievements, check cooldown to avoid showing same milestone repeatedly.
+					if ( 'milestone_achievements' === $group_key ) {
+						// If this exact milestone was shown recently, skip it.
+						if ( $last_milestone_key === $trigger_key && $last_milestone_at ) {
+							if ( ( time() - (int) $last_milestone_at ) < $milestone_cooldown ) {
+								continue; // Skip this trigger, check next one.
+							}
+						}
+
+						// This milestone passed cooldown or is new - track it and return.
+						update_user_meta( get_current_user_id(), '_pum_last_milestone_trigger', $trigger_key );
+						update_user_meta( get_current_user_id(), '_pum_last_milestone_at', time() );
+					}
+
 					return $trigger;
 				}
 			}
@@ -306,8 +328,8 @@ class PUM_Upsell {
 				'triggers' => array(
 					'ecommerce_exit_intent' => array(
 						'message'      => sprintf(
-							/* translators: 1: Number of tracked conversions, 2: Estimated additional conversions, 3: Opening link tag, 4: Closing link tag. */
-							esc_html__( '💰 You\'ve tracked %1$d conversions. %3$sWith Pro+ Exit Intent, you could capture ~%2$d more%4$s!', 'popup-maker' ),
+							/* translators: 1: Number of tracked form submissions, 2: Estimated additional submissions, 3: Opening link tag, 4: Closing link tag. */
+							esc_html__( '💰 You\'ve tracked %1$d form submissions. %3$sWith Pro+ Exit Intent, you could capture ~%2$d more%4$s!', 'popup-maker' ),
 							$form_count,
 							max( 1, (int) ( $form_count * 0.33 ) ), // 33% extrapolation.
 							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-exit-intent-extrapolation' ) ) . '" target="_blank" rel="noopener">',
@@ -323,8 +345,8 @@ class PUM_Upsell {
 					),
 					'lms_targeting'         => array(
 						'message'      => sprintf(
-							/* translators: 1: Number of tracked conversions, 2: Estimated additional conversions, 3: Opening link tag, 4: Closing link tag. */
-							esc_html__( '🎓 You\'ve tracked %1$d enrollments. %3$sWith Pro+ LMS targeting, you could capture ~%2$d more%4$s!', 'popup-maker' ),
+							/* translators: 1: Number of tracked form submissions, 2: Estimated additional submissions, 3: Opening link tag, 4: Closing link tag. */
+							esc_html__( '🎓 You\'ve tracked %1$d form submissions. %3$sWith Pro+ LMS targeting, you could capture ~%2$d more%4$s!', 'popup-maker' ),
 							$form_count,
 							max( 1, (int) ( $form_count * 0.4 ) ), // 40% extrapolation for LMS.
 							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-targeting-extrapolation' ) ) . '" target="_blank" rel="noopener">',
