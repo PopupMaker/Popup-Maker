@@ -113,6 +113,7 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 * [Mailchimp for WordPress](https://wppopupmaker.com/form-integrations/mailchimp-for-wordpress/) (MC4WP) - newsletter signup forms
 * [Formidable Forms](https://wppopupmaker.com/form-integrations/formidable-forms/) - advanced form builder with database views
 * [Forminator](https://wppopupmaker.com/form-integrations/forminator/) - free form builder by WPMU DEV
+* [Elementor Pro Forms](https://wppopupmaker.com/form-integrations/elementor-forms/) - native form builder for Elementor page builder
 * and more!
 
 <h4>Email Marketing & CRM Integrations:</h4>
