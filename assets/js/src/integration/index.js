@@ -1,9 +1,13 @@
 import './bricksbuilder';
 import './calderaforms';
 import './contactform7';
+import './elementor';
 import './fluentforms';
 import './formidableforms';
+import './forminator';
 import './gravityforms';
+import './happyforms';
+import './kaliForms';
 import './mc4wp';
 import './newsletter';
 import './ninjaforms';

@@ -1,0 +1,31 @@
+# CodeRabbit Configuration
+# https://docs.coderabbit.ai/guides/configure-coderabbit
+
+# Review configuration
+reviews:
+  # Enable reviews for PRs targeting develop branch (not just default branch)
+  review_status: true
+
+  # Auto-review PRs targeting these branches
+  auto_review:
+    enabled: true
+    base_branches:
+      - develop
+
+  # Collapse file walkthrough in PR comments
+  collapse_walkthrough: false
+
+  # High-level summary at top of review
+  high_level_summary: true
+
+  # Add poem to reviews
+  poem: false
+
+  # Review full files or just changed lines
+  review_full_file_on_changed_file: false
+
+  # Auto-incremental reviews when new commits pushed
+  auto_incremental_review: true
+
+# Review language
+language: en-US

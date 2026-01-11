@@ -1,0 +1,195 @@
+name: Request Release Approval
+
+on:
+  repository_dispatch:
+    types: [request-approval]
+
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to test (e.g., 1.22.0)'
+        required: true
+        default: '1.22.0-test'
+      plugin:
+        description: 'Plugin name'
+        required: true
+        default: 'popup-maker'
+      dry_run:
+        description: 'Dry run - output payload without sending to Slack'
+        type: boolean
+        default: true
+
+jobs:
+  send-approval-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set variables
+        id: vars
+        run: |
+          # Use dispatch payload or workflow_dispatch inputs
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "version=${{ github.event.client_payload.version }}" >> $GITHUB_OUTPUT
+            echo "plugin=${{ github.event.client_payload.plugin || github.event.repository.name }}" >> $GITHUB_OUTPUT
+            echo "artifact=${{ github.event.client_payload.artifact }}" >> $GITHUB_OUTPUT
+            echo "dry_run=false" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+            echo "plugin=${{ inputs.plugin }}" >> $GITHUB_OUTPUT
+            echo "artifact=test-artifact-${{ inputs.version }}" >> $GITHUB_OUTPUT
+            echo "dry_run=${{ inputs.dry_run }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract changelog for version
+        id: changelog
+        run: |
+          VERSION="${{ steps.vars.outputs.version }}"
+
+          # Try multiple changelog extraction methods for robustness
+          CHANGELOG=""
+
+          # Method 1: Extract from changelog.txt (WordPress style)
+          # Pattern matches "= X.Y.Z" format with proper version boundaries
+          if [ -f "changelog.txt" ]; then
+            CHANGELOG=$(sed -n "/^= $VERSION/,/^= [0-9][0-9.]*[[:space:]]/p" changelog.txt | head -n -1 | tail -n +2)
+          fi
+
+          # Method 2: Extract from CHANGELOG.md if changelog.txt failed
+          # Pattern matches "## [X.Y.Z]" format
+          if [ -z "$CHANGELOG" ] && [ -f "CHANGELOG.md" ]; then
+            CHANGELOG=$(sed -n "/^## \[$VERSION\]/,/^## \[[0-9]/p" CHANGELOG.md | head -n -1 | tail -n +2)
+          fi
+
+          # Method 3: Fallback to readme.txt
+          if [ -z "$CHANGELOG" ] && [ -f "readme.txt" ]; then
+            CHANGELOG=$(sed -n "/^= $VERSION/,/^= [0-9][0-9.]*[[:space:]]/p" readme.txt | head -n -1 | tail -n +2)
+          fi
+
+          # Fallback for testing if no changelog found
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="• No changelog found for version $VERSION\n• This is a test run"
+          fi
+
+          # Truncate to 500 chars (UTF-8 safe)
+          CHANGELOG=$(echo "$CHANGELOG" | cut -c 1-500)
+
+          # Escape for JSON
+          CHANGELOG=$(echo "$CHANGELOG" | jq -Rs .)
+
+          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+
+      - name: Build Slack payload
+        id: payload
+        run: |
+          VERSION="${{ steps.vars.outputs.version }}"
+          PLUGIN="${{ steps.vars.outputs.plugin }}"
+          ARTIFACT="${{ steps.vars.outputs.artifact }}"
+          REPO="${{ github.event.repository.name }}"
+          DOWNLOAD_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          CHANGELOG=${{ steps.changelog.outputs.changelog }}
+          DRY_RUN="${{ steps.vars.outputs.dry_run }}"
+
+          # Build action value JSON and stringify for Slack button value
+          ACTION_VALUE=$(jq -nc \
+            --arg repo "$REPO" \
+            --arg version "$VERSION" \
+            --arg artifact "$ARTIFACT" \
+            --arg plugin "$PLUGIN" \
+            '{repo: $repo, version: $version, artifact: $artifact, plugin: $plugin} | @json')
+
+          # Remove outer quotes added by @json for shell interpolation
+          ACTION_VALUE=$(echo "$ACTION_VALUE" | sed 's/^"//;s/"$//')
+
+          # Build the full payload
+          PAYLOAD=$(cat << EOFPAYLOAD
+          {
+            "text": "🔔 Release Approval Required: ${PLUGIN} v${VERSION}",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "🔔 Release Approval Required",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {"type": "mrkdwn", "text": "*Plugin:*\n${PLUGIN}"},
+                  {"type": "mrkdwn", "text": "*Version:*\n${VERSION}"}
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Changelog Preview:*\n${CHANGELOG:1:-1}"
+                }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📦 View Build", "emoji": true},
+                    "url": "${DOWNLOAD_URL}"
+                  }
+                ]
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "✅ Approve & Deploy", "emoji": true},
+                    "style": "primary",
+                    "action_id": "approve_release",
+                    "value": "${ACTION_VALUE}"
+                  },
+                  {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "❌ Reject", "emoji": true},
+                    "style": "danger",
+                    "action_id": "reject_release",
+                    "value": "${ACTION_VALUE}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOFPAYLOAD
+          )
+
+          # Store payload for use in next steps
+          echo "payload<<EOF" >> $GITHUB_OUTPUT
+          echo "$PAYLOAD" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Dry run - Show payload
+        if: steps.vars.outputs.dry_run == 'true'
+        run: |
+          echo "🧪 DRY RUN MODE - Would send this payload to Slack:"
+          echo ""
+          echo "========== SLACK PAYLOAD =========="
+          echo '${{ steps.payload.outputs.payload }}' | jq .
+          echo "==================================="
+          echo ""
+          echo "✅ Dry run complete. No message sent to Slack."
+
+      - name: Send Slack approval request
+        if: steps.vars.outputs.dry_run != 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV }}
+        run: |
+          echo "📤 Sending approval request to Slack..."
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '${{ steps.payload.outputs.payload }}'
+          echo ""
+          echo "✅ Slack message sent!"

@@ -48,7 +48,11 @@ class PUM_Integrations {
 				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
 				'fluentforms'     => new PUM_Integration_Form_FluentForms(),
 				'bricksbuilder'   => new PUM_Integration_Form_BricksBuilder(),
-				// Builders.
+				'forminator'      => new PUM_Integration_Form_Forminator(),
+				'elementor'       => new PUM_Integration_Form_Elementor(),
+				'kaliForms'       => new PUM_Integration_Form_KaliForms(),
+				'happyforms'      => new PUM_Integration_Form_HappyForms(),
+				// Page Builders.
 				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
 				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
 				// 'bricks'          => new PUM_Integration_Builder_Bricks(),
