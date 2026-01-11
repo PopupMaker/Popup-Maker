@@ -12,15 +12,16 @@
 		function ( event, response ) {
 			const $form = $( this )[ 0 ];
 
-			// Get form_id from hidden input field.
-			const formIdInput = $form.querySelector( 'input[name="form_id"]' );
-			const formId = formIdInput
-				? formIdInput.value
-				: $form.getAttribute( 'name' ) || 'unknown';
+			// Get element_id from the widget container.
+			// Elementor form widgets are inside a .elementor-element-{id} container.
+			const $widget = $( this ).closest( '[data-id]' );
+			const elementId = $widget.length
+				? $widget.attr( 'data-id' )
+				: 'unknown';
 
 			window.PUM.integrations.formSubmission( $form, {
 				formProvider,
-				formId,
+				formId: elementId,
 			} );
 		}
 	);

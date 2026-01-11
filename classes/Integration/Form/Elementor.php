@@ -158,24 +158,28 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 	/**
 	 * Hooks in a success functions specific to this provider for non AJAX submission handling.
 	 *
-	 * @param object $record
-	 * @param object $ajax_handler
+	 * @param \ElementorPro\Modules\Forms\Classes\Form_Record $record Form submission record.
+	 * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $ajax_handler Ajax handler instance.
 	 */
 	public function on_success( $record, $ajax_handler ) {
 		if ( ! $this->should_process_submission() ) {
 			return;
 		}
 
-		$form_name = $record->get_form_settings( 'form_name' );
-		$popup_id  = $this->get_popup_id();
+		// Get element_id to match form selector configuration.
+		$current_form = $ajax_handler->get_current_form();
+		$element_id   = isset( $current_form['id'] ) ? $current_form['id'] : null;
+		$popup_id     = $this->get_popup_id();
 
-		$this->increase_conversion( $popup_id );
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
 		pum_integrated_form_submission(
 			[
 				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
-				'form_id'       => $form_name ? $form_name : 'unknown',
+				'form_id'       => $element_id ? $element_id : 'unknown',
 			]
 		);
 	}
