@@ -29,7 +29,8 @@ class PUM_Integration_Form_HTMLForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return 'HTML Forms';
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use HTML Forms' own translations.
+		return __( 'HTML Forms', 'html-forms' );
 	}
 
 	/**
@@ -113,30 +114,34 @@ class PUM_Integration_Form_HTMLForms extends PUM_Abstract_Integration_Form {
 			return;
 		}
 
-		// Check if submission should be processed
-		if ( ! self::should_process_submission() ) {
+		// Check if submission should be processed.
+		if ( ! $this->should_process_submission() ) {
 			return;
 		}
 
-		// Extract form ID from Form object
-		// HTML Forms Form object has public $ID property (and magic getter for lowercase 'id')
+		// Extract form ID from Form object.
+		// HTML Forms Form object has public $ID property (and magic getter for lowercase 'id').
 		$form_id = isset( $form->ID ) ? $form->ID : null;
 
 		if ( ! $form_id ) {
 			return;
 		}
 
-		// Get popup ID from session
-		$popup_id = self::get_popup_id();
+		// Get popup ID from session.
+		$popup_id = $this->get_popup_id();
 
-		// Increase conversion count
-		self::increase_conversion( $popup_id );
+		// Increase conversion count if popup ID is valid.
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
-		// Track integrated form submission
-		pum_integrated_form_submission([
-			'popup_id'      => $popup_id,
-			'form_provider' => $this->key,
-			'form_id'       => (string) $form_id,
-		]);
+		// Track integrated form submission.
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => $this->key,
+				'form_id'       => (string) $form_id,
+			]
+		);
 	}
 }
