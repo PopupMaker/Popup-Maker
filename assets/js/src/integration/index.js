@@ -1,3 +1,5 @@
+import './beaverbuilder';
+import './bitform';
 import './bricksbuilder';
 import './calderaforms';
 import './contactform7';
@@ -7,6 +9,7 @@ import './formidableforms';
 import './forminator';
 import './gravityforms';
 import './happyforms';
+import './htmlforms';
 import './kaliForms';
 import './mc4wp';
 import './newsletter';

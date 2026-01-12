@@ -9,7 +9,7 @@
 	$( document ).on( 'frmFormComplete', function ( event, form, response ) {
 		const $form = $( form );
 		const formId = $form.find( 'input[name="form_id"]' ).val();
-		const $popup = PUM.getPopup(
+		const $popup = window.PUM.getPopup(
 			$form.find( 'input[name="pum_form_popup_id"]' ).val()
 		);
 

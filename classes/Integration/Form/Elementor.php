@@ -31,7 +31,8 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Elementor Pro', 'popup-maker' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Elementor Pro's own translations.
+		return __( 'Elementor Pro', 'elementor-pro' );
 	}
 
 	/**

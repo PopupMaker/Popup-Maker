@@ -30,7 +30,7 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Fluent Forms' own translations.
 		return __( 'Fluent Forms', 'fluentform' );
 	}
 
@@ -99,7 +99,10 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 		}
 
 		$popup_id = $this->get_popup_id();
-		$this->increase_conversion( $popup_id );
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
 		pum_integrated_form_submission(
 			[

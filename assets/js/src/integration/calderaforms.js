@@ -10,8 +10,8 @@
 	/**
 	 * This function is run before every CF Ajax call to store the form being submitted.
 	 *
-	 * @param event
-	 * @param obj
+	 * @param {Event}  event
+	 * @param {Object} obj
 	 */
 	const beforeAjax = ( event, obj ) => ( $form = obj.$form );
 
@@ -35,7 +35,10 @@
 					formId,
 					formInstanceId,
 					extras: {
-						state: window.cfstate.hasOwnProperty( formId )
+						state: Object.prototype.hasOwnProperty.call(
+							window.cfstate,
+							formId
+						)
 							? window.cfstate[ formId ]
 							: null,
 					},

@@ -30,7 +30,8 @@ class PUM_Integration_Form_Forminator extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Forminator', 'popup-maker' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Forminator's own translations.
+		return __( 'Forminator', 'forminator' );
 	}
 
 	/**
@@ -130,7 +131,10 @@ class PUM_Integration_Form_Forminator extends PUM_Abstract_Integration_Form {
 		$form_id = absint( $form_id );
 
 		$popup_id = $this->get_popup_id();
-		$this->increase_conversion( $popup_id );
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
 		pum_integrated_form_submission(
 			[
