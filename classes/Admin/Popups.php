@@ -1359,6 +1359,7 @@ class PUM_Admin_Popups {
 	 */
 	public static function sortable_columns( $columns ) {
 		$columns['popup_title'] = 'popup_title';
+		$columns['enabled']     = 'enabled';
 		$columns['views']       = 'views';
 		$columns['conversions'] = 'conversions';
 
@@ -1385,6 +1386,16 @@ class PUM_Admin_Popups {
 								// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 								'meta_key' => 'popup_title',
 								'orderby'  => 'meta_value',
+							]
+						);
+						break;
+					case 'enabled':
+						$vars = array_merge(
+							$vars,
+							[
+								// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+								'meta_key' => 'enabled',
+								'orderby'  => 'meta_value_num',
 							]
 						);
 						break;
