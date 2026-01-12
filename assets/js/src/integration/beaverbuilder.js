@@ -48,11 +48,11 @@
 
 		// Find the form element.
 		const $module = $( '.fl-node-' + nodeId );
-		const $form = $module.find(
-			'.fl-contact-form, .fl-subscribe-form'
-		)[ 0 ];
+		const $form = $module
+			.find( '.fl-contact-form, .fl-subscribe-form' )
+			.first();
 
-		if ( ! $form ) {
+		if ( ! $form.length ) {
 			return;
 		}
 
@@ -66,10 +66,12 @@
 		}
 
 		const formId = formType + '_' + nodeId;
+		const formInstanceId = formType + '_' + nodeId;
 
 		window.PUM.integrations.formSubmission( $form, {
 			formProvider,
 			formId,
+			formInstanceId,
 		} );
 	} );
 

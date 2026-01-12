@@ -24,7 +24,8 @@ class PUM_Integration_Form_BeaverBuilder extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return 'Beaver Builder';
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Beaver Builder's own translations.
+		return __( 'Beaver Builder', 'fl-builder' );
 	}
 
 	/**
@@ -47,15 +48,15 @@ class PUM_Integration_Form_BeaverBuilder extends PUM_Abstract_Integration_Form {
 		return [
 			[
 				'ID'         => 'contact_any',
-				'post_title' => 'Any Contact Form',
+				'post_title' => __( 'Any Contact Form', 'popup-maker' ),
 			],
 			[
 				'ID'         => 'subscribe_any',
-				'post_title' => 'Any Subscribe Form',
+				'post_title' => __( 'Any Subscribe Form', 'popup-maker' ),
 			],
 			[
 				'ID'         => 'login_any',
-				'post_title' => 'Any Login Form',
+				'post_title' => __( 'Any Login Form', 'popup-maker' ),
 			],
 		];
 	}
@@ -84,9 +85,9 @@ class PUM_Integration_Form_BeaverBuilder extends PUM_Abstract_Integration_Form {
 	 */
 	public function get_form_selectlist() {
 		return [
-			'contact_any'   => 'Any Contact Form',
-			'subscribe_any' => 'Any Subscribe Form',
-			'login_any'     => 'Any Login Form',
+			'contact_any'   => __( 'Any Contact Form', 'popup-maker' ),
+			'subscribe_any' => __( 'Any Subscribe Form', 'popup-maker' ),
+			'login_any'     => __( 'Any Login Form', 'popup-maker' ),
 		];
 	}
 

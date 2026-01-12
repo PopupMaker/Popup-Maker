@@ -118,6 +118,7 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 * [Kali Forms](https://wppopupmaker.com/form-integrations/kali-forms/) - Gutenberg-native form builder with block editor support
 * [Bit Form](https://wppopupmaker.com/form-integrations/bit-form/) - lightweight form builder with custom post type storage
 * [HTML Forms](https://wppopupmaker.com/form-integrations/html-forms/) - simple, lightweight form builder with no bloat
+* [Beaver Builder Forms](https://wppopupmaker.com/form-integrations/beaver-builder/) - contact, subscribe, and login forms for Beaver Builder page builder
 * and more!
 
 <h4>Email Marketing & CRM Integrations:</h4>
