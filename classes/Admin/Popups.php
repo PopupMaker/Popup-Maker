@@ -56,6 +56,11 @@ class PUM_Admin_Popups {
 
 		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_enabled_toggle_editor' ], 10, 1 );
 
+		// Bulk actions for enabling/disabling popups.
+		add_filter( 'bulk_actions-edit-popup', [ __CLASS__, 'register_bulk_actions' ] );
+		add_filter( 'handle_bulk_actions-edit-popup', [ __CLASS__, 'handle_bulk_actions' ], 10, 3 );
+		add_action( 'admin_notices', [ __CLASS__, 'bulk_action_admin_notice' ] );
+
 		add_filter( 'mce_buttons_2', [ __CLASS__, 'add_mce_buttons' ], 10, 1 );
 		add_filter( 'tiny_mce_before_init', [ __CLASS__, 'increase_available_font_sizes' ], 10, 1 );
 	}
@@ -83,6 +88,146 @@ class PUM_Admin_Popups {
 		</div>
 
 		<?php
+	}
+
+	/**
+	 * Registers bulk actions for enabling/disabling popups.
+	 *
+	 * @since 1.21.4
+	 *
+	 * @param array $actions Existing bulk actions.
+	 *
+	 * @return array Modified bulk actions.
+	 */
+	public static function register_bulk_actions( $actions ) {
+		$actions['pum_enable']  = __( 'Enable', 'popup-maker' );
+		$actions['pum_disable'] = __( 'Disable', 'popup-maker' );
+
+		return $actions;
+	}
+
+	/**
+	 * Handles bulk enable/disable actions for popups.
+	 *
+	 * @since 1.21.4
+	 *
+	 * @param string $redirect_url The redirect URL.
+	 * @param string $action       The action being taken.
+	 * @param array  $post_ids     The post IDs to act on.
+	 *
+	 * @return string The redirect URL.
+	 */
+	public static function handle_bulk_actions( $redirect_url, $action, $post_ids ) {
+		if ( ! in_array( $action, [ 'pum_enable', 'pum_disable' ], true ) ) {
+			return $redirect_url;
+		}
+
+		$enabled = 'pum_enable' === $action ? 1 : 0;
+		$count   = 0;
+		$skipped = 0;
+
+		foreach ( $post_ids as $post_id ) {
+			// Check user can edit this popup.
+			if ( ! current_user_can( 'edit_post', $post_id ) ) {
+				continue;
+			}
+
+			$popup = pum_get_popup( $post_id );
+
+			if ( ! $popup || ! $popup->is_valid() ) {
+				continue;
+			}
+
+			// Only allow enabling/disabling published popups (matches UI toggle behavior).
+			if ( 'publish' !== get_post_status( $post_id ) ) {
+				++$skipped;
+				continue;
+			}
+
+			$popup->update_meta( 'enabled', $enabled );
+			++$count;
+		}
+
+		$redirect_url = add_query_arg(
+			[
+				'pum_bulk_action'  => $action,
+				'pum_bulk_count'   => $count,
+				'pum_bulk_skipped' => $skipped,
+			],
+			$redirect_url
+		);
+
+		return $redirect_url;
+	}
+
+	/**
+	 * Displays an admin notice after bulk enable/disable actions.
+	 *
+	 * @since 1.21.4
+	 */
+	public static function bulk_action_admin_notice() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only, no action taken.
+		if ( empty( $_REQUEST['pum_bulk_action'] ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+
+		if ( ! $screen || 'edit-popup' !== $screen->id ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only, no action taken.
+		$action = sanitize_key( wp_unslash( $_REQUEST['pum_bulk_action'] ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only, no action taken.
+		$count = isset( $_REQUEST['pum_bulk_count'] ) ? intval( $_REQUEST['pum_bulk_count'] ) : 0;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only, no action taken.
+		$skipped = isset( $_REQUEST['pum_bulk_skipped'] ) ? intval( $_REQUEST['pum_bulk_skipped'] ) : 0;
+
+		if ( 'pum_enable' === $action ) {
+			$message = sprintf(
+				/* translators: %d: Number of popups enabled. */
+				_n(
+					'%d popup enabled.',
+					'%d popups enabled.',
+					$count,
+					'popup-maker'
+				),
+				$count
+			);
+		} elseif ( 'pum_disable' === $action ) {
+			$message = sprintf(
+				/* translators: %d: Number of popups disabled. */
+				_n(
+					'%d popup disabled.',
+					'%d popups disabled.',
+					$count,
+					'popup-maker'
+				),
+				$count
+			);
+		} else {
+			return;
+		}
+
+		// Add skipped notice if any popups were skipped due to not being published.
+		if ( $skipped > 0 ) {
+			$message .= ' ' . sprintf(
+				/* translators: %d: Number of popups skipped. */
+				_n(
+					'%d popup skipped (not published).',
+					'%d popups skipped (not published).',
+					$skipped,
+					'popup-maker'
+				),
+				$skipped
+			);
+		}
+
+		printf(
+			'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+			esc_html( $message )
+		);
 	}
 
 	/**
