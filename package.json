@@ -89,6 +89,7 @@
 		"copy-webpack-plugin": "^12.0.2",
 		"glob": "^11.0.2",
 		"husky": "^9.1.7",
+		"lint-staged": "^15.2.11",
 		"mini-css-extract-plugin": "^2.9.2",
 		"minimist": "^1.2.8",
 		"nx": "20.3.4",
@@ -169,5 +170,21 @@
 		"*.scss",
 		"*.css",
 		"assets/js/src/**/*.js"
-	]
+	],
+	"lint-staged": {
+		"*.php": [
+			"composer format",
+			"composer lint"
+		],
+		"*.{js,jsx,ts,tsx}": [
+			"wp-scripts format",
+			"wp-scripts lint-js --fix",
+			"wp-scripts lint-js"
+		],
+		"*.{scss,css}": [
+			"wp-scripts format",
+			"wp-scripts lint-style --fix",
+			"wp-scripts lint-style"
+		]
+	}
 }
