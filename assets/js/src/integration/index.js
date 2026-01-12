@@ -8,6 +8,7 @@ import './formidableforms';
 import './forminator';
 import './gravityforms';
 import './happyforms';
+import './htmlforms';
 import './kaliForms';
 import './mc4wp';
 import './newsletter';

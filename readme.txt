@@ -117,6 +117,7 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 * [HappyForms](https://wppopupmaker.com/form-integrations/happyforms/) - free drag-and-drop form builder with live preview
 * [Kali Forms](https://wppopupmaker.com/form-integrations/kali-forms/) - Gutenberg-native form builder with block editor support
 * [Bit Form](https://wppopupmaker.com/form-integrations/bit-form/) - lightweight form builder with custom post type storage
+* [HTML Forms](https://wppopupmaker.com/form-integrations/html-forms/) - simple, lightweight form builder with no bloat
 * and more!
 
 <h4>Email Marketing & CRM Integrations:</h4>
