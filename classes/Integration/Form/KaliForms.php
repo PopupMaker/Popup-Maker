@@ -30,7 +30,8 @@ class PUM_Integration_Form_KaliForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Kali Forms', 'popup-maker' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Kali Forms' own translations.
+		return __( 'Kali Forms', 'kali-forms' );
 	}
 
 	/**

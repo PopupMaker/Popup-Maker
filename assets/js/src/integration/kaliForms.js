@@ -17,79 +17,69 @@
 	 * Kali Forms dispatches custom events during form processing.
 	 * We listen to the document-level custom event after form processing completes.
 	 */
-	document.addEventListener(
-		'kaliformProcessCompleted',
-		function ( event ) {
-			const detail = event.detail;
+	document.addEventListener( 'kaliformProcessCompleted', function ( event ) {
+		const detail = event.detail;
 
-			if ( ! detail || ! detail.form ) {
-				return;
-			}
-
-			const $form = $( detail.form );
-			const formId = $form.data( 'form-id' );
-			const formInstanceId = $form.attr( 'id' ); // e.g., "kaliforms-form-123"
-
-			// All the magic happens here.
-			window.PUM.integrations.formSubmission( $form, {
-				formProvider,
-				formId,
-				formInstanceId,
-			} );
+		if ( ! detail || ! detail.form ) {
+			return;
 		}
-	);
+
+		const $form = $( detail.form );
+		const formId = $form.data( 'form-id' );
+		const formInstanceId = $form.attr( 'id' ); // e.g., "kaliforms-form-123"
+
+		// All the magic happens here.
+		window.PUM.integrations.formSubmission( $form, {
+			formProvider,
+			formId,
+			formInstanceId,
+		} );
+	} );
 
 	/**
 	 * Alternative approach: Listen for successful AJAX response.
 	 * Kali Forms processes forms via AJAX action 'kaliforms_form_process'.
 	 */
-	$( document ).on(
-		'submit',
-		'form[data-form-id]',
-		function ( event ) {
-			const $form = $( this );
-			const formClass = $form.attr( 'class' );
+	$( document ).on( 'submit', 'form[data-form-id]', function ( event ) {
+		const $form = $( this );
+		const formClass = $form.attr( 'class' );
 
-			// Check if this is a Kali Forms form.
-			if ( ! formClass || ! formClass.includes( 'kali-form' ) ) {
-				return;
-			}
+		// Check if this is a Kali Forms form.
+		if ( ! formClass || ! formClass.includes( 'kali-form' ) ) {
+			return;
+		}
 
-			// Store reference for success handler.
-			const formId = $form.data( 'form-id' );
-			const formInstanceId = $form.attr( 'id' );
+		// Store reference for success handler.
+		const formId = $form.data( 'form-id' );
+		const formInstanceId = $form.attr( 'id' );
 
-			// Listen for successful form processing via custom event.
-			const successHandler = function ( successEvent ) {
-				if (
-					successEvent.detail &&
-					successEvent.detail.formId === formId
-				) {
-					window.PUM.integrations.formSubmission( $form, {
-						formProvider,
-						formId,
-						formInstanceId,
-					} );
+		// Listen for successful form processing via custom event.
+		const successHandler = function ( successEvent ) {
+			if (
+				successEvent.detail &&
+				successEvent.detail.formId === formId
+			) {
+				window.PUM.integrations.formSubmission( $form, {
+					formProvider,
+					formId,
+					formInstanceId,
+				} );
 
-					// Remove the listener after firing once.
-					document.removeEventListener(
-						'kaliFormSuccess',
-						successHandler
-					);
-				}
-			};
-
-			document.addEventListener( 'kaliFormSuccess', successHandler );
-
-			// Cleanup listener after 30 seconds if not fired.
-			setTimeout( function () {
+				// Remove the listener after firing once.
 				document.removeEventListener(
 					'kaliFormSuccess',
 					successHandler
 				);
-			}, 30000 );
-		}
-	);
+			}
+		};
+
+		document.addEventListener( 'kaliFormSuccess', successHandler );
+
+		// Cleanup listener after 30 seconds if not fired.
+		setTimeout( function () {
+			document.removeEventListener( 'kaliFormSuccess', successHandler );
+		}, 30000 );
+	} );
 
 	/**
 	 * Add hidden popup ID field to Kali Forms inside popups.

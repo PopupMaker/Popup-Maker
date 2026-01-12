@@ -21,7 +21,8 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return 'Gravity Forms';
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Gravity Forms' own translations.
+		return __( 'Gravity Forms', 'gravityforms' );
 	}
 
 	/**
@@ -68,7 +69,7 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 	 * @param $form
 	 */
 	public function on_success( $entry, $form ) {
-		if ( ! self::should_process_submission() ) {
+		if ( ! $this->should_process_submission() ) {
 			return;
 		}
 
@@ -78,8 +79,11 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 			return;
 		}
 
-		$popup_id = self::get_popup_id();
-		self::increase_conversion( $popup_id );
+		$popup_id = $this->get_popup_id();
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
 		pum_integrated_form_submission(
 			[

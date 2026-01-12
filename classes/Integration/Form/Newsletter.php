@@ -45,7 +45,8 @@ class PUM_Integration_Form_Newsletter extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'Newsletter', 'popup-maker' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Newsletter's own translations.
+		return __( 'Newsletter', 'newsletter' );
 	}
 
 	/**

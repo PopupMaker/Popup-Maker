@@ -13,7 +13,7 @@
 			const formConfig = formDetails.config; // The form configuration (contains formId, etc.)
 			const formId = formConfig.id;
 			const formInstanceId = formEl.data( 'form_instance' );
-			console.log( formId, formDetails );
+
 			// All the magic happens here.
 			window.PUM.integrations.formSubmission( $( formEl ), {
 				formProvider,

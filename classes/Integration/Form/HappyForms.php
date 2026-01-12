@@ -127,11 +127,9 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 
 		$popup_id = $this->get_popup_id();
 
-		if ( ! $popup_id ) {
-			return;
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
 		}
-
-		$this->increase_conversion( $popup_id );
 
 		$form_id = isset( $form['id'] ) ? (string) $form['id'] : null;
 
