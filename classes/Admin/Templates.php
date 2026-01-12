@@ -988,7 +988,7 @@ class PUM_Admin_Templates {
 				id: 'pum_trigger_add_type_modal',
 				title: '<?php esc_attr_e( 'New Trigger', 'popup-maker' ); ?>',
 				content: content,
-				save_button: pum_admin_vars.I10n.add || '<?php esc_attr__( 'Add', 'popup-maker' ); ?>'
+				save_button: pum_admin_vars.I10n.add || '<?php esc_attr_e( 'Add', 'popup-maker' ); ?>'
 			}));
 			#>
 		</script>
