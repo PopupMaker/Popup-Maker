@@ -19,6 +19,7 @@
 
 **Fixes**
 
+-   Fixed trigger modal "Add" button label not displaying due to incorrect i18n function usage. Props to @DAnn2012.
 -   Fixed Divi 4 block editor compatibility issue where the popup editor would fail to load when the block editor was enabled. The classic editor is now automatically enforced for Divi 4 users.
 -   Fixed license key not deactivating properly.
 -   Fixed issue where license keys were being saved as asterisks instead of the actual key.
