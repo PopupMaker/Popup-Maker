@@ -15,6 +15,7 @@
 
 **Improvements**
 
+-   Enhanced all Popup list views with sortable Enabled column and bulk enable/disable actions for easier management of multiple popups.
 -   Block library assets (CSS) loading unnecessarily on all front-end pages. WordPress now automatically loads these styles only when Popup Maker blocks are actually rendered.
 
 **Fixes**
