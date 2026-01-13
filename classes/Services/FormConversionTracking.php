@@ -41,7 +41,11 @@ class FormConversionTracking extends Service {
 	 * @since X.X.X
 	 */
 	public function init() {
+		// Track non-AJAX form submissions (PHP-side tracking).
 		add_action( 'pum_integrated_form_submission', [ $this, 'track_form_conversion' ], 10, 1 );
+
+		// Track AJAX form submissions (JS beacon tracking).
+		add_action( 'pum_analytics_conversion', [ $this, 'track_ajax_conversion' ], 10, 2 );
 	}
 
 	/**
@@ -72,6 +76,31 @@ class FormConversionTracking extends Service {
 		}
 
 		$popup_id = (int) $args['popup_id'];
+
+		// Increment site-wide form conversion count.
+		$this->increment_site_count();
+
+		// Increment per-popup count.
+		$this->increment_popup_count( $popup_id );
+	}
+
+	/**
+	 * Track AJAX form conversion from analytics beacon.
+	 *
+	 * Handles conversions tracked via frontend JS beacon (AJAX submissions).
+	 *
+	 * @since X.X.X
+	 *
+	 * @param int   $popup_id Popup ID from analytics beacon.
+	 * @param array $args     Additional arguments from beacon.
+	 */
+	public function track_ajax_conversion( $popup_id, $args = [] ) {
+		// Validate popup ID.
+		if ( empty( $popup_id ) || ! is_numeric( $popup_id ) ) {
+			return;
+		}
+
+		$popup_id = (int) $popup_id;
 
 		// Increment site-wide form conversion count.
 		$this->increment_site_count();
