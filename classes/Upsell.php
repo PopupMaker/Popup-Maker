@@ -266,7 +266,7 @@ class PUM_Upsell {
 		// Generic Pro+ upgrade message fallback.
 		$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'pro-generic-upgrade' );
 		return sprintf(
-			/* translators: %s - Wraps ending in link to pricing page. */
+			/* translators: 1: Opening link tag to pricing page. 2: Closing link tag. */
 			esc_html__( 'Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, revenue attribution, and enhanced targeting.', 'popup-maker' ),
 			'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
 			'</a>'
@@ -289,7 +289,7 @@ class PUM_Upsell {
 		// Generic upgrade message fallback.
 		$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'free-generic-upgrade' );
 		return sprintf(
-			/* translators: %s - Wraps ending in link to pricing page. */
+			/* translators: 1: Opening link tag to pricing page. 2: Closing link tag. */
 			esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
 			'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
 			'</a>'
