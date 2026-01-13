@@ -258,7 +258,7 @@ class PUM_AssetCache {
 
 		$site_url = get_site_url();
 
-		switch ( pum_get_option( 'adblock_bypass_url_method', 'random' ) ) {
+		switch ( pum_get_option( 'adblock_bypass_url_method', 'custom' ) ) {
 			case 'random':
 				$filename = md5( $site_url . $filename );
 				break;
