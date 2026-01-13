@@ -771,7 +771,7 @@ class PUM_Admin_Settings {
 		$integrations    = PUM_Admin_Helpers::get_detected_integrations();
 		$has_woocommerce = isset( $integrations['woocommerce'] );
 		$has_edd         = isset( $integrations['edd'] );
-		$has_lms         = isset( $integrations['lifterlms'] ) || isset( $integrations['learndash'] );
+		$has_lms         = isset( $integrations['lifterlms'] );
 		$has_ecommerce   = $has_woocommerce || $has_edd;
 		$is_pro_active   = \PopupMaker\plugin( 'license' )->is_license_active();
 
