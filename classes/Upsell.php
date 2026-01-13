@@ -195,7 +195,25 @@ class PUM_Upsell {
 
 					switch ( $category ) {
 						case 'ecommerce':
-							$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-detected' );
+							// Determine which ecommerce platform to link to.
+							$has_woocommerce = in_array( 'WooCommerce', $platforms, true );
+							$has_edd         = in_array( 'Easy Digital Downloads', $platforms, true );
+
+							// Route to specific integration page (WooCommerce preferred if both exist, though rare).
+							if ( $has_woocommerce ) {
+								$base_url = 'https://wppopupmaker.com/ecommerce-integrations/woocommerce/';
+							} else {
+								$base_url = 'https://wppopupmaker.com/ecommerce-integrations/easy-digital-downloads/';
+							}
+
+							$upgrade_link = add_query_arg(
+								[
+									'utm_source'   => 'plugin',
+									'utm_medium'   => 'notice-bar',
+									'utm_campaign' => 'ecommerce-detected',
+								],
+								$base_url
+							);
 							$messages[]   = sprintf(
 								/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
 								esc_html__( 'Automate %1$s campaigns with %2$sPopup Maker Pro+ Ecommerce%3$s - unlock cart actions, revenue attribution, and precision targeting.', 'popup-maker' ),
@@ -206,7 +224,16 @@ class PUM_Upsell {
 							break;
 
 						case 'lms':
-							$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-detected' );
+							// Point to LifterLMS integration page with UTM tracking.
+							$base_url     = 'https://wppopupmaker.com/lms-integrations/lifterlms/';
+							$upgrade_link = add_query_arg(
+								[
+									'utm_source'   => 'plugin',
+									'utm_medium'   => 'notice-bar',
+									'utm_campaign' => 'lms-detected',
+								],
+								$base_url
+							);
 							$messages[]   = sprintf(
 								/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
 								esc_html__( 'Deliver targeted funnels for %1$s with %2$sPopup Maker Pro+ LMS%3$s - track enrollments, issue rewards, and automate course journeys.', 'popup-maker' ),
@@ -228,7 +255,16 @@ class PUM_Upsell {
 
 					switch ( $category ) {
 						case 'crm':
-							$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-detected' );
+							// Point to FluentCRM integration page with UTM tracking.
+							$base_url     = 'https://wppopupmaker.com/crm-integrations/fluentcrm/';
+							$upgrade_link = add_query_arg(
+								[
+									'utm_source'   => 'plugin',
+									'utm_medium'   => 'notice-bar',
+									'utm_campaign' => 'crm-detected',
+								],
+								$base_url
+							);
 							$messages[]   = sprintf(
 								/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
 								esc_html__( 'Unlock %1$s integration with %2$sPopup Maker Pro%3$s - connect popups to your CRM workflows and automate lead capture.', 'popup-maker' ),
