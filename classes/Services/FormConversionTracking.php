@@ -95,6 +95,19 @@ class FormConversionTracking extends Service {
 	 * @param array $args     Additional arguments from beacon.
 	 */
 	public function track_ajax_conversion( $popup_id, $args = [] ) {
+		// Extract eventData (matches Pro's pattern).
+		$event_data = isset( $args['eventData'] ) ? $args['eventData'] : [];
+
+		// Only track conversions with explicit form submission metadata.
+		if ( empty( $event_data ) || ! is_array( $event_data ) ) {
+			return;
+		}
+
+		// Verify this is a form submission event (not CTA or link click).
+		if ( empty( $event_data['type'] ) || 'form_submission' !== $event_data['type'] ) {
+			return;
+		}
+
 		// Validate popup ID.
 		if ( empty( $popup_id ) || ! is_numeric( $popup_id ) ) {
 			return;
