@@ -530,7 +530,7 @@ class PUM_Admin_Settings {
 									'random' => __( 'Randomize Names', 'popup-maker' ),
 									'custom' => __( 'Custom Names', 'popup-maker' ),
 								],
-								'std'          => 'random',
+								'std'          => 'custom',
 								'dependencies' => [
 									'bypass_adblockers' => true,
 								],
