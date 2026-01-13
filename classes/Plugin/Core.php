@@ -299,8 +299,8 @@ final class Core extends \PopupMaker\Plugin\Container {
 			 *
 			 * @return \PopupMaker\Services\FormConversionTracking
 			 */
-			function () {
-				return new \PopupMaker\Services\FormConversionTracking();
+			function ( $container ) {
+				return new \PopupMaker\Services\FormConversionTracking( $container );
 			}
 		);
 
