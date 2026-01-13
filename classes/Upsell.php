@@ -184,7 +184,6 @@ class PUM_Upsell {
 	 * @return string Targeted upgrade message or empty string.
 	 */
 	private static function get_integration_messages( $user_tier ) {
-		$upgrade_link = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
 		$integrations = self::detect_integrations();
 		$messages     = [];
 
@@ -196,21 +195,50 @@ class PUM_Upsell {
 
 					switch ( $category ) {
 						case 'ecommerce':
-							$messages[] = sprintf(
+							// Determine which ecommerce platform to link to.
+							$has_woocommerce = in_array( 'WooCommerce', $platforms, true );
+							$has_edd         = in_array( 'Easy Digital Downloads', $platforms, true );
+
+							// Route to specific integration page (WooCommerce preferred if both exist, though rare).
+							if ( $has_woocommerce ) {
+								$base_url = 'https://wppopupmaker.com/ecommerce-integrations/woocommerce/';
+							} else {
+								$base_url = 'https://wppopupmaker.com/ecommerce-integrations/easy-digital-downloads/';
+							}
+
+							$upgrade_link = add_query_arg(
+								[
+									'utm_source'   => 'plugin',
+									'utm_medium'   => 'notice-bar',
+									'utm_campaign' => 'ecommerce-detected',
+								],
+								$base_url
+							);
+							$messages[]   = sprintf(
 								/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
 								esc_html__( 'Automate %1$s campaigns with %2$sPopup Maker Pro+ Ecommerce%3$s - unlock cart actions, revenue attribution, and precision targeting.', 'popup-maker' ),
 								$platform_list,
-								'<a href="' . esc_url( $upgrade_link ) . '">',
+								'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
 								'</a>'
 							);
 							break;
 
 						case 'lms':
-							$messages[] = sprintf(
+							// Point to LifterLMS integration page with UTM tracking.
+							$base_url     = 'https://wppopupmaker.com/lms-integrations/lifterlms/';
+							$upgrade_link = add_query_arg(
+								[
+									'utm_source'   => 'plugin',
+									'utm_medium'   => 'notice-bar',
+									'utm_campaign' => 'lms-detected',
+								],
+								$base_url
+							);
+							$messages[]   = sprintf(
 								/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
 								esc_html__( 'Deliver targeted funnels for %1$s with %2$sPopup Maker Pro+ LMS%3$s - track enrollments, issue rewards, and automate course journeys.', 'popup-maker' ),
 								$platform_list,
-								'<a href="' . esc_url( $upgrade_link ) . '">',
+								'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
 								'</a>'
 							);
 							break;
@@ -227,11 +255,21 @@ class PUM_Upsell {
 
 					switch ( $category ) {
 						case 'crm':
-							$messages[] = sprintf(
+							// Point to FluentCRM integration page with UTM tracking.
+							$base_url     = 'https://wppopupmaker.com/crm-integrations/fluentcrm/';
+							$upgrade_link = add_query_arg(
+								[
+									'utm_source'   => 'plugin',
+									'utm_medium'   => 'notice-bar',
+									'utm_campaign' => 'crm-detected',
+								],
+								$base_url
+							);
+							$messages[]   = sprintf(
 								/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
 								esc_html__( 'Unlock %1$s integration with %2$sPopup Maker Pro%3$s - connect popups to your CRM workflows and automate lead capture.', 'popup-maker' ),
 								$platform_list,
-								'<a href="' . esc_url( $upgrade_link ) . '">',
+								'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
 								'</a>'
 							);
 							break;
@@ -262,11 +300,11 @@ class PUM_Upsell {
 		}
 
 		// Generic Pro+ upgrade message fallback.
-		$upgrade_link = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
+		$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'pro-generic-upgrade' );
 		return sprintf(
-			/* translators: %s - Wraps ending in link to pro settings page. */
+			/* translators: 1: Opening link tag to pricing page. 2: Closing link tag. */
 			esc_html__( 'Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, revenue attribution, and enhanced targeting.', 'popup-maker' ),
-			'<a href="' . esc_url( $upgrade_link ) . '">',
+			'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
 			'</a>'
 		);
 	}
@@ -285,11 +323,11 @@ class PUM_Upsell {
 		}
 
 		// Generic upgrade message fallback.
-		$upgrade_link = admin_url( 'edit.php?post_type=popup&page=pum-settings#go-pro' );
+		$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'free-generic-upgrade' );
 		return sprintf(
-			/* translators: %s - Wraps ending in link to pro settings page. */
+			/* translators: 1: Opening link tag to pricing page. 2: Closing link tag. */
 			esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
-			'<a href="' . esc_url( $upgrade_link ) . '">',
+			'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
 			'</a>'
 		);
 	}
