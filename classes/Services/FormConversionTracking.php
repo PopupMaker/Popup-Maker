@@ -67,13 +67,18 @@ class FormConversionTracking extends Service {
 			return;
 		}
 
+		// Only track submissions that were captured by a popup.
+		if ( empty( $args['popup_id'] ) || ! is_numeric( $args['popup_id'] ) ) {
+			return;
+		}
+
+		$popup_id = (int) $args['popup_id'];
+
 		// Increment site-wide form conversion count.
 		$this->increment_site_count();
 
-		// Increment per-popup count if popup_id is available.
-		if ( ! empty( $args['popup_id'] ) && is_numeric( $args['popup_id'] ) ) {
-			$this->increment_popup_count( (int) $args['popup_id'] );
-		}
+		// Increment per-popup count.
+		$this->increment_popup_count( $popup_id );
 
 		/*
 		 * TODO: Integrate with opt-in usage tracking when ready.
