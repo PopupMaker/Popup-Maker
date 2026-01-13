@@ -255,7 +255,7 @@ class PUM_Analytics {
 	public static function customize_endpoint_value( $value = '' ) {
 		$bypass_adblockers = pum_get_option( 'bypass_adblockers', false );
 		if ( true === $bypass_adblockers || 1 === intval( $bypass_adblockers ) ) {
-			switch ( pum_get_option( 'adblock_bypass_url_method', 'random' ) ) {
+			switch ( pum_get_option( 'adblock_bypass_url_method', 'custom' ) ) {
 				case 'custom':
 					$value = preg_replace( '/[^a-z0-9]+/', '-', pum_get_option( 'adblock_bypass_custom_filename', $value ) );
 					break;
