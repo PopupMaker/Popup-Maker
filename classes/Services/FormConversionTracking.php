@@ -20,9 +20,8 @@ defined( 'ABSPATH' ) || exit;
  * Tracks site-wide and per-popup form conversion counts for:
  * - Milestone-based upsell triggers
  * - Future analytics dashboard
- * - Opt-in usage tracking integration
  *
- * @since 1.21.3
+ * @since X.X.X
  */
 class FormConversionTracking extends Service {
 
@@ -39,7 +38,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Initialize service.
 	 *
-	 * @since 1.21.3
+	 * @since X.X.X
 	 */
 	public function init() {
 		add_action( 'pum_integrated_form_submission', [ $this, 'track_form_conversion' ], 10, 1 );
@@ -50,7 +49,7 @@ class FormConversionTracking extends Service {
 	 *
 	 * Increments both site-wide and per-popup conversion counts.
 	 *
-	 * @since 1.21.3
+	 * @since X.X.X
 	 *
 	 * @param array<string, mixed> $args {
 	 *     Form submission arguments.
@@ -79,23 +78,12 @@ class FormConversionTracking extends Service {
 
 		// Increment per-popup count.
 		$this->increment_popup_count( $popup_id );
-
-		/*
-		 * TODO: Integrate with opt-in usage tracking when ready.
-		 * Example:
-		 * if ( pum_is_tracking_enabled() ) {
-		 *     PUM_Tracking::track_event( 'form_conversion', [
-		 *         'popup_id'      => $args['popup_id'],
-		 *         'form_provider' => $args['form_provider'],
-		 *     ]);
-		 * }
-		 */
 	}
 
 	/**
 	 * Increment site-wide form conversion count.
 	 *
-	 * @since 1.21.3
+	 * @since X.X.X
 	 *
 	 * @return int New count after increment.
 	 */
@@ -110,7 +98,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Increment per-popup form conversion count.
 	 *
-	 * @since 1.21.3
+	 * @since X.X.X
 	 *
 	 * @param int $popup_id Popup post ID.
 	 * @return int New count after increment.
@@ -126,7 +114,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Get site-wide form conversion count.
 	 *
-	 * @since 1.21.3
+	 * @since X.X.X
 	 *
 	 * @return int Total form conversions across all popups.
 	 */
@@ -137,7 +125,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Get form conversion count for a specific popup.
 	 *
-	 * @since 1.21.3
+	 * @since X.X.X
 	 *
 	 * @param int $popup_id Popup post ID.
 	 * @return int Form conversions for this popup.
@@ -151,7 +139,7 @@ class FormConversionTracking extends Service {
 	 *
 	 * Useful for testing or if data needs to be cleared.
 	 *
-	 * @since 1.21.3
+	 * @since X.X.X
 	 */
 	public function reset_site_count() {
 		delete_option( self::SITE_COUNT_KEY );
@@ -160,7 +148,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Reset form conversion count for a specific popup.
 	 *
-	 * @since 1.21.3
+	 * @since X.X.X
 	 *
 	 * @param int $popup_id Popup post ID.
 	 */
