@@ -17,6 +17,7 @@
 
 -   Enhanced all Popup list views with sortable Enabled column and bulk enable/disable actions for easier management of multiple popups.
 -   Block library assets (CSS) loading unnecessarily on all front-end pages. WordPress now automatically loads these styles only when Popup Maker blocks are actually rendered.
+-   Enhanced ad-blocker bypass feature to obfuscate script and style element IDs (in addition to filenames) for improved bypass reliability. IDs now consistently use per site settings using either MD5 hashing or custom prefixes.
 
 **Fixes**
 
