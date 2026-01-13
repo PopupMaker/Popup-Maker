@@ -26,6 +26,7 @@
 -   Fixed license key not deactivating properly.
 -   Fixed issue where license keys were being saved as asterisks instead of the actual key.
 -   Fixed issue where filter `replace_editor` was being used as an action without returning the value.
+-   Fixed Subscribers page sort columns throwing 404 errors due to malformed URLs with double protocols (e.g., `https://http//site.com`). Closes #1092.
 
 ## v1.21.5 - 2025-10-13
 
