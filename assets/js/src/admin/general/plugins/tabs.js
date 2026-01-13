@@ -29,10 +29,15 @@
 							: $this.parents( '[id]' ).attr( 'id' );
 
 					if ( typeof storage[ id ] !== 'undefined' ) {
-						// If we have a stored tab, set it as the first tab.
-						$firstTab = $tabList
+						// If we have a stored tab, check if it exists for this trigger type.
+						var $storedTab = $tabList
 							.find( 'a[href="' + storage[ id ] + '"]' )
 							.parent();
+
+						// Only use stored tab if it exists, otherwise fall back to first tab.
+						if ( $storedTab.length > 0 ) {
+							$firstTab = $storedTab;
+						}
 					}
 
 					if ( $this.hasClass( 'vertical-tabs' ) ) {
