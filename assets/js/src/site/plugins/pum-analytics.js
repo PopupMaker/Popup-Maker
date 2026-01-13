@@ -141,6 +141,13 @@
 							10
 						) || null,
 					event: 'conversion',
+					eventData: {
+						type: 'form_submission',
+						formProvider: args.formProvider || null,
+						formId: args.formId || null,
+						formKey: args.formKey || null,
+						formInstanceId: args.formInstanceId || null,
+					},
 				};
 
 				// Shortcode popups use negative numbers, and single-popup (preview mode) shouldn't be tracked.
