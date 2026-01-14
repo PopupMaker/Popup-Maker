@@ -205,9 +205,11 @@ function get_param_name( $key ) {
 
 	if ( ! isset( $cache[ $key ] ) ) {
 		$defaults      = [ 'popup_id' => 'pid' ];
-		$cache[ $key ] = apply_filters(
-			"popup_maker/param_name/{$key}",
-			$defaults[ $key ] ?? $key
+		$cache[ $key ] = sanitize_key(
+			apply_filters(
+				"popup_maker/param_name/{$key}",
+				$defaults[ $key ] ?? $key
+			)
 		);
 	}
 
