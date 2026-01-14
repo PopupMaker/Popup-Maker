@@ -195,9 +195,9 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		// Get the current popup id.
 		$popup_id = pum_get_popup_id();
 
-		$url = $cta->generate_url('', [
-			'pid' => $popup_id ? $popup_id : null,
-		]);
+		$url = $cta->generate_url( '', [
+			\PopupMaker\get_param_name( 'popup_id' ) => $popup_id ? $popup_id : null,
+		] );
 
 		$wrapper_classes = [
 			'pum-cta-wrapper',

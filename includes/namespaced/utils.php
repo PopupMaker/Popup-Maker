@@ -187,3 +187,40 @@ function progress_bar( $percentage, $args = [] ) {
 
 	echo '</div>';
 }
+
+/**
+ * Get a filterable query parameter name.
+ *
+ * Used for URL tracking parameters like 'pid' which can conflict
+ * with other plugins. Site admins can filter to change the param name.
+ *
+ * @since 1.22.0
+ *
+ * @param string $key Parameter key (e.g., 'popup_id').
+ *
+ * @return string The parameter name.
+ */
+function get_param_name( $key ) {
+	static $cache = [];
+
+	if ( ! isset( $cache[ $key ] ) ) {
+		$defaults      = [ 'popup_id' => 'pid' ];
+		$cache[ $key ] = apply_filters(
+			"popup_maker/param_name/{$key}",
+			$defaults[ $key ] ?? $key
+		);
+	}
+
+	return $cache[ $key ];
+}
+
+/**
+ * Get all filterable query parameter names.
+ *
+ * @since 1.22.0
+ *
+ * @return array<string,string> Parameter names keyed by their identifier.
+ */
+function get_param_names() {
+	return [ 'popup_id' => get_param_name( 'popup_id' ) ];
+}
