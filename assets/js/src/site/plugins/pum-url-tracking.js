@@ -59,8 +59,13 @@
 					href = $link.attr( 'href' );
 
 				if ( self.isInternalUrl( href ) ) {
+					// Get the filterable param name (defaults to 'pid').
+					var pidParam =
+						window.pum_vars?.paramNames?.popup_id || 'pid';
+
 					// Internal URLs: Append PID parameter (tracked via server redirect).
-					var urlParams = { pid: pid };
+					var urlParams = {};
+					urlParams[ pidParam ] = pid;
 
 					// Allow extensions to add additional parameters.
 					if ( window.PUM && window.PUM.hooks ) {

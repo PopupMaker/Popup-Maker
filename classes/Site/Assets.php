@@ -267,6 +267,7 @@ class PUM_Site_Assets {
 					'core_sub_forms_enabled' => ! PUM_Newsletters::$disabled,
 					'popups'                 => [],
 					'cookie_domain'          => apply_filters( 'pum_cookie_domain', '' ),
+					'paramNames'             => \PopupMaker\get_param_names(),
 				]
 			)
 		);
