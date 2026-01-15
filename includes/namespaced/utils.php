@@ -157,12 +157,15 @@ function safe_redirect( $url, $status = 302 ) {
  */
 function progress_bar( $percentage, $args = [] ) {
 
-	$args = wp_parse_args( $args, [
-		'size'            => null,
-		'title'           => '',
-		'class'           => '',
-		'show_percentage' => true,
-	] );
+	$args = wp_parse_args(
+		$args,
+		[
+			'size'            => null,
+			'title'           => '',
+			'class'           => '',
+			'show_percentage' => true,
+		]
+	);
 
 	$classes = [
 		'pum-progress-bar',
@@ -224,5 +227,134 @@ function get_param_name( $key ) {
  * @return array<string,string> Parameter names keyed by their identifier.
  */
 function get_param_names() {
-	return [ 'popup_id' => get_param_name( 'popup_id' ) ];
+	return [
+		'popup_id' => get_param_name( 'popup_id' ),
+		'cta'      => get_param_name( 'cta' ),
+		'notrack'  => get_param_name( 'notrack' ),
+	];
+}
+
+/**
+ * Get a query parameter value with type safety and filtering support.
+ *
+ * Uses the filterable parameter name system via get_param_name().
+ * Returns fallback if parameter is not set OR is an empty string.
+ * Note: Allows "0" as a valid value (unlike empty() check).
+ *
+ * @since 1.22.0
+ *
+ * @param string $key      Parameter key (e.g., 'popup_id', 'cta').
+ * @param mixed  $fallback Fallback value if parameter not set or empty.
+ * @param string $type     Type to cast value to: 'string', 'int', 'bool', 'key', 'email', 'url'.
+ *                         Defaults to 'string'.
+ *
+ * @return mixed The sanitized parameter value, or fallback if not set/empty.
+ */
+function get_param_value( $key, $fallback = null, $type = 'string' ) {
+	$param_name = get_param_name( $key );
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Parameter reading, not state-changing operation.
+	if ( ! isset( $_GET[ $param_name ] ) || '' === $_GET[ $param_name ] ) {
+		return $fallback;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitization handled by sanitize_param_by_type().
+	$value = wp_unslash( $_GET[ $param_name ] );
+
+	return sanitize_param_by_type( $value, $type );
+}
+
+/**
+ * Get a POST parameter value with type safety.
+ *
+ * Separate function for POST to enforce deliberate intent.
+ * Note: POST parameters do not use the filterable name system.
+ *
+ * @since 1.22.0
+ *
+ * @param string $key      Parameter key (e.g., 'action', 'nonce').
+ * @param mixed  $fallback Fallback value if parameter not set or empty.
+ * @param string $type     Type to cast value to: 'string', 'int', 'bool', 'key', 'email', 'url'.
+ *                         Defaults to 'string'.
+ *
+ * @return mixed The sanitized parameter value, or fallback if not set/empty.
+ */
+function get_post_param_value( $key, $fallback = null, $type = 'string' ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Parameter reading, not state-changing operation.
+	if ( ! isset( $_POST[ $key ] ) || '' === $_POST[ $key ] ) {
+		return $fallback;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitization handled by sanitize_param_by_type().
+	$value = wp_unslash( $_POST[ $key ] );
+
+	return sanitize_param_by_type( $value, $type );
+}
+
+/**
+ * Sanitize a parameter value based on type specification.
+ *
+ * Reusable helper for type-safe sanitization of request data.
+ *
+ * @since 1.22.0
+ *
+ * @param mixed  $value Raw parameter value.
+ * @param string $type  Type to sanitize for: 'string', 'int', 'bool', 'key', 'email', 'url'.
+ *                      Note: 'bool' returns false for invalid boolean values.
+ *
+ * @return mixed Sanitized value. Returns false for 'bool' type with invalid input.
+ */
+function sanitize_param_by_type( $value, $type ) {
+	switch ( $type ) {
+		case 'int':
+			$int_value = absint( $value );
+
+			// Log suspicious int conversions in debug mode.
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && 0 === $int_value && '0' !== $value && 0 !== $value ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( sprintf( 'Popup Maker: Non-numeric value "%s" converted to int resulted in 0', $value ) );
+			}
+
+			return $int_value;
+
+		case 'bool':
+			$result = filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+
+			// Log invalid boolean values in debug mode.
+			if ( null === $result && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( sprintf( 'Popup Maker: Invalid boolean value "%s", returning false', $value ) );
+			}
+
+			return $result ?? false;
+
+		case 'key':
+			return sanitize_key( $value );
+
+		case 'email':
+			$sanitized = sanitize_email( $value );
+
+			// Log email validation failures in debug mode.
+			if ( '' === $sanitized && '' !== $value && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( sprintf( 'Popup Maker: Email validation failed for value "%s"', $value ) );
+			}
+
+			return $sanitized;
+
+		case 'url':
+			$sanitized = esc_url_raw( $value );
+
+			// Log URL validation failures in debug mode.
+			if ( '' === $sanitized && '' !== $value && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log( sprintf( 'Popup Maker: URL validation failed for value "%s"', $value ) );
+			}
+
+			return $sanitized;
+
+		case 'string':
+		default:
+			return sanitize_text_field( $value );
+	}
 }
