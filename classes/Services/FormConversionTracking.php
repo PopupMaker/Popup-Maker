@@ -96,6 +96,7 @@ class FormConversionTracking extends Service {
 	 */
 	public function track_ajax_conversion( $popup_id, $args = [] ) {
 		// Extract eventData (matches Pro's pattern).
+		// REST endpoint sanitize_event_data() already decoded JSON to array.
 		$event_data = isset( $args['eventData'] ) ? $args['eventData'] : [];
 
 		// Only track conversions with explicit form submission metadata.

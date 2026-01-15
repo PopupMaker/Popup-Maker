@@ -172,6 +172,7 @@ class PUM_Telemetry {
 			'popups'                 => $popups,
 			'popup_themes'           => $popup_themes,
 			'open_count'             => get_option( 'pum_total_open_count', 0 ),
+			// TODO: Add form conversion tracking metric: get_option( 'pum_form_conversion_count', 0 ).
 
 			// Popup Maker Settings.
 			'block_editor_enabled'   => ! pum_get_option( 'enable_classic_editor', false ),
