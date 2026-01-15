@@ -839,7 +839,10 @@ class PUM_ListTable {
 		$host        = isset( $_SERVER['HTTP_HOST'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : wp_parse_url( home_url(), PHP_URL_HOST );
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
-		$current_url = set_url_scheme( $host . $request_uri );
+		// Strip any existing protocol from host to prevent double protocol issues (https://http//site.com).
+		$host = preg_replace( '#^https?://#', '', $host );
+
+		$current_url = set_url_scheme( 'http://' . $host . $request_uri );
 
 		$current_url = remove_query_arg( $removable_query_args, $current_url );
 
@@ -1136,6 +1139,9 @@ class PUM_ListTable {
 
 		$host        = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_url( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : wp_parse_url( home_url(), PHP_URL_HOST );
 		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+		// Strip any existing protocol from host to prevent double protocol issues (https://http//site.com).
+		$host = preg_replace( '#^https?://#', '', $host );
 
 		$current_url = set_url_scheme( 'http://' . $host . $request_uri );
 
