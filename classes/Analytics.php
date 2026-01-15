@@ -168,6 +168,30 @@ class PUM_Analytics {
 	}
 
 	/**
+	 * Sanitize eventData parameter (matches Pro's approach).
+	 *
+	 * Decodes JSON string to array if needed.
+	 *
+	 * @param mixed $value EventData value (JSON string or array).
+	 *
+	 * @return array Decoded eventData as array.
+	 */
+	public static function sanitize_event_data( $value ) {
+		// If already an array, return as-is.
+		if ( is_array( $value ) ) {
+			return $value;
+		}
+
+		// Decode JSON string to array (matches Pro's Request::parse_tracking_data).
+		if ( is_string( $value ) ) {
+			$decoded = json_decode( $value, true );
+			return is_array( $decoded ) ? $decoded : [];
+		}
+
+		return [];
+	}
+
+	/**
 	 * Registers the analytics endpoints
 	 */
 	public static function register_endpoints() {
@@ -181,17 +205,22 @@ class PUM_Analytics {
 					'callback'            => [ __CLASS__, 'analytics_endpoint' ],
 					'permission_callback' => '__return_true',
 					'args'                => [
-						'event' => [
+						'event'     => [
 							'required'    => true,
 							'description' => __( 'Event Type', 'popup-maker' ),
 							'type'        => 'string',
 						],
-						'pid'   => [
+						'pid'       => [
 							'required'            => true,
 							'description'         => __( 'Popup ID', 'popup-maker' ),
 							'type'                => 'integer',
 							'validation_callback' => [ __CLASS__, 'endpoint_absint' ],
 							'sanitize_callback'   => 'absint',
+						],
+						'eventData' => [
+							'required'          => false,
+							'description'       => __( 'Event metadata (JSON or array)', 'popup-maker' ),
+							'sanitize_callback' => [ __CLASS__, 'sanitize_event_data' ],
 						],
 					],
 				]
