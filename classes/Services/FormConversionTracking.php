@@ -77,6 +77,16 @@ class FormConversionTracking extends Service {
 
 		$popup_id = (int) $args['popup_id'];
 
+		// Verify popup exists before tracking (prevents orphaned meta).
+		$popup = get_post( $popup_id );
+		if ( ! $popup || 'popup' !== get_post_type( $popup ) ) {
+			// Log but don't break form submission - tracking is non-critical.
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( sprintf( '[Popup Maker] Skipping form conversion tracking for invalid popup ID: %d', $popup_id ) );
+			}
+			return;
+		}
+
 		// Increment site-wide form conversion count.
 		$this->increment_site_count();
 
@@ -115,6 +125,16 @@ class FormConversionTracking extends Service {
 		}
 
 		$popup_id = (int) $popup_id;
+
+		// Verify popup exists before tracking (prevents orphaned meta).
+		$popup = get_post( $popup_id );
+		if ( ! $popup || 'popup' !== get_post_type( $popup ) ) {
+			// Log but don't break form submission - tracking is non-critical.
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( sprintf( '[Popup Maker] Skipping AJAX form conversion tracking for invalid popup ID: %d', $popup_id ) );
+			}
+			return;
+		}
 
 		// Increment site-wide form conversion count.
 		$this->increment_site_count();
