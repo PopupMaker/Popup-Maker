@@ -89,9 +89,9 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Hooks in a success functions specific to this provider for non AJAX submission handling.
 	 *
-	 * @param string $submission_id
-	 * @param array  $form_data
-	 * @param array  $form
+	 * @param string          $submission_id
+	 * @param array           $form_data
+	 * @param object|stdClass $form
 	 */
 	public function on_success( $submission_id, $form_data, $form ) {
 		if ( ! $this->should_process_submission() ) {
@@ -104,11 +104,17 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 			$this->increase_conversion( $popup_id );
 		}
 
+		// Defensive validation - $form is stdClass, not array.
+		$form_id = null;
+		if ( is_object( $form ) && isset( $form->attributes ) && is_object( $form->attributes ) && isset( $form->attributes->id ) ) {
+			$form_id = $form->attributes->id;
+		}
+
 		pum_integrated_form_submission(
 			[
 				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
-				'form_id'       => isset( $form['attributes']['id'] ) ? $form['attributes']['id'] : null,
+				'form_id'       => $form_id,
 			]
 		);
 	}
