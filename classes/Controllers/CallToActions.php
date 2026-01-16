@@ -34,13 +34,12 @@ class CallToActions extends Controller {
 	 * Redirects when needed.
 	 */
 	public function template_redirect() {
-		$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ 'cta', 'pid' ] );
+		$pid_param = \PopupMaker\get_param_name( 'popup_id' );
+		$cta_args  = apply_filters( 'popup_maker/cta_valid_url_args', [ 'cta', $pid_param ] );
 
-		/* phpcs:disable WordPress.Security.NonceVerification.Recommended */
-		$cta_uuid = ! empty( $_GET['cta'] ) ? sanitize_text_field( wp_unslash( $_GET['cta'] ) ) : '';
-		$popup_id = ! empty( $_GET['pid'] ) ? absint( $_GET['pid'] ) : null;
-		$notrack  = (bool) ( ! empty( $_GET['notrack'] ) ? sanitize_text_field( wp_unslash( $_GET['notrack'] ) ) : false );
-		/* phpcs:enable WordPress.Security.NonceVerification.Recommended */
+		$cta_uuid = \PopupMaker\get_param_value( 'cta', '', 'string' );
+		$popup_id = \PopupMaker\get_param_value( 'popup_id', null, 'int' );
+		$notrack  = \PopupMaker\get_param_value( 'notrack', false, 'bool' );
 
 		/**
 		 * Filter the CTA identifier before lookup.

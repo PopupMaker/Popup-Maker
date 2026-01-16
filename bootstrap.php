@@ -165,6 +165,9 @@ function init_plugin() {
 	do_action( 'popup_maker/init' );
 }
 
+// Check for pid parameter conflicts early, before other plugins initialize.
+add_action( 'plugins_loaded', '\PopupMaker\maybe_auto_fix_pid_conflict', 1 );
+
 add_action(
 	'plugins_loaded',
 	'\PopupMaker\init_plugin',
