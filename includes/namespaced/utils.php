@@ -207,13 +207,18 @@ function get_param_name( $key ) {
 	static $cache = [];
 
 	if ( ! isset( $cache[ $key ] ) ) {
-		$defaults      = [ 'popup_id' => 'pid' ];
-		$cache[ $key ] = sanitize_key(
-			apply_filters(
-				"popup_maker/param_name/{$key}",
-				$defaults[ $key ] ?? $key
-			)
-		);
+		$defaults = [ 'popup_id' => 'pid' ];
+		$default  = $defaults[ $key ] ?? $key;
+
+		// Check for stored override (auto-detected or user-set).
+		if ( 'popup_id' === $key ) {
+			$override = get_option( 'pum_pid_param_override' );
+			if ( $override ) {
+				$default = $override;
+			}
+		}
+
+		$cache[ $key ] = sanitize_key( $default );
 	}
 
 	return $cache[ $key ];
@@ -356,5 +361,145 @@ function sanitize_param_by_type( $value, $type ) {
 		case 'string':
 		default:
 			return sanitize_text_field( $value );
+	}
+}
+
+/**
+ * Known plugins that use the 'pid' query parameter.
+ *
+ * @since 1.22.0
+ *
+ * @return array<string,string> Plugin file => Plugin name.
+ */
+function get_known_pid_plugins() {
+	return [
+		'wp-user-frontend/wpuf.php'                       => 'WP User Frontend',
+		'wp-user-frontend-pro/wpuf.php'                   => 'WP User Frontend Pro',
+		'participants-database/participants-database.php' => 'Participants Database',
+	];
+}
+
+/**
+ * Check if any known pid-using plugins are active.
+ *
+ * @since 1.22.0
+ *
+ * @return bool True if conflict detected.
+ */
+function has_known_pid_conflict() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		// @phpstan-ignore-next-line ABSPATH is a WordPress constant defined at runtime.
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	foreach ( array_keys( get_known_pid_plugins() ) as $plugin_file ) {
+		if ( is_plugin_active( $plugin_file ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Scan active plugins for pid parameter usage.
+ *
+ * Results are cached in a transient for performance.
+ * Cache invalidated on plugin activation/deactivation.
+ *
+ * @since 1.22.0
+ *
+ * @return bool True if any plugin uses 'pid' parameter.
+ */
+function scan_plugins_for_pid_usage() {
+	// Check cache first.
+	$cached = get_transient( 'pum_pid_scan_result' );
+	if ( false !== $cached ) {
+		return (bool) $cached;
+	}
+
+	$found          = false;
+	$active_plugins = get_option( 'active_plugins', [] );
+
+	// Patterns that indicate pid parameter usage.
+	$patterns = [
+		'/\$_GET\s*\[\s*[\'"]pid[\'"]\s*\]/',
+		'/\$_REQUEST\s*\[\s*[\'"]pid[\'"]\s*\]/',
+		'/\$_POST\s*\[\s*[\'"]pid[\'"]\s*\]/',
+		'/get_query_var\s*\(\s*[\'"]pid[\'"]\s*\)/',
+	];
+
+	foreach ( $active_plugins as $plugin_file ) {
+		// Skip Popup Maker itself.
+		if ( false !== strpos( $plugin_file, 'popup-maker' ) ) {
+			continue;
+		}
+
+		$plugin_path = WP_PLUGIN_DIR . '/' . $plugin_file;
+
+		// Only check the main plugin file (lightweight).
+		if ( ! file_exists( $plugin_path ) ) {
+			continue;
+		}
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading plugin files for pattern matching.
+		$content = file_get_contents( $plugin_path );
+		if ( false === $content || '' === $content ) {
+			continue;
+		}
+
+		foreach ( $patterns as $pattern ) {
+			if ( preg_match( $pattern, $content ) ) {
+				$found = true;
+				break 2; // Exit both loops.
+			}
+		}
+	}
+
+	// Cache for 1 week (invalidated on plugin changes).
+	set_transient( 'pum_pid_scan_result', $found ? 1 : 0, WEEK_IN_SECONDS );
+
+	return $found;
+}
+
+/**
+ * Clear the pid scan cache when plugins change.
+ *
+ * @since 1.22.0
+ *
+ * @return void
+ */
+function clear_pid_scan_cache() {
+	delete_transient( 'pum_pid_scan_result' );
+}
+add_action( 'activated_plugin', __NAMESPACE__ . '\clear_pid_scan_cache' );
+add_action( 'deactivated_plugin', __NAMESPACE__ . '\clear_pid_scan_cache' );
+
+/**
+ * Check and auto-apply pid override if conflict detected.
+ *
+ * Called early on plugins_loaded to ensure override is in place
+ * before any plugin tries to use the parameter.
+ *
+ * @since 1.22.0
+ *
+ * @return void
+ */
+function maybe_auto_fix_pid_conflict() {
+	// Already have an override set (user or auto).
+	if ( get_option( 'pum_pid_param_override' ) ) {
+		return;
+	}
+
+	// Check fast path first (known plugins).
+	$has_conflict = has_known_pid_conflict();
+
+	// If no known conflict, do lightweight scan (cached).
+	if ( ! $has_conflict ) {
+		$has_conflict = scan_plugins_for_pid_usage();
+	}
+
+	// Auto-apply override if conflict found.
+	if ( $has_conflict ) {
+		update_option( 'pum_pid_param_override', 'pum_popup_id', false );
 	}
 }
