@@ -263,6 +263,12 @@ function get_param_value( $key, $fallback = null, $type = 'string' ) {
 		return $fallback;
 	}
 
+	// Guard against array input (e.g., ?pid[]=malicious).
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Parameter reading, not state-changing operation.
+	if ( is_array( $_GET[ $param_name ] ) ) {
+		return $fallback;
+	}
+
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitization handled by sanitize_param_by_type().
 	$value = wp_unslash( $_GET[ $param_name ] );
 
@@ -287,6 +293,12 @@ function get_param_value( $key, $fallback = null, $type = 'string' ) {
 function get_post_param_value( $key, $fallback = null, $type = 'string' ) {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Parameter reading, not state-changing operation.
 	if ( ! isset( $_POST[ $key ] ) || '' === $_POST[ $key ] ) {
+		return $fallback;
+	}
+
+	// Guard against array input.
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Parameter reading, not state-changing operation.
+	if ( is_array( $_POST[ $key ] ) ) {
 		return $fallback;
 	}
 
