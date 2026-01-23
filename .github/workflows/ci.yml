@@ -19,16 +19,29 @@ jobs:
   # ============================================================================
   # Change Detection - Fast first step to gate expensive jobs
   # ============================================================================
+  #
+  # tj-actions/changed-files OUTPUT NAMING:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # This job uses `files_yaml:` to define multiple file categories.
+  # With files_yaml, outputs are prefixed with the category name:
+  #   - php_any_changed, js_any_changed, css_any_changed, etc.
+  #
+  # Individual jobs below use `files:` (single category) which outputs:
+  #   - any_changed (no prefix)
+  #
+  # Both patterns are correct for their respective configurations.
+  # ─────────────────────────────────────────────────────────────────────────────
   detect-changes:
     name: Detect Changes
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
+    # NOTE: With files_yaml:, outputs are {category}_any_changed
     outputs:
-      php: ${{ steps.changes.outputs.php }}
-      js: ${{ steps.changes.outputs.js }}
-      css: ${{ steps.changes.outputs.css }}
-      npm_deps: ${{ steps.changes.outputs.npm_deps }}
-      php_deps: ${{ steps.changes.outputs.php_deps }}
+      php: ${{ steps.changes.outputs.php_any_changed }}
+      js: ${{ steps.changes.outputs.js_any_changed }}
+      css: ${{ steps.changes.outputs.css_any_changed }}
+      npm_deps: ${{ steps.changes.outputs.npm_deps_any_changed }}
+      php_deps: ${{ steps.changes.outputs.php_deps_any_changed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -39,6 +52,7 @@ jobs:
         id: changes
         uses: tj-actions/changed-files@v41
         with:
+          # files_yaml: defines multiple categories → outputs are {category}_any_changed
           files_yaml: |
             php:
               - '**/*.php'
@@ -84,6 +98,7 @@ jobs:
         with:
           fetch-depth: 0
 
+      # NOTE: Using `files:` (not files_yaml) → outputs are just `any_changed`
       - name: Get changed PHP files
         id: changed-files
         uses: tj-actions/changed-files@v41
@@ -163,6 +178,7 @@ jobs:
         with:
           fetch-depth: 0
 
+      # NOTE: Using `files:` (not files_yaml) → outputs are just `any_changed`
       - name: Get changed JS/TS files
         id: changed-js
         uses: tj-actions/changed-files@v41
@@ -179,6 +195,7 @@ jobs:
             build/**
             coverage/**
 
+      # NOTE: Using `files:` (not files_yaml) → outputs are just `any_changed`
       - name: Get changed CSS/SCSS files
         id: changed-css
         uses: tj-actions/changed-files@v41
