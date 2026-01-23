@@ -122,7 +122,8 @@ class LinkClickTracking extends Service {
 		// Check if option exists; if not, create it with autoload disabled.
 		$exists = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT option_id FROM {$wpdb->options} WHERE option_name = %s LIMIT 1",
+				'SELECT option_id FROM %i WHERE option_name = %s LIMIT 1',
+				$wpdb->options,
 				self::SITE_COUNT_KEY
 			)
 		);
@@ -134,7 +135,8 @@ class LinkClickTracking extends Service {
 		// Atomic increment (prevents race condition).
 		$wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$wpdb->options} SET option_value = option_value + 1 WHERE option_name = %s",
+				'UPDATE %i SET option_value = option_value + 1 WHERE option_name = %s',
+				$wpdb->options,
 				self::SITE_COUNT_KEY
 			)
 		);
@@ -159,7 +161,8 @@ class LinkClickTracking extends Service {
 
 		$exists = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = %s LIMIT 1",
+				'SELECT meta_id FROM %i WHERE post_id = %d AND meta_key = %s LIMIT 1',
+				$wpdb->postmeta,
 				$popup_id,
 				self::POPUP_META_KEY
 			)
@@ -172,7 +175,8 @@ class LinkClickTracking extends Service {
 		// Atomic increment.
 		$wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$wpdb->postmeta} SET meta_value = meta_value + 1 WHERE post_id = %d AND meta_key = %s",
+				'UPDATE %i SET meta_value = meta_value + 1 WHERE post_id = %d AND meta_key = %s',
+				$wpdb->postmeta,
 				$popup_id,
 				self::POPUP_META_KEY
 			)
