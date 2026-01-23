@@ -1,9 +1,6 @@
 name: CI - Code Quality
 
 on:
-  push:
-    branches:
-      - develop
   pull_request:
   workflow_dispatch:
 
@@ -147,7 +144,6 @@ jobs:
           extensions: curl, zip
           tools: composer, cs2pr, phpcs
           coverage: none
-          cache: composer
 
       - name: Install composer dependencies
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -349,7 +345,6 @@ jobs:
         with:
           php-version: '8.2'
           tools: composer
-          cache: composer
 
       - name: Install composer dependencies
         run: composer install --no-interaction --ignore-platform-reqs
@@ -388,7 +383,6 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: curl, mysql, zip
           coverage: xdebug
-          cache: composer
 
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-progress --ignore-platform-reqs
