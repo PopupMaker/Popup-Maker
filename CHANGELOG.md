@@ -4,6 +4,7 @@
 
 **Features**
 
+-   Added link click conversion tracking for external and special links (mailto:, tel:, etc.) within popups. Clicks are tracked via analytics beacon and categorized by link type for conversion reporting.
 -   Added [Beaver Builder Forms integration](https://wppopupmaker.com/form-integrations/beaver-builder/) for form submission tracking and conversion analytics. Supports Contact, Subscribe, and Login form modules.
 -   Added [Bit Form integration](https://wppopupmaker.com/form-integrations/bit-form/) for form submission tracking and conversion analytics.
 -   Added [Elementor Pro Forms integration](https://wppopupmaker.com/form-integrations/elementor-forms/) for form submission tracking and conversion analytics with support for targeting specific forms.
@@ -21,6 +22,7 @@
 
 **Fixes**
 
+-   Fixed mailto: and tel: links inside popups being incorrectly modified with tracking parameters, which broke email and phone links.
 -   Fixed Fluent Forms integration fatal error when using double opt-in. Closes #1094.
 -   Fixed Time Delay trigger settings tab displaying blank when switching from Click Trigger advanced tab. Closes #1109.
 -   Fixed trigger modal "Add" button label not displaying due to incorrect i18n function usage. Props to @DAnn2012.
