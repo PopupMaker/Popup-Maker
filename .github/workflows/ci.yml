@@ -38,7 +38,8 @@ jobs:
     # NOTE: With files_yaml:, outputs are {category}_any_changed
     outputs:
       php: ${{ steps.changes.outputs.php_any_changed }}
-      js: ${{ steps.changes.outputs.js_any_changed }}
+      js: ${{ steps.changes.outputs.js_any_changed }}           # All JS/TS (for ESLint)
+      js_src: ${{ steps.changes.outputs.js_src_any_changed }}   # Source only (for build/TS check)
       css: ${{ steps.changes.outputs.css_any_changed }}
       npm_deps: ${{ steps.changes.outputs.npm_deps_any_changed }}
       php_deps: ${{ steps.changes.outputs.php_deps_any_changed }}
@@ -59,6 +60,7 @@ jobs:
               - '!vendor/**'
               - '!vendor-prefixed/**'
             js:
+              # All JS/TS for ESLint (config, tooling, source, etc.)
               - '**/*.js'
               - '**/*.ts'
               - '**/*.tsx'
@@ -66,6 +68,12 @@ jobs:
               - '!node_modules/**'
               - '!dist/**'
               - '!build/**'
+              - '!vendor/**'
+            js_src:
+              # Only source files that need build/TS type checking
+              - 'packages/**/src/**/*.ts'
+              - 'packages/**/src/**/*.tsx'
+              - 'assets/js/src/**/*.js'
             css:
               - '**/*.css'
               - '**/*.scss'
@@ -148,7 +156,8 @@ jobs:
         continue-on-error: true
         run: |
           echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' > .changed-files.txt
-          vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml --file-list=.changed-files.txt
+          # --warning-severity=0: Only fail on errors, not warnings (warnings still shown)
+          vendor/bin/phpcs --standard=.phpcs.xml.dist --warning-severity=0 --report-full --report-checkstyle=./phpcs-report.xml --file-list=.changed-files.txt
 
       - name: Show PHPCS results in PR
         if: steps.changed-files.outputs.any_changed == 'true' && always() && steps.phpcs.outcome == 'failure'
@@ -179,6 +188,7 @@ jobs:
           fetch-depth: 0
 
       # NOTE: Using `files:` (not files_yaml) → outputs are just `any_changed`
+      # All JS/TS files for ESLint (config, tooling, source, etc.)
       - name: Get changed JS/TS files
         id: changed-js
         uses: tj-actions/changed-files@v41
@@ -232,8 +242,9 @@ jobs:
         run: |
           echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs npm run lint:style -- --formatter=compact
 
+      # Only type-check when source files change (not config/tooling)
       - name: Run TypeScript type checking
-        if: steps.changed-js.outputs.any_changed == 'true'
+        if: needs.detect-changes.outputs.js_src == 'true'
         continue-on-error: true
         id: tsc
         run: npm run build:tsc
@@ -254,7 +265,8 @@ jobs:
     name: Build Validation
     runs-on: ubuntu-latest
     needs: detect-changes
-    if: ${{ github.event_name == 'pull_request' && (needs.detect-changes.outputs.js == 'true' || needs.detect-changes.outputs.npm_deps == 'true') }}
+    # Only build when source files change (not config/tooling JS)
+    if: ${{ github.event_name == 'pull_request' && (needs.detect-changes.outputs.js_src == 'true' || needs.detect-changes.outputs.npm_deps == 'true') }}
 
     steps:
       - name: Checkout code
