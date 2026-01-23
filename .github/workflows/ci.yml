@@ -102,9 +102,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Min + Latest only for faster CI. Uncomment middle versions if needed.
-        php-version: ['7.4', '8.2']
-        # php-version: ['7.4', '8.0', '8.1', '8.2']
+        # PHPCS only on 8.2 - PHPUnit dev dep uses PHP 8+ syntax in vendor autoload
+        # Code compatibility is the same regardless of PHP version running PHPCS
+        php-version: ['8.2']
 
     steps:
       - name: Checkout code
