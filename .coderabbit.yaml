@@ -11,6 +11,8 @@ reviews:
     enabled: true
     base_branches:
       - develop
+    # Auto-incremental reviews when new commits pushed
+    auto_incremental_review: true
 
   # Collapse file walkthrough in PR comments
   collapse_walkthrough: false
@@ -20,12 +22,6 @@ reviews:
 
   # Add poem to reviews
   poem: false
-
-  # Review full files or just changed lines
-  review_full_file_on_changed_file: false
-
-  # Auto-incremental reviews when new commits pushed
-  auto_incremental_review: true
 
 # Review language
 language: en-US
