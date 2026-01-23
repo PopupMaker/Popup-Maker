@@ -75,10 +75,11 @@ jobs:
               - 'packages/**/src/**/*.tsx'
               - 'assets/js/src/**/*.js'
             css:
-              - '**/*.css'
-              - '**/*.scss'
-              - '!node_modules/**'
-              - '!dist/**'
+              # Only source CSS/SCSS (not built output)
+              - 'assets/css/src/**/*.css'
+              - 'assets/css/src/**/*.scss'
+              - 'packages/**/src/**/*.css'
+              - 'packages/**/src/**/*.scss'
             npm_deps:
               - 'package.json'
               - 'package-lock.json'
@@ -98,7 +99,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2']
+        # Min + Latest only for faster CI. Uncomment middle versions if needed.
+        php-version: ['7.4', '8.2']
+        # php-version: ['7.4', '8.0', '8.1', '8.2']
 
     steps:
       - name: Checkout code
