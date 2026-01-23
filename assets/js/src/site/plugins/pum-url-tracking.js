@@ -86,6 +86,11 @@
 				return false;
 			}
 
+			// Skip non-HTTP protocols (mailto:, tel:, javascript:, etc.).
+			if ( /^[a-z][a-z0-9+.-]*:/i.test( url ) && ! /^https?:/i.test( url ) ) {
+				return false;
+			}
+
 			// Handle relative URLs.
 			if ( url.indexOf( '/' ) === 0 && url.indexOf( '//' ) !== 0 ) {
 				return true;
