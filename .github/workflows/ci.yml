@@ -36,7 +36,8 @@ jobs:
     outputs:
       php: ${{ steps.changes.outputs.php_any_changed }}
       js: ${{ steps.changes.outputs.js_any_changed }}           # All JS/TS (for ESLint)
-      js_src: ${{ steps.changes.outputs.js_src_any_changed }}   # Source only (for build/TS check)
+      js_src: ${{ steps.changes.outputs.js_src_any_changed }}   # All source JS/TS (for build)
+      ts_src: ${{ steps.changes.outputs.ts_src_any_changed }}   # TypeScript only (for tsc)
       css: ${{ steps.changes.outputs.css_any_changed }}
       npm_deps: ${{ steps.changes.outputs.npm_deps_any_changed }}
       php_deps: ${{ steps.changes.outputs.php_deps_any_changed }}
@@ -67,10 +68,15 @@ jobs:
               - '!build/**'
               - '!vendor/**'
             js_src:
-              # Only source files that need build/TS type checking
+              # All source JS/TS files (for build validation)
               - 'packages/**/src/**/*.ts'
               - 'packages/**/src/**/*.tsx'
+              - 'packages/**/src/**/*.js'
               - 'assets/js/src/**/*.js'
+            ts_src:
+              # TypeScript only (for tsc type checking)
+              - 'packages/**/src/**/*.ts'
+              - 'packages/**/src/**/*.tsx'
             css:
               # Only source CSS/SCSS (not built output)
               - 'assets/css/src/**/*.css'
@@ -241,9 +247,9 @@ jobs:
         run: |
           echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs npm run lint:style -- --formatter=compact
 
-      # Only type-check when source files change (not config/tooling)
+      # Only type-check when TypeScript files change
       - name: Run TypeScript type checking
-        if: needs.detect-changes.outputs.js_src == 'true'
+        if: needs.detect-changes.outputs.ts_src == 'true'
         continue-on-error: true
         id: tsc
         run: npm run build:tsc
