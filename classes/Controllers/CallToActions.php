@@ -24,7 +24,8 @@ class CallToActions extends Controller {
 	 * Initialize cta actions
 	 */
 	public function init() {
-		add_action( 'template_redirect', [ $this, 'template_redirect' ] );
+		// Priority 0 ensures PID tracking fires before other plugins that might redirect.
+		add_action( 'template_redirect', [ $this, 'template_redirect' ], 0 );
 		add_action( 'popup_maker/cta_conversion', [ $this, 'track_cta_conversion' ], 10, 2 );
 	}
 
