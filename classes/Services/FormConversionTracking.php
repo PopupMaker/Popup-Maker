@@ -83,8 +83,8 @@ class FormConversionTracking extends Service {
 		$popup_id = (int) $args['popup_id'];
 
 		// Verify popup exists before tracking (prevents orphaned meta).
-		$popup = get_post( $popup_id );
-		if ( ! $popup || 'popup' !== get_post_type( $popup ) ) {
+		$popup = pum_get_popup( $popup_id );
+		if ( ! pum_is_popup( $popup ) ) {
 			// Log but don't break form submission - tracking is non-critical.
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				error_log( sprintf( '[Popup Maker] Skipping form conversion tracking for invalid popup ID: %d', $popup_id ) );
@@ -97,6 +97,16 @@ class FormConversionTracking extends Service {
 
 		// Increment per-popup count.
 		$this->increment_popup_count( $popup_id );
+
+		/**
+		 * Fires after a form conversion is tracked (non-AJAX).
+		 *
+		 * @since X.X.X
+		 *
+		 * @param int   $popup_id Popup ID.
+		 * @param array $args     Form submission arguments.
+		 */
+		do_action( 'popup_maker/form_conversion_tracked', $popup_id, $args );
 	}
 
 	/**
@@ -137,8 +147,8 @@ class FormConversionTracking extends Service {
 		$popup_id = (int) $popup_id;
 
 		// Verify popup exists before tracking (prevents orphaned meta).
-		$popup = get_post( $popup_id );
-		if ( ! $popup || 'popup' !== get_post_type( $popup ) ) {
+		$popup = pum_get_popup( $popup_id );
+		if ( ! pum_is_popup( $popup ) ) {
 			// Log but don't break form submission - tracking is non-critical.
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				error_log( sprintf( '[Popup Maker] Skipping AJAX form conversion tracking for invalid popup ID: %d', $popup_id ) );
@@ -151,6 +161,16 @@ class FormConversionTracking extends Service {
 
 		// Increment per-popup count.
 		$this->increment_popup_count( $popup_id );
+
+		/**
+		 * Fires after an AJAX form conversion is tracked.
+		 *
+		 * @since X.X.X
+		 *
+		 * @param int   $popup_id   Popup ID.
+		 * @param array $event_data Form submission event data.
+		 */
+		do_action( 'popup_maker/form_conversion_tracked', $popup_id, $event_data );
 	}
 
 	/**
@@ -169,7 +189,8 @@ class FormConversionTracking extends Service {
 		// Check if option exists; if not, create it with autoload disabled.
 		$exists = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT option_id FROM {$wpdb->options} WHERE option_name = %s LIMIT 1",
+				'SELECT option_id FROM %i WHERE option_name = %s LIMIT 1',
+				$wpdb->options,
 				self::SITE_COUNT_KEY
 			)
 		);
@@ -182,7 +203,8 @@ class FormConversionTracking extends Service {
 		// Atomic increment (prevents race condition).
 		$wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$wpdb->options} SET option_value = option_value + 1 WHERE option_name = %s",
+				'UPDATE %i SET option_value = option_value + 1 WHERE option_name = %s',
+				$wpdb->options,
 				self::SITE_COUNT_KEY
 			)
 		);
@@ -211,7 +233,8 @@ class FormConversionTracking extends Service {
 		// Check if meta exists; if not, create it.
 		$exists = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT meta_id FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = %s LIMIT 1",
+				'SELECT meta_id FROM %i WHERE post_id = %d AND meta_key = %s LIMIT 1',
+				$wpdb->postmeta,
 				$popup_id,
 				self::POPUP_META_KEY
 			)
@@ -224,7 +247,8 @@ class FormConversionTracking extends Service {
 		// Atomic increment (prevents race condition).
 		$wpdb->query(
 			$wpdb->prepare(
-				"UPDATE {$wpdb->postmeta} SET meta_value = meta_value + 1 WHERE post_id = %d AND meta_key = %s",
+				'UPDATE %i SET meta_value = meta_value + 1 WHERE post_id = %d AND meta_key = %s',
+				$wpdb->postmeta,
 				$popup_id,
 				self::POPUP_META_KEY
 			)
