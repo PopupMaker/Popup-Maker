@@ -12,7 +12,11 @@
 			// 1. First with formDetails (complete data)
 			// 2. Second without formDetails (undefined)
 			// We only process the first event with actual data.
-			if ( ! formDetails || ! formDetails.config || ! formDetails.config.id ) {
+			if (
+				! formDetails ||
+				! formDetails.config ||
+				! formDetails.config.id
+			) {
 				return;
 			}
 

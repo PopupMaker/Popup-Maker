@@ -77,7 +77,8 @@
 
 						return;
 					} catch ( error ) {
-						// Fall back to image beacon if sendBeacon fails
+						// Fall back to image beacon if sendBeacon fails.
+						// eslint-disable-next-line no-console
 						console.warn(
 							'sendBeacon failed, falling back to image beacon:',
 							error
