@@ -305,6 +305,16 @@ function get_post_param_value( $key, $fallback = null, $type = 'string' ) {
  * @return mixed Sanitized value. Returns false for 'bool' type with invalid input.
  */
 function sanitize_param_by_type( $value, $type ) {
+	// Handle array values passed when expecting scalar types.
+	if ( is_array( $value ) && in_array( $type, [ 'int', 'string', 'bool' ], true ) ) {
+		// Use first array element if available, otherwise return type-appropriate fallback.
+		if ( ! empty( $value ) ) {
+			$value = reset( $value );
+		} else {
+			return 'bool' === $type ? false : ( 'int' === $type ? 0 : '' );
+		}
+	}
+
 	switch ( $type ) {
 		case 'int':
 			$int_value = absint( $value );
