@@ -32,6 +32,7 @@
 -   Fixed issue where license keys were being saved as asterisks instead of the actual key.
 -   Fixed issue where filter `replace_editor` was being used as an action without returning the value.
 -   Fixed Subscribers page sort columns throwing 404 errors due to malformed URLs with double protocols (e.g., `https://http//site.com`). Closes #1092.
+-   Fixed SQL syntax error on Subscribers page caused by using identifier placeholder instead of string placeholder in `SHOW TABLES LIKE` query.
 
 ## v1.21.5 - 2025-10-13
 

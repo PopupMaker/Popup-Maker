@@ -125,9 +125,9 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		$previous_error = $wpdb->last_error; // The show tables query will erase the last error. So, record it now in case we need it.
 
 		if ( $this->wp_version >= 6.2 ) {
-			$table_found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %i', $this->table_name() ) );
+			$table_found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $this->table_name() ) );
 		} else {
-			// Ignored because these are identifiersas we still support <=6.2
+			// Ignored because table names need string quotes for SHOW TABLES LIKE, not identifier backticks.
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$table_found = $wpdb->get_var( "SHOW TABLES LIKE '{$this->table_name()}'" );
 		}
