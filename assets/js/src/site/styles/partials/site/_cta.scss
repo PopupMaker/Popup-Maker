@@ -1,0 +1,105 @@
+/**
+ * CTA Shortcode Styles
+ *
+ * These styles ensure CTA shortcodes render correctly in both Classic and Block
+ * editor contexts. The shortcode uses block-compatible classes but needs base
+ * styles that work without block CSS loaded.
+ */
+
+// Wrapper styles for shortcode CTA buttons.
+.pum-cta-wrapper {
+	display: inline-block;
+	width: auto;
+	max-width: 100%;
+
+	// Alignment classes.
+	&.alignleft {
+		display: block;
+		text-align: left;
+	}
+
+	&.aligncenter {
+		display: block;
+		text-align: center;
+	}
+
+	&.alignright {
+		display: block;
+		text-align: right;
+	}
+
+	&.alignfull {
+		display: block;
+		width: 100%;
+
+		.pum-cta {
+			width: 100%;
+		}
+	}
+}
+
+// Base CTA button styles - only apply within shortcode wrapper to avoid
+// conflicts with block styles when block CSS is loaded.
+.pum-cta-wrapper .pum-cta {
+	display: inline-block;
+	width: auto;
+	box-sizing: border-box;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	border-radius: 9999px;
+	padding: 1rem 2.25rem;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	transition: filter 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+// Fill style (default).
+.pum-cta-wrapper:not(.is-style-outline):not(.is-style-text-only) .pum-cta {
+	background-color: var(--wp--preset--color--contrast, #000);
+	color: var(--wp--preset--color--base, #fff);
+	border: none;
+
+	&:hover {
+		filter: brightness(0.85);
+	}
+}
+
+// Outline style.
+.pum-cta-wrapper.is-style-outline .pum-cta {
+	background-color: transparent;
+	color: var(--wp--preset--color--contrast, currentColor);
+	border: 1px solid currentColor;
+	padding: calc(1rem - 1px) calc(2.25rem - 1px);
+
+	&:hover {
+		filter: brightness(1.05);
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+}
+
+// Text-only style.
+.pum-cta-wrapper.is-style-text-only .pum-cta {
+	background-color: transparent;
+	color: var(--wp--preset--color--contrast, currentColor);
+	border: none;
+	padding: 0.5rem 1rem;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+// Fallback colors when CSS custom properties are not available.
+@supports not (color: var(--wp--preset--color--contrast)) {
+	.pum-cta-wrapper:not(.is-style-outline):not(.is-style-text-only) .pum-cta {
+		background-color: #1e1e1e;
+		color: #ffffff;
+	}
+
+	.pum-cta-wrapper.is-style-outline .pum-cta,
+	.pum-cta-wrapper.is-style-text-only .pum-cta {
+		color: inherit;
+	}
+}
