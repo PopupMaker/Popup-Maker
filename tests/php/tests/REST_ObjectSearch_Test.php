@@ -209,6 +209,7 @@ class REST_ObjectSearch_Test extends WP_UnitTestCase {
 		$request = new WP_REST_Request( 'GET', '/popup-maker/v2/object-search' );
 		$request->set_param( 'object_type', 'user' );
 		$request->set_param( 's', 'admin' );
+		$request->set_param( 'paged', 1 );
 
 		$response = $this->controller->search_objects( $request );
 

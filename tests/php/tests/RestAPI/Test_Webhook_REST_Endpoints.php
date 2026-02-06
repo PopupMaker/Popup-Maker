@@ -31,6 +31,11 @@ class Test_Webhook_REST_Endpoints extends WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		// Webhook endpoints are a Pro-only feature. Skip all tests in this class.
+		if ( ! class_exists( 'PopupMaker\Pro\RestAPI\Webhooks' ) ) {
+			$this->markTestSkipped( 'Webhook endpoints require Popup Maker Pro plugin.' );
+		}
+
 		// Initialize REST API server.
 		global $wp_rest_server;
 		$wp_rest_server = new WP_REST_Server();
