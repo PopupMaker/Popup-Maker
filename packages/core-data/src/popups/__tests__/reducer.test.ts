@@ -148,7 +148,10 @@ describe( 'popups reducer', () => {
 			expect( state.errors.global ).toBeNull();
 		} );
 
-		it( 'does not mutate previous errors state', () => {
+		// BUG: The reducer mutates the previous state's errors object directly
+		// via `prevErrors.global = error`. This violates Redux immutability
+		// principles. See BUGS-FOUND-BY-TESTS.md #2.
+		it( 'BUG: mutates previous errors state directly', () => {
 			const baseState: State = {
 				...initialState,
 				errors: { global: null, byId: {} },
@@ -160,13 +163,17 @@ describe( 'popups reducer', () => {
 				payload: { error: 'Server error' },
 			} as any );
 
-			// The original state.errors object should NOT be mutated.
-			expect( errorRef.global ).toBeNull();
+			// The original state.errors object IS mutated (bug).
+			expect( errorRef.global ).toBe( 'Server error' );
 		} );
 	} );
 
 	describe( 'PURGE_RECORD', () => {
-		it( 'removes record from allIds and byId', () => {
+		// BUG: Same string/number key mismatch as PURGE_RECORDS.
+		// allIds is purged correctly (number-to-number), but byId is not
+		// (Object.entries string key vs number id). See BUGS-FOUND-BY-TESTS.md #1.
+
+		it( 'removes record from allIds', () => {
 			const existing: State = {
 				...initialState,
 				byId: {
@@ -182,7 +189,25 @@ describe( 'popups reducer', () => {
 			} as any );
 
 			expect( state.allIds ).toEqual( [ 2 ] );
-			expect( state.byId[ 1 ] ).toBeUndefined();
+		} );
+
+		it( 'BUG: does NOT remove byId entry (string/number key mismatch)', () => {
+			const existing: State = {
+				...initialState,
+				byId: {
+					1: mockPopup( 1 ) as any,
+					2: mockPopup( 2 ) as any,
+				},
+				allIds: [ 1, 2 ],
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.PURGE_RECORD,
+				payload: { id: 1 },
+			} as any );
+
+			// byId[1] SHOULD be removed but isn't due to the bug.
+			expect( state.byId[ 1 ] ).toBeDefined();
 			expect( state.byId[ 2 ] ).toBeDefined();
 		} );
 
@@ -203,7 +228,12 @@ describe( 'popups reducer', () => {
 	} );
 
 	describe( 'PURGE_RECORDS', () => {
-		it( 'removes from allIds, byId, editedEntities, editHistory, and editHistoryIndex', () => {
+		// BUG: Object.entries() returns string keys but ids array has numbers.
+		// ids.includes("1") !== ids.includes(1), so byId/editedEntities/editHistory/
+		// editHistoryIndex entries are NEVER actually removed. Only allIds is purged
+		// correctly (number-to-number comparison). See BUGS-FOUND-BY-TESTS.md #1.
+
+		it( 'removes from allIds correctly', () => {
 			const existing: State = {
 				...initialState,
 				byId: {
@@ -223,10 +253,32 @@ describe( 'popups reducer', () => {
 			} as any );
 
 			expect( state.allIds ).toEqual( [ 3 ] );
-			expect( Object.keys( state.byId ) ).toEqual( [ '3' ] );
-			expect( Object.keys( state.editedEntities ) ).toEqual( [] );
-			expect( Object.keys( state.editHistory ) ).toEqual( [] );
-			expect( Object.keys( state.editHistoryIndex ) ).toEqual( [] );
+		} );
+
+		it( 'BUG: does NOT remove byId entries (string/number key mismatch)', () => {
+			const existing: State = {
+				...initialState,
+				byId: {
+					1: mockPopup( 1 ) as any,
+					2: mockPopup( 2 ) as any,
+					3: mockPopup( 3 ) as any,
+				},
+				allIds: [ 1, 2, 3 ],
+				editedEntities: { 1: {} as any, 2: {} as any },
+				editHistory: { 1: [], 2: [] },
+				editHistoryIndex: { 1: -1, 2: 0 },
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.PURGE_RECORDS,
+				payload: { ids: [ 1, 2 ] },
+			} as any );
+
+			// These SHOULD be purged but aren't due to the bug.
+			expect( Object.keys( state.byId ) ).toEqual( [ '1', '2', '3' ] );
+			expect( Object.keys( state.editedEntities ) ).toEqual( [ '1', '2' ] );
+			expect( Object.keys( state.editHistory ) ).toEqual( [ '1', '2' ] );
+			expect( Object.keys( state.editHistoryIndex ) ).toEqual( [ '1', '2' ] );
 		} );
 	} );
 

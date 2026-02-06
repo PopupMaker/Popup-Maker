@@ -135,6 +135,81 @@ $options[ $key ] = $value;
 
 ---
 
+## 8. `PUM_Analytics::track()`: Missing Event Key Causes PHP 8.x Warning
+
+**Severity**: Medium
+**Location**: `classes/Analytics.php` - `track()` method
+**Test**: `tests/php/tests/PUM_Analytics_Expanded_Test.php` - `test_track_with_missing_event_key` (skipped)
+
+**Problem**: When `$event_data` is passed without an `'event'` key, the method accesses `$event_data['event']` without checking if it exists. On PHP 8.x this triggers an `Undefined array key` warning which PHPUnit converts to an error.
+
+**Impact**: Any external code calling `track()` with incomplete data gets a PHP warning on 8.x. Silent on 7.x.
+
+**Fix**: Add an early guard:
+```php
+if ( empty( $event_data['event'] ) ) {
+    return false;
+}
+```
+
+---
+
+## 9. `PUM_Utils_Fields::parse_fields()`: Default Name Parameter Causes ValueError
+
+**Severity**: Medium
+**Location**: `includes/utils/fields.php` - `parse_fields()` method
+**Test**: `tests/php/tests/PUM_Utils_Fields_Test.php` - multiple tests
+
+**Problem**: Method signature is `parse_fields( $fields, $name = '%' )`. The default `$name = '%'` is passed to `sprintf()` internally, but `'%'` alone is not a valid format specifier, causing a `ValueError: Unknown format specifier` on PHP 8.x.
+
+**Impact**: Any caller using `parse_fields()` without a second argument gets a fatal ValueError on PHP 8.x. Tests must explicitly pass `'%s'` to work around it.
+
+**Fix**: Change the default parameter:
+```php
+public static function parse_fields( $fields, $name = '%s' )
+```
+
+---
+
+## 10. `PopupMaker\Plugin\Core` is `final` — Cannot Be Mocked
+
+**Severity**: Low (testability issue, not runtime bug)
+**Location**: `classes/Plugin/Core.php`
+**Test**: `tests/php/tests/RestAPI/Test_License_REST_Endpoints.php` (entire class skipped)
+
+**Problem**: `Core` is declared `final`, preventing PHPUnit from creating partial mocks or test doubles. All 17 License REST endpoint tests are skipped because the controller depends on `Core` and it cannot be mocked.
+
+**Impact**: License REST API is untestable without either removing `final` or introducing an interface/wrapper.
+
+**Fix options**:
+1. Remove `final` from Core class
+2. Extract a `CoreInterface` and type-hint against that
+3. Use a dependency injection pattern that allows test substitution
+
+---
+
+## 11. `ObjectSearch`: Missing `paged` Param Causes Negative SQL LIMIT
+
+**Severity**: Medium
+**Location**: `classes/RestAPI/ObjectSearch.php` - `search_objects()` method
+
+**Problem**: The offset calculation is `(paged - 1) * per_page`. When `paged` is not provided (defaults to 0 or null), this produces a negative offset like `LIMIT -10, 10`, which is invalid SQL.
+
+**Impact**: REST API calls to `/popup-maker/v2/object-search` without a `paged` parameter produce a database error.
+
+**Fix**: Default `paged` to 1:
+```php
+$paged = max( 1, (int) $request->get_param( 'paged' ) );
+```
+
+---
+
+## 12. `Options::update_many()`: Unset Then Re-Set (Already #6 - Confirmed by Batch 2)
+
+Additional confirmation: The `test_update_many_removes_empty_values` test in Batch 2 validated this bug still exists.
+
+---
+
 ## Pre-existing Test Infrastructure Issues (Not Bugs)
 
 These are not source code bugs but test environment issues:
@@ -142,3 +217,7 @@ These are not source code bugs but test environment issues:
 - `cta-admin` tests fail: `@popup-maker/i18n` module not found (needs Jest moduleNameMapper or virtual mock)
 - `cta-editor` tests fail: `@popup-maker/registry` module not found (needs build or moduleNameMapper)
 - Settings store tests need `popupMakerCoreData` global set inside `jest.mock()` factory to run before ES import hoisting
+- `PUM_Admin_Settings` tests: All skip when `dist/assets/site.css` not built (48 skips in test environment)
+- `Test_Webhook_REST_Endpoints`: All skip — webhooks are a pro-only feature
+- `Test_License_REST_Endpoints`: All skip — `Core` is `final` and can't be mocked (see Bug #10)
+- wp-env global PHPUnit is v10.5 but WP core test lib uses v9.6 — must use `vendor/bin/phpunit`

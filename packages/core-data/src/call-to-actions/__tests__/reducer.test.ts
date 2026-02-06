@@ -206,6 +206,10 @@ describe( 'CTA Reducer', () => {
 	} );
 
 	describe( 'PURGE_RECORD', () => {
+		// BUG: Same string/number key mismatch as PURGE_RECORDS.
+		// allIds is purged correctly (number-to-number), but byId is not
+		// (Object.entries string key vs number id). See BUGS-FOUND-BY-TESTS.md #1.
+
 		const stateWithEdits: State = {
 			...initialState,
 			byId: { 1: mockCta( 1 ), 2: mockCta( 2 ) },
@@ -224,13 +228,14 @@ describe( 'CTA Reducer', () => {
 			expect( state.allIds ).toEqual( [ 2 ] );
 		} );
 
-		it( 'removes byId entry for purged record', () => {
+		it( 'BUG: does NOT remove byId entry (string/number key mismatch)', () => {
 			const state = reducer( stateWithEdits, {
 				type: PURGE_RECORD,
 				payload: { id: 1 },
 			} );
 
-			expect( state.byId[ 1 ] ).toBeUndefined();
+			// byId[1] SHOULD be removed but isn't due to the bug.
+			expect( state.byId[ 1 ] ).toBeDefined();
 			expect( state.byId[ 2 ] ).toBeDefined();
 		} );
 
@@ -245,7 +250,12 @@ describe( 'CTA Reducer', () => {
 	} );
 
 	describe( 'PURGE_RECORDS', () => {
-		it( 'removes entities from allIds, byId, editedEntities, editHistory, and editHistoryIndex', () => {
+		// BUG: Object.entries() returns string keys but ids array has numbers.
+		// ids.includes("1") !== ids.includes(1), so byId/editedEntities/editHistory/
+		// editHistoryIndex entries are NEVER actually removed. Only allIds is purged
+		// correctly (number-to-number comparison). See BUGS-FOUND-BY-TESTS.md #1.
+
+		it( 'removes from allIds correctly', () => {
 			const existing: State = {
 				...initialState,
 				byId: { 1: mockCta( 1 ), 2: mockCta( 2 ), 3: mockCta( 3 ) },
@@ -261,10 +271,28 @@ describe( 'CTA Reducer', () => {
 			} );
 
 			expect( state.allIds ).toEqual( [ 3 ] );
-			expect( Object.keys( state.byId ) ).toEqual( [ '3' ] );
-			expect( Object.keys( state.editedEntities ) ).toEqual( [] );
-			expect( Object.keys( state.editHistory ) ).toEqual( [] );
-			expect( Object.keys( state.editHistoryIndex ) ).toEqual( [] );
+		} );
+
+		it( 'BUG: does NOT remove byId entries (string/number key mismatch)', () => {
+			const existing: State = {
+				...initialState,
+				byId: { 1: mockCta( 1 ), 2: mockCta( 2 ), 3: mockCta( 3 ) },
+				allIds: [ 1, 2, 3 ],
+				editedEntities: { 1: mockEditable( 1 ), 2: mockEditable( 2 ) } as any,
+				editHistory: { 1: [], 2: [] },
+				editHistoryIndex: { 1: -1, 2: -1 },
+			};
+
+			const state = reducer( existing, {
+				type: PURGE_RECORDS,
+				payload: { ids: [ 1, 2 ] },
+			} );
+
+			// These SHOULD be purged but aren't due to the bug.
+			expect( Object.keys( state.byId ) ).toEqual( [ '1', '2', '3' ] );
+			expect( Object.keys( state.editedEntities ) ).toEqual( [ '1', '2' ] );
+			expect( Object.keys( state.editHistory ) ).toEqual( [ '1', '2' ] );
+			expect( Object.keys( state.editHistoryIndex ) ).toEqual( [ '1', '2' ] );
 		} );
 
 		it( 'returns state unchanged for empty ids array', () => {

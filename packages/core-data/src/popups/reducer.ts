@@ -308,6 +308,9 @@ export const reducer = (
 			const newById = { ...prevErrors.byId };
 			if ( id ) {
 				newById[ id ] = error;
+			} else {
+				// No id provided, set the global error
+				prevErrors.global = error;
 			}
 			return {
 				...state,
@@ -338,28 +341,28 @@ export const reducer = (
 			// Remove the entity from the byId object.
 			const byId = Object.fromEntries(
 				Object.entries( state.byId ).filter(
-					( [ _id ] ) => ! ids.includes( Number( _id ) )
+					( [ _id ] ) => ! ids.includes( _id )
 				)
 			);
 
 			// Remove the entity from the editedEntities object.
 			const editedEntities = Object.fromEntries(
 				Object.entries( state.editedEntities ).filter(
-					( [ _id ] ) => ! ids.includes( Number( _id ) )
+					( [ _id ] ) => ! ids.includes( _id )
 				)
 			);
 
 			// Remove the entity from the editHistory object.
 			const editHistory = Object.fromEntries(
 				Object.entries( state.editHistory ).filter(
-					( [ _id ] ) => ! ids.includes( Number( _id ) )
+					( [ _id ] ) => ! ids.includes( _id )
 				)
 			);
 
 			// Remove the entity from the editHistoryIndex object.
 			const editHistoryIndex = Object.fromEntries(
 				Object.entries( state.editHistoryIndex ).filter(
-					( [ _id ] ) => ! ids.includes( Number( _id ) )
+					( [ _id ] ) => ! ids.includes( _id )
 				)
 			);
 

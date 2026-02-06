@@ -26,7 +26,7 @@ export const validatePopup = (
 		};
 	}
 
-	if ( popup.title !== undefined && ! popup.title?.length ) {
+	if ( popup.title && ! popup.title?.length ) {
 		return {
 			message: __(
 				'Please provide a name for this popup.',

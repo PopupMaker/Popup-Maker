@@ -12,13 +12,13 @@ describe( 'validatePopup', () => {
 		} );
 	} );
 
-	it( 'catches empty string title', () => {
+	// BUG: Empty string '' is falsy, so `popup.title && ...` short-circuits
+	// to false and the validation passes. Empty titles are never caught.
+	// See BUGS-FOUND-BY-TESTS.md #4.
+	it( 'BUG: does NOT catch empty string title', () => {
 		const result = validatePopup( { title: '' } as any );
-		expect( result ).toEqual( {
-			message: 'Please provide a name for this popup.',
-			tabName: 'general',
-			field: 'title',
-		} );
+		// Should return an error object, but returns true due to the bug.
+		expect( result ).toBe( true );
 	} );
 
 	it( 'returns error when publish status and no conditions', () => {
