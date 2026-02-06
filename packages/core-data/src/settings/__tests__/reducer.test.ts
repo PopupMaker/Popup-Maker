@@ -2,7 +2,7 @@
 // (jest.mock is hoisted, but import statements are too).
 jest.mock( '@wordpress/hooks', () => {
 	// Set global here because jest.mock factories run before imports.
-	( global as any ).popupMakerCoreData = {
+	( global as unknown as Record< string, unknown > ).popupMakerCoreData = {
 		currentSettings: {
 			permissions: {
 				view_block_controls: 'edit_posts',
@@ -21,7 +21,7 @@ import reducer from '../reducer';
 import { ACTION_TYPES, initialState } from '../constants';
 import { DispatchStatus } from '../../constants';
 
-import type { State } from '../reducer';
+import type { State, ReducerAction } from '../reducer';
 import type { Settings } from '../types';
 
 const mockSettings: Settings = {
@@ -35,7 +35,7 @@ const mockSettings: Settings = {
 
 describe( 'settings reducer', () => {
 	it( 'returns initial state for unknown action', () => {
-		const result = reducer( undefined, { type: 'UNKNOWN' } as any );
+		const result = reducer( undefined, { type: 'UNKNOWN' } as unknown as ReducerAction );
 		expect( result ).toEqual( initialState );
 	} );
 
@@ -53,7 +53,7 @@ describe( 'settings reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.HYDRATE,
 				payload: { settings: newSettings },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.settings ).toEqual( newSettings );
 		} );
@@ -61,15 +61,15 @@ describe( 'settings reducer', () => {
 		it( 'preserves other state properties', () => {
 			const stateWithChanges: State = {
 				...initialState,
-				unsavedChanges: { permissions: {} as any },
+				unsavedChanges: { permissions: {} as unknown as Settings[ 'permissions' ] },
 			};
 
 			const state = reducer( stateWithChanges, {
 				type: ACTION_TYPES.HYDRATE,
 				payload: { settings: mockSettings },
-			} as any );
+			} as unknown as ReducerAction );
 
-			expect( state.unsavedChanges ).toEqual( { permissions: {} as any } );
+			expect( state.unsavedChanges ).toEqual( { permissions: {} as unknown as Settings[ 'permissions' ] } );
 		} );
 	} );
 
@@ -78,23 +78,23 @@ describe( 'settings reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.SETTINGS_FETCH_ERROR,
 				payload: { message: 'Network error' },
-			} as any );
+			} as unknown as ReducerAction );
 
-			expect( ( state as any ).error ).toBe( 'Network error' );
+			expect( ( state as unknown as Record< string, unknown > ).error ).toBe( 'Network error' );
 		} );
 
 		it( 'overwrites previous error', () => {
 			const stateWithError = {
 				...initialState,
 				error: 'Old error',
-			} as any;
+			} as unknown as State;
 
 			const state = reducer( stateWithError, {
 				type: ACTION_TYPES.SETTINGS_FETCH_ERROR,
 				payload: { message: 'New error' },
-			} as any );
+			} as unknown as ReducerAction );
 
-			expect( ( state as any ).error ).toBe( 'New error' );
+			expect( ( state as unknown as Record< string, unknown > ).error ).toBe( 'New error' );
 		} );
 	} );
 
@@ -112,7 +112,7 @@ describe( 'settings reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.STAGE_CHANGES,
 				payload: { settings: changes },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.unsavedChanges ).toEqual( changes );
 		} );
@@ -142,7 +142,7 @@ describe( 'settings reducer', () => {
 			const state = reducer( stateWithChanges, {
 				type: ACTION_TYPES.STAGE_CHANGES,
 				payload: { settings: moreChanges },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.unsavedChanges?.permissions?.edit_block_controls ).toBe(
 				'manage_options'
@@ -176,7 +176,7 @@ describe( 'settings reducer', () => {
 			const state = reducer( stateWithChanges, {
 				type: ACTION_TYPES.SAVE_CHANGES,
 				payload: { settings: savedSettings },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.settings.permissions.view_block_controls ).toBe(
 				'manage_options'
@@ -199,7 +199,7 @@ describe( 'settings reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.UPDATE,
 				payload: { settings: update },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.settings.permissions.view_block_controls ).toBe(
 				'read'
@@ -210,14 +210,14 @@ describe( 'settings reducer', () => {
 			const stateWithChanges: State = {
 				...initialState,
 				unsavedChanges: {
-					permissions: { manage_settings: 'edit_posts' } as any,
+					permissions: { manage_settings: 'edit_posts' } as unknown as Settings[ 'permissions' ],
 				},
 			};
 
 			const state = reducer( stateWithChanges, {
 				type: ACTION_TYPES.UPDATE,
 				payload: { settings: mockSettings },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.unsavedChanges ).toEqual(
 				stateWithChanges.unsavedChanges
@@ -234,7 +234,7 @@ describe( 'settings reducer', () => {
 					status: DispatchStatus.Resolving,
 					message: undefined,
 				},
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.resolutionState.fetchSettings ).toEqual( {
 				status: DispatchStatus.Resolving,
@@ -250,7 +250,7 @@ describe( 'settings reducer', () => {
 					status: DispatchStatus.Error,
 					message: 'Permission denied',
 				},
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.resolutionState.saveSettings ).toEqual( {
 				status: DispatchStatus.Error,
@@ -265,7 +265,12 @@ describe( 'settings reducer', () => {
 				...initialState,
 				resolutionState: {
 					fetchSettings: {
-						status: DispatchStatus.Success,
+						1: {
+							status: DispatchStatus.Success,
+						},
+						2: {
+							status: DispatchStatus.Success,
+						},
 					},
 				},
 			};
@@ -273,11 +278,14 @@ describe( 'settings reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.INVALIDATE_RESOLUTION,
 				payload: { id: 1, operation: 'fetchSettings' },
-			} as any );
+			} as unknown as ReducerAction );
 
-			expect(
-				( state.resolutionState.fetchSettings as any )[ 1 ]
-			).toBeUndefined();
+			// ID 1 should be invalidated.
+			expect( state.resolutionState.fetchSettings?.[ 1 ] ).toBeUndefined();
+			// ID 2 should remain.
+			expect( state.resolutionState.fetchSettings?.[ 2 ] ).toEqual( {
+				status: DispatchStatus.Success,
+			} );
 		} );
 	} );
 } );

@@ -45,6 +45,19 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 				'post_title'  => 'Test Page',
 			]
 		);
+
+		// Register custom taxonomies used across multiple tests.
+		register_taxonomy( 'genre', 'post', [ 'label' => 'Genre' ] );
+		register_taxonomy( 'color', 'post', [ 'label' => 'Color' ] );
+	}
+
+	/**
+	 * Tear down test fixtures.
+	 */
+	public function tearDown(): void {
+		unregister_taxonomy( 'genre' );
+		unregister_taxonomy( 'color' );
+		parent::tearDown();
 	}
 
 	/**
@@ -988,7 +1001,6 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 	 * Test taxonomy all modifier returns true on a custom taxonomy archive.
 	 */
 	public function test_taxonomy_custom_all_on_archive() {
-		register_taxonomy( 'genre', 'post', [ 'public' => true ] );
 		$term = wp_insert_term( 'Rock', 'genre' );
 		wp_set_object_terms( $this->post_id, [ $term['term_id'] ], 'genre' );
 		$this->go_to( get_term_link( $term['term_id'], 'genre' ) );
@@ -1007,7 +1019,6 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 	 * Test taxonomy all modifier returns false when not on its archive.
 	 */
 	public function test_taxonomy_custom_all_not_on_archive() {
-		register_taxonomy( 'genre', 'post', [ 'public' => true ] );
 		$this->go_to( get_permalink( $this->post_id ) );
 
 		$condition = [
@@ -1028,7 +1039,6 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 	 * Test taxonomy selected modifier returns true for matching term.
 	 */
 	public function test_taxonomy_custom_selected_matches() {
-		register_taxonomy( 'genre', 'post', [ 'public' => true ] );
 		$term = wp_insert_term( 'Jazz', 'genre' );
 		wp_set_object_terms( $this->post_id, [ $term['term_id'] ], 'genre' );
 		$this->go_to( get_term_link( $term['term_id'], 'genre' ) );
@@ -1049,7 +1059,6 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 	 * Test taxonomy selected modifier returns false for non-matching term.
 	 */
 	public function test_taxonomy_custom_selected_no_match() {
-		register_taxonomy( 'genre', 'post', [ 'public' => true ] );
 		$term = wp_insert_term( 'Blues', 'genre' );
 		wp_set_object_terms( $this->post_id, [ $term['term_id'] ], 'genre' );
 		$this->go_to( get_term_link( $term['term_id'], 'genre' ) );
@@ -1070,7 +1079,6 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 	 * Test taxonomy with ID modifier (alias of selected).
 	 */
 	public function test_taxonomy_custom_id_modifier() {
-		register_taxonomy( 'genre', 'post', [ 'public' => true ] );
 		$term = wp_insert_term( 'Classical', 'genre' );
 		wp_set_object_terms( $this->post_id, [ $term['term_id'] ], 'genre' );
 		$this->go_to( get_term_link( $term['term_id'], 'genre' ) );
@@ -1285,7 +1293,6 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 	 * Test post_type_tax with custom taxonomy returns true on match.
 	 */
 	public function test_post_type_tax_custom_taxonomy_matches() {
-		register_taxonomy( 'color', 'post', [ 'public' => true ] );
 		$term = wp_insert_term( 'Red', 'color' );
 		wp_set_object_terms( $this->post_id, [ $term['term_id'] ], 'color' );
 
@@ -1312,8 +1319,6 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 	 * Test post_type_tax with custom taxonomy returns false when no match.
 	 */
 	public function test_post_type_tax_custom_taxonomy_no_match() {
-		register_taxonomy( 'color', 'post', [ 'public' => true ] );
-
 		global $post;
 		$post = get_post( $this->post_id );
 		$this->go_to( get_permalink( $this->post_id ) );
@@ -1337,7 +1342,6 @@ class PUM_ConditionCallbacks_Test extends WP_UnitTestCase {
 	 * Test post_type_tax returns false for wrong post type.
 	 */
 	public function test_post_type_tax_wrong_post_type() {
-		register_taxonomy( 'color', 'post', [ 'public' => true ] );
 		$term = wp_insert_term( 'Blue', 'color' );
 		wp_set_object_terms( $this->page_id, [ $term['term_id'] ], 'color' );
 

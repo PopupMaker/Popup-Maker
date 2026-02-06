@@ -5,14 +5,9 @@
  * by manipulating localStorage and verifying console output.
  */
 
-// Mock window.addEventListener to capture the storage listener.
-const storageListeners: Array< () => void > = [];
-const origAddEventListener = window.addEventListener;
-window.addEventListener = jest.fn( ( event: string, handler: any ) => {
-	if ( event === 'storage' ) {
-		storageListeners.push( handler );
-	}
-} );
+// Stub window.addEventListener to prevent side effects from module-level
+// storage event listeners registered during import.
+window.addEventListener = jest.fn();
 
 // We need to re-import debug fresh for each describe block to capture
 // the module-level getDebugConfig call with the right localStorage state.
@@ -38,7 +33,6 @@ describe( 'debug', () => {
 	afterEach( () => {
 		jest.restoreAllMocks();
 		localStorage.clear();
-		storageListeners.length = 0;
 	} );
 
 	describe( 'with all debugging disabled (default)', () => {

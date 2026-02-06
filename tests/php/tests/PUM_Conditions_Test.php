@@ -363,7 +363,7 @@ class PUM_Conditions_Test extends WP_UnitTestCase {
 			$this->assertIsString( $group );
 			$this->assertIsArray( $conditions );
 			foreach ( $conditions as $id => $name ) {
-				$this->assertIsString( $name, 'Condition name should be a string.' );
+				$this->assertIsString( $name, "Condition '$id' name should be a string." );
 			}
 		}
 	}

@@ -14,7 +14,9 @@ import { reducer } from '../reducer';
 import { ACTION_TYPES, initialState } from '../constants';
 import { DispatchStatus } from '../../constants';
 
-import type { State } from '../reducer';
+import type { State, ReducerAction } from '../reducer';
+import type { Popup, EditablePopup } from '../types';
+import type { Operation } from 'fast-json-patch';
 
 const mockPopup = ( id: number, overrides = {} ) => ( {
 	id,
@@ -27,7 +29,7 @@ const mockPopup = ( id: number, overrides = {} ) => ( {
 
 describe( 'popups reducer', () => {
 	it( 'returns initial state for unknown action', () => {
-		const result = reducer( undefined, { type: 'UNKNOWN' } as any );
+		const result = reducer( undefined, { type: 'UNKNOWN' } as unknown as ReducerAction );
 		expect( result ).toEqual( initialState );
 	} );
 
@@ -37,7 +39,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.RECEIVE_RECORD,
 				payload: { record },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.byId[ 1 ] ).toEqual( record );
 			expect( state.allIds ).toContain( 1 );
@@ -47,7 +49,7 @@ describe( 'popups reducer', () => {
 			const record = mockPopup( 1 );
 			const stateWithRecord: State = {
 				...initialState,
-				byId: { 1: record as any },
+				byId: { 1: record as unknown as Popup< 'edit' > },
 				allIds: [ 1 ],
 			};
 
@@ -55,7 +57,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( stateWithRecord, {
 				type: ACTION_TYPES.RECEIVE_RECORD,
 				payload: { record: updatedRecord },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.allIds ).toEqual( [ 1 ] );
 			expect( state.byId[ 1 ].title ).toBe( 'Updated' );
@@ -68,7 +70,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.RECEIVE_RECORDS,
 				payload: { records },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.allIds ).toEqual( [ 1, 2 ] );
 			expect( state.byId[ 1 ] ).toEqual( records[ 0 ] );
@@ -78,7 +80,7 @@ describe( 'popups reducer', () => {
 		it( 'merges with existing records without duplicating IDs', () => {
 			const existing: State = {
 				...initialState,
-				byId: { 1: mockPopup( 1 ) as any },
+				byId: { 1: mockPopup( 1 ) as unknown as Popup< 'edit' > },
 				allIds: [ 1 ],
 			};
 
@@ -86,7 +88,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.RECEIVE_RECORDS,
 				payload: { records },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.allIds ).toEqual( [ 1, 2, 3 ] );
 		} );
@@ -99,7 +101,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.RECEIVE_QUERY_RECORDS,
 				payload: { records, query },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.allIds ).toEqual( [ 1, 2 ] );
 			expect(
@@ -112,7 +114,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.RECEIVE_RECORDS,
 				payload: { records },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.queries ).toEqual( initialState.queries );
 		} );
@@ -128,7 +130,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( freshState, {
 				type: ACTION_TYPES.RECEIVE_ERROR,
 				payload: { error: 'Server error' },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.errors.global ).toBe( 'Server error' );
 		} );
@@ -142,7 +144,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( freshState, {
 				type: ACTION_TYPES.RECEIVE_ERROR,
 				payload: { error: 'Not found', id: 42 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.errors.byId[ 42 ] ).toBe( 'Not found' );
 			expect( state.errors.global ).toBeNull();
@@ -161,7 +163,7 @@ describe( 'popups reducer', () => {
 			reducer( baseState, {
 				type: ACTION_TYPES.RECEIVE_ERROR,
 				payload: { error: 'Server error' },
-			} as any );
+			} as unknown as ReducerAction );
 
 			// The original state.errors object IS mutated (bug).
 			expect( errorRef.global ).toBe( 'Server error' );
@@ -177,8 +179,8 @@ describe( 'popups reducer', () => {
 			const existing: State = {
 				...initialState,
 				byId: {
-					1: mockPopup( 1 ) as any,
-					2: mockPopup( 2 ) as any,
+					1: mockPopup( 1 ) as unknown as Popup< 'edit' >,
+					2: mockPopup( 2 ) as unknown as Popup< 'edit' >,
 				},
 				allIds: [ 1, 2 ],
 			};
@@ -186,7 +188,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.PURGE_RECORD,
 				payload: { id: 1 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.allIds ).toEqual( [ 2 ] );
 		} );
@@ -195,8 +197,8 @@ describe( 'popups reducer', () => {
 			const existing: State = {
 				...initialState,
 				byId: {
-					1: mockPopup( 1 ) as any,
-					2: mockPopup( 2 ) as any,
+					1: mockPopup( 1 ) as unknown as Popup< 'edit' >,
+					2: mockPopup( 2 ) as unknown as Popup< 'edit' >,
 				},
 				allIds: [ 1, 2 ],
 			};
@@ -204,7 +206,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.PURGE_RECORD,
 				payload: { id: 1 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			// byId[1] SHOULD be removed but isn't due to the bug.
 			expect( state.byId[ 1 ] ).toBeDefined();
@@ -214,14 +216,14 @@ describe( 'popups reducer', () => {
 		it( 'returns unchanged state when id is 0 and no ids provided', () => {
 			const existing: State = {
 				...initialState,
-				byId: { 1: mockPopup( 1 ) as any },
+				byId: { 1: mockPopup( 1 ) as unknown as Popup< 'edit' > },
 				allIds: [ 1 ],
 			};
 
 			const state = reducer( existing, {
 				type: ACTION_TYPES.PURGE_RECORD,
 				payload: { id: 0 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state ).toEqual( existing );
 		} );
@@ -237,12 +239,12 @@ describe( 'popups reducer', () => {
 			const existing: State = {
 				...initialState,
 				byId: {
-					1: mockPopup( 1 ) as any,
-					2: mockPopup( 2 ) as any,
-					3: mockPopup( 3 ) as any,
+					1: mockPopup( 1 ) as unknown as Popup< 'edit' >,
+					2: mockPopup( 2 ) as unknown as Popup< 'edit' >,
+					3: mockPopup( 3 ) as unknown as Popup< 'edit' >,
 				},
 				allIds: [ 1, 2, 3 ],
-				editedEntities: { 1: {} as any, 2: {} as any },
+				editedEntities: { 1: {} as unknown as EditablePopup, 2: {} as unknown as EditablePopup },
 				editHistory: { 1: [], 2: [] },
 				editHistoryIndex: { 1: -1, 2: 0 },
 			};
@@ -250,7 +252,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.PURGE_RECORDS,
 				payload: { ids: [ 1, 2 ] },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.allIds ).toEqual( [ 3 ] );
 		} );
@@ -259,12 +261,12 @@ describe( 'popups reducer', () => {
 			const existing: State = {
 				...initialState,
 				byId: {
-					1: mockPopup( 1 ) as any,
-					2: mockPopup( 2 ) as any,
-					3: mockPopup( 3 ) as any,
+					1: mockPopup( 1 ) as unknown as Popup< 'edit' >,
+					2: mockPopup( 2 ) as unknown as Popup< 'edit' >,
+					3: mockPopup( 3 ) as unknown as Popup< 'edit' >,
 				},
 				allIds: [ 1, 2, 3 ],
-				editedEntities: { 1: {} as any, 2: {} as any },
+				editedEntities: { 1: {} as unknown as EditablePopup, 2: {} as unknown as EditablePopup },
 				editHistory: { 1: [], 2: [] },
 				editHistoryIndex: { 1: -1, 2: 0 },
 			};
@@ -272,7 +274,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.PURGE_RECORDS,
 				payload: { ids: [ 1, 2 ] },
-			} as any );
+			} as unknown as ReducerAction );
 
 			// These SHOULD be purged but aren't due to the bug.
 			expect( Object.keys( state.byId ) ).toEqual( [ '1', '2', '3' ] );
@@ -287,7 +289,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.EDITOR_CHANGE_ID,
 				payload: { editorId: 42 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editorId ).toBe( 42 );
 		} );
@@ -297,7 +299,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( active, {
 				type: ACTION_TYPES.EDITOR_CHANGE_ID,
 				payload: { editorId: undefined },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editorId ).toBeUndefined();
 		} );
@@ -305,11 +307,11 @@ describe( 'popups reducer', () => {
 
 	describe( 'START_EDITING_RECORD', () => {
 		it( 'stores the editable entity and sets editor id', () => {
-			const editableEntity = { id: 5, title: 'Test' } as any;
+			const editableEntity = { id: 5, title: 'Test' } as unknown as EditablePopup;
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.START_EDITING_RECORD,
 				payload: { id: 5, editableEntity, setEditorId: true },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editedEntities[ 5 ] ).toEqual( editableEntity );
 			expect( state.editorId ).toBe( 5 );
@@ -320,10 +322,10 @@ describe( 'popups reducer', () => {
 				type: ACTION_TYPES.START_EDITING_RECORD,
 				payload: {
 					id: 5,
-					editableEntity: { id: 5 } as any,
+					editableEntity: { id: 5 } as unknown as EditablePopup,
 					setEditorId: false,
 				},
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editedEntities[ 5 ] ).toBeDefined();
 			expect( state.editorId ).toBeUndefined();
@@ -336,7 +338,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( initialState, {
 				type: ACTION_TYPES.EDIT_RECORD,
 				payload: { id: 1, edits },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editHistory[ 1 ] ).toEqual( [ edits ] );
 			expect( state.editHistoryIndex[ 1 ] ).toBe( 0 );
@@ -350,7 +352,7 @@ describe( 'popups reducer', () => {
 						[ { op: 'replace', path: '/title', value: 'A' } ],
 						[ { op: 'replace', path: '/title', value: 'B' } ],
 						[ { op: 'replace', path: '/title', value: 'C' } ],
-					] as any,
+					] as unknown as Operation[][],
 				},
 				editHistoryIndex: { 1: 0 },
 			};
@@ -359,7 +361,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.EDIT_RECORD,
 				payload: { id: 1, edits: newEdits },
-			} as any );
+			} as unknown as ReducerAction );
 
 			// Should keep only the first edit and add the new one.
 			expect( state.editHistory[ 1 ] ).toHaveLength( 2 );
@@ -377,7 +379,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.UNDO_EDIT_RECORD,
 				payload: { id: 1, steps: 1 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editHistoryIndex[ 1 ] ).toBe( 1 );
 		} );
@@ -391,7 +393,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.UNDO_EDIT_RECORD,
 				payload: { id: 1, steps: 5 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editHistoryIndex[ 1 ] ).toBe( -1 );
 		} );
@@ -402,7 +404,7 @@ describe( 'popups reducer', () => {
 			const existing: State = {
 				...initialState,
 				editHistory: {
-					1: [ [], [], [] ] as any,
+					1: [ [], [], [] ] as unknown as Operation[][],
 				},
 				editHistoryIndex: { 1: 0 },
 			};
@@ -410,7 +412,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.REDO_EDIT_RECORD,
 				payload: { id: 1, steps: 1 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editHistoryIndex[ 1 ] ).toBe( 1 );
 		} );
@@ -419,7 +421,7 @@ describe( 'popups reducer', () => {
 			const existing: State = {
 				...initialState,
 				editHistory: {
-					1: [ [], [] ] as any,
+					1: [ [], [] ] as unknown as Operation[][],
 				},
 				editHistoryIndex: { 1: 0 },
 			};
@@ -427,7 +429,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.REDO_EDIT_RECORD,
 				payload: { id: 1, steps: 99 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editHistoryIndex[ 1 ] ).toBe( 1 );
 		} );
@@ -441,7 +443,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.REDO_EDIT_RECORD,
 				payload: { id: 1, steps: 1 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editHistoryIndex[ 1 ] ).toBe( -1 );
 		} );
@@ -452,19 +454,19 @@ describe( 'popups reducer', () => {
 			const existing: State = {
 				...initialState,
 				editedEntities: {
-					1: { id: 1, title: 'Old' } as any,
+					1: { id: 1, title: 'Old' } as unknown as EditablePopup,
 				},
 				editHistory: {
-					1: [ [], [], [] ] as any,
+					1: [ [], [], [] ] as unknown as Operation[][],
 				},
 				editHistoryIndex: { 1: 1 },
 			};
 
-			const editedEntity = { id: 1, title: 'Saved' } as any;
+			const editedEntity = { id: 1, title: 'Saved' } as unknown as EditablePopup;
 			const state = reducer( existing, {
 				type: ACTION_TYPES.SAVE_EDITED_RECORD,
 				payload: { id: 1, historyIndex: 1, editedEntity },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editedEntities[ 1 ] ).toEqual( editedEntity );
 			expect( state.editHistory[ 1 ] ).toHaveLength( 1 );
@@ -477,8 +479,8 @@ describe( 'popups reducer', () => {
 			const existing: State = {
 				...initialState,
 				editedEntities: {
-					1: { id: 1 } as any,
-					2: { id: 2 } as any,
+					1: { id: 1 } as unknown as EditablePopup,
+					2: { id: 2 } as unknown as EditablePopup,
 				},
 				editHistory: { 1: [], 2: [] },
 				editHistoryIndex: { 1: 0, 2: 0 },
@@ -487,7 +489,7 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.RESET_EDIT_RECORD,
 				payload: { id: 1 },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.editedEntities[ 1 ] ).toBeUndefined();
 			expect( state.editHistory[ 1 ] ).toBeUndefined();
@@ -506,7 +508,7 @@ describe( 'popups reducer', () => {
 					status: DispatchStatus.Resolving,
 					message: undefined,
 				},
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.resolutionState.getPopup ).toEqual( {
 				status: DispatchStatus.Resolving,
@@ -522,7 +524,7 @@ describe( 'popups reducer', () => {
 					status: DispatchStatus.Error,
 					message: 'Failed to save',
 				},
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state.resolutionState.savePopup ).toEqual( {
 				status: DispatchStatus.Error,
@@ -537,7 +539,12 @@ describe( 'popups reducer', () => {
 				...initialState,
 				resolutionState: {
 					getPopup: {
-						status: DispatchStatus.Success,
+						1: {
+							status: DispatchStatus.Success,
+						},
+						2: {
+							status: DispatchStatus.Success,
+						},
 					},
 				},
 			};
@@ -545,9 +552,14 @@ describe( 'popups reducer', () => {
 			const state = reducer( existing, {
 				type: ACTION_TYPES.INVALIDATE_RESOLUTION,
 				payload: { id: 1, operation: 'getPopup' },
-			} as any );
+			} as unknown as ReducerAction );
 
-			expect( ( state.resolutionState.getPopup as any )[ 1 ] ).toBeUndefined();
+			// ID 1 should be invalidated (set to undefined).
+			expect( state.resolutionState.getPopup?.[ 1 ] ).toBeUndefined();
+			// ID 2 should remain intact.
+			expect( state.resolutionState.getPopup?.[ 2 ] ).toEqual( {
+				status: DispatchStatus.Success,
+			} );
 		} );
 	} );
 } );

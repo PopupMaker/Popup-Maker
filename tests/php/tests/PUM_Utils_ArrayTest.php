@@ -1146,7 +1146,6 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests sort_by_sort comparator directly.
 	 */
 	public function test_sort_by_sort() {
-		$this->assertSame( -1, PUM_Utils_Array::sort_by_sort( [ 'sort' => 1 ], [ 'sort' => 2 ] ) <=> 0 ? -1 : 1 );
 		$this->assertLessThan( 0, PUM_Utils_Array::sort_by_sort( [ 'sort' => 1 ], [ 'sort' => 10 ] ) );
 		$this->assertGreaterThan( 0, PUM_Utils_Array::sort_by_sort( [ 'sort' => 10 ], [ 'sort' => 1 ] ) );
 		$this->assertSame( 0, PUM_Utils_Array::sort_by_sort( [ 'sort' => 5 ], [ 'sort' => 5 ] ) );

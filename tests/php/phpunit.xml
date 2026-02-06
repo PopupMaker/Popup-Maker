@@ -3,24 +3,21 @@
 	bootstrap="config/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
 	>
 	<testsuites>
 		<testsuite name="general">
 			<directory suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
-	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="false">
+	<coverage processUncoveredFiles="false">
+		<include>
 			<directory suffix=".php">../../classes/</directory>
 			<directory suffix=".php">../../includes/</directory>
-			<exclude>
-				<directory suffix=".php">../../includes/legacy/</directory>
-				<directory suffix=".php">../../vendor/</directory>
-				<directory suffix=".php">../../vendor-prefixed/</directory>
-			</exclude>
-		</whitelist>
-	</filter>
+		</include>
+		<exclude>
+			<directory suffix=".php">../../includes/legacy/</directory>
+			<directory suffix=".php">../../vendor/</directory>
+			<directory suffix=".php">../../vendor-prefixed/</directory>
+		</exclude>
+	</coverage>
 </phpunit>

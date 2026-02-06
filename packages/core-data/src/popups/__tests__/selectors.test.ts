@@ -59,6 +59,8 @@ import { DispatchStatus } from '../../constants';
 import { initialState } from '../constants';
 
 import type { State } from '../reducer';
+import type { Popup, EditablePopup } from '../types';
+import type { Operation } from 'fast-json-patch';
 
 const mockPopup = ( id: number, overrides = {} ) =>
 	( {
@@ -67,7 +69,7 @@ const mockPopup = ( id: number, overrides = {} ) =>
 		status: 'draft',
 		slug: `popup-${ id }`,
 		...overrides,
-	} ) as any;
+	} ) as unknown as Popup< 'edit' >;
 
 const stateWith = ( overrides: Partial< State > ): State => ( {
 	...initialState,
@@ -172,7 +174,7 @@ describe( 'popups selectors', () => {
 		} );
 
 		it( 'isEditorActive returns true for "new" string id', () => {
-			const state = stateWith( { editorId: 'new' as any } );
+			const state = stateWith( { editorId: 'new' as unknown as number } );
 			expect( isEditorActive( state ) ).toBe( true );
 		} );
 
@@ -181,13 +183,13 @@ describe( 'popups selectors', () => {
 		} );
 
 		it( 'isEditorActive returns false for 0', () => {
-			const state = stateWith( { editorId: 0 as any } );
+			const state = stateWith( { editorId: 0 as unknown as number } );
 			expect( isEditorActive( state ) ).toBe( false );
 		} );
 
 		it( 'hasEditedEntity returns true when entity exists', () => {
 			const state = stateWith( {
-				editedEntities: { 3: { id: 3 } as any },
+				editedEntities: { 3: { id: 3 } as unknown as EditablePopup },
 			} );
 			expect( hasEditedEntity( state, 3 ) ).toBe( true );
 		} );
@@ -197,7 +199,7 @@ describe( 'popups selectors', () => {
 		} );
 
 		it( 'getEditedEntity returns the edited entity', () => {
-			const entity = { id: 3, title: 'Edited' } as any;
+			const entity = { id: 3, title: 'Edited' } as unknown as EditablePopup;
 			const state = stateWith( { editedEntities: { 3: entity } } );
 			expect( getEditedEntity( state, 3 ) ).toEqual( entity );
 		} );
@@ -205,7 +207,7 @@ describe( 'popups selectors', () => {
 		it( 'getEntityEditHistory returns history for entity', () => {
 			const history = [
 				[ { op: 'replace', path: '/title', value: 'A' } ],
-			] as any;
+			] as unknown as Operation[][];
 			const state = stateWith( { editHistory: { 1: history } } );
 			expect( getEntityEditHistory( state, 1 ) ).toEqual( history );
 		} );
@@ -219,18 +221,18 @@ describe( 'popups selectors', () => {
 	describe( 'hasEdits / hasUndo / hasRedo', () => {
 		it( 'hasEdits returns true when edit history exists', () => {
 			const state = stateWith( {
-				editHistory: { 1: [ [] ] as any },
+				editHistory: { 1: [ [] ] as unknown as Operation[][] },
 			} );
 			expect( hasEdits( state, 1 ) ).toBe( true );
 		} );
 
 		it( 'hasEdits returns false for empty history', () => {
-			expect( hasEdits( initialState, 1 ) ).toBeFalsy();
+			expect( hasEdits( initialState, 1 ) ).toBe( false );
 		} );
 
 		it( 'hasUndo returns true when index >= 0', () => {
 			const state = stateWith( {
-				editHistory: { 1: [ [] ] as any },
+				editHistory: { 1: [ [] ] as unknown as Operation[][] },
 				editHistoryIndex: { 1: 0 },
 			} );
 			expect( hasUndo( state, 1 ) ).toBe( true );
@@ -238,7 +240,7 @@ describe( 'popups selectors', () => {
 
 		it( 'hasUndo returns false when index is -1', () => {
 			const state = stateWith( {
-				editHistory: { 1: [ [] ] as any },
+				editHistory: { 1: [ [] ] as unknown as Operation[][] },
 				editHistoryIndex: { 1: -1 },
 			} );
 			expect( hasUndo( state, 1 ) ).toBe( false );
@@ -250,7 +252,7 @@ describe( 'popups selectors', () => {
 
 		it( 'hasRedo returns true when index < length - 1', () => {
 			const state = stateWith( {
-				editHistory: { 1: [ [], [], [] ] as any },
+				editHistory: { 1: [ [], [], [] ] as unknown as Operation[][] },
 				editHistoryIndex: { 1: 0 },
 			} );
 			expect( hasRedo( state, 1 ) ).toBe( true );
@@ -258,7 +260,7 @@ describe( 'popups selectors', () => {
 
 		it( 'hasRedo returns false when at end of history', () => {
 			const state = stateWith( {
-				editHistory: { 1: [ [], [] ] as any },
+				editHistory: { 1: [ [], [] ] as unknown as Operation[][] },
 				editHistoryIndex: { 1: 1 },
 			} );
 			expect( hasRedo( state, 1 ) ).toBe( false );
@@ -275,7 +277,7 @@ describe( 'popups selectors', () => {
 		} );
 
 		it( 'returns base entity when history index is -1', () => {
-			const entity = { id: 1, title: 'Base' } as any;
+			const entity = { id: 1, title: 'Base' } as unknown as EditablePopup;
 			const state = stateWith( {
 				editedEntities: { 1: entity },
 				editHistoryIndex: { 1: -1 },
@@ -285,7 +287,7 @@ describe( 'popups selectors', () => {
 		} );
 
 		it( 'returns base entity when no edit history', () => {
-			const entity = { id: 1, title: 'Base' } as any;
+			const entity = { id: 1, title: 'Base' } as unknown as EditablePopup;
 			const state = stateWith( {
 				editedEntities: { 1: entity },
 			} );
@@ -294,7 +296,7 @@ describe( 'popups selectors', () => {
 		} );
 
 		it( 'applies patches through applyPatch', () => {
-			const entity = { id: 1, title: 'Old' } as any;
+			const entity = { id: 1, title: 'Old' } as unknown as EditablePopup;
 			const state = stateWith( {
 				editedEntities: { 1: entity },
 				editHistory: {
@@ -306,7 +308,7 @@ describe( 'popups selectors', () => {
 								value: 'New',
 							},
 						],
-					] as any,
+					] as unknown as Operation[][],
 				},
 				editHistoryIndex: { 1: 0 },
 			} );

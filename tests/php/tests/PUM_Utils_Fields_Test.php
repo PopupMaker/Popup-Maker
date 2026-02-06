@@ -712,8 +712,8 @@ class PUM_Utils_Fields_Test extends WP_UnitTestCase {
 		PUM_Utils_Fields::render_field( [ 'type' => 'nonexistent_type_xyz' ] );
 		$output = ob_get_clean();
 
-		// Just verify no fatal error occurred.
-		$this->assertTrue( true );
+		// Verify output buffer returned a string (not false).
+		$this->assertIsString( $output );
 	}
 
 	/**

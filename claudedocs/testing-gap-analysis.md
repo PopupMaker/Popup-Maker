@@ -192,7 +192,7 @@
 ### Phase 1: "Foundation" (Week 1-2) — Pure Functions First
 **Strategy**: Maximum test coverage with minimum effort. All pure functions.
 
-```
+```text
 1. core-data/call-to-actions/validation.ts     (~5 tests)   — 30 min
 2. core-data/call-to-actions/selectors.ts      (~25 tests)  — 2 hours
 3. core-data/call-to-actions/reducer.ts        (~30 tests)  — 3 hours
@@ -210,7 +210,7 @@
 ### Phase 2: "Services & Security" (Week 3-4)
 **Strategy**: Test security-critical PHP services with mocking.
 
-```
+```text
 1. DB/Subscribers.php                          (~15 tests)  — 2 hours
 2. Models/CallToAction.php                     (~20 tests)  — 2 hours
 3. Services/Options.php                        (~10 tests)  — 1 hour
@@ -228,7 +228,7 @@
 ### Phase 3: "User Workflows" (Week 5-6)
 **Strategy**: E2E tests for the critical happy paths.
 
-```
+```text
 1. Popup create → publish → verify frontend    (~5 tests)   — 4 hours
 2. Click trigger opens popup                   (~3 tests)   — 1 hour
 3. Time delay trigger                          (~3 tests)   — 1 hour

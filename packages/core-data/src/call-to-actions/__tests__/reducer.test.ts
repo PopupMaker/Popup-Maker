@@ -1,7 +1,8 @@
 import { reducer } from '../reducer';
 import { initialState, ACTION_TYPES } from '../constants';
 
-import type { State } from '../reducer';
+import type { State, ReducerAction } from '../reducer';
+import type { CallToAction, EditableCta } from '../types';
 import type { Operation } from 'fast-json-patch';
 
 const {
@@ -29,7 +30,7 @@ const mockCta = ( id: number, title = `CTA ${ id }` ) =>
 		title,
 		status: 'publish',
 		settings: { type: 'link', url: '' },
-	} ) as any;
+	} ) as unknown as CallToAction< 'edit' >;
 
 // Helper to create a mock editable entity.
 const mockEditable = ( id: number, title = `CTA ${ id }` ) =>
@@ -38,17 +39,17 @@ const mockEditable = ( id: number, title = `CTA ${ id }` ) =>
 		title,
 		status: 'draft',
 		settings: { type: 'link', url: '' },
-	} ) as any;
+	} ) as unknown as EditableCta;
 
 describe( 'CTA Reducer', () => {
 	it( 'returns initial state for unknown action', () => {
-		const state = reducer( undefined, { type: 'UNKNOWN' } as any );
+		const state = reducer( undefined, { type: 'UNKNOWN' } as unknown as ReducerAction );
 		expect( state ).toEqual( initialState );
 	} );
 
 	it( 'returns existing state for unknown action', () => {
 		const existing = { ...initialState, editorId: 42 };
-		const state = reducer( existing, { type: 'NONSENSE' } as any );
+		const state = reducer( existing, { type: 'NONSENSE' } as unknown as ReducerAction );
 		expect( state ).toBe( existing );
 	} );
 
@@ -214,8 +215,8 @@ describe( 'CTA Reducer', () => {
 			...initialState,
 			byId: { 1: mockCta( 1 ), 2: mockCta( 2 ) },
 			allIds: [ 1, 2 ],
-			editedEntities: { 1: mockEditable( 1 ) } as any,
-			editHistory: { 1: [ [ { op: 'replace', path: '/title', value: 'X' } ] ] } as any,
+			editedEntities: { 1: mockEditable( 1 ) },
+			editHistory: { 1: [ [ { op: 'replace', path: '/title', value: 'X' } as Operation ] ] },
 			editHistoryIndex: { 1: 0 },
 		};
 
@@ -243,7 +244,7 @@ describe( 'CTA Reducer', () => {
 			const state = reducer( stateWithEdits, {
 				type: PURGE_RECORD,
 				payload: { id: null },
-			} as any );
+			} as unknown as ReducerAction );
 
 			expect( state ).toBe( stateWithEdits );
 		} );
@@ -260,7 +261,7 @@ describe( 'CTA Reducer', () => {
 				...initialState,
 				byId: { 1: mockCta( 1 ), 2: mockCta( 2 ), 3: mockCta( 3 ) },
 				allIds: [ 1, 2, 3 ],
-				editedEntities: { 1: mockEditable( 1 ), 2: mockEditable( 2 ) } as any,
+				editedEntities: { 1: mockEditable( 1 ), 2: mockEditable( 2 ) },
 				editHistory: { 1: [], 2: [] },
 				editHistoryIndex: { 1: -1, 2: -1 },
 			};
@@ -278,7 +279,7 @@ describe( 'CTA Reducer', () => {
 				...initialState,
 				byId: { 1: mockCta( 1 ), 2: mockCta( 2 ), 3: mockCta( 3 ) },
 				allIds: [ 1, 2, 3 ],
-				editedEntities: { 1: mockEditable( 1 ), 2: mockEditable( 2 ) } as any,
+				editedEntities: { 1: mockEditable( 1 ), 2: mockEditable( 2 ) },
 				editHistory: { 1: [], 2: [] },
 				editHistoryIndex: { 1: -1, 2: -1 },
 			};
@@ -507,7 +508,7 @@ describe( 'CTA Reducer', () => {
 				...initialState,
 				editHistory: { 1: [ patchA, patchB, patchC ] },
 				editHistoryIndex: { 1: 1 }, // Currently at patchB.
-				editedEntities: { 1: mockEditable( 1 ) } as any,
+				editedEntities: { 1: mockEditable( 1 ) },
 			};
 
 			const savedEntity = mockEditable( 1, 'Saved' );
@@ -531,7 +532,7 @@ describe( 'CTA Reducer', () => {
 				...initialState,
 				editHistory: { 1: [ [] ] },
 				editHistoryIndex: { 1: 0 },
-				editedEntities: { 1: mockEditable( 1 ) } as any,
+				editedEntities: { 1: mockEditable( 1 ) },
 			};
 
 			const state = reducer( existing, {
@@ -555,7 +556,7 @@ describe( 'CTA Reducer', () => {
 				editedEntities: {
 					1: mockEditable( 1 ),
 					2: mockEditable( 2 ),
-				} as any,
+				},
 				editHistory: { 1: [ [] ], 2: [ [] ] },
 				editHistoryIndex: { 1: 0, 2: 0 },
 			};
@@ -616,7 +617,8 @@ describe( 'CTA Reducer', () => {
 				resolutionState: {
 					getCallToAction: {
 						5: { status: 'SUCCESS' },
-					} as any,
+						6: { status: 'SUCCESS' },
+					},
 				},
 			};
 
@@ -625,9 +627,14 @@ describe( 'CTA Reducer', () => {
 				payload: { id: 5, operation: 'getCallToAction' },
 			} );
 
+			// ID 5 should be invalidated.
 			expect(
-				( state.resolutionState[ 'getCallToAction' ] as any )?.[ 5 ]
+				state.resolutionState[ 'getCallToAction' ]?.[ 5 ]
 			).toBeUndefined();
+			// ID 6 should remain.
+			expect(
+				state.resolutionState[ 'getCallToAction' ]?.[ 6 ]
+			).toEqual( { status: 'SUCCESS' } );
 		} );
 	} );
 

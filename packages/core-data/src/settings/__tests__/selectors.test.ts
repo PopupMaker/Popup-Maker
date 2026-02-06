@@ -1,7 +1,7 @@
 // Must set global inside jest.mock factory so it runs before imports
 // (jest.mock is hoisted, but import statements are too).
 jest.mock( '@wordpress/hooks', () => {
-	( global as any ).popupMakerCoreData = {
+	( global as unknown as Record< string, unknown > ).popupMakerCoreData = {
 		currentSettings: {
 			permissions: {
 				view_block_controls: 'edit_posts',
@@ -90,7 +90,7 @@ describe( 'settings selectors', () => {
 			const result = getSetting(
 				emptyState,
 				'permissions',
-				{ view_block_controls: 'fallback' } as any
+				{ view_block_controls: 'fallback' } as unknown as Settings[ 'permissions' ]
 			);
 			expect( result ).toEqual( {
 				view_block_controls: 'fallback',
@@ -108,7 +108,7 @@ describe( 'settings selectors', () => {
 				permissions: {
 					view_block_controls: 'manage_options',
 				},
-			} as any;
+			} as unknown as Partial< Settings >;
 			const state = stateWith( { unsavedChanges: changes } );
 			expect( getUnsavedChanges( state ) ).toEqual( changes );
 		} );
@@ -122,7 +122,7 @@ describe( 'settings selectors', () => {
 		it( 'returns true when changes exist', () => {
 			const state = stateWith( {
 				unsavedChanges: {
-					permissions: { manage_settings: 'edit_posts' } as any,
+					permissions: { manage_settings: 'edit_posts' } as unknown as Settings[ 'permissions' ],
 				},
 			} );
 			expect( hasUnsavedChanges( state ) ).toBe( true );

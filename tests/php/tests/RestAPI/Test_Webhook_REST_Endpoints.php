@@ -55,6 +55,8 @@ class Test_Webhook_REST_Endpoints extends WP_UnitTestCase {
 		global $wp_rest_server;
 		$wp_rest_server = null;
 
+		unset( $_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_AUTHORIZATION'] );
+
 		parent::tearDown();
 	}
 

@@ -306,7 +306,7 @@ class PUM_Triggers_Test extends WP_UnitTestCase {
 		$this->assertNotEmpty( $list );
 
 		foreach ( $list as $id => $name ) {
-			$this->assertIsString( $name, 'Trigger name should be a string.' );
+			$this->assertIsString( $name, "Trigger '$id' name should be a string." );
 		}
 	}
 

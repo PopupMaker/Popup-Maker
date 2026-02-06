@@ -34,43 +34,43 @@ describe( 'isURLLike', () => {
 
 	describe( 'www. links', () => {
 		it( 'returns true for strings containing www.', () => {
-			expect( isURLLike( 'www.example.com' ) ).toBeTruthy();
+			expect( isURLLike( 'www.example.com' ) ).toBe( true );
 		} );
 
 		it( 'returns true for www. in the middle of a string', () => {
-			expect( isURLLike( 'visit www.example.com today' ) ).toBeTruthy();
+			expect( isURLLike( 'visit www.example.com today' ) ).toBe( true );
 		} );
 	} );
 
 	describe( 'hash/internal links', () => {
 		it( 'returns true for hash-only links', () => {
-			expect( isURLLike( '#section' ) ).toBeTruthy();
+			expect( isURLLike( '#section' ) ).toBe( true );
 		} );
 
 		it( 'returns true for just a hash', () => {
-			expect( isURLLike( '#' ) ).toBeTruthy();
+			expect( isURLLike( '#' ) ).toBe( true );
 		} );
 
 		it( 'returns true for hash with path-like value', () => {
-			expect( isURLLike( '#/route/page' ) ).toBeTruthy();
+			expect( isURLLike( '#/route/page' ) ).toBe( true );
 		} );
 	} );
 
 	describe( 'non-URL strings', () => {
 		it( 'returns falsy for plain text', () => {
-			expect( isURLLike( 'hello world' ) ).toBeFalsy();
+			expect( isURLLike( 'hello world' ) ).toBe( false );
 		} );
 
 		it( 'returns falsy for an empty string', () => {
-			expect( isURLLike( '' ) ).toBeFalsy();
+			expect( isURLLike( '' ) ).toBe( false );
 		} );
 
 		it( 'returns falsy for a single word', () => {
-			expect( isURLLike( 'notaurl' ) ).toBeFalsy();
+			expect( isURLLike( 'notaurl' ) ).toBe( false );
 		} );
 
 		it( 'returns falsy for a path without protocol', () => {
-			expect( isURLLike( '/just/a/path' ) ).toBeFalsy();
+			expect( isURLLike( '/just/a/path' ) ).toBe( false );
 		} );
 	} );
 
@@ -84,7 +84,7 @@ describe( 'isURLLike', () => {
 		} );
 
 		it( 'returns falsy for strings with only spaces', () => {
-			expect( isURLLike( '   ' ) ).toBeFalsy();
+			expect( isURLLike( '   ' ) ).toBe( false );
 		} );
 	} );
 } );

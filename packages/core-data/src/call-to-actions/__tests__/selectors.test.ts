@@ -5,6 +5,7 @@ import { DispatchStatus } from '../../constants';
 import { defaultValues } from '../constants';
 
 import type { State } from '../reducer';
+import type { CallToAction, EditableCta } from '../types';
 
 // Mock dependencies before importing selectors.
 jest.mock( 'fast-json-patch', () => ( {
@@ -53,7 +54,7 @@ const mockCta = ( id: number, title = `CTA ${ id }` ) =>
 		title,
 		status: 'publish',
 		settings: { type: 'link', url: '' },
-	} ) as any;
+	} ) as unknown as CallToAction< 'edit' >;
 
 // Helper to create a mock editable entity.
 const mockEditable = ( id: number, title = `CTA ${ id }` ) =>
@@ -62,7 +63,7 @@ const mockEditable = ( id: number, title = `CTA ${ id }` ) =>
 		title,
 		status: 'draft',
 		settings: { type: 'link', url: '' },
-	} ) as any;
+	} ) as unknown as EditableCta;
 
 // Base empty state matching initialState shape.
 const emptyState: State = {
@@ -231,7 +232,7 @@ describe( 'CTA Selectors', () => {
 			} );
 
 			it( 'returns true when editorId is "new"', () => {
-				const state = { ...emptyState, editorId: 'new' as any };
+				const state = { ...emptyState, editorId: 'new' as unknown as number };
 				expect( selectors.isEditorActive( state ) ).toBe( true );
 			} );
 		} );
@@ -284,7 +285,7 @@ describe( 'CTA Selectors', () => {
 				];
 				const state: State = {
 					...emptyState,
-					editHistory: { 1: history } as any,
+					editHistory: { 1: history } as unknown as State[ 'editHistory' ],
 				};
 				expect(
 					selectors.getEntityEditHistory( state, 1 )
@@ -312,7 +313,7 @@ describe( 'CTA Selectors', () => {
 
 		describe( 'hasEdits', () => {
 			it( 'returns false when no history', () => {
-				expect( selectors.hasEdits( emptyState, 1 ) ).toBeFalsy();
+				expect( selectors.hasEdits( emptyState, 1 ) ).toBe( false );
 			} );
 
 			it( 'returns false when history is empty array', () => {
@@ -328,7 +329,7 @@ describe( 'CTA Selectors', () => {
 					...emptyState,
 					editHistory: {
 						1: [ [ { op: 'replace', path: '/title', value: 'X' } ] ],
-					} as any,
+					} as unknown as State[ 'editHistory' ],
 				};
 				expect( selectors.hasEdits( state, 1 ) ).toBe( true );
 			} );
@@ -429,7 +430,7 @@ describe( 'CTA Selectors', () => {
 				const state: State = {
 					...emptyState,
 					editedEntities: { 1: entity },
-					editHistory: { 1: patches } as any,
+					editHistory: { 1: patches } as unknown as State[ 'editHistory' ],
 					editHistoryIndex: { 1: 0 }, // Only apply first patch.
 				};
 

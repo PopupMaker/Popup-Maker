@@ -426,7 +426,7 @@ class PUM_Utils_Options_Test extends WP_UnitTestCase {
 		PUM_Utils_Options::init( true );
 
 		// Should not throw, key just does not exist in options.
-		$result = PUM_Utils_Options::delete( 'nonexistent' );
+		PUM_Utils_Options::delete( 'nonexistent' );
 
 		$all = get_option( 'popmake_settings' );
 		$this->assertArrayHasKey( 'existing', $all );

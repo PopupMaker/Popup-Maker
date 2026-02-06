@@ -96,7 +96,7 @@ class PUM_Analytics_Expanded_Test extends WP_UnitTestCase {
 
 		add_action(
 			'pum_analytics_open',
-			function ( $popup_id, $args ) use ( &$fired ) {
+			function () use ( &$fired ) {
 				$fired = true;
 			},
 			10,
@@ -394,20 +394,16 @@ class PUM_Analytics_Expanded_Test extends WP_UnitTestCase {
 	 * Test analytics_enabled returns false when disable_analytics option is set.
 	 */
 	public function test_analytics_enabled_disabled_by_option() {
-		// Set the option to disable analytics.
-		update_option( 'pum_settings', [ 'disable_analytics' => true ] );
-
-		// Need to clear any cached options.
-		wp_cache_flush();
+		// Use PUM_Utils_Options API to set the option correctly.
+		PUM_Utils_Options::update( 'disable_analytics', true );
 
 		$enabled = PUM_Analytics::analytics_enabled();
 
 		// Clean up.
-		delete_option( 'pum_settings' );
+		PUM_Utils_Options::delete( 'disable_analytics' );
 
-		// The exact result depends on how pum_get_option reads the setting.
-		// At minimum, verify it returns a boolean.
-		$this->assertIsBool( $enabled, 'analytics_enabled should return a boolean.' );
+		// With disable_analytics=true, analytics should be disabled.
+		$this->assertFalse( $enabled, 'analytics_enabled should return false when disable_analytics is true.' );
 	}
 
 	/**

@@ -109,6 +109,8 @@ if (popup.title !== undefined && !popup.title?.length) {
 
 **Impact**: Passing an empty value in `update_many()` does NOT delete the key as presumably intended. The key persists with an empty string value. This differs from `update()` which correctly delegates to `delete()` for empty values.
 
+**Confirmed by**: Batch 2 testing (`test_update_many_removes_empty_values`).
+
 **Fix**: Skip the assignment on line 187 when the value was empty:
 ```php
 // Option A: skip empty values after unset
@@ -201,12 +203,6 @@ public static function parse_fields( $fields, $name = '%s' )
 ```php
 $paged = max( 1, (int) $request->get_param( 'paged' ) );
 ```
-
----
-
-## 12. `Options::update_many()`: Unset Then Re-Set (Already #6 - Confirmed by Batch 2)
-
-Additional confirmation: The `test_update_many_removes_empty_values` test in Batch 2 validated this bug still exists.
 
 ---
 
