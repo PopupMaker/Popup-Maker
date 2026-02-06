@@ -1,0 +1,501 @@
+jest.mock( '@wordpress/hooks', () => ( {
+	applyFilters: jest.fn( ( _, v ) => v ),
+} ) );
+
+jest.mock( 'fast-json-patch', () => ( {
+	applyPatch: jest.fn( ( doc, patch ) => ( { newDocument: doc } ) ),
+} ) );
+
+jest.mock( '@wordpress/notices', () => ( {
+	store: 'core/notices',
+} ) );
+
+import { reducer } from '../reducer';
+import { ACTION_TYPES, initialState } from '../constants';
+import { DispatchStatus } from '../../constants';
+
+import type { State } from '../reducer';
+
+const mockPopup = ( id: number, overrides = {} ) => ( {
+	id,
+	title: `Popup ${ id }`,
+	status: 'draft' as const,
+	slug: `popup-${ id }`,
+	content: '',
+	...overrides,
+} );
+
+describe( 'popups reducer', () => {
+	it( 'returns initial state for unknown action', () => {
+		const result = reducer( undefined, { type: 'UNKNOWN' } as any );
+		expect( result ).toEqual( initialState );
+	} );
+
+	describe( 'RECEIVE_RECORD', () => {
+		it( 'adds a new record to the store', () => {
+			const record = mockPopup( 1 );
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.RECEIVE_RECORD,
+				payload: { record },
+			} as any );
+
+			expect( state.byId[ 1 ] ).toEqual( record );
+			expect( state.allIds ).toContain( 1 );
+		} );
+
+		it( 'does not duplicate IDs when receiving existing record', () => {
+			const record = mockPopup( 1 );
+			const stateWithRecord: State = {
+				...initialState,
+				byId: { 1: record as any },
+				allIds: [ 1 ],
+			};
+
+			const updatedRecord = mockPopup( 1, { title: 'Updated' } );
+			const state = reducer( stateWithRecord, {
+				type: ACTION_TYPES.RECEIVE_RECORD,
+				payload: { record: updatedRecord },
+			} as any );
+
+			expect( state.allIds ).toEqual( [ 1 ] );
+			expect( state.byId[ 1 ].title ).toBe( 'Updated' );
+		} );
+	} );
+
+	describe( 'RECEIVE_RECORDS', () => {
+		it( 'adds multiple records', () => {
+			const records = [ mockPopup( 1 ), mockPopup( 2 ) ];
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.RECEIVE_RECORDS,
+				payload: { records },
+			} as any );
+
+			expect( state.allIds ).toEqual( [ 1, 2 ] );
+			expect( state.byId[ 1 ] ).toEqual( records[ 0 ] );
+			expect( state.byId[ 2 ] ).toEqual( records[ 1 ] );
+		} );
+
+		it( 'merges with existing records without duplicating IDs', () => {
+			const existing: State = {
+				...initialState,
+				byId: { 1: mockPopup( 1 ) as any },
+				allIds: [ 1 ],
+			};
+
+			const records = [ mockPopup( 2 ), mockPopup( 3 ) ];
+			const state = reducer( existing, {
+				type: ACTION_TYPES.RECEIVE_RECORDS,
+				payload: { records },
+			} as any );
+
+			expect( state.allIds ).toEqual( [ 1, 2, 3 ] );
+		} );
+	} );
+
+	describe( 'RECEIVE_QUERY_RECORDS', () => {
+		it( 'stores records and caches query results', () => {
+			const records = [ mockPopup( 1 ), mockPopup( 2 ) ];
+			const query = { status: 'publish', per_page: 10 };
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.RECEIVE_QUERY_RECORDS,
+				payload: { records, query },
+			} as any );
+
+			expect( state.allIds ).toEqual( [ 1, 2 ] );
+			expect(
+				state.queries?.[ JSON.stringify( query ) ]
+			).toEqual( [ 1, 2 ] );
+		} );
+
+		it( 'does not update queries when no query provided', () => {
+			const records = [ mockPopup( 5 ) ];
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.RECEIVE_RECORDS,
+				payload: { records },
+			} as any );
+
+			expect( state.queries ).toEqual( initialState.queries );
+		} );
+	} );
+
+	describe( 'RECEIVE_ERROR', () => {
+		it( 'sets global error when no id provided', () => {
+			// Use fresh state to avoid mutation from other tests.
+			const freshState: State = {
+				...initialState,
+				errors: { global: null, byId: {} },
+			};
+			const state = reducer( freshState, {
+				type: ACTION_TYPES.RECEIVE_ERROR,
+				payload: { error: 'Server error' },
+			} as any );
+
+			expect( state.errors.global ).toBe( 'Server error' );
+		} );
+
+		it( 'sets per-ID error when id provided', () => {
+			// Use fresh state to avoid mutation leaking between tests.
+			const freshState: State = {
+				...initialState,
+				errors: { global: null, byId: {} },
+			};
+			const state = reducer( freshState, {
+				type: ACTION_TYPES.RECEIVE_ERROR,
+				payload: { error: 'Not found', id: 42 },
+			} as any );
+
+			expect( state.errors.byId[ 42 ] ).toBe( 'Not found' );
+			expect( state.errors.global ).toBeNull();
+		} );
+
+		it( 'does not mutate previous errors state', () => {
+			const baseState: State = {
+				...initialState,
+				errors: { global: null, byId: {} },
+			};
+			const errorRef = baseState.errors;
+
+			reducer( baseState, {
+				type: ACTION_TYPES.RECEIVE_ERROR,
+				payload: { error: 'Server error' },
+			} as any );
+
+			// The original state.errors object should NOT be mutated.
+			expect( errorRef.global ).toBeNull();
+		} );
+	} );
+
+	describe( 'PURGE_RECORD', () => {
+		it( 'removes record from allIds and byId', () => {
+			const existing: State = {
+				...initialState,
+				byId: {
+					1: mockPopup( 1 ) as any,
+					2: mockPopup( 2 ) as any,
+				},
+				allIds: [ 1, 2 ],
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.PURGE_RECORD,
+				payload: { id: 1 },
+			} as any );
+
+			expect( state.allIds ).toEqual( [ 2 ] );
+			expect( state.byId[ 1 ] ).toBeUndefined();
+			expect( state.byId[ 2 ] ).toBeDefined();
+		} );
+
+		it( 'returns unchanged state when id is 0 and no ids provided', () => {
+			const existing: State = {
+				...initialState,
+				byId: { 1: mockPopup( 1 ) as any },
+				allIds: [ 1 ],
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.PURGE_RECORD,
+				payload: { id: 0 },
+			} as any );
+
+			expect( state ).toEqual( existing );
+		} );
+	} );
+
+	describe( 'PURGE_RECORDS', () => {
+		it( 'removes from allIds, byId, editedEntities, editHistory, and editHistoryIndex', () => {
+			const existing: State = {
+				...initialState,
+				byId: {
+					1: mockPopup( 1 ) as any,
+					2: mockPopup( 2 ) as any,
+					3: mockPopup( 3 ) as any,
+				},
+				allIds: [ 1, 2, 3 ],
+				editedEntities: { 1: {} as any, 2: {} as any },
+				editHistory: { 1: [], 2: [] },
+				editHistoryIndex: { 1: -1, 2: 0 },
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.PURGE_RECORDS,
+				payload: { ids: [ 1, 2 ] },
+			} as any );
+
+			expect( state.allIds ).toEqual( [ 3 ] );
+			expect( Object.keys( state.byId ) ).toEqual( [ '3' ] );
+			expect( Object.keys( state.editedEntities ) ).toEqual( [] );
+			expect( Object.keys( state.editHistory ) ).toEqual( [] );
+			expect( Object.keys( state.editHistoryIndex ) ).toEqual( [] );
+		} );
+	} );
+
+	describe( 'EDITOR_CHANGE_ID', () => {
+		it( 'sets the editor id', () => {
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.EDITOR_CHANGE_ID,
+				payload: { editorId: 42 },
+			} as any );
+
+			expect( state.editorId ).toBe( 42 );
+		} );
+
+		it( 'can set editor id to undefined', () => {
+			const active: State = { ...initialState, editorId: 42 };
+			const state = reducer( active, {
+				type: ACTION_TYPES.EDITOR_CHANGE_ID,
+				payload: { editorId: undefined },
+			} as any );
+
+			expect( state.editorId ).toBeUndefined();
+		} );
+	} );
+
+	describe( 'START_EDITING_RECORD', () => {
+		it( 'stores the editable entity and sets editor id', () => {
+			const editableEntity = { id: 5, title: 'Test' } as any;
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.START_EDITING_RECORD,
+				payload: { id: 5, editableEntity, setEditorId: true },
+			} as any );
+
+			expect( state.editedEntities[ 5 ] ).toEqual( editableEntity );
+			expect( state.editorId ).toBe( 5 );
+		} );
+
+		it( 'does not change editor id when setEditorId is false', () => {
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.START_EDITING_RECORD,
+				payload: {
+					id: 5,
+					editableEntity: { id: 5 } as any,
+					setEditorId: false,
+				},
+			} as any );
+
+			expect( state.editedEntities[ 5 ] ).toBeDefined();
+			expect( state.editorId ).toBeUndefined();
+		} );
+	} );
+
+	describe( 'EDIT_RECORD', () => {
+		it( 'appends edits to history', () => {
+			const edits = [ { op: 'replace', path: '/title', value: 'New' } ];
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.EDIT_RECORD,
+				payload: { id: 1, edits },
+			} as any );
+
+			expect( state.editHistory[ 1 ] ).toEqual( [ edits ] );
+			expect( state.editHistoryIndex[ 1 ] ).toBe( 0 );
+		} );
+
+		it( 'clears future history when editing from mid-history', () => {
+			const existing: State = {
+				...initialState,
+				editHistory: {
+					1: [
+						[ { op: 'replace', path: '/title', value: 'A' } ],
+						[ { op: 'replace', path: '/title', value: 'B' } ],
+						[ { op: 'replace', path: '/title', value: 'C' } ],
+					] as any,
+				},
+				editHistoryIndex: { 1: 0 },
+			};
+
+			const newEdits = [ { op: 'replace', path: '/title', value: 'D' } ];
+			const state = reducer( existing, {
+				type: ACTION_TYPES.EDIT_RECORD,
+				payload: { id: 1, edits: newEdits },
+			} as any );
+
+			// Should keep only the first edit and add the new one.
+			expect( state.editHistory[ 1 ] ).toHaveLength( 2 );
+			expect( state.editHistoryIndex[ 1 ] ).toBe( 1 );
+		} );
+	} );
+
+	describe( 'UNDO_EDIT_RECORD', () => {
+		it( 'decrements the history index', () => {
+			const existing: State = {
+				...initialState,
+				editHistoryIndex: { 1: 2 },
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.UNDO_EDIT_RECORD,
+				payload: { id: 1, steps: 1 },
+			} as any );
+
+			expect( state.editHistoryIndex[ 1 ] ).toBe( 1 );
+		} );
+
+		it( 'does not go below -1', () => {
+			const existing: State = {
+				...initialState,
+				editHistoryIndex: { 1: 0 },
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.UNDO_EDIT_RECORD,
+				payload: { id: 1, steps: 5 },
+			} as any );
+
+			expect( state.editHistoryIndex[ 1 ] ).toBe( -1 );
+		} );
+	} );
+
+	describe( 'REDO_EDIT_RECORD', () => {
+		it( 'increments the history index', () => {
+			const existing: State = {
+				...initialState,
+				editHistory: {
+					1: [ [], [], [] ] as any,
+				},
+				editHistoryIndex: { 1: 0 },
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.REDO_EDIT_RECORD,
+				payload: { id: 1, steps: 1 },
+			} as any );
+
+			expect( state.editHistoryIndex[ 1 ] ).toBe( 1 );
+		} );
+
+		it( 'does not exceed max history length', () => {
+			const existing: State = {
+				...initialState,
+				editHistory: {
+					1: [ [], [] ] as any,
+				},
+				editHistoryIndex: { 1: 0 },
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.REDO_EDIT_RECORD,
+				payload: { id: 1, steps: 99 },
+			} as any );
+
+			expect( state.editHistoryIndex[ 1 ] ).toBe( 1 );
+		} );
+
+		it( 'stays at current index when no history exists', () => {
+			const existing: State = {
+				...initialState,
+				editHistoryIndex: { 1: -1 },
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.REDO_EDIT_RECORD,
+				payload: { id: 1, steps: 1 },
+			} as any );
+
+			expect( state.editHistoryIndex[ 1 ] ).toBe( -1 );
+		} );
+	} );
+
+	describe( 'SAVE_EDITED_RECORD', () => {
+		it( 'removes saved edits and resets index to -1', () => {
+			const existing: State = {
+				...initialState,
+				editedEntities: {
+					1: { id: 1, title: 'Old' } as any,
+				},
+				editHistory: {
+					1: [ [], [], [] ] as any,
+				},
+				editHistoryIndex: { 1: 1 },
+			};
+
+			const editedEntity = { id: 1, title: 'Saved' } as any;
+			const state = reducer( existing, {
+				type: ACTION_TYPES.SAVE_EDITED_RECORD,
+				payload: { id: 1, historyIndex: 1, editedEntity },
+			} as any );
+
+			expect( state.editedEntities[ 1 ] ).toEqual( editedEntity );
+			expect( state.editHistory[ 1 ] ).toHaveLength( 1 );
+			expect( state.editHistoryIndex[ 1 ] ).toBe( -1 );
+		} );
+	} );
+
+	describe( 'RESET_EDIT_RECORD', () => {
+		it( 'removes all edit data for the record', () => {
+			const existing: State = {
+				...initialState,
+				editedEntities: {
+					1: { id: 1 } as any,
+					2: { id: 2 } as any,
+				},
+				editHistory: { 1: [], 2: [] },
+				editHistoryIndex: { 1: 0, 2: 0 },
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.RESET_EDIT_RECORD,
+				payload: { id: 1 },
+			} as any );
+
+			expect( state.editedEntities[ 1 ] ).toBeUndefined();
+			expect( state.editHistory[ 1 ] ).toBeUndefined();
+			expect( state.editHistoryIndex[ 1 ] ).toBeUndefined();
+			// Record 2 is untouched.
+			expect( state.editedEntities[ 2 ] ).toBeDefined();
+		} );
+	} );
+
+	describe( 'CHANGE_ACTION_STATUS', () => {
+		it( 'sets resolution status for an action', () => {
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.CHANGE_ACTION_STATUS,
+				payload: {
+					actionName: 'getPopup',
+					status: DispatchStatus.Resolving,
+					message: undefined,
+				},
+			} as any );
+
+			expect( state.resolutionState.getPopup ).toEqual( {
+				status: DispatchStatus.Resolving,
+				error: undefined,
+			} );
+		} );
+
+		it( 'stores error message on failure', () => {
+			const state = reducer( initialState, {
+				type: ACTION_TYPES.CHANGE_ACTION_STATUS,
+				payload: {
+					actionName: 'savePopup',
+					status: DispatchStatus.Error,
+					message: 'Failed to save',
+				},
+			} as any );
+
+			expect( state.resolutionState.savePopup ).toEqual( {
+				status: DispatchStatus.Error,
+				error: 'Failed to save',
+			} );
+		} );
+	} );
+
+	describe( 'INVALIDATE_RESOLUTION', () => {
+		it( 'clears resolution for a specific operation/id', () => {
+			const existing: State = {
+				...initialState,
+				resolutionState: {
+					getPopup: {
+						status: DispatchStatus.Success,
+					},
+				},
+			};
+
+			const state = reducer( existing, {
+				type: ACTION_TYPES.INVALIDATE_RESOLUTION,
+				payload: { id: 1, operation: 'getPopup' },
+			} as any );
+
+			expect( ( state.resolutionState.getPopup as any )[ 1 ] ).toBeUndefined();
+		} );
+	} );
+} );

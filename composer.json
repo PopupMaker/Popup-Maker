@@ -24,10 +24,11 @@
 		"phpstan/phpstan": "^2.0.3",
 		"szepeviktor/phpstan-wordpress": "2.0.2",
 		"phpstan/extension-installer": "^1.4.3",
-		"phpunit/phpunit": "^10.5.38",
+		"phpunit/phpunit": "^9.6",
 		"mockery/mockery": "^1.6.12",
 		"brain/monkey": "^2.6.2",
-		"phpcompatibility/phpcompatibility-wp": "^2.1.7"
+		"phpcompatibility/phpcompatibility-wp": "^2.1.7",
+		"yoast/phpunit-polyfills": "^2.0"
 	},
 	"autoload": {
 		"psr-4": {

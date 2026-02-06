@@ -9,4 +9,7 @@ module.exports = {
 		'/build-types/',
 		'\\.d\\.ts$',
 	],
+	moduleNameMapper: {
+		'^@popup-maker/([^/]+)$': '<rootDir>/packages/$1/src/index.ts',
+	},
 };
