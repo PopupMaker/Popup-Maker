@@ -206,6 +206,30 @@ $paged = max( 1, (int) $request->get_param( 'paged' ) );
 
 ---
 
+## 12. INVALIDATE_RESOLUTION Tests: Tautological Assertions
+
+**Severity**: Low (test-only, not runtime)
+**Location**: `packages/core-data/src/popups/__tests__/reducer.test.ts`, `packages/core-data/src/settings/__tests__/reducer.test.ts`
+**Found during**: CodeRabbit review of PR #1172
+
+**Problem**: The INVALIDATE_RESOLUTION tests set up `resolutionState` like `{ getPopup: { status: Success } }` (flat) but the reducer stores per-ID state like `{ getPopup: { 1: { status: Success } } }`. The tests checked `resolutionState.getPopup[1]` which was ALWAYS undefined — a tautology that never actually tested the invalidation logic.
+
+**Fix applied**: Tests now set up proper per-ID state and verify that the targeted ID is removed while other IDs remain.
+
+---
+
+## 13. Analytics Test: Wrong Option Key
+
+**Severity**: Low (test-only, not runtime)
+**Location**: `tests/php/tests/PUM_Analytics_Expanded_Test.php` - `test_analytics_enabled_disabled_by_option`
+**Found during**: CodeRabbit review fix validation
+
+**Problem**: Test used `update_option('pum_settings', ...)` to set `disable_analytics`, but `PUM_Utils_Options` reads from `popmake_settings` (prefix `popmake_` + `settings`). The test was always a no-op — the option was never read, so `analytics_enabled()` always returned `true`.
+
+**Fix applied**: Changed to use `PUM_Utils_Options::update('disable_analytics', true)` which writes to the correct option key.
+
+---
+
 ## Pre-existing Test Infrastructure Issues (Not Bugs)
 
 These are not source code bugs but test environment issues:
@@ -217,3 +241,4 @@ These are not source code bugs but test environment issues:
 - `Test_Webhook_REST_Endpoints`: All skip — webhooks are a pro-only feature
 - `Test_License_REST_Endpoints`: All skip — `Core` is `final` and can't be mocked (see Bug #10)
 - wp-env global PHPUnit is v10.5 but WP core test lib uses v9.6 — must use `vendor/bin/phpunit`
+- CI `tsc` check fails on `__tests__/*.test.ts` files — tsconfig doesn't include `@types/jest` in `types` and doesn't exclude test directories from the build check. Pre-existing issue, not caused by test PR.
