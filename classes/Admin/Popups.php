@@ -289,6 +289,9 @@ class PUM_Admin_Popups {
 		}
 
 		if ( 'popup' === $typenow && in_array( $pagenow, [ 'post-new.php', 'post.php' ], true ) ) {
+			$popup         = pum_get_popup( $post->ID );
+			$settings      = $popup ? $popup->get_settings() : [];
+			$display_title = isset( $settings['display_title'] ) ? $settings['display_title'] : true;
 			?>
 
 			<div id="popup-titlediv" class="pum-form">
@@ -297,6 +300,10 @@ class PUM_Admin_Popups {
 						<?php esc_html_e( 'Popup Title', 'popup-maker' ); ?>
 					</label>
 					<input tabindex="2" name="popup_title" size="30" value="<?php echo esc_attr( get_post_meta( $post->ID, 'popup_title', true ) ); ?>" id="popup-title" autocomplete="off" placeholder="<?php esc_attr_e( 'Popup Title', 'popup-maker' ); ?>" />
+					<label class="pum-display-title-toggle" for="popup-display-title">
+						<input type="checkbox" name="popup_settings[display_title]" id="popup-display-title" value="1" <?php checked( $display_title, true ); ?> />
+						<?php esc_html_e( 'Display on frontend', 'popup-maker' ); ?>
+					</label>
 					<p class="pum-desc"><?php echo '(' . esc_html__( 'Optional', 'popup-maker' ) . ') ' . esc_html__( 'Shown as headline inside the popup. Can be left blank.', 'popup-maker' ); ?></p>
 				</div>
 				<div class="inside"></div>
@@ -686,12 +693,20 @@ class PUM_Admin_Popups {
 								],
 							],
 							'main'      => [
-								'theme_id' => [
+								'theme_id'      => [
 									'label'        => __( 'Popup Theme', 'popup-maker' ),
 									'dynamic_desc' => sprintf( '%1$s<br/><a id="edit_theme_link" href="%3$s">%2$s</a>', __( 'Choose a theme for this popup.', 'popup-maker' ), __( 'Customize This Theme', 'popup-maker' ), admin_url( 'post.php?action=edit&post={{data.value}}' ) ),
 									'type'         => 'select',
 									'options'      => pum_is_popup_editor() ? PUM_Helpers::popup_theme_selectlist() : null,
 									'std'          => pum_get_default_theme_id(),
+									'priority'     => 10,
+								],
+								'display_title' => [
+									'label'    => __( 'Display Title', 'popup-maker' ),
+									'desc'     => __( 'Show the popup title on the frontend.', 'popup-maker' ),
+									'type'     => 'checkbox',
+									'std'      => true,
+									'priority' => 15,
 								],
 							],
 							'size'      => [
@@ -1639,7 +1654,7 @@ class PUM_Admin_Popups {
 	/**
 	 * Prepends Popup ID to the action row on All Popups
 	 *
-	 * @param array         $actions The row actions.
+	 * @param array $actions The row actions.
 	 * @param $post The post
 	 *
 	 * @return array The new actions.

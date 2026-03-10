@@ -121,6 +121,7 @@ class PostTypes extends Controller {
 				'editor',
 				'revisions',
 				'author',
+				'custom-fields',
 			],
 			// Rest.
 			'show_in_rest'        => true,
@@ -157,6 +158,72 @@ class PostTypes extends Controller {
 		$popup_args = apply_filters( 'popmake_popup_post_type_args', $popup_args );
 
 		register_post_type( $this->get_type_key( 'popup' ), $popup_args );
+
+		// Register popup meta for REST API (block editor support).
+		register_post_meta(
+			$this->get_type_key( 'popup' ),
+			'popup_title',
+			[
+				'show_in_rest'      => true,
+				'single'            => true,
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'auth_callback'     => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			]
+		);
+
+		register_post_meta(
+			$this->get_type_key( 'popup' ),
+			'popup_settings',
+			[
+				'show_in_rest'      => [
+					'schema' => [
+						'type'                 => 'object',
+						'additionalProperties' => true,
+					],
+				],
+				'single'            => true,
+				'type'              => 'object',
+				'sanitize_callback' => [ $this, 'sanitize_popup_settings_meta' ],
+				'auth_callback'     => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			]
+		);
+	}
+
+	/**
+	 * Sanitize popup settings meta for REST API save.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 *
+	 * @return array The sanitized settings array.
+	 */
+	public function sanitize_popup_settings_meta( $value ) {
+		if ( ! is_array( $value ) ) {
+			return [];
+		}
+
+		$sanitized = [];
+
+		foreach ( $value as $key => $setting ) {
+			$key = sanitize_key( $key );
+
+			if ( is_bool( $setting ) ) {
+				$sanitized[ $key ] = (bool) $setting;
+			} elseif ( is_numeric( $setting ) ) {
+				$sanitized[ $key ] = is_float( $setting ) ? (float) $setting : (int) $setting;
+			} elseif ( is_string( $setting ) ) {
+				$sanitized[ $key ] = sanitize_text_field( $setting );
+			} elseif ( is_array( $setting ) ) {
+				// Nested arrays (conditions, triggers, cookies) pass through.
+				$sanitized[ $key ] = $setting;
+			}
+		}
+
+		return $sanitized;
 	}
 
 	/**
@@ -543,7 +610,7 @@ class PostTypes extends Controller {
 	 *
 	 * @param bool    $replace   Whether to replace the editor.
 	 * @param WP_Post $post      The post object.
-	 * @return void
+	 * @return bool Whether to replace the editor.
 	 */
 	public function replace_editor( $replace, $post ) {
 		// Only handle our post types.
