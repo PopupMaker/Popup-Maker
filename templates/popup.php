@@ -6,21 +6,18 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
-$popup         = pum_get_popup();
-$title_text    = pum_get_popup_title();
-$has_title     = '' !== $title_text;
-$display_title = $popup ? $popup->get_setting( 'display_title', true ) : true;
-$show_title    = $has_title && $display_title;
+$has_title  = '' !== pum_get_popup_title();
+$show_title = pum_show_popup_title();
 
 ?>
-<div 
-	id="pum-<?php pum_popup_ID(); ?>" 
-	role="dialog" 
+<div
+	id="pum-<?php pum_popup_ID(); ?>"
+	role="dialog"
 	aria-modal="false"
 <?php if ( $has_title ) : ?>
 	aria-labelledby="pum_popup_title_<?php pum_popup_ID(); ?>"
 <?php endif; ?>
-	class="<?php pum_popup_classes(); ?>" 
+	class="<?php pum_popup_classes(); ?>"
 	<?php pum_popup_data_attr(); ?>
 >
 
