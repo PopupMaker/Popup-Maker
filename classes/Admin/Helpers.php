@@ -421,6 +421,31 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Detect active third-party integrations for contextual messaging.
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return array Associative array of detected integration slugs.
+	 */
+	public static function get_detected_integrations() {
+		$integrations = [];
+
+		if ( class_exists( 'WooCommerce' ) ) {
+			$integrations['woocommerce'] = true;
+		}
+
+		if ( class_exists( 'Easy_Digital_Downloads' ) || defined( 'EDD_VERSION' ) ) {
+			$integrations['edd'] = true;
+		}
+
+		if ( class_exists( 'LifterLMS' ) || function_exists( 'llms' ) ) {
+			$integrations['lifterlms'] = true;
+		}
+
+		return $integrations;
+	}
+
+	/**
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::from_object instead.
 	 *
