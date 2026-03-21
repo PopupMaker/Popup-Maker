@@ -245,7 +245,7 @@ function get_param_names() {
  *
  * @param string $key      Parameter key (e.g., 'popup_id', 'cta').
  * @param mixed  $fallback Fallback value if parameter not set or empty.
- * @param string $type     Type to cast value to: 'string', 'int', 'bool', 'key', 'email', 'url'.
+ * @param string $type     Type to cast value to: 'string', 'int', 'bool', 'key', 'email', 'url', 'array'.
  *                         Defaults to 'string'.
  *
  * @return mixed The sanitized parameter value, or fallback if not set/empty.
@@ -274,7 +274,7 @@ function get_param_value( $key, $fallback = null, $type = 'string' ) {
  *
  * @param string $key      Parameter key (e.g., 'action', 'nonce').
  * @param mixed  $fallback Fallback value if parameter not set or empty.
- * @param string $type     Type to cast value to: 'string', 'int', 'bool', 'key', 'email', 'url'.
+ * @param string $type     Type to cast value to: 'string', 'int', 'bool', 'key', 'email', 'url', 'array'.
  *                         Defaults to 'string'.
  *
  * @return mixed The sanitized parameter value, or fallback if not set/empty.
@@ -299,15 +299,13 @@ function get_post_param_value( $key, $fallback = null, $type = 'string' ) {
  * @since 1.22.0
  *
  * @param mixed  $value Raw parameter value.
- * @param string $type  Type to sanitize for: 'string', 'int', 'bool', 'key', 'email', 'url'.
- *                      Note: 'bool' returns false for invalid boolean values.
+ * @param string $type  Type to sanitize for: 'string', 'int', 'bool', 'key', 'email', 'url', 'array'.
  *
- * @return mixed Sanitized value. Returns false for 'bool' type with invalid input.
+ * @return mixed Sanitized value.
  */
 function sanitize_param_by_type( $value, $type ) {
 	// Handle array values passed when expecting scalar types.
-	if ( is_array( $value ) && in_array( $type, [ 'int', 'string', 'bool' ], true ) ) {
-		// Use first array element if available, otherwise return type-appropriate fallback.
+	if ( is_array( $value ) && 'array' !== $type ) {
 		if ( ! empty( $value ) ) {
 			$value = reset( $value );
 		} else {
@@ -317,51 +315,22 @@ function sanitize_param_by_type( $value, $type ) {
 
 	switch ( $type ) {
 		case 'int':
-			$int_value = absint( $value );
-
-			// Log suspicious int conversions in debug mode.
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && 0 === $int_value && '0' !== $value && 0 !== $value ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log( sprintf( 'Popup Maker: Non-numeric value "%s" converted to int resulted in 0', $value ) );
-			}
-
-			return $int_value;
+			return absint( $value );
 
 		case 'bool':
-			$result = filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
-
-			// Log invalid boolean values in debug mode.
-			if ( null === $result && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log( sprintf( 'Popup Maker: Invalid boolean value "%s", returning false', $value ) );
-			}
-
-			return $result ?? false;
+			return filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) ?? false;
 
 		case 'key':
 			return sanitize_key( $value );
 
 		case 'email':
-			$sanitized = sanitize_email( $value );
-
-			// Log email validation failures in debug mode.
-			if ( '' === $sanitized && '' !== $value && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log( sprintf( 'Popup Maker: Email validation failed for value "%s"', $value ) );
-			}
-
-			return $sanitized;
+			return sanitize_email( $value );
 
 		case 'url':
-			$sanitized = esc_url_raw( $value );
+			return esc_url_raw( $value );
 
-			// Log URL validation failures in debug mode.
-			if ( '' === $sanitized && '' !== $value && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log( sprintf( 'Popup Maker: URL validation failed for value "%s"', $value ) );
-			}
-
-			return $sanitized;
+		case 'array':
+			return is_array( $value ) ? array_map( 'sanitize_text_field', $value ) : [];
 
 		case 'string':
 		default:

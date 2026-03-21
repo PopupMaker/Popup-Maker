@@ -35,8 +35,7 @@ class CallToActions extends Controller {
 	 * Redirects when needed.
 	 */
 	public function template_redirect() {
-		$pid_param = \PopupMaker\get_param_name( 'popup_id' );
-		$cta_args  = apply_filters( 'popup_maker/cta_valid_url_args', [ 'cta', $pid_param ] );
+		$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ \PopupMaker\get_param_name( 'cta' ), \PopupMaker\get_param_name( 'popup_id' ) ] );
 
 		$cta_uuid = \PopupMaker\get_param_value( 'cta', '', 'string' );
 		$popup_id = \PopupMaker\get_param_value( 'popup_id', null, 'int' );

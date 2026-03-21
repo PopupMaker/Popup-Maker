@@ -49,7 +49,7 @@ class Link extends \PopupMaker\Base\CallToAction {
 		$url = $call_to_action->get_setting( 'url' );
 
 		if ( ! $url ) {
-			$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ 'cta', \PopupMaker\get_param_name( 'popup_id' ) ] );
+			$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ \PopupMaker\get_param_name( 'cta' ), \PopupMaker\get_param_name( 'popup_id' ) ] );
 			// Strip query args and use the current page.
 			$url = remove_query_arg( $cta_args );
 		}
