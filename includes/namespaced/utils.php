@@ -330,7 +330,16 @@ function sanitize_param_by_type( $value, $type ) {
 			return esc_url_raw( $value );
 
 		case 'array':
-			return is_array( $value ) ? array_map( 'sanitize_text_field', $value ) : [];
+			if ( ! is_array( $value ) ) {
+				return [];
+			}
+			// Safely handle nested arrays by only sanitizing scalar values.
+			return array_map(
+				function ( $v ) {
+					return is_scalar( $v ) ? sanitize_text_field( (string) $v ) : '';
+				},
+				$value
+			);
 
 		case 'string':
 		default:
