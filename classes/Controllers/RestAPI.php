@@ -358,10 +358,14 @@ class RestAPI extends Controller {
 		// This ensures saves work correctly with custom REST namespace.
 		register_rest_field( $post_type, 'popup_title', [
 			'get_callback'        => function ( $obj ) {
-				return get_post_meta( $obj['id'], 'popup_title', true ) ?: '';
+				$popup = pum_get_popup( $obj['id'] );
+				return $popup ? $popup->get_meta( 'popup_title' ) : '';
 			},
 			'update_callback'     => function ( $value, $obj ) {
-				update_post_meta( $obj->ID, 'popup_title', sanitize_text_field( $value ) );
+				$popup = pum_get_popup( $obj->ID );
+				if ( $popup ) {
+					$popup->update_meta( 'popup_title', sanitize_text_field( $value ) );
+				}
 			},
 			'schema'              => [
 				'type'        => 'string',

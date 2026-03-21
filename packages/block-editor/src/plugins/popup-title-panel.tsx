@@ -9,7 +9,7 @@
 import { __ } from '@wordpress/i18n';
 import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import { TextControl } from '@wordpress/components';
-import { useSelect, subscribe } from '@wordpress/data';
+import { useSelect, subscribe, dispatch } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
@@ -93,6 +93,10 @@ function setupSaveSubscription() {
 					console.error(
 						'Failed to save popup title:',
 						error
+					);
+					dispatch( 'core/notices' ).createErrorNotice(
+						__( 'Failed to save popup title.', 'popup-maker' ),
+						{ type: 'snackbar' }
 					);
 				} );
 		}
