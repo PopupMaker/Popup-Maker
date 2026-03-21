@@ -17,7 +17,7 @@
 **Improvements**
 
 -   Popup title field is now editable in the Block Editor sidebar, matching the classic editor experience.
--   URL tracking parameter names (`pid`, `cta`, `notrack`) are now filterable via `popup_maker/param_name/{key}`, allowing site admins to resolve conflicts with other plugins.
+-   URL tracking parameter names (`pid`, `cta`, `notrack`) are now filterable via `popup_maker/param_name/{key}`, allowing site admins to resolve conflicts with other plugins. Example: `add_filter( 'popup_maker/param_name/popup_id', function() { return 'pum_id'; } );`
 -   Improved PID tracking reliability by firing template_redirect at priority 0, ensuring tracking occurs before other plugins that might redirect.
 -   Enhanced all Popup list views with sortable Enabled column and bulk enable/disable actions for easier management of multiple popups.
 -   Block library assets (CSS) loading unnecessarily on all front-end pages. WordPress now automatically loads these styles only when Popup Maker blocks are actually rendered.
