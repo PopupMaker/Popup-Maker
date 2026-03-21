@@ -157,12 +157,15 @@ function safe_redirect( $url, $status = 302 ) {
  */
 function progress_bar( $percentage, $args = [] ) {
 
-	$args = wp_parse_args( $args, [
-		'size'            => null,
-		'title'           => '',
-		'class'           => '',
-		'show_percentage' => true,
-	] );
+	$args = wp_parse_args(
+		$args,
+		[
+			'size'            => null,
+			'title'           => '',
+			'class'           => '',
+			'show_percentage' => true,
+		]
+	);
 
 	$classes = [
 		'pum-progress-bar',
@@ -186,4 +189,160 @@ function progress_bar( $percentage, $args = [] ) {
 	}
 
 	echo '</div>';
+}
+
+/**
+ * Get a filterable query parameter name.
+ *
+ * Used for URL tracking parameters like 'pid' which can conflict
+ * with other plugins. Site admins can filter to change the param name.
+ *
+ * @since 1.22.0
+ *
+ * @param string $key Parameter key (e.g., 'popup_id').
+ *
+ * @return string The parameter name.
+ */
+function get_param_name( $key ) {
+	static $cache = [];
+
+	if ( ! isset( $cache[ $key ] ) ) {
+		$defaults      = [ 'popup_id' => 'pid' ];
+		$cache[ $key ] = sanitize_key(
+			apply_filters(
+				"popup_maker/param_name/{$key}",
+				$defaults[ $key ] ?? $key
+			)
+		);
+	}
+
+	return $cache[ $key ];
+}
+
+/**
+ * Get all filterable query parameter names.
+ *
+ * @since 1.22.0
+ *
+ * @return array<string,string> Parameter names keyed by their identifier.
+ */
+function get_param_names() {
+	return [
+		'popup_id' => get_param_name( 'popup_id' ),
+		'cta'      => get_param_name( 'cta' ),
+		'notrack'  => get_param_name( 'notrack' ),
+	];
+}
+
+/**
+ * Get a query parameter value with type safety and filtering support.
+ *
+ * Uses the filterable parameter name system via get_param_name().
+ * Returns fallback if parameter is not set OR is an empty string.
+ * Note: Allows "0" as a valid value (unlike empty() check).
+ *
+ * @since 1.22.0
+ *
+ * @param string $key      Parameter key (e.g., 'popup_id', 'cta').
+ * @param mixed  $fallback Fallback value if parameter not set or empty.
+ * @param string $type     Type to cast value to: 'string', 'int', 'bool', 'key', 'email', 'url', 'array'.
+ *                         Defaults to 'string'.
+ *
+ * @return mixed The sanitized parameter value, or fallback if not set/empty.
+ */
+function get_param_value( $key, $fallback = null, $type = 'string' ) {
+	$param_name = get_param_name( $key );
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Parameter reading, not state-changing operation.
+	if ( ! isset( $_GET[ $param_name ] ) || '' === $_GET[ $param_name ] ) {
+		return $fallback;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitization handled by sanitize_param_by_type().
+	$value = wp_unslash( $_GET[ $param_name ] );
+
+	return sanitize_param_by_type( $value, $type );
+}
+
+/**
+ * Get a POST parameter value with type safety.
+ *
+ * Separate function for POST to enforce deliberate intent.
+ * Note: POST parameters do not use the filterable name system.
+ *
+ * @since 1.22.0
+ *
+ * @param string $key      Parameter key (e.g., 'action', 'nonce').
+ * @param mixed  $fallback Fallback value if parameter not set or empty.
+ * @param string $type     Type to cast value to: 'string', 'int', 'bool', 'key', 'email', 'url', 'array'.
+ *                         Defaults to 'string'.
+ *
+ * @return mixed The sanitized parameter value, or fallback if not set/empty.
+ */
+function get_post_param_value( $key, $fallback = null, $type = 'string' ) {
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Parameter reading, not state-changing operation.
+	if ( ! isset( $_POST[ $key ] ) || '' === $_POST[ $key ] ) {
+		return $fallback;
+	}
+
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitization handled by sanitize_param_by_type().
+	$value = wp_unslash( $_POST[ $key ] );
+
+	return sanitize_param_by_type( $value, $type );
+}
+
+/**
+ * Sanitize a parameter value based on type specification.
+ *
+ * Reusable helper for type-safe sanitization of request data.
+ *
+ * @since 1.22.0
+ *
+ * @param mixed  $value Raw parameter value.
+ * @param string $type  Type to sanitize for: 'string', 'int', 'bool', 'key', 'email', 'url', 'array'.
+ *
+ * @return mixed Sanitized value.
+ */
+function sanitize_param_by_type( $value, $type ) {
+	// Handle array values passed when expecting scalar types.
+	if ( is_array( $value ) && 'array' !== $type ) {
+		if ( ! empty( $value ) ) {
+			$value = reset( $value );
+		} else {
+			return 'bool' === $type ? false : ( 'int' === $type ? 0 : '' );
+		}
+	}
+
+	switch ( $type ) {
+		case 'int':
+			return absint( $value );
+
+		case 'bool':
+			return filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE ) ?? false;
+
+		case 'key':
+			return sanitize_key( $value );
+
+		case 'email':
+			return sanitize_email( $value );
+
+		case 'url':
+			return esc_url_raw( $value );
+
+		case 'array':
+			if ( ! is_array( $value ) ) {
+				return [];
+			}
+			// Safely handle nested arrays by only sanitizing scalar values.
+			return array_map(
+				function ( $v ) {
+					return is_scalar( $v ) ? sanitize_text_field( (string) $v ) : '';
+				},
+				$value
+			);
+
+		case 'string':
+		default:
+			return sanitize_text_field( $value );
+	}
 }

@@ -183,7 +183,7 @@ abstract class CallToAction implements \PopupMaker\Interfaces\CallToAction {
 		} else {
 			// Default fallback.
 			/** @var string[] $cta_args */
-			$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ 'cta', 'pid' ] );
+			$cta_args = apply_filters( 'popup_maker/cta_valid_url_args', [ \PopupMaker\get_param_name( 'cta' ), \PopupMaker\get_param_name( 'popup_id' ) ] );
 			$url      = remove_query_arg( $cta_args );
 			\PopupMaker\safe_redirect( $url );
 		}
