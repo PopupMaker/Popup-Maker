@@ -6,18 +6,17 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
-$has_title  = '' !== pum_get_popup_title();
-$show_title = pum_show_popup_title();
+$has_title = pum_get_popup_title() !== '';
 
 ?>
-<div
-	id="pum-<?php pum_popup_ID(); ?>"
-	role="dialog"
+<div 
+	id="pum-<?php pum_popup_ID(); ?>" 
+	role="dialog" 
 	aria-modal="false"
 <?php if ( $has_title ) : ?>
 	aria-labelledby="pum_popup_title_<?php pum_popup_ID(); ?>"
 <?php endif; ?>
-	class="<?php pum_popup_classes(); ?>"
+	class="<?php pum_popup_classes(); ?>" 
 	<?php pum_popup_data_attr(); ?>
 >
 
@@ -29,17 +28,12 @@ $show_title = pum_show_popup_title();
 		<?php
 		/**
 		 * Render the title if not empty.
-		 * If display_title is disabled, render as screen-reader-only for accessibility.
 		 */
 		?>
-		<?php if ( $show_title ) : ?>
+		<?php if ( $has_title ) : ?>
 			<div id="pum_popup_title_<?php pum_popup_ID(); ?>" class="<?php pum_popup_classes( null, 'title' ); ?>">
 				<?php pum_popup_title(); ?>
 			</div>
-		<?php elseif ( $has_title ) : ?>
-			<span id="pum_popup_title_<?php pum_popup_ID(); ?>" class="screen-reader-text">
-				<?php pum_popup_title(); ?>
-			</span>
 		<?php endif; ?>
 
 		<?php do_action( 'pum_popup_before_content' ); ?>

@@ -174,56 +174,6 @@ class PostTypes extends Controller {
 			]
 		);
 
-		register_post_meta(
-			$this->get_type_key( 'popup' ),
-			'popup_settings',
-			[
-				'show_in_rest'      => [
-					'schema' => [
-						'type'                 => 'object',
-						'additionalProperties' => true,
-					],
-				],
-				'single'            => true,
-				'type'              => 'object',
-				'sanitize_callback' => [ $this, 'sanitize_popup_settings_meta' ],
-				'auth_callback'     => function () {
-					return current_user_can( 'edit_posts' );
-				},
-			]
-		);
-	}
-
-	/**
-	 * Sanitize popup settings meta for REST API save.
-	 *
-	 * @param mixed $value The value to sanitize.
-	 *
-	 * @return array The sanitized settings array.
-	 */
-	public function sanitize_popup_settings_meta( $value ) {
-		if ( ! is_array( $value ) ) {
-			return [];
-		}
-
-		$sanitized = [];
-
-		foreach ( $value as $key => $setting ) {
-			$key = sanitize_key( $key );
-
-			if ( is_bool( $setting ) ) {
-				$sanitized[ $key ] = (bool) $setting;
-			} elseif ( is_numeric( $setting ) ) {
-				$sanitized[ $key ] = is_float( $setting ) ? (float) $setting : (int) $setting;
-			} elseif ( is_string( $setting ) ) {
-				$sanitized[ $key ] = sanitize_text_field( $setting );
-			} elseif ( is_array( $setting ) ) {
-				// Nested arrays (conditions, triggers, cookies) pass through.
-				$sanitized[ $key ] = $setting;
-			}
-		}
-
-		return $sanitized;
 	}
 
 	/**

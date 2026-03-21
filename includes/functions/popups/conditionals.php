@@ -63,25 +63,3 @@ function pum_show_close_button( $popup_id = null ) {
 
 	return $popup->show_close_button();
 }
-
-/**
- * Whether the popup title should be displayed on the frontend.
- *
- * Returns true when display_title setting is enabled (defaults true)
- * AND the popup has a non-empty title.
- *
- * @param null|int $popup_id Popup ID or null for current popup.
- *
- * @return bool
- */
-function pum_show_popup_title( $popup_id = null ) {
-	$popup = pum_get_popup( $popup_id );
-
-	if ( ! pum_is_popup( $popup ) ) {
-		return false;
-	}
-
-	$has_title = '' !== pum_get_popup_title( $popup_id );
-
-	return $has_title && $popup->get_setting( 'display_title', true );
-}
