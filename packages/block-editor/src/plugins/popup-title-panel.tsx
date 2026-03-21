@@ -9,7 +9,7 @@
 import { __ } from '@wordpress/i18n';
 import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import { TextControl } from '@wordpress/components';
-import { useSelect, subscribe, dispatch } from '@wordpress/data';
+import { useSelect, subscribe, select, dispatch } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
@@ -50,19 +50,7 @@ function setupSaveSubscription() {
 	let wasSaving = false;
 
 	subscribe( () => {
-		const editor = (
-			window as typeof window & {
-				wp?: {
-					data?: {
-						select: ( store: string ) => EditorStore;
-					};
-				};
-			}
-		).wp?.data?.select( 'core/editor' ) as EditorStore | null;
-
-		if ( ! editor ) {
-			return;
-		}
+		const editor = select( 'core/editor' ) as EditorStore;
 
 		const isSaving = editor.isSavingPost();
 		const isAutosaving = editor.isAutosavingPost();
