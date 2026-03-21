@@ -169,7 +169,7 @@ class PostTypes extends Controller {
 				'type'              => 'string',
 				'sanitize_callback' => 'sanitize_text_field',
 				'auth_callback'     => function () {
-					return current_user_can( 'edit_posts' );
+					return current_user_can( $this->container->get_permission( 'edit_popups' ) );
 				},
 			]
 		);
