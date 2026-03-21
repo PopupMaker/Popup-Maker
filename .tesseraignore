@@ -1,0 +1,5 @@
+.storybook/
+.wordpress-org/
+vendor-prefixed/
+bin/
+languages/
