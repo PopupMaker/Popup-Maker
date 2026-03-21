@@ -56,8 +56,7 @@ function setupSaveSubscription() {
 		const isAutosaving = editor.isAutosavingPost();
 		const didSaveSucceed = editor.didPostSaveRequestSucceed();
 
-		const justFinishedSaving =
-			wasSaving && ! isSaving && ! isAutosaving;
+		const justFinishedSaving = wasSaving && ! isSaving && ! isAutosaving;
 		wasSaving = isSaving && ! isAutosaving;
 
 		if (
@@ -78,10 +77,7 @@ function setupSaveSubscription() {
 				} )
 				.catch( ( error ) => {
 					// eslint-disable-next-line no-console
-					console.error(
-						'Failed to save popup title:',
-						error
-					);
+					console.error( 'Failed to save popup title:', error );
 					dispatch( 'core/notices' ).createErrorNotice(
 						__( 'Failed to save popup title.', 'popup-maker' ),
 						{ type: 'snackbar' }
@@ -98,14 +94,13 @@ const PopupTitlePanel = () => {
 	const [ localTitle, setLocalTitle ] = useState( '' );
 	const [ isInitialized, setIsInitialized ] = useState( false );
 
-	const { postType, postId, popupTitle } = useSelect( ( select ) => {
-		const editor = select( 'core/editor' ) as EditorStore;
+	const { postType, postId, popupTitle } = useSelect( ( sel ) => {
+		const editor = sel( 'core/editor' ) as EditorStore;
 		return {
 			postType: editor.getCurrentPostType(),
 			postId: editor.getCurrentPostId(),
 			popupTitle:
-				editor.getEditedPostAttribute< string >( 'popup_title' ) ??
-				'',
+				editor.getEditedPostAttribute< string >( 'popup_title' ) ?? '',
 		};
 	}, [] );
 
