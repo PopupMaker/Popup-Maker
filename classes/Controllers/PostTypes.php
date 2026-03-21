@@ -121,6 +121,7 @@ class PostTypes extends Controller {
 				'editor',
 				'revisions',
 				'author',
+				'custom-fields',
 			],
 			// Rest.
 			'show_in_rest'        => true,
@@ -157,6 +158,22 @@ class PostTypes extends Controller {
 		$popup_args = apply_filters( 'popmake_popup_post_type_args', $popup_args );
 
 		register_post_type( $this->get_type_key( 'popup' ), $popup_args );
+
+		// Register popup meta for REST API (block editor support).
+		register_post_meta(
+			$this->get_type_key( 'popup' ),
+			'popup_title',
+			[
+				'show_in_rest'      => true,
+				'single'            => true,
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'auth_callback'     => function () {
+					return current_user_can( $this->container->get_permission( 'edit_popups' ) );
+				},
+			]
+		);
+
 	}
 
 	/**
@@ -543,7 +560,7 @@ class PostTypes extends Controller {
 	 *
 	 * @param bool    $replace   Whether to replace the editor.
 	 * @param WP_Post $post      The post object.
-	 * @return void
+	 * @return bool Whether to replace the editor.
 	 */
 	public function replace_editor( $replace, $post ) {
 		// Only handle our post types.

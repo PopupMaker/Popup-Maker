@@ -111,6 +111,25 @@ Misc
 		margin: 0 0 3px;
 		background-color: #fff;
 	}
+
+	.pum-display-title-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		margin: 8px 0 4px;
+		cursor: pointer;
+		font-size: 13px;
+		color: #50575e;
+
+		input[type="checkbox"] {
+			margin: 0;
+			cursor: pointer;
+		}
+
+		&:hover {
+			color: #135e96;
+		}
+	}
 }
 
 .post-type-popup {
