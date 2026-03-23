@@ -122,6 +122,8 @@ class PUM_Admin_Settings {
 
 		try {
 			$license_service = \PopupMaker\plugin( 'license' );
+			$succeeded       = false;
+			$message         = __( 'Unknown license operation.', 'popup-maker' );
 
 			switch ( $operation ) {
 				case 'activate':
