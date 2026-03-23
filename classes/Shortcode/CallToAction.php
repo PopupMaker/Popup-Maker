@@ -207,6 +207,7 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			'text-only' === $atts['style'] ? 'pum-cta--button' : null,
 		];
 
+		// Build link classes, filtering out empty values.
 		$link_classes = array_filter(
 			[
 				'pum-cta',

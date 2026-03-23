@@ -6,13 +6,13 @@
  * styles that work without block CSS loaded.
  */
 
-// Wrapper styles for shortcode CTA buttons.
+/* Wrapper styles for shortcode CTA buttons. */
 .pum-cta-wrapper {
 	display: inline-block;
-	width: auto;
 	max-width: 100%;
+	width: auto;
 
-	// Alignment classes.
+	/* Alignment classes. */
 	&.alignleft {
 		display: block;
 		text-align: left;
@@ -38,52 +38,54 @@
 	}
 }
 
-// Base CTA button styles - only apply within shortcode wrapper to avoid
-// conflicts with block styles when block CSS is loaded.
+/**
+ * Base CTA button styles - only apply within shortcode wrapper to avoid
+ * conflicts with block styles when block CSS is loaded.
+ */
 .pum-cta-wrapper .pum-cta {
-	display: inline-block;
-	width: auto;
+	border-radius: 9999px;
 	box-sizing: border-box;
 	cursor: pointer;
-	text-align: center;
-	text-decoration: none;
-	border-radius: 9999px;
-	padding: 1rem 2.25rem;
+	display: inline-block;
 	font-family: inherit;
 	font-size: inherit;
 	line-height: inherit;
+	padding: 1rem 2.25rem;
+	text-align: center;
+	text-decoration: none;
 	transition: filter 0.15s ease-in-out, background-color 0.15s ease-in-out;
+	width: auto;
 }
 
-// Fill style (default).
+/* Fill style (default). */
 .pum-cta-wrapper:not(.is-style-outline):not(.is-style-text-only) .pum-cta {
 	background-color: var(--wp--preset--color--contrast, #000);
-	color: var(--wp--preset--color--base, #fff);
 	border: none;
+	color: var(--wp--preset--color--base, #fff);
 
 	&:hover {
 		filter: brightness(0.85);
 	}
 }
 
-// Outline style.
+/* Outline style. */
 .pum-cta-wrapper.is-style-outline .pum-cta {
 	background-color: transparent;
-	color: var(--wp--preset--color--contrast, currentColor);
-	border: 1px solid currentColor;
+	border: 1px solid currentcolor;
+	color: var(--wp--preset--color--contrast, currentcolor);
 	padding: calc(1rem - 1px) calc(2.25rem - 1px);
 
 	&:hover {
-		filter: brightness(1.05);
 		background-color: rgba(0, 0, 0, 0.05);
+		filter: brightness(1.05);
 	}
 }
 
-// Text-only style.
+/* Text-only style. */
 .pum-cta-wrapper.is-style-text-only .pum-cta {
 	background-color: transparent;
-	color: var(--wp--preset--color--contrast, currentColor);
 	border: none;
+	color: var(--wp--preset--color--contrast, currentcolor);
 	padding: 0.5rem 1rem;
 
 	&:hover {
@@ -91,11 +93,11 @@
 	}
 }
 
-// Fallback colors when CSS custom properties are not available.
+/* Fallback colors when CSS custom properties are not available. */
 @supports not (color: var(--wp--preset--color--contrast)) {
 	.pum-cta-wrapper:not(.is-style-outline):not(.is-style-text-only) .pum-cta {
 		background-color: #1e1e1e;
-		color: #ffffff;
+		color: #fff;
 	}
 
 	.pum-cta-wrapper.is-style-outline .pum-cta,
