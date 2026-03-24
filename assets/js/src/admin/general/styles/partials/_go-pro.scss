@@ -484,12 +484,12 @@
 
 /* Responsive — stack layout on narrow admin widths. */
 @media (max-width: 960px) {
-	.pum-go-pro-hero__inner {
+	.pum-go-pro-hero__body {
 		flex-direction: column;
 		align-items: flex-start;
 	}
 
-	.pum-go-pro-stats {
+	.pum-go-pro-hero__stats {
 		width: 100%;
 		justify-content: flex-start;
 	}

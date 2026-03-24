@@ -971,80 +971,80 @@ class PUM_Admin_Settings {
 
 		// Only output template if there's something to show.
 		if ( $upsell_hero || $upsell_features ) :
-		?>
-		<template id="pum-pro-upsell-tpl">
-			<div class="pum-pro-upsell-banner <?php echo $upsell_hero ? 'pum-pro-upsell-banner--has-hero' : ''; ?>" style="position:relative;">
-				<?php echo $upsell_hero; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<?php echo $upsell_features; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<button type="button" class="pum-pro-upsell-dismiss" aria-label="<?php esc_attr_e( 'Dismiss', 'popup-maker' ); ?>">&times;</button>
-			</div>
-		</template>
-		<script>
-		(function($){
-			var KEY = 'pum_pro_hero_dismissed';
-			var EXPIRY_DAYS = 14;
-			var tpl = document.getElementById('pum-pro-upsell-tpl');
-			var injected = false;
+			?>
+			<template id="pum-pro-upsell-tpl">
+				<div class="pum-pro-upsell-banner <?php echo $upsell_hero ? 'pum-pro-upsell-banner--has-hero' : ''; ?>" style="position:relative;">
+					<?php echo $upsell_hero; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo $upsell_features; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<button type="button" class="pum-pro-upsell-dismiss" aria-label="<?php esc_attr_e( 'Dismiss', 'popup-maker' ); ?>">&times;</button>
+				</div>
+			</template>
+			<script>
+			(function($){
+				var KEY = 'pum_pro_hero_dismissed';
+				var EXPIRY_DAYS = 14;
+				var tpl = document.getElementById('pum-pro-upsell-tpl');
+				var injected = false;
 
-			function isGoProPanel($panel) {
-				return ($panel.attr('id') || '').indexOf('go-pro') !== -1;
-			}
-
-			function isDismissed() {
-				var ts = parseInt(localStorage.getItem(KEY), 10);
-				if (!ts) return false;
-				if (Date.now() - ts > EXPIRY_DAYS * 86400000) {
-					localStorage.removeItem(KEY);
-					return false;
+				function isGoProPanel($panel) {
+					return ($panel.attr('id') || '').indexOf('go-pro') !== -1;
 				}
-				return true;
-			}
 
-			function updateVisibility() {
-				var dismissed = isDismissed();
-				$('.pum-pro-upsell-banner').each(function(){
-					var $banner = $(this);
-					if (isGoProPanel($banner.parent())) {
-						$banner.show();
-					} else {
-						$banner.toggle(!dismissed);
+				function isDismissed() {
+					var ts = parseInt(localStorage.getItem(KEY), 10);
+					if (!ts) return false;
+					if (Date.now() - ts > EXPIRY_DAYS * 86400000) {
+						localStorage.removeItem(KEY);
+						return false;
 					}
-				});
-			}
+					return true;
+				}
 
-			$(document).on('pum_init', function(){
-				if (injected) return;
-				injected = true;
+				function updateVisibility() {
+					var dismissed = isDismissed();
+					$('.pum-pro-upsell-banner').each(function(){
+						var $banner = $(this);
+						if (isGoProPanel($banner.parent())) {
+							$banner.show();
+						} else {
+							$banner.toggle(!dismissed);
+						}
+					});
+				}
 
-				// Inject into each main tab panel.
-				$('#pum-settings-container > .pum-tabs-container').first().children('div.tab-content').each(function(){
-					var $panel = $(this);
-					var $banner = $(tpl.content.cloneNode(true)).children().first();
+				$(document).on('pum_init', function(){
+					if (injected) return;
+					injected = true;
 
-					if (isGoProPanel($panel)) {
-						$banner.find('.pum-pro-upsell-dismiss').remove();
-					}
+					// Inject into each main tab panel.
+					$('#pum-settings-container > .pum-tabs-container').first().children('div.tab-content').each(function(){
+						var $panel = $(this);
+						var $banner = $(tpl.content.cloneNode(true)).children().first();
 
-					$panel.prepend($banner);
-				});
+						if (isGoProPanel($panel)) {
+							$banner.find('.pum-pro-upsell-dismiss').remove();
+						}
 
-				// Set initial visibility.
-				updateVisibility();
+						$panel.prepend($banner);
+					});
 
-				// Dismiss handler.
-				$(document).on('click', '.pum-pro-upsell-dismiss', function(){
-					localStorage.setItem(KEY, Date.now());
+					// Set initial visibility.
 					updateVisibility();
-				});
 
-				// Re-check on tab switch.
-				$(document).on('click', '#pum-settings-container li.tab', function(){
-					updateVisibility();
+					// Dismiss handler.
+					$(document).on('click', '.pum-pro-upsell-dismiss', function(){
+						localStorage.setItem(KEY, Date.now());
+						updateVisibility();
+					});
+
+					// Re-check on tab switch.
+					$(document).on('click', '#pum-settings-container li.tab', function(){
+						updateVisibility();
+					});
 				});
-			});
-		})(jQuery);
-		</script>
-		<?php
+			})(jQuery);
+			</script>
+			<?php
 		endif;
 	}
 
