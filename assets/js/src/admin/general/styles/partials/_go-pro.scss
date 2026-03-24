@@ -14,6 +14,35 @@
 	margin: -8px 0 16px;
 }
 
+/* Dismiss button — adapts color based on whether hero (dark bg) is present. */
+.pum-pro-upsell-dismiss {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	background: none;
+	border: none;
+	font-size: 18px;
+	cursor: pointer;
+	line-height: 1;
+	padding: 4px 6px;
+	z-index: 1;
+	color: #0f172a;
+	opacity: 0.5;
+	transition: opacity 0.15s;
+
+	&:hover {
+		opacity: 0.8;
+	}
+
+	.pum-pro-upsell-banner--has-hero & {
+		color: rgba(255, 255, 255, 0.7);
+
+		&:hover {
+			color: #fff;
+		}
+	}
+}
+
 /* When Pro+ bar follows the hero, merge them visually. */
 .pum-go-pro-hero + .pum-proplus-bar {
 	border-top: none;
@@ -249,6 +278,14 @@
 	}
 }
 
+.pum-go-pro-hero__price-note {
+	display: block;
+	margin-top: 8px;
+	font-size: 13px;
+	color: #94a3b8;
+	letter-spacing: 0.01em;
+}
+
 /* Pro+ Pitch Bar */
 .pum-proplus-bar {
 	position: relative;
@@ -408,6 +445,19 @@
 	}
 }
 
+.pum-proplus-bar__cta-wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+.pum-proplus-bar__price-note {
+	margin-top: 4px;
+	font-size: 12px;
+	color: #64748b;
+}
+
 /* CTA Section */
 .pum-go-pro-cta {
 	text-align: center;
@@ -429,5 +479,31 @@
 		margin: 0;
 		color: #50575e;
 		font-size: 13px;
+	}
+}
+
+/* Responsive — stack layout on narrow admin widths. */
+@media (max-width: 960px) {
+	.pum-go-pro-hero__inner {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.pum-go-pro-stats {
+		width: 100%;
+		justify-content: flex-start;
+	}
+
+	.pum-go-pro-hero__cta {
+		margin-left: 0;
+	}
+
+	.pum-proplus-bar {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.pum-proplus-bar__cta {
+		white-space: normal;
 	}
 }
