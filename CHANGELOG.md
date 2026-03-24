@@ -25,6 +25,7 @@
 
 **Fixes**
 
+-   Fixed CTA shortcode buttons rendering as plain links instead of styled buttons, with proper support for fill, outline, and text-only styles in both classic and block editor popups.
 -   Fixed mailto: and tel: links inside popups being incorrectly modified with tracking parameters, which broke email and phone links.
 -   Fixed Fluent Forms integration fatal error when using double opt-in. Closes #1094.
 -   Fixed Time Delay trigger settings tab displaying blank when switching from Click Trigger advanced tab. Closes #1109.
