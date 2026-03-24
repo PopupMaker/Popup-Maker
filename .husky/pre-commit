@@ -1,3 +1,0 @@
-# Pre-commit hook placeholder
-# Tests will be added in a future phase
-# For now, commitlint (commit-msg hook) handles commit validation

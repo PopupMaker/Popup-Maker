@@ -64,8 +64,6 @@
 		"@code-atlantic/browserslist-config": "^1.0.1",
 		"@code-atlantic/eslint-plugin": "^1.3.1",
 		"@code-atlantic/stylelint-config": "^1.3.0",
-		"@commitlint/cli": "^20.2.0",
-		"@commitlint/config-conventional": "^20.2.0",
 		"@jest/globals": "^29.7.0",
 		"@nx/playwright": "20.3.3",
 		"@nx/storybook": "20.3.3",
@@ -88,7 +86,6 @@
 		"@wordpress/scripts": "^31.6.0",
 		"copy-webpack-plugin": "^12.0.2",
 		"glob": "^11.0.2",
-		"husky": "^9.1.7",
 		"lint-staged": "^15.2.11",
 		"mini-css-extract-plugin": "^2.9.2",
 		"minimist": "^1.2.8",
@@ -160,8 +157,7 @@
 		"packages:bump:minor": "node bin/bump-and-publish-packages.js --version-type=minor",
 		"packages:bump:patch": "node bin/bump-and-publish-packages.js --version-type=patch",
 		"packages:bump:major": "node bin/bump-and-publish-packages.js --version-type=major",
-		"wp-env": "wp-env",
-		"prepare": "husky"
+		"wp-env": "wp-env"
 	},
 	"workspaces": [
 		"./packages/*"
