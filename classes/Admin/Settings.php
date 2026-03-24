@@ -982,6 +982,7 @@ class PUM_Admin_Settings {
 		<script>
 		(function($){
 			var KEY = 'pum_pro_hero_dismissed';
+			var EXPIRY_DAYS = 14;
 			var tpl = document.getElementById('pum-pro-upsell-tpl');
 			var injected = false;
 
@@ -989,8 +990,18 @@ class PUM_Admin_Settings {
 				return ($panel.attr('id') || '').indexOf('go-pro') !== -1;
 			}
 
+			function isDismissed() {
+				var ts = parseInt(localStorage.getItem(KEY), 10);
+				if (!ts) return false;
+				if (Date.now() - ts > EXPIRY_DAYS * 86400000) {
+					localStorage.removeItem(KEY);
+					return false;
+				}
+				return true;
+			}
+
 			function updateVisibility() {
-				var dismissed = !!localStorage.getItem(KEY);
+				var dismissed = isDismissed();
 				$('.pum-pro-upsell-banner').each(function(){
 					var $banner = $(this);
 					if (isGoProPanel($banner.parent())) {
