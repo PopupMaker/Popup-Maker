@@ -122,6 +122,8 @@ class PUM_Admin_Settings {
 
 		try {
 			$license_service = \PopupMaker\plugin( 'license' );
+			$succeeded       = false;
+			$message         = __( 'Unknown license operation.', 'popup-maker' );
 
 			switch ( $operation ) {
 				case 'activate':
@@ -147,7 +149,9 @@ class PUM_Admin_Settings {
 
 				case 'delete':
 					$succeeded = $license_service->remove_license();
-					$message   = __( 'License key deleted successfully!', 'popup-maker' );
+					$message   = $succeeded
+						? __( 'License key deleted successfully!', 'popup-maker' )
+						: __( 'License key deletion failed.', 'popup-maker' );
 					break;
 			}
 
@@ -706,6 +710,174 @@ class PUM_Admin_Settings {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Generate Go Pro hero section with social proof and feature pills.
+	 *
+	 * Compact dark hero matching the v0 design — stats right-aligned,
+	 * features as horizontal pills below a border separator.
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return string HTML content for the hero section.
+	 */
+	public static function field_go_pro_hero() {
+		ob_start();
+		?>
+		<div class="pum-go-pro-hero">
+			<div class="pum-go-pro-hero__body">
+				<div class="pum-go-pro-hero__main">
+					<div class="pum-go-pro-hero__title">
+						<img class="pum-go-pro-hero__logo" src="<?php echo esc_url( POPMAKE_URL . '/assets/images/logo-light.png' ); ?>" alt="<?php esc_attr_e( 'Popup Maker', 'popup-maker' ); ?>" />
+						<span class="pum-go-pro-hero__pro-badge"><?php esc_html_e( 'Pro', 'popup-maker' ); ?></span>
+					</div>
+					<p class="pum-go-pro-hero__tagline">&#x1F449; <?php esc_html_e( "You're leaving conversions on the table every day without these tools.", 'popup-maker' ); ?></p>
+
+					<ul class="pum-go-pro-hero__features">
+						<li><?php esc_html_e( '6 Exit Intent Methods — desktop + mobile', 'popup-maker' ); ?></li>
+						<li><?php esc_html_e( 'Event-Based Analytics Dashboard', 'popup-maker' ); ?></li>
+						<li><?php esc_html_e( '50+ Advanced Targeting Conditions', 'popup-maker' ); ?></li>
+						<li><?php esc_html_e( 'FluentCRM Marketing Automation', 'popup-maker' ); ?></li>
+						<li><?php esc_html_e( 'CTA Value Tracking & Export/Import', 'popup-maker' ); ?></li>
+						<li><?php esc_html_e( 'Campaign Scheduling with Timezones', 'popup-maker' ); ?></li>
+					</ul>
+				</div>
+
+				<div class="pum-go-pro-hero__stats">
+					<div class="pum-go-pro-stat">
+						<div class="pum-go-pro-stat__value">780K+</div>
+						<div class="pum-go-pro-stat__label"><?php esc_html_e( 'Active Sites', 'popup-maker' ); ?></div>
+					</div>
+					<div class="pum-go-pro-stat">
+						<div class="pum-go-pro-stat__value">4,271</div>
+						<div class="pum-go-pro-stat__label"><?php esc_html_e( '5-Star Reviews', 'popup-maker' ); ?></div>
+					</div>
+					<div class="pum-go-pro-stat">
+						<div class="pum-go-pro-stat__value">4.9</div>
+						<div class="pum-go-pro-stat__label"><?php esc_html_e( 'Rating', 'popup-maker' ); ?></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="pum-go-pro-hero__footer">
+				<a href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'settings-hero', 'get-pro-cta' ) ); ?>"
+				   target="_blank" rel="noopener"
+				   class="pum-go-pro-hero__cta">
+					<?php esc_html_e( 'Increase My Conversion Rate', 'popup-maker' ); ?>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+				</a>
+				<span class="pum-go-pro-hero__price-note"><?php esc_html_e( 'Upgrade to Pro — $99/yr', 'popup-maker' ); ?></span>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Generate Go Pro contextual pitch bars and CTA.
+	 *
+	 * Renders horizontal Pro+ pitch bars for detected integrations
+	 * and a manage license section for Pro users.
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return string HTML content for the features section.
+	 */
+	public static function field_go_pro_features() {
+		// Detect integrations for contextual messaging.
+		$integrations    = PUM_Admin_Helpers::get_detected_integrations();
+		$has_woocommerce = isset( $integrations['woocommerce'] );
+		$has_edd         = isset( $integrations['edd'] );
+		$has_lms         = isset( $integrations['lifterlms'] );
+		$has_ecommerce   = $has_woocommerce || $has_edd;
+		$is_pro_active   = \PopupMaker\plugin( 'license' )->is_license_active();
+
+		// Check individual Pro+ addon status — show bar when platform detected but addon missing.
+		$has_ecom_addon  = pum_extension_enabled( 'ecommerce-popups' );
+		$has_lms_addon   = pum_extension_enabled( 'lms-popups' );
+		$show_ecom_bar   = $has_ecommerce && ! $has_ecom_addon;
+		$show_lms_bar    = $has_lms && ! $has_lms_addon;
+
+		ob_start();
+
+		// Pro+ bars show for ANY user (free or Pro) who has the platform but not the addon.
+		if ( $show_ecom_bar ) {
+			?>
+			<div class="pum-proplus-bar pum-proplus-bar--ecommerce">
+				<div class="pum-proplus-bar__content">
+					<div class="pum-proplus-bar__icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+					</div>
+					<div>
+						<h4 class="pum-proplus-bar__title">
+							<span class="pum-proplus-bar__badge">
+								<?php echo $has_woocommerce ? esc_html__( 'WooCommerce', 'popup-maker' ) : esc_html__( 'EDD', 'popup-maker' ); ?>
+							</span>
+							<span class="pum-proplus-bar__plus">+</span>
+							<span class="pum-proplus-bar__badge pum-proplus-bar__badge--pro"><?php esc_html_e( 'Pro+', 'popup-maker' ); ?></span>
+							<span class="pum-proplus-bar__title-text"><?php esc_html_e( 'Ecommerce Popups', 'popup-maker' ); ?></span>
+						</h4>
+						<p class="pum-proplus-bar__desc">
+							<?php esc_html_e( 'Recover abandoned carts, automate discounts, and track exactly which popups drive sales in your store.', 'popup-maker' ); ?>
+						</p>
+					</div>
+				</div>
+				<div class="pum-proplus-bar__cta-wrap">
+					<a href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'go-pro-tab', 'proplus-ecommerce-pitch' ) ); ?>"
+					   target="_blank" rel="noopener"
+					   class="pum-proplus-bar__cta">
+						<?php esc_html_e( 'Track My Popup Revenue', 'popup-maker' ); ?>
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+					</a>
+					<span class="pum-proplus-bar__price-note"><?php esc_html_e( 'Pro+ — $249/yr', 'popup-maker' ); ?></span>
+				</div>
+			</div>
+			<?php
+		}
+
+		if ( $show_lms_bar ) {
+			?>
+			<div class="pum-proplus-bar pum-proplus-bar--lms">
+				<div class="pum-proplus-bar__content">
+					<div class="pum-proplus-bar__icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+					</div>
+					<div>
+						<h4 class="pum-proplus-bar__title">
+							<span class="pum-proplus-bar__badge pum-proplus-bar__badge--lms"><?php esc_html_e( 'LifterLMS', 'popup-maker' ); ?></span>
+							<span class="pum-proplus-bar__plus">+</span>
+							<span class="pum-proplus-bar__badge pum-proplus-bar__badge--pro"><?php esc_html_e( 'Pro+', 'popup-maker' ); ?></span>
+							<span class="pum-proplus-bar__title-text"><?php esc_html_e( 'LMS Popups', 'popup-maker' ); ?></span>
+						</h4>
+						<p class="pum-proplus-bar__desc">
+							<?php esc_html_e( 'Recover abandoned checkouts, automate enrollment, and track which popups drive course sales and signups.', 'popup-maker' ); ?>
+						</p>
+					</div>
+				</div>
+				<div class="pum-proplus-bar__cta-wrap">
+					<a href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'go-pro-tab', 'proplus-lms-pitch' ) ); ?>"
+					   target="_blank" rel="noopener"
+					   class="pum-proplus-bar__cta">
+						<?php esc_html_e( 'Boost My Course Sales', 'popup-maker' ); ?>
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+					</a>
+					<span class="pum-proplus-bar__price-note"><?php esc_html_e( 'Pro+ — $249/yr', 'popup-maker' ); ?></span>
+				</div>
+			</div>
+			<?php
+		}
+
+		// Show manage license section for Pro users (only on go-pro tab via JS template).
+		if ( $is_pro_active && ! $show_ecom_bar && ! $show_lms_bar ) {
+			?>
+			<div class="pum-go-pro-manage">
+				<h3><?php esc_html_e( 'Manage Your Pro License', 'popup-maker' ); ?></h3>
+				<p><?php esc_html_e( 'Enter your license key below to receive automatic updates and support.', 'popup-maker' ); ?></p>
+			</div>
+			<?php
+		}
+
+		return ob_get_clean();
+	}
 
 	/**
 	 * @return array
@@ -740,6 +912,7 @@ class PUM_Admin_Settings {
 
 				<?php wp_nonce_field( 'pum_settings_nonce', 'pum_settings_nonce' ); ?>
 				<h1><?php esc_html_e( 'Popup Maker Settings', 'popup-maker' ); ?></h1>
+
 				<div id="pum-settings-container" class="pum-settings-container">
 					<div class="pum-no-js" style="padding: 0 12px;">
 						<p>
@@ -792,6 +965,87 @@ class PUM_Admin_Settings {
 		</div>
 
 		<?php
+		// Output upsell template — hero for free users, Pro+ bars for anyone missing addons.
+		$upsell_hero     = \PopupMaker\plugin( 'license' )->is_license_active() ? '' : self::field_go_pro_hero();
+		$upsell_features = self::field_go_pro_features();
+
+		// Only output template if there's something to show.
+		if ( $upsell_hero || $upsell_features ) :
+			?>
+			<template id="pum-pro-upsell-tpl">
+				<div class="pum-pro-upsell-banner <?php echo $upsell_hero ? 'pum-pro-upsell-banner--has-hero' : ''; ?>" style="position:relative;">
+					<?php echo $upsell_hero; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo $upsell_features; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<button type="button" class="pum-pro-upsell-dismiss" aria-label="<?php esc_attr_e( 'Dismiss', 'popup-maker' ); ?>">&times;</button>
+				</div>
+			</template>
+			<script>
+			(function($){
+				var KEY = 'pum_pro_hero_dismissed';
+				var EXPIRY_DAYS = 14;
+				var tpl = document.getElementById('pum-pro-upsell-tpl');
+				var injected = false;
+
+				function isGoProPanel($panel) {
+					return ($panel.attr('id') || '').indexOf('go-pro') !== -1;
+				}
+
+				function isDismissed() {
+					var ts = parseInt(localStorage.getItem(KEY), 10);
+					if (!ts) return false;
+					if (Date.now() - ts > EXPIRY_DAYS * 86400000) {
+						localStorage.removeItem(KEY);
+						return false;
+					}
+					return true;
+				}
+
+				function updateVisibility() {
+					var dismissed = isDismissed();
+					$('.pum-pro-upsell-banner').each(function(){
+						var $banner = $(this);
+						if (isGoProPanel($banner.parent())) {
+							$banner.show();
+						} else {
+							$banner.toggle(!dismissed);
+						}
+					});
+				}
+
+				$(document).on('pum_init', function(){
+					if (injected) return;
+					injected = true;
+
+					// Inject into each main tab panel.
+					$('#pum-settings-container > .pum-tabs-container').first().children('div.tab-content').each(function(){
+						var $panel = $(this);
+						var $banner = $(tpl.content.cloneNode(true)).children().first();
+
+						if (isGoProPanel($panel)) {
+							$banner.find('.pum-pro-upsell-dismiss').remove();
+						}
+
+						$panel.prepend($banner);
+					});
+
+					// Set initial visibility.
+					updateVisibility();
+
+					// Dismiss handler.
+					$(document).on('click', '.pum-pro-upsell-dismiss', function(){
+						localStorage.setItem(KEY, Date.now());
+						updateVisibility();
+					});
+
+					// Re-check on tab switch.
+					$(document).on('click', '#pum-settings-container li.tab', function(){
+						updateVisibility();
+					});
+				});
+			})(jQuery);
+			</script>
+			<?php
+		endif;
 	}
 
 	/**
