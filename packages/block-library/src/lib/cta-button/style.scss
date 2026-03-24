@@ -1,4 +1,4 @@
-// This variable is repeated across Button, Buttons, and Buttons editor styles.
+/* This variable is repeated across Button, Buttons, and Buttons editor styles. */
 $blocks-block__margin: 0.5em;
 
 // Use our CTA button class but maintain the same styling structure
@@ -9,8 +9,17 @@ $blocks-block__margin: 0.5em;
 	display: inline-block;
 	height: 100%;
 	text-align: center;
-	width: 100%;
 	word-break: break-word;
+
+	/* Only use 100% width when inside the block container, not shortcode wrapper. */
+	.wp-block-popup-maker-cta-buttons & {
+		width: 100%;
+	}
+
+	/* Shortcode context: auto width (shortcode wrapper uses pum-cta-wrapper class). */
+	.pum-cta-wrapper & {
+		width: auto;
+	}
 
 	&.aligncenter,
 	&.has-text-align-center {
