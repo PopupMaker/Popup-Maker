@@ -245,6 +245,10 @@ class PUM_Upsell {
 		// Get total popup views.
 		$popup_views = (int) get_option( 'pum_total_open_count', 0 );
 
+		// Determine if this is a new install (installed after form tracking shipped).
+		$installed_on = get_option( 'pum_reviews_installed_on', '' );
+		$is_new_install = ! empty( $installed_on ) && strtotime( $installed_on ) > strtotime( '2026-04-01' );
+
 		$triggers = [
 
 			/*
@@ -255,12 +259,19 @@ class PUM_Upsell {
 				'pri'      => 100,
 				'triggers' => [
 					'first_form_conversion' => [
-						'message'      => sprintf(
-							/* translators: 1: Opening link tag, 2: Closing link tag. */
-							esc_html__( '🎉 Congrats on your first form submission! %1$sUpgrade to Pro%2$s for exit intent triggers, conversion analytics, and advanced targeting.', 'popup-maker' ),
-							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'first-form-milestone' ) ) . '" target="_blank" rel="noopener">',
-							'</a>'
-						),
+						'message'      => $is_new_install
+							? sprintf(
+								/* translators: 1: Opening link tag, 2: Closing link tag. */
+								esc_html__( '🎉 Congrats on your first form submission! %1$sUpgrade to Pro%2$s for exit intent triggers, conversion analytics, and advanced targeting.', 'popup-maker' ),
+								'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'first-form-milestone' ) ) . '" target="_blank" rel="noopener">',
+								'</a>'
+							)
+							: sprintf(
+								/* translators: 1: Opening link tag, 2: Closing link tag. */
+								esc_html__( '📊 Form conversion tracking is now live! Your first submission has been captured. %1$sSee what\'s converting with Pro analytics%2$s.', 'popup-maker' ),
+								'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'first-form-milestone' ) ) . '" target="_blank" rel="noopener">',
+								'</a>'
+							),
 						'conditions'   => [
 							1 === $form_count,
 						],
