@@ -257,7 +257,7 @@ class PUM_Upsell {
 					'first_form_conversion' => [
 						'message'      => sprintf(
 							/* translators: 1: Opening link tag, 2: Closing link tag. */
-							esc_html__( '🎉 Congrats on your first form submission! %1$sIncrease signups by 300-500%% with Exit Intent%2$s and advanced targeting.', 'popup-maker' ),
+							esc_html__( '🎉 Congrats on your first form submission! %1$sUpgrade to Pro%2$s for exit intent triggers, conversion analytics, and advanced targeting.', 'popup-maker' ),
 							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'first-form-milestone' ) ) . '" target="_blank" rel="noopener">',
 							'</a>'
 						),
@@ -325,38 +325,38 @@ class PUM_Upsell {
 			'conversion_extrapolation' => [
 				'pri'      => 80,
 				'triggers' => [
-					'ecommerce_exit_intent' => [
+					'ecommerce_extrapolation' => [
 						'message'      => sprintf(
 							/* translators: 1: Number of tracked form submissions, 2: Estimated additional submissions, 3: Opening link tag, 4: Closing link tag. */
-							esc_html__( '💰 You\'ve tracked %1$d form submissions. %3$sWith Pro+ Exit Intent, you could capture ~%2$d more%4$s!', 'popup-maker' ),
+							esc_html__( '💰 You\'ve tracked %1$d form submissions. %3$sWith Pro+ Ecommerce Popups, recover abandoned carts and capture ~%2$d more sales%4$s!', 'popup-maker' ),
 							$form_count,
 							max( 1, (int) ( $form_count * 0.33 ) ), // 33% extrapolation.
-							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-exit-intent-extrapolation' ) ) . '" target="_blank" rel="noopener">',
+							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-extrapolation' ) ) . '" target="_blank" rel="noopener">',
 							'</a>'
 						),
 						'conditions'   => [
 							$has_ecommerce,
 							$form_count >= 3,
 						],
-						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-exit-intent-extrapolation' ),
-						'utm_campaign' => 'ecommerce-exit-intent-extrapolation',
+						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-extrapolation' ),
+						'utm_campaign' => 'ecommerce-extrapolation',
 						'pri'          => 100,
 					],
-					'lms_targeting'         => [
+					'lms_extrapolation'       => [
 						'message'      => sprintf(
 							/* translators: 1: Number of tracked form submissions, 2: Estimated additional submissions, 3: Opening link tag, 4: Closing link tag. */
-							esc_html__( '🎓 You\'ve tracked %1$d form submissions. %3$sWith Pro+ LMS targeting, you could capture ~%2$d more%4$s!', 'popup-maker' ),
+							esc_html__( '🎓 You\'ve tracked %1$d form submissions. %3$sWith Pro+ LMS Popups, automate enrollment and capture ~%2$d more signups%4$s!', 'popup-maker' ),
 							$form_count,
 							max( 1, (int) ( $form_count * 0.4 ) ), // 40% extrapolation for LMS.
-							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-targeting-extrapolation' ) ) . '" target="_blank" rel="noopener">',
+							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-extrapolation' ) ) . '" target="_blank" rel="noopener">',
 							'</a>'
 						),
 						'conditions'   => [
 							$has_lms,
 							$form_count >= 3,
 						],
-						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-targeting-extrapolation' ),
-						'utm_campaign' => 'lms-targeting-extrapolation',
+						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-extrapolation' ),
+						'utm_campaign' => 'lms-extrapolation',
 						'pri'          => 90,
 					],
 				],
@@ -387,7 +387,7 @@ class PUM_Upsell {
 			$triggers['integration_detected']['triggers']['ecommerce'] = [
 				'message'      => sprintf(
 					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
-					esc_html__( 'Automate %1$s campaigns with %2$sPopup Maker Pro+ Ecommerce%3$s - unlock cart actions, revenue attribution, and precision targeting.', 'popup-maker' ),
+					esc_html__( '%1$s detected — recover abandoned carts, trigger discount popups, and track revenue per popup with %2$sPro+ Ecommerce Popups%3$s.', 'popup-maker' ),
 					$platform_list,
 					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-detected' ) ) . '" target="_blank" rel="noopener">',
 					'</a>'
@@ -404,7 +404,7 @@ class PUM_Upsell {
 			$triggers['integration_detected']['triggers']['lms'] = [
 				'message'      => sprintf(
 					/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
-					esc_html__( 'Deliver targeted funnels for %1$s with %2$sPopup Maker Pro+ LMS%3$s - track enrollments, issue rewards, and automate course journeys.', 'popup-maker' ),
+					esc_html__( '%1$s detected — boost course enrollment, target students by progress, and track signups per popup with %2$sPro+ LMS Popups%3$s.', 'popup-maker' ),
 					$platform_list,
 					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-detected' ) ) . '" target="_blank" rel="noopener">',
 					'</a>'
@@ -421,7 +421,7 @@ class PUM_Upsell {
 			$triggers['integration_detected']['triggers']['crm'] = [
 				'message'      => sprintf(
 					/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
-					esc_html__( 'Unlock %1$s integration with %2$sPopup Maker Pro%3$s - connect popups to your CRM workflows and automate lead capture.', 'popup-maker' ),
+					esc_html__( '%1$s detected — auto-tag subscribers, trigger email sequences from popups, and sync leads with %2$sPopup Maker Pro%3$s.', 'popup-maker' ),
 					$platform_list,
 					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-detected' ) ) . '" target="_blank" rel="noopener">',
 					'</a>'
