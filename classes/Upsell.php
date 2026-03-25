@@ -169,9 +169,10 @@ class PUM_Upsell {
 	}
 
 	/**
-	 * Get the highest priority notice bar trigger that meets all conditions.
+	 * Get a random matching notice bar trigger.
 	 *
-	 * Respects milestone cooldown periods to avoid fatigue (shown once per 90 days for milestone achievements).
+	 * Collects all triggers whose conditions are met and returns one at random,
+	 * so users see different messages across page loads.
 	 *
 	 * @since 1.21.3
 	 *
@@ -229,9 +230,10 @@ class PUM_Upsell {
 		// Get total popup views.
 		$popup_views = (int) get_option( 'pum_total_open_count', 0 );
 
-		// Determine if this is a new install (installed after form tracking shipped).
-		$installed_on   = get_option( 'pum_reviews_installed_on', '' );
-		$is_new_install = ! empty( $installed_on ) && strtotime( $installed_on ) > strtotime( '2026-04-01' );
+		// New installs (after form tracking shipped) get celebration messaging.
+		// Existing installs get "tracking is now live" messaging instead.
+		$installed_on   = get_option( 'pum_installed_on', '' );
+		$is_new_install = ! empty( $installed_on ) && strtotime( $installed_on ) >= strtotime( '2026-03-25' );
 
 		$triggers = [
 
@@ -467,16 +469,6 @@ class PUM_Upsell {
 			];
 		}
 
-		// Sort groups by priority (highest first).
-		uasort( $triggers, [ __CLASS__, 'rsort_by_priority' ] );
-
-		// Sort triggers within each group by priority (highest first).
-		foreach ( $triggers as $group_key => $group ) {
-			if ( ! empty( $group['triggers'] ) ) {
-				uasort( $triggers[ $group_key ]['triggers'], [ __CLASS__, 'rsort_by_priority' ] );
-			}
-		}
-
 		return $triggers;
 	}
 
@@ -499,23 +491,6 @@ class PUM_Upsell {
 		}
 
 		return 0;
-	}
-
-	/**
-	 * Sort array in reverse by priority value (highest first).
-	 *
-	 * @since 1.21.3
-	 *
-	 * @param array{pri?: int} $a First array to compare.
-	 * @param array{pri?: int} $b Second array to compare.
-	 * @return int Comparison result.
-	 */
-	private static function rsort_by_priority( $a, $b ) {
-		if ( ! isset( $a['pri'] ) || ! isset( $b['pri'] ) || $a['pri'] === $b['pri'] ) {
-			return 0;
-		}
-
-		return ( $a['pri'] < $b['pri'] ) ? 1 : -1;
 	}
 
 	/**
