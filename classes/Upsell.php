@@ -230,7 +230,7 @@ class PUM_Upsell {
 		$popup_views = (int) get_option( 'pum_total_open_count', 0 );
 
 		// Determine if this is a new install (installed after form tracking shipped).
-		$installed_on = get_option( 'pum_reviews_installed_on', '' );
+		$installed_on   = get_option( 'pum_reviews_installed_on', '' );
 		$is_new_install = ! empty( $installed_on ) && strtotime( $installed_on ) > strtotime( '2026-04-01' );
 
 		$triggers = [
@@ -239,7 +239,7 @@ class PUM_Upsell {
 			 * Group 1: Milestone Achievements (Highest Priority: 100)
 			 * Celebration-based messaging for user success milestones.
 			 */
-			'milestone_achievements'   => [
+			'milestone_achievements' => [
 				'pri'      => 100,
 				'triggers' => [
 					'first_form_conversion' => [
@@ -317,7 +317,7 @@ class PUM_Upsell {
 			 * Group 2: Integration Detected (Priority: 60)
 			 * Contextual messages based on detected plugins.
 			 */
-			'integration_detected'     => [
+			'integration_detected'   => [
 				'pri'      => 60,
 				'triggers' => [],
 			],
@@ -326,7 +326,7 @@ class PUM_Upsell {
 			 * Group 4: Generic Upgrade (Priority: 40)
 			 * Fallback messages for users without specific triggers.
 			 */
-			'generic_upgrade'          => [
+			'generic_upgrade'        => [
 				'pri'      => 40,
 				'triggers' => [],
 			],
@@ -335,7 +335,7 @@ class PUM_Upsell {
 		// Build integration-detected triggers dynamically.
 		if ( $has_ecommerce ) {
 			$platform_list = self::format_integration_list( $integrations['pro_plus']['ecommerce'] );
-			$triggers['integration_detected']['triggers']['ecommerce_carts'] = [
+			$triggers['integration_detected']['triggers']['ecommerce_carts']   = [
 				'message'      => sprintf(
 					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
 					esc_html__( '%1$s detected — recover abandoned carts, trigger discount popups, and track revenue per popup with %2$sPro+ Ecommerce Popups%3$s.', 'popup-maker' ),
@@ -361,7 +361,7 @@ class PUM_Upsell {
 				'utm_campaign' => 'ecommerce-revenue',
 				'pri'          => 90,
 			];
-			$triggers['integration_detected']['triggers']['ecommerce_upsell'] = [
+			$triggers['integration_detected']['triggers']['ecommerce_upsell']  = [
 				'message'      => sprintf(
 					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
 					esc_html__( 'Show personalized offers to %1$s customers based on cart contents and purchase history with %2$sPro+ Ecommerce Popups%3$s.', 'popup-maker' ),
@@ -377,7 +377,7 @@ class PUM_Upsell {
 		}
 
 		if ( $has_lms ) {
-			$platform_list                                       = self::format_integration_list( $integrations['pro_plus']['lms'] );
+			$platform_list = self::format_integration_list( $integrations['pro_plus']['lms'] );
 			$triggers['integration_detected']['triggers']['lms_enrollment'] = [
 				'message'      => sprintf(
 					/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
@@ -391,7 +391,7 @@ class PUM_Upsell {
 				'utm_campaign' => 'lms-enrollment',
 				'pri'          => 90,
 			];
-			$triggers['integration_detected']['triggers']['lms_targeting'] = [
+			$triggers['integration_detected']['triggers']['lms_targeting']  = [
 				'message'      => sprintf(
 					/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
 					esc_html__( 'Show the right offer at the right time — target %1$s students by enrollment status, course progress, and membership with %2$sPro+ LMS Popups%3$s.', 'popup-maker' ),
@@ -407,8 +407,8 @@ class PUM_Upsell {
 		}
 
 		if ( $has_crm ) {
-			$platform_list                                       = self::format_integration_list( $integrations['pro']['crm'] );
-			$triggers['integration_detected']['triggers']['crm_tagging'] = [
+			$platform_list = self::format_integration_list( $integrations['pro']['crm'] );
+			$triggers['integration_detected']['triggers']['crm_tagging']    = [
 				'message'      => sprintf(
 					/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
 					esc_html__( '%1$s detected — auto-tag subscribers, trigger email sequences from popups, and sync leads with %2$sPopup Maker Pro%3$s.', 'popup-maker' ),
