@@ -178,34 +178,12 @@ class PUM_Upsell {
 	 * @return array|false Trigger array or false if no trigger matches.
 	 */
 	private static function get_current_notice_bar_trigger() {
-		$triggers           = self::get_notice_bar_triggers();
-		$last_milestone_key = get_user_meta( get_current_user_id(), '_pum_last_milestone_trigger', true );
-		$last_milestone_at  = get_user_meta( get_current_user_id(), '_pum_last_milestone_at', true );
+		$triggers = self::get_notice_bar_triggers();
 
-		// 90-day cooldown for milestone re-showing (allows seasonal re-engagement).
-		$milestone_cooldown = 90 * DAY_IN_SECONDS;
-
-		// Loop through groups by priority (highest first).
-		foreach ( $triggers as $group_key => $group ) {
-			// Loop through triggers within group by priority (highest first).
-			foreach ( $group['triggers'] as $trigger_key => $trigger ) {
-				// Check if all conditions are met.
+		// Return the highest priority trigger whose conditions are all met.
+		foreach ( $triggers as $group ) {
+			foreach ( $group['triggers'] as $trigger ) {
 				if ( ! in_array( false, $trigger['conditions'], true ) ) {
-
-					// For milestone achievements, check cooldown to avoid showing same milestone repeatedly.
-					if ( 'milestone_achievements' === $group_key ) {
-						// If this exact milestone was shown recently, skip it.
-						if ( $last_milestone_key === $trigger_key && $last_milestone_at ) {
-							if ( ( time() - (int) $last_milestone_at ) < $milestone_cooldown ) {
-								continue; // Skip this trigger, check next one.
-							}
-						}
-
-						// This milestone passed cooldown or is new - track it and return.
-						update_user_meta( get_current_user_id(), '_pum_last_milestone_trigger', $trigger_key );
-						update_user_meta( get_current_user_id(), '_pum_last_milestone_at', time() );
-					}
-
 					return $trigger;
 				}
 			}
