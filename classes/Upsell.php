@@ -35,7 +35,7 @@ class PUM_Upsell {
 				return;
 			}
 
-			// Disable it on post.php edit screens for popup editor & popup theme editor. post.php?post=850&action=edit | post-new.php?post_type=popup
+			// Disable it on post.php edit screens for popup editor & popup theme editor. post.php?post=850&action=edit | post-new.php?post_type=popup.
 			$screen = get_current_screen();
 			if ( 'post' === $screen->base && ( 'popup' === $screen->post_type || 'popup_theme' === $screen->post_type ) ) {
 				return;
@@ -128,24 +128,24 @@ class PUM_Upsell {
 	/**
 	 * Generate appropriate upgrade message based on current license and plugin status.
 	 *
+	 * Uses priority-based trigger system for targeted, engaging upgrade messaging.
+	 *
+	 * @since 1.21.3 Refactored to use priority-based trigger system.
+	 *
 	 * @return string Upgrade message or empty string if no message should be shown.
 	 */
 	private static function generate_upgrade_message() {
 		$license_service = \PopupMaker\plugin( 'license' );
 		$license_tier    = $license_service->get_license_tier();
 		$license_status  = $license_service->get_license_status();
-		$pro_is_active   = \PopupMaker\plugin()->is_pro_active();
 
 		$active_extensions  = pum_enabled_extensions();
 		$has_active_add_ons = ! empty( $active_extensions );
 
 		/**
 		 * 1. Pro Plus users with valid license see nothing.
-		 * 2. Pro users with valid license get targeted integration messaging.
-		 * 3. Pro users with invalid license get general upgrade messaging.
-		 * 4. Free users or users with invalid license get general upgrade messaging.
-		 * 5. Extension users get no message for now.
-		 * 6. Extension users without valid license get no message for now.
+		 * 2. Extension users get no message for now (regardless of license status).
+		 * 3. All other users (Free, Pro with invalid license, Pro with valid license) use priority system.
 		 */
 
 		// 1. Pro Plus users with valid license see nothing.
@@ -153,183 +153,344 @@ class PUM_Upsell {
 			return '';
 		}
 
-		// 2. Pro users with valid license get targeted integration messaging.
-		if ( 'valid' === $license_status && 'pro' === $license_tier ) {
-			return self::get_pro_integration_message();
-		}
-
-		// 3. Pro users with invalid license get general upgrade messaging.
-		if ( $pro_is_active && 'valid' !== $license_status ) {
-			return self::get_free_upgrade_message();
-		}
-
-		// 4. Free users get general upgrade messaging.
-		if ( ! $pro_is_active && ! $has_active_add_ons ) {
-			return self::get_free_upgrade_message();
-		}
-
-		// 5 & 6. Extension users get no message for now (regardless of license status).
+		// 2. Extension users get no message for now.
 		if ( $has_active_add_ons ) {
 			return '';
 		}
 
-		// Fallback (should not reach here).
-		return '';
+		// 3. Use priority-based trigger system for all other users.
+		$trigger = self::get_current_notice_bar_trigger();
+
+		if ( empty( $trigger ) ) {
+			return '';
+		}
+
+		return $trigger['message'];
 	}
 
 	/**
-	 * Generate targeted upgrade messages based on detected integrations.
+	 * Get a random matching notice bar trigger.
 	 *
-	 * @param string $user_tier Current user tier ('free', 'pro', 'pro_plus').
-	 * @return string Targeted upgrade message or empty string.
+	 * Collects all triggers whose conditions are met and returns one at random,
+	 * so users see different messages across page loads.
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return array|false Trigger array or false if no trigger matches.
 	 */
-	private static function get_integration_messages( $user_tier ) {
-		$integrations = self::detect_integrations();
-		$messages     = [];
+	private static function get_current_notice_bar_trigger() {
+		$triggers = self::get_notice_bar_triggers();
 
-		// For Pro users, show Pro+ integration opportunities.
-		if ( in_array( $user_tier, [ 'free', 'pro' ], true ) && ! empty( $integrations['pro_plus'] ) ) {
-			foreach ( $integrations['pro_plus'] as $category => $platforms ) {
-				if ( ! empty( $platforms ) ) {
-					$platform_list = self::format_integration_list( $platforms );
-
-					switch ( $category ) {
-						case 'ecommerce':
-							// Determine which ecommerce platform to link to.
-							$has_woocommerce = in_array( 'WooCommerce', $platforms, true );
-							$has_edd         = in_array( 'Easy Digital Downloads', $platforms, true );
-
-							// Route to specific integration page (WooCommerce preferred if both exist, though rare).
-							if ( $has_woocommerce ) {
-								$base_url = 'https://wppopupmaker.com/ecommerce-integrations/woocommerce/';
-							} else {
-								$base_url = 'https://wppopupmaker.com/ecommerce-integrations/easy-digital-downloads/';
-							}
-
-							$upgrade_link = add_query_arg(
-								[
-									'utm_source'   => 'plugin',
-									'utm_medium'   => 'notice-bar',
-									'utm_campaign' => 'ecommerce-detected',
-								],
-								$base_url
-							);
-							$messages[]   = sprintf(
-								/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
-								esc_html__( 'Automate %1$s campaigns with %2$sPopup Maker Pro+ Ecommerce%3$s - unlock cart actions, revenue attribution, and precision targeting.', 'popup-maker' ),
-								$platform_list,
-								'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
-								'</a>'
-							);
-							break;
-
-						case 'lms':
-							// Point to LifterLMS integration page with UTM tracking.
-							$base_url     = 'https://wppopupmaker.com/lms-integrations/lifterlms/';
-							$upgrade_link = add_query_arg(
-								[
-									'utm_source'   => 'plugin',
-									'utm_medium'   => 'notice-bar',
-									'utm_campaign' => 'lms-detected',
-								],
-								$base_url
-							);
-							$messages[]   = sprintf(
-								/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
-								esc_html__( 'Deliver targeted funnels for %1$s with %2$sPopup Maker Pro+ LMS%3$s - track enrollments, issue rewards, and automate course journeys.', 'popup-maker' ),
-								$platform_list,
-								'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
-								'</a>'
-							);
-							break;
-					}
+		// Collect all matching triggers across all groups.
+		$matching = [];
+		foreach ( $triggers as $group ) {
+			foreach ( $group['triggers'] as $trigger ) {
+				if ( ! in_array( false, $trigger['conditions'], true ) ) {
+					$matching[] = $trigger;
 				}
 			}
 		}
 
-		// For Free users, show Pro integration opportunities.
-		if ( 'free' === $user_tier && ! empty( $integrations['pro'] ) ) {
-			foreach ( $integrations['pro'] as $category => $platforms ) {
-				if ( ! empty( $platforms ) ) {
-					$platform_list = self::format_integration_list( $platforms );
+		if ( empty( $matching ) ) {
+			return false;
+		}
 
-					switch ( $category ) {
-						case 'crm':
-							// Point to FluentCRM integration page with UTM tracking.
-							$base_url     = 'https://wppopupmaker.com/crm-integrations/fluentcrm/';
-							$upgrade_link = add_query_arg(
-								[
-									'utm_source'   => 'plugin',
-									'utm_medium'   => 'notice-bar',
-									'utm_campaign' => 'crm-detected',
-								],
-								$base_url
-							);
-							$messages[]   = sprintf(
-								/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
-								esc_html__( 'Unlock %1$s integration with %2$sPopup Maker Pro%3$s - connect popups to your CRM workflows and automate lead capture.', 'popup-maker' ),
-								$platform_list,
-								'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
+		// Randomize so users see different messages across page loads.
+		return $matching[ array_rand( $matching ) ];
+	}
+
+	/**
+	 * Get notice bar triggers organized by priority groups.
+	 *
+	 * Trigger groups are sorted by group priority (highest first).
+	 * Triggers within each group are sorted by trigger priority (highest first).
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return array<string, array{pri: int, triggers: array<string, array{message: string, conditions: bool[], link: string, utm_campaign: string, pri: int}>}> Trigger groups.
+	 */
+	private static function get_notice_bar_triggers() {
+		static $triggers;
+
+		if ( isset( $triggers ) ) {
+			return $triggers;
+		}
+
+		$license_service = \PopupMaker\plugin( 'license' );
+		$license_tier    = $license_service->get_license_tier();
+		$license_status  = $license_service->get_license_status();
+		$integrations    = self::detect_integrations();
+		$has_ecommerce   = ! empty( $integrations['pro_plus']['ecommerce'] );
+		$has_lms         = ! empty( $integrations['pro_plus']['lms'] );
+		$has_crm         = ! empty( $integrations['pro']['crm'] );
+
+		// Get form conversion count (will be 0 if service not available).
+		$form_count = self::get_form_conversion_count();
+
+		// Get total popup views.
+		$popup_views = (int) get_option( 'pum_total_open_count', 0 );
+
+		// New installs (after form tracking shipped) get celebration messaging.
+		// Existing installs get "tracking is now live" messaging instead.
+		$installed_on   = get_option( 'pum_installed_on', '' );
+		$is_new_install = ! empty( $installed_on ) && strtotime( $installed_on ) >= strtotime( '2026-03-25' );
+
+		$triggers = [
+
+			/*
+			 * Group 1: Milestone Achievements (Highest Priority: 100)
+			 * Celebration-based messaging for user success milestones.
+			 */
+			'milestone_achievements' => [
+				'pri'      => 100,
+				'triggers' => [
+					'first_form_conversion' => [
+						'message'      => $is_new_install
+							? sprintf(
+								/* translators: 1: Opening link tag, 2: Closing link tag. */
+								esc_html__( '🎉 Congrats on your first form submission! %1$sUpgrade to Pro%2$s for exit intent triggers, conversion analytics, and advanced targeting.', 'popup-maker' ),
+								'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'first-form-milestone' ) ) . '" target="_blank" rel="noopener">',
 								'</a>'
-							);
-							break;
-					}
-				}
+							)
+							: sprintf(
+								/* translators: 1: Opening link tag, 2: Closing link tag. */
+								esc_html__( '📊 Form conversion tracking is now live! Your first submission has been captured. %1$sSee what\'s converting with Pro analytics%2$s.', 'popup-maker' ),
+								'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'first-form-milestone' ) ) . '" target="_blank" rel="noopener">',
+								'</a>'
+							),
+						'conditions'   => [
+							1 === $form_count,
+						],
+						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'first-form-milestone' ),
+						'utm_campaign' => 'first-form-milestone',
+						'pri'          => 100,
+					],
+					'high_engagement_10k'   => [
+						'message'      => sprintf(
+							/* translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag. */
+							esc_html__( '🚀 Amazing! You\'ve had %1$s popup views! %2$sSee which ones convert best with Pro analytics%3$s.', 'popup-maker' ),
+							number_format( $popup_views ),
+							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'high-engagement-10k' ) ) . '" target="_blank" rel="noopener">',
+							'</a>'
+						),
+						'conditions'   => [
+							$popup_views >= 10000,
+						],
+						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'high-engagement-10k' ),
+						'utm_campaign' => 'high-engagement-10k',
+						'pri'          => 95,
+					],
+					'high_engagement_5k'    => [
+						'message'      => sprintf(
+							/* translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag. */
+							esc_html__( '📊 You\'ve had %1$s popup views! %2$sSee which ones convert best with Pro analytics%3$s.', 'popup-maker' ),
+							number_format( $popup_views ),
+							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'high-engagement-5k' ) ) . '" target="_blank" rel="noopener">',
+							'</a>'
+						),
+						'conditions'   => [
+							$popup_views >= 5000,
+							$popup_views < 10000,
+						],
+						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'high-engagement-5k' ),
+						'utm_campaign' => 'high-engagement-5k',
+						'pri'          => 90,
+					],
+					'high_engagement_1k'    => [
+						'message'      => sprintf(
+							/* translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag. */
+							esc_html__( '📈 You\'ve had %1$s popup views! %2$sSee which ones convert best with Pro analytics%3$s.', 'popup-maker' ),
+							number_format( $popup_views ),
+							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'high-engagement-1k' ) ) . '" target="_blank" rel="noopener">',
+							'</a>'
+						),
+						'conditions'   => [
+							$popup_views >= 1000,
+							$popup_views < 5000,
+						],
+						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'high-engagement-1k' ),
+						'utm_campaign' => 'high-engagement-1k',
+						'pri'          => 85,
+					],
+				],
+			],
+
+			/*
+			 * Group 2: Integration Detected (Priority: 60)
+			 * Contextual messages based on detected plugins.
+			 */
+			'integration_detected'   => [
+				'pri'      => 60,
+				'triggers' => [],
+			],
+
+			/*
+			 * Group 4: Generic Upgrade (Priority: 40)
+			 * Fallback messages for users without specific triggers.
+			 */
+			'generic_upgrade'        => [
+				'pri'      => 40,
+				'triggers' => [],
+			],
+		];
+
+		// Build integration-detected triggers dynamically.
+		if ( $has_ecommerce ) {
+			$platform_list = self::format_integration_list( $integrations['pro_plus']['ecommerce'] );
+			$triggers['integration_detected']['triggers']['ecommerce_carts']   = [
+				'message'      => sprintf(
+					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( '%1$s detected — recover abandoned carts, trigger discount popups, and track revenue per popup with %2$sPro+ Ecommerce Popups%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-carts' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-carts' ),
+				'utm_campaign' => 'ecommerce-carts',
+				'pri'          => 100,
+			];
+			$triggers['integration_detected']['triggers']['ecommerce_revenue'] = [
+				'message'      => sprintf(
+					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( 'Track exactly which popups drive %1$s sales with %2$sPro+ Ecommerce Popups%3$s — revenue attribution, purchase targeting, and conversion analytics.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-revenue' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-revenue' ),
+				'utm_campaign' => 'ecommerce-revenue',
+				'pri'          => 90,
+			];
+			$triggers['integration_detected']['triggers']['ecommerce_upsell']  = [
+				'message'      => sprintf(
+					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( 'Show personalized offers to %1$s customers based on cart contents and purchase history with %2$sPro+ Ecommerce Popups%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-upsell' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-upsell' ),
+				'utm_campaign' => 'ecommerce-upsell',
+				'pri'          => 80,
+			];
+		}
+
+		if ( $has_lms ) {
+			$platform_list = self::format_integration_list( $integrations['pro_plus']['lms'] );
+			$triggers['integration_detected']['triggers']['lms_enrollment'] = [
+				'message'      => sprintf(
+					/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( '%1$s detected — boost course enrollment, target students by progress, and track signups per popup with %2$sPro+ LMS Popups%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-enrollment' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-enrollment' ),
+				'utm_campaign' => 'lms-enrollment',
+				'pri'          => 90,
+			];
+			$triggers['integration_detected']['triggers']['lms_targeting']  = [
+				'message'      => sprintf(
+					/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( 'Show the right offer at the right time — target %1$s students by enrollment status, course progress, and membership with %2$sPro+ LMS Popups%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-targeting' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-targeting' ),
+				'utm_campaign' => 'lms-targeting',
+				'pri'          => 80,
+			];
+		}
+
+		if ( $has_crm ) {
+			$platform_list = self::format_integration_list( $integrations['pro']['crm'] );
+			$triggers['integration_detected']['triggers']['crm_tagging']    = [
+				'message'      => sprintf(
+					/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( '%1$s detected — auto-tag subscribers, trigger email sequences from popups, and sync leads with %2$sPopup Maker Pro%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-tagging' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-tagging' ),
+				'utm_campaign' => 'crm-tagging',
+				'pri'          => 80,
+			];
+			$triggers['integration_detected']['triggers']['crm_automation'] = [
+				'message'      => sprintf(
+					/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( 'Connect popups to %1$s workflows — automatically add contacts, apply tags, and start automations when visitors convert with %2$sPopup Maker Pro%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-automation' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-automation' ),
+				'utm_campaign' => 'crm-automation',
+				'pri'          => 70,
+			];
+		}
+
+		// Build generic upgrade triggers.
+		if ( 'valid' === $license_status && 'pro' === $license_tier ) {
+			// Pro users get Pro+ generic message.
+			$triggers['generic_upgrade']['triggers']['pro_generic'] = [
+				'message'      => sprintf(
+					/* translators: 1: Opening link tag, 2: Closing link tag. */
+					esc_html__( 'Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, revenue attribution, and enhanced targeting.', 'popup-maker' ),
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'pro-generic-upgrade' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'pro-generic-upgrade' ),
+				'utm_campaign' => 'pro-generic-upgrade',
+				'pri'          => 100,
+			];
+		} else {
+			// Free users or Pro with invalid license get free generic message.
+			$triggers['generic_upgrade']['triggers']['free_generic'] = [
+				'message'      => sprintf(
+					/* translators: 1: Opening link tag, 2: Closing link tag. */
+					esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'free-generic-upgrade' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'free-generic-upgrade' ),
+				'utm_campaign' => 'free-generic-upgrade',
+				'pri'          => 90,
+			];
+		}
+
+		return $triggers;
+	}
+
+	/**
+	 * Get site-wide form conversion count.
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return int Form conversion count, or 0 if not available.
+	 */
+	private static function get_form_conversion_count() {
+		try {
+			$form_tracking = \PopupMaker\plugin( 'form_conversion_tracking' );
+			if ( $form_tracking && method_exists( $form_tracking, 'get_site_count' ) ) {
+				return $form_tracking->get_site_count();
 			}
+		} catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			// Service not available, graceful fallback.
+			unset( $e );
 		}
 
-		// Randomly select one message if available.
-		if ( ! empty( $messages ) ) {
-			$random_index = array_rand( $messages );
-			return $messages[ $random_index ];
-		}
-
-		return '';
-	}
-
-	/**
-	 * Get upgrade message for Pro users based on detected integrations.
-	 *
-	 * @return string Targeted upgrade message.
-	 */
-	private static function get_pro_integration_message() {
-		$integration_message = self::get_integration_messages( 'pro' );
-
-		if ( ! empty( $integration_message ) ) {
-			return $integration_message;
-		}
-
-		// Generic Pro+ upgrade message fallback.
-		$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'pro-generic-upgrade' );
-		return sprintf(
-			/* translators: 1: Opening link tag to pricing page. 2: Closing link tag. */
-			esc_html__( 'Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, revenue attribution, and enhanced targeting.', 'popup-maker' ),
-			'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
-			'</a>'
-		);
-	}
-
-	/**
-	 * Get upgrade message for free users.
-	 *
-	 * @return string General upgrade message.
-	 */
-	private static function get_free_upgrade_message() {
-		// Try to get an integration-specific message first.
-		$integration_message = self::get_integration_messages( 'free' );
-
-		if ( ! empty( $integration_message ) ) {
-			return $integration_message;
-		}
-
-		// Generic upgrade message fallback.
-		$upgrade_link = \PopupMaker\generate_upgrade_url( 'notice-bar', 'free-generic-upgrade' );
-		return sprintf(
-			/* translators: 1: Opening link tag to pricing page. 2: Closing link tag. */
-			esc_html__( 'Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced targeting, revenue tracking, live analytics, and more.', 'popup-maker' ),
-			'<a href="' . esc_url( $upgrade_link ) . '" target="_blank" rel="noopener">',
-			'</a>'
-		);
+		return 0;
 	}
 
 	/**
