@@ -180,16 +180,22 @@ class PUM_Upsell {
 	private static function get_current_notice_bar_trigger() {
 		$triggers = self::get_notice_bar_triggers();
 
-		// Return the highest priority trigger whose conditions are all met.
+		// Collect all matching triggers across all groups.
+		$matching = [];
 		foreach ( $triggers as $group ) {
 			foreach ( $group['triggers'] as $trigger ) {
 				if ( ! in_array( false, $trigger['conditions'], true ) ) {
-					return $trigger;
+					$matching[] = $trigger;
 				}
 			}
 		}
 
-		return false;
+		if ( empty( $matching ) ) {
+			return false;
+		}
+
+		// Randomize so users see different messages across page loads.
+		return $matching[ array_rand( $matching ) ];
 	}
 
 	/**
@@ -308,51 +314,7 @@ class PUM_Upsell {
 			],
 
 			/*
-			 * Group 2: Conversion Extrapolation (Priority: 80)
-			 * Data-driven messaging showing potential missed conversions.
-			 */
-			'conversion_extrapolation' => [
-				'pri'      => 80,
-				'triggers' => [
-					'ecommerce_extrapolation' => [
-						'message'      => sprintf(
-							/* translators: 1: Number of tracked form submissions, 2: Estimated additional submissions, 3: Opening link tag, 4: Closing link tag. */
-							esc_html__( '💰 You\'ve tracked %1$d form submissions. %3$sWith Pro+ Ecommerce Popups, recover abandoned carts and capture ~%2$d more sales%4$s!', 'popup-maker' ),
-							$form_count,
-							max( 1, (int) ( $form_count * 0.33 ) ), // 33% extrapolation.
-							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-extrapolation' ) ) . '" target="_blank" rel="noopener">',
-							'</a>'
-						),
-						'conditions'   => [
-							$has_ecommerce,
-							$form_count >= 3,
-						],
-						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-extrapolation' ),
-						'utm_campaign' => 'ecommerce-extrapolation',
-						'pri'          => 100,
-					],
-					'lms_extrapolation'       => [
-						'message'      => sprintf(
-							/* translators: 1: Number of tracked form submissions, 2: Estimated additional submissions, 3: Opening link tag, 4: Closing link tag. */
-							esc_html__( '🎓 You\'ve tracked %1$d form submissions. %3$sWith Pro+ LMS Popups, automate enrollment and capture ~%2$d more signups%4$s!', 'popup-maker' ),
-							$form_count,
-							max( 1, (int) ( $form_count * 0.4 ) ), // 40% extrapolation for LMS.
-							'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-extrapolation' ) ) . '" target="_blank" rel="noopener">',
-							'</a>'
-						),
-						'conditions'   => [
-							$has_lms,
-							$form_count >= 3,
-						],
-						'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-extrapolation' ),
-						'utm_campaign' => 'lms-extrapolation',
-						'pri'          => 90,
-					],
-				],
-			],
-
-			/*
-			 * Group 3: Integration Detected (Priority: 60)
+			 * Group 2: Integration Detected (Priority: 60)
 			 * Contextual messages based on detected plugins.
 			 */
 			'integration_detected'     => [
@@ -373,52 +335,104 @@ class PUM_Upsell {
 		// Build integration-detected triggers dynamically.
 		if ( $has_ecommerce ) {
 			$platform_list = self::format_integration_list( $integrations['pro_plus']['ecommerce'] );
-			$triggers['integration_detected']['triggers']['ecommerce'] = [
+			$triggers['integration_detected']['triggers']['ecommerce_carts'] = [
 				'message'      => sprintf(
 					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
 					esc_html__( '%1$s detected — recover abandoned carts, trigger discount popups, and track revenue per popup with %2$sPro+ Ecommerce Popups%3$s.', 'popup-maker' ),
 					$platform_list,
-					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-detected' ) ) . '" target="_blank" rel="noopener">',
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-carts' ) ) . '" target="_blank" rel="noopener">',
 					'</a>'
 				),
-				'conditions'   => [ true ], // Already checked via $has_ecommerce.
-				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-detected' ),
-				'utm_campaign' => 'ecommerce-detected',
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-carts' ),
+				'utm_campaign' => 'ecommerce-carts',
 				'pri'          => 100,
+			];
+			$triggers['integration_detected']['triggers']['ecommerce_revenue'] = [
+				'message'      => sprintf(
+					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( 'Track exactly which popups drive %1$s sales with %2$sPro+ Ecommerce Popups%3$s — revenue attribution, purchase targeting, and conversion analytics.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-revenue' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-revenue' ),
+				'utm_campaign' => 'ecommerce-revenue',
+				'pri'          => 90,
+			];
+			$triggers['integration_detected']['triggers']['ecommerce_upsell'] = [
+				'message'      => sprintf(
+					/* translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( 'Show personalized offers to %1$s customers based on cart contents and purchase history with %2$sPro+ Ecommerce Popups%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-upsell' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'ecommerce-upsell' ),
+				'utm_campaign' => 'ecommerce-upsell',
+				'pri'          => 80,
 			];
 		}
 
 		if ( $has_lms ) {
 			$platform_list                                       = self::format_integration_list( $integrations['pro_plus']['lms'] );
-			$triggers['integration_detected']['triggers']['lms'] = [
+			$triggers['integration_detected']['triggers']['lms_enrollment'] = [
 				'message'      => sprintf(
 					/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
 					esc_html__( '%1$s detected — boost course enrollment, target students by progress, and track signups per popup with %2$sPro+ LMS Popups%3$s.', 'popup-maker' ),
 					$platform_list,
-					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-detected' ) ) . '" target="_blank" rel="noopener">',
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-enrollment' ) ) . '" target="_blank" rel="noopener">',
 					'</a>'
 				),
-				'conditions'   => [ true ], // Already checked via $has_lms.
-				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-detected' ),
-				'utm_campaign' => 'lms-detected',
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-enrollment' ),
+				'utm_campaign' => 'lms-enrollment',
 				'pri'          => 90,
+			];
+			$triggers['integration_detected']['triggers']['lms_targeting'] = [
+				'message'      => sprintf(
+					/* translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( 'Show the right offer at the right time — target %1$s students by enrollment status, course progress, and membership with %2$sPro+ LMS Popups%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-targeting' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'lms-targeting' ),
+				'utm_campaign' => 'lms-targeting',
+				'pri'          => 80,
 			];
 		}
 
 		if ( $has_crm ) {
 			$platform_list                                       = self::format_integration_list( $integrations['pro']['crm'] );
-			$triggers['integration_detected']['triggers']['crm'] = [
+			$triggers['integration_detected']['triggers']['crm_tagging'] = [
 				'message'      => sprintf(
 					/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
 					esc_html__( '%1$s detected — auto-tag subscribers, trigger email sequences from popups, and sync leads with %2$sPopup Maker Pro%3$s.', 'popup-maker' ),
 					$platform_list,
-					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-detected' ) ) . '" target="_blank" rel="noopener">',
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-tagging' ) ) . '" target="_blank" rel="noopener">',
 					'</a>'
 				),
-				'conditions'   => [ true ], // Already checked via $has_crm.
-				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-detected' ),
-				'utm_campaign' => 'crm-detected',
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-tagging' ),
+				'utm_campaign' => 'crm-tagging',
 				'pri'          => 80,
+			];
+			$triggers['integration_detected']['triggers']['crm_automation'] = [
+				'message'      => sprintf(
+					/* translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag. */
+					esc_html__( 'Connect popups to %1$s workflows — automatically add contacts, apply tags, and start automations when visitors convert with %2$sPopup Maker Pro%3$s.', 'popup-maker' ),
+					$platform_list,
+					'<a href="' . esc_url( \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-automation' ) ) . '" target="_blank" rel="noopener">',
+					'</a>'
+				),
+				'conditions'   => [ true ],
+				'link'         => \PopupMaker\generate_upgrade_url( 'notice-bar', 'crm-automation' ),
+				'utm_campaign' => 'crm-automation',
+				'pri'          => 70,
 			];
 		}
 
