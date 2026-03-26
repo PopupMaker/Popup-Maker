@@ -78,49 +78,7 @@ class PUM_Upsell {
 	 * @return array<string, array<string, string[]>>
 	 */
 	private static function detect_integrations() {
-		$detection_map = [
-			// Pro+ integrations (from Pro to Pro+).
-			'pro_plus' => [
-				'ecommerce' => [
-					'WooCommerce'            => class_exists( 'WooCommerce' ),
-					'Easy Digital Downloads' => class_exists( 'Easy_Digital_Downloads' ),
-				],
-				'lms'       => [
-					'LifterLMS' => class_exists( 'LifterLMS' ),
-				],
-			],
-			// Pro integrations (from Free to Pro).
-			'pro'      => [
-				'crm' => [
-					'FluentCRM' => defined( 'FLUENTCRM' ),
-				],
-			],
-		];
-
-		$integrations = [
-			'pro_plus' => [
-				'ecommerce' => [],
-				'lms'       => [],
-			],
-			'pro'      => [
-				'crm' => [],
-			],
-		];
-
-		foreach ( $detection_map as $tier => $categories ) {
-			foreach ( $categories as $category => $plugins ) {
-				foreach ( $plugins as $label => $is_detected ) {
-					if ( $is_detected ) {
-						$integrations[ $tier ][ $category ][] = $label;
-					}
-				}
-			}
-		}
-
-		// Remove empty categories.
-		foreach ( $integrations as $tier => $categories ) {
-			$integrations[ $tier ] = array_filter( $categories );
-		}
+		return \PUM_Admin_Helpers::detect_integrations();
 
 		return array_filter( $integrations );
 	}
