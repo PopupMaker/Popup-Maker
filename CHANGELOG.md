@@ -26,6 +26,8 @@
 **Fixes**
 
 -   Fixed popup preview not opening due to admin_debug trigger firing before initialization completed. Closes #1181.
+-   Fixed animation speed field allowing negative and excessively large values via manual text input. Closes #1053.
+-   Fixed Gravity Forms integration fatal error when saving Close Popup or Open Popup settings. Closes #1084.
 -   Fixed CTA shortcode buttons rendering as plain links instead of styled buttons, with proper support for fill, outline, and text-only styles in both classic and block editor popups.
 -   Fixed mailto: and tel: links inside popups being incorrectly modified with tracking parameters, which broke email and phone links.
 -   Fixed Fluent Forms integration fatal error when using double opt-in. Closes #1094.
