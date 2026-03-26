@@ -804,6 +804,7 @@ class PUM_Admin_Popups {
 									'step'         => 10,
 									'min'          => 50,
 									'max'          => 1000,
+									'force_minmax' => true,
 									'unit'         => __( 'ms', 'popup-maker' ),
 									'priority'     => 20,
 									'dependencies' => [
