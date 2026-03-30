@@ -419,7 +419,15 @@
 				var $this = $( this ),
 					$editor = $this.parents( '.pum-popup-trigger-editor' ),
 					type = $this.val(),
+					trigger = triggers.get_trigger( type ),
 					values = {};
+
+				// Intercept pro_required triggers — show upsell instead of settings.
+				if ( trigger && trigger.pro_required && window.PUM_Admin.premiumPreviews ) {
+					$this.val( null ).trigger( 'change' );
+					window.PUM_Admin.premiumPreviews.openUpsellModal( type, 'trigger' );
+					return;
+				}
 
 				// Set Current Editor.
 				PUM_Admin.triggers.current_editor = $editor;
@@ -469,6 +477,17 @@
 			}
 		)
 		// Add New Triggers
+		// Intercept locked trigger selection immediately in the add-trigger modal.
+		.on( 'change', '#popup_trigger_add_type', function () {
+			var type = $( this ).val(),
+				trigger = type ? triggers.get_trigger( type ) : null;
+
+			if ( trigger && trigger.pro_required && window.PUM_Admin.premiumPreviews ) {
+				// Reset selection so they can pick again after closing upsell.
+				$( this ).val( '' );
+				window.PUM_Admin.premiumPreviews.openUpsellModal( type, 'trigger' );
+			}
+		} )
 		.on( 'click', '.pum-popup-trigger-editor .pum-add-new', function () {
 			PUM_Admin.triggers.current_editor = $( this ).parents(
 				'.pum-popup-trigger-editor'

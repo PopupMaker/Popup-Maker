@@ -1,7 +1,7 @@
 import { __ } from '@popup-maker/i18n';
 import { clamp } from '@popup-maker/utils';
 import { cleanForSlug } from '@wordpress/url';
-import { Fragment } from '@wordpress/element';
+import { Fragment, useState } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import {
 	Notice,
@@ -25,7 +25,7 @@ export const getCallToActionTypeOptions = () => {
 	const { cta_types: registeredCtaTypes = {} } =
 		window.popupMakerCtaEditor || {};
 
-	// Convert registered CTA types to dropdown options
+	// Convert registered CTA types to dropdown options.
 	const registeredOptions = Object.values( registeredCtaTypes ).map(
 		( ctaType: any ) => ( {
 			value: ctaType.key,
@@ -43,23 +43,8 @@ export const getCallToActionTypeOptions = () => {
 			value: '',
 			label: __( 'Select a type', 'popup-maker' ),
 		},
-		// Include all registered CTA types (core + pro)
+		// Include all registered CTA types (core + pro + locked previews).
 		...registeredOptions,
-		// {
-		// 	value: 'openPopup',
-		// 	label: __( 'Open Popup (Available in Pro)', 'popup-maker' ),
-		// 	disabled: true,
-		// },
-		// {
-		// 	value: 'addToCart',
-		// 	label: __( 'Add to Cart (Available in Pro+)', 'popup-maker' ),
-		// 	disabled: true,
-		// },
-		// {
-		// 	value: 'applyDiscount',
-		// 	label: __( 'Apply Discount (Available in Pro+)', 'popup-maker' ),
-		// 	disabled: true,
-		// },
 	] ) as {
 		value: Exclude< CallToAction[ 'settings' ][ 'type' ], undefined > | '';
 		label: string;
@@ -79,10 +64,13 @@ export const Component = ( {
 	const { clearAllErrors } = useAllFieldErrors();
 
 	const { settings } = callToAction;
+	const [ lockedType, setLockedType ] = useState< string | null >( null );
 
 	const descriptionRowEst = ( callToAction.excerpt ?? '' ).length / 80;
 	const descriptionRows = clamp( descriptionRowEst, 1, 5 );
 
+	const { cta_types: registeredCtaTypes = {} } =
+		window.popupMakerCtaEditor || {};
 	const callToActionTypeOptions = getCallToActionTypeOptions();
 
 	return (
@@ -134,12 +122,53 @@ export const Component = ( {
 					options={ callToActionTypeOptions }
 					value={ settings.type ?? '' }
 					onChange={ ( type ) => {
+						const ctaType =
+							registeredCtaTypes[ type as string ];
+
+						// Intercept locked types — revert to link, show upsell.
+						if ( ctaType?.pro_required ) {
+							setLockedType( type );
+							clearAllErrors();
+							updateSettings( { type: 'link' } );
+							return;
+						}
+
+						setLockedType( null );
 						clearAllErrors();
 						updateSettings( { type } );
 					} }
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				/>
+			) }
+
+			{ /* Upsell notice when a locked CTA type was attempted. */ }
+			{ lockedType && registeredCtaTypes?.[ lockedType ] && (
+				<Notice
+					status="warning"
+					isDismissible={ true }
+					onDismiss={ () => setLockedType( null ) }
+					className="pro-cta-type-notice"
+				>
+					<strong>
+						{ registeredCtaTypes[ lockedType ]?.label }
+					</strong>
+					{ ' \u2014 ' }
+					{ registeredCtaTypes[ lockedType ]?.pro_description ||
+						'This action type requires Popup Maker Pro.' }{ ' ' }
+					<a
+						href={
+							registeredCtaTypes[ lockedType ]?.upgrade_url ||
+							'#'
+						}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						{ registeredCtaTypes[ lockedType ]?.pro_cta ||
+							'Upgrade Now' }
+						{ ' \u2192' }
+					</a>
+				</Notice>
 			) }
 
 			{ getTabFields( 'general' ).map( ( field ) => (

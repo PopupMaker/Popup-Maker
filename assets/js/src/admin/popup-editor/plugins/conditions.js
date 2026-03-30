@@ -329,6 +329,15 @@
 					$operand = $editor.find( '#pum-first-facet-operand' ),
 					not_operand = $operand.is( ':checked' );
 
+				// Intercept pro_required conditions — show upsell instead.
+				var allConditions = window.pum_popup_settings_editor ? window.pum_popup_settings_editor.conditions : {};
+				var condition = allConditions[ target ];
+				if ( condition && condition.pro_required && window.PUM_Admin.premiumPreviews ) {
+					$field.val( null ).trigger( 'change' );
+					window.PUM_Admin.premiumPreviews.openUpsellModal( target, 'condition' );
+					return;
+				}
+
 				conditions.groups.add( $editor, target, not_operand );
 
 				$field.val( null ).trigger( 'change' );

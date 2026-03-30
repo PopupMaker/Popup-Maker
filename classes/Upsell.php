@@ -16,11 +16,25 @@ class PUM_Upsell {
 	 * Hooks any needed methods
 	 */
 	public static function init() {
+		// Kill switch — disable all upsells if constant is defined.
+		if ( defined( 'POPUP_MAKER_DISABLE_UPSELLS' ) && POPUP_MAKER_DISABLE_UPSELLS ) {
+			return;
+		}
+
 		add_filter( 'views_edit-popup', [ __CLASS__, 'addon_tabs' ], 10, 1 );
 		add_filter( 'views_edit-popup_theme', [ __CLASS__, 'addon_tabs' ], 10, 1 );
 		add_filter( 'pum_popup_settings_fields', [ __CLASS__, 'popup_promotional_fields' ] );
 		add_filter( 'pum_theme_settings_fields', [ __CLASS__, 'theme_promotional_fields' ] );
 		add_action( 'in_admin_header', [ __CLASS__, 'notice_bar_display' ] );
+
+		// Premium feature previews — only when Pro is NOT active.
+		if ( ! \PopupMaker\plugin()->is_pro_active() ) {
+			add_filter( 'pum_registered_triggers', [ __CLASS__, 'register_preview_triggers' ] );
+			add_filter( 'pum_registered_conditions', [ __CLASS__, 'register_preview_conditions' ] );
+			add_filter( 'popup_maker/cta_types_as_array', [ __CLASS__, 'register_preview_cta_types' ] );
+			add_action( 'pum_popup_analytics_metabox_after', [ __CLASS__, 'render_analytics_teaser' ] );
+			add_filter( 'pum_admin_vars', [ __CLASS__, 'localize_premium_preview_data' ] );
+		}
 	}
 
 	/**
@@ -507,9 +521,9 @@ class PUM_Upsell {
 			$tabs['close']['alternate_methods']['fi_promotion'] = $promotion;
 		}
 
-		if ( ! pum_extension_enabled( 'advanced-targeting-conditions' ) ) {
+		if ( ! \PopupMaker\plugin()->is_pro_active() ) {
 			/* translators: %s url to product page. */
-			$message = sprintf( __( 'Need more <a href="%s" target="_blank">advanced targeting</a> options?', 'popup-maker' ), 'https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=upsell&utm_source=plugin-popup-editor&utm_medium=text-link&utm_content=conditions-editor' );
+			$message = sprintf( __( 'Unlock 50+ advanced targeting conditions with <a href="%s" target="_blank" rel="noopener">Popup Maker Pro</a> — user roles, device detection, URL matching, referrer targeting, and more.', 'popup-maker' ), 'https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=upsell&utm_source=plugin-popup-editor&utm_medium=text-link&utm_content=conditions-editor' );
 
 			$tabs['targeting']['main']['atc_promotion'] = [
 				'type'     => 'html',
@@ -530,14 +544,17 @@ class PUM_Upsell {
 	 */
 	public static function theme_promotional_fields( $tabs = [] ) {
 
-		if ( ! pum_extension_enabled( 'advanced-theme-builder' ) && ! class_exists( 'PUM_ATB' ) ) {
+		if ( ! \PopupMaker\plugin()->is_pro_active() ) {
 			foreach ( [ 'overlay', 'container', 'close' ] as $tab ) {
 				/* translators: %s url to product page. */
-				$message = __( 'Want to use <a href="%s" target="_blank">background images</a>?', 'popup-maker' );
+				$message = sprintf(
+					__( 'Unlock background images, parallax effects, and advanced styling with <a href="%s" target="_blank" rel="noopener">Popup Maker Pro</a>.', 'popup-maker' ),
+					'https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_campaign=upsell&utm_source=plugin-theme-editor&utm_medium=text-link&utm_content=' . $tab . '-settings'
+				);
 
 				$tabs[ $tab ]['background']['atc_promotion'] = [
 					'type'     => 'html',
-					'content'  => '<img src="' . pum_asset_url( 'images/upsell-icon-advanted-theme-builder.png' ) . '" height="28" />' . sprintf( $message, 'https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_campaign=upsell&utm_source=plugin-theme-editor&utm_medium=text-link&utm_content=' . $tab . '-settings' ),
+					'content'  => '<img class="pum-upgrade-icon" src="' . pum_asset_url( 'images/mark.svg' ) . '" />' . $message,
 					'priority' => 999,
 					'class'    => 'pum-upgrade-tip',
 				];
@@ -565,6 +582,502 @@ class PUM_Upsell {
 	 *
 	 * @since 1.8.0
 	 */
+	/**
+	 * Register greyed-out preview triggers for Pro/Pro+ features.
+	 *
+	 * Shows locked triggers in the trigger picker to demonstrate Pro value.
+	 * Each trigger has pro_required flag so JS can intercept selection.
+	 *
+	 * @since 1.22.0
+	 *
+	 * @param array $triggers Registered triggers.
+	 * @return array Modified triggers with preview entries.
+	 */
+	public static function register_preview_triggers( $triggers ) {
+		// Marketing copy — not translatable (English-only upsell content).
+		$preview_triggers = [
+			'exit_intent'  => [
+				'name'            => __( 'Exit Intent', 'popup-maker' ),
+				'modal_title'     => 'Exit Intent Settings',
+				'settings_column' => 'Exit Intent',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'fields'          => [ 'general' => [] ],
+				'pro_description' => "Stop losing visitors \u{2014} catch them before they leave.",
+				'pro_bullets'     => [
+					'Mouse leave detection',
+					'Back button interception',
+					'Mobile scroll-up + time delay',
+					'Sensitivity tuning',
+				],
+			],
+			'scroll'       => [
+				'name'            => __( 'Scroll Trigger', 'popup-maker' ),
+				'modal_title'     => 'Scroll Trigger Settings',
+				'settings_column' => 'Scroll Trigger',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'fields'          => [ 'general' => [] ],
+				'pro_description' => "Show the right message at exactly the right moment.",
+				'pro_bullets'     => [
+					'Trigger by scroll depth (px or %)',
+					'Detect when elements become visible',
+					'Auto-close when user scrolls back up',
+				],
+			],
+			'time_on_site' => [
+				'name'            => __( 'Time on Site', 'popup-maker' ),
+				'modal_title'     => 'Time on Site Settings',
+				'settings_column' => 'Time on Site',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'fields'          => [ 'general' => [] ],
+				'pro_description' => "Engage visitors who are actually interested \u{2014} not just passing through.",
+				'pro_bullets'     => [
+					'Set any delay from 1 second to 5 minutes',
+					'Only count active mouse/keyboard time',
+					'Ignore idle or background tabs',
+				],
+			],
+		];
+
+		// Add ecommerce trigger when WooCommerce or EDD detected.
+		$integrations  = self::detect_integrations();
+		$has_ecommerce = ! empty( $integrations['pro_plus']['ecommerce'] );
+
+		if ( $has_ecommerce ) {
+			$preview_triggers['product_added_to_cart'] = [
+				'name'            => __( 'Item Added to Cart', 'popup-maker' ),
+				'modal_title'     => 'Add to Cart Trigger Settings',
+				'settings_column' => 'Item Added to Cart',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro_plus',
+				'fields'          => [ 'general' => [] ],
+				'pro_description' => "Turn every add-to-cart into an upsell opportunity.",
+				'pro_bullets'     => [
+					'Target specific products',
+					'Upsell complementary items',
+					'Free shipping threshold nudges',
+				],
+			];
+		}
+
+		// Append lock + tier label to preview trigger names for dropdown display.
+		foreach ( $preview_triggers as $id => &$trigger ) {
+			$tier_label         = 'pro_plus' === $trigger['pro_tier'] ? 'Pro+' : 'Pro';
+			$trigger['name'] .= " \xF0\x9F\x94\x92 {$tier_label}";
+		}
+		unset( $trigger );
+
+		return array_merge( $triggers, $preview_triggers );
+	}
+
+	/**
+	 * Register greyed-out preview conditions for Pro/Pro+ features.
+	 *
+	 * Shows locked conditions in the targeting picker grouped by category.
+	 * Only the most impactful conditions are shown, not the full Pro set.
+	 *
+	 * @since 1.22.0
+	 *
+	 * @param array $conditions Registered conditions.
+	 * @return array Modified conditions with preview entries.
+	 */
+	public static function register_preview_conditions( $conditions ) {
+		// Marketing copy — not translatable (English-only upsell content).
+		// Only group names and condition names are translated (visible in UI dropdowns).
+		$preview_conditions = [
+			// User Targeting (Pro).
+			'user_is_logged_in'         => [
+				'group'           => __( 'User Targeting (Pro)', 'popup-maker' ),
+				'name'            => __( 'User Is Logged In', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'fields'          => [],
+				'pro_description' => "Know exactly who you're talking to \u{2014} personalize every interaction.",
+				'pro_bullets'     => [
+					'Show offers only to logged-in users',
+					'Hide signup forms for existing members',
+					'Combine with role targeting for precision',
+				],
+			],
+			'user_has_role'             => [
+				'group'           => __( 'User Targeting (Pro)', 'popup-maker' ),
+				'name'            => __( 'User Has Role', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'fields'          => [],
+				'pro_description' => "Different users deserve different experiences.",
+				'pro_bullets'     => [
+					'Show VIP content to specific roles',
+					'Hide admin notices from subscribers',
+					'Segment by membership tier',
+				],
+			],
+
+			// Behavior Targeting (Pro).
+			'referrer_is_search_engine' => [
+				'group'           => __( 'Behavior Targeting (Pro)', 'popup-maker' ),
+				'name'            => __( 'Came From Search Engine', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'advanced'        => true,
+				'fields'          => [],
+				'pro_description' => "First impressions matter \u{2014} greet search visitors with the right offer.",
+				'pro_bullets'     => [
+					'Tailored offers for search traffic',
+					'Different CTAs by traffic source',
+					'Detects Google, Bing, Yahoo, and more',
+				],
+			],
+			'device_is_mobile'          => [
+				'group'           => __( 'Behavior Targeting (Pro)', 'popup-maker' ),
+				'name'            => __( 'Is Mobile Device', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'advanced'        => true,
+				'fields'          => [],
+				'pro_description' => "Mobile visitors behave differently \u{2014} your popups should too.",
+				'pro_bullets'     => [
+					'Mobile-optimized popup designs',
+					'Separate phone vs tablet targeting',
+					'Avoid intrusive interstitials on mobile',
+				],
+			],
+			'url_contains'              => [
+				'group'           => __( 'Behavior Targeting (Pro)', 'popup-maker' ),
+				'name'            => __( 'URL Contains', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'advanced'        => true,
+				'fields'          => [],
+				'pro_description' => "Precision targeting \u{2014} show the right popup on the right page.",
+				'pro_bullets'     => [
+					'Match UTM parameters for campaign targeting',
+					'Target specific URL paths or sections',
+					'Combine with other conditions for precision',
+				],
+			],
+			// Form Engagement (Pro).
+			'is_filling_form'           => [
+				'group'           => __( 'Behavior Targeting (Pro)', 'popup-maker' ),
+				'name'            => __( 'Is Filling Out a Form', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro',
+				'advanced'        => true,
+				'fields'          => [],
+				'pro_description' => "Recover form abandoners before they walk away.",
+				'pro_bullets'     => [
+					'Detect active form engagement',
+					'Set minimum fields touched threshold',
+					'Combine with Exit Intent for abandonment recovery',
+				],
+			],
+		];
+
+		// Add ecommerce conditions when WooCommerce or EDD detected.
+		$integrations  = self::detect_integrations();
+		$has_ecommerce = ! empty( $integrations['pro_plus']['ecommerce'] );
+		$has_lms       = ! empty( $integrations['pro_plus']['lms'] );
+
+		if ( $has_ecommerce ) {
+			$preview_conditions['product_in_cart']        = [
+				'group'           => __( 'Ecommerce (Pro+)', 'popup-maker' ),
+				'name'            => __( 'Product In Cart', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro_plus',
+				'fields'          => [],
+				'pro_description' => "Every cart is a conversion opportunity \u{2014} don't waste it.",
+				'pro_bullets'     => [
+					'Cross-sell related products',
+					'Upsell higher-value alternatives',
+					'Target specific product combinations',
+				],
+			];
+			$preview_conditions['cart_total']             = [
+				'group'           => __( 'Ecommerce (Pro+)', 'popup-maker' ),
+				'name'            => __( 'Cart Total', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro_plus',
+				'fields'          => [],
+				'pro_description' => "Boost average order value with smart threshold targeting.",
+				'pro_bullets'     => [
+					'Free shipping threshold nudges',
+					'Discount offers at checkout',
+					'Compare subtotal, tax, or total',
+				],
+			];
+			$preview_conditions['customer_has_purchased'] = [
+				'group'           => __( 'Ecommerce (Pro+)', 'popup-maker' ),
+				'name'            => __( 'Customer Has Purchased', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro_plus',
+				'fields'          => [],
+				'pro_description' => "Reward loyalty, re-engage lapsed buyers, exclude past purchasers.",
+				'pro_bullets'     => [
+					'Welcome back returning customers',
+					'Exclude past purchasers from promos',
+					'Target by specific products bought',
+				],
+			];
+			$preview_conditions['customer_spent']         = [
+				'group'           => __( 'Ecommerce (Pro+)', 'popup-maker' ),
+				'name'            => __( 'Customer Lifetime Spend', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro_plus',
+				'fields'          => [],
+				'pro_description' => "Segment customers by their total spending history.",
+				'pro_bullets'     => [
+					'VIP offers for high-value customers',
+					'Win-back campaigns for low spenders',
+					'Tiered promotions based on lifetime value',
+				],
+			];
+		}
+
+		if ( $has_lms ) {
+			$preview_conditions['llms_student_course_enrollment'] = [
+				'group'           => __( 'LMS (Pro+)', 'popup-maker' ),
+				'name'            => __( 'Student Course Enrollment', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro_plus',
+				'fields'          => [],
+				'pro_cta'         => 'Boost My Course Sales',
+				'pro_description' => "Meet students where they are in their learning journey.",
+				'pro_bullets'     => [
+					'Promote advanced courses to completers',
+					'Re-engage students who dropped off',
+					'Target by specific course enrollment',
+				],
+			];
+			$preview_conditions['llms_cart_total']                = [
+				'group'           => __( 'LMS (Pro+)', 'popup-maker' ),
+				'name'            => __( 'LMS Cart Total', 'popup-maker' ),
+				'callback'        => '__return_false',
+				'pro_required'    => true,
+				'pro_tier'        => 'pro_plus',
+				'fields'          => [],
+				'pro_cta'         => 'Boost My Course Sales',
+				'pro_description' => "Increase course revenue with targeted cart offers.",
+				'pro_bullets'     => [
+					'Bundle discount nudges at checkout',
+					'Upsell memberships to course buyers',
+					'Target by cart value threshold',
+				],
+			];
+		}
+
+		// Append tier label to preview condition names for dropdown display.
+		foreach ( $preview_conditions as $id => &$condition ) {
+			$tier_label          = 'pro_plus' === $condition['pro_tier'] ? 'Pro+' : 'Pro';
+			$condition['name'] .= " ({$tier_label})";
+		}
+		unset( $condition );
+
+		return array_merge( $conditions, $preview_conditions );
+	}
+
+	/**
+	 * Register locked preview CTA types for the CTA editor type picker.
+	 *
+	 * Injects disabled options into the CTA types array so they appear
+	 * greyed-out in the React SelectControl dropdown.
+	 *
+	 * @since 1.22.0
+	 *
+	 * @param array $cta_types Registered CTA types as arrays.
+	 * @return array Modified CTA types with preview entries.
+	 */
+	public static function register_preview_cta_types( $cta_types ) {
+		$integrations  = self::detect_integrations();
+		$has_ecommerce = ! empty( $integrations['pro_plus']['ecommerce'] );
+		$has_lms       = ! empty( $integrations['pro_plus']['lms'] );
+		$has_crm       = ! empty( $integrations['pro']['crm'] );
+
+		$pro_url      = \PopupMaker\generate_upgrade_url( 'cta-editor', 'pro-cta-type' );
+		$pro_plus_url = \PopupMaker\generate_upgrade_url( 'cta-editor', 'pro-plus-cta-type' );
+
+		// FluentCRM CTA types (Pro).
+		if ( $has_crm ) {
+			$cta_types['fluentcrm_add_tag']     = [
+				'key'             => 'fluentcrm_add_tag',
+				'label'           => 'FluentCRM: Add Tag (Pro)',
+				'pro_required'    => true,
+				'pro_description' => 'Automatically tag contacts in FluentCRM when visitors interact with your CTAs.',
+				'pro_cta'         => 'Increase My Conversion Rate',
+				'upgrade_url'     => $pro_url,
+				'fields'          => [],
+			];
+			$cta_types['fluentcrm_add_to_list'] = [
+				'key'             => 'fluentcrm_add_to_list',
+				'label'           => 'FluentCRM: Add to List (Pro)',
+				'pro_required'    => true,
+				'pro_description' => 'Add visitors to FluentCRM lists directly from popup CTAs.',
+				'pro_cta'         => 'Increase My Conversion Rate',
+				'upgrade_url'     => $pro_url,
+				'fields'          => [],
+			];
+		}
+
+		// Ecommerce CTA types (Pro+).
+		if ( $has_ecommerce ) {
+			$cta_types['wc_add_to_cart']     = [
+				'key'             => 'wc_add_to_cart',
+				'label'           => 'Add to Cart (Pro+)',
+				'pro_required'    => true,
+				'pro_description' => 'Add products directly to the cart from popup CTAs.',
+				'pro_cta'         => 'Boost My Revenue',
+				'upgrade_url'     => $pro_plus_url,
+				'fields'          => [],
+			];
+			$cta_types['wc_apply_discount']  = [
+				'key'             => 'wc_apply_discount',
+				'label'           => 'Apply Discount Code (Pro+)',
+				'pro_required'    => true,
+				'pro_description' => 'Auto-apply discount codes when visitors click your CTA.',
+				'pro_cta'         => 'Boost My Revenue',
+				'upgrade_url'     => $pro_plus_url,
+				'fields'          => [],
+			];
+		}
+
+		// LMS CTA types (Pro+).
+		if ( $has_lms ) {
+			$cta_types['llms_enroll_course']     = [
+				'key'             => 'llms_enroll_course',
+				'label'           => 'Enroll in Course (Pro+)',
+				'pro_required'    => true,
+				'pro_description' => 'Enroll students directly from popup CTAs.',
+				'pro_cta'         => 'Boost My Course Sales',
+				'upgrade_url'     => $pro_plus_url,
+				'fields'          => [],
+			];
+			$cta_types['llms_enroll_membership'] = [
+				'key'             => 'llms_enroll_membership',
+				'label'           => 'Enroll in Membership (Pro+)',
+				'pro_required'    => true,
+				'pro_description' => 'Sign up members directly from popup CTAs.',
+				'pro_cta'         => 'Boost My Course Sales',
+				'upgrade_url'     => $pro_plus_url,
+				'fields'          => [],
+			];
+		}
+
+		return $cta_types;
+	}
+
+	/**
+	 * Render analytics teaser below the popup editor sidebar analytics box.
+	 *
+	 * @since 1.22.0
+	 *
+	 * @param int $popup_id The popup ID.
+	 */
+	public static function render_analytics_teaser( $popup_id ) {
+		$upgrade_url = \PopupMaker\generate_upgrade_url( 'analytics-teaser', 'popup-editor-sidebar' );
+		/* translators: %s url to product page. */
+		$message = sprintf( __( 'Track trends over time with <a href="%s" target="_blank" rel="noopener">Pro Analytics</a> — charts, funnels, and revenue attribution.', 'popup-maker' ), esc_url( $upgrade_url ) );
+		?>
+		<div class="pum-upgrade-tip" style="font-size:12px;line-height:1.5 !important;">
+			<img class="pum-upgrade-icon" src="<?php echo esc_url( pum_asset_url( 'images/mark.svg' ) ); ?>" style="height:1.4em;margin-right:6px;" />
+			<?php echo wp_kses_post( $message ); ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Add premium preview data to pum_admin_vars for JS consumption.
+	 *
+	 * @since 1.22.0
+	 *
+	 * @param array $vars Admin vars.
+	 * @return array Modified admin vars with premium preview data.
+	 */
+	public static function localize_premium_preview_data( $vars ) {
+		$vars['premium_previews'] = self::get_premium_preview_data();
+		return $vars;
+	}
+
+	/**
+	 * Get premium preview modal content data.
+	 *
+	 * Returns structured data for each preview feature, consumed by
+	 * premium-previews.js to render upsell modals.
+	 *
+	 * @since 1.22.0
+	 *
+	 * @return array Premium preview data keyed by feature ID.
+	 */
+	private static function get_premium_preview_data() {
+		$data = [
+			'triggers'   => [],
+			'conditions' => [],
+		];
+
+		// Default CTAs per tier — features can override with pro_cta.
+		$default_ctas = [
+			'pro'      => 'Increase My Conversion Rate',
+			'pro_plus' => 'Boost My Revenue',
+		];
+
+		// Build trigger preview data from registered preview triggers.
+		$all_triggers = \PUM_Triggers::instance()->get_triggers();
+		foreach ( $all_triggers as $id => $trigger ) {
+			if ( empty( $trigger['pro_required'] ) ) {
+				continue;
+			}
+			$tier                        = $trigger['pro_tier'] ?? 'pro';
+			$data['triggers'][ $id ] = [
+				'label'       => $trigger['name'],
+				'tier'        => $tier,
+				'description' => $trigger['pro_description'] ?? '',
+				'bullets'     => $trigger['pro_bullets'] ?? [],
+				'cta'         => $trigger['pro_cta'] ?? $default_ctas[ $tier ] ?? $default_ctas['pro'],
+				'upgrade_url' => \PopupMaker\generate_upgrade_url( 'feature-preview', 'trigger-' . $id ),
+			];
+		}
+
+		// Build condition preview data from registered preview conditions.
+		$all_conditions = \PUM_Conditions::instance()->get_conditions();
+		foreach ( $all_conditions as $id => $condition ) {
+			if ( empty( $condition['pro_required'] ) ) {
+				continue;
+			}
+			$tier                           = $condition['pro_tier'] ?? 'pro';
+			$data['conditions'][ $id ] = [
+				'label'       => $condition['name'],
+				'group'       => $condition['group'],
+				'tier'        => $tier,
+				'description' => $condition['pro_description'] ?? '',
+				'bullets'     => $condition['pro_bullets'] ?? [],
+				'cta'         => $condition['pro_cta'] ?? $default_ctas[ $tier ] ?? $default_ctas['pro'],
+				'upgrade_url' => \PopupMaker\generate_upgrade_url( 'feature-preview', 'condition-' . $id ),
+			];
+		}
+
+		// Marketing copy — not translatable.
+		$data['all_features_url']  = \PopupMaker\generate_upgrade_url( 'feature-preview', 'see-all-features' );
+		$data['all_features_text'] = 'See All Pro Features';
+
+		$data['I10n'] = [
+			'pro_feature' => 'Pro',
+			'pro_plus'    => 'Pro+',
+		];
+
+		return $data;
+	}
+
 	public static function display_addon_tabs() {
 		// Get labels for the Popup and Popup Theme post types.
 		$popup_labels = (array) get_post_type_labels( get_post_type_object( plugin( 'PostTypes' )->get_type_key( 'popup' ) ) );

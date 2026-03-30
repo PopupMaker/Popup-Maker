@@ -11,3 +11,4 @@ import './serialize-object';
 import './tabs';
 import './templates';
 import './utils';
+import './premium-previews';
