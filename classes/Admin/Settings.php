@@ -864,16 +864,6 @@ class PUM_Admin_Settings {
 			<?php
 		}
 
-		// Show manage license section for Pro users (only when Pro plugin is actually active).
-		if ( \PopupMaker\plugin()->is_pro_active() && ! $show_ecom_bar && ! $show_lms_bar ) {
-			?>
-			<div class="pum-go-pro-manage">
-				<h3><?php esc_html_e( 'Manage Your Pro License', 'popup-maker' ); ?></h3>
-				<p><?php esc_html_e( 'Enter your license key below to receive automatic updates and support.', 'popup-maker' ); ?></p>
-			</div>
-			<?php
-		}
-
 		return ob_get_clean();
 	}
 
