@@ -618,7 +618,7 @@ class PUM_Upsell {
 				'pro_required'    => true,
 				'pro_tier'        => 'pro',
 				'fields'          => [ 'general' => [] ],
-				'pro_description' => "Show the right message at exactly the right moment.",
+				'pro_description' => 'Show the right message at exactly the right moment.',
 				'pro_bullets'     => [
 					'Trigger by scroll depth (px or %)',
 					'Detect when elements become visible',
@@ -653,7 +653,7 @@ class PUM_Upsell {
 				'pro_required'    => true,
 				'pro_tier'        => 'pro_plus',
 				'fields'          => [ 'general' => [] ],
-				'pro_description' => "Turn every add-to-cart into an upsell opportunity.",
+				'pro_description' => 'Turn every add-to-cart into an upsell opportunity.',
 				'pro_bullets'     => [
 					'Target specific products',
 					'Upsell complementary items',
@@ -664,7 +664,7 @@ class PUM_Upsell {
 
 		// Append lock + tier label to preview trigger names for dropdown display.
 		foreach ( $preview_triggers as $id => &$trigger ) {
-			$tier_label         = 'pro_plus' === $trigger['pro_tier'] ? 'Pro+' : 'Pro';
+			$tier_label       = 'pro_plus' === $trigger['pro_tier'] ? 'Pro+' : 'Pro';
 			$trigger['name'] .= " \xF0\x9F\x94\x92 {$tier_label}";
 		}
 		unset( $trigger );
@@ -709,7 +709,7 @@ class PUM_Upsell {
 				'pro_required'    => true,
 				'pro_tier'        => 'pro',
 				'fields'          => [],
-				'pro_description' => "Different users deserve different experiences.",
+				'pro_description' => 'Different users deserve different experiences.',
 				'pro_bullets'     => [
 					'Show VIP content to specific roles',
 					'Hide admin notices from subscribers',
@@ -772,7 +772,7 @@ class PUM_Upsell {
 				'pro_tier'        => 'pro',
 				'advanced'        => true,
 				'fields'          => [],
-				'pro_description' => "Recover form abandoners before they walk away.",
+				'pro_description' => 'Recover form abandoners before they walk away.',
 				'pro_bullets'     => [
 					'Detect active form engagement',
 					'Set minimum fields touched threshold',
@@ -808,7 +808,7 @@ class PUM_Upsell {
 				'pro_required'    => true,
 				'pro_tier'        => 'pro_plus',
 				'fields'          => [],
-				'pro_description' => "Boost average order value with smart threshold targeting.",
+				'pro_description' => 'Boost average order value with smart threshold targeting.',
 				'pro_bullets'     => [
 					'Free shipping threshold nudges',
 					'Discount offers at checkout',
@@ -822,7 +822,7 @@ class PUM_Upsell {
 				'pro_required'    => true,
 				'pro_tier'        => 'pro_plus',
 				'fields'          => [],
-				'pro_description' => "Reward loyalty, re-engage lapsed buyers, exclude past purchasers.",
+				'pro_description' => 'Reward loyalty, re-engage lapsed buyers, exclude past purchasers.',
 				'pro_bullets'     => [
 					'Welcome back returning customers',
 					'Exclude past purchasers from promos',
@@ -836,7 +836,7 @@ class PUM_Upsell {
 				'pro_required'    => true,
 				'pro_tier'        => 'pro_plus',
 				'fields'          => [],
-				'pro_description' => "Segment customers by their total spending history.",
+				'pro_description' => 'Segment customers by their total spending history.',
 				'pro_bullets'     => [
 					'VIP offers for high-value customers',
 					'Win-back campaigns for low spenders',
@@ -854,7 +854,7 @@ class PUM_Upsell {
 				'pro_tier'        => 'pro_plus',
 				'fields'          => [],
 				'pro_cta'         => 'Boost My Course Sales',
-				'pro_description' => "Meet students where they are in their learning journey.",
+				'pro_description' => 'Meet students where they are in their learning journey.',
 				'pro_bullets'     => [
 					'Promote advanced courses to completers',
 					'Re-engage students who dropped off',
@@ -869,7 +869,7 @@ class PUM_Upsell {
 				'pro_tier'        => 'pro_plus',
 				'fields'          => [],
 				'pro_cta'         => 'Boost My Course Sales',
-				'pro_description' => "Increase course revenue with targeted cart offers.",
+				'pro_description' => 'Increase course revenue with targeted cart offers.',
 				'pro_bullets'     => [
 					'Bundle discount nudges at checkout',
 					'Upsell memberships to course buyers',
@@ -880,7 +880,7 @@ class PUM_Upsell {
 
 		// Append tier label to preview condition names for dropdown display.
 		foreach ( $preview_conditions as $id => &$condition ) {
-			$tier_label          = 'pro_plus' === $condition['pro_tier'] ? 'Pro+' : 'Pro';
+			$tier_label         = 'pro_plus' === $condition['pro_tier'] ? 'Pro+' : 'Pro';
 			$condition['name'] .= " ({$tier_label})";
 		}
 		unset( $condition );
@@ -932,7 +932,7 @@ class PUM_Upsell {
 
 		// Ecommerce CTA types (Pro+).
 		if ( $has_ecommerce ) {
-			$cta_types['wc_add_to_cart']     = [
+			$cta_types['wc_add_to_cart']    = [
 				'key'             => 'wc_add_to_cart',
 				'label'           => 'Add to Cart (Pro+)',
 				'pro_required'    => true,
@@ -941,7 +941,7 @@ class PUM_Upsell {
 				'upgrade_url'     => $pro_plus_url,
 				'fields'          => [],
 			];
-			$cta_types['wc_apply_discount']  = [
+			$cta_types['wc_apply_discount'] = [
 				'key'             => 'wc_apply_discount',
 				'label'           => 'Apply Discount Code (Pro+)',
 				'pro_required'    => true,
@@ -1037,7 +1037,7 @@ class PUM_Upsell {
 			if ( empty( $trigger['pro_required'] ) ) {
 				continue;
 			}
-			$tier                        = $trigger['pro_tier'] ?? 'pro';
+			$tier                    = $trigger['pro_tier'] ?? 'pro';
 			$data['triggers'][ $id ] = [
 				'label'       => $trigger['name'],
 				'tier'        => $tier,
@@ -1054,7 +1054,7 @@ class PUM_Upsell {
 			if ( empty( $condition['pro_required'] ) ) {
 				continue;
 			}
-			$tier                           = $condition['pro_tier'] ?? 'pro';
+			$tier                      = $condition['pro_tier'] ?? 'pro';
 			$data['conditions'][ $id ] = [
 				'label'       => $condition['name'],
 				'group'       => $condition['group'],
