@@ -878,10 +878,9 @@ class PUM_Upsell {
 			];
 		}
 
-		// Append tier label to preview condition names for dropdown display.
+		// Append lock indicator to preview condition names for dropdown display.
 		foreach ( $preview_conditions as $id => &$condition ) {
-			$tier_label         = 'pro_plus' === $condition['pro_tier'] ? 'Pro+' : 'Pro';
-			$condition['name'] .= " ({$tier_label})";
+			$condition['name'] .= " \xF0\x9F\x94\x92";
 		}
 		unset( $condition );
 
