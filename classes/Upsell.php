@@ -932,20 +932,20 @@ class PUM_Upsell {
 
 		// Ecommerce CTA types (Pro+).
 		if ( $has_ecommerce ) {
-			$cta_types['wc_add_to_cart']    = [
-				'key'             => 'wc_add_to_cart',
+			$cta_types['ecom_add_to_cart']    = [
+				'key'             => 'ecom_add_to_cart',
 				'label'           => 'Add to Cart (Pro+)',
 				'pro_required'    => true,
-				'pro_description' => 'Add products directly to the cart from popup CTAs.',
+				'pro_description' => 'Add products directly to the cart from popup CTAs — works with WooCommerce and Easy Digital Downloads.',
 				'pro_cta'         => 'Boost My Revenue',
 				'upgrade_url'     => $pro_plus_url,
 				'fields'          => [],
 			];
-			$cta_types['wc_apply_discount'] = [
-				'key'             => 'wc_apply_discount',
+			$cta_types['ecom_apply_discount'] = [
+				'key'             => 'ecom_apply_discount',
 				'label'           => 'Apply Discount Code (Pro+)',
 				'pro_required'    => true,
-				'pro_description' => 'Auto-apply discount codes when visitors click your CTA.',
+				'pro_description' => 'Auto-apply discount codes when visitors click your CTA — works with WooCommerce and Easy Digital Downloads.',
 				'pro_cta'         => 'Boost My Revenue',
 				'upgrade_url'     => $pro_plus_url,
 				'fields'          => [],
