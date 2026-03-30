@@ -789,8 +789,6 @@ class PUM_Admin_Settings {
 		$has_edd         = isset( $integrations['edd'] );
 		$has_lms         = isset( $integrations['lifterlms'] );
 		$has_ecommerce   = $has_woocommerce || $has_edd;
-		$is_pro_active   = \PopupMaker\plugin( 'license' )->is_license_active();
-
 		// Check individual Pro+ addon status — show bar when platform detected but addon missing.
 		$has_ecom_addon  = pum_extension_enabled( 'ecommerce-popups' );
 		$has_lms_addon   = pum_extension_enabled( 'lms-popups' );
@@ -866,8 +864,8 @@ class PUM_Admin_Settings {
 			<?php
 		}
 
-		// Show manage license section for Pro users (only on go-pro tab via JS template).
-		if ( $is_pro_active && ! $show_ecom_bar && ! $show_lms_bar ) {
+		// Show manage license section for Pro users (only when Pro plugin is actually active).
+		if ( \PopupMaker\plugin()->is_pro_active() && ! $show_ecom_bar && ! $show_lms_bar ) {
 			?>
 			<div class="pum-go-pro-manage">
 				<h3><?php esc_html_e( 'Manage Your Pro License', 'popup-maker' ); ?></h3>
