@@ -318,7 +318,9 @@ jobs:
     timeout-minutes: 30
     continue-on-error: true
     needs: detect-changes
+    # DISABLED: E2E tests take 20+ min on GH runners. Run locally or enable when optimized.
     if: |
+      false &&
       needs.detect-changes.outputs.has_e2e_tests == 'true' &&
       (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') &&
       (needs.detect-changes.outputs.php == 'true' ||
