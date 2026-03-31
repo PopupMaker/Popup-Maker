@@ -188,13 +188,27 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	 */
 	public function test_create_table_creates_table() {
 		global $wpdb;
+
+		// Ensure upgrade.php is loaded for dbDelta.
+		if ( ! function_exists( 'dbDelta' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		}
+
 		$this->db->create_table();
 
-		if ( floatval( get_bloginfo( 'version' ) ) >= 6.2 ) {
-			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $this->db->table_name() ) );
-		} else {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$found = $wpdb->get_var( "SHOW TABLES LIKE '{$this->db->table_name()}'" );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$found = $wpdb->get_var( "SHOW TABLES LIKE '{$this->db->table_name()}'" );
+
+		// Debug output if failing.
+		if ( null === $found ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'DEBUG: table_name=' . $this->db->table_name() );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'DEBUG: last_error=' . $wpdb->last_error );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$tables = $wpdb->get_col( 'SHOW TABLES' );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'DEBUG: all_tables=' . implode( ', ', $tables ) );
 		}
 
 		$this->assertSame( $this->db->table_name(), $found );
