@@ -315,6 +315,7 @@ jobs:
   test-e2e:
     name: Playwright E2E Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: detect-changes
     if: |
       needs.detect-changes.outputs.has_e2e_tests == 'true' &&
@@ -403,7 +404,7 @@ jobs:
       - name: Run Playwright Tests
         env:
           WP_BASE_URL: http://127.0.0.1:8880
-        run: npm run test:e2e
+        run: npx playwright test --project=chromium
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
