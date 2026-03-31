@@ -404,7 +404,7 @@ jobs:
       - name: Run Playwright Tests
         env:
           WP_BASE_URL: http://127.0.0.1:8880
-        run: npx playwright test --project=chromium
+        run: npx playwright test --config=tests/e2e/playwright.config.ts --project=chromium
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
