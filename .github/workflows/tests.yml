@@ -143,7 +143,7 @@ jobs:
           echo "E2E Tests: ${{ steps.check-tests.outputs.has_e2e_tests }}"
 
   # ============================================================
-  # PHPUnit Unit Tests - Fast, no WordPress required
+  # PHPUnit Tests - Requires WordPress test suite + MySQL
   # ============================================================
   test-php-unit:
     name: PHP Unit Tests (PHP ${{ matrix.php }})
@@ -155,6 +155,20 @@ jobs:
        needs.detect-changes.outputs.php_tests == 'true' ||
        needs.detect-changes.outputs.php_deps == 'true' ||
        needs.detect-changes.outputs.ci == 'true')
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     strategy:
       fail-fast: false
@@ -170,6 +184,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
+          extensions: mysqli
           coverage: none
 
       - name: Get Composer cache directory
@@ -184,10 +199,20 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.php }}-
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-scripts
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install WordPress test suite
+        run: |
+          if [ -f "./bin/install-wp-tests.sh" ]; then
+            chmod +x ./bin/install-wp-tests.sh
+            ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
+          else
+            echo "::error::WordPress test suite installer not found"
+            exit 1
+          fi
 
       - name: Run Unit Tests
-        run: composer run tests --quiet
+        run: composer run tests
 
   # ============================================================
   # PHPUnit Integration Tests - Requires WordPress + MySQL
