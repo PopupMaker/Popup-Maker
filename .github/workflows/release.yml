@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - '[0-9]+\.[0-9]+\.[0-9]+'
-      - '[0-9]+\.[0-9]+\.[0-9]+-test'
+      - '[0-9]+\.[0-9]+\.[0-9]+-*'
   workflow_dispatch:
 
 env:
@@ -22,6 +22,7 @@ jobs:
     outputs:
       version: ${{ steps.extract.outputs.version }}
       is_test: ${{ steps.extract.outputs.is_test }}
+      is_prerelease: ${{ steps.extract.outputs.is_prerelease }}
       zip_name: ${{ steps.build.outputs.zip_name }}
 
     steps:
@@ -35,14 +36,20 @@ jobs:
         run: |
           VERSION="${TAG_NAME}"
           IS_TEST="false"
+          IS_PRERELEASE="false"
 
-          if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+-test$ ]]; then
+          # Detect test tags (dry-run pipeline).
+          if [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-test$ ]]; then
             IS_TEST="true"
             VERSION="${VERSION%-test}"
+          # Detect pre-release tags (alpha, beta, rc).
+          elif [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+            IS_PRERELEASE="true"
           fi
 
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "is_test=${IS_TEST}" >> $GITHUB_OUTPUT
+          echo "is_prerelease=${IS_PRERELEASE}" >> $GITHUB_OUTPUT
 
       - name: Setup PHP 8.0
         uses: shivammathur/setup-php@v2
@@ -140,101 +147,7 @@ jobs:
           body: ${{ steps.changelog.outputs.content }}
           files: ${{ needs.build.outputs.zip_name }}
           draft: ${{ needs.build.outputs.is_test == 'true' }}
-          prerelease: ${{ needs.build.outputs.is_test == 'true' }}
-
-  # ============================================================================
-  # DEPLOY TO WORDPRESS.ORG (STABLE ONLY)
-  # ============================================================================
-  wordpress-deploy:
-    name: Deploy to WordPress.org
-    runs-on: ubuntu-latest
-    needs: [build, release]
-    if: needs.build.outputs.is_test == 'false'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Setup PHP 8.0
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.0'
-          tools: composer:v2
-          coverage: none
-
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v6
-        with:
-          node-version: '20'
-
-      - name: Install PHP dependencies
-        run: |
-          composer install --no-dev --optimize-autoloader
-
-      - name: Install Node dependencies
-        run: |
-          npm ci
-
-      - name: Build production assets
-        run: |
-          npm run build:production
-
-      - name: Deploy to WordPress.org
-        uses: 10up/action-wordpress-plugin-deploy@stable
-        env:
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SLUG: ${{ env.PLUGIN_SLUG }}
-          VERSION: ${{ needs.build.outputs.version }}
-          ASSETS_DIR: .github/assets
-
-  # ============================================================================
-  # DEPLOY TO WORDPRESS.ORG (DRY RUN FOR TEST TAGS)
-  # ============================================================================
-  wordpress-deploy-test:
-    name: Deploy to WordPress.org (Test)
-    runs-on: ubuntu-latest
-    needs: [build, release]
-    if: needs.build.outputs.is_test == 'true'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Setup PHP 8.0
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.0'
-          tools: composer:v2
-          coverage: none
-
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v6
-        with:
-          node-version: '20'
-
-      - name: Install PHP dependencies
-        run: |
-          composer install --no-dev --optimize-autoloader
-
-      - name: Install Node dependencies
-        run: |
-          npm ci
-
-      - name: Build production assets
-        run: |
-          npm run build:production
-
-      - name: Deploy to WordPress.org (Dry Run)
-        uses: 10up/action-wordpress-plugin-deploy@stable
-        with:
-          dry-run: true
-        env:
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SLUG: ${{ env.PLUGIN_SLUG }}
-          VERSION: ${{ needs.build.outputs.version }}
-          ASSETS_DIR: .github/assets
+          prerelease: ${{ needs.build.outputs.is_prerelease == 'true' }}
 
   # ============================================================================
   # SYNC TO EDD (STABLE RELEASES ONLY)
@@ -414,7 +327,7 @@ jobs:
   release-summary:
     name: Release Summary
     runs-on: ubuntu-latest
-    needs: [build, release, wordpress-deploy, edd-sync, google-drive]
+    needs: [build, release, edd-sync, google-drive]
     if: always()
 
     steps:
@@ -422,21 +335,29 @@ jobs:
         env:
           VERSION: ${{ needs.build.outputs.version }}
           IS_TEST: ${{ needs.build.outputs.is_test }}
+          IS_PRERELEASE: ${{ needs.build.outputs.is_prerelease }}
           BUILD_RESULT: ${{ needs.build.result }}
           RELEASE_RESULT: ${{ needs.release.result }}
-          DEPLOY_RESULT: ${{ needs.wordpress-deploy.result }}
           EDD_RESULT: ${{ needs.edd-sync.result }}
           GDRIVE_RESULT: ${{ needs.google-drive.result }}
         run: |
+          if [ "$IS_TEST" == "true" ]; then
+            TYPE="🧪 Test Lane"
+          elif [ "$IS_PRERELEASE" == "true" ]; then
+            TYPE="🔶 Pre-release"
+          else
+            TYPE="🚀 Stable"
+          fi
+
           echo "# Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${VERSION} — ${TYPE}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Build | $([ "${BUILD_RESULT}" == "success" ] && echo "✅" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
-          echo "| Release | $([ "${RELEASE_RESULT}" == "success" ] && echo "✅" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
-          echo "| WordPress.org Deploy | $([ "${DEPLOY_RESULT}" == "success" ] && echo "✅" || [ "${DEPLOY_RESULT}" == "skipped" ] && echo "⏭️" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
+          echo "| GitHub Release | $([ "${RELEASE_RESULT}" == "success" ] && echo "✅" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
           echo "| EDD Sync | $([ "${EDD_RESULT}" == "success" ] && echo "✅" || [ "${EDD_RESULT}" == "skipped" ] && echo "⏭️" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
           echo "| Google Drive | $([ "${GDRIVE_RESULT}" == "success" ] && echo "✅" || [ "${GDRIVE_RESULT}" == "skipped" ] && echo "⏭️" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${VERSION}" >> $GITHUB_STEP_SUMMARY
-          echo "**Release Type:** $([ "${IS_TEST}" == "true" ] && echo "🧪 Test Lane" || echo "🚀 Stable")" >> $GITHUB_STEP_SUMMARY
+          echo "*WordPress.org deploy triggers separately on merge to master.*" >> $GITHUB_STEP_SUMMARY

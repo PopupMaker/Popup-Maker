@@ -1,0 +1,47 @@
+name: Deploy to WordPress.org
+
+on:
+    push:
+        branches:
+            - master
+
+env:
+    PLUGIN_SLUG: popup-maker
+
+jobs:
+    deploy:
+        name: Deploy to WordPress.org SVN
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.0'
+                  tools: composer:v2
+                  coverage: none
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: |
+                  composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+                  npm ci
+
+            - name: Build production assets
+              run: npm run build:production
+
+            - name: Deploy to WordPress.org
+              uses: 10up/action-wordpress-plugin-deploy@stable
+              env:
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  SLUG: ${{ env.PLUGIN_SLUG }}
+                  ASSETS_DIR: .github/assets
