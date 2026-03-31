@@ -13,7 +13,7 @@ import baseConfig from '@wordpress/scripts/config/playwright.config.js';
 const config = defineConfig( {
 	...baseConfig,
 	reporter: process.env.CI ? [ [ 'github' ] ] : 'list',
-	workers: 1,
+	workers: process.env.CI ? 2 : 1,
 	globalSetup: fileURLToPath(
 		new URL( './config/global-setup.ts', 'file:' + __filename ).href
 	),
