@@ -384,36 +384,53 @@ async function stageFinish() {
 
 	console.log( '' );
 
-	// Merge to master.
-	log( 'Merging to master branch', 'cyan' );
-	execCommand( 'git checkout master' );
-	execCommand( `git merge --no-ff release/${ version } -m "Merge release ${ version }"` );
-	success( 'Merged to master' );
+	if ( isTest ) {
+		// Test mode: tag from release branch, push tag only. No merge.
+		log( `Creating test tag from release branch: ${ tag }`, 'cyan' );
+		execCommand( `git tag ${ tag }` );
+		success( `Tag created: ${ tag }` );
 
-	// Create tag.
-	log( `Creating tag: ${ tag }`, 'cyan' );
-	execCommand( `git tag ${ tag }` );
-	success( `Tag created: ${ tag }` );
+		log( 'Pushing test tag to remote', 'cyan' );
+		execCommand( `git push origin ${ tag }` );
+		success( 'Test tag pushed' );
+	} else {
+		// Stable release: full merge flow.
+		log( 'Merging to master branch', 'cyan' );
+		execCommand( 'git checkout master' );
+		execCommand( `git merge --no-ff release/${ version } -m "Merge release ${ version }"` );
+		success( 'Merged to master' );
 
-	// Merge back to develop.
-	log( 'Merging back to develop branch', 'cyan' );
-	execCommand( 'git checkout develop' );
-	execCommand( `git merge --no-ff master -m "Merge release ${ version } back to develop"` );
-	success( 'Merged back to develop' );
+		// Create tag on master.
+		log( `Creating tag: ${ tag }`, 'cyan' );
+		execCommand( `git tag ${ tag }` );
+		success( `Tag created: ${ tag }` );
 
-	// Delete release branch.
-	log( `Deleting release branch: release/${ version }`, 'cyan' );
-	execCommand( `git branch -d release/${ version }` );
-	success( 'Release branch deleted' );
+		// Merge back to develop.
+		log( 'Merging back to develop branch', 'cyan' );
+		execCommand( 'git checkout develop' );
+		execCommand( `git merge --no-ff master -m "Merge release ${ version } back to develop"` );
+		success( 'Merged back to develop' );
 
-	// Push to remote.
-	log( 'Pushing to remote', 'cyan' );
-	execCommand( 'git push origin master develop --tags' );
-	success( 'Pushed to remote' );
+		// Delete release branch.
+		log( `Deleting release branch: release/${ version }`, 'cyan' );
+		execCommand( `git branch -d release/${ version }` );
+		success( 'Release branch deleted' );
+
+		// Push everything.
+		log( 'Pushing to remote', 'cyan' );
+		execCommand( 'git push origin master develop --tags' );
+		success( 'Pushed to remote' );
+	}
 
 	console.log( '' );
 	if ( isTest ) {
 		log( `🧪 Test tag ${ tag } pushed. GitHub Actions will dry-run the release pipeline.`, 'cyan' );
+		console.log( '' );
+		info( 'Next steps:' );
+		info( '  1. Watch GitHub Actions for pipeline results' );
+		info( '  2. Verify draft release, SVN dry-run, Slack notification' );
+		info( '  3. Clean up test tag: git tag -d ' + tag + ' && git push origin :refs/tags/' + tag );
+		info( '  4. Ship for real: npm run prepare-release finish' );
 	} else {
 		log( `🚀 Release ${ tag } shipped! GitHub Actions will handle the rest.`, 'cyan' );
 	}
