@@ -180,6 +180,7 @@ function execCommand( cmd, options = {} ) {
 		return execSync( cmd, {
 			encoding: 'utf8',
 			stdio: options.silent ? 'pipe' : 'inherit',
+			env: { ...process.env, BASH_ENV: '', ENV: '' },
 			...options,
 		} );
 	} catch ( err ) {
