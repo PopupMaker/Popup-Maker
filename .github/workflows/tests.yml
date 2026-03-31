@@ -198,18 +198,16 @@ jobs:
           key: ${{ runner.os }}-composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.php }}-
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
-          if [ -f "./bin/install-wp-tests.sh" ]; then
-            chmod +x ./bin/install-wp-tests.sh
-            ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
-          else
-            echo "::error::WordPress test suite installer not found"
-            exit 1
-          fi
+          chmod +x ./bin/install-wp-tests.sh
+          ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
 
       - name: Run Unit Tests
         run: composer run tests
@@ -268,21 +266,19 @@ jobs:
           key: ${{ runner.os }}-composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.php }}-
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
-          if [ -f "./bin/install-wp-tests.sh" ]; then
-            chmod +x ./bin/install-wp-tests.sh
-            ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
-          else
-            echo "::warning::WordPress test suite installer not found at ./bin/install-wp-tests.sh"
-            exit 1
-          fi
+          chmod +x ./bin/install-wp-tests.sh
+          ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
 
       - name: Run Integration Tests
-        run: composer run tests --quiet
+        run: composer run tests
 
   # ============================================================
   # Jest Tests - JavaScript/TypeScript unit tests
