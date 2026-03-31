@@ -187,7 +187,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-scripts
 
       - name: Run Unit Tests
-        run: composer run test:unit --quiet
+        run: composer run tests --quiet
 
   # ============================================================
   # PHPUnit Integration Tests - Requires WordPress + MySQL
@@ -249,6 +249,7 @@ jobs:
       - name: Install WordPress test suite
         run: |
           if [ -f "./bin/install-wp-tests.sh" ]; then
+            chmod +x ./bin/install-wp-tests.sh
             ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
           else
             echo "::warning::WordPress test suite installer not found at ./bin/install-wp-tests.sh"
@@ -256,7 +257,7 @@ jobs:
           fi
 
       - name: Run Integration Tests
-        run: composer run test:integration --quiet
+        run: composer run tests --quiet
 
   # ============================================================
   # Jest Tests - JavaScript/TypeScript unit tests
@@ -362,8 +363,11 @@ jobs:
             npm run build
           fi
 
+      - name: Install wp-env
+        run: npm install -g @wordpress/env
+
       - name: Start wp-env
-        run: npm run wp-env start
+        run: wp-env start
 
       - name: Wait for WordPress
         run: |
@@ -392,7 +396,7 @@ jobs:
 
       - name: Stop wp-env
         if: always()
-        run: npm run wp-env stop
+        run: wp-env stop
 
   # ============================================================
   # Test Summary - Reports overall test status
