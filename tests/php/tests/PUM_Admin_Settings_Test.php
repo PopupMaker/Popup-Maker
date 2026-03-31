@@ -106,8 +106,9 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	 */
 	public function test_defaults_contains_known_values() {
 		$defaults = PUM_Admin_Settings::defaults();
-		// debug_mode is a checkbox with no explicit std — should be null.
-		$this->assertArrayHasKey( 'debug_mode', $defaults, 'defaults should contain debug_mode.' );
+		// Fields without 'std' key are not included in defaults.
+		// debug_mode has no std, so it should NOT be in defaults.
+		$this->assertArrayNotHasKey( 'debug_mode', $defaults, 'debug_mode has no std, should not be in defaults.' );
 	}
 
 	/**

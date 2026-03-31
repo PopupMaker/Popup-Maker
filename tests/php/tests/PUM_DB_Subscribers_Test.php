@@ -189,29 +189,15 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_create_table_creates_table() {
 		global $wpdb;
 
-		// Ensure upgrade.php is loaded for dbDelta.
-		if ( ! function_exists( 'dbDelta' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		}
-
 		$this->db->create_table();
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$found = $wpdb->get_var( "SHOW TABLES LIKE '{$this->db->table_name()}'" );
+		// WP test suite uses temporary tables, which are invisible to SHOW TABLES.
+		// Instead, verify by attempting a query against the table.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$result = $wpdb->get_var( "SELECT COUNT(*) FROM {$this->db->table_name()}" );
 
-		// Debug output if failing.
-		if ( null === $found ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( 'DEBUG: table_name=' . $this->db->table_name() );
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( 'DEBUG: last_error=' . $wpdb->last_error );
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$tables = $wpdb->get_col( 'SHOW TABLES' );
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( 'DEBUG: all_tables=' . implode( ', ', $tables ) );
-		}
-
-		$this->assertSame( $this->db->table_name(), $found );
+		$this->assertNotNull( $result, 'Table should exist and be queryable.' );
+		$this->assertSame( '0', $result, 'Table should be empty after creation.' );
 	}
 
 	/**
