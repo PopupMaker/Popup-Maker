@@ -1,0 +1,137 @@
+name: AI Translate
+
+on:
+    # Auto-run on develop when translatable files change
+    push:
+        branches: [develop]
+        paths:
+            - '**.php'
+            - 'src/**/*.js'
+            - 'src/**/*.ts'
+            - 'languages/*.pot'
+    # Manual trigger for full control
+    workflow_dispatch:
+        inputs:
+            languages:
+                description: 'Target languages (comma-separated)'
+                required: true
+                default: 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN'
+            max_cost:
+                description: 'Maximum cost in USD'
+                required: false
+                default: '5.00'
+            dry_run:
+                description: 'Dry run (no API calls)'
+                required: false
+                type: boolean
+                default: false
+            force_translate:
+                description: 'Force re-translate all strings'
+                required: false
+                type: boolean
+                default: false
+
+env:
+    PLUGIN_SLUG: popup-maker
+
+jobs:
+    translate:
+        # DISABLED: Enable when Potomatic translation is ready
+        if: false
+        name: AI Translate POT
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '22'
+                  cache: 'npm'
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.1'
+                  tools: wp-cli
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build assets
+              run: npm run build
+
+            - name: Create languages directory
+              run: mkdir -p languages
+
+            - name: Generate POT file
+              run: |
+                  wp i18n make-pot . languages/$PLUGIN_SLUG.pot \
+                    --domain=$PLUGIN_SLUG \
+                    --exclude=vendor,vendor-prefixed,node_modules,tests
+
+            - name: Install Potomatic
+              run: npm install -g https://github.com/GravityKit/Potomatic.git
+
+            - name: Run AI Translation
+              env:
+                  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+                  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+                  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+                  TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN' }}
+                  MAX_COST: ${{ inputs.max_cost || vars.DEFAULT_TRANSLATION_MAX_COST || '2.00' }}
+                  DRY_RUN: ${{ inputs.dry_run || 'false' }}
+                  FORCE_TRANSLATE: ${{ inputs.force_translate || 'false' }}
+              run: |
+                  if [[ -z "$OPENAI_API_KEY" && -z "$GEMINI_API_KEY" && -z "$ANTHROPIC_API_KEY" ]]; then
+                    echo "No AI API key configured. Skipping translation."
+                    echo "Set OPENAI_API_KEY, GEMINI_API_KEY, or ANTHROPIC_API_KEY secret to enable."
+                    exit 0
+                  fi
+
+                  ARGS="--pot-file-path languages/$PLUGIN_SLUG.pot"
+                  ARGS="$ARGS --output-dir languages/"
+                  ARGS="$ARGS --po-file-prefix $PLUGIN_SLUG-"
+                  ARGS="$ARGS --locale-format wp_locale"
+                  ARGS="$ARGS --target-languages $TARGET_LANGUAGES"
+                  ARGS="$ARGS --max-cost $MAX_COST"
+                  ARGS="$ARGS --use-dictionary"
+
+                  if [[ "$DRY_RUN" == "true" ]]; then
+                    ARGS="$ARGS --dry-run"
+                  fi
+
+                  if [[ "$FORCE_TRANSLATE" == "true" ]]; then
+                    ARGS="$ARGS --force-translate"
+                  fi
+
+                  echo "Running Potomatic with: $ARGS"
+                  potomatic $ARGS
+
+            - name: Generate JSON translations
+              run: |
+                  if ls languages/*.po 1> /dev/null 2>&1; then
+                    wp i18n make-json languages/ --no-purge
+                  fi
+
+            - name: Check for changes
+              id: changes
+              run: |
+                  if git diff --quiet languages/; then
+                    echo "changed=false" >> $GITHUB_OUTPUT
+                  else
+                    echo "changed=true" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Commit translations
+              if: steps.changes.outputs.changed == 'true' && inputs.dry_run != 'true'
+              env:
+                  INPUT_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN' }}
+              run: |
+                  git config --local user.email "github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+                  git add languages/
+                  git commit -m "chore(i18n): update translations for $INPUT_LANGUAGES"
+                  git push

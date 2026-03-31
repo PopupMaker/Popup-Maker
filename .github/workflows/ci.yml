@@ -49,7 +49,7 @@ jobs:
 
       - name: Detect file changes
         id: changes
-        uses: tj-actions/changed-files@v41
+        uses: tj-actions/changed-files@v45
         with:
           # files_yaml: defines multiple categories → outputs are {category}_any_changed
           files_yaml: |
@@ -115,7 +115,7 @@ jobs:
       # NOTE: Using `files:` (not files_yaml) → outputs are just `any_changed`
       - name: Get changed PHP files
         id: changed-files
-        uses: tj-actions/changed-files@v41
+        uses: tj-actions/changed-files@v45
         with:
           files: |
             **/*.php
@@ -196,7 +196,7 @@ jobs:
       # All JS/TS files for ESLint (config, tooling, source, etc.)
       - name: Get changed JS/TS files
         id: changed-js
-        uses: tj-actions/changed-files@v41
+        uses: tj-actions/changed-files@v45
         with:
           files: |
             **/*.js
@@ -213,7 +213,7 @@ jobs:
       # NOTE: Using `files:` (not files_yaml) → outputs are just `any_changed`
       - name: Get changed CSS/SCSS files
         id: changed-css
-        uses: tj-actions/changed-files@v41
+        uses: tj-actions/changed-files@v45
         with:
           files: |
             **/*.css
@@ -238,14 +238,14 @@ jobs:
         continue-on-error: true
         id: eslint
         run: |
-          echo "${{ steps.changed-js.outputs.all_changed_files }}" | xargs npm run lint:js:changed --
+          echo "${{ steps.changed-js.outputs.all_changed_files }}" | xargs -r npm run lint:js:changed --
 
       - name: Run Stylelint on changed files
         if: steps.changed-css.outputs.any_changed == 'true'
         continue-on-error: true
         id: stylelint
         run: |
-          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs npm run lint:style -- --formatter=compact
+          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs -r npm run lint:style -- --formatter=compact
 
       # Only type-check when TypeScript files change
       - name: Run TypeScript type checking
