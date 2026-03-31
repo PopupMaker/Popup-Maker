@@ -1,4 +1,4 @@
-=== Popup Maker - Boost Sales, Conversions, Optins, Subscribers with the Ultimate WP Popups Builder ===
+=== Popup Maker - Boost Sales, Conversions, Optins, Subscribers with the Ultimate WP Popup Builder ===
 Contributors: danieliser, codeatlantic
 Author URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=author-url
 Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&utm_source=readme-header&utm_content=plugin-url
@@ -51,11 +51,13 @@ With Popup Maker, you have the ultimate popup builder toolkit at your disposal, 
 * Content upgrade popups,
 * Ecommerce popups,
 * Contact form popups,
-* Coronavirus/COVID-19 styleannouncements,
+* Urgent site-wide announcements and notification banners,
 * [EU cookie notices](https://ninjaforms.com/blog/eu-cookie-notices-ninja-forms/),
-* Popups to greet visitors from ProductHunt (requires [premium Advanced Targeting Conditions feature](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=greet-producthunt)),
-* WooCommerce upsell popups (requires [premium WooCommerce feature](https://wppopupmaker.com/extensions/woocommerce-pro/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-upsells)),
-* WooCommerce cross-sell popups (requires [premium WooCommerce feature](https://wppopupmaker.com/extensions/woocommerce-pro/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-crosssells)),
+* Popups to greet visitors from ProductHunt (requires [Popup Maker Pro](https://wppopupmaker.com/pricing/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=greet-producthunt)),
+* WooCommerce & Easy Digital Downloads upsell popups (requires [Popup Maker Pro+](https://wppopupmaker.com/pricing/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-upsells)),
+* WooCommerce & Easy Digital Downloads cross-sell popups (requires [Popup Maker Pro+](https://wppopupmaker.com/pricing/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=woocommerce-crosssells)),
+* Cart abandonment popups — recover lost sales with targeted offers at checkout (requires [Popup Maker Pro+](https://wppopupmaker.com/pricing/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=cart-abandonment)),
+* LifterLMS course enrollment popups — convert visitors directly into enrolled students (requires [Popup Maker Pro+](https://wppopupmaker.com/pricing/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=example-popups&utm_term=lifterlms-enrollment)),
 * & more.
 
 > **Even the free version is great**
@@ -69,8 +71,8 @@ Popup Maker offers a variety of triggers to open your popups:
 * Open automatically (with optional delay)
 * Click button (or any other element) to open
 * Form submission (open a popup when a form is submitted)
-* Open when someone is about to leave your site (requires [premium Exit Intent feature](https://wppopupmaker.com/extensions/exit-intent-popups/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=triggers&utm_term=exit-intent))
-* Open when someone has scrolled down your page (requires [premium Scroll Trigger feature](https://wppopupmaker.com/extensions/scroll-triggered-popups/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=triggers&utm_term=scroll))
+* Open when someone is about to leave your site (requires [Popup Maker Pro](https://wppopupmaker.com/pricing/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=triggers&utm_term=exit-intent))
+* Open when someone has scrolled down your page (requires [Popup Maker Pro](https://wppopupmaker.com/pricing/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=triggers&utm_term=scroll))
 
 <h3>🎯 Smart Popup Targeting: Deliver the Perfect Message to Every Visitor</h3>
 
@@ -119,6 +121,7 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 * [Bit Form](https://wppopupmaker.com/form-integrations/bit-form/) - lightweight form builder with custom post type storage
 * [HTML Forms](https://wppopupmaker.com/form-integrations/html-forms/) - simple, lightweight form builder with no bloat
 * [Beaver Builder Forms](https://wppopupmaker.com/form-integrations/beaver-builder/) - contact, subscribe, and login forms for Beaver Builder page builder
+* [Newsletter](https://wppopupmaker.com/form-integrations/newsletter/) - thenewsletterplugin.com integration with AJAX submission support
 * and more!
 
 <h4>Email Marketing & CRM Integrations:</h4>
@@ -151,21 +154,45 @@ Take complete control of your popups with our powerful customization features:
 
 <h3>👍 Trusted by many people just like you!</h3>
 
-Popup Maker is used on over 780,000 websites and has received over 4,200 5-star reviews just like this one:
+Popup Maker is used on over 780,000 websites and has received over 4,300 5-star reviews just like this one:
 
 > **Great plugin, everything I needed**
 > "Really nice plugin, simple to use, responsive, a good catch !" ~[@lemmmy](https://wordpress.org/support/topic/great-plugin-everything-i-needed/)
 
-<h3>🛠️ Enhance Your WordPress Popups Using Our Premium Features</h3>
+<h3>🚀 Go Further with Popup Maker Pro & Pro+</h3>
 
-Need even more features? Popup Maker has over 20 premium features to supercharge your conversion rates:
+Stop settling for basic conversion tracking. Popup Maker is the **only WordPress popup plugin with complete revenue attribution** — see exactly how much money each popup generates, not just clicks and email captures.
 
-* [Exit Intent](https://wppopupmaker.com/extensions/exit-intent-popups/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=exit-intent) - Catch abandoning visitors before they leave with perfectly timed offers
-* [Popup Analytics](https://wppopupmaker.com/extensions/popup-analytics/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=popup-analytics) - Track views, conversions, and optimize your popup performance with detailed insights
-* [Advanced Targeting Conditions](https://wppopupmaker.com/extensions/advanced-targeting-conditions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=advanced-targeting-conditions) - Show popups based on user behavior, referral source, geolocation, and more
-* [Forced Interaction](https://wppopupmaker.com/extensions/forced-interaction/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=forced-interaction) - Ensure critical messages are seen with popups that require acknowledgment
-* [Scheduling](https://wppopupmaker.com/extensions/scheduling/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=scheduling) - Display time-sensitive offers and content automatically at the perfect moment
-* And [many more premium features](https://wppopupmaker.com/extensions/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=premium-features&utm_term=all-extensions) to help you maximize conversions!
+**No monthly fees. Your data stays on your server. No traffic limits. Ever.**
+
+> Compare to the alternatives: OptinMonster starts at $108/year. Privy starts at $288/year. Justuno starts at $228/year. None of them give you complete revenue attribution or WordPress-native data ownership.
+
+<h4>⚡ Popup Maker Pro — $99/year</h4>
+
+Everything serious marketers need to drive and measure results:
+
+* **Exit Intent** — Recover abandoning visitors with perfectly timed offers before they leave
+* **Popup Analytics** — Track views, clicks, and conversions with a full reporting dashboard
+* **Advanced Targeting** — Target by user behavior, referral source, scroll depth, geolocation, browser, OS, user role, login status, and more
+* **Scheduling** — Display time-sensitive offers automatically at the perfect moment
+* **Forced Interaction** — Ensure critical messages are acknowledged before users continue
+* **Call to Action Management** — Create, track, and export unlimited trackable CTAs with conversion reporting
+* **Bulk Operations** — Enable, disable, duplicate, and manage multiple popups at once
+* **Export / Import** — Replicate winning campaigns across sites in seconds
+* **FluentCRM Integration** — Tag contacts, add to lists, and trigger automations on popup conversion
+* **Scroll Trigger** — Fire popups when visitors reach a specific scroll depth
+
+<h4>🏆 Popup Maker Pro+ — $249/year</h4>
+
+Everything in Pro, plus industry-specific power for ecommerce and education businesses:
+
+* **Complete Revenue Attribution** — Track actual sales generated by each popup, from interaction through final purchase. See that a specific popup generated $5,000 in revenue this month.
+* **WooCommerce Integration** — Add to cart, apply discounts, trigger upsells, cross-sells, and cart abandonment recovery, and track purchase revenue per popup campaign
+* **Easy Digital Downloads Integration** — Add to cart, apply discounts, trigger upsells and cross-sells, and track purchase revenue per popup campaign — full feature parity with WooCommerce
+* **LifterLMS Integration** — Enroll students, award achievements, apply discounts, and track enrollment revenue per popup
+* **Advanced Revenue Reporting** — Attribution reports showing real dollars earned per campaign, popup, and CTA
+
+👉 [Compare Plans & Pricing](https://wppopupmaker.com/pricing/?utm_campaign=readme&utm_medium=referral&utm_source=readme-description&utm_content=pro-plus-section&utm_term=compare-plans)
 
 <h3>🤝 Join Our Growing Community</h3>
 
