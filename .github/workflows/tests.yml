@@ -392,8 +392,8 @@ jobs:
         run: |
           echo "Waiting for WordPress to be ready..."
           for i in {1..30}; do
-            if curl -s http://localhost:8988 > /dev/null 2>&1; then
-              echo "WordPress is ready!"
+            if curl -s http://127.0.0.1:8880 > /dev/null 2>&1; then
+              echo "WordPress dev site is ready!"
               break
             fi
             echo "Attempt $i/30..."
@@ -401,7 +401,9 @@ jobs:
           done
 
       - name: Run Playwright Tests
-        run: npm run test:e2e --quiet
+        env:
+          WP_BASE_URL: http://127.0.0.1:8880
+        run: npm run test:e2e
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
