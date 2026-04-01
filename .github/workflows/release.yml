@@ -255,7 +255,7 @@ jobs:
 
       - name: Send Slack notification
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_SUPPORT }}
+          SLACK_WEBHOOK_URL: ${{ needs.build.outputs.is_test == 'true' && secrets.SLACK_WEBHOOK || secrets.SLACK_WEBHOOK_SUPPORT }}
           EMOJI: ${{ steps.status.outputs.emoji }}
           STATUS: ${{ steps.status.outputs.status }}
           VERSION: ${{ needs.build.outputs.version }}
