@@ -106,6 +106,7 @@ jobs:
 
     outputs:
       release_url: ${{ steps.gh_release.outputs.url }}
+      changelog: ${{ steps.changelog.outputs.content }}
 
     steps:
       - name: Checkout code
@@ -262,6 +263,7 @@ jobs:
           IS_TEST: ${{ needs.build.outputs.is_test }}
           RELEASE_RESULT: ${{ needs.release.result }}
           RELEASE_URL: ${{ needs.release.outputs.release_url }}
+          CHANGELOG: ${{ needs.release.outputs.changelog }}
           PLUGIN: ${{ env.PLUGIN_NAME }}
           REPO: ${{ github.repository }}
         run: |
@@ -279,6 +281,9 @@ jobs:
 
           CHANGELOG_URL="https://github.com/${REPO}/blob/master/CHANGELOG.md"
 
+          # Truncate changelog for Slack (max ~2500 chars to stay under block limit).
+          CHANGELOG_TRUNCATED=$(echo "$CHANGELOG" | head -30 | cut -c 1-2500)
+
           PAYLOAD=$(jq -n \
             --arg emoji "$EMOJI" \
             --arg status "$STATUS" \
@@ -288,6 +293,7 @@ jobs:
             --arg gh_status "$GH_STATUS" \
             --arg release_url "$RELEASE_URL" \
             --arg changelog_url "$CHANGELOG_URL" \
+            --arg changelog "$CHANGELOG_TRUNCATED" \
             '{
               "text": "\($emoji) \($status) - \($plugin) \($version)",
               "blocks": [
@@ -305,9 +311,13 @@ jobs:
                 },
                 {
                   "type": "section",
-                  "text": { "type": "mrkdwn", "text": "*Support Actions:*\n• Review changelog for customer communications\n• Update documentation if needed\n• Monitor support channels for issues" }
+                  "text": { "type": "mrkdwn", "text": "*What'\''s New:*\n\($changelog)" }
                 },
                 { "type": "divider" },
+                {
+                  "type": "section",
+                  "text": { "type": "mrkdwn", "text": "*Support Actions:*\n• Review changelog for customer communications\n• Update documentation if needed\n• Monitor support channels for issues" }
+                },
                 {
                   "type": "actions",
                   "elements": [
