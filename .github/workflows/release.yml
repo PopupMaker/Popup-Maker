@@ -283,42 +283,45 @@ jobs:
             exit 0
           fi
 
-          # Build emoji prefix.
           EMOJI="🚀"
           [ "$IS_TEST" == "true" ] && EMOJI="🧪"
 
-          # Status indicators.
           EDD_STATUS="✅"
           [ "$EDD_RESULT" != "success" ] && EDD_STATUS="⚠️"
           GDRIVE_STATUS="✅"
           [ "$GDRIVE_RESULT" != "success" ] && GDRIVE_STATUS="⚠️"
 
-          # Build message.
-          MESSAGE="*${PLUGIN_NAME} ${VERSION}*\n\n"
+          # Truncate changelog.
+          TRUNCATED=$(echo "$CHANGELOG" | head -15 | cut -c 1-2000)
 
-          if [ -n "$CHANGELOG" ]; then
-            # Truncate for Slack.
-            TRUNCATED=$(echo "$CHANGELOG" | head -20)
-            MESSAGE="${MESSAGE}\`\`\`\n${TRUNCATED}\n\`\`\`\n\n"
-          fi
-
-          MESSAGE="${MESSAGE}*Downloads:*\n"
-          MESSAGE="${MESSAGE}🔗 <${RELEASE_URL}|GitHub Release>\n"
-
+          # Build downloads section.
+          DOWNLOADS="🔗 <${RELEASE_URL}|GitHub Release>"
           if [ -n "$DRIVE_DOWNLOAD_URL" ]; then
-            MESSAGE="${MESSAGE}⬇️ <${DRIVE_DOWNLOAD_URL}|Download Release Zip (shareable link)>\n"
+            DOWNLOADS="${DOWNLOADS}\n⬇️ <${DRIVE_DOWNLOAD_URL}|Download Zip (shareable)>"
           fi
 
-          MESSAGE="${MESSAGE}\n*Status:* EDD ${EDD_STATUS} | GDrive ${GDRIVE_STATUS}\n"
+          TEST_NOTE=""
+          [ "$IS_TEST" == "true" ] && TEST_NOTE="\n_🧪 Test release — not published to WordPress.org_"
 
-          if [ "$IS_TEST" == "true" ]; then
-            MESSAGE="${MESSAGE}\n_🧪 This is a test release — not published to WordPress.org_"
-          fi
+          # Use jq for safe JSON construction.
+          PAYLOAD=$(jq -n \
+            --arg emoji "$EMOJI" \
+            --arg plugin "$PLUGIN_NAME" \
+            --arg version "$VERSION" \
+            --arg changelog "$TRUNCATED" \
+            --arg downloads "$DOWNLOADS" \
+            --arg status "EDD ${EDD_STATUS} | GDrive ${GDRIVE_STATUS}" \
+            --arg test_note "$TEST_NOTE" \
+            '{
+              text: "\($emoji) *\($plugin) \($version)*\n\n```\n\($changelog)\n```\n\n*Downloads:*\n\($downloads)\n\n*Status:* \($status)\($test_note)",
+              username: "Release Bot",
+              icon_emoji: ":package:"
+            }')
 
-          curl -X POST \
-            --data-urlencode "payload={\"text\": \"${EMOJI} ${MESSAGE}\", \"username\": \"Release Bot\", \"icon_emoji\": \":package:\"}" \
-            "$SLACK_WEBHOOK_URL" \
-            --fail --silent --show-error
+          curl -s -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            --fail --show-error
 
           echo "✅ Slack sent"
 
