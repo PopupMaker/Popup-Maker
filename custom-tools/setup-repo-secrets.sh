@@ -47,7 +47,12 @@ set_secret() {
     if [[ "$val" == @* ]]; then
         local filepath="${val:1}"
         if [ -f "$filepath" ]; then
-            gh secret set "$key" --repo "$REPO" < "$filepath"
+            # Base64-encode JSON files (required by some actions like GDrive).
+            if [[ "$filepath" == *.json ]]; then
+                base64 < "$filepath" | gh secret set "$key" --repo "$REPO"
+            else
+                gh secret set "$key" --repo "$REPO" < "$filepath"
+            fi
         else
             echo "  ❌ Secret: $key (file not found: $filepath)"
             return
