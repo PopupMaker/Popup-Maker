@@ -9,7 +9,7 @@
 -   Added link click conversion tracking for external and special links (mailto:, tel:, etc.) within popups. Clicks are tracked via analytics beacon and categorized by link type for conversion reporting.
 -   Added [Beaver Builder Forms integration](https://wppopupmaker.com/form-integrations/beaver-builder/) for form submission tracking and conversion analytics. Supports Contact, Subscribe, and Login form modules.
 -   Added [Bit Form integration](https://wppopupmaker.com/form-integrations/bit-form/) for form submission tracking and conversion analytics.
--   Added [Elementor Pro Forms integration](https://wppopupmaker.com/form-integrations/elementor-forms/) for form submission tracking and conversion analytics with support for targeting specific forms.
+-   Added [Elementor Pro Forms integration](https://wppopupmaker.com/form-integrations/elementor-pro-forms/) for form submission tracking and conversion analytics with support for targeting specific forms.
 -   Added [Forminator integration](https://wppopupmaker.com/form-integrations/forminator/) for form submission tracking and conversion analytics.
 -   Added [HappyForms integration](https://wppopupmaker.com/form-integrations/happyforms/) for form submission tracking and conversion analytics.
 -   Added [HTML Forms integration](https://wppopupmaker.com/form-integrations/html-forms/) for lightweight form submission tracking and conversion analytics.
