@@ -9,11 +9,12 @@ on:
             dry_run:
                 description: 'Dry run (no actual deploy)'
                 type: boolean
-                default: true
+                default: false
 
 env:
     PLUGIN_SLUG: popup-maker
     PLUGIN_NAME: Popup Maker
+    BUILD_DIR: /tmp/svn-source/popup-maker
     FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -40,9 +41,45 @@ jobs:
               run: |
                   VERSION=$(grep "Version:" popup-maker.php | head -1 | sed 's/.*Version:\s*\([0-9.]*\).*/\1/' | xargs)
                   echo "version=${VERSION}" >> $GITHUB_OUTPUT
-                  echo "📦 Deploying version: ${VERSION}"
+                  echo "📦 Version: ${VERSION}"
 
+            - name: Try downloading release zip
+              id: download
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  VERSION: ${{ steps.version.outputs.version }}
+                  REPO: ${{ github.repository }}
+              run: |
+                  ZIP_NAME="${{ env.PLUGIN_SLUG }}_${VERSION}.zip"
+
+                  gh release download "${VERSION}" \
+                    --pattern "${ZIP_NAME}" \
+                    --dir . \
+                    --repo "${REPO}" 2>/dev/null || true
+
+                  if [ -f "${ZIP_NAME}" ]; then
+                    echo "✅ Downloaded ${ZIP_NAME}"
+                    echo "found=true" >> $GITHUB_OUTPUT
+                    echo "zip_name=${ZIP_NAME}" >> $GITHUB_OUTPUT
+                  else
+                    echo "⚠️ Release zip not found, will build from source"
+                    echo "found=false" >> $GITHUB_OUTPUT
+                  fi
+
+            # --- Path A: Extract release zip into BUILD_DIR ---
+            - name: Extract release zip
+              if: steps.download.outputs.found == 'true'
+              env:
+                  ZIP_NAME: ${{ steps.download.outputs.zip_name }}
+              run: |
+                  mkdir -p "${{ env.BUILD_DIR }}"
+                  unzip -o "${ZIP_NAME}" -d /tmp/svn-source
+                  echo "✅ Extracted to ${{ env.BUILD_DIR }}"
+                  ls -la "${{ env.BUILD_DIR }}"
+
+            # --- Path B: Build from source into BUILD_DIR ---
             - name: Setup PHP
+              if: steps.download.outputs.found != 'true'
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
@@ -50,19 +87,44 @@ jobs:
                   coverage: none
 
             - name: Setup Node.js
+              if: steps.download.outputs.found != 'true'
               uses: actions/setup-node@v6
               with:
                   node-version: '20'
                   cache: 'npm'
 
             - name: Install dependencies
+              if: steps.download.outputs.found != 'true'
               run: |
                   composer install --no-dev --optimize-autoloader --no-interaction --no-progress
                   npm ci
 
-            - name: Build production assets
-              run: npm run build:production
+            - name: Build into BUILD_DIR
+              if: steps.download.outputs.found != 'true'
+              run: |
+                  npm run build:production
 
+                  mkdir -p "${{ env.BUILD_DIR }}"
+
+                  if [ -f "bin/build-release.js" ]; then
+                    node bin/build-release.js --output-dir "${{ env.BUILD_DIR }}"
+                  else
+                    # Manual copy matching what build-release.js produces.
+                    cp -r classes "${{ env.BUILD_DIR }}/"
+                    cp -r includes "${{ env.BUILD_DIR }}/"
+                    cp -r languages "${{ env.BUILD_DIR }}/" 2>/dev/null || true
+                    cp -r vendor-prefixed "${{ env.BUILD_DIR }}/" 2>/dev/null || true
+                    [ -d "dist" ] && cp -r dist "${{ env.BUILD_DIR }}/"
+                    [ -d "assets" ] && cp -r assets "${{ env.BUILD_DIR }}/"
+                    cp popup-maker.php "${{ env.BUILD_DIR }}/"
+                    cp readme.txt "${{ env.BUILD_DIR }}/"
+                    cp LICENSE "${{ env.BUILD_DIR }}/" 2>/dev/null || true
+                  fi
+
+                  echo "✅ Built into ${{ env.BUILD_DIR }}"
+                  ls -la "${{ env.BUILD_DIR }}"
+
+            # --- Deploy (same for both paths) ---
             - name: Deploy to WordPress.org
               uses: 10up/action-wordpress-plugin-deploy@stable
               with:
@@ -72,7 +134,8 @@ jobs:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SLUG: ${{ env.PLUGIN_SLUG }}
                   VERSION: ${{ steps.version.outputs.version }}
-                  ASSETS_DIR: .github/assets
+                  BUILD_DIR: ${{ env.BUILD_DIR }}
+                  ASSETS_DIR: .wordpress-org
 
     notify-failure:
         name: Slack Failure Notification
@@ -97,6 +160,6 @@ jobs:
                   MESSAGE="${MESSAGE}🔍 <https://github.com/${REPO}/actions/runs/${RUN_ID}|View Workflow>"
 
                   curl -X POST \
-                    --data-urlencode "payload={\"text\": \"${MESSAGE}\", \"username\": \"Release Bot\", \"icon_emoji\": \":x:\"}" \
+                    --data-urlencode "payload={\"text\": \"${MESSAGE}\", \"username\": \"Release Bot\", \"icon_emoji\": \":package:\"}" \
                     "$SLACK_WEBHOOK_URL" \
                     --fail --silent --show-error
