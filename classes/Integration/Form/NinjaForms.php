@@ -22,7 +22,8 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return 'Ninja Forms';
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Ninja Forms' own translations.
+		return __( 'Ninja Forms', 'ninja-forms' );
 	}
 
 	/**
@@ -69,11 +70,15 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	public function on_success_v2() {
 		global $ninja_forms_processing;
 
-		if ( ! self::should_process_submission() ) {
+		if ( ! $this->should_process_submission() ) {
 			return;
 		}
-		$popup_id = self::get_popup_id();
-		self::increase_conversion( $popup_id );
+
+		$popup_id = $this->get_popup_id();
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
 		pum_integrated_form_submission(
 			[
@@ -88,11 +93,16 @@ class PUM_Integration_Form_NinjaForms extends PUM_Abstract_Integration_Form {
 	 * @param $form_data
 	 */
 	public function on_success_v3( $form_data ) {
-		if ( ! self::should_process_submission() ) {
+		if ( ! $this->should_process_submission() ) {
 			return;
 		}
-		$popup_id = self::get_popup_id();
-		self::increase_conversion( $popup_id );
+
+		$popup_id = $this->get_popup_id();
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
+
 		pum_integrated_form_submission(
 			[
 				'popup_id'      => $popup_id,

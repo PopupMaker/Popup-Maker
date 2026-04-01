@@ -354,6 +354,28 @@ class RestAPI extends Controller {
 			},
 		] );
 
+		// Register popup_title as REST field with explicit update_callback.
+		// This ensures saves work correctly with custom REST namespace.
+		register_rest_field( $post_type, 'popup_title', [
+			'get_callback'        => function ( $obj ) {
+				$popup = pum_get_popup( $obj['id'] );
+				return $popup ? $popup->get_meta( 'popup_title' ) : '';
+			},
+			'update_callback'     => function ( $value, $obj ) {
+				$popup = pum_get_popup( $obj->ID );
+				if ( $popup ) {
+					$popup->update_meta( 'popup_title', sanitize_text_field( $value ) );
+				}
+			},
+			'schema'              => [
+				'type'        => 'string',
+				'description' => __( 'The popup title displayed inside the popup.', 'popup-maker' ),
+			],
+			'permission_callback' => function () use ( $edit_permission ) {
+				return current_user_can( $edit_permission );
+			},
+		] );
+
 		register_rest_field( $post_type, 'settings', [
 			'get_callback'        => function ( $obj, $field, $request ) {
 				$popup = pum_get_popup( $obj['id'] );

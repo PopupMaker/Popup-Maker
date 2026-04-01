@@ -1,0 +1,167 @@
+/**
+ * Premium Feature Preview Styles
+ *
+ * Minimal overrides — reuses existing Go Pro hero styles from _go-pro.scss.
+ * Only adds: locked option styling, close button, Pro+ color swap, modal fit.
+ *
+ * @since 1.22.0
+ */
+
+/* Locked option in native select dropdowns — smaller lock icon. */
+option.pum-pro-locked {
+	color: #999;
+	font-style: italic;
+}
+
+/* Scale down lock emoji in select options. */
+select option {
+	font-size: inherit;
+}
+
+/* Modal wrapper — center properly and remove default modal chrome. */
+.pum-premium-preview-modal {
+	.pum-modal-wrap {
+		width: 500px;
+		margin-left: -250px;
+		border-radius: 6px;
+		overflow: hidden;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+		background: transparent;
+	}
+
+	/* Hide any leftover default modal header/footer/content wrappers. */
+	.pum-modal-header,
+	.pum-modal-footer {
+		display: none;
+	}
+
+	.pum-modal-content {
+		padding: 0 !important;
+	}
+}
+
+/* Close button — floats over the hero. */
+.pum-premium-close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	z-index: 10;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	background: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 50%;
+	color: rgba(255, 255, 255, 0.7);
+	font-size: 16px;
+	line-height: 26px;
+	text-align: center;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+
+	&::before {
+		content: "\2715";
+	}
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.2);
+		color: #fff;
+	}
+}
+
+/* Hero inside modal — compact spacing adjustments. */
+.pum-premium-hero {
+	margin: 0;
+	border: none;
+	border-radius: 6px;
+	padding: 20px 24px;
+
+	.pum-go-pro-hero__body {
+		display: block; /* Stack vertically in modal. */
+	}
+
+	.pum-go-pro-hero__features {
+		grid-template-columns: 1fr;
+		gap: 6px;
+
+		li {
+			font-size: 14px;
+		}
+	}
+
+	.pum-go-pro-hero__footer {
+		text-align: center;
+		margin-top: 16px;
+		padding-top: 16px;
+	}
+
+	.pum-go-pro-hero__cta {
+		display: inline-flex;
+	}
+
+	.pum-go-pro-hero__price-note a {
+		color: #94a3b8;
+
+		&:hover {
+			color: #cbd5e1;
+		}
+	}
+}
+
+/* Feature label — small, above the headline. */
+.pum-premium-hero__label {
+	font-size: 13px;
+	font-weight: 500;
+	color: #fff;
+	margin-bottom: 6px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+/* Pro+ badge variant. */
+.pum-premium-hero__badge--plus {
+	background: #7f54b3 !important;
+}
+
+/* Stats row — horizontal in modal footer. */
+.pum-premium-hero__stats-row {
+	display: flex;
+	justify-content: center;
+	gap: 28px;
+	margin-bottom: 16px;
+}
+
+/* Pro+ variant — purple accents instead of green. */
+.pum-tier-pro_plus .pum-premium-hero {
+	background: linear-gradient(135deg, #1a1033 0%, #1d2327 35%, #1d2327 55%, #1a1033 100%);
+	border-color: rgba(127, 84, 179, 0.25);
+
+	/* Purple accent line. */
+	&::before {
+		background: linear-gradient(90deg, transparent, #7f54b3 30%, #7f54b3 70%, transparent);
+	}
+
+	/* Purple glow. */
+	&::after {
+		background: rgba(127, 84, 179, 0.18);
+	}
+
+	.pum-go-pro-hero__body::before {
+		background: rgba(127, 84, 179, 0.14);
+	}
+
+	.pum-go-pro-hero__features li::before {
+		background: rgba(127, 84, 179, 0.2);
+		color: #a78bfa;
+	}
+
+	.pum-go-pro-hero__cta {
+		background: #7f54b3;
+
+		&:hover,
+		&:focus {
+			background: #674399;
+		}
+	}
+}

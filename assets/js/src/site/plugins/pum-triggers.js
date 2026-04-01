@@ -206,7 +206,11 @@
 				);
 			},
 			admin_debug: function () {
-				PUM.getPopup( this ).popmake( 'open' );
+				// Defer open until after all popups finish initializing.
+				var $popup = PUM.getPopup( this );
+				$( document ).one( 'pumInitialized', function () {
+					$popup.popmake( 'open' );
+				} );
 			},
 		} );
 

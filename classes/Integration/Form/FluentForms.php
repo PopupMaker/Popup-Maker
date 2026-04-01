@@ -30,7 +30,7 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Fluent Forms' own translations.
 		return __( 'Fluent Forms', 'fluentform' );
 	}
 
@@ -89,9 +89,9 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Hooks in a success functions specific to this provider for non AJAX submission handling.
 	 *
-	 * @param string $submission_id
-	 * @param array  $form_data
-	 * @param array  $form
+	 * @param string          $submission_id
+	 * @param array           $form_data
+	 * @param object|stdClass $form
 	 */
 	public function on_success( $submission_id, $form_data, $form ) {
 		if ( ! $this->should_process_submission() ) {
@@ -99,13 +99,22 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 		}
 
 		$popup_id = $this->get_popup_id();
-		$this->increase_conversion( $popup_id );
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
+
+		// Defensive validation - $form is stdClass, not array.
+		$form_id = null;
+		if ( is_object( $form ) && isset( $form->attributes ) && is_object( $form->attributes ) && isset( $form->attributes->id ) ) {
+			$form_id = $form->attributes->id;
+		}
 
 		pum_integrated_form_submission(
 			[
 				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
-				'form_id'       => isset( $form['attributes']['id'] ) ? $form['attributes']['id'] : null,
+				'form_id'       => $form_id,
 			]
 		);
 	}

@@ -1,0 +1,484 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+# Cancel in-progress runs for the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================
+  # Change Detection & Test Discovery
+  # Determines which test suites need to run and if they exist
+  # ============================================================
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      php: ${{ steps.changes.outputs.php_any_changed }}
+      php_tests: ${{ steps.changes.outputs.php_tests_any_changed }}
+      js: ${{ steps.changes.outputs.js_any_changed }}
+      js_tests: ${{ steps.changes.outputs.js_tests_any_changed }}
+      e2e: ${{ steps.changes.outputs.e2e_any_changed }}
+      npm_deps: ${{ steps.changes.outputs.npm_deps_any_changed }}
+      php_deps: ${{ steps.changes.outputs.php_deps_any_changed }}
+      ci: ${{ steps.changes.outputs.ci_any_changed }}
+      # Test directory existence
+      has_php_unit_tests: ${{ steps.check-tests.outputs.has_php_unit_tests }}
+      has_php_integration_tests: ${{ steps.check-tests.outputs.has_php_integration_tests }}
+      has_js_tests: ${{ steps.check-tests.outputs.has_js_tests }}
+      has_e2e_tests: ${{ steps.check-tests.outputs.has_e2e_tests }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect file changes
+        id: changes
+        uses: tj-actions/changed-files@v45
+        with:
+          files_yaml: |
+            php:
+              - '**/*.php'
+              - '!vendor/**'
+              - '!vendor-prefixed/**'
+              - '!tests/**'
+            php_tests:
+              - 'tests/**/*.php'
+              - 'phpunit.xml.dist'
+              - 'tests/php/phpunit.xml'
+            js:
+              - 'packages/*/src/**/*.{js,ts,tsx,jsx}'
+              - 'assets/js/src/**/*.{js,ts,tsx,jsx}'
+              - 'src/**/*.{js,ts,tsx,jsx}'
+            js_tests:
+              - 'tests/unit/**'
+              - 'jest.config.js'
+              - 'jest.config.ts'
+              - 'jest.config.mjs'
+            e2e:
+              - 'tests/e2e/**'
+              - 'playwright.config.ts'
+              - 'playwright.config.js'
+            npm_deps:
+              - 'package.json'
+              - 'package-lock.json'
+            php_deps:
+              - 'composer.json'
+              - 'composer.lock'
+            ci:
+              - '.github/workflows/tests.yml'
+
+      - name: Check for test directories
+        id: check-tests
+        run: |
+          # Check for PHP unit tests
+          if [ -d "tests/php/tests" ] && find tests/php/tests -name "*Test.php" 2>/dev/null | grep -q .; then
+            echo "has_php_unit_tests=true" >> $GITHUB_OUTPUT
+            echo "Found PHP unit tests in tests/php/tests/"
+          elif [ -f "phpunit.xml.dist" ] || [ -f "phpunit.xml" ]; then
+            echo "has_php_unit_tests=true" >> $GITHUB_OUTPUT
+            echo "Found PHPUnit config (assuming unit tests exist)"
+          else
+            echo "has_php_unit_tests=false" >> $GITHUB_OUTPUT
+            echo "No PHP unit tests found"
+          fi
+
+          # Check for PHP integration tests
+          if [ -d "tests/php" ] && find tests/php -name "*Test.php" 2>/dev/null | grep -q .; then
+            echo "has_php_integration_tests=true" >> $GITHUB_OUTPUT
+            echo "Found PHP integration tests in tests/php/"
+          else
+            echo "has_php_integration_tests=false" >> $GITHUB_OUTPUT
+            echo "No PHP integration tests found"
+          fi
+
+          # Check for Jest tests
+          if [ -d "tests/unit" ] || [ -d "__tests__" ]; then
+            echo "has_js_tests=true" >> $GITHUB_OUTPUT
+            echo "Found JS test directory"
+          elif [ -f "jest.config.js" ] || [ -f "jest.config.ts" ] || [ -f "jest.config.mjs" ]; then
+            echo "has_js_tests=true" >> $GITHUB_OUTPUT
+            echo "Found Jest config"
+          else
+            echo "has_js_tests=false" >> $GITHUB_OUTPUT
+            echo "No JS tests found"
+          fi
+
+          # Check for Playwright e2e tests
+          if [ -d "tests/e2e" ]; then
+            echo "has_e2e_tests=true" >> $GITHUB_OUTPUT
+            echo "Found e2e test directory"
+          elif [ -f "playwright.config.ts" ] || [ -f "playwright.config.js" ]; then
+            echo "has_e2e_tests=true" >> $GITHUB_OUTPUT
+            echo "Found Playwright config"
+          else
+            echo "has_e2e_tests=false" >> $GITHUB_OUTPUT
+            echo "No e2e tests found"
+          fi
+
+      - name: Output detection summary
+        run: |
+          echo "=== File Changes ==="
+          echo "PHP source: ${{ steps.changes.outputs.php_any_changed }}"
+          echo "PHP tests: ${{ steps.changes.outputs.php_tests_any_changed }}"
+          echo "JS source: ${{ steps.changes.outputs.js_any_changed }}"
+          echo "JS tests: ${{ steps.changes.outputs.js_tests_any_changed }}"
+          echo "E2E tests: ${{ steps.changes.outputs.e2e_any_changed }}"
+          echo "NPM deps: ${{ steps.changes.outputs.npm_deps_any_changed }}"
+          echo "PHP deps: ${{ steps.changes.outputs.php_deps_any_changed }}"
+          echo "CI config: ${{ steps.changes.outputs.ci_any_changed }}"
+          echo ""
+          echo "=== Test Discovery ==="
+          echo "PHP Unit Tests: ${{ steps.check-tests.outputs.has_php_unit_tests }}"
+          echo "PHP Integration: ${{ steps.check-tests.outputs.has_php_integration_tests }}"
+          echo "JS Tests: ${{ steps.check-tests.outputs.has_js_tests }}"
+          echo "E2E Tests: ${{ steps.check-tests.outputs.has_e2e_tests }}"
+
+  # ============================================================
+  # PHPUnit Tests - Requires WordPress test suite + MySQL
+  # ============================================================
+  test-php-unit:
+    name: PHP Unit Tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.has_php_unit_tests == 'true' &&
+      (needs.detect-changes.outputs.php == 'true' ||
+       needs.detect-changes.outputs.php_tests == 'true' ||
+       needs.detect-changes.outputs.php_deps == 'true' ||
+       needs.detect-changes.outputs.ci == 'true')
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["7.4", "8.1", "8.2", "8.3"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          extensions: mysqli
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-${{ matrix.php }}-
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install WordPress test suite
+        run: |
+          chmod +x ./bin/install-wp-tests.sh
+          ./bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
+
+      - name: Run Unit Tests
+        run: composer run tests
+
+  # ============================================================
+  # PHPUnit Integration Tests - Requires WordPress + MySQL
+  # Only runs on PRs and main/develop branches to reduce CI cost
+  # ============================================================
+  test-php-integration:
+    name: PHP Integration Tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.has_php_integration_tests == 'true' &&
+      (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') &&
+      (needs.detect-changes.outputs.php == 'true' ||
+       needs.detect-changes.outputs.php_tests == 'true' ||
+       needs.detect-changes.outputs.php_deps == 'true' ||
+       needs.detect-changes.outputs.ci == 'true')
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["7.4", "8.2"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          extensions: mysqli
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-${{ matrix.php }}-
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install WordPress test suite
+        run: |
+          chmod +x ./bin/install-wp-tests.sh
+          ./bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
+
+      - name: Run Integration Tests
+        run: composer run tests
+
+  # ============================================================
+  # Jest Tests - JavaScript/TypeScript unit tests
+  # ============================================================
+  test-js:
+    name: Jest Tests
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.has_js_tests == 'true' &&
+      (needs.detect-changes.outputs.js == 'true' ||
+       needs.detect-changes.outputs.js_tests == 'true' ||
+       needs.detect-changes.outputs.npm_deps == 'true' ||
+       needs.detect-changes.outputs.ci == 'true')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run Jest Tests
+        run: npm run test:unit --quiet
+
+  # ============================================================
+  # Playwright E2E Tests - Browser-based tests with wp-env
+  # Only runs on PRs and main/develop branches
+  # ============================================================
+  test-e2e:
+    name: Playwright E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    needs: detect-changes
+    # DISABLED: E2E tests take 20+ min on GH runners. Run locally or enable when optimized.
+    if: |
+      false &&
+      needs.detect-changes.outputs.has_e2e_tests == 'true' &&
+      (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') &&
+      (needs.detect-changes.outputs.php == 'true' ||
+       needs.detect-changes.outputs.js == 'true' ||
+       needs.detect-changes.outputs.e2e == 'true' ||
+       needs.detect-changes.outputs.npm_deps == 'true' ||
+       needs.detect-changes.outputs.php_deps == 'true' ||
+       needs.detect-changes.outputs.ci == 'true')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer:v2
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-8.2-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-8.2-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Install Playwright system dependencies
+        run: npx playwright install-deps chromium
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-playwright-
+
+      - name: Install Playwright browser
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
+
+      - name: Build assets (if needed)
+        run: |
+          if npm run 2>/dev/null | grep -q "build"; then
+            npm run build
+          fi
+
+      - name: Install wp-env
+        run: npm install -g @wordpress/env
+
+      - name: Start wp-env
+        run: wp-env start
+
+      - name: Wait for WordPress
+        run: |
+          echo "Waiting for WordPress to be ready..."
+          for i in {1..30}; do
+            if curl -s http://127.0.0.1:8880 > /dev/null 2>&1; then
+              echo "WordPress dev site is ready!"
+              break
+            fi
+            echo "Attempt $i/30..."
+            sleep 2
+          done
+
+      - name: Run Playwright Tests
+        env:
+          WP_BASE_URL: http://127.0.0.1:8880
+        run: npx playwright test --config=tests/e2e/playwright.config.ts --project=chromium
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+      - name: Stop wp-env
+        if: always()
+        run: wp-env stop
+
+  # ============================================================
+  # Test Summary - Reports overall test status
+  # ============================================================
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [detect-changes, test-php-unit, test-php-integration, test-js, test-e2e]
+    if: always()
+
+    steps:
+      - name: Check test results
+        env:
+          PHP_UNIT_RESULT: ${{ needs.test-php-unit.result }}
+          PHP_INTEGRATION_RESULT: ${{ needs.test-php-integration.result }}
+          JS_RESULT: ${{ needs.test-js.result }}
+          E2E_RESULT: ${{ needs.test-e2e.result }}
+          HAS_PHP_UNIT: ${{ needs.detect-changes.outputs.has_php_unit_tests }}
+          HAS_PHP_INTEGRATION: ${{ needs.detect-changes.outputs.has_php_integration_tests }}
+          HAS_JS: ${{ needs.detect-changes.outputs.has_js_tests }}
+          HAS_E2E: ${{ needs.detect-changes.outputs.has_e2e_tests }}
+        run: |
+          echo "=== Test Results Summary ==="
+          echo ""
+
+          # Helper function to check job result
+          check_result() {
+            local name=$1
+            local result=$2
+            local has_tests=$3
+
+            if [ "$has_tests" = "false" ]; then
+              echo "$name: SKIPPED (no tests found)"
+            elif [ "$result" = "success" ]; then
+              echo "$name: PASSED"
+            elif [ "$result" = "skipped" ]; then
+              echo "$name: SKIPPED (no relevant changes)"
+            elif [ "$result" = "failure" ]; then
+              echo "$name: FAILED"
+            else
+              echo "$name: $result"
+            fi
+          }
+
+          check_result "PHP Unit Tests" "$PHP_UNIT_RESULT" "$HAS_PHP_UNIT"
+          check_result "PHP Integration Tests" "$PHP_INTEGRATION_RESULT" "$HAS_PHP_INTEGRATION"
+          check_result "Jest Tests" "$JS_RESULT" "$HAS_JS"
+          check_result "E2E Tests" "$E2E_RESULT" "$HAS_E2E"
+
+          # Fail if any required test failed
+          if [ "$PHP_UNIT_RESULT" = "failure" ] || \
+             [ "$PHP_INTEGRATION_RESULT" = "failure" ] || \
+             [ "$JS_RESULT" = "failure" ] || \
+             [ "$E2E_RESULT" = "failure" ]; then
+            echo ""
+            echo "One or more test suites failed!"
+            exit 1
+          fi
+
+          echo ""
+          echo "All tests passed or were skipped appropriately."

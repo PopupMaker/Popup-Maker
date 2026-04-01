@@ -35,8 +35,8 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * @return string
 	 */
 	public function label() {
-		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-		return __( 'Formidable Forms', 'formidable-forms' );
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Formidable Forms' own translations.
+		return __( 'Formidable Forms', 'formidable' );
 	}
 
 	/**
@@ -99,11 +99,15 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 			return;
 		}
 
-		if ( ! self::should_process_submission() ) {
+		if ( ! $this->should_process_submission() ) {
 			return;
 		}
-		$popup_id = self::get_popup_id();
-		self::increase_conversion( $popup_id );
+
+		$popup_id = $this->get_popup_id();
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
 		pum_integrated_form_submission(
 			[

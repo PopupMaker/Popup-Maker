@@ -195,21 +195,32 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 		// Get the current popup id.
 		$popup_id = pum_get_popup_id();
 
-		$url = $cta->generate_url('', [
-			'pid' => $popup_id ? $popup_id : null,
-		]);
+		$url = $cta->generate_url( '', [
+			\PopupMaker\get_param_name( 'popup_id' ) => $popup_id ?: false,
+		] );
 
 		$wrapper_classes = [
 			'pum-cta-wrapper',
+			'wp-block-popup-maker-cta-button',
 			'align' . $align,
 			'is-style-' . $style,
 			'text-only' === $atts['style'] ? 'pum-cta--button' : null,
 		];
 
+		// Build link classes, filtering out empty values.
+		$link_classes = array_filter(
+			[
+				'pum-cta',
+				'wp-block-popup-maker-cta-button__link',
+				'wp-element-button',
+				$atts['extra_link_classes'],
+			]
+		);
+
 		$cta_content = sprintf(
-			"<a href='%s' class='pum-cta %s' target='%s' data-cta-type='%s' rel='noreferrer noopener'>%s</a>",
+			"<a href='%s' class='%s' target='%s' data-cta-type='%s' rel='noreferrer noopener'>%s</a>",
 			esc_url_raw( $url ),
-			esc_attr( $atts['extra_link_classes'] ),
+			esc_attr( implode( ' ', $link_classes ) ),
 			esc_attr( $target ),
 			esc_attr( $type ),
 			esc_html( $text )

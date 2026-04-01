@@ -21,7 +21,8 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return 'Caldera Forms';
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use Caldera Forms' own translations.
+		return __( 'Caldera Forms', 'caldera-forms' );
 	}
 
 	/**
@@ -66,11 +67,15 @@ class PUM_Integration_Form_CalderaForms extends PUM_Abstract_Integration_Form {
 	 * @param array $form
 	 */
 	public function on_success( $form ) {
-		if ( ! self::should_process_submission() ) {
+		if ( ! $this->should_process_submission() ) {
 			return;
 		}
-		$popup_id = self::get_popup_id();
-		self::increase_conversion( $popup_id );
+
+		$popup_id = $this->get_popup_id();
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
 
 		pum_integrated_form_submission(
 			[

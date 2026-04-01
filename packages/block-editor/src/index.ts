@@ -1,5 +1,6 @@
 import './block-extensions';
 import './formats';
+import './plugins';
 
 import {
 	callToActionStore,

@@ -1,6 +1,6 @@
 {
 	"name": "popup-maker",
-	"version": "1.21.5",
+	"version": "1.22.0",
 	"description": "WordPress Popup Plugin",
 	"author": "Code Atlantic LLC",
 	"license": "GPL-2.0-or-later",
@@ -67,25 +67,26 @@
 		"@jest/globals": "^29.7.0",
 		"@nx/playwright": "20.3.3",
 		"@nx/storybook": "20.3.3",
-		"@playwright/test": "^1.56.1",
+		"@playwright/test": "^1.50.1",
 		"@popup-maker/custom-templated-path-webpack-plugin": "file:./packages/custom-templated-path-webpack-plugin",
 		"@popup-maker/dependency-extraction-webpack-plugin": "file:./packages/dependency-extraction-webpack-plugin",
 		"@popup-maker/types": "file:./packages/types",
-		"@storybook/addon-actions": "^8.4.7",
-		"@storybook/addon-essentials": "^8.4.7",
+		"@storybook/addon-actions": "8.6.14",
+		"@storybook/addon-essentials": "8.6.14",
 		"@storybook/addon-styling-webpack": "^1.0.1",
 		"@storybook/addon-webpack5-compiler-babel": "^3.0.3",
 		"@storybook/preset-scss": "^1.0.3",
-		"@storybook/react": "^8.6.14",
-		"@storybook/react-webpack5": "^8.6.14",
+		"@storybook/react": "8.6.14",
+		"@storybook/react-webpack5": "8.6.14",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/react": "^16.2.0",
 		"@testing-library/user-event": "^14.6.1",
 		"@types/testing-library__jest-dom": "^6.0.0",
 		"@wordpress/e2e-test-utils-playwright": "^1.29.0",
-		"@wordpress/scripts": "^27.9.0",
+		"@wordpress/scripts": "^31.6.0",
 		"copy-webpack-plugin": "^12.0.2",
-		"glob": "^11.1.0",
+		"glob": "^11.0.2",
+		"lint-staged": "^15.2.11",
 		"mini-css-extract-plugin": "^2.9.2",
 		"minimist": "^1.2.8",
 		"nx": "20.3.4",
@@ -93,7 +94,7 @@
 		"prettier": "npm:wp-prettier@3.0.3",
 		"react-docgen-typescript": "^2.2.2",
 		"rtlcss-webpack-plugin": "^4.0.7",
-		"storybook": "^8.6.15",
+		"storybook": "8.6.17",
 		"webpack-bundle-analyzer": "^4.10.2"
 	},
 	"scripts": {
@@ -111,7 +112,9 @@
 		"check-licenses": "wp-scripts check-licenses",
 		"format": "wp-scripts format",
 		"lint:style": "wp-scripts lint-style",
+		"lint:style:changed": "wp-scripts lint-style --formatter=compact",
 		"lint:js": "wp-scripts lint-js ./packages/**/src/*.ts* --no-ignore",
+		"lint:js:changed": "wp-scripts lint-js --format=compact",
 		"lint:md:docs": "wp-scripts lint-md-docs",
 		"lint:md:js": "wp-scripts lint-md-js",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
@@ -126,6 +129,12 @@
 		"start": "wp-scripts start --config webpack.config.js --config webpack.old.config.js",
 		"start:hot": "wp-scripts start --hot --config webpack.config.js",
 		"release": "node bin/build-release.js",
+		"prepare-release": "node bin/prepare-release.js",
+		"prepare-release:patch": "node bin/prepare-release.js --patch",
+		"prepare-release:minor": "node bin/prepare-release.js --minor",
+		"prepare-release:major": "node bin/prepare-release.js --major",
+		"changelog:update": "node bin/update-changelog.js",
+		"version:update": "node bin/update-versions.js",
 		"cache:stats": "node bin/webpack-cache-manager.js stats",
 		"cache:clean": "node bin/webpack-cache-manager.js clean",
 		"cache:validate": "node bin/webpack-cache-manager.js validate",
@@ -157,5 +166,21 @@
 		"*.scss",
 		"*.css",
 		"assets/js/src/**/*.js"
-	]
+	],
+	"lint-staged": {
+		"*.php": [
+			"composer format",
+			"composer lint"
+		],
+		"*.{js,jsx,ts,tsx}": [
+			"wp-scripts format",
+			"wp-scripts lint-js --fix",
+			"wp-scripts lint-js"
+		],
+		"*.{scss,css}": [
+			"wp-scripts format",
+			"wp-scripts lint-style --fix",
+			"wp-scripts lint-style"
+		]
+	}
 }

@@ -2,6 +2,46 @@
 
 ## Unreleased
 
+## v1.22.0 - 2026-03-31
+
+**Features**
+
+-   Added link click conversion tracking for external and special links (mailto:, tel:, etc.) within popups. Clicks are tracked via analytics beacon and categorized by link type for conversion reporting.
+-   Added [Beaver Builder Forms integration](https://wppopupmaker.com/form-integrations/beaver-builder/) for form submission tracking and conversion analytics. Supports Contact, Subscribe, and Login form modules.
+-   Added [Bit Form integration](https://wppopupmaker.com/form-integrations/bit-form/) for form submission tracking and conversion analytics.
+-   Added [Elementor Pro Forms integration](https://wppopupmaker.com/form-integrations/elementor-forms/) for form submission tracking and conversion analytics with support for targeting specific forms.
+-   Added [Forminator integration](https://wppopupmaker.com/form-integrations/forminator/) for form submission tracking and conversion analytics.
+-   Added [HappyForms integration](https://wppopupmaker.com/form-integrations/happyforms/) for form submission tracking and conversion analytics.
+-   Added [HTML Forms integration](https://wppopupmaker.com/form-integrations/html-forms/) for lightweight form submission tracking and conversion analytics.
+-   Added [Kali Forms integration](https://wppopupmaker.com/form-integrations/kali-forms/) for form submission tracking and conversion analytics with native Gutenberg block support.
+-   Added Newsletter plugin (thenewsletterplugin.com) form integration for success detection and conversion tracking. **Note:** Newsletter forms must use `[newsletter_form ajax="true"]` shortcode to enable AJAX submission mode for the integration to work.
+
+**Improvements**
+
+-   Popup title field is now editable in the Block Editor sidebar, matching the classic editor experience.
+-   URL tracking parameter names (`pid`, `cta`, `notrack`) are now filterable via `popup_maker/param_name/{key}`, allowing site admins to resolve conflicts with other plugins. Example: `add_filter( 'popup_maker/param_name/popup_id', function() { return 'pum_id'; } );`
+-   Improved PID tracking reliability by firing template_redirect at priority 0, ensuring tracking occurs before other plugins that might redirect.
+-   Enhanced all Popup list views with sortable Enabled column and bulk enable/disable actions for easier management of multiple popups.
+-   Block library assets (CSS) loading unnecessarily on all front-end pages. WordPress now automatically loads these styles only when Popup Maker blocks are actually rendered.
+-   Enhanced ad-blocker bypass feature to obfuscate script and style element IDs (in addition to filenames) for improved bypass reliability. IDs now consistently use per site settings using either MD5 hashing or custom prefixes.
+
+**Fixes**
+
+-   Fixed popup preview not opening due to admin_debug trigger firing before initialization completed. Closes #1181.
+-   Fixed animation speed field allowing negative and excessively large values via manual text input. Closes #1053.
+-   Fixed Gravity Forms integration fatal error when saving Close Popup or Open Popup settings. Closes #1084.
+-   Fixed CTA shortcode buttons rendering as plain links instead of styled buttons, with proper support for fill, outline, and text-only styles in both classic and block editor popups.
+-   Fixed mailto: and tel: links inside popups being incorrectly modified with tracking parameters, which broke email and phone links.
+-   Fixed Fluent Forms integration fatal error when using double opt-in. Closes #1094.
+-   Fixed Time Delay trigger settings tab displaying blank when switching from Click Trigger advanced tab. Closes #1109.
+-   Fixed trigger modal "Add" button label not displaying due to incorrect i18n function usage. Props to @DAnn2012.
+-   Fixed Divi 4 block editor compatibility issue where the popup editor would fail to load when the block editor was enabled. The classic editor is now automatically enforced for Divi 4 users.
+-   Fixed license key not deactivating properly.
+-   Fixed issue where license keys were being saved as asterisks instead of the actual key.
+-   Fixed issue where filter `replace_editor` was being used as an action without returning the value.
+-   Fixed Subscribers page sort columns throwing 404 errors due to malformed URLs with double protocols (e.g., `https://http//site.com`). Closes #1092.
+-   Fixed SQL syntax error on Subscribers page caused by using identifier placeholder instead of string placeholder in `SHOW TABLES LIKE` query.
+
 ## v1.21.5 - 2025-10-13
 
 **Improvements**

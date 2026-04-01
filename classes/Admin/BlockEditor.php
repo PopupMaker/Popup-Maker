@@ -53,16 +53,29 @@ class PUM_Admin_BlockEditor {
 	}
 
 	/**
-	 * Register block assets.
+	 * Register block editor JavaScript.
+	 *
+	 * Block styles are automatically enqueued by WordPress via block.json:
+	 * - Frontend: On-demand when blocks are rendered
+	 * - Editor: Always available for block inserter previews
+	 *
+	 * We only manually enqueue the block editor JavaScript in admin.
+	 *
+	 * @see https://make.wordpress.org/core/2025/03/24/new-filter-should_load_block_assets_on_demand-in-6-8/
 	 *
 	 * @param string $hook Current page hook.
 	 */
 	public static function register_block_assets( $hook ) {
+		// Block editor JavaScript is admin-only.
+		// Block styles load automatically via block.json on both frontend and editor.
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		// Load block editor JavaScript when in popup editor.
 		if ( self::load_block_library() ) {
 			wp_enqueue_script( 'popup-maker-block-library' );
 		}
-
-		wp_enqueue_style( 'popup-maker-block-library-style' );
 	}
 
 	/**

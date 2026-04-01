@@ -86,18 +86,61 @@ function is_pro_active() {
 }
 
 /**
- * Get upgrade link.
+ * Get upgrade link with UTM tracking.
  *
- * @return string
+ * Generates upgrade URLs with proper UTM parameters for conversion tracking.
+ *
+ * @param array<string, string> $utm_args {
+ *     Optional UTM parameters to override defaults.
+ *
+ *     @type string $utm_source   Traffic source (default: 'plugin').
+ *     @type string $utm_medium   Marketing medium (default: 'dashboard').
+ *     @type string $utm_campaign Campaign name (default: 'upgrade').
+ *     @type string $utm_content  Optional content variant.
+ * }
+ * @return string Upgrade URL with UTM parameters.
+ *
+ * @since 1.14.0
  */
 function get_upgrade_link( $utm_args = [] ) {
-	$utm_args = array_merge( [
+	$defaults = [
 		'utm_source'   => 'plugin',
 		'utm_medium'   => 'dashboard',
 		'utm_campaign' => 'upgrade',
-	], $utm_args );
+	];
 
-	return 'https://wppopupmaker.com/pricing/?' . http_build_query( $utm_args );
+	$utm_args = wp_parse_args( $utm_args, $defaults );
+
+	// Remove empty values to keep URLs clean.
+	$utm_args = array_filter( $utm_args );
+
+	return add_query_arg( $utm_args, 'https://wppopupmaker.com/pricing/' );
+}
+
+/**
+ * Generate upgrade URL with UTM tracking.
+ *
+ * Convenience function for generating contextual upgrade links.
+ *
+ * @param string $medium   Marketing medium (e.g., 'notice-bar', 'go-pro-tab', 'feature-preview').
+ * @param string $campaign Campaign name (e.g., 'woocommerce-detected', 'exit-intent').
+ * @param string $content  Optional content variant (e.g., 'variant-a', 'screenshot-viewed').
+ * @return string Upgrade URL with UTM parameters.
+ *
+ * @since 1.21.3
+ */
+function generate_upgrade_url( $medium, $campaign, $content = '' ) {
+	$utm_args = [
+		'utm_source'   => 'plugin',
+		'utm_medium'   => sanitize_key( $medium ),
+		'utm_campaign' => sanitize_key( $campaign ),
+	];
+
+	if ( ! empty( $content ) ) {
+		$utm_args['utm_content'] = sanitize_key( $content );
+	}
+
+	return get_upgrade_link( $utm_args );
 }
 
 /**

@@ -32,7 +32,7 @@ class PostTypes extends Controller {
 		// Control block editor usage on per popup post type basis.
 		add_filter( 'use_block_editor_for_post_type', [ $this, 'use_block_editor_for_post_type' ], 10, 2 );
 		// Blanket disable block editor for popup post types if setting is enabled.
-		add_action( 'replace_editor', [ $this, 'replace_editor' ], 10, 2 );
+		add_filter( 'replace_editor', [ $this, 'replace_editor' ], 10, 2 );
 	}
 
 	/**
@@ -121,6 +121,7 @@ class PostTypes extends Controller {
 				'editor',
 				'revisions',
 				'author',
+				'custom-fields',
 			],
 			// Rest.
 			'show_in_rest'        => true,
@@ -157,6 +158,22 @@ class PostTypes extends Controller {
 		$popup_args = apply_filters( 'popmake_popup_post_type_args', $popup_args );
 
 		register_post_type( $this->get_type_key( 'popup' ), $popup_args );
+
+		// Register popup meta for REST API (block editor support).
+		register_post_meta(
+			$this->get_type_key( 'popup' ),
+			'popup_title',
+			[
+				'show_in_rest'      => true,
+				'single'            => true,
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'auth_callback'     => function () {
+					return current_user_can( $this->container->get_permission( 'edit_popups' ) );
+				},
+			]
+		);
+
 	}
 
 	/**
@@ -543,12 +560,12 @@ class PostTypes extends Controller {
 	 *
 	 * @param bool    $replace   Whether to replace the editor.
 	 * @param WP_Post $post      The post object.
-	 * @return void
+	 * @return bool Whether to replace the editor.
 	 */
 	public function replace_editor( $replace, $post ) {
 		// Only handle our post types.
 		if ( ! in_array( $post->post_type, [ 'popup', 'popup_theme' ], true ) ) {
-			return;
+			return $replace;
 		}
 
 		// If classic editor is enabled, ensure we're using classic interface.
@@ -557,5 +574,7 @@ class PostTypes extends Controller {
 			remove_action( 'admin_enqueue_scripts', 'wp_enqueue_editor' );
 			remove_action( 'admin_footer', 'wp_enqueue_editor' );
 		}
+
+		return $replace;
 	}
 }

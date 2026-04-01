@@ -84,7 +84,7 @@ export interface WordPressWindow {
 		remove: ( id: string ) => void;
 	};
 	blocks?: unknown;
-  ajax: {
+	ajax: {
 		get: ( action: string, data: any ) => Promise< any >;
 		post: ( action: string, data: any ) => Promise< any >;
 		nonce: string;

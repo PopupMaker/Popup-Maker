@@ -421,6 +421,88 @@ class PUM_Admin_Helpers {
 	}
 
 	/**
+	 * Detect active third-party integrations grouped by upgrade tier and category.
+	 *
+	 * Returns detected platform names grouped by the tier they unlock.
+	 * Single source of truth — used by both the Go Pro tab and the notice bar.
+	 *
+	 * @since 1.22.0
+	 *
+	 * @return array{pro_plus: array{ecommerce: string[], lms: string[]}, pro: array{crm: string[]}} Detected platforms by tier.
+	 */
+	public static function detect_integrations() {
+		static $cache;
+
+		if ( isset( $cache ) ) {
+			return $cache;
+		}
+
+		$detection_map = [
+			'pro_plus' => [
+				'ecommerce' => [
+					'WooCommerce'            => class_exists( 'WooCommerce' ),
+					'Easy Digital Downloads' => class_exists( 'Easy_Digital_Downloads' ) || defined( 'EDD_VERSION' ),
+				],
+				'lms'       => [
+					'LifterLMS' => class_exists( 'LifterLMS' ) || function_exists( 'llms' ),
+				],
+			],
+			'pro'      => [
+				'crm' => [
+					'FluentCRM' => defined( 'FLUENTCRM' ),
+				],
+			],
+		];
+
+		$cache = [
+			'pro_plus' => [
+				'ecommerce' => [],
+				'lms'       => [],
+			],
+			'pro'      => [
+				'crm' => [],
+			],
+		];
+
+		foreach ( $detection_map as $tier => $categories ) {
+			foreach ( $categories as $category => $plugins ) {
+				foreach ( $plugins as $label => $is_detected ) {
+					if ( $is_detected ) {
+						$cache[ $tier ][ $category ][] = $label;
+					}
+				}
+			}
+		}
+
+		return $cache;
+	}
+
+	/**
+	 * Get flat list of detected integration slugs.
+	 *
+	 * Convenience wrapper for detect_integrations() that returns a simple
+	 * associative array of slug => true for detected platforms.
+	 *
+	 * @since 1.21.3
+	 *
+	 * @return array<string, true> Detected integration slugs.
+	 */
+	public static function get_detected_integrations() {
+		$tiered      = self::detect_integrations();
+		$flat        = [];
+
+		foreach ( $tiered as $categories ) {
+			foreach ( $categories as $platforms ) {
+				foreach ( $platforms as $platform ) {
+					$flat[ strtolower( str_replace( ' ', '_', $platform ) ) ] = true;
+				}
+			}
+		}
+
+		return $flat;
+	}
+
+	/**
 	 * @deprecated 1.7.20
 	 * @see        PUM_Utils_Array::from_object instead.
 	 *

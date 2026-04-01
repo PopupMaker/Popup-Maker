@@ -28,15 +28,16 @@
 					jqXHR,
 					formIdentifier
 				) {
-					const $form = $( '#nf-form-' + formIdentifier + '-cont' ),
-						[ formId, formInstanceId = null ] =
-							formIdentifier.split( '_' ),
-						settings = {};
+					const settings = {};
 
 					// Bail if submission failed.
 					if ( response.errors && response.errors.length ) {
 						return;
 					}
+
+					const $form = $( '#nf-form-' + formIdentifier + '-cont' );
+					const [ formId, formInstanceId = null ] =
+						formIdentifier.split( '_' );
 
 					// All the magic happens here.
 					window.PUM.integrations.formSubmission( $form, {

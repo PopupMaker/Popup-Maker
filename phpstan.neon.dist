@@ -3,6 +3,9 @@ includes:
     # - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
     level: 1
+    # Complexity metrics (uncomment to enable)
+    # complexity:
+    #     maxComplexity: 10
     paths:
         - classes/
         - includes/

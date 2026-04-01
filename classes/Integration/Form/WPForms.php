@@ -21,7 +21,8 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	 * @return string
 	 */
 	public function label() {
-		return 'WP Forms';
+		// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Use WPForms' own translations.
+		return __( 'WPForms', 'wpforms-lite' );
 	}
 
 	/**
@@ -35,7 +36,7 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	 * @return array|bool|null|WP_Post[]
 	 */
 	public function get_forms() {
-		return wpforms()->form->get( null, [ 'posts_per_page' => - 1 ] );
+		return wpforms()->form->get( null, [ 'posts_per_page' => -1 ] );
 	}
 
 	/**
@@ -73,11 +74,16 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	 * @param int   $entry_id Entry ID. Will return 0 if entry storage is disabled or using WPForms Lite.
 	 */
 	public function on_success( $fields, $entry, $form_data, $entry_id ) {
-		if ( ! self::should_process_submission() ) {
+		if ( ! $this->should_process_submission() ) {
 			return;
 		}
-		$popup_id = self::get_popup_id();
-		self::increase_conversion( $popup_id );
+
+		$popup_id = $this->get_popup_id();
+
+		if ( $popup_id ) {
+			$this->increase_conversion( $popup_id );
+		}
+
 		pum_integrated_form_submission(
 			[
 				'popup_id'      => $popup_id,
@@ -102,11 +108,6 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	 * @return array
 	 */
 	public function custom_styles( $css = [] ) {
-		// $css[ $this->key ] = [
-		// 'content'  => ".pac-container { z-index: 2000000000 !important; }\n",
-		// 'priority' => 8,
-		// ];
-
 		return $css;
 	}
 }

@@ -43,7 +43,7 @@
 		"@wordpress/url": "^4.29.0",
 		"classnames": "^2.5.1",
 		"clsx": "^2.1.1",
-		"lodash": "4.17.21"
+		"lodash": "4.17.23"
 	},
 	"devDependencies": {
 		"@popup-maker/types": "*"
