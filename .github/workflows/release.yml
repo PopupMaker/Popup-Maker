@@ -277,6 +277,7 @@ jobs:
           DRIVE_DOWNLOAD_URL: ${{ needs.google-drive-upload.outputs.download_link }}
           EDD_RESULT: ${{ needs.edd-webhook.result }}
           GDRIVE_RESULT: ${{ needs.google-drive-upload.result }}
+          REPO: ${{ github.repository }}
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
             echo "⚠️ No Slack webhook configured"
