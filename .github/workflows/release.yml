@@ -291,31 +291,29 @@ jobs:
           GDRIVE_STATUS="✅"
           [ "$GDRIVE_RESULT" != "success" ] && GDRIVE_STATUS="⚠️"
 
-          # Truncate changelog.
           TRUNCATED=$(echo "$CHANGELOG" | head -15 | cut -c 1-2000)
 
-          # Build downloads section.
-          DOWNLOADS="🔗 <${RELEASE_URL}|GitHub Release>"
-          if [ -n "$DRIVE_DOWNLOAD_URL" ]; then
-            DOWNLOADS="${DOWNLOADS}\n⬇️ <${DRIVE_DOWNLOAD_URL}|Download Zip (shareable)>"
-          fi
-
-          TEST_NOTE=""
-          [ "$IS_TEST" == "true" ] && TEST_NOTE="\n_🧪 Test release — not published to WordPress.org_"
-
-          # Use jq for safe JSON construction.
+          # Use jq for safe JSON — all newlines handled inside jq template.
           PAYLOAD=$(jq -n \
             --arg emoji "$EMOJI" \
             --arg plugin "$PLUGIN_NAME" \
             --arg version "$VERSION" \
             --arg changelog "$TRUNCATED" \
-            --arg downloads "$DOWNLOADS" \
-            --arg status "EDD ${EDD_STATUS} | GDrive ${GDRIVE_STATUS}" \
-            --arg test_note "$TEST_NOTE" \
+            --arg release_url "$RELEASE_URL" \
+            --arg drive_url "$DRIVE_DOWNLOAD_URL" \
+            --arg edd_status "$EDD_STATUS" \
+            --arg gdrive_status "$GDRIVE_STATUS" \
+            --argjson is_test "$( [ "$IS_TEST" == "true" ] && echo true || echo false )" \
             '{
-              text: "\($emoji) *\($plugin) \($version)*\n\n```\n\($changelog)\n```\n\n*Downloads:*\n\($downloads)\n\n*Status:* \($status)\($test_note)",
-              username: "Release Bot",
-              icon_emoji: ":package:"
+              text: (
+                "\($emoji) *\($plugin) \($version)*\n\n"
+                + "\($changelog)\n\n"
+                + "*Downloads:*\n"
+                + "🔗 <\($release_url)|GitHub Release>\n"
+                + (if $drive_url != "" then "⬇️ <\($drive_url)|Download Zip (shareable)>\n" else "" end)
+                + "\n*Status:* EDD \($edd_status) | GDrive \($gdrive_status)"
+                + (if $is_test then "\n_🧪 Test release — not published to WordPress.org_" else "" end)
+              )
             }')
 
           curl -s -X POST "$SLACK_WEBHOOK_URL" \
