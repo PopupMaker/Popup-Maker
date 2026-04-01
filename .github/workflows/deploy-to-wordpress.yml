@@ -9,7 +9,7 @@ on:
             dry_run:
                 description: 'Dry run (no actual deploy)'
                 type: boolean
-                default: true
+                default: false
 
 env:
     PLUGIN_SLUG: popup-maker
@@ -40,28 +40,83 @@ jobs:
               run: |
                   VERSION=$(grep "Version:" popup-maker.php | head -1 | sed 's/.*Version:\s*\([0-9.]*\).*/\1/' | xargs)
                   echo "version=${VERSION}" >> $GITHUB_OUTPUT
-                  echo "📦 Deploying version: ${VERSION}"
+                  echo "📦 Version: ${VERSION}"
 
-            - name: Setup PHP
+            - name: Download release zip from GitHub
+              id: download
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  VERSION: ${{ steps.version.outputs.version }}
+                  REPO: ${{ github.repository }}
+              run: |
+                  ZIP_NAME="${{ env.PLUGIN_SLUG }}_${VERSION}.zip"
+
+                  echo "⬇️ Downloading ${ZIP_NAME} from GitHub release..."
+
+                  # Try downloading from the release matching this version.
+                  gh release download "${VERSION}" \
+                    --pattern "${ZIP_NAME}" \
+                    --dir . \
+                    --repo "${REPO}" 2>/dev/null || true
+
+                  if [ ! -f "${ZIP_NAME}" ]; then
+                    echo "⚠️ Release zip not found, falling back to build..."
+                    echo "found=false" >> $GITHUB_OUTPUT
+                  else
+                    echo "✅ Downloaded ${ZIP_NAME}"
+                    echo "found=true" >> $GITHUB_OUTPUT
+                    echo "zip_name=${ZIP_NAME}" >> $GITHUB_OUTPUT
+                  fi
+
+            # Fallback: build from source if no release zip available.
+            - name: Setup PHP (fallback)
+              if: steps.download.outputs.found != 'true'
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
                   tools: composer:v2
                   coverage: none
 
-            - name: Setup Node.js
+            - name: Setup Node.js (fallback)
+              if: steps.download.outputs.found != 'true'
               uses: actions/setup-node@v6
               with:
                   node-version: '20'
                   cache: 'npm'
 
-            - name: Install dependencies
+            - name: Install dependencies (fallback)
+              if: steps.download.outputs.found != 'true'
               run: |
                   composer install --no-dev --optimize-autoloader --no-interaction --no-progress
                   npm ci
 
-            - name: Build production assets
+            - name: Build production assets (fallback)
+              if: steps.download.outputs.found != 'true'
               run: npm run build:production
+
+            - name: Extract release zip for SVN
+              if: steps.download.outputs.found == 'true'
+              env:
+                  ZIP_NAME: ${{ steps.download.outputs.zip_name }}
+              run: |
+                  # Extract zip to a temp directory.
+                  mkdir -p /tmp/svn-source
+                  unzip -o "${ZIP_NAME}" -d /tmp/svn-source
+
+                  # The zip contains a folder named after the plugin slug.
+                  # Move its contents to the repo root so 10up action can rsync them.
+                  SVN_DIR="/tmp/svn-source/${{ env.PLUGIN_SLUG }}"
+                  if [ -d "$SVN_DIR" ]; then
+                    # Remove all tracked files, replace with zip contents.
+                    git ls-files -z | xargs -0 rm -f 2>/dev/null || true
+                    cp -r "$SVN_DIR"/* .
+                    echo "✅ Repo replaced with release zip contents"
+                    ls -la
+                  else
+                    echo "❌ Expected directory ${SVN_DIR} not found in zip"
+                    ls -la /tmp/svn-source/
+                    exit 1
+                  fi
 
             - name: Deploy to WordPress.org
               uses: 10up/action-wordpress-plugin-deploy@stable
@@ -72,7 +127,7 @@ jobs:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SLUG: ${{ env.PLUGIN_SLUG }}
                   VERSION: ${{ steps.version.outputs.version }}
-                  ASSETS_DIR: .github/assets
+                  ASSETS_DIR: .wordpress-org
 
     notify-failure:
         name: Slack Failure Notification
@@ -97,6 +152,6 @@ jobs:
                   MESSAGE="${MESSAGE}🔍 <https://github.com/${REPO}/actions/runs/${RUN_ID}|View Workflow>"
 
                   curl -X POST \
-                    --data-urlencode "payload={\"text\": \"${MESSAGE}\", \"username\": \"Release Bot\", \"icon_emoji\": \":x:\"}" \
+                    --data-urlencode "payload={\"text\": \"${MESSAGE}\", \"username\": \"Release Bot\", \"icon_emoji\": \":package:\"}" \
                     "$SLACK_WEBHOOK_URL" \
                     --fail --silent --show-error

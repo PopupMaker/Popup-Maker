@@ -4,8 +4,11 @@
 /.wordpress-org
 /bin
 /build
+/custom-tools
+/docs
 /node_modules
 /packages
+/plans
 /release
 /src
 /tests
@@ -51,7 +54,15 @@ strauss.phar
 tsconfig.base.json
 tsconfig.json
 webpack.config.js
+webpack.old.config.js
 yarn-lock.json
+jest.config.js
+jest.config.ts
+jest.config.mjs
+phpstan.neon.dist
+repomix.config.json
+.env.secrets
+.env.secrets.example
 *.css.map
 
 # plugin release zip
