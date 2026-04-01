@@ -1,28 +1,26 @@
-name: Plugin asset/readme update
+name: Sync readme/assets to WordPress.org
+
 on:
     push:
         branches:
             - master
+        paths:
+            - 'readme.txt'
+            - '.wordpress-org/**'
+
 jobs:
-    master:
-        name: Push to master
+    update:
+        name: Update WordPress.org readme & assets
         runs-on: ubuntu-latest
+
         steps:
-            - name: Checkout master
-              uses: actions/checkout@master
+            - name: Checkout
+              uses: actions/checkout@v6
 
-            - name: Setup PHP to use 7.4 with composer v2
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '7.4'
-                  tools: composer:v2
-
-            - name: Install ActionScheduler
-              run: composer install --prefer-dist --no-progress --no-dev
-
-            - name: WordPress.org plugin asset/readme update
+            - name: Sync to WordPress.org SVN
               uses: 10up/action-wordpress-plugin-asset-update@stable
               env:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-                  SLUG: ${{ secrets.SLUG }}
+                  SLUG: popup-maker
+                  ASSETS_DIR: .wordpress-org
