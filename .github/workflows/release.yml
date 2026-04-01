@@ -291,7 +291,8 @@ jobs:
           GDRIVE_STATUS="✅"
           [ "$GDRIVE_RESULT" != "success" ] && GDRIVE_STATUS="⚠️"
 
-          TRUNCATED=$(echo "$CHANGELOG" | head -15 | cut -c 1-2000)
+          # Convert Markdown to Slack mrkdwn: **bold** → *bold*, [text](url) → <url|text>
+          TRUNCATED=$(echo "$CHANGELOG" | head -15 | cut -c 1-2000 | sed 's/\*\*\([^*]*\)\*\*/*\1*/g' | sed 's/\[\([^]]*\)\](\([^)]*\))/<\2|\1>/g')
 
           # Use jq for safe JSON — all newlines handled inside jq template.
           PAYLOAD=$(jq -n \
