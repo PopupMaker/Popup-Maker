@@ -142,6 +142,7 @@ jobs:
       contents: write
     outputs:
       release_url: ${{ steps.set_url.outputs.release_url }}
+      release_id: ${{ steps.release.outputs.id }}
 
     steps:
       - name: Download artifact
@@ -191,10 +192,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKAGE_NAME: ${{ needs.build.outputs.zip_name }}
-          TAG: ${{ github.ref_name }}
+          RELEASE_ID: ${{ needs.github-release.outputs.release_id }}
           REPO: ${{ github.repository }}
         run: |
-          ASSET_URL=$(gh api "repos/${REPO}/releases/tags/${TAG}" \
+          # Use release ID (works for draft + published releases).
+          ASSET_URL=$(gh api "repos/${REPO}/releases/${RELEASE_ID}" \
             --jq ".assets[] | select(.name == \"${PACKAGE_NAME}\") | .url")
 
           if [ -z "$ASSET_URL" ] || [ "$ASSET_URL" == "null" ]; then
