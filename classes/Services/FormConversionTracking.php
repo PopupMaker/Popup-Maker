@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * - Milestone-based upsell triggers
  * - Future analytics dashboard
  *
- * @since X.X.X
+ * @since 1.22.0
  */
 class FormConversionTracking extends Service {
 
@@ -38,7 +38,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Initialize service.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 */
 	public function init() {
 		// Track non-AJAX form submissions (PHP-side tracking).
@@ -53,7 +53,7 @@ class FormConversionTracking extends Service {
 	 *
 	 * Increments both site-wide and per-popup conversion counts.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param array<string, mixed> $args {
 	 *     Form submission arguments.
@@ -101,7 +101,7 @@ class FormConversionTracking extends Service {
 		/**
 		 * Fires after a form conversion is tracked (non-AJAX).
 		 *
-		 * @since X.X.X
+		 * @since 1.22.0
 		 *
 		 * @param int   $popup_id Popup ID.
 		 * @param array $args     Form submission arguments.
@@ -114,7 +114,7 @@ class FormConversionTracking extends Service {
 	 *
 	 * Handles conversions tracked via frontend JS beacon (AJAX submissions).
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param int   $popup_id Popup ID from analytics beacon.
 	 * @param array $args     Additional arguments from beacon.
@@ -165,7 +165,7 @@ class FormConversionTracking extends Service {
 		/**
 		 * Fires after an AJAX form conversion is tracked.
 		 *
-		 * @since X.X.X
+		 * @since 1.22.0
 		 *
 		 * @param int   $popup_id   Popup ID.
 		 * @param array $event_data Form submission event data.
@@ -179,7 +179,7 @@ class FormConversionTracking extends Service {
 	 * Uses atomic SQL update to prevent race conditions when multiple
 	 * form submissions occur simultaneously.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @return int New count after increment.
 	 */
@@ -222,7 +222,7 @@ class FormConversionTracking extends Service {
 	 * Uses atomic SQL update to prevent race conditions when multiple
 	 * form submissions occur simultaneously for the same popup.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param int $popup_id Popup post ID.
 	 * @return int New count after increment.
@@ -264,7 +264,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Get site-wide form conversion count.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @return int Total form conversions across all popups.
 	 */
@@ -275,7 +275,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Get form conversion count for a specific popup.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param int $popup_id Popup post ID.
 	 * @return int Form conversions for this popup.
@@ -289,7 +289,7 @@ class FormConversionTracking extends Service {
 	 *
 	 * Useful for testing or if data needs to be cleared.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 */
 	public function reset_site_count() {
 		delete_option( self::SITE_COUNT_KEY );
@@ -298,7 +298,7 @@ class FormConversionTracking extends Service {
 	/**
 	 * Reset form conversion count for a specific popup.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param int $popup_id Popup post ID.
 	 */

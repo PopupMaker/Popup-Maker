@@ -62,7 +62,7 @@ function extractVersionContent( content, version ) {
 	// Support multiple version formats: ## v1.0.3, ## 1.0.3, etc.
 	// Handles both LF and CRLF line endings
 	const versionPattern = new RegExp(
-		`^## (?:v)?${ escapedVersion }(?:\\s*-\\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\\s*\\r?\\n([\\s\\S]*?)(?=\\r?\\n## |\\r?\\n?$)`,
+		`^## (?:v)?${ escapedVersion }(?:\\s*-\\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\\s*\\r?\\n([\\s\\S]*?)(?=\\n## [^#]|$(?![\\s\\S]))`,
 		'm'
 	);
 

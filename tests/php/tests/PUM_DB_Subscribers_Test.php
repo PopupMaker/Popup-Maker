@@ -188,16 +188,16 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	 */
 	public function test_create_table_creates_table() {
 		global $wpdb;
+
 		$this->db->create_table();
 
-		if ( floatval( get_bloginfo( 'version' ) ) >= 6.2 ) {
-			$found = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $this->db->table_name() ) );
-		} else {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$found = $wpdb->get_var( "SHOW TABLES LIKE '{$this->db->table_name()}'" );
-		}
+		// WP test suite uses temporary tables, which are invisible to SHOW TABLES.
+		// Instead, verify by attempting a query against the table.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$result = $wpdb->get_var( "SELECT COUNT(*) FROM {$this->db->table_name()}" );
 
-		$this->assertSame( $this->db->table_name(), $found );
+		$this->assertNotNull( $result, 'Table should exist and be queryable.' );
+		$this->assertSame( '0', $result, 'Table should be empty after creation.' );
 	}
 
 	/**

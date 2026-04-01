@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.22.0 - 2026-03-31
+
 **Features**
 
 -   Added link click conversion tracking for external and special links (mailto:, tel:, etc.) within popups. Clicks are tracked via analytics beacon and categorized by link type for conversion reporting.

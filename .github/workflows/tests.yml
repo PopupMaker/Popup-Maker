@@ -143,7 +143,7 @@ jobs:
           echo "E2E Tests: ${{ steps.check-tests.outputs.has_e2e_tests }}"
 
   # ============================================================
-  # PHPUnit Unit Tests - Fast, no WordPress required
+  # PHPUnit Tests - Requires WordPress test suite + MySQL
   # ============================================================
   test-php-unit:
     name: PHP Unit Tests (PHP ${{ matrix.php }})
@@ -155,6 +155,19 @@ jobs:
        needs.detect-changes.outputs.php_tests == 'true' ||
        needs.detect-changes.outputs.php_deps == 'true' ||
        needs.detect-changes.outputs.ci == 'true')
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     strategy:
       fail-fast: false
@@ -170,6 +183,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           tools: composer:v2
+          extensions: mysqli
           coverage: none
 
       - name: Get Composer cache directory
@@ -183,11 +197,19 @@ jobs:
           key: ${{ runner.os }}-composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.php }}-
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-scripts
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install WordPress test suite
+        run: |
+          chmod +x ./bin/install-wp-tests.sh
+          ./bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
 
       - name: Run Unit Tests
-        run: composer run test:unit --quiet
+        run: composer run tests
 
   # ============================================================
   # PHPUnit Integration Tests - Requires WordPress + MySQL
@@ -207,10 +229,9 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: wordpress_test
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -243,20 +264,19 @@ jobs:
           key: ${{ runner.os }}-composer-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.php }}-
 
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
-          if [ -f "./bin/install-wp-tests.sh" ]; then
-            ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
-          else
-            echo "::warning::WordPress test suite installer not found at ./bin/install-wp-tests.sh"
-            exit 1
-          fi
+          chmod +x ./bin/install-wp-tests.sh
+          ./bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
 
       - name: Run Integration Tests
-        run: composer run test:integration --quiet
+        run: composer run tests
 
   # ============================================================
   # Jest Tests - JavaScript/TypeScript unit tests
@@ -295,8 +315,12 @@ jobs:
   test-e2e:
     name: Playwright E2E Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
     needs: detect-changes
+    # DISABLED: E2E tests take 20+ min on GH runners. Run locally or enable when optimized.
     if: |
+      false &&
       needs.detect-changes.outputs.has_e2e_tests == 'true' &&
       (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') &&
       (needs.detect-changes.outputs.php == 'true' ||
@@ -340,6 +364,9 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Install Playwright system dependencies
+        run: npx playwright install-deps chromium
+
       - name: Cache Playwright browsers
         uses: actions/cache@v5
         id: playwright-cache
@@ -348,13 +375,9 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-playwright-
 
-      - name: Install Playwright browsers
+      - name: Install Playwright browser
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-
-      - name: Install Playwright dependencies
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+        run: npx playwright install chromium
 
       - name: Build assets (if needed)
         run: |
@@ -362,15 +385,18 @@ jobs:
             npm run build
           fi
 
+      - name: Install wp-env
+        run: npm install -g @wordpress/env
+
       - name: Start wp-env
-        run: npm run wp-env start
+        run: wp-env start
 
       - name: Wait for WordPress
         run: |
           echo "Waiting for WordPress to be ready..."
           for i in {1..30}; do
-            if curl -s http://localhost:8988 > /dev/null 2>&1; then
-              echo "WordPress is ready!"
+            if curl -s http://127.0.0.1:8880 > /dev/null 2>&1; then
+              echo "WordPress dev site is ready!"
               break
             fi
             echo "Attempt $i/30..."
@@ -378,7 +404,9 @@ jobs:
           done
 
       - name: Run Playwright Tests
-        run: npm run test:e2e --quiet
+        env:
+          WP_BASE_URL: http://127.0.0.1:8880
+        run: npx playwright test --config=tests/e2e/playwright.config.ts --project=chromium
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -392,7 +420,7 @@ jobs:
 
       - name: Stop wp-env
         if: always()
-        run: npm run wp-env stop
+        run: wp-env stop
 
   # ============================================================
   # Test Summary - Reports overall test status

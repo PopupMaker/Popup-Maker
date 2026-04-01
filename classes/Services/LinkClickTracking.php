@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * - Analytics dashboard reporting
  * - Conversion tracking for external/special links (mailto, tel, etc.)
  *
- * @since X.X.X
+ * @since 1.22.0
  */
 class LinkClickTracking extends Service {
 
@@ -38,7 +38,7 @@ class LinkClickTracking extends Service {
 	/**
 	 * Initialize service.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 */
 	public function init() {
 		// Track link click conversions from JS beacon.
@@ -50,7 +50,7 @@ class LinkClickTracking extends Service {
 	 *
 	 * Handles link clicks tracked via frontend JS beacon.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param int   $popup_id Popup ID from analytics beacon.
 	 * @param array $args     Additional arguments from beacon.
@@ -99,7 +99,7 @@ class LinkClickTracking extends Service {
 		/**
 		 * Fires after a link click is tracked.
 		 *
-		 * @since X.X.X
+		 * @since 1.22.0
 		 *
 		 * @param int   $popup_id   Popup ID.
 		 * @param array $event_data Link click event data (url, linkType, etc.).
@@ -112,7 +112,7 @@ class LinkClickTracking extends Service {
 	 *
 	 * Uses atomic SQL update to prevent race conditions.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @return int New count after increment.
 	 */
@@ -151,7 +151,7 @@ class LinkClickTracking extends Service {
 	 *
 	 * Uses atomic SQL update to prevent race conditions.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param int $popup_id Popup post ID.
 	 * @return int New count after increment.
@@ -190,7 +190,7 @@ class LinkClickTracking extends Service {
 	/**
 	 * Get site-wide link click count.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @return int Total link clicks across all popups.
 	 */
@@ -201,7 +201,7 @@ class LinkClickTracking extends Service {
 	/**
 	 * Get link click count for a specific popup.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param int $popup_id Popup post ID.
 	 * @return int Link clicks for this popup.
@@ -213,7 +213,7 @@ class LinkClickTracking extends Service {
 	/**
 	 * Reset site-wide link click count.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 */
 	public function reset_site_count() {
 		delete_option( self::SITE_COUNT_KEY );
@@ -222,7 +222,7 @@ class LinkClickTracking extends Service {
 	/**
 	 * Reset link click count for a specific popup.
 	 *
-	 * @since X.X.X
+	 * @since 1.22.0
 	 *
 	 * @param int $popup_id Popup post ID.
 	 */
