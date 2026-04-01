@@ -326,7 +326,7 @@ jobs:
                 + "\n*Downloads:*\n"
                 + "📖 <\($release_url)|GitHub Release>\n"
                 + (if $drive_url != "" then "⬇️ <\($drive_url)|Download Zip (shareable)>\n" else "" end)
-                + "📋 <\($changelog_url)|CHANGELOG.md>\n"
+                + "📋 <\($changelog_url)|Changelog>\n"
                 + "\n*Status:* EDD \($edd_status) | GDrive \($gdrive_status)"
                 + (if $is_test then "\n_🧪 Test release — not published to WordPress.org_" else "" end)
               ),
