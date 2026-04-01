@@ -292,11 +292,17 @@ jobs:
           [ "$GDRIVE_RESULT" != "success" ] && GDRIVE_STATUS="⚠️"
 
           # Convert Markdown to Slack mrkdwn.
-          TRUNCATED=$(echo "$CHANGELOG" | head -15 | cut -c 1-2000 \
+          CONVERTED=$(echo "$CHANGELOG" \
             | sed 's/\*\*\([^*]*\)\*\*/*\1*/g' \
-            | sed 's/\[\([^]]*\)\](\([^)]*\))/<\2|\1>/g' \
-            | sed 's/^- /• /g' \
-            | sed 's/^  - /  ◦ /g')
+            | sed 's/\[\([^]]*\)\](\([^)]*\))/<\2|\1>/g')
+
+          # Truncate to 10 lines. If longer, add "view full" note.
+          TOTAL_LINES=$(echo "$CONVERTED" | wc -l)
+          TRUNCATED=$(echo "$CONVERTED" | head -10)
+          WAS_TRUNCATED="false"
+          [ "$TOTAL_LINES" -gt 10 ] && WAS_TRUNCATED="true"
+
+          CHANGELOG_URL="https://github.com/${REPO}/blob/master/CHANGELOG.md"
 
           # Use jq for safe JSON — all newlines handled inside jq template.
           PAYLOAD=$(jq -n \
@@ -304,7 +310,9 @@ jobs:
             --arg plugin "$PLUGIN_NAME" \
             --arg version "$VERSION" \
             --arg changelog "$TRUNCATED" \
+            --argjson was_truncated "$WAS_TRUNCATED" \
             --arg release_url "$RELEASE_URL" \
+            --arg changelog_url "$CHANGELOG_URL" \
             --arg drive_url "$DRIVE_DOWNLOAD_URL" \
             --arg edd_status "$EDD_STATUS" \
             --arg gdrive_status "$GDRIVE_STATUS" \
@@ -312,10 +320,12 @@ jobs:
             '{
               text: (
                 "\($emoji) *\($plugin) \($version)*\n\n"
-                + "\($changelog)\n\n"
-                + "*Downloads:*\n"
-                + "🔗 <\($release_url)|GitHub Release>\n"
+                + "\($changelog)\n"
+                + (if $was_truncated then "_…truncated — <\($changelog_url)|view full changelog>_\n" else "" end)
+                + "\n*Downloads:*\n"
+                + "📖 <\($release_url)|GitHub Release>\n"
                 + (if $drive_url != "" then "⬇️ <\($drive_url)|Download Zip (shareable)>\n" else "" end)
+                + "📋 <\($changelog_url)|CHANGELOG.md>\n"
                 + "\n*Status:* EDD \($edd_status) | GDrive \($gdrive_status)"
                 + (if $is_test then "\n_🧪 Test release — not published to WordPress.org_" else "" end)
               ),
