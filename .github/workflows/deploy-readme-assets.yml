@@ -4,9 +4,6 @@ on:
     push:
         branches:
             - master
-        paths:
-            - 'readme.txt'
-            - '.wordpress-org/**'
 
 jobs:
     update:
