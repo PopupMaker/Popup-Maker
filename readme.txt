@@ -115,13 +115,13 @@ Popup Maker integrates with all of the most popular form plugins to allow you to
 * [Mailchimp for WordPress](https://wppopupmaker.com/form-integrations/mailchimp-for-wordpress/) (MC4WP) - newsletter signup forms
 * [Formidable Forms](https://wppopupmaker.com/form-integrations/formidable-forms/) - advanced form builder with database views
 * [Forminator](https://wppopupmaker.com/form-integrations/forminator/) - free form builder by WPMU DEV
-* [Elementor Pro Forms](https://wppopupmaker.com/form-integrations/elementor-forms/) - native form builder for Elementor page builder
+* [Elementor Pro Forms](https://wppopupmaker.com/form-integrations/elementor-pro-forms/) - native form builder for Elementor page builder
 * [HappyForms](https://wppopupmaker.com/form-integrations/happyforms/) - free drag-and-drop form builder with live preview
 * [Kali Forms](https://wppopupmaker.com/form-integrations/kali-forms/) - Gutenberg-native form builder with block editor support
 * [Bit Form](https://wppopupmaker.com/form-integrations/bit-form/) - lightweight form builder with custom post type storage
 * [HTML Forms](https://wppopupmaker.com/form-integrations/html-forms/) - simple, lightweight form builder with no bloat
 * [Beaver Builder Forms](https://wppopupmaker.com/form-integrations/beaver-builder/) - contact, subscribe, and login forms for Beaver Builder page builder
-* [Newsletter](https://wppopupmaker.com/form-integrations/newsletter/) - thenewsletterplugin.com integration with AJAX submission support
+* [Newsletter](https://wppopupmaker.com/email-marketing-integrations/the-newsletter-plugin/) - thenewsletterplugin.com integration with AJAX submission support
 * and more!
 
 <h4>Email Marketing & CRM Integrations:</h4>
@@ -279,7 +279,7 @@ For the latest updates and release information:
 -   Added link click conversion tracking for external and special links (mailto:, tel:, etc.) within popups. Clicks are tracked via analytics beacon and categorized by link type for conversion reporting.
 -   Added [Beaver Builder Forms integration](https://wppopupmaker.com/form-integrations/beaver-builder/) for form submission tracking and conversion analytics. Supports Contact, Subscribe, and Login form modules.
 -   Added [Bit Form integration](https://wppopupmaker.com/form-integrations/bit-form/) for form submission tracking and conversion analytics.
--   Added [Elementor Pro Forms integration](https://wppopupmaker.com/form-integrations/elementor-forms/) for form submission tracking and conversion analytics with support for targeting specific forms.
+-   Added [Elementor Pro Forms integration](https://wppopupmaker.com/form-integrations/elementor-pro-forms/) for form submission tracking and conversion analytics with support for targeting specific forms.
 -   Added [Forminator integration](https://wppopupmaker.com/form-integrations/forminator/) for form submission tracking and conversion analytics.
 -   Added [HappyForms integration](https://wppopupmaker.com/form-integrations/happyforms/) for form submission tracking and conversion analytics.
 -   Added [HTML Forms integration](https://wppopupmaker.com/form-integrations/html-forms/) for lightweight form submission tracking and conversion analytics.
