@@ -4,9 +4,16 @@ on:
     push:
         branches:
             - master
+    workflow_dispatch:
+        inputs:
+            dry_run:
+                description: 'Dry run (no actual deploy)'
+                type: boolean
+                default: true
 
 env:
     PLUGIN_SLUG: popup-maker
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
     deploy:
@@ -40,6 +47,8 @@ jobs:
 
             - name: Deploy to WordPress.org
               uses: 10up/action-wordpress-plugin-deploy@stable
+              with:
+                  dry-run: ${{ inputs.dry_run || 'false' }}
               env:
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
