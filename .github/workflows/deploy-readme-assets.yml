@@ -24,3 +24,4 @@ jobs:
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                   SLUG: popup-maker
                   ASSETS_DIR: .wordpress-org
+                  IGNORE_OTHER_FILES: true
