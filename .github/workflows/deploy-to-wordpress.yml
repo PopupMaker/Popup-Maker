@@ -24,6 +24,13 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v6
 
+            - name: Extract version from plugin header
+              id: version
+              run: |
+                  VERSION=$(grep "Version:" popup-maker.php | head -1 | sed 's/.*Version:\s*\([0-9.]*\).*/\1/' | xargs)
+                  echo "version=${VERSION}" >> $GITHUB_OUTPUT
+                  echo "📦 Deploying version: ${VERSION}"
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -53,4 +60,5 @@ jobs:
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SLUG: ${{ env.PLUGIN_SLUG }}
+                  VERSION: ${{ steps.version.outputs.version }}
                   ASSETS_DIR: .github/assets

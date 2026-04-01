@@ -5,12 +5,10 @@ on:
     tags:
       - '[0-9]+\.[0-9]+\.[0-9]+'
       - '[0-9]+\.[0-9]+\.[0-9]+-*'
-  workflow_dispatch:
 
 env:
   PLUGIN_SLUG: popup-maker
   PLUGIN_NAME: Popup Maker
-  PLUGIN_MAIN_FILE: popup-maker.php
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -21,29 +19,30 @@ jobs:
     name: Build Release Package
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.extract.outputs.version }}
-      is_test: ${{ steps.extract.outputs.is_test }}
-      is_prerelease: ${{ steps.extract.outputs.is_prerelease }}
-      zip_name: ${{ steps.build.outputs.zip_name }}
+      version: ${{ steps.info.outputs.version }}
+      is_test: ${{ steps.info.outputs.is_test }}
+      is_prerelease: ${{ steps.info.outputs.is_prerelease }}
+      zip_name: ${{ steps.package.outputs.name }}
+      changelog_content: ${{ steps.changelog.outputs.content }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
 
-      - name: Extract version from tag
-        id: extract
+      - name: Extract release information
+        id: info
         env:
-          TAG_NAME: ${{ github.ref_name }}
+          TAG: ${{ github.ref_name }}
         run: |
-          VERSION="${TAG_NAME}"
+          VERSION="${TAG}"
           IS_TEST="false"
           IS_PRERELEASE="false"
 
-          # Detect test tags (dry-run pipeline).
-          if [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-test$ ]]; then
+          if [[ "$VERSION" =~ -test$ ]]; then
             IS_TEST="true"
             VERSION="${VERSION%-test}"
-          # Detect pre-release tags (alpha, beta, rc).
           elif [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
             IS_PRERELEASE="true"
           fi
@@ -52,293 +51,325 @@ jobs:
           echo "is_test=${IS_TEST}" >> $GITHUB_OUTPUT
           echo "is_prerelease=${IS_PRERELEASE}" >> $GITHUB_OUTPUT
 
-      - name: Setup PHP 8.0
+          echo "📦 Plugin: ${{ env.PLUGIN_NAME }}"
+          echo "🏷️ Version: ${VERSION}"
+          echo "🧪 Test: ${IS_TEST}"
+          echo "🔖 Pre-release: ${IS_PRERELEASE}"
+
+      - name: Extract changelog
+        id: changelog
+        env:
+          VERSION: ${{ steps.info.outputs.version }}
+        run: |
+          CHANGELOG=""
+
+          if [ -f "bin/extract-changelog.js" ]; then
+            CHANGELOG=$(node bin/extract-changelog.js "$VERSION" 2>/dev/null || echo "")
+          fi
+
+          if [ -z "$CHANGELOG" ] && [ -f "CHANGELOG.md" ]; then
+            CHANGELOG=$(sed -n "/^## \[*v*${VERSION}[]\) -]*/,/^## /p" CHANGELOG.md | sed '1d;$d' | awk 'NF {p=1} p')
+          fi
+
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="Release ${VERSION}"
+          fi
+
+          {
+            echo 'content<<EOF'
+            echo "$CHANGELOG"
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.0'
           tools: composer:v2
           coverage: none
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '20'
+          cache: 'npm'
 
-      - name: Install PHP dependencies
+      - name: Install dependencies
         run: |
-          composer install --no-dev --optimize-autoloader
-
-      - name: Install Node dependencies
-        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --no-progress
           npm ci
 
       - name: Build production assets
-        run: |
-          npm run build:production
+        run: npm run build:production
 
       - name: Create release package
-        id: build
+        id: package
         env:
-          VERSION: ${{ steps.extract.outputs.version }}
+          VERSION: ${{ steps.info.outputs.version }}
         run: |
           ZIP_NAME="${{ env.PLUGIN_SLUG }}_${VERSION}.zip"
 
-          node bin/build-release.js --zip-name "${ZIP_NAME}"
+          if [ -f "bin/build-release.js" ]; then
+            node bin/build-release.js --zip-name "${ZIP_NAME}"
+          else
+            npm run release
+          fi
 
-          echo "zip_name=${ZIP_NAME}" >> $GITHUB_OUTPUT
+          if [ ! -f "${ZIP_NAME}" ]; then
+            echo "❌ Package not found: ${ZIP_NAME}"
+            exit 1
+          fi
+
+          FILE_SIZE=$(ls -lh "${ZIP_NAME}" | awk '{print $5}')
+          echo "✅ Package created: ${ZIP_NAME} (${FILE_SIZE})"
+          echo "name=${ZIP_NAME}" >> $GITHUB_OUTPUT
 
       - name: Upload artifact
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ env.PLUGIN_SLUG }}-release
-          path: ${{ steps.build.outputs.zip_name }}
+          name: ${{ env.PLUGIN_SLUG }}-${{ steps.info.outputs.version }}
+          path: ${{ steps.package.outputs.name }}
           retention-days: 30
 
   # ============================================================================
   # CREATE GITHUB RELEASE
   # ============================================================================
-  release:
+  github-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     needs: build
     permissions:
       contents: write
-
     outputs:
-      release_url: ${{ steps.gh_release.outputs.url }}
-      changelog: ${{ steps.changelog.outputs.content }}
+      release_url: ${{ steps.set_url.outputs.release_url }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
       - name: Download artifact
         uses: actions/download-artifact@v7
         with:
-          name: ${{ env.PLUGIN_SLUG }}-release
+          name: ${{ env.PLUGIN_SLUG }}-${{ needs.build.outputs.version }}
 
-      - name: Extract changelog
-        id: changelog
-        env:
-          VERSION: ${{ needs.build.outputs.version }}
-        run: |
-          CHANGELOG=""
-
-          if [ -f "bin/extract-changelog.js" ]; then
-            CHANGELOG=$(node bin/extract-changelog.js "$VERSION")
-          else
-            # Fallback to awk-based extraction.
-            if [ -f "CHANGELOG.md" ]; then
-              CHANGELOG=$(awk -v version="$VERSION" '/^## [0-9]+\.[0-9]+\.[0-9]+/ {if (found) exit; if ($2 == version) found=1; next} found && NF' CHANGELOG.md | head -20)
-            fi
-          fi
-
-          if [ -z "$CHANGELOG" ]; then
-            CHANGELOG="Release $VERSION"
-          fi
-
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Create GitHub release
-        id: gh_release
+      - name: Create GitHub Release
+        id: release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          body: ${{ steps.changelog.outputs.content }}
+          name: ${{ env.PLUGIN_NAME }} ${{ needs.build.outputs.version }}
+          body: |
+            ${{ needs.build.outputs.changelog_content }}
           files: ${{ needs.build.outputs.zip_name }}
           draft: ${{ needs.build.outputs.is_test == 'true' }}
           prerelease: ${{ needs.build.outputs.is_prerelease == 'true' }}
 
+      - name: Set release URL
+        id: set_url
+        env:
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          RELEASE_URL="https://github.com/${REPO}/releases/tag/${TAG}"
+          echo "release_url=${RELEASE_URL}" >> $GITHUB_OUTPUT
+
   # ============================================================================
-  # SYNC TO EDD (test_mode for test tags, live for stable)
+  # NOTIFY EDD STORE
   # ============================================================================
-  edd-sync:
-    name: Sync to EDD
+  edd-webhook:
+    name: Notify EDD Store
     runs-on: ubuntu-latest
-    needs: [build, release]
+    needs: [build, github-release]
     if: |
-      vars.EDD_PRODUCT_ID != '' &&
-      vars.EDD_PRODUCT_ID != '0'
+      always() &&
+      needs.build.result == 'success' &&
+      needs.github-release.result == 'success'
 
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: ${{ env.PLUGIN_SLUG }}-release
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - name: Get asset info
-        id: asset
+      - name: Get release asset API URL
+        id: get_asset
         env:
-          ZIP_FILE: ${{ needs.build.outputs.zip_name }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_NAME: ${{ needs.build.outputs.zip_name }}
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
         run: |
-          SIZE=$(ls -lh "$ZIP_FILE" | awk '{print $5}')
-          SHA=$(sha256sum "$ZIP_FILE" | awk '{print $1}')
+          ASSET_URL=$(gh api "repos/${REPO}/releases/tags/${TAG}" \
+            --jq ".assets[] | select(.name == \"${PACKAGE_NAME}\") | .url")
 
-          echo "size=${SIZE}" >> $GITHUB_OUTPUT
-          echo "sha256=${SHA}" >> $GITHUB_OUTPUT
+          if [ -z "$ASSET_URL" ] || [ "$ASSET_URL" == "null" ]; then
+            echo "⚠️ Could not find asset URL for ${PACKAGE_NAME}"
+            echo "asset_url=" >> $GITHUB_OUTPUT
+          else
+            echo "asset_url=${ASSET_URL}" >> $GITHUB_OUTPUT
+            echo "✅ Asset API URL: ${ASSET_URL}"
+          fi
 
-      - name: Sync to EDD
+      - name: Sync release to EDD
         uses: code-atlantic/edd-release-sync@v0.2.0
         with:
-          version: ${{ needs.build.outputs.version }}
           edd_id: ${{ vars.EDD_PRODUCT_ID }}
-          test_mode: ${{ needs.build.outputs.is_test == 'true' }}
-          release_url: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}
+          version: ${{ needs.build.outputs.version }}
+          release_url: ${{ needs.github-release.outputs.release_url }}
           download_url: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ needs.build.outputs.zip_name }}
-          asset_api_url: https://api.github.com/repos/${{ github.repository }}/releases/latest/assets
-          webhook_url: ${{ secrets.EDD_STORE_URL }}
-          webhook_token: ${{ secrets.EDD_API_KEY }}
+          asset_api_url: ${{ steps.get_asset.outputs.asset_url }}
+          webhook_url: ${{ vars.EDD_WEBHOOK_URL }}
+          webhook_token: ${{ secrets.EDD_WEBHOOK_TOKEN }}
+          plugin_slug: ${{ env.PLUGIN_SLUG }}
+          is_prerelease: ${{ needs.build.outputs.is_prerelease }}
+          test_mode: ${{ needs.build.outputs.is_test }}
 
   # ============================================================================
   # UPLOAD TO GOOGLE DRIVE
   # ============================================================================
-  google-drive:
+  google-drive-upload:
     name: Upload to Google Drive
     runs-on: ubuntu-latest
-    needs: [build, release]
-    if: vars.GOOGLE_DRIVE_FOLDER_ID != ''
-    continue-on-error: true
+    needs: [build, github-release]
+    if: needs.build.result == 'success' && needs.github-release.result == 'success'
+    outputs:
+      file_id: ${{ steps.upload.outputs.file_id }}
+      web_view_link: ${{ steps.upload.outputs.web_view_link }}
+      download_link: ${{ steps.upload.outputs.download_link }}
+      updated: ${{ steps.upload.outputs.updated }}
+      skipped: ${{ steps.upload.outputs.skipped }}
 
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v7
         with:
-          name: ${{ env.PLUGIN_SLUG }}-release
-
-      - name: Determine folder ID
-        id: folder
-        env:
-          IS_TEST: ${{ needs.build.outputs.is_test }}
-          FOLDER_ID: ${{ vars.GOOGLE_DRIVE_FOLDER_ID }}
-          BETA_FOLDER_ID: ${{ vars.GOOGLE_DRIVE_BETA_FOLDER_ID }}
-        run: |
-          if [ "$IS_TEST" == "true" ] && [ -n "$BETA_FOLDER_ID" ]; then
-            echo "folder=${BETA_FOLDER_ID}" >> $GITHUB_OUTPUT
-          else
-            echo "folder=${FOLDER_ID}" >> $GITHUB_OUTPUT
-          fi
+          name: ${{ env.PLUGIN_SLUG }}-${{ needs.build.outputs.version }}
 
       - name: Upload to Google Drive
-        uses: adityak74/google-drive-upload-git-action@v0.3
+        id: upload
+        uses: code-atlantic/sync-release-to-google-drive@v0.3.1
         with:
-          credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
-          folderId: ${{ steps.folder.outputs.folder }}
           filename: ${{ needs.build.outputs.zip_name }}
+          credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
+          folder_id: ${{ vars.GOOGLE_DRIVE_FOLDER_ID }}
+          overwrite: 'true'
+          sharing: anyone
+          link_discoverable: false
 
   # ============================================================================
-  # SLACK NOTIFICATION
+  # SLACK NOTIFICATION (runs after EDD + GDrive)
   # ============================================================================
-  slack-notify:
-    name: Slack Notification
+  slack-notification-success:
+    name: Slack Success Notification
     runs-on: ubuntu-latest
-    needs: [build, release]
-    if: always()
+    needs: [build, github-release, edd-webhook, google-drive-upload]
+    if: |
+      always() &&
+      needs.build.result == 'success' &&
+      needs.github-release.result == 'success'
 
     steps:
-      - name: Determine status
-        id: status
-        env:
-          IS_TEST: ${{ needs.build.outputs.is_test }}
-          RELEASE_RESULT: ${{ needs.release.result }}
-        run: |
-          if [ "$IS_TEST" == "true" ]; then
-            echo "emoji=🧪" >> $GITHUB_OUTPUT
-            echo "status=TEST" >> $GITHUB_OUTPUT
-          elif [ "$RELEASE_RESULT" == "success" ]; then
-            echo "emoji=🚀" >> $GITHUB_OUTPUT
-            echo "status=DEPLOYED" >> $GITHUB_OUTPUT
-          else
-            echo "emoji=❌" >> $GITHUB_OUTPUT
-            echo "status=FAILED" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Send Slack notification
+      - name: Send success notification
         env:
           SLACK_WEBHOOK_URL: ${{ needs.build.outputs.is_test == 'true' && secrets.SLACK_WEBHOOK || secrets.SLACK_WEBHOOK_SUPPORT }}
-          EMOJI: ${{ steps.status.outputs.emoji }}
-          STATUS: ${{ steps.status.outputs.status }}
+          PLUGIN_NAME: ${{ env.PLUGIN_NAME }}
           VERSION: ${{ needs.build.outputs.version }}
           IS_TEST: ${{ needs.build.outputs.is_test }}
-          RELEASE_RESULT: ${{ needs.release.result }}
-          RELEASE_URL: ${{ needs.release.outputs.release_url }}
-          CHANGELOG: ${{ needs.release.outputs.changelog }}
-          PLUGIN: ${{ env.PLUGIN_NAME }}
-          REPO: ${{ github.repository }}
+          RELEASE_URL: ${{ needs.github-release.outputs.release_url }}
+          CHANGELOG: ${{ needs.build.outputs.changelog_content }}
+          DRIVE_DOWNLOAD_URL: ${{ needs.google-drive-upload.outputs.download_link }}
+          EDD_RESULT: ${{ needs.edd-webhook.result }}
+          GDRIVE_RESULT: ${{ needs.google-drive-upload.result }}
         run: |
-          # Skip if no webhook configured.
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "No Slack webhook configured, skipping."
+            echo "⚠️ No Slack webhook configured"
             exit 0
           fi
 
-          RELEASE_TYPE="Stable"
-          [ "$IS_TEST" == "true" ] && RELEASE_TYPE="Test Lane"
+          # Build emoji prefix.
+          EMOJI="🚀"
+          [ "$IS_TEST" == "true" ] && EMOJI="🧪"
 
-          GH_STATUS="✅ Created"
-          [ "$RELEASE_RESULT" != "success" ] && GH_STATUS="❌ Failed"
+          # Status indicators.
+          EDD_STATUS="✅"
+          [ "$EDD_RESULT" != "success" ] && EDD_STATUS="⚠️"
+          GDRIVE_STATUS="✅"
+          [ "$GDRIVE_RESULT" != "success" ] && GDRIVE_STATUS="⚠️"
 
-          CHANGELOG_URL="https://github.com/${REPO}/blob/master/CHANGELOG.md"
+          # Build message.
+          MESSAGE="*${PLUGIN_NAME} ${VERSION}*\n\n"
 
-          # Truncate changelog for Slack (max ~2500 chars to stay under block limit).
-          CHANGELOG_TRUNCATED=$(echo "$CHANGELOG" | head -30 | cut -c 1-2500)
+          if [ -n "$CHANGELOG" ]; then
+            # Truncate for Slack.
+            TRUNCATED=$(echo "$CHANGELOG" | head -20)
+            MESSAGE="${MESSAGE}\`\`\`\n${TRUNCATED}\n\`\`\`\n\n"
+          fi
 
-          PAYLOAD=$(jq -n \
-            --arg emoji "$EMOJI" \
-            --arg status "$STATUS" \
-            --arg plugin "$PLUGIN" \
-            --arg version "$VERSION" \
-            --arg release_type "$RELEASE_TYPE" \
-            --arg gh_status "$GH_STATUS" \
-            --arg release_url "$RELEASE_URL" \
-            --arg changelog_url "$CHANGELOG_URL" \
-            --arg changelog "$CHANGELOG_TRUNCATED" \
-            '{
-              "text": "\($emoji) \($status) - \($plugin) \($version)",
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": { "type": "plain_text", "text": "\($emoji) \($status) - \($plugin) \($version)", "emoji": true }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    { "type": "mrkdwn", "text": "*Version:*\n\($version)" },
-                    { "type": "mrkdwn", "text": "*Release Type:*\n\($release_type)" },
-                    { "type": "mrkdwn", "text": "*GitHub Release:*\n\($gh_status)" }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "text": { "type": "mrkdwn", "text": "*What'\''s New:*\n\($changelog)" }
-                },
-                { "type": "divider" },
-                {
-                  "type": "section",
-                  "text": { "type": "mrkdwn", "text": "*Support Actions:*\n• Review changelog for customer communications\n• Update documentation if needed\n• Monitor support channels for issues" }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    { "type": "button", "text": { "type": "plain_text", "text": "📖 Full Changelog", "emoji": true }, "url": "\($release_url)" },
-                    { "type": "button", "text": { "type": "plain_text", "text": "📋 CHANGELOG.md", "emoji": true }, "url": "\($changelog_url)" }
-                  ]
-                }
-              ]
-            }')
+          MESSAGE="${MESSAGE}*Downloads:*\n"
+          MESSAGE="${MESSAGE}🔗 <${RELEASE_URL}|GitHub Release>\n"
 
-          curl -s -X POST "$SLACK_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD"
+          if [ -n "$DRIVE_DOWNLOAD_URL" ]; then
+            MESSAGE="${MESSAGE}⬇️ <${DRIVE_DOWNLOAD_URL}|Download Release Zip (shareable link)>\n"
+          fi
+
+          MESSAGE="${MESSAGE}\n*Status:* EDD ${EDD_STATUS} | GDrive ${GDRIVE_STATUS}\n"
+
+          if [ "$IS_TEST" == "true" ]; then
+            MESSAGE="${MESSAGE}\n_🧪 This is a test release — not published to WordPress.org_"
+          fi
+
+          curl -X POST \
+            --data-urlencode "payload={\"text\": \"${EMOJI} ${MESSAGE}\", \"username\": \"Release Bot\", \"icon_emoji\": \":package:\"}" \
+            "$SLACK_WEBHOOK_URL" \
+            --fail --silent --show-error
+
+          echo "✅ Slack sent"
+
+  slack-notification-failure:
+    name: Slack Failure Notification
+    runs-on: ubuntu-latest
+    needs: [build, github-release, edd-webhook, google-drive-upload]
+    if: |
+      always() &&
+      needs.build.result == 'success' &&
+      (needs.github-release.result == 'failure' || needs.edd-webhook.result == 'failure' || needs.google-drive-upload.result == 'failure')
+
+    steps:
+      - name: Send failure notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_SUPPORT }}
+          PLUGIN_NAME: ${{ env.PLUGIN_NAME }}
+          VERSION: ${{ needs.build.outputs.version }}
+          GH_RESULT: ${{ needs.github-release.result }}
+          EDD_RESULT: ${{ needs.edd-webhook.result }}
+          GDRIVE_RESULT: ${{ needs.google-drive-upload.result }}
+          RUN_ID: ${{ github.run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            exit 0
+          fi
+
+          GH_STATUS="✅"
+          [ "$GH_RESULT" != "success" ] && GH_STATUS="❌"
+          EDD_STATUS="✅"
+          [ "$EDD_RESULT" != "success" ] && EDD_STATUS="❌"
+          GDRIVE_STATUS="✅"
+          [ "$GDRIVE_RESULT" != "success" ] && GDRIVE_STATUS="❌"
+
+          MESSAGE="*🚨 RELEASE FAILURE: ${PLUGIN_NAME} ${VERSION}*\n\n"
+          MESSAGE="${MESSAGE}• *GitHub:* ${GH_STATUS}\n"
+          MESSAGE="${MESSAGE}• *EDD:* ${EDD_STATUS}\n"
+          MESSAGE="${MESSAGE}• *Drive:* ${GDRIVE_STATUS}\n\n"
+          MESSAGE="${MESSAGE}🔍 <https://github.com/${REPO}/actions/runs/${RUN_ID}|View Workflow>"
+
+          curl -X POST \
+            --data-urlencode "payload={\"text\": \"${MESSAGE}\", \"username\": \"Release Bot\", \"icon_emoji\": \":x:\"}" \
+            "$SLACK_WEBHOOK_URL" \
+            --fail --silent --show-error
 
   # ============================================================================
   # RELEASE SUMMARY
   # ============================================================================
-  release-summary:
+  summary:
     name: Release Summary
     runs-on: ubuntu-latest
-    needs: [build, release, edd-sync, google-drive]
+    needs: [build, github-release, edd-webhook, google-drive-upload, slack-notification-success, slack-notification-failure]
     if: always()
 
     steps:
@@ -347,28 +378,31 @@ jobs:
           VERSION: ${{ needs.build.outputs.version }}
           IS_TEST: ${{ needs.build.outputs.is_test }}
           IS_PRERELEASE: ${{ needs.build.outputs.is_prerelease }}
+          RELEASE_URL: ${{ needs.github-release.outputs.release_url }}
           BUILD_RESULT: ${{ needs.build.result }}
-          RELEASE_RESULT: ${{ needs.release.result }}
-          EDD_RESULT: ${{ needs.edd-sync.result }}
-          GDRIVE_RESULT: ${{ needs.google-drive.result }}
+          GH_RESULT: ${{ needs.github-release.result }}
+          EDD_RESULT: ${{ needs.edd-webhook.result }}
+          GDRIVE_RESULT: ${{ needs.google-drive-upload.result }}
+          SLACK_OK: ${{ needs.slack-notification-success.result }}
+          SLACK_FAIL: ${{ needs.slack-notification-failure.result }}
         run: |
-          if [ "$IS_TEST" == "true" ]; then
-            TYPE="🧪 Test Lane"
-          elif [ "$IS_PRERELEASE" == "true" ]; then
-            TYPE="🔶 Pre-release"
-          else
-            TYPE="🚀 Stable"
-          fi
+          TYPE="🚀 Stable"
+          [ "$IS_TEST" == "true" ] && TYPE="🧪 Test Lane"
+          [ "$IS_PRERELEASE" == "true" ] && TYPE="🔶 Pre-release"
 
-          echo "# Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "# Release Summary: ${{ env.PLUGIN_NAME }} ${VERSION}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** ${VERSION} — ${TYPE}" >> $GITHUB_STEP_SUMMARY
+          echo "**Type:** ${TYPE}" >> $GITHUB_STEP_SUMMARY
+          echo "**Release:** ${RELEASE_URL}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Build | $([ "${BUILD_RESULT}" == "success" ] && echo "✅" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
-          echo "| GitHub Release | $([ "${RELEASE_RESULT}" == "success" ] && echo "✅" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
-          echo "| EDD Sync | $([ "${EDD_RESULT}" == "success" ] && echo "✅" || [ "${EDD_RESULT}" == "skipped" ] && echo "⏭️" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
-          echo "| Google Drive | $([ "${GDRIVE_RESULT}" == "success" ] && echo "✅" || [ "${GDRIVE_RESULT}" == "skipped" ] && echo "⏭️" || echo "❌") |" >> $GITHUB_STEP_SUMMARY
+          echo "## Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          [ "$BUILD_RESULT" == "success" ] && echo "✅ **Build**: Package created" >> $GITHUB_STEP_SUMMARY || echo "❌ **Build**: Failed" >> $GITHUB_STEP_SUMMARY
+          [ "$GH_RESULT" == "success" ] && echo "✅ **GitHub Release**: Created" >> $GITHUB_STEP_SUMMARY || echo "❌ **GitHub Release**: Failed" >> $GITHUB_STEP_SUMMARY
+          [ "$EDD_RESULT" == "success" ] && echo "✅ **EDD Webhook**: Delivered" >> $GITHUB_STEP_SUMMARY || echo "⚠️ **EDD Webhook**: ${EDD_RESULT}" >> $GITHUB_STEP_SUMMARY
+          [ "$GDRIVE_RESULT" == "success" ] && echo "✅ **Google Drive**: Uploaded" >> $GITHUB_STEP_SUMMARY || echo "⚠️ **Google Drive**: ${GDRIVE_RESULT}" >> $GITHUB_STEP_SUMMARY
+          [ "$SLACK_OK" == "success" ] && echo "✅ **Slack**: Notified" >> $GITHUB_STEP_SUMMARY || [ "$SLACK_FAIL" == "success" ] && echo "⚠️ **Slack**: Failure notice sent" >> $GITHUB_STEP_SUMMARY || echo "⚠️ **Slack**: ${SLACK_OK}" >> $GITHUB_STEP_SUMMARY
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "*WordPress.org deploy triggers separately on merge to master.*" >> $GITHUB_STEP_SUMMARY
