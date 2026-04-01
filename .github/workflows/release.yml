@@ -268,7 +268,7 @@ jobs:
     steps:
       - name: Send success notification
         env:
-          SLACK_WEBHOOK_URL: ${{ needs.build.outputs.is_test == 'true' && secrets.SLACK_WEBHOOK || secrets.SLACK_WEBHOOK_SUPPORT }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           PLUGIN_NAME: ${{ env.PLUGIN_NAME }}
           VERSION: ${{ needs.build.outputs.version }}
           IS_TEST: ${{ needs.build.outputs.is_test }}
@@ -334,7 +334,7 @@ jobs:
     steps:
       - name: Send failure notification
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_SUPPORT }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           PLUGIN_NAME: ${{ env.PLUGIN_NAME }}
           VERSION: ${{ needs.build.outputs.version }}
           GH_RESULT: ${{ needs.github-release.result }}
