@@ -31,6 +31,7 @@ class Assets extends Controller {
 	 * Initialize the assets controller.
 	 */
 	public function init() {
+		add_action( 'init', [ $this, 'register_scripts' ], 1 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ], 1 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'register_scripts' ], 1 );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'register_scripts' ], 1 );
@@ -278,43 +279,47 @@ class Assets extends Controller {
 					isset( $package_data['deps'] ) ? $package_data['deps'] : []
 				);
 
-			if ( 'block-editor' === $package ) {
-				if ( is_admin() && 'widgets' !== $screen->id ) {
-					$js_deps = array_merge( $js_deps, [ 'wp-edit-post' ] );
+				if ( 'block-editor' === $package ) {
+					if ( is_admin() && ( ! $screen || 'widgets' !== $screen->id ) ) {
+						$js_deps = array_merge( $js_deps, [ 'wp-edit-post' ] );
+					}
 				}
-			}
 
 				$footer = $package_data['head'] ?? true;
 
-			if ( $bundled ) {
-				pum_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
-			} else {
-				// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
-				wp_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
-			}
-
-			if ( isset( $package_data['styles'] ) && $package_data['styles'] ) {
-				$css_file = $this->container->get_url( "$path/$package{$rtl}.css" );
-				$css_deps = [ 'wp-components', 'wp-block-editor', 'dashicons' ];
-
 				if ( $bundled ) {
-					pum_register_style( $handle, $css_file, $css_deps, $meta['version'] );
+					pum_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
 				} else {
 					// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
-					wp_register_style( $handle, $css_file, $css_deps, $meta['version'] );
+					wp_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
 				}
-			}
 
-			if ( isset( $package_data['block_styles'] ) && $package_data['block_styles'] ) {
-				$block_css_file = $this->container->get_url( "$path/$package-style{$rtl}.css" );
-				$block_css_deps = [ 'wp-block-editor' ];
+				$css_path = $this->container->get_path( "$path/$package{$rtl}.css" );
 
-				if ( $bundled ) {
-					pum_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
-				} else {
-					wp_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
+				if ( isset( $package_data['styles'] ) && $package_data['styles'] && file_exists( $css_path ) ) {
+					$css_file = $this->container->get_url( "$path/$package{$rtl}.css" );
+					$css_deps = [ 'wp-components', 'wp-block-editor', 'dashicons' ];
+
+					if ( $bundled ) {
+						pum_register_style( $handle, $css_file, $css_deps, $meta['version'] );
+					} else {
+						// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
+						wp_register_style( $handle, $css_file, $css_deps, $meta['version'] );
+					}
 				}
-			}
+
+				$block_css_path = $this->container->get_path( "$path/$package-style{$rtl}.css" );
+
+				if ( isset( $package_data['block_styles'] ) && $package_data['block_styles'] && file_exists( $block_css_path ) ) {
+					$block_css_file = $this->container->get_url( "$path/$package-style{$rtl}.css" );
+					$block_css_deps = [ 'wp-block-editor' ];
+
+					if ( $bundled ) {
+						pum_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
+					} else {
+						wp_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
+					}
+				}
 
 				/**
 				 * TODO Create pum_set_script_translations() function.

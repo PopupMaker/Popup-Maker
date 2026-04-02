@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Bug Fixes**
+
+-   Fixed block library frontend styles (`block-library-style.css`) missing from production builds. WordPress blocks referencing the `popup-maker-block-library-style` handle would trigger a missing asset. The webpack build config now correctly splits frontend `style.scss` from editor `editor.scss` into separate CSS files.
+
 ## v1.22.0 - 2026-03-31
 
 **Features**
