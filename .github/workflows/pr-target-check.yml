@@ -2,13 +2,14 @@ name: PR target check
 
 on:
     pull_request_target:
-        types: [opened]
+        types: [opened, edited]
         branches:
             - master
 
 jobs:
     redirect:
         runs-on: ubuntu-latest
+        if: "!contains(github.event.pull_request.labels.*.name, 'hotfix')"
         steps:
             - name: Retarget to develop
               env:
