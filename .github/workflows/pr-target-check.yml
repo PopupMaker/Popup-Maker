@@ -9,7 +9,9 @@ on:
 jobs:
     redirect:
         runs-on: ubuntu-latest
-        if: "!contains(github.event.pull_request.labels.*.name, 'hotfix')"
+        if: >-
+          github.event.pull_request.author_association != 'OWNER' &&
+          github.event.pull_request.author_association != 'MEMBER'
         steps:
             - name: Retarget to develop
               env:
