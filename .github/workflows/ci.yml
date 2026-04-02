@@ -171,7 +171,7 @@ jobs:
       - name: Run PHPStan
         if: steps.changed-files.outputs.any_changed == 'true' && matrix.php-version == '8.2'
         continue-on-error: true
-        run: composer phpstan
+        run: vendor/bin/phpstan analyse --error-format=github
 
       - name: Check for PHPCS failures
         if: steps.changed-files.outputs.any_changed == 'true' && steps.phpcs.outcome == 'failure'
@@ -233,6 +233,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Enable ESLint problem matcher
+        if: steps.changed-js.outputs.any_changed == 'true'
+        run: echo "::add-matcher::node_modules/@wordpress/scripts/config/.eslintrc-problem-matcher.json" 2>/dev/null || true
+
       - name: Run ESLint on changed files
         if: steps.changed-js.outputs.any_changed == 'true'
         continue-on-error: true
@@ -245,9 +249,13 @@ jobs:
         continue-on-error: true
         id: stylelint
         run: |
-          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs -r npm run lint:style -- --formatter=compact
+          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs -r npm run lint:style -- --formatter=github
 
       # Only type-check when TypeScript files change
+      - name: Enable tsc problem matcher
+        if: needs.detect-changes.outputs.ts_src == 'true'
+        run: echo "::add-matcher::node_modules/typescript/lib/tsc-problem-matcher.json" 2>/dev/null || true
+
       - name: Run TypeScript type checking
         if: needs.detect-changes.outputs.ts_src == 'true'
         continue-on-error: true
