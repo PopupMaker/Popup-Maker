@@ -17,6 +17,7 @@
 		rest_nonce: null,
 		debug_mode: false,
 		disable_tracking: true,
+		disable_url_params: false,
 		message_position: 'top',
 		core_sub_forms_enabled: true,
 		popups: {},

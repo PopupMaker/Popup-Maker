@@ -45,8 +45,14 @@
 		/**
 		 * Process all links within a popup to add tracking parameters.
 		 *
-		 * Internal links get ?pid= appended (tracked via server redirect).
-		 * External/special links get click handlers for beacon tracking.
+		 * Internal links get ?pid= appended (tracked via server redirect),
+		 * unless disable_url_params is enabled, in which case they use
+		 * beacon tracking like external links.
+		 *
+		 * External/special links always get click handlers for beacon tracking.
+		 *
+		 * When disable_tracking is true (analytics fully disabled), no
+		 * tracking of any kind is applied.
 		 *
 		 * @param {jQuery} $popup The popup element.
 		 * @param {number} pid    The popup ID.
@@ -54,33 +60,47 @@
 		processPopupLinks: function ( $popup, pid ) {
 			var self = this;
 
+			// If all analytics disabled, do nothing.
+			if ( pum_vars.disable_tracking ) {
+				return;
+			}
+
 			$popup.find( 'a[href]' ).each( function () {
 				var $link = $( this ),
 					href = $link.attr( 'href' );
 
 				if ( self.isInternalUrl( href ) ) {
-					// Get the filterable param name (defaults to 'pid').
-					var pidParam =
-						window.pum_vars?.paramNames?.popup_id || 'pid';
+					if ( pum_vars.disable_url_params ) {
+						// Beacon fallback for internal links (same as external).
+						if ( self.shouldTrackClick( href ) ) {
+							self.attachClickTracking( $link, pid, href );
+						}
+					} else {
+						// Default: append pid param for server-side tracking.
+						var pidParam =
+							window.pum_vars?.paramNames?.popup_id || 'pid';
 
-					// Internal URLs: Append PID parameter (tracked via server redirect).
-					var urlParams = {};
-					urlParams[ pidParam ] = pid;
+						var urlParams = {};
+						urlParams[ pidParam ] = pid;
 
-					// Allow extensions to add additional parameters.
-					if ( window.PUM && window.PUM.hooks ) {
-						urlParams = window.PUM.hooks.applyFilters(
-							'popupMaker.popup.linkUrlParams',
-							urlParams,
-							$popup,
-							$link
+						// Allow extensions to add additional parameters.
+						if ( window.PUM && window.PUM.hooks ) {
+							urlParams = window.PUM.hooks.applyFilters(
+								'popupMaker.popup.linkUrlParams',
+								urlParams,
+								$popup,
+								$link
+							);
+						}
+
+						var newHref = self.appendParamsToUrl(
+							href,
+							urlParams
 						);
+						$link.attr( 'href', newHref );
 					}
-
-					var newHref = self.appendParamsToUrl( href, urlParams );
-					$link.attr( 'href', newHref );
 				} else if ( self.shouldTrackClick( href ) ) {
-					// External/special links: Attach click handler for beacon tracking.
+					// External/special links: always beacon tracking.
 					self.attachClickTracking( $link, pid, href );
 				}
 			} );
