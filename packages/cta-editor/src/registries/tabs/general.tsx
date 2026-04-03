@@ -116,6 +116,13 @@ export const Component = ( {
 				</Notice>
 			) }
 
+			{ /* Filtered fields with priority < 3 render before action type. */ }
+			{ getTabFields( 'general' )
+				.filter( ( field ) => field.priority < 3 )
+				.map( ( field ) => (
+					<Fragment key={ field.id }>{ field.component }</Fragment>
+				) ) }
+
 			{ callToActionTypeOptions.length > 1 && (
 				<SelectControl
 					label={ __( 'Action Type', 'popup-maker' ) }
@@ -171,9 +178,11 @@ export const Component = ( {
 				</Notice>
 			) }
 
-			{ getTabFields( 'general' ).map( ( field ) => (
-				<Fragment key={ field.id }>{ field.component }</Fragment>
-			) ) }
+			{ getTabFields( 'general' )
+				.filter( ( field ) => field.priority >= 3 )
+				.map( ( field ) => (
+					<Fragment key={ field.id }>{ field.component }</Fragment>
+				) ) }
 		</div>
 	);
 };
