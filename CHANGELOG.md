@@ -2,9 +2,15 @@
 
 ## Unreleased
 
+**Features**
+
+-   Added "Disable URL tracking parameters" privacy setting. When enabled, popup links no longer get `?pid=` appended — link clicks are tracked via browser beacons instead (less reliable but non-invasive to URLs).
+
 **Bug Fixes**
 
 -   Fixed block library frontend styles (`block-library-style.css`) missing from production builds. WordPress blocks referencing the `popup-maker-block-library-style` handle would trigger a missing asset. The webpack build config now correctly splits frontend `style.scss` from editor `editor.scss` into separate CSS files.
+-   Fixed URL tracking module ignoring the "Disable popup open tracking" privacy setting. When analytics are disabled, link tracking parameters and click beacons are now properly suppressed.
+-   Fixed PHP operator precedence bug in `pum_get_asset_group_meta()` where `(array) file_exists()` always evaluated as truthy, causing fatal errors when build artifacts were missing.
 
 ## v1.22.0 - 2026-03-31
 
