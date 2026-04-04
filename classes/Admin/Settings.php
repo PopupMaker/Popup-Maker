@@ -426,6 +426,11 @@ class PUM_Admin_Settings {
 								'label' => __( 'Disables popup open tracking?', 'popup-maker' ),
 								'desc'  => __( 'This will disable the built in analytics functionality.', 'popup-maker' ),
 							],
+							'disable_pid_url_params'      => [
+								'type'  => 'checkbox',
+								'label' => __( 'Disable URL tracking parameters?', 'popup-maker' ),
+								'desc'  => __( 'Stops adding tracking parameters (pid) to links inside popups. Link clicks will be tracked via browser beacons instead (less reliable but non-invasive).', 'popup-maker' ),
+							],
 						],
 						'forms' => [
 							'forms_disclaimer'             => [

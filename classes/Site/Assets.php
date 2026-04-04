@@ -262,6 +262,7 @@ class PUM_Site_Assets {
 					'default_theme'          => (string) pum_get_default_theme_id(),
 					'debug_mode'             => Popup_Maker::debug_mode(),
 					'disable_tracking'       => popmake_get_option( 'disable_popup_open_tracking' ),
+					'disable_url_params'     => (bool) pum_get_option( 'disable_pid_url_params' ),
 					'home_url'               => trailingslashit( $site_home_path ),
 					'message_position'       => 'top',
 					'core_sub_forms_enabled' => ! PUM_Newsletters::$disabled,
