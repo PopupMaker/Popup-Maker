@@ -28,9 +28,9 @@
 	},
 	"wpScript": true,
 	"dependencies": {
-		"@popup-maker/core-data": "*",
-		"@popup-maker/i18n": "*",
-		"@popup-maker/utils": "*",
+		"@popup-maker/core-data": "workspace:*",
+		"@popup-maker/i18n": "workspace:*",
+		"@popup-maker/utils": "workspace:*",
 		"@wordpress/base-styles": "^6.5.0",
 		"@wordpress/components": "^30.2.0",
 		"@wordpress/compose": "^7.29.0",
@@ -46,7 +46,7 @@
 		"lodash": "4.17.23"
 	},
 	"devDependencies": {
-		"@popup-maker/types": "*"
+		"@popup-maker/types": "workspace:*"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
