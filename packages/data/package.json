@@ -33,7 +33,7 @@
 	"wpScript": true,
 	"sideEffects": true,
 	"dependencies": {
-		"@popup-maker/core-data": "*",
+		"@popup-maker/core-data": "workspace:*",
 		"@wordpress/core-data": "^7.29.0",
 		"@wordpress/data": "^10.29.0",
 		"@wordpress/hooks": "^4.29.0",

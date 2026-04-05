@@ -30,7 +30,7 @@
 	"wpScript": true,
 	"sideEffects": false,
 	"dependencies": {
-		"@popup-maker/i18n": "*",
+		"@popup-maker/i18n": "workspace:*",
 		"@wordpress/api-fetch": "^7.29.0",
 		"@wordpress/core-data": "^7.29.0",
 		"@wordpress/data": "^10.29.0",
