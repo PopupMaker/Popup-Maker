@@ -72,7 +72,7 @@ class Link extends \PopupMaker\Base\CallToAction {
 					'type'         => 'url',
 					'label'        => __( 'Link URL', 'popup-maker' ),
 					'placeholder'  => __( 'https://example.com', 'popup-maker' ),
-					'priority'     => 1.2,
+					'priority'     => 5,
 					'required'     => true,
 					'dependencies' => [
 						'type' => 'link',
