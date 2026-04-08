@@ -69,7 +69,7 @@ jobs:
               - 'playwright.config.js'
             npm_deps:
               - 'package.json'
-              - 'package-lock.json'
+              - 'pnpm-lock.yaml'
             php_deps:
               - 'composer.json'
               - 'composer.lock'
@@ -307,7 +307,7 @@ jobs:
           node-version: "20"
           cache: "pnpm"
 
-      - name: Install npm dependencies
+      - name: Install pnpm dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Run Jest Tests
@@ -371,7 +371,7 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Install npm dependencies
+      - name: Install pnpm dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright system dependencies
@@ -382,7 +382,7 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-playwright-
 
       - name: Install Playwright browser

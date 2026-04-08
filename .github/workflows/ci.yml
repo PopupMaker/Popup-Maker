@@ -85,7 +85,7 @@ jobs:
               - 'packages/**/src/**/*.scss'
             npm_deps:
               - 'package.json'
-              - 'package-lock.json'
+              - 'pnpm-lock.yaml'
             php_deps:
               - 'composer.json'
               - 'composer.lock'
@@ -329,7 +329,7 @@ jobs:
   # Security Scanning - NPM Dependencies
   # ============================================================================
   npm-security:
-    name: NPM Security Audit
+    name: pnpm Security Audit
     runs-on: ubuntu-latest
     needs: detect-changes
     if: ${{ github.event_name == 'pull_request' && needs.detect-changes.outputs.npm_deps == 'true' }}
@@ -349,12 +349,12 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
-      - name: Install npm dependencies
+      - name: Install pnpm dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit
+      - name: Run pnpm audit
         continue-on-error: true
-        run: pnpm audit --audit-level=high || echo "⚠️ NPM audit found vulnerabilities"
+        run: pnpm audit --audit-level=high || echo "⚠️ pnpm audit found vulnerabilities"
 
   # ============================================================================
   # Security Scanning - Composer Dependencies
