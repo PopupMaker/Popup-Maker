@@ -97,7 +97,7 @@ jobs:
               if: steps.download.outputs.found != 'true'
               run: |
                   composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-                  npm ci
+                  pnpm install --frozen-lockfile
 
             - name: Build into BUILD_DIR
               if: steps.download.outputs.found != 'true'

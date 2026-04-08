@@ -150,7 +150,7 @@ If other packages will import from `@popup-maker/<name>`, add a mapping in `pack
 
 ```bash
 npx tsc --noEmit --project packages/<name>/tsconfig.json
-npm run build
+pnpm run build
 php -l classes/Controllers/Assets.php
 ```
 
@@ -164,7 +164,7 @@ php -l classes/Controllers/Assets.php
 
 ## Examples
 
-```
+```bash
 /create-package split-testing --bundled
 /create-package reporting-charts --admin-only --with-styles
 ```
