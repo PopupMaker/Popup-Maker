@@ -313,7 +313,7 @@ function main() {
 
             // Change to package directory for publishing
             process.chdir(pkg.path);
-            execCommand('npm publish --access public');
+            execCommand('pnpm publish --access public --no-git-checks');
 
             success(`✅ Published ${pkg.name}@${pkg.newVersion}`);
             publishedCount++;
@@ -342,7 +342,7 @@ ${failedPackages.map(name => {
             const pkg = updates.find(u => u.name === name);
             return `echo "Publishing ${name}..."
 cd packages/${path.basename(pkg.path)}
-npm publish --access public
+pnpm publish --access public --no-git-checks
 cd ../..`;
         }).join('\n')}
 `;
