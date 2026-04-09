@@ -311,7 +311,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Jest Tests
-        run: pnpm run test:unit --quiet
+        run: pnpm run test:unit
 
   # ============================================================
   # Playwright E2E Tests - Browser-based tests with wp-env

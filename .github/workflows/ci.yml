@@ -240,7 +240,9 @@ jobs:
 
       - name: Enable ESLint problem matcher
         if: steps.changed-js.outputs.any_changed == 'true'
-        run: echo "::add-matcher::node_modules/@wordpress/scripts/config/.eslintrc-problem-matcher.json" 2>/dev/null || true
+        run: |
+          MATCHER="node_modules/@wordpress/scripts/config/.eslintrc-problem-matcher.json"
+          [ -f "$MATCHER" ] && echo "::add-matcher::$MATCHER" || echo "ESLint problem matcher not found, skipping"
 
       - name: Run ESLint on changed files
         if: steps.changed-js.outputs.any_changed == 'true'
@@ -259,7 +261,9 @@ jobs:
       # Only type-check when TypeScript files change
       - name: Enable tsc problem matcher
         if: needs.detect-changes.outputs.ts_src == 'true'
-        run: echo "::add-matcher::node_modules/typescript/lib/tsc-problem-matcher.json" 2>/dev/null || true
+        run: |
+          MATCHER="node_modules/typescript/lib/tsc-problem-matcher.json"
+          [ -f "$MATCHER" ] && echo "::add-matcher::$MATCHER" || echo "tsc problem matcher not found, skipping"
 
       - name: Run TypeScript type checking
         if: needs.detect-changes.outputs.ts_src == 'true'
