@@ -92,7 +92,9 @@
 		"nx": "20.3.4",
 		"path": "^0.12.7",
 		"prettier": "npm:wp-prettier@3.0.3",
+		"react": "^19.2.5",
 		"react-docgen-typescript": "^2.2.2",
+		"react-dom": "^19.2.5",
 		"rtlcss-webpack-plugin": "^4.0.7",
 		"storybook": "8.6.17",
 		"webpack-bundle-analyzer": "^4.10.2"
