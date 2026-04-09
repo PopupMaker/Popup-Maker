@@ -123,34 +123,21 @@ jobs:
         with:
           version: 10
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
-
-      - name: Cache npm dependencies
-        id: npm-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            packages/*/node_modules
-          key: npm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            npm-${{ runner.os }}-
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: |
-          echo "📦 Installing dependencies for quality checks..."
           composer install --no-interaction --no-progress
-
-          if [ "${{ steps.npm-cache.outputs.cache-hit }}" != "true" ]; then
-            echo "📦 Installing npm dependencies..."
-            pnpm install --frozen-lockfile
-          else
-            echo "✅ npm dependencies restored from cache"
-          fi
+          pnpm install --frozen-lockfile
 
       - name: PHP Linting
         if: github.event.inputs.run_linting == 'true'
@@ -225,21 +212,10 @@ jobs:
           version: 10
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
-
-      - name: Cache npm dependencies
-        id: npm-cache-build
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            packages/*/node_modules
-          key: npm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            npm-${{ runner.os }}-
+          cache: 'pnpm'
 
       - name: Capture build information
         id: build_info
@@ -332,15 +308,8 @@ jobs:
 
       - name: Install production dependencies
         run: |
-          echo "📦 Installing production dependencies..."
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-
-          if [ "${{ steps.npm-cache-build.outputs.cache-hit }}" != "true" ]; then
-            echo "📦 Installing npm dependencies..."
-            pnpm install --frozen-lockfile  # Need dev deps for build
-          else
-            echo "✅ npm dependencies restored from cache"
-          fi
+          pnpm install --frozen-lockfile
 
       - name: Build production assets
         run: |
