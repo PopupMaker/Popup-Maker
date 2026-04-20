@@ -77,7 +77,7 @@ class Notifications extends WP_REST_Controller {
 						'action' => [
 							'required'          => false,
 							'type'              => 'string',
-							'default'           => 'dismiss',
+							'default'           => '',
 							'sanitize_callback' => 'sanitize_key',
 						],
 					],
@@ -113,20 +113,12 @@ class Notifications extends WP_REST_Controller {
 	public function get_items( $request ) {
 		unset( $request );
 
-		$alerts = PUM_Utils_Alerts::get_alerts();
-
 		$items = [];
 
-		foreach ( $alerts as $alert ) {
-			$type    = isset( $alert['type'] ) ? (string) $alert['type'] : 'info';
-			$is_bad  = in_array( $type, [ 'error', 'warning' ], true );
-			$is_glob = ! empty( $alert['global'] );
-
-			// Skip inline-rendered blocking alerts.
-			if ( $is_bad || $is_glob ) {
+		foreach ( PUM_Utils_Alerts::get_alerts() as $alert ) {
+			if ( ! self::is_panel_eligible( $alert ) ) {
 				continue;
 			}
-
 			$items[] = $this->prepare_alert_for_response( $alert );
 		}
 
@@ -150,9 +142,12 @@ class Notifications extends WP_REST_Controller {
 			return new WP_Error( 'pum_missing_code', __( 'Missing alert code.', 'popup-maker' ), [ 'status' => 400 ] );
 		}
 
-		// Look up the alert we're about to act on and confirm the action is
-		// one the provider declared. Without this check a caller could pass
-		// any action string and fire arbitrary `pum_alert_dismissed` events.
+		/*
+		 * Look up the alert we're about to act on and confirm the action
+		 * is one the provider declared. Without this check a caller could
+		 * pass any action string and fire arbitrary `pum_alert_dismissed`
+		 * events.
+		 */
 		$alert = $this->find_alert_by_code( $code );
 		if ( null === $alert ) {
 			return new WP_Error( 'pum_unknown_notification', __( 'Unknown notification.', 'popup-maker' ), [ 'status' => 404 ] );
@@ -175,43 +170,67 @@ class Notifications extends WP_REST_Controller {
 	/**
 	 * Find an alert in the current panel-eligible list by code.
 	 *
+	 * Skips blocking alerts (`type: error|warning` or `global: true`)
+	 * because those render inline at the top of the admin pages instead
+	 * of appearing in our panel — a REST dismiss POST should never act
+	 * on an alert the user isn't seeing through this endpoint.
+	 *
 	 * @param string $code Alert code.
 	 * @return array<string,mixed>|null
 	 */
 	protected function find_alert_by_code( $code ) {
 		foreach ( PUM_Utils_Alerts::get_alerts() as $alert ) {
-			if ( isset( $alert['code'] ) && $alert['code'] === $code ) {
-				return $alert;
+			if ( ! isset( $alert['code'] ) || $alert['code'] !== $code ) {
+				continue;
 			}
+			if ( ! self::is_panel_eligible( $alert ) ) {
+				continue;
+			}
+			return $alert;
 		}
 
 		return null;
 	}
 
 	/**
+	 * Whether an alert belongs in the panel (i.e. isn't a blocking one
+	 * rendered inline at the top of the admin pages).
+	 *
+	 * @param array<string,mixed> $alert Alert definition.
+	 * @return bool
+	 */
+	protected static function is_panel_eligible( array $alert ) {
+		$type = isset( $alert['type'] ) ? (string) $alert['type'] : 'info';
+		if ( in_array( $type, [ 'error', 'warning' ], true ) ) {
+			return false;
+		}
+		if ( ! empty( $alert['global'] ) ) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Determine whether the requested action is permitted on the alert and
 	 * return the `expires` value the provider declared for that action.
 	 *
-	 * Returns `false` when the action isn't declared by the alert. Empty
-	 * action (or 'dismiss' with no matching declared action) is treated as
-	 * the default permanent dismiss path, which `action_handler` handles.
+	 * Semantics:
+	 *   - action '' (corner X close): always permanent, never inherits a
+	 *     declared `dismiss` action's expires. Only allowed when the alert
+	 *     is flagged dismissible.
+	 *   - action 'dismiss' or other: must match a declared action on the
+	 *     alert. Inherits that declared action's `expires` (so "Not now"
+	 *     with `expires: '30 days'` becomes a 30-day snooze).
+	 *
+	 * Returns `false` when the action isn't allowed.
 	 *
 	 * @param array<string,mixed> $alert  Alert definition.
 	 * @param string              $action Requested action key.
 	 * @return string|false
 	 */
 	protected function resolve_action_expires( array $alert, $action ) {
-		// The default dismiss (corner X) is always allowed — no declared
-		// action needed, permanent TTL.
-		if ( '' === $action || 'dismiss' === $action ) {
-			// Still honour a declared dismiss action that carries expires
-			// (e.g. "Not now" action with 30-day snooze).
-			foreach ( (array) ( $alert['actions'] ?? [] ) as $declared ) {
-				if ( is_array( $declared ) && ( $declared['action'] ?? '' ) === 'dismiss' && ! empty( $declared['expires'] ) ) {
-					return (string) $declared['expires'];
-				}
-			}
-			return '';
+		if ( '' === $action ) {
+			return ! empty( $alert['dismissible'] ) ? '' : false;
 		}
 
 		foreach ( (array) ( $alert['actions'] ?? [] ) as $declared ) {
@@ -235,14 +254,17 @@ class Notifications extends WP_REST_Controller {
 	protected function prepare_alert_for_response( array $alert ) {
 		$category = isset( $alert['category'] ) ? (string) $alert['category'] : 'announcement';
 
-		$allowed_tags = PUM_Utils_Alerts::allowed_tags();
+		$allowed_tags = self::panel_allowed_tags();
 
 		$title_raw   = isset( $alert['title'] ) ? (string) $alert['title'] : '';
 		$message_raw = isset( $alert['message'] ) ? (string) $alert['message'] : '';
 		$html_raw    = isset( $alert['html'] ) ? (string) $alert['html'] : '';
 
-		// Sanitize HTML server-side via wp_kses before it leaves the API.
-		// The client never has to re-trust content from the pum_alert_list filter.
+		/*
+		 * Sanitize HTML server-side via wp_kses before it leaves the API
+		 * so the client never has to re-trust content from the
+		 * pum_alert_list filter.
+		 */
 		$title   = $title_raw ? wp_kses( $title_raw, $allowed_tags ) : '';
 		$message = $message_raw ? wp_kses( $message_raw, $allowed_tags ) : '';
 		$html    = $html_raw ? wp_kses( $html_raw, $allowed_tags ) : '';
@@ -314,5 +336,51 @@ class Notifications extends WP_REST_Controller {
 		];
 
 		return $this->add_additional_fields_schema( $this->schema );
+	}
+
+	/**
+	 * Panel-specific HTML allowlist for `wp_kses`.
+	 *
+	 * Deliberately narrow — only simple formatting tags. The legacy
+	 * `PUM_Utils_Alerts::allowed_tags()` list permits interactive and
+	 * executable tags (script, form, input, button, select, option) that
+	 * don't belong in a notifications panel body, even from our own
+	 * providers. Filterable so Pro/Pro+ can add back any safe tags they
+	 * legitimately need for richer provider content.
+	 *
+	 * @return array<string,array<string,bool>>
+	 */
+	protected static function panel_allowed_tags() {
+		$tags = [
+			'a'      => [
+				'href'   => true,
+				'title'  => true,
+				'target' => true,
+				'rel'    => true,
+			],
+			'strong' => [],
+			'b'      => [],
+			'em'     => [],
+			'i'      => [],
+			'br'     => [],
+			'p'      => [],
+			'span'   => [
+				'class' => true,
+			],
+			'ul'     => [],
+			'ol'     => [],
+			'li'     => [],
+			'code'   => [],
+		];
+
+		/**
+		 * Filters the HTML allowlist used to sanitize notification
+		 * panel content before it leaves the REST API.
+		 *
+		 * @since 1.23.0
+		 *
+		 * @param array<string,array<string,bool>> $tags Allowed tags map.
+		 */
+		return (array) apply_filters( 'popup_maker/notifications/allowed_tags', $tags );
 	}
 }
