@@ -4,6 +4,7 @@
 	"description": "Popup Maker admin notifications panel — toolbar-triggered slide-in panel powered by pum_alert_list.",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
+	"private": true,
 	"keywords": [
 		"wordpress",
 		"popup-maker",
@@ -53,8 +54,6 @@
 	"files": [
 		"build",
 		"build-types",
-		"tsconfig.json",
-		"README.md",
-		"LICENSE"
+		"tsconfig.json"
 	]
 }
