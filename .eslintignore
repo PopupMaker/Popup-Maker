@@ -7,3 +7,8 @@
 /release/*
 assets/js/*.js
 assets/js/*.js.map
+# Legacy jQuery source tree predates modern lint rules. The `lint:js` script
+# already scopes to packages/**/src; this entry ensures `lint-js:changed` in CI
+# (which runs on any touched file) doesn't flag pre-existing debt on PRs that
+# only incidentally touch these files.
+assets/js/src/**/*.js
