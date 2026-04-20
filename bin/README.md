@@ -48,7 +48,7 @@ node bin/prepare-release.js --help
 3. 📝 Updates versions in all files (via `update-versions.js`)
 4. 📋 Updates changelog (via `update-changelog.js`)
 5. 📦 Updates `package-lock.json`
-6. 🔨 Builds release assets (`npm run release`)
+6. 🔨 Builds release assets (`pnpm run release`)
 7. 💾 Commits changes with standardized message
 8. 🏁 Finishes git flow release with tag
 9. 🚀 Offers to push changes
@@ -70,7 +70,7 @@ node bin/prepare-release.js --help
 
 ```bash
 # From your plugin directory
-npm run release
+pnpm run release
 
 # Or run directly
 node bin/build-release.js
@@ -220,7 +220,7 @@ You can customize this for special cases:
 
 ```bash
 # Full release process
-npm run release
+pnpm run release
 ```
 
 ### Development Testing
@@ -288,7 +288,7 @@ If you have existing release scripts, you can gradually migrate:
 {
 	"scripts": {
 		"release": "node bin/build-release.js",
-		"release:old": "npm run release:clean && npm run release:build && npm run release:zip && npm run release:clean",
+		"release:old": "pnpm run release:clean && pnpm run release:build && pnpm run release:zip && pnpm run release:clean",
 		"release:build": "node bin/build-release.js --skip-composer --skip-npm"
 	}
 }

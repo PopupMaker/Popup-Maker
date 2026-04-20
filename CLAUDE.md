@@ -14,27 +14,29 @@ Popup Maker is a mature WordPress plugin for creating popups. It uses both legac
 
 ## Quick Start Commands
 
+This repo uses **pnpm** (v10+). `npm install` is blocked by a `preinstall` guard — use `pnpm` for all JS commands. Install pnpm with `npm i -g pnpm` or enable corepack.
+
 ```bash
 # Setup
-npm install && composer install
+pnpm install && composer install
 
 # Development
-npm run start              # Watch mode
-npm run start:hot          # Hot module replacement
-npm run build              # Development build
-npm run build:production   # Production build
+pnpm start                 # Watch mode
+pnpm run start:hot         # Hot module replacement
+pnpm run build             # Development build
+pnpm run build:production  # Production build
 
 # Testing
-npm run test:e2e          # Playwright E2E tests
-npm run test:e2e:debug    # Debug mode with UI
-npm run test:unit         # Jest unit tests
+pnpm run test:e2e         # Playwright E2E tests
+pnpm run test:e2e:debug   # Debug mode with UI
+pnpm run test:unit        # Jest unit tests
 composer run tests        # PHPUnit tests
 composer run coverage     # Test coverage
 
 # Code Quality
-npm run lint:js           # ESLint
-npm run lint:style        # Stylelint
-npm run format            # Prettier
+pnpm run lint:js          # ESLint
+pnpm run lint:style       # Stylelint
+pnpm run format           # Prettier
 composer run lint         # PHPCS
 composer run format       # PHPCBF
 composer run phpstan      # Static analysis
