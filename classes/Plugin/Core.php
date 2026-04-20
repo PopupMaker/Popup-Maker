@@ -347,9 +347,13 @@ final class Core extends \PopupMaker\Plugin\Container {
 		$form_conversion_tracking = $this->get( 'form_conversion_tracking' );
 		$form_conversion_tracking->init();
 
-		// Initialize notifications orchestrator — boots every registered provider.
-		$notifications = $this->get( 'notifications' );
-		$notifications->init();
+		// Defer notifications orchestrator init until `init` so addons loading
+		// at `plugins_loaded` priority 12+ have a chance to register their
+		// own providers via the `popup_maker/notification_providers` filter
+		// before the Manager resolves the provider list.
+		add_action( 'init', function () {
+			$this->get( 'notifications' )->init();
+		}, 5 );
 	}
 
 	/**

@@ -48,11 +48,27 @@ class Manager extends Service {
 	protected $providers = [];
 
 	/**
+	 * Guard so `init()` is idempotent — defensive against multiple `init`
+	 * action fires or repeated manual calls.
+	 *
+	 * @var bool
+	 */
+	protected $booted = false;
+
+	/**
 	 * Boot the service — gather providers and wire each one.
+	 *
+	 * Safe to call multiple times; the guard ensures providers only hook
+	 * their WordPress events on the first call.
 	 *
 	 * @return void
 	 */
 	public function init() {
+		if ( $this->booted ) {
+			return;
+		}
+		$this->booted = true;
+
 		$this->providers = $this->resolve_providers();
 
 		foreach ( $this->providers as $provider ) {
