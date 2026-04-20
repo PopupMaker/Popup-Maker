@@ -42,12 +42,14 @@ class WhatsNew extends Service implements Provider {
 	const LAST_SEEN_OPTION = 'pum_whats_new_last_seen';
 
 	/**
-	 * Stable alert code — same slot across all versions so dismissals
-	 * clear the right thing.
+	 * Prefix for the alert code. Actual code is suffixed with the current
+	 * major.minor (e.g. `pm_whats_new_release_1_22`) so dismissing one
+	 * version's notification doesn't silently suppress future versions —
+	 * each release gets its own dismissal entry in `_pum_dismissed_alerts`.
 	 *
 	 * @var string
 	 */
-	const ALERT_CODE = 'pm_whats_new_release';
+	const ALERT_CODE_PREFIX = 'pm_whats_new_release';
 
 	/**
 	 * Maximum highlight bullets shown inline.
@@ -89,8 +91,11 @@ class WhatsNew extends Service implements Provider {
 
 		$slot = $this->get_slot();
 
-		// Carry forward the "since" floor: keep oldest unseen if a slot is
-		// pending, otherwise anchor to the user's previous running version.
+		/*
+		 * Carry forward the "since" floor: keep the oldest unseen version
+		 * if a slot is already pending, otherwise anchor to the user's
+		 * previous running version.
+		 */
 		$since = $slot['since'] ? $slot['since'] : $old_mm;
 
 		$this->set_slot( [
@@ -140,7 +145,7 @@ class WhatsNew extends Service implements Provider {
 		$message    = '<p>' . $lead . '</p>' . $highlights;
 
 		$alerts[] = [
-			'code'        => self::ALERT_CODE,
+			'code'        => $this->alert_code_for( $latest ),
 			'category'    => 'feature',
 			'priority'    => 90,
 			'title'       => sprintf(
@@ -208,7 +213,7 @@ class WhatsNew extends Service implements Provider {
 	public function on_dismiss( $code, $action = '' ) {
 		unset( $action );
 
-		if ( self::ALERT_CODE !== $code ) {
+		if ( 0 !== strpos( (string) $code, self::ALERT_CODE_PREFIX . '_' ) ) {
 			return;
 		}
 
@@ -219,6 +224,16 @@ class WhatsNew extends Service implements Provider {
 		}
 
 		delete_option( self::SLOT_OPTION );
+	}
+
+	/**
+	 * Build the version-scoped alert code for a given major.minor.
+	 *
+	 * @param string $major_minor Version string like "1.22".
+	 * @return string
+	 */
+	protected function alert_code_for( $major_minor ) {
+		return self::ALERT_CODE_PREFIX . '_' . str_replace( '.', '_', (string) $major_minor );
 	}
 
 	/**
@@ -288,7 +303,8 @@ class WhatsNew extends Service implements Provider {
 	 * @return string HTML fragment, empty when nothing to show.
 	 */
 	protected function parse_highlights( $latest, $since ) {
-		$cache_key = 'pum_whats_new_highlights_' . md5( $latest . '|' . $since );
+		$locale    = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
+		$cache_key = 'pum_whats_new_highlights_' . md5( $latest . '|' . $since . '|' . $locale );
 		$cached    = get_transient( $cache_key );
 
 		if ( false !== $cached ) {
@@ -298,9 +314,11 @@ class WhatsNew extends Service implements Provider {
 		$items = $this->collect_highlight_items( $latest, $since );
 		$html  = $items ? $this->render_highlights( $items ) : '';
 
-		// Short TTL when empty so a readme tweak surfaces quickly; long
-		// TTL when we have content (invalidated naturally by cache key
-		// changing whenever $latest/$since does, i.e. on version bump).
+		/*
+		 * Short TTL when empty so a readme tweak surfaces quickly; long
+		 * TTL when we have content (invalidated naturally by cache key
+		 * changing whenever $latest/$since does, i.e. on version bump).
+		 */
 		set_transient( $cache_key, $html, $html ? DAY_IN_SECONDS : HOUR_IN_SECONDS );
 
 		return $html;
@@ -387,10 +405,12 @@ class WhatsNew extends Service implements Provider {
 	 * @return array<int,string>
 	 */
 	protected function extract_bullets( $body, $heading ) {
-		// The lookahead must accept multi-word bold headings like
-		// "**Bug Fixes**" or "**Breaking Changes**" — the original `[A-Za-z]+`
-		// terminated after one word, letting a Features block swallow later
-		// sections whole.
+		/*
+		 * The lookahead must accept multi-word bold headings like
+		 * "**Bug Fixes**" or "**Breaking Changes**" — the original
+		 * `[A-Za-z]+` terminated after one word, letting a Features block
+		 * swallow later sections whole.
+		 */
 		$pattern = '/\*\*' . preg_quote( $heading, '/' ) . '\*\*(.*?)(?=\*\*[A-Za-z][A-Za-z0-9 \'\-]*\*\*|\z)/s';
 		if ( ! preg_match( $pattern, $body, $section_match ) ) {
 			return [];
