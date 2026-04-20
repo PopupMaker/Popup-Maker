@@ -39,7 +39,7 @@
 - **Compatibility**: All existing CLI options preserved
 - **Files Modified**: `bin/build-release.js`
 - **Commit**: `dd92a4e0` - feat(build): implement parallel build processing
-- **Testing**: ✅ Validated in full release workflow with `npm run release`
+- **Testing**: ✅ Validated in full release workflow with `pnpm run release`
 
 ---
 
@@ -62,7 +62,7 @@
 - **Management**: Full cache utilities with stats/cleanup/validation
 - **Files Modified**: `webpack.config.js`, `webpack.old.config.js`, `.gitignore`, `package.json`
 - **Files Added**: `bin/webpack-cache-manager.js`
-- **New Commands**: `npm run cache:stats`, `npm run cache:clean`, `npm run cache:validate`
+- **New Commands**: `pnpm run cache:stats`, `pnpm run cache:clean`, `pnpm run cache:validate`
 
 ---
 
@@ -86,7 +86,7 @@
 - **WordPress.org Compatible**: All assets use predictable static paths
 - **Files Modified**: `webpack.config.js`, `package.json`, `packages/icons/package.json`, `packages/cta-admin/src/App.tsx`
 - **New Tools**: `bin/bundle-analyzer.js` with stats, detailed reports, and optimization targets
-- **New Commands**: `npm run bundle:analyze`, `npm run bundle:report`, `npm run build:optimized`
+- **New Commands**: `pnpm run bundle:analyze`, `pnpm run bundle:report`, `pnpm run build:optimized`
 
 **Performance Impact**:
 - **Modern Packages**: 306 KB (88 KB gzipped) with predictable WordPress.org structure
@@ -275,11 +275,11 @@
 **Commands Added**:
 ```bash
 # Cache Management
-npm run cache:stats     # View cache statistics
-npm run cache:clean     # Clean all cache directories  
-npm run cache:validate  # Validate cache health
+pnpm run cache:stats     # View cache statistics
+pnpm run cache:clean     # Clean all cache directories  
+pnpm run cache:validate  # Validate cache health
 
 # Build Performance
-npm run build          # Standard build (now with caching)
-npm run release        # Release build (now with parallel processing)
+pnpm run build          # Standard build (now with caching)
+pnpm run release        # Release build (now with parallel processing)
 ```

@@ -29,10 +29,10 @@
 
 ### **Development Workflow**
 ```bash
-npm run start                 # Watch mode (dual webpack configs)
-npm run start:hot             # Hot module replacement (modern only)
-npm run build                 # Development build
-npm run build:production      # Production build with NODE_ENV=production
+pnpm run start                 # Watch mode (dual webpack configs)
+pnpm run start:hot             # Hot module replacement (modern only)
+pnpm run build                 # Development build
+pnpm run build:production      # Production build with NODE_ENV=production
 ```
 
 ### **Asset Compilation Pipeline**
@@ -48,13 +48,13 @@ npm run build:production      # Production build with NODE_ENV=production
 
 ### **Automated Release Builder** (`bin/build-release.js`)
 ```bash
-npm run release              # Full automated release
+pnpm run release              # Full automated release
 ```
 
 **Release Steps**:
 1. 🧹 **Clean** build artifacts
 2. 📦 **Composer Install** (`--no-dev --classmap-authoritative`)
-3. 🔨 **NPM Build** (`build:production`)
+3. 🔨 **pnpm Build** (`build:production`)
 4. 📁 **Copy Files** (based on `package.json` files array)
 5. 🗜️ **Create ZIP** (`{plugin-name}_{version}.zip`)
 6. 🧽 **Cleanup** temporary files
