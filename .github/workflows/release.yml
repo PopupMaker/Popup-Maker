@@ -117,7 +117,7 @@ jobs:
           if [ -f "bin/build-release.js" ]; then
             node bin/build-release.js --zip-name "${ZIP_NAME}"
           else
-            npm run release
+            pnpm run release
           fi
 
           if [ ! -f "${ZIP_NAME}" ]; then

@@ -249,14 +249,14 @@ jobs:
         continue-on-error: true
         id: eslint
         run: |
-          echo "${{ steps.changed-js.outputs.all_changed_files }}" | xargs -r npm run lint:js:changed --
+          echo "${{ steps.changed-js.outputs.all_changed_files }}" | xargs -r pnpm run lint:js:changed --
 
       - name: Run Stylelint on changed files
         if: steps.changed-css.outputs.any_changed == 'true'
         continue-on-error: true
         id: stylelint
         run: |
-          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs -r npm run lint:style -- --formatter=github
+          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs -r pnpm run lint:style -- --formatter=github
 
       # Only type-check when TypeScript files change
       - name: Enable tsc problem matcher

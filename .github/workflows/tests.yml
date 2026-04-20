@@ -391,12 +391,12 @@ jobs:
 
       - name: Build assets (if needed)
         run: |
-          if npm run 2>/dev/null | grep -q "build"; then
-            npm run build
+          if pnpm run 2>/dev/null | grep -q "build"; then
+            pnpm run build
           fi
 
       - name: Install wp-env
-        run: npm install -g @wordpress/env
+        run: pnpm add -g @wordpress/env
 
       - name: Start wp-env
         run: wp-env start

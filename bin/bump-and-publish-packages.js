@@ -181,10 +181,10 @@ function checkGitStatus() {
  */
 function checkNpmAuth() {
 	try {
-		const whoami = execCommand( 'npm whoami', { silent: true } );
-		info( `Logged in to npm as: ${ whoami.trim() }` );
+		const whoami = execCommand( 'pnpm whoami', { silent: true } );
+		info( `Logged in to pnpm as: ${ whoami.trim() }` );
 	} catch ( error ) {
-		error( 'Not logged in to npm. Please run "npm login" first.' );
+		error( 'Not logged in to pnpm. Please run "pnpm login" first.' );
 		process.exit( 1 );
 	}
 }
