@@ -84,8 +84,11 @@ class FeatureAnnouncements extends Service implements Provider {
 	public function init() {
 		add_filter( 'pum_alert_list', [ $this, 'register_announcements' ], 15 );
 
-		// Any popup or CTA lifecycle event can flip a condition — flush so
-		// the next panel fetch reflects reality instead of stale cache.
+		/*
+		 * Any popup or CTA lifecycle event can flip a condition — flush
+		 * so the next panel fetch reflects reality instead of stale
+		 * cache.
+		 */
 		add_action( 'save_post_popup', [ $this, 'flush_cache' ] );
 		add_action( 'save_post_pum_cta', [ $this, 'flush_cache' ] );
 		add_action( 'deleted_post', [ $this, 'maybe_flush_on_deleted_post' ], 10, 2 );
@@ -353,9 +356,11 @@ class FeatureAnnouncements extends Service implements Provider {
 		];
 	}
 
-	// Condition helpers.
-	// These only run on cache miss (see register_announcements) so their
-	// simplicity matters more than per-call optimization.
+	/*
+	 * Condition helpers.
+	 * These only run on cache miss (see register_announcements) so their
+	 * simplicity matters more than per-call optimization.
+	 */
 
 	/**
 	 * True when no CTA records exist yet.
