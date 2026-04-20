@@ -47,7 +47,15 @@ export const NotificationPanel = ( {
 				role="dialog"
 				aria-modal={ isOpen ? 'true' : 'false' }
 				aria-hidden={ isOpen ? undefined : 'true' }
-				aria-label={ __( 'Popup Maker notifications', 'popup-maker' ) }
+				aria-label={ __(
+					'Popup Maker notifications',
+					'popup-maker'
+				) }
+				// `inert` removes focusable children from the tab order.
+				// The panel is always mounted (CSS-transformed off-screen
+				// when closed) so without this users could tab into hidden
+				// buttons/links.
+				{ ...( isOpen ? {} : { inert: '' } ) }
 			>
 				<NotificationPanelHeader
 					count={ items.length }

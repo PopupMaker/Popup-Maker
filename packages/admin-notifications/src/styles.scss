@@ -572,3 +572,26 @@ $pm-n-600: #51555c;
 		}
 	}
 }
+
+// Keyboard focus rings for every interactive control inside the panel.
+// These controls strip their default button chrome, so without explicit
+// :focus-visible rules keyboard users lose the browser focus indicator.
+.pum-notification-chip,
+.pum-notification-item__dismiss,
+.pum-notification-item__iframe-close,
+.pum-notification-cta {
+	&:focus {
+		outline: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid $pm-green;
+		outline-offset: 2px;
+		border-radius: 4px;
+	}
+}
+
+.pum-notification-cta--chip:focus-visible {
+	outline-offset: 3px;
+	border-radius: 999px;
+}

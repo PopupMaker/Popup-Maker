@@ -60,22 +60,34 @@ export const usePanelOpenState = ( {
 	// the localStorage flag and lets WP 7.0 soft-nav handle the jump.
 	useEffect( () => {
 		const onClick = ( e: MouseEvent ) => {
+			// Preserve native "open in new tab / window" behavior for
+			// modifier + middle-button clicks — otherwise users who
+			// expect to Cmd/Ctrl-click the marker lose that capability.
+			if (
+				e.defaultPrevented ||
+				e.button !== 0 ||
+				e.metaKey ||
+				e.ctrlKey ||
+				e.shiftKey ||
+				e.altKey
+			) {
+				return;
+			}
+
 			const target = e.target as HTMLElement | null;
 			if ( ! target ) {
 				return;
 			}
 
-			const marker = target.closest< HTMLElement >(
-				'[data-pum-notifications-trigger]'
-			);
-			if ( marker ) {
-				e.preventDefault();
-				e.stopPropagation();
-				setIsOpen( true );
-				return;
-			}
+			const inTrigger =
+				target.closest< HTMLElement >(
+					'[data-pum-notifications-trigger]'
+				) !== null;
 
-			if ( target.closest( '#wp-admin-bar-pum-notifications' ) ) {
+			const inDropdownNode =
+				target.closest( '#wp-admin-bar-pum-notifications' ) !== null;
+
+			if ( inTrigger || inDropdownNode ) {
 				e.preventDefault();
 				setIsOpen( true );
 			}
