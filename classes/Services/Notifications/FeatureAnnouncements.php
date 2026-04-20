@@ -47,11 +47,22 @@ class FeatureAnnouncements extends Service implements Provider {
 	const SCHEDULING_STALE_DAYS = 90;
 
 	/**
-	 * Transient key for the cached computed announcement list.
+	 * Base transient key for the cached computed announcement list.
+	 *
+	 * The actual key is suffixed with the current locale so two admins in
+	 * different languages don't stomp each other's translated content.
 	 *
 	 * @var string
 	 */
 	const CACHE_KEY = 'pum_feature_announcements';
+
+	/**
+	 * Option name storing the list of cache keys we've written — used to
+	 * flush every locale-scoped variant when invalidation fires.
+	 *
+	 * @var string
+	 */
+	const CACHE_INDEX_OPTION = 'pum_feature_announcements_cache_index';
 
 	/**
 	 * Cache TTL. Invalidated on popup save; the TTL is a safety net for
@@ -72,16 +83,51 @@ class FeatureAnnouncements extends Service implements Provider {
 	 */
 	public function init() {
 		add_filter( 'pum_alert_list', [ $this, 'register_announcements' ], 15 );
+
+		// Any popup or CTA lifecycle event can flip a condition — flush so
+		// the next panel fetch reflects reality instead of stale cache.
 		add_action( 'save_post_popup', [ $this, 'flush_cache' ] );
+		add_action( 'save_post_pum_cta', [ $this, 'flush_cache' ] );
+		add_action( 'deleted_post', [ $this, 'maybe_flush_on_deleted_post' ], 10, 2 );
+		add_action( 'trashed_post', [ $this, 'maybe_flush_on_trashed_post' ] );
+		add_action( 'untrashed_post', [ $this, 'maybe_flush_on_trashed_post' ] );
 	}
 
 	/**
-	 * Clear the cached announcement list.
+	 * Clear the cached announcement list across locales.
 	 *
 	 * @return void
 	 */
 	public function flush_cache() {
-		delete_transient( self::CACHE_KEY );
+		foreach ( $this->cache_keys_to_flush() as $key ) {
+			delete_transient( $key );
+		}
+	}
+
+	/**
+	 * Flush only when the deleted post is a popup or CTA.
+	 *
+	 * @param int           $post_id Post ID (unused — post type read from $post).
+	 * @param \WP_Post|null $post    Deleted post object.
+	 * @return void
+	 */
+	public function maybe_flush_on_deleted_post( $post_id, $post = null ) {
+		unset( $post_id );
+		if ( $post instanceof \WP_Post && in_array( $post->post_type, [ 'popup', 'pum_cta' ], true ) ) {
+			$this->flush_cache();
+		}
+	}
+
+	/**
+	 * Flush when a popup/CTA is trashed or untrashed.
+	 *
+	 * @param int $post_id Affected post ID.
+	 * @return void
+	 */
+	public function maybe_flush_on_trashed_post( $post_id ) {
+		if ( in_array( get_post_type( (int) $post_id ), [ 'popup', 'pum_cta' ], true ) ) {
+			$this->flush_cache();
+		}
 	}
 
 	/**
@@ -98,13 +144,53 @@ class FeatureAnnouncements extends Service implements Provider {
 			return $alerts;
 		}
 
-		$cached = get_transient( self::CACHE_KEY );
+		$cache_key = $this->cache_key_for_current_locale();
+
+		$cached = get_transient( $cache_key );
 		if ( ! is_array( $cached ) ) {
 			$cached = $this->compute_announcements();
-			set_transient( self::CACHE_KEY, $cached, self::CACHE_TTL );
+			set_transient( $cache_key, $cached, self::CACHE_TTL );
+			$this->remember_cache_key( $cache_key );
 		}
 
 		return array_merge( $alerts, $cached );
+	}
+
+	/**
+	 * Current request's cache key — locale-scoped so translated strings
+	 * don't leak across admins using different languages.
+	 *
+	 * @return string
+	 */
+	protected function cache_key_for_current_locale() {
+		$locale = function_exists( 'determine_locale' ) ? determine_locale() : get_locale();
+		return self::CACHE_KEY . '_' . sanitize_key( (string) $locale );
+	}
+
+	/**
+	 * Track a cache key so `flush_cache()` can clear every locale variant.
+	 *
+	 * @param string $key Transient key.
+	 * @return void
+	 */
+	protected function remember_cache_key( $key ) {
+		$index = (array) get_option( self::CACHE_INDEX_OPTION, [] );
+		if ( ! in_array( $key, $index, true ) ) {
+			$index[] = $key;
+			update_option( self::CACHE_INDEX_OPTION, $index, false );
+		}
+	}
+
+	/**
+	 * All known cache keys (from the flush index plus the current locale's
+	 * key as a safety net).
+	 *
+	 * @return array<int,string>
+	 */
+	protected function cache_keys_to_flush() {
+		$index   = (array) get_option( self::CACHE_INDEX_OPTION, [] );
+		$index[] = $this->cache_key_for_current_locale();
+		return array_values( array_unique( $index ) );
 	}
 
 	/**
@@ -172,10 +258,11 @@ class FeatureAnnouncements extends Service implements Provider {
 						'primary' => true,
 					],
 					[
-						'text'   => __( 'Learn more', 'popup-maker' ),
-						'type'   => 'link',
-						'action' => '',
-						'href'   => $this->doc_url( 'call-to-actions', 'ctas' ),
+						'text'     => __( 'Learn more', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => $this->doc_url( 'call-to-actions', 'ctas' ),
+						'external' => true,
 					],
 				],
 			],
@@ -192,11 +279,12 @@ class FeatureAnnouncements extends Service implements Provider {
 				'icon'      => 'chart-line',
 				'actions'   => [
 					[
-						'text'    => __( 'See how exit intent works', 'popup-maker' ),
-						'type'    => 'link',
-						'action'  => '',
-						'href'    => $this->upgrade_url( 'exit-intent-upsell' ),
-						'primary' => true,
+						'text'     => __( 'See how exit intent works', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => $this->upgrade_url( 'exit-intent-upsell' ),
+						'primary'  => true,
+						'external' => true,
 					],
 					[
 						'text'    => __( 'Not now', 'popup-maker' ),
@@ -246,11 +334,12 @@ class FeatureAnnouncements extends Service implements Provider {
 				'icon'      => 'calendar-alt',
 				'actions'   => [
 					[
-						'text'    => __( 'See how scheduling works', 'popup-maker' ),
-						'type'    => 'link',
-						'action'  => '',
-						'href'    => $this->upgrade_url( 'scheduling-upsell' ),
-						'primary' => true,
+						'text'     => __( 'See how scheduling works', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => $this->upgrade_url( 'scheduling-upsell' ),
+						'primary'  => true,
+						'external' => true,
 					],
 					[
 						'text'    => __( 'Not now', 'popup-maker' ),
@@ -264,7 +353,7 @@ class FeatureAnnouncements extends Service implements Provider {
 		];
 	}
 
-	// -- Condition helpers. --
+	// Condition helpers.
 	// These only run on cache miss (see register_announcements) so their
 	// simplicity matters more than per-call optimization.
 
@@ -400,7 +489,7 @@ class FeatureAnnouncements extends Service implements Provider {
 		return false;
 	}
 
-	// -- Message builders. --
+	// Message builders.
 
 	/**
 	 * Exit-intent upsell message with live numbers.
@@ -507,7 +596,7 @@ class FeatureAnnouncements extends Service implements Provider {
 		return $stats;
 	}
 
-	// -- URL helpers. --
+	// URL helpers.
 
 	/**
 	 * URL to the CTA admin screen.
