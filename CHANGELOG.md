@@ -8,10 +8,10 @@
 
 **Bug Fixes**
 
--   Fixed classic editor popup preview regression in 1.22.0 where the preview no longer opened. The `init.js` IIFE declared `document` as a parameter but was only invoked with `jQuery`, leaving `document` as `undefined` inside the module — so `pumInitialized` / `pumBeforeInit` fired on an empty jQuery set instead of the real document. The 1.22 `admin_debug` deferral (#1181) was the first consumer to rely on that listener path, which exposed the pre-existing bug. Thanks to @marklchaves for the fix (#1204).
--   Fixed block library frontend styles (`block-library-style.css`) missing from production builds. WordPress blocks referencing the `popup-maker-block-library-style` handle would trigger a missing asset. The webpack build config now correctly splits frontend `style.scss` from editor `editor.scss` into separate CSS files.
--   Fixed URL tracking module ignoring the "Disable popup open tracking" privacy setting. When analytics are disabled, link tracking parameters and click beacons are now properly suppressed.
--   Fixed PHP operator precedence bug in `pum_get_asset_group_meta()` where `(array) file_exists()` always evaluated as truthy, causing fatal errors when build artifacts were missing.
+-   Fixed popup "Preview" button in the classic editor not opening the popup (regression in 1.22.0). You can now preview your popups from the editor again without saving and visiting the live page. Thanks to @marklchaves for the fix.
+-   Fixed missing styles for Popup Maker blocks on the front end in some installs — blocks now render with the correct styling without a console warning about a missing stylesheet.
+-   Fixed "Disable popup open tracking" privacy setting not being fully respected — with analytics turned off, popup links no longer get tracking parameters appended and click beacons are no longer sent.
+-   Fixed a rare fatal error that could occur when Popup Maker's build assets were missing or not yet generated (for example, immediately after a fresh clone or a failed update). The plugin now degrades gracefully instead of crashing the site.
 
 ## v1.22.0 - 2026-03-31
 
