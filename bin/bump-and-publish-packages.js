@@ -34,6 +34,7 @@ const colors = {
 };
 
 function log( message, color = 'reset' ) {
+	// eslint-disable-next-line no-console
 	console.log( `${ colors[ color ] }${ message }${ colors.reset }` );
 }
 
@@ -78,6 +79,8 @@ function getPackageDirectories() {
 
 /**
  * Get package info from package.json
+ * @param {string} packageDir Absolute path to a package directory.
+ * @return {{path:string,packageJsonPath:string,packageJson:object,name:string,version:string,isPrivate:boolean}} Package metadata.
  */
 function getPackageInfo( packageDir ) {
 	const packageJsonPath = path.join( packageDir, 'package.json' );
@@ -97,17 +100,26 @@ function getPackageInfo( packageDir ) {
 
 /**
  * Bump version based on type
+ * @param {string}                  currentVersion Semver version string (e.g. "1.2.3").
+ * @param {'major'|'minor'|'patch'} type           Bump type.
+ * @return {string} The bumped version.
  */
 function bumpVersion( currentVersion, type = 'minor' ) {
-	const [ major, minor, patch ] = currentVersion.split( '.' ).map( Number );
-
 	switch ( type ) {
-		case 'major':
+		case 'major': {
+			const [ major ] = currentVersion.split( '.' ).map( Number );
 			return `${ major + 1 }.0.0`;
-		case 'minor':
+		}
+		case 'minor': {
+			const [ major, minor ] = currentVersion.split( '.' ).map( Number );
 			return `${ major }.${ minor + 1 }.0`;
-		case 'patch':
+		}
+		case 'patch': {
+			const [ major, minor, patch ] = currentVersion
+				.split( '.' )
+				.map( Number );
 			return `${ major }.${ minor }.${ patch + 1 }`;
+		}
 		default:
 			throw new Error( `Invalid version type: ${ type }` );
 	}
@@ -115,6 +127,9 @@ function bumpVersion( currentVersion, type = 'minor' ) {
 
 /**
  * Update package.json with new version
+ * @param {{packageJson:object,packageJsonPath:string}} packageInfo Package metadata as returned by getPackageInfo.
+ * @param {string}                                      newVersion  New semver version to write.
+ * @return {Object} The updated package.json object.
  */
 function updatePackageJson( packageInfo, newVersion ) {
 	const updatedPackageJson = {
@@ -134,6 +149,10 @@ function updatePackageJson( packageInfo, newVersion ) {
 
 /**
  * Execute shell command
+ * @param {string}  command          Shell command to execute.
+ * @param {Object}  [options]        Options passed through to execSync.
+ * @param {boolean} [options.silent] When true, capture stdio instead of inheriting.
+ * @return {string} The command output (empty string in dry-run mode).
  */
 function execCommand( command, options = {} ) {
 	if ( dryRun ) {
@@ -147,8 +166,8 @@ function execCommand( command, options = {} ) {
 			stdio: options.silent ? 'pipe' : 'inherit',
 			...options,
 		} );
-	} catch ( error ) {
-		throw new Error( `Command failed: ${ command }\n${ error.message }` );
+	} catch ( err ) {
+		throw new Error( `Command failed: ${ command }\n${ err.message }` );
 	}
 }
 
@@ -170,8 +189,10 @@ function checkGitStatus() {
 			);
 			process.exit( 1 );
 		}
-	} catch ( error ) {
-		error( 'Not in a git repository or git not available.' );
+	} catch ( err ) {
+		error(
+			`Not in a git repository or git not available: ${ err.message }`
+		);
 		process.exit( 1 );
 	}
 }
@@ -183,8 +204,10 @@ function checkNpmAuth() {
 	try {
 		const whoami = execCommand( 'npm whoami', { silent: true } );
 		info( `Logged in to npm as: ${ whoami.trim() }` );
-	} catch ( error ) {
-		error( 'Not logged in to npm. Please run "npm login" first.' );
+	} catch ( err ) {
+		error(
+			`Not logged in to npm. Please run "npm login" first. (${ err.message })`
+		);
 		process.exit( 1 );
 	}
 }
@@ -227,9 +250,9 @@ function hasUnreleasedChanges() {
 		} );
 
 		return hasContent;
-	} catch ( error ) {
+	} catch ( err ) {
 		warning(
-			`Error reading CHANGELOG.md: ${ error.message } - proceeding with release`
+			`Error reading CHANGELOG.md: ${ err.message } - proceeding with release`
 		);
 		return true;
 	}
@@ -339,7 +362,7 @@ function main() {
 	log( '\n🚀 Publishing packages to npm...' );
 
 	let publishedCount = 0;
-	let failedPackages = [];
+	const failedPackages = [];
 
 	for ( const pkg of updates ) {
 		try {
@@ -351,8 +374,8 @@ function main() {
 
 			success( `✅ Published ${ pkg.name }@${ pkg.newVersion }` );
 			publishedCount++;
-		} catch ( error ) {
-			error( `❌ Failed to publish ${ pkg.name }: ${ error.message }` );
+		} catch ( err ) {
+			error( `❌ Failed to publish ${ pkg.name }: ${ err.message }` );
 			failedPackages.push( pkg.name );
 		}
 	}
@@ -418,7 +441,7 @@ if ( ! [ 'major', 'minor', 'patch' ].includes( versionType ) ) {
 // Run the script
 try {
 	main();
-} catch ( error ) {
-	error( `Script failed: ${ error.message }` );
+} catch ( err ) {
+	error( `Script failed: ${ err.message }` );
 	process.exit( 1 );
 }
