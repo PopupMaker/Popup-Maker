@@ -288,21 +288,6 @@ class ToolbarNotifications extends Controller {
 	}
 
 	/**
-	 * Destination URL for the notifications button.
-	 *
-	 * @return string
-	 */
-	protected function panel_url() {
-		return add_query_arg(
-			[
-				'post_type'         => 'popup',
-				'pum-notifications' => 'open',
-			],
-			admin_url( 'edit.php' )
-		);
-	}
-
-	/**
 	 * Build the marker HTML — a green edge-aligned chip with "!" + count.
 	 *
 	 * @param int $count Notification count.
