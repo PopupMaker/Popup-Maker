@@ -69,22 +69,16 @@ class Notifications extends WP_REST_Controller {
 					'callback'            => [ $this, 'dismiss_item' ],
 					'permission_callback' => [ $this, 'get_items_permissions_check' ],
 					'args'                => [
-						'code'    => [
+						'code'   => [
 							'required'          => true,
 							'type'              => 'string',
 							'sanitize_callback' => 'sanitize_text_field',
 						],
-						'action'  => [
+						'action' => [
 							'required'          => false,
 							'type'              => 'string',
 							'default'           => 'dismiss',
 							'sanitize_callback' => 'sanitize_key',
-						],
-						'expires' => [
-							'required'          => false,
-							'type'              => 'string',
-							'default'           => '',
-							'sanitize_callback' => 'sanitize_text_field',
 						],
 					],
 				],
@@ -149,12 +143,24 @@ class Notifications extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function dismiss_item( $request ) {
-		$code    = (string) $request->get_param( 'code' );
-		$action  = (string) $request->get_param( 'action' );
-		$expires = (string) $request->get_param( 'expires' );
+		$code   = sanitize_text_field( (string) $request->get_param( 'code' ) );
+		$action = sanitize_key( (string) $request->get_param( 'action' ) );
 
 		if ( '' === $code ) {
 			return new WP_Error( 'pum_missing_code', __( 'Missing alert code.', 'popup-maker' ), [ 'status' => 400 ] );
+		}
+
+		// Look up the alert we're about to act on and confirm the action is
+		// one the provider declared. Without this check a caller could pass
+		// any action string and fire arbitrary `pum_alert_dismissed` events.
+		$alert = $this->find_alert_by_code( $code );
+		if ( null === $alert ) {
+			return new WP_Error( 'pum_unknown_notification', __( 'Unknown notification.', 'popup-maker' ), [ 'status' => 404 ] );
+		}
+
+		$expires = $this->resolve_action_expires( $alert, $action );
+		if ( false === $expires ) {
+			return new WP_Error( 'pum_invalid_notification_action', __( 'Invalid notification action.', 'popup-maker' ), [ 'status' => 400 ] );
 		}
 
 		$ok = PUM_Utils_Alerts::action_handler( $code, $action, $expires );
@@ -164,6 +170,60 @@ class Notifications extends WP_REST_Controller {
 		}
 
 		return rest_ensure_response( [ 'success' => true ] );
+	}
+
+	/**
+	 * Find an alert in the current panel-eligible list by code.
+	 *
+	 * @param string $code Alert code.
+	 * @return array<string,mixed>|null
+	 */
+	protected function find_alert_by_code( $code ) {
+		foreach ( PUM_Utils_Alerts::get_alerts() as $alert ) {
+			if ( isset( $alert['code'] ) && $alert['code'] === $code ) {
+				return $alert;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Determine whether the requested action is permitted on the alert and
+	 * return the `expires` value the provider declared for that action.
+	 *
+	 * Returns `false` when the action isn't declared by the alert. Empty
+	 * action (or 'dismiss' with no matching declared action) is treated as
+	 * the default permanent dismiss path, which `action_handler` handles.
+	 *
+	 * @param array<string,mixed> $alert  Alert definition.
+	 * @param string              $action Requested action key.
+	 * @return string|false
+	 */
+	protected function resolve_action_expires( array $alert, $action ) {
+		// The default dismiss (corner X) is always allowed — no declared
+		// action needed, permanent TTL.
+		if ( '' === $action || 'dismiss' === $action ) {
+			// Still honour a declared dismiss action that carries expires
+			// (e.g. "Not now" action with 30-day snooze).
+			foreach ( (array) ( $alert['actions'] ?? [] ) as $declared ) {
+				if ( is_array( $declared ) && ( $declared['action'] ?? '' ) === 'dismiss' && ! empty( $declared['expires'] ) ) {
+					return (string) $declared['expires'];
+				}
+			}
+			return '';
+		}
+
+		foreach ( (array) ( $alert['actions'] ?? [] ) as $declared ) {
+			if ( ! is_array( $declared ) ) {
+				continue;
+			}
+			if ( ( $declared['action'] ?? '' ) === $action ) {
+				return isset( $declared['expires'] ) ? (string) $declared['expires'] : '';
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -181,8 +241,8 @@ class Notifications extends WP_REST_Controller {
 		$message_raw = isset( $alert['message'] ) ? (string) $alert['message'] : '';
 		$html_raw    = isset( $alert['html'] ) ? (string) $alert['html'] : '';
 
-		// Sanitize HTML server-side via wp_kses before it leaves the API so
-		// the client never has to re-trust content from the pum_alert_list filter.
+		// Sanitize HTML server-side via wp_kses before it leaves the API.
+		// The client never has to re-trust content from the pum_alert_list filter.
 		$title   = $title_raw ? wp_kses( $title_raw, $allowed_tags ) : '';
 		$message = $message_raw ? wp_kses( $message_raw, $allowed_tags ) : '';
 		$html    = $html_raw ? wp_kses( $html_raw, $allowed_tags ) : '';
@@ -193,21 +253,24 @@ class Notifications extends WP_REST_Controller {
 				if ( ! is_array( $action ) ) {
 					continue;
 				}
+				$target    = isset( $action['target'] ) ? (string) $action['target'] : '';
 				$actions[] = [
-					'text'    => isset( $action['text'] ) ? (string) $action['text'] : '',
-					'type'    => isset( $action['type'] ) ? (string) $action['type'] : 'action',
-					'action'  => isset( $action['action'] ) ? (string) $action['action'] : '',
-					'href'    => isset( $action['href'] ) ? esc_url_raw( (string) $action['href'] ) : '',
-					'primary' => ! empty( $action['primary'] ),
-					'expires' => isset( $action['expires'] ) ? sanitize_text_field( (string) $action['expires'] ) : '',
+					'text'     => isset( $action['text'] ) ? sanitize_text_field( (string) $action['text'] ) : '',
+					'type'     => isset( $action['type'] ) ? sanitize_key( (string) $action['type'] ) : 'action',
+					'action'   => isset( $action['action'] ) ? sanitize_key( (string) $action['action'] ) : '',
+					'href'     => isset( $action['href'] ) ? esc_url_raw( (string) $action['href'] ) : '',
+					'primary'  => ! empty( $action['primary'] ),
+					'external' => ! empty( $action['external'] ),
+					'target'   => in_array( $target, [ '_blank', '_self' ], true ) ? $target : '',
+					'expires'  => isset( $action['expires'] ) ? sanitize_text_field( (string) $action['expires'] ) : '',
 				];
 			}
 		}
 
 		return [
-			'code'        => (string) ( $alert['code'] ?? '' ),
-			'type'        => (string) ( $alert['type'] ?? 'info' ),
-			'category'    => $category,
+			'code'        => sanitize_text_field( (string) ( $alert['code'] ?? '' ) ),
+			'type'        => sanitize_key( (string) ( $alert['type'] ?? 'info' ) ),
+			'category'    => sanitize_key( $category ),
 			'priority'    => (int) ( $alert['priority'] ?? 10 ),
 			'title'       => $title,
 			'message'     => $message,
