@@ -1,0 +1,68 @@
+# Dependabot configuration for Popup Maker
+#
+# Notes:
+# - All PRs target `develop` to match git-flow. Releases flow develop → master.
+# - Dependabot supports pnpm via the `npm` ecosystem (detects pnpm-lock.yaml).
+# - Patch-level bumps are grouped per ecosystem to cut PR volume.
+# - Major-version bumps always open as separate PRs for explicit review.
+version: 2
+updates:
+    # Root workspace (pnpm monorepo — Dependabot walks all workspace package.jsons)
+    - package-ecosystem: 'npm'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+          day: 'monday'
+          time: '06:00'
+          timezone: 'America/New_York'
+      target-branch: 'develop'
+      open-pull-requests-limit: 10
+      labels:
+          - 'dependencies'
+          - 'javascript'
+      commit-message:
+          prefix: 'chore(deps)'
+          prefix-development: 'chore(deps-dev)'
+          include: 'scope'
+      groups:
+          # Group non-breaking bumps so weekly batches arrive as one PR per scope
+          minor-and-patch:
+              update-types:
+                  - 'minor'
+                  - 'patch'
+
+    # Composer PHP dependencies
+    - package-ecosystem: 'composer'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+          day: 'monday'
+          time: '06:00'
+          timezone: 'America/New_York'
+      target-branch: 'develop'
+      open-pull-requests-limit: 5
+      labels:
+          - 'dependencies'
+          - 'php'
+      commit-message:
+          prefix: 'chore(deps)'
+          prefix-development: 'chore(deps-dev)'
+          include: 'scope'
+      groups:
+          minor-and-patch:
+              update-types:
+                  - 'minor'
+                  - 'patch'
+
+    # GitHub Actions workflow dependencies
+    - package-ecosystem: 'github-actions'
+      directory: '/'
+      schedule:
+          interval: 'monthly'
+      target-branch: 'develop'
+      labels:
+          - 'dependencies'
+          - 'github-actions'
+      commit-message:
+          prefix: 'chore(ci)'
+          include: 'scope'
