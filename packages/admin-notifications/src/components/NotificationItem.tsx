@@ -41,8 +41,16 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 
 	const handleDismiss = () => {
 		setIsDismissing( true );
-		// Wait for exit animation before removing from store.
-		window.setTimeout( () => dismiss( notification.code ), 260 );
+		/*
+		 * Wait for exit animation, then fire the close affordance.
+		 * Passing an empty action string signals "user clicked the corner X"
+		 * so the server can decide permanence on its own (never inherits a
+		 * declared "Not now" snooze TTL).
+		 */
+		window.setTimeout(
+			() => dismiss( notification.code, '' ),
+			260
+		);
 	};
 
 	const handleAction = (
@@ -185,15 +193,16 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 			{ iframeUrl && (
 				<Modal
 					className="pum-notification-item__iframe-modal"
-					// No title — the iframe content provides its own header.
-					// `__experimentalHideHeader` removes the Modal's entire
-					// header bar including the close button; we render our
-					// own dismiss affordance as an overlay.
+					// No visible title — the iframe provides its own header.
+					// `__experimentalHideHeader` removes the Modal header
+					// bar including the close button; we render our own
+					// dismiss affordance as an overlay. `contentLabel`
+					// supplies an accessible name for screen readers that
+					// would otherwise have no way to announce this dialog.
 					__experimentalHideHeader
-					aria={ {
-						labelledby: undefined,
-						describedby: undefined,
-					} }
+					contentLabel={
+						iframeTitle || __( 'Details', 'popup-maker' )
+					}
 					onRequestClose={ () => setIframeUrl( null ) }
 					shouldCloseOnClickOutside
 					shouldCloseOnEsc
@@ -207,7 +216,9 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 						<span className="dashicons dashicons-no-alt" />
 					</button>
 					<iframe
-						title={ iframeTitle || __( 'Details', 'popup-maker' ) }
+						title={
+							iframeTitle || __( 'Details', 'popup-maker' )
+						}
 						src={ iframeUrl }
 						className="pum-notification-item__iframe"
 					/>

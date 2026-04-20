@@ -1,3 +1,4 @@
+import { useRef } from '@wordpress/element';
 import { Spinner } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
 import clsx from 'clsx';
@@ -8,6 +9,7 @@ import { NotificationFilters } from './NotificationFilters';
 import { usePanelOpenState } from '../hooks/use-panel-open-state';
 import { useNotifications } from '../hooks/use-notifications';
 import { useMarkerSync } from '../hooks/use-marker-sync';
+import { useFocusTrap } from '../hooks/use-focus-trap';
 
 interface Props {
 	initiallyOpen?: boolean;
@@ -17,6 +19,9 @@ export const NotificationPanel = ( {
 	initiallyOpen = false,
 }: Props ): JSX.Element => {
 	const { isOpen, setIsOpen } = usePanelOpenState( { initiallyOpen } );
+	const panelRef = useRef< HTMLElement | null >( null );
+
+	useFocusTrap( isOpen, panelRef );
 	const {
 		items,
 		isLoading,
@@ -41,6 +46,7 @@ export const NotificationPanel = ( {
 				/>
 			) }
 			<aside
+				ref={ panelRef }
 				className={ clsx( 'pum-notification-panel', {
 					'is-open': isOpen,
 				} ) }
@@ -51,10 +57,12 @@ export const NotificationPanel = ( {
 					'Popup Maker notifications',
 					'popup-maker'
 				) }
-				// `inert` removes focusable children from the tab order.
-				// The panel is always mounted (CSS-transformed off-screen
-				// when closed) so without this users could tab into hidden
-				// buttons/links.
+				/*
+				 * `inert` removes focusable children from the tab order.
+				 * The panel is always mounted (CSS-transformed off-screen
+				 * when closed) so without this users could tab into hidden
+				 * buttons/links.
+				 */
 				{ ...( isOpen ? {} : { inert: '' } ) }
 			>
 				<NotificationPanelHeader

@@ -81,7 +81,7 @@ const actions = {
 		},
 
 	dismiss:
-		( code: string, action: string = 'dismiss' ) =>
+		( code: string, action: string = '' ) =>
 		async ( { dispatch }: { dispatch: typeof actions } ) => {
 			// Optimistic local removal — panel feels instant.
 			dispatch.dismissLocal( code );
@@ -94,9 +94,11 @@ const actions = {
 			} catch ( err ) {
 				// eslint-disable-next-line no-console
 				console.warn( '[PM] dismiss failed', err );
-				// Re-sync with the server so the optimistic removal is
-				// reverted if the dismissal didn't persist. Otherwise the
-				// user sees phantom state until the next page load.
+				/*
+				 * Re-sync with the server so the optimistic removal is
+				 * reverted if the dismissal didn't persist. Otherwise the
+				 * user sees phantom state until the next page load.
+				 */
 				dispatch.fetchNotifications();
 			}
 		},
