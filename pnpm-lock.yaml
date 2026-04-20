@@ -207,6 +207,36 @@ importers:
         specifier: ^3.5.32
         version: 3.5.34
 
+  packages/admin-notifications:
+    dependencies:
+      '@popup-maker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@popup-maker/icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@wordpress/api-fetch':
+        specifier: ^7.29.0
+        version: 7.43.0
+      '@wordpress/components':
+        specifier: ^30.2.0
+        version: 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@wordpress/data':
+        specifier: ^10.29.0
+        version: 10.43.0(react@19.2.5)
+      '@wordpress/dom-ready':
+        specifier: ^4.29.0
+        version: 4.43.0
+      '@wordpress/element':
+        specifier: ^6.29.0
+        version: 6.43.0
+      '@wordpress/hooks':
+        specifier: ^4.29.0
+        version: 4.43.0
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+
   packages/block-editor:
     dependencies:
       '@popup-maker/components':

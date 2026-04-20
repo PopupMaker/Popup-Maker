@@ -316,6 +316,18 @@ final class Core extends \PopupMaker\Plugin\Container {
 			}
 		);
 
+		$this->set(
+			'notifications',
+			/**
+			 * Get notifications orchestrator service.
+			 *
+			 * @return \PopupMaker\Services\Notifications\Manager
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Notifications\Manager( $container );
+			}
+		);
+
 		do_action( 'popup_maker/register_services', $this );
 	}
 
@@ -334,6 +346,10 @@ final class Core extends \PopupMaker\Plugin\Container {
 		// Initialize form conversion tracking.
 		$form_conversion_tracking = $this->get( 'form_conversion_tracking' );
 		$form_conversion_tracking->init();
+
+		// Initialize notifications orchestrator — boots every registered provider.
+		$notifications = $this->get( 'notifications' );
+		$notifications->init();
 	}
 
 	/**

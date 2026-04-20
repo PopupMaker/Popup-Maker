@@ -58,7 +58,7 @@ class Assets extends Controller {
 		}
 
 		$packages = [
-			'admin-bar'        => [
+			'admin-bar'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-admin-bar',
 				'styles'   => true,
@@ -74,12 +74,17 @@ class Assets extends Controller {
 					],
 				],
 			],
-			'admin-marketing'  => [
+			'admin-marketing'     => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-admin-marketing',
 				'styles'  => true,
 			],
-			'block-editor'     => [
+			'admin-notifications' => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-admin-notifications',
+				'styles'  => true,
+			],
+			'block-editor'        => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-block-editor',
 				'styles'   => true,
@@ -98,7 +103,7 @@ class Assets extends Controller {
 					),
 				],
 			],
-			'block-library'    => [
+			'block-library'       => [
 				'bundled'      => false,
 				'handle'       => 'popup-maker-block-library',
 				'styles'       => true,
@@ -110,7 +115,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'components'       => [
+			'components'          => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-components',
 				'styles'   => true,
@@ -121,7 +126,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'core-data'        => [
+			'core-data'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-core-data',
 				'styles'   => false,
@@ -136,7 +141,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'cta-admin'        => [
+			'cta-admin'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-cta-admin',
 				'styles'   => true,
@@ -147,7 +152,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'cta-editor'       => [
+			'cta-editor'          => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-cta-editor',
 				'styles'   => true,
@@ -159,68 +164,68 @@ class Assets extends Controller {
 				},
 					// 'head'     => true,
 			],
-			'dashboard'        => [
+			'dashboard'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-dashboard',
 				'styles'   => true,
 				'varsName' => 'popupMakerDashboard',
 				'vars'     => [],
 			],
-			'data'             => [
+			'data'                => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-data',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerData',
 				// 'vars'     => [],
 			],
-			'fields'           => [
+			'fields'              => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-fields',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerFields',
 				// 'vars'     => [],
 			],
-			'i18n'             => [
+			'i18n'                => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-i18n',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerI18n',
 				// 'vars'     => [],
 			],
-			'icons'            => [
+			'icons'               => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-icons',
 				'styles'  => true,
 				// 'varsName' => 'popupMakerIcons',
 				// 'vars'     => [],
 			],
-			'layout'           => [
+			'layout'              => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-layout',
 				'styles'  => true,
 				// 'varsName' => 'popupMakerLayout',
 				// 'vars'     => [],
 			],
-			'popup-admin'      => [
+			'popup-admin'         => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-popup-admin',
 				'styles'  => true,
 			],
-			'registry'         => [
+			'registry'            => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-registry',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerRegistry',
 				// 'vars'     => [],
 			],
-			'use-query-params' => [
+			'use-query-params'    => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-use-query-params',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerUseQueryParams',
 				// 'vars'     => [],
 			],
-			'utils'            => [
+			'utils'               => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-utils',
 				'styles'  => false,

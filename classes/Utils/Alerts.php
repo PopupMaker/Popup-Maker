@@ -24,8 +24,6 @@ class PUM_Utils_Alerts {
 		add_action( 'admin_init', [ __CLASS__, 'hooks' ] );
 		add_action( 'admin_init', [ __CLASS__, 'php_handler' ] );
 		add_action( 'wp_ajax_pum_alerts_action', [ __CLASS__, 'ajax_handler' ] );
-		add_filter( 'pum_alert_list', [ __CLASS__, 'whats_new_alerts' ], 0 );
-		add_filter( 'pum_alert_list', [ __CLASS__, 'integration_alerts' ], 5 );
 		add_filter( 'pum_alert_list', [ __CLASS__, 'translation_request' ], 10 );
 		add_action( 'admin_menu', [ __CLASS__, 'append_alert_count' ], 999 );
 	}
@@ -243,155 +241,11 @@ class PUM_Utils_Alerts {
 
 		if ( ! empty( $suggest_string ) ) {
 			$alerts[] = [
-				'code'    => $code,
-				'message' => $suggest_string,
-				'type'    => 'info',
+				'code'     => $code,
+				'message'  => $suggest_string,
+				'type'     => 'info',
+				'category' => 'announcement',
 			];
-		}
-
-		return $alerts;
-	}
-
-	/**
-	 * Add "What's New" alerts for major version updates.
-	 *
-	 * @param array $alerts {
-	 *     @type string $code             Alert code.
-	 *     @type string $message          Alert message.
-	 *     @type string $type             Alert type.
-	 *     @type string $html             Optional. Alert HTML.
-	 *     @type int    $priority         Optional. Alert priority.
-	 *     @type mixed  $dismissible      Optional. Dismissible setting.
-	 *     @type bool   $global           Optional. Global alert.
-	 *     @type array  $actions          Optional. Alert actions.
-	 * }
-	 *
-	 * @return array<int, array{
-	 *     code: string,
-	 *     message: string,
-	 *     type: string,
-	 *     html?: string,
-	 *     priority?: int,
-	 *     dismissible?: bool|string|int,
-	 *     global?: bool,
-	 *     actions?: array<int, array{
-	 *         text: string,
-	 *         type: string,
-	 *         action: string,
-	 *         href?: string,
-	 *         primary?: bool
-	 *     }>
-	 * }>
-	 */
-	public static function whats_new_alerts( $alerts = [] ) {
-
-		$upgraded_from = PUM_Utils_Upgrades::$upgraded_from;
-
-		if ( version_compare( $upgraded_from, '0.0.0', '>' ) ) {
-			if ( version_compare( $upgraded_from, '1.8.0', '<' ) ) {
-				$alerts[] = [
-					'code'     => 'whats_new_1_8_0',
-					'type'     => 'success',
-					'message'  => sprintf(
-						/* translators: 1. Version number, 2. URL to changelog, 3. closing HTML tag. */
-						'<strong>' . esc_html__( 'See whats new in v%1$s - (%2$sview all changes%3$s)', 'popup-maker' ) . '</strong>',
-						'1.8.0',
-						'<a href="' . add_query_arg(
-							[
-								'tab'       => 'plugin-information',
-								'plugin'    => 'popup-maker',
-								'section'   => 'changelog',
-								'TB_iframe' => true,
-								'width'     => 722,
-								'height'    => 949,
-							],
-							admin_url( 'plugin-install.php' )
-						) . '" target="_blank">',
-						'</a>'
-					),
-					'html'     => "<ul class='ul-disc'><li>New UX for the Popup Theme editor.</li><li>New close button positions: top center, bottom center, middle left & middle right.</li><li>New option to position close button outside of popup.</li></ul>",
-					'priority' => 100,
-				];
-			}
-		}
-
-		return $alerts;
-	}
-
-	/**
-	 * Add alerts for available plugin integrations based on detected plugins.
-	 *
-	 * @param array $alerts {
-	 *     @type string $code             Alert code.
-	 *     @type string $message          Alert message.
-	 *     @type string $type             Alert type.
-	 *     @type string $html             Optional. Alert HTML.
-	 *     @type int    $priority         Optional. Alert priority.
-	 *     @type mixed  $dismissible      Optional. Dismissible setting.
-	 *     @type bool   $global           Optional. Global alert.
-	 *     @type array  $actions          Optional. Alert actions.
-	 * }
-	 *
-	 * @return array<int, array{
-	 *     code: string,
-	 *     message: string,
-	 *     type: string,
-	 *     html?: string,
-	 *     priority?: int,
-	 *     dismissible?: bool|string|int,
-	 *     global?: bool,
-	 *     actions?: array<int, array{
-	 *         text: string,
-	 *         type: string,
-	 *         action: string,
-	 *         href?: string,
-	 *         primary?: bool
-	 *     }>
-	 * }>
-	 */
-	public static function integration_alerts( $alerts = [] ) {
-
-		$integrations = [
-			'buddypress' => [
-				// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-				'label'          => __( 'BuddyPress', 'buddypress' ),
-				'learn_more_url' => 'https://wppopupmaker.com/social-integrations/buddypress/',
-				'conditions'     => ! class_exists( 'PUM_BuddyPress' ) && ( function_exists( 'buddypress' ) || class_exists( 'BuddyPress' ) ),
-				'slug'           => 'popup-maker-buddypress-integration',
-				'name'           => 'Popup Maker - BuddyPress Integration',
-				'free'           => true,
-			],
-		];
-
-		foreach ( $integrations as $key => $integration ) {
-			if ( $integration['conditions'] ) {
-				$path        = "{$integration['slug']}/{$integration['slug']}.php";
-				$plugin_data = file_exists( WP_PLUGIN_DIR . '/' . $path ) ? get_plugin_data( WP_PLUGIN_DIR . '/' . $path, false, false ) : false;
-
-				$installed = $plugin_data && ! empty( $plugin_data['Name'] ) && $plugin_data['Name'] === $integration['name'];
-
-				$text = $installed ? __( 'activate it now', 'popup-maker' ) : __( 'install it now', 'popup-maker' );
-				$url  = $installed ? esc_url( wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=' . $path ), 'activate-plugin_' . $path ) ) : esc_url( wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=popup-maker-buddypress-integration' ), 'install-plugin_popup-maker-buddypress-integration' ) );
-
-				$alerts[] = [
-					'code'        => $key . '_integration_available',
-					'message'     => sprintf(
-						/* translators: 1. Opening HTML tag, 2. Closing HTML tag, 3. Integration name, 4. Learn more URL, 5. Opening HTML tag, 6. Closing HTML tag, 7. Activate/Install URL, 8. Activate/Install text. */
-						__( '%1$sDid you know:%2$s Popup Maker has custom integrations with %3$s, %4$slearn more%5$s or %6$s%7$s%8$s!', 'popup-maker' ),
-						'<strong>',
-						'</strong>',
-						$integration['label'],
-						'<a href="' . $integration['learn_more_url'] . '" target="_blank">',
-						'</a>',
-						'<a href="' . $url . '">',
-						$text,
-						'</a>'
-					),
-					'dismissible' => true,
-					'global'      => false,
-					'type'        => $installed ? 'warning' : 'info',
-				];
-			}
 		}
 
 		return $alerts;
@@ -555,6 +409,15 @@ class PUM_Utils_Alerts {
 		$global_only = ! pum_is_admin_page();
 
 		$alerts = $global_only ? self::get_global_alerts() : self::get_alerts();
+
+		// Only render inline alerts that are blocking: errors, warnings, or marked global.
+		// Everything else surfaces via the notifications panel to avoid admin header noise.
+		$alerts = array_values( array_filter( $alerts, function ( $alert ) {
+			$type    = isset( $alert['type'] ) ? (string) $alert['type'] : 'info';
+			$is_bad  = in_array( $type, [ 'error', 'warning' ], true );
+			$is_glob = ! empty( $alert['global'] );
+			return $is_bad || $is_glob;
+		} ) );
 
 		$count = count( $alerts );
 
@@ -747,6 +610,7 @@ class PUM_Utils_Alerts {
 					'html'        => '',
 					'dismissible' => true,
 					'global'      => false,
+					'category'    => 'announcement',
 				]
 			);
 		}
