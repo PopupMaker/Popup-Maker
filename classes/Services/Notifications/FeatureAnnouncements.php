@@ -264,7 +264,7 @@ class FeatureAnnouncements extends Service implements Provider {
 						'text'     => __( 'Learn more', 'popup-maker' ),
 						'type'     => 'link',
 						'action'   => '',
-						'href'     => $this->doc_url( 'call-to-actions', 'ctas' ),
+						'href'     => $this->doc_url( 'apply-popup-maker/create-call-to-action-cta-popup', 'ctas' ),
 						'external' => true,
 					],
 				],
