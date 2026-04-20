@@ -69,7 +69,7 @@ jobs:
               - 'playwright.config.js'
             npm_deps:
               - 'package.json'
-              - 'package-lock.json'
+              - 'pnpm-lock.yaml'
             php_deps:
               - 'composer.json'
               - 'composer.lock'
@@ -296,17 +296,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
 
-      - name: Install npm dependencies
-        run: npm ci
+      - name: Install pnpm dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run Jest Tests
-        run: npm run test:unit --quiet
+        run: pnpm run test:unit
 
   # ============================================================
   # Playwright E2E Tests - Browser-based tests with wp-env
@@ -334,11 +337,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: "20"
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -361,8 +367,8 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Install npm dependencies
-        run: npm ci
+      - name: Install pnpm dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright system dependencies
         run: npx playwright install-deps chromium
@@ -372,7 +378,7 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-playwright-
 
       - name: Install Playwright browser

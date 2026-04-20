@@ -27,13 +27,13 @@
 	},
 	"wpScript": true,
 	"dependencies": {
-		"@popup-maker/components": "*",
-		"@popup-maker/core-data": "*",
-		"@popup-maker/fields": "*",
-		"@popup-maker/i18n": "*",
-		"@popup-maker/registry": "*",
-		"@popup-maker/use-query-params": "*",
-		"@popup-maker/utils": "*",
+		"@popup-maker/components": "workspace:*",
+		"@popup-maker/core-data": "workspace:*",
+		"@popup-maker/fields": "workspace:*",
+		"@popup-maker/i18n": "workspace:*",
+		"@popup-maker/registry": "workspace:*",
+		"@popup-maker/use-query-params": "workspace:*",
+		"@popup-maker/utils": "workspace:*",
 		"@wordpress/components": "^30.2.0",
 		"@wordpress/data": "^10.29.0",
 		"@wordpress/dom-ready": "^4.29.0",
@@ -46,7 +46,7 @@
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",
-		"@popup-maker/types": "*",
+		"@popup-maker/types": "workspace:*",
 		"@testing-library/react": "^16.2.0"
 	},
 	"peerDependencies": {

@@ -20,6 +20,7 @@
 	"engines": {
 		"node": "^18.0.0 || >=20.10.0"
 	},
+	"packageManager": "pnpm@10.32.0",
 	"files": [
 		"assets/**/index.php",
 		"assets/css/*.css",
@@ -92,12 +93,15 @@
 		"nx": "20.3.4",
 		"path": "^0.12.7",
 		"prettier": "npm:wp-prettier@3.0.3",
+		"react": "^18.3.1",
 		"react-docgen-typescript": "^2.2.2",
+		"react-dom": "^18.3.1",
 		"rtlcss-webpack-plugin": "^4.0.7",
 		"storybook": "8.6.17",
 		"webpack-bundle-analyzer": "^4.10.2"
 	},
 	"scripts": {
+		"preinstall": "npx -y only-allow pnpm",
 		"build": "wp-scripts build --config webpack.config.js --config webpack.old.config.js",
 		"build:production": "NODE_ENV=production npm run build",
 		"build:tsc": "nx run-many --target=build:tsc",
