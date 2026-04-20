@@ -309,7 +309,7 @@ jobs:
       - name: Build production assets
         run: |
           echo "🏗️ Building production assets..."
-          npm run build:production
+          pnpm run build:production
           echo "✅ Production build complete"
 
       - name: Create test package
