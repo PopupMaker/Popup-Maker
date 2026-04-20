@@ -183,17 +183,40 @@ class ToolbarNotifications extends Controller {
 
 			$marker = $this->marker_html( $count );
 
-			// Strip the existing alerts count bubble if present — we're replacing it
-			// with the edge-aligned marker to keep the menu item visually clean.
-			$clean_title = isset( $menu[ $key ][0] )
-				? preg_replace( '/\s*<span class="update-plugins[^>]*>.*?<\/span>\s*<\/span>/', '', (string) $menu[ $key ][0] )
-				: '';
-			$clean_title = preg_replace( '/\s*<span class="update-plugins[^>]*>.*?<\/span>/', '', (string) $clean_title );
+			$title       = isset( $menu[ $key ][0] ) ? (string) $menu[ $key ][0] : '';
+			$clean_title = $this->strip_update_plugins_badge( $title );
 
 			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			$menu[ $key ][0] = $clean_title . $marker;
 			break;
 		}
+	}
+
+	/**
+	 * Remove any `<span class="update-plugins ...">...</span>` badge from
+	 * a menu title string.
+	 *
+	 * Tolerates attribute order, extra classes, whitespace/newlines, and
+	 * single-level nested spans (which is how WP renders the inner counter
+	 * span inside the outer bubble). Regex-based because WordPress's
+	 * HTML Tag Processor doesn't yet support node removal.
+	 *
+	 * @param string $title Raw menu title HTML.
+	 * @return string
+	 */
+	protected function strip_update_plugins_badge( $title ) {
+		if ( '' === $title ) {
+			return '';
+		}
+
+		// Match the outer badge span plus any nested spans within it.
+		// Use a non-greedy body match anchored to the matching closing
+		// </span> so we don't accidentally consume trailing markup.
+		$pattern = '#\s*<span\s+[^>]*class="[^"]*\bupdate-plugins\b[^"]*"[^>]*>(?:[^<]*+|<(?!/span\b)[^>]*+>[^<]*+</[^>]+>)*</span>\s*#is';
+
+		$result = preg_replace( $pattern, '', $title );
+
+		return null === $result ? $title : (string) $result;
 	}
 
 	/**
