@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 
 import { STORE_NAME } from '../store';
+import type { NotificationsSelectors } from '../store';
 import type { Notification, NotificationCategory } from '../types';
 
 type FilterKey = 'all' | NotificationCategory;
@@ -26,11 +27,7 @@ export const useNotifications = (): State => {
 	const { fetchNotifications } = useDispatch( STORE_NAME );
 
 	const { items, isLoading, hasLoaded } = useSelect( ( select ) => {
-		const store = select( STORE_NAME ) as {
-			getNotifications: () => Notification[];
-			isLoading: () => boolean;
-			hasLoaded: () => boolean;
-		};
+		const store = select( STORE_NAME ) as NotificationsSelectors;
 		return {
 			items: store.getNotifications(),
 			isLoading: store.isLoading(),

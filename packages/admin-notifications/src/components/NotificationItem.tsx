@@ -221,6 +221,7 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 						}
 						src={ iframeUrl }
 						className="pum-notification-item__iframe"
+						sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
 					/>
 				</Modal>
 			) }

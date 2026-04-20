@@ -96,10 +96,16 @@ export const usePanelOpenState = ( {
 		return () => document.removeEventListener( 'click', onClick );
 	}, [ setIsOpen ] );
 
-	// Back/forward navigation — mirror the query-param state onto ours
-	// without re-pushing history.
+	/*
+	 * Back/forward navigation — mirror the query-param state onto ours
+	 * without re-pushing history. Also reconciles once on mount so a
+	 * client-side route change that swapped the URL (WP 7.0 soft-nav)
+	 * won't leave us desynced if the caller passed a stale
+	 * `initiallyOpen`. `setIsOpenState` is React's stable setter so the
+	 * effect effectively runs once.
+	 */
 	useEffect( () => {
-		const onPop = () => {
+		const syncFromUrl = () => {
 			try {
 				const url = new URL( window.location.href );
 				const shouldOpen =
@@ -109,8 +115,10 @@ export const usePanelOpenState = ( {
 				// Noop.
 			}
 		};
-		window.addEventListener( 'popstate', onPop );
-		return () => window.removeEventListener( 'popstate', onPop );
+		syncFromUrl();
+		window.addEventListener( 'popstate', syncFromUrl );
+		return () =>
+			window.removeEventListener( 'popstate', syncFromUrl );
 	}, [] );
 
 	return { isOpen, setIsOpen };

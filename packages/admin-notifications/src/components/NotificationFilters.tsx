@@ -47,6 +47,7 @@ export const NotificationFilters = ( {
 					className={ clsx( 'pum-notification-chip', {
 						'is-active': active === filter.key,
 					} ) }
+					aria-pressed={ active === filter.key }
 					onClick={ () => onChange( filter.key ) }
 				>
 					{ filter.key !== 'all' && (

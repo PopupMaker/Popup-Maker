@@ -112,6 +112,22 @@ const selectors = {
 	getError: ( state: State ): string | null => state.error,
 };
 
+/**
+ * Shape of the selector surface exposed via `select( STORE_NAME )`.
+ *
+ * Each raw selector takes `state` as its first arg; `@wordpress/data`
+ * binds state for us so consumers call the selector without it. Mirror
+ * that here so `useSelect` callers stay type-safe when the store
+ * adds/removes selectors.
+ */
+export type NotificationsSelectors = {
+	getNotifications: () => Notification[];
+	getCount: () => number;
+	isLoading: () => boolean;
+	hasLoaded: () => boolean;
+	getError: () => string | null;
+};
+
 export const store = createReduxStore( STORE_NAME, {
 	reducer,
 	actions,
