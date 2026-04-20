@@ -11,7 +11,7 @@
 -   Fixed the "Preview" button in the classic editor not opening popups — a regression introduced in 1.22.0. You can once again preview popups directly from the editor without having to save and view the live page. Thanks to @marklchaves for the fix.
 -   Fixed missing styles for Popup Maker blocks on the front end in some installs — blocks now render with the correct styling without a console warning about a missing stylesheet.
 -   Fixed "Disable popup open tracking" privacy setting not being fully respected — with analytics turned off, popup links no longer get tracking parameters appended and click beacons are no longer sent.
--   Fixed a rare fatal error that could occur when Popup Maker's build assets were missing or not yet generated (for example, immediately after a fresh clone or a failed update). The plugin now degrades gracefully instead of crashing the site.
+-   Fixed PHP bug in `pum_get_asset_group_meta()` where `(array) file_exists()` always evaluated as truthy, causing fatal errors when build artifacts were missing.
 
 ## v1.22.0 - 2026-03-31
 
