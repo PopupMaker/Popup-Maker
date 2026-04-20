@@ -16,6 +16,12 @@ export interface NotificationAction {
 	action: string;
 	href?: string;
 	primary?: boolean;
+	// Explicit opt-in to open the link in a new tab. Internal admin links
+	// default to same-tab navigation; set `target: '_blank'` (or `external:
+	// true`) on actions that point at docs, upgrade pages, or any off-site
+	// URL so we can attach the correct `rel` noopener/noreferrer pair.
+	target?: '_blank' | '_self';
+	external?: boolean;
 	// Relative time expression forwarded to dismissal handler (e.g. "30 days").
 	// Empty string / omitted = permanent dismissal.
 	expires?: string;

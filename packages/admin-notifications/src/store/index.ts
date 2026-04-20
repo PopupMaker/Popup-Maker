@@ -81,7 +81,7 @@ const actions = {
 		},
 
 	dismiss:
-		( code: string, action: string = 'dismiss', expires: string = '' ) =>
+		( code: string, action: string = 'dismiss' ) =>
 		async ( { dispatch }: { dispatch: typeof actions } ) => {
 			// Optimistic local removal — panel feels instant.
 			dispatch.dismissLocal( code );
@@ -89,12 +89,15 @@ const actions = {
 				await apiFetch( {
 					path: '/popup-maker/v2/notifications/dismiss',
 					method: 'POST',
-					data: { code, action, expires },
+					data: { code, action },
 				} );
 			} catch ( err ) {
-				// Silent — the next fetch will reconcile if the server disagreed.
 				// eslint-disable-next-line no-console
 				console.warn( '[PM] dismiss failed', err );
+				// Re-sync with the server so the optimistic removal is
+				// reverted if the dismissal didn't persist. Otherwise the
+				// user sees phantom state until the next page load.
+				dispatch.fetchNotifications();
 			}
 		},
 };

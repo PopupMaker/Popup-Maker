@@ -63,13 +63,9 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 			return;
 		}
 		e.preventDefault();
-		// Forward the action's expires value so "Not now" actions snooze
-		// instead of permanently dismissing. Empty string = permanent.
-		dismiss(
-			notification.code,
-			action.action || 'dismiss',
-			action.expires || ''
-		);
+		// The server derives `expires` from the declared action on the
+		// current alert definition — we only forward `code` + `action`.
+		dismiss( notification.code, action.action || 'dismiss' );
 	};
 
 	const iconSlug =
@@ -151,12 +147,21 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 					{ notification.actions.map( ( action, idx ) => {
 						const key = `${ notification.code }-a-${ idx }`;
 						if ( action.type === 'link' && action.href ) {
+							const external =
+								action.external === true ||
+								action.target === '_blank';
 							return (
 								<a
 									key={ key }
 									href={ action.href }
-									target="_blank"
-									rel="noopener noreferrer"
+									target={
+										external ? '_blank' : undefined
+									}
+									rel={
+										external
+											? 'noopener noreferrer'
+											: undefined
+									}
 									className={ ctaClassFor( action ) }
 								>
 									{ action.text }
