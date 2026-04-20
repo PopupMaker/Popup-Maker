@@ -152,23 +152,50 @@ class WhatsNew extends Service implements Provider {
 			'subtitle'    => $subtitle,
 			'icon'        => 'star-filled',
 			'dismissible' => true,
-			'actions'     => [
-				[
-					'text'    => __( 'View changelog', 'popup-maker' ),
-					'type'    => 'iframe',
-					'action'  => '',
-					'href'    => $this->changelog_url(),
-					'primary' => true,
-				],
-				[
-					'text'   => __( 'Dismiss', 'popup-maker' ),
-					'type'   => 'action',
-					'action' => 'dismiss',
-				],
-			],
+			'actions'     => $this->build_actions(),
 		];
 
 		return $alerts;
+	}
+
+	/**
+	 * Build the action list for the release notification.
+	 *
+	 * Picks a target appropriate for the current user's capabilities —
+	 * WordPress's plugin-information screen requires `install_plugins`,
+	 * so users without it (e.g. editors with a custom `edit_popups`
+	 * grant) get the public changelog on wppopupmaker.com instead.
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
+	protected function build_actions() {
+		if ( current_user_can( 'install_plugins' ) ) {
+			$view = [
+				'text'    => __( 'View changelog', 'popup-maker' ),
+				'type'    => 'iframe',
+				'action'  => '',
+				'href'    => $this->changelog_url(),
+				'primary' => true,
+			];
+		} else {
+			$view = [
+				'text'     => __( 'View changelog', 'popup-maker' ),
+				'type'     => 'link',
+				'action'   => '',
+				'href'     => $this->public_changelog_url(),
+				'primary'  => true,
+				'external' => true,
+			];
+		}
+
+		return [
+			$view,
+			[
+				'text'   => __( 'Dismiss', 'popup-maker' ),
+				'type'   => 'action',
+				'action' => 'dismiss',
+			],
+		];
 	}
 
 	/**
@@ -360,7 +387,11 @@ class WhatsNew extends Service implements Provider {
 	 * @return array<int,string>
 	 */
 	protected function extract_bullets( $body, $heading ) {
-		$pattern = '/\*\*' . preg_quote( $heading, '/' ) . '\*\*(.*?)(?=\*\*[A-Za-z]+\*\*|\z)/s';
+		// The lookahead must accept multi-word bold headings like
+		// "**Bug Fixes**" or "**Breaking Changes**" — the original `[A-Za-z]+`
+		// terminated after one word, letting a Features block swallow later
+		// sections whole.
+		$pattern = '/\*\*' . preg_quote( $heading, '/' ) . '\*\*(.*?)(?=\*\*[A-Za-z][A-Za-z0-9 \'\-]*\*\*|\z)/s';
 		if ( ! preg_match( $pattern, $body, $section_match ) ) {
 			return [];
 		}
@@ -427,6 +458,24 @@ class WhatsNew extends Service implements Provider {
 				'height'    => 700,
 			],
 			self_admin_url( 'plugin-install.php' )
+		);
+	}
+
+	/**
+	 * Fallback changelog URL for users who can't access the WP plugin
+	 * information screen (no `install_plugins` capability). Opens the
+	 * public changelog on wppopupmaker.com in a new tab.
+	 *
+	 * @return string
+	 */
+	protected function public_changelog_url() {
+		return add_query_arg(
+			[
+				'utm_source'   => 'pm-notifications',
+				'utm_medium'   => 'panel',
+				'utm_campaign' => 'whats-new',
+			],
+			'https://wppopupmaker.com/changelog/'
 		);
 	}
 }
