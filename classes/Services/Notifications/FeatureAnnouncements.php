@@ -430,41 +430,20 @@ class FeatureAnnouncements extends Service implements Provider {
 	 * True when the user has multiple popups AND at least one signal that
 	 * they would benefit from scheduling.
 	 *
+	 * Consumes the memoized scheduling_stats() so the popup scan runs
+	 * once per request even when both the condition check and the
+	 * message builder fire.
+	 *
 	 * @return bool
 	 */
 	public function needs_popup_scheduling() {
-		$popups = get_posts( [
-			'post_type'      => 'popup',
-			'post_status'    => [ 'publish', 'draft' ],
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
-		] );
+		$stats = $this->scheduling_stats();
 
-		if ( count( $popups ) < self::SCHEDULING_MIN_POPUPS ) {
+		if ( $stats['total'] < self::SCHEDULING_MIN_POPUPS ) {
 			return false;
 		}
 
-		$stale_threshold = time() - ( self::SCHEDULING_STALE_DAYS * DAY_IN_SECONDS );
-
-		foreach ( $popups as $popup_id ) {
-			$post = get_post( (int) $popup_id );
-			if ( ! $post ) {
-				continue;
-			}
-
-			$enabled = get_post_meta( (int) $popup_id, 'popup_enabled', true );
-			if ( '' !== $enabled && ! $enabled ) {
-				return true;
-			}
-
-			$modified = get_post_modified_time( 'U', true, $post );
-			if ( $modified && $modified < $stale_threshold ) {
-				return true;
-			}
-		}
-
-		return false;
+		return $stats['disabled'] > 0 || $stats['stale'] > 0;
 	}
 
 	/**
@@ -575,11 +554,26 @@ class FeatureAnnouncements extends Service implements Provider {
 	}
 
 	/**
+	 * Per-request memoized scheduling stats.
+	 *
+	 * @var array{total:int,disabled:int,stale:int}|null
+	 */
+	protected $scheduling_stats_cache = null;
+
+	/**
 	 * Counts used by the scheduling upsell message.
+	 *
+	 * Memoized for the lifetime of the request — both the condition
+	 * check and the message builder call this, and the underlying
+	 * get_posts() scan is the most expensive thing in this class.
 	 *
 	 * @return array{total:int,disabled:int,stale:int}
 	 */
 	protected function scheduling_stats() {
+		if ( null !== $this->scheduling_stats_cache ) {
+			return $this->scheduling_stats_cache;
+		}
+
 		$popups = get_posts( [
 			'post_type'      => 'popup',
 			'post_status'    => [ 'publish', 'draft' ],
@@ -605,6 +599,8 @@ class FeatureAnnouncements extends Service implements Provider {
 				++$stats['stale'];
 			}
 		}
+
+		$this->scheduling_stats_cache = $stats;
 
 		return $stats;
 	}
