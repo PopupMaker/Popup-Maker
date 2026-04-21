@@ -29,17 +29,20 @@ After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so pro
 
 ### Core plugin (`popup-maker`)
 
-| Code | Source | Category | Type | Dismissible | Notes |
+| Code | Source | Category | Type | Destination | Notes |
 |---|---|---|---|---|---|
-| `translation_request_<version>` | `classes/Utils/Alerts.php:246` | — | `info` | Yes | Locale-specific translation nag. Version-suffixed so a new release re-prompts. |
-| `whats_new_1_8_0` | `classes/Utils/Alerts.php:293` | — | `success` | — | Legacy "What's new in 1.8.0" card. Gated behind `upgraded_from < 1.8.0` so effectively inert today. Candidate for removal. |
-| `<integration>_integration_available` | `classes/Utils/Alerts.php:377` | — | default | Yes | One per detected integration (WooCommerce, EDD, MC4WP, etc.). Suggests installing the matching addon. |
-| `pum_telemetry_notice` | `classes/Telemetry.php:260` | — | `info` | Yes | Opt-in prompt for anonymous usage telemetry. Suppressed in Pro via `Pro\Controllers\Admin\Telemetry`. |
-| `review_request` | `includes/modules/reviews.php:353` | — | default | Yes | Review nag, driven by usage triggers (form conversions, popup counts). Snooze actions: "maybe_later", "already_did", "never". |
-| `license_not_valid` | `classes/Extension/License.php:549` / `:562` | — | default | Yes | Fires per extension when its license is invalid/expired. Extension-scoped. |
-| `upgrades_required` | `classes/Utils/Upgrades.php:277` | — | `warning` | No | Blocks until the user runs pending DB upgrades. Non-dismissible by design. |
-| `pum_tip_alert` | `classes/Admin/Onboarding.php:56` | — | `info` | Yes | Rotating onboarding tips for new users (first N admin sessions). |
-| `pum_writeable_notice` | `classes/AssetCache.php:705` | — | `warning` | Yes | Filesystem can't write asset cache. Stays on legacy widget (warning → not panel-eligible). |
+| `translation_request_<version>` | `classes/Utils/Alerts.php:244` | — | `info` | Legacy widget | Locale-specific translation nag. Version-suffixed so a new release re-prompts. |
+| `pum_notice_<id>` | `classes/Admin/Notices.php:53` | `announcement` | `success` | Panel | Remote-fetched notices feed (from `pum_plugin_notices` transient). IDs come from the server payload. Supports custom `disable_notices` action to turn off the whole feed. |
+| `php_<future_version>_<plugin_version>` | `classes/Admin/Notices.php:325` | `warning` | `error` (global) | Legacy widget | Upcoming PHP min-req nag. Version-suffixed so it re-fires on each plugin release while the server hasn't been upgraded. Non-dismissible for `manage_options` users. |
+| `wp_<future_version>_<plugin_version>` | `classes/Admin/Notices.php:340` | `warning` | `error` (global) | Legacy widget | Upcoming WordPress min-req nag. Same re-fire pattern as the PHP nag. |
+| `pum_telemetry_notice` | `classes/Telemetry.php:260` | — | `info` | Legacy widget | Opt-in prompt for anonymous usage telemetry. Suppressed in Pro via `Pro\Controllers\Admin\Telemetry::remove_telemetry_alert`. |
+| `review_request` | `includes/modules/reviews.php:353` | — | default | Legacy widget | Review nag, driven by usage triggers (form conversions, popup counts). Snooze actions: `maybe_later`, `already_did`, `never`. |
+| `license_not_valid` | `classes/Extension/License.php:549` / `:562` | — | default | Legacy widget | Fires per extension when its license is invalid/expired. Extension-scoped. |
+| `upgrades_required` | `classes/Utils/Upgrades.php:277` | — | `warning` | Legacy widget | Blocks until the user runs pending DB upgrades. Non-dismissible by design. |
+| `pum_tip_alert` | `classes/Admin/Onboarding.php:56` | — | `info` | Legacy widget | Rotating onboarding tips for new users (first N admin sessions). |
+| `pum_writeable_notice` | `classes/AssetCache.php:705` | — | `warning` | Legacy widget | Filesystem can't write asset cache. Stays on legacy widget (warning → not panel-eligible). |
+
+**Removed on this branch (2026):** `whats_new_1_8_0` (2018-era, inert), `integration_alerts` + `<integration>_integration_available` (BuddyPress addon unmaintained), `pum_bfcm_2024` (expired), `pum_block_editor_migration` (shipped).
 
 ### Admin Notifications Panel plugin (this plugin)
 
@@ -75,11 +78,11 @@ Shared helpers (in `FeatureAnnouncements`):
 
 | Plugin | Registered alerts | Notes |
 |---|---|---|
-| `popup-maker-pro` | — | Only *removes* the telemetry notice (`Pro\Controllers\Admin\Telemetry::remove_telemetry_alert`). Doesn't register its own. |
+| `popup-maker-pro` | — | Only *removes* the telemetry notice via `Pro\Controllers\Admin\Telemetry`. Doesn't register its own. |
 | `popup-maker-lms-popups` | — | None. |
 | `popup-maker-ecommerce-popups` | — | None. |
 
-Individual license alerts are registered per extension via `License.php`, so code `license_not_valid` can appear multiple times with different `extension` metadata.
+`license_not_valid` is registered once per extension instance via `License.php`, so the same code can appear multiple times in the alert list with different extension metadata.
 
 ## Adding a new notification
 
