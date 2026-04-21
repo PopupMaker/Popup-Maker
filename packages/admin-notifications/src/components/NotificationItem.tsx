@@ -5,6 +5,7 @@ import { __ } from '@popup-maker/i18n';
 import clsx from 'clsx';
 
 import { STORE_NAME } from '../store';
+import { clearOpenQueryParam } from '../utils/open-state';
 import type { Notification, NotificationAction } from '../types';
 
 // Human-friendly category labels.
@@ -167,6 +168,13 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 							const external =
 								action.external === true ||
 								action.target === '_blank';
+							// Internal same-tab navigation unloads the page.
+							// Strip the open-state query param before the
+							// navigator reads it so the destination page
+							// doesn't auto-reopen the panel.
+							const onLinkClick = external
+								? undefined
+								: () => clearOpenQueryParam();
 							return (
 								<a
 									key={ key }
@@ -180,6 +188,7 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 											: undefined
 									}
 									className={ ctaClassFor( action ) }
+									onClick={ onLinkClick }
 								>
 									{ action.text }
 								</a>

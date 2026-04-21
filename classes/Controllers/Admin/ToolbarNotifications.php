@@ -94,9 +94,11 @@ class ToolbarNotifications extends Controller {
 				}
 
 				// If the React panel is on this page, it handles the click
-				// in-place via its own listener — bail out.
+				// in-place via its own listener. Do NOT set the flag —
+				// otherwise the next page navigation (via a link inside
+				// the panel) would reopen the panel even though the user
+				// never asked for it.
 				if ( document.getElementById( 'pum-notifications-panel-root' ) ) {
-					setFlag();
 					return;
 				}
 
