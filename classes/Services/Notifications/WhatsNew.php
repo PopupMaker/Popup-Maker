@@ -92,11 +92,17 @@ class WhatsNew extends Service implements Provider {
 		$slot = $this->get_slot();
 
 		/*
-		 * Carry forward the "since" floor: keep the oldest unseen version
-		 * if a slot is already pending, otherwise anchor to the user's
-		 * previous running version.
+		 * Carry forward the "since" floor in priority order:
+		 *   1. Pending slot already has a since (oldest unseen wins).
+		 *   2. User's previous running version.
+		 *   3. Last dismissed major.minor (survives activate/deactivate
+		 *      cycles where `$old_version` resets to empty).
 		 */
 		$since = $slot['since'] ? $slot['since'] : $old_mm;
+		if ( ! $since ) {
+			$last_seen = (string) get_option( self::LAST_SEEN_OPTION, '' );
+			$since     = $this->major_minor( $last_seen );
+		}
 
 		$this->set_slot( [
 			'latest' => $new_mm,
