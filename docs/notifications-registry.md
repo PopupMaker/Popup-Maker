@@ -118,4 +118,12 @@ wp eval 'update_user_meta( get_current_user_id(), "_pum_dismissed_alerts", [] );
 # Reset WhatsNew state:
 wp option delete pum_whats_new_slot
 wp option delete pum_whats_new_last_seen
+
+# Flush FeatureAnnouncements transient cache (locale-scoped, 12h TTL).
+# `wp cache flush` won't touch these — they live in the options table.
+wp eval '
+$index = (array) get_option( "pum_feature_announcements_cache_index", [] );
+foreach ( $index as $key ) { delete_transient( $key ); }
+delete_option( "pum_feature_announcements_cache_index" );
+'
 ```
