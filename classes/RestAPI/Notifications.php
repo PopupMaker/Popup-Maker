@@ -164,6 +164,18 @@ class Notifications extends WP_REST_Controller {
 			return new WP_Error( 'pum_dismiss_failed', __( 'Could not record dismissal.', 'popup-maker' ), [ 'status' => 500 ] );
 		}
 
+		/*
+		 * Core's action_handler only fires `pum_alert_dismissed` for custom
+		 * actions — empty ('' = corner X) and 'dismiss' paths short-circuit
+		 * after writing user-meta. Providers that need a post-dismissal
+		 * side-effect (e.g. WhatsNew clearing its release slot) would never
+		 * get notified. Fire the hook here for those paths so providers see
+		 * every dismissal consistently.
+		 */
+		if ( '' === $action || 'dismiss' === $action ) {
+			do_action( 'pum_alert_dismissed', $code, $action );
+		}
+
 		return rest_ensure_response( [ 'success' => true ] );
 	}
 
