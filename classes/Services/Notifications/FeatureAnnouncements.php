@@ -340,7 +340,7 @@ class FeatureAnnouncements extends Service implements Provider {
 						'text'     => __( 'See how scheduling works', 'popup-maker' ),
 						'type'     => 'link',
 						'action'   => '',
-						'href'     => $this->feature_url( 'popup-automation/popup-scheduling', 'scheduling-feature' ),
+						'href'     => $this->feature_url( 'popup-targeting/popup-scheduling', 'scheduling-feature' ),
 						'primary'  => true,
 						'external' => true,
 					],
