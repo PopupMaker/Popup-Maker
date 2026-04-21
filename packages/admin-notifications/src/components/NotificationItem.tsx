@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { useDispatch } from '@wordpress/data';
 import { Modal } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
@@ -38,6 +38,15 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 	const [ isDismissing, setIsDismissing ] = useState( false );
 	const [ iframeUrl, setIframeUrl ] = useState< string | null >( null );
 	const [ iframeTitle, setIframeTitle ] = useState< string >( '' );
+	const pendingDismiss = useRef< number | null >( null );
+
+	useEffect( () => {
+		return () => {
+			if ( pendingDismiss.current !== null ) {
+				window.clearTimeout( pendingDismiss.current );
+			}
+		};
+	}, [] );
 
 	const handleDismiss = () => {
 		setIsDismissing( true );
@@ -47,7 +56,7 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 		 * so the server can decide permanence on its own (never inherits a
 		 * declared "Not now" snooze TTL).
 		 */
-		window.setTimeout(
+		pendingDismiss.current = window.setTimeout(
 			() => dismiss( notification.code, '' ),
 			260
 		);
