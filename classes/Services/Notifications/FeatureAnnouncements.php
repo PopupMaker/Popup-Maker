@@ -619,11 +619,17 @@ class FeatureAnnouncements extends Service implements Provider {
 	/**
 	 * URL to a specific Popup Maker settings tab.
 	 *
+	 * Emits both `?tab=<slug>` (server-rendered active tab) AND `#<slug>`
+	 * (client-side tab switcher in assets/js/src/admin/settings-page/).
+	 * The hash is what actually activates the tab in the DOM; the query
+	 * param keeps the URL semantically correct.
+	 *
 	 * @param string $tab Settings tab slug.
 	 * @return string
 	 */
 	protected function settings_url( $tab ) {
-		return admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=' . rawurlencode( $tab ) );
+		$slug = rawurlencode( $tab );
+		return admin_url( 'edit.php?post_type=popup&page=pum-settings&tab=' . $slug ) . '#' . $slug;
 	}
 
 	/**
