@@ -285,7 +285,7 @@ class FeatureAnnouncements extends Service implements Provider {
 						'text'     => __( 'See how exit intent works', 'popup-maker' ),
 						'type'     => 'link',
 						'action'   => '',
-						'href'     => $this->upgrade_url( 'exit-intent-upsell' ),
+						'href'     => $this->feature_url( 'exit-intent', 'exit-intent-feature' ),
 						'primary'  => true,
 						'external' => true,
 					],
@@ -340,7 +340,7 @@ class FeatureAnnouncements extends Service implements Provider {
 						'text'     => __( 'See how scheduling works', 'popup-maker' ),
 						'type'     => 'link',
 						'action'   => '',
-						'href'     => $this->upgrade_url( 'scheduling-upsell' ),
+						'href'     => $this->feature_url( 'popup-scheduling', 'scheduling-feature' ),
 						'primary'  => true,
 						'external' => true,
 					],
@@ -637,6 +637,28 @@ class FeatureAnnouncements extends Service implements Provider {
 				'utm_campaign' => $campaign,
 			],
 			'https://wppopupmaker.com/docs/' . ltrim( $path, '/' ) . '/'
+		);
+	}
+
+	/**
+	 * UTM-tagged feature landing page URL on wppopupmaker.com.
+	 *
+	 * Educational destination for "See how X works" style CTAs —
+	 * informational, not a pricing grid. Each feature page carries
+	 * its own on-page upgrade CTA that routes to /pricing/.
+	 *
+	 * @param string $slug     Feature slug (e.g. 'exit-intent').
+	 * @param string $campaign UTM campaign identifier.
+	 * @return string
+	 */
+	protected function feature_url( $slug, $campaign ) {
+		return add_query_arg(
+			[
+				'utm_source'   => 'pm-notifications',
+				'utm_medium'   => 'panel',
+				'utm_campaign' => $campaign,
+			],
+			'https://wppopupmaker.com/features/' . ltrim( $slug, '/' ) . '/'
 		);
 	}
 
