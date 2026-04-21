@@ -120,8 +120,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -144,7 +142,7 @@ jobs:
         if: github.event.inputs.run_linting == 'true'
         run: |
           echo "🔍 Running ESLint..."
-          pnpm run lint:js || echo "⚠️ JavaScript linting failed but continuing..."
+          npm run lint:js || echo "⚠️ JavaScript linting failed but continuing..."
 
       - name: Run Tests
         if: github.event.inputs.run_tests == 'true'
@@ -158,7 +156,7 @@ jobs:
 
           # JavaScript tests if available
           if [ -f "package.json" ] && grep -q '"test"' package.json; then
-            pnpm run test:unit || echo "⚠️ JavaScript tests failed but continuing..."
+            npm run test:unit || echo "⚠️ JavaScript tests failed but continuing..."
           fi
 
   # ============================================================================
@@ -203,8 +201,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -309,7 +305,7 @@ jobs:
       - name: Build production assets
         run: |
           echo "🏗️ Building production assets..."
-          pnpm run build:production
+          npm run build:production
           echo "✅ Production build complete"
 
       - name: Create test package

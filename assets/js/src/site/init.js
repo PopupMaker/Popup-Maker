@@ -79,4 +79,4 @@
 	$( '.pum .pum-cta a, .pum a.pum-cta' ).on( 'click', function () {
 		PUM.getPopup( this ).trigger( 'pumConversion' );
 	} );
-} )( jQuery );
+} )( jQuery, document );
