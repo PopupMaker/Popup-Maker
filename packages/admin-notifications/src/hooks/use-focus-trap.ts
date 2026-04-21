@@ -38,6 +38,9 @@ export const useFocusTrap = (
 				: null;
 
 		const container = ref.current;
+		// Track only the tabindex we synthesized, so cleanup doesn't strip
+		// a caller-provided one.
+		let addedTabIndex = false;
 		if ( container ) {
 			const focusables = container.querySelectorAll< HTMLElement >(
 				FOCUSABLE_SELECTOR
@@ -46,7 +49,10 @@ export const useFocusTrap = (
 			if ( first ) {
 				first.focus();
 			} else {
-				container.setAttribute( 'tabindex', '-1' );
+				if ( ! container.hasAttribute( 'tabindex' ) ) {
+					container.setAttribute( 'tabindex', '-1' );
+					addedTabIndex = true;
+				}
 				container.focus();
 			}
 		}
@@ -79,7 +85,7 @@ export const useFocusTrap = (
 
 		return () => {
 			document.removeEventListener( 'keydown', onKey );
-			if ( container ) {
+			if ( container && addedTabIndex ) {
 				container.removeAttribute( 'tabindex' );
 			}
 			const prev = previouslyFocused.current;
