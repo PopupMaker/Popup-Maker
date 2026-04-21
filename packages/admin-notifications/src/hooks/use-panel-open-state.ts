@@ -97,12 +97,13 @@ export const usePanelOpenState = ( {
 	}, [ setIsOpen ] );
 
 	/*
-	 * Back/forward navigation — mirror the query-param state onto ours
-	 * without re-pushing history. Also reconciles once on mount so a
-	 * client-side route change that swapped the URL (WP 7.0 soft-nav)
-	 * won't leave us desynced if the caller passed a stale
-	 * `initiallyOpen`. `setIsOpenState` is React's stable setter so the
-	 * effect effectively runs once.
+	 * Mirror query-param state onto ours when the user hits back/forward,
+	 * without re-pushing history. We intentionally do NOT run this on
+	 * mount — the initial state already comes from `initiallyOpen` which
+	 * is computed from both the query param AND the localStorage flag
+	 * (set by marker clicks on non-PM admin pages). Running on mount
+	 * would slam the panel closed in the localStorage path because the
+	 * URL has no `?pum-notifications=open` to read back.
 	 */
 	useEffect( () => {
 		const syncFromUrl = () => {
@@ -115,7 +116,6 @@ export const usePanelOpenState = ( {
 				// Noop.
 			}
 		};
-		syncFromUrl();
 		window.addEventListener( 'popstate', syncFromUrl );
 		return () =>
 			window.removeEventListener( 'popstate', syncFromUrl );
