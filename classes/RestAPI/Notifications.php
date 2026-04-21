@@ -116,7 +116,7 @@ class Notifications extends WP_REST_Controller {
 		$items = [];
 
 		foreach ( PUM_Utils_Alerts::get_alerts() as $alert ) {
-			if ( ! self::is_panel_eligible( $alert ) ) {
+			if ( ! is_array( $alert ) || ! self::is_panel_eligible( $alert ) ) {
 				continue;
 			}
 			$items[] = $this->prepare_alert_for_response( $alert );

@@ -94,6 +94,14 @@ class FeatureAnnouncements extends Service implements Provider {
 		add_action( 'deleted_post', [ $this, 'maybe_flush_on_deleted_post' ], 10, 2 );
 		add_action( 'trashed_post', [ $this, 'maybe_flush_on_trashed_post' ] );
 		add_action( 'untrashed_post', [ $this, 'maybe_flush_on_trashed_post' ] );
+
+		/*
+		 * Option-backed conditions (form conversion count, ad-block bypass
+		 * setting) — flush when they change so the next panel fetch
+		 * reflects current state.
+		 */
+		add_action( 'update_option_pum_form_conversion_count', [ $this, 'flush_cache' ] );
+		add_action( 'update_option_pum_bypass_adblockers', [ $this, 'flush_cache' ] );
 	}
 
 	/**

@@ -85,6 +85,7 @@ jobs:
               - 'packages/**/src/**/*.scss'
             npm_deps:
               - 'package.json'
+              - 'packages/**/package.json'
               - 'pnpm-lock.yaml'
             php_deps:
               - 'composer.json'
@@ -357,8 +358,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run pnpm audit
-        continue-on-error: true
-        run: pnpm audit --audit-level=high || echo "⚠️ pnpm audit found vulnerabilities"
+        run: pnpm audit --audit-level=high
 
   # ============================================================================
   # Security Scanning - Composer Dependencies

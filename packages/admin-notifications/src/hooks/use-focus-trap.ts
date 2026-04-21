@@ -79,6 +79,9 @@ export const useFocusTrap = (
 
 		return () => {
 			document.removeEventListener( 'keydown', onKey );
+			if ( container ) {
+				container.removeAttribute( 'tabindex' );
+			}
 			const prev = previouslyFocused.current;
 			if ( prev && document.contains( prev ) ) {
 				prev.focus();
