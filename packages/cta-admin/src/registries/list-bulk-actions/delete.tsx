@@ -9,7 +9,7 @@ import { useRegistry, useDispatch } from '@wordpress/data';
 
 import { useList } from '../../context';
 
-const DeleteBulkAction = () => {
+const DeleteBulkAction = (): JSX.Element | null => {
 	const [ confirm, setConfirm ] = useState< {
 		message: string;
 		callback: () => void;

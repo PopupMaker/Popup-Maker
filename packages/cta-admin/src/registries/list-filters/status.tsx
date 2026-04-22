@@ -31,7 +31,7 @@ export const StatusFilter = ( {
 	onClose,
 	items,
 	filteredItems,
-}: ListFilterContext< StatusFilterKey, StatusFilterValue > ) => {
+}: ListFilterContext< StatusFilterKey, StatusFilterValue > ): JSX.Element => {
 	const [ isOpen, setIsOpen ] = useState( false );
 	const buttonRef = useRef< HTMLButtonElement >( null );
 

@@ -7,7 +7,7 @@ import { callToActionStore } from '@popup-maker/core-data';
 
 import { useList } from '../../context';
 
-const DisableBulkAction = () => {
+const DisableBulkAction = (): JSX.Element | null => {
 	const { bulkSelection = [], setBulkSelection } = useList();
 
 	const registry = useRegistry();

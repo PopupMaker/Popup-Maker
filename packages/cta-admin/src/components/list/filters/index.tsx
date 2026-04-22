@@ -4,7 +4,7 @@ import { Fragment, useCallback, useRef } from '@wordpress/element';
 import { useList } from '../../../context';
 import { useListFilters } from '../../../registry';
 
-const ListFilters = () => {
+const ListFilters = (): JSX.Element | null => {
 	const {
 		filters = {},
 		setFilters,

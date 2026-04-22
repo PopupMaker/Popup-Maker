@@ -65,7 +65,7 @@ const InlinePopupTriggerUI = ( {
 	stopAddingTrigger,
 	contentRef,
 	focusOnMount,
-}: Props ) => {
+}: Props ): JSX.Element => {
 	// Get dispatch action to change the selection.
 	const { selectionChange } = useDispatch( blockEditorStore );
 

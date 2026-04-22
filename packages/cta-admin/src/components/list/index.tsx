@@ -26,7 +26,7 @@ import type { CallToAction } from '@popup-maker/core-data';
 
 const { cta_types: callToActions } = window.popupMakerCtaAdmin;
 
-const List = () => {
+const List = (): JSX.Element => {
 	// Get the shared method for setting editor Id & query params.
 	const { setEditorId } = useEditor();
 

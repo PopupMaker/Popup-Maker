@@ -4,7 +4,7 @@ import { download } from '@wordpress/icons';
 import { useRef, useState } from '@wordpress/element';
 import { Button, Flex, Icon, Popover } from '@wordpress/components';
 
-export const ExportListOption = () => {
+export const ExportListOption = (): JSX.Element => {
 	const [ showPopover, setShowPopover ] = useState( false );
 	const btnRef = useRef< HTMLButtonElement | null >( null );
 

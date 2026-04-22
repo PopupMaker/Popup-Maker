@@ -10,7 +10,7 @@ import { DEBUG_MODE } from '@popup-maker/cta-editor';
 // REVIEW: This one doesn't allow for extra options such as closeDelay.
 // REVIEW: We also need to allow typing/grouping of notices, such as toast or editor etc.
 
-const Notices = () => {
+const Notices = (): JSX.Element | null => {
 	const noticeTimerRef = useRef< {
 		[ key: WPNotice[ 'id' ] ]: ReturnType< typeof setTimeout >;
 	} >( {} );

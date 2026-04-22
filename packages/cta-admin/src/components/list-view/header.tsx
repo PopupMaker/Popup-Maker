@@ -6,7 +6,7 @@ import { callToActionStore } from '@popup-maker/core-data';
 
 import { useEditor } from '@popup-maker/cta-editor';
 
-const Header = () => {
+const Header = (): JSX.Element => {
 	const { setEditorId } = useEditor();
 
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.

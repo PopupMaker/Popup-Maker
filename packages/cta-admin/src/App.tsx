@@ -12,7 +12,7 @@ import { getGlobalVars } from './utils';
 
 import type { TabComponent } from '@popup-maker/types';
 
-const App = () => {
+const App = (): JSX.Element => {
 	const { permissions = { edit_ctas: false } } = getGlobalVars();
 	const { edit_ctas: userCanEditCallToActions } = permissions;
 

@@ -7,7 +7,7 @@ type Props = {
 	values: CallToAction< 'edit' >;
 };
 
-const ListQuickActions = ( { values }: Props ) => {
+const ListQuickActions = ( { values }: Props ): JSX.Element | null => {
 	const lastGroup = useRef< string | undefined >( undefined );
 
 	const listQuickActions = useListQuickActions();

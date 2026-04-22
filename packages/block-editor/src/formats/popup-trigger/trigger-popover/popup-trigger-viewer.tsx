@@ -59,7 +59,7 @@ export default function PopupTriggerViewer( {
 	onEditTriggerClick,
 	popupId,
 	...props
-}: PopupTriggerViewerProps ) {
+}: PopupTriggerViewerProps ): JSX.Element {
 	return (
 		<div
 			className={ clsx(

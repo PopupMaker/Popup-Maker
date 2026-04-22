@@ -18,7 +18,7 @@ import type { BaseEditorTabProps } from '../../types';
 
 export const name = 'general';
 
-export const title = __( 'General', 'popup-maker' );
+export const title: string = __( 'General', 'popup-maker' );
 
 export const getCallToActionTypeOptions = () => {
 	// Get all registered CTA types from the global data
@@ -59,7 +59,7 @@ export const Component = ( {
 	callToAction,
 	updateFields,
 	updateSettings,
-}: BaseEditorTabProps ) => {
+}: BaseEditorTabProps ): JSX.Element => {
 	const { getTabFields } = useFields();
 	const { clearAllErrors } = useAllFieldErrors();
 

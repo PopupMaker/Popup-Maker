@@ -8,7 +8,7 @@ import { DispatchStatus } from '../constants';
 import { defaultValues, NOTICE_CONTEXT } from './constants';
 
 import type { Updatable } from '@wordpress/core-data';
-import type { Notice } from '../types';
+import type { WPNotice } from '../types';
 import type { State } from './reducer';
 import type { CallToAction } from './types';
 
@@ -339,7 +339,7 @@ const noticeSelectors = {
 	 */
 	getNotices: createRegistrySelector( ( select ) => () => {
 		const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
-		return ( notices || [] ) as Notice[];
+		return ( notices || [] ) as WPNotice[];
 	} ),
 
 	/**
@@ -347,11 +347,11 @@ const noticeSelectors = {
 	 */
 	getNoticeById: createRegistrySelector(
 		( select ) =>
-			( id: string ): Notice | undefined => {
+			( id: string ): WPNotice | undefined => {
 				const notices =
 					select( noticesStore ).getNotices( NOTICE_CONTEXT );
 				return notices?.find( ( n ) => n.id === id ) as
-					| Notice
+					| WPNotice
 					| undefined;
 			}
 	),

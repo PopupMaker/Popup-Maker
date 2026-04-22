@@ -9,7 +9,7 @@ import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
 import { useList } from '../../context';
 import { callToActionStore } from '@popup-maker/core-data';
 
-const TrashBulkAction = () => {
+const TrashBulkAction = (): JSX.Element | null => {
 	const [ confirm, setConfirm ] = useState< {
 		message: string;
 		callback: () => void;

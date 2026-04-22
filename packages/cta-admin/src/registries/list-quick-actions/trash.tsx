@@ -8,7 +8,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 
 import type { ListQuickActionContext } from '../../registry';
 
-const TrashQuickAction = ( { values }: ListQuickActionContext ) => {
+const TrashQuickAction = ( { values }: ListQuickActionContext ): JSX.Element => {
 	const [ confirm, setConfirm ] = useState< {
 		message: string;
 		callback: () => void;

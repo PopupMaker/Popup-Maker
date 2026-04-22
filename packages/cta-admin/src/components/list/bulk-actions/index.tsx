@@ -16,7 +16,7 @@ import { chevronDown, chevronUp } from '@wordpress/icons';
 import { useList } from '../../../context';
 import { useListBulkActions } from '../../../registry';
 
-const ListBulkActions = () => {
+const ListBulkActions = (): JSX.Element | null => {
 	const lastGroup = useRef< string | undefined >( undefined );
 	const btnRef = useRef< HTMLButtonElement >();
 	const [ isOpen, setIsOpen ] = useState( false );

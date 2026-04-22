@@ -54,7 +54,7 @@ export interface EditorWithModalProps extends EditorWithDataStoreProps {
  */
 export const withModal = (
 	WrappedComponent: ComponentType< EditorWithDataStoreProps >
-) => {
+): ComponentType< EditorWithModalProps > => {
 	return function ModalWrappedEditor( {
 		closeOnSave = true,
 		showDocumentationLink = true,
@@ -64,7 +64,7 @@ export const withModal = (
 		onRequestClose,
 		modalProps,
 		...componentProps
-	}: EditorWithModalProps ) {
+	}: EditorWithModalProps ): JSX.Element {
 		const [ confirm, setConfirm ] = useState< {
 			message: string;
 			callback: () => void;
