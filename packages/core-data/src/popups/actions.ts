@@ -873,7 +873,7 @@ export const changeEditorId =
  *
  * @param {WPNotice[ 'status' ]}  status  The notice status.
  * @param {WPNotice[ 'content' ]} content The notice content.
- * @param {Notice}              options The notice options.
+ * @param {Notice}                options The notice options.
  * @return {Promise<void>}
  */
 export const createNotice =
