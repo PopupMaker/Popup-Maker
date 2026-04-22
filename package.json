@@ -98,6 +98,7 @@
 		"react-dom": "^18.3.1",
 		"rtlcss-webpack-plugin": "^4.0.7",
 		"storybook": "8.6.17",
+		"typescript": "5.7.3",
 		"webpack-bundle-analyzer": "^4.10.2"
 	},
 	"scripts": {
