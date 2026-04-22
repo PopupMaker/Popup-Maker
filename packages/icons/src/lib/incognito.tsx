@@ -3,7 +3,7 @@
  */
 import { SVG, Path } from '@wordpress/primitives';
 
-const Incognito = (
+const Incognito: JSX.Element = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 20 22"

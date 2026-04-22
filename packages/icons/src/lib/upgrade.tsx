@@ -3,7 +3,7 @@
  */
 import { SVG, Path, Defs, G } from '@wordpress/primitives';
 
-const Upgrade = (
+const Upgrade: JSX.Element = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 16 17"

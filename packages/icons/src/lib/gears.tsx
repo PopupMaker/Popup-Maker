@@ -1,6 +1,6 @@
 import { SVG, Path } from '@wordpress/primitives';
 
-const Gears = (
+const Gears: JSX.Element = (
 	<SVG
 		viewBox="0 0 512 512"
 		width={ 512 }
