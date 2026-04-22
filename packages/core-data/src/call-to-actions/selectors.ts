@@ -5,6 +5,7 @@ import { store as noticesStore } from '@wordpress/notices';
 import { createRegistrySelector, createSelector } from '@wordpress/data';
 
 import { DispatchStatus } from '../constants';
+import { isValidNoticeStatus } from '../types';
 import { defaultValues, NOTICE_CONTEXT } from './constants';
 
 import type { Updatable } from '@wordpress/core-data';
@@ -337,9 +338,13 @@ const noticeSelectors = {
 	/**
 	 * Get notices.
 	 */
-	getNotices: createRegistrySelector( ( select ) => () => {
+	getNotices: createRegistrySelector( ( select ) => (): WPNotice[] => {
 		const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
-		return ( notices || [] ) as WPNotice[];
+		// Filter to known-status notices so the narrow WPNotice['status']
+		// union stays honest — upstream is wider than ours.
+		return ( notices || [] ).filter( ( n ) =>
+			isValidNoticeStatus( n.status )
+		) as WPNotice[];
 	} ),
 
 	/**
@@ -350,9 +355,11 @@ const noticeSelectors = {
 			( id: string ): WPNotice | undefined => {
 				const notices =
 					select( noticesStore ).getNotices( NOTICE_CONTEXT );
-				return notices?.find( ( n ) => n.id === id ) as
-					| WPNotice
-					| undefined;
+				const match = notices?.find( ( n ) => n.id === id );
+				if ( ! match || ! isValidNoticeStatus( match.status ) ) {
+					return undefined;
+				}
+				return match as WPNotice;
 			}
 	),
 };

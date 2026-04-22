@@ -99,6 +99,20 @@ export interface Notice {
 }
 
 /**
+ * Predicate that narrows an incoming notice's loose `status: string` to
+ * the four known literals WPNotice declares. Use when casting
+ * `@wordpress/notices` output where the upstream type is wider than
+ * ours and we only want to forward known-safe statuses.
+ */
+export const isValidNoticeStatus = (
+	status: unknown
+): status is NonNullable< WPNotice[ 'status' ] > =>
+	status === 'warning' ||
+	status === 'success' ||
+	status === 'error' ||
+	status === 'info';
+
+/**
  * WP notice action. Shape matches `@wordpress/notices::NoticeAction`.
  */
 export type NoticeAction = {

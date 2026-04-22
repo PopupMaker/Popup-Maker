@@ -1,4 +1,4 @@
-import type { ComponentType } from '@wordpress/element';
+import type { ComponentType } from 'react';
 
 import BaseEditor from './base-editor';
 import { withDataStore } from './hocs';
