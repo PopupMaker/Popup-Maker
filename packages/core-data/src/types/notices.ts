@@ -103,6 +103,9 @@ export interface Notice {
  * the four known literals WPNotice declares. Use when casting
  * `@wordpress/notices` output where the upstream type is wider than
  * ours and we only want to forward known-safe statuses.
+ *
+ * @param {unknown} status The raw status value to check.
+ * @return {boolean} True when status is one of the known WPNotice literals.
  */
 export const isValidNoticeStatus = (
 	status: unknown
