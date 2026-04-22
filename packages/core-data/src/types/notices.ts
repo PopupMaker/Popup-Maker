@@ -96,6 +96,12 @@ export interface Notice {
 	 * Auto-close delay (ms). Snackbar-only.
 	 */
 	closeDelay?: number;
+	/**
+	 * Whether the message should be shown as raw HTML. Matches
+	 * `@wordpress/notices`' NoticeOptions flag — subject to removal
+	 * upstream, so use sparingly.
+	 */
+	__unstableHTML?: boolean;
 }
 
 /**

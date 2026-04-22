@@ -129,7 +129,7 @@ export const Component = ( {
 					options={ callToActionTypeOptions }
 					value={ settings.type ?? '' }
 					onChange={ ( type ) => {
-						const ctaType = registeredCtaTypes[ type as string ];
+						const ctaType = registeredCtaTypes[ type ];
 
 						// Intercept locked types — revert to link, show upsell.
 						if ( ctaType?.pro_required ) {
