@@ -10,7 +10,7 @@ const NumberField = ( {
 	value,
 	onChange,
 	...fieldProps
-}: WithOnChange< NumberFieldProps > ) => {
+}: WithOnChange< NumberFieldProps > ): JSX.Element => {
 	return (
 		<NumberControl
 			{ ...fieldProps }

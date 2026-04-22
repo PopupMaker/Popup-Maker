@@ -6,7 +6,7 @@ type Props = {
 	fields: FieldPropsWithOnChange[];
 };
 
-const Fields = ( props: Props ) => {
+const Fields = ( props: Props ): JSX.Element => {
 	const { fields } = props;
 
 	return (

@@ -6,7 +6,7 @@ const RadioField = ( {
 	value,
 	onChange,
 	...fieldProps
-}: WithOnChange< RadioFieldProps > ) => {
+}: WithOnChange< RadioFieldProps > ): JSX.Element => {
 	const options = fieldProps.options;
 
 	return (

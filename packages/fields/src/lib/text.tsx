@@ -7,7 +7,7 @@ const TextField = ( {
 	value,
 	onChange,
 	...fieldProps
-}: WithOnChange< TextFieldProps > | WithOnChange< HiddenFieldProps > ) => {
+}: WithOnChange< TextFieldProps > | WithOnChange< HiddenFieldProps > ): JSX.Element => {
 	return (
 		// @ts-ignore
 		<TextControl

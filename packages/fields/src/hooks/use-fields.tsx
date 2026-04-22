@@ -29,7 +29,8 @@ export interface FieldsContextType<
 	setValues: ( values: Record< K, V[ K ] > ) => void;
 }
 
-export const FieldsContext = createContext< FieldsContextType >( {
+export const FieldsContext: React.Context< FieldsContextType > =
+	createContext< FieldsContextType >( {
 	context: '',
 	fields: [],
 	values: {} as Record< string, any >,
@@ -46,7 +47,7 @@ export const FieldContextProvider = <
 	children,
 }: T & {
 	children: React.ReactNode;
-} ) => {
+} ): JSX.Element => {
 	return (
 		<FieldsContext.Provider
 			value={ { context, fields, values, setValues } }

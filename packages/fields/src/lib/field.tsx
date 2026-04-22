@@ -78,7 +78,7 @@ const FieldComponent = ( fieldProps: FieldPropsWithOnChange ): JSX.Element => {
 	);
 };
 
-const Field = ( props: FieldPropsWithOnChange ) => {
+const Field = ( props: FieldPropsWithOnChange ): JSX.Element => {
 	const { type, className, onChange } = props;
 
 	return (

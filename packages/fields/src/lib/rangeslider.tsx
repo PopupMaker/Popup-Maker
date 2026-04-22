@@ -6,7 +6,7 @@ const RangeSliderField = ( {
 	onChange,
 	initialPosition = 0,
 	...fieldProps
-}: WithOnChange< RangesliderFieldProps > ) => {
+}: WithOnChange< RangesliderFieldProps > ): JSX.Element => {
 	const { step } = fieldProps;
 
 	return (
