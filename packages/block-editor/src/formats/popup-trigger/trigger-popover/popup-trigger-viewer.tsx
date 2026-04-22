@@ -30,8 +30,8 @@ function PopupView( {
 	const popup = getPopupById( popupId );
 	let label = '';
 	if ( popup ) {
-		/* translators: %s: popup title. */
 		label = sprintf(
+			/* translators: %s: popup title. */
 			__( 'Open "%s" popup', 'popup-maker' ),
 			decodeEntities( popup.title.rendered )
 		);
