@@ -11,7 +11,7 @@ import { DispatchStatus } from '../constants';
 import { fetchFromApi, getErrorMessage } from '../utils';
 import { validateCallToAction } from './validation';
 import { editableEntity } from './utils';
-import type { EditorId, Notice } from '../types';
+import type { EditorId, Notice, WPNotice } from '../types';
 import type {
 	CallToAction,
 	ThunkAction,
@@ -1033,8 +1033,8 @@ const noticeActions = {
 	/**
 	 * Create a notice.
 	 *
-	 * @param {Notice[ 'status' ]}  status  The notice status.
-	 * @param {Notice[ 'content' ]} content The notice content.
+	 * @param {WPNotice[ 'status' ]}  status  The notice status.
+	 * @param {WPNotice[ 'content' ]} content The notice content.
 	 * @param {Notice}              options The notice options.
 	 * @return {Promise<void>}
 	 */
@@ -1043,11 +1043,11 @@ const noticeActions = {
 			/**
 			 * Notice status.
 			 */
-			status: Notice[ 'status' ] = 'info',
+			status: WPNotice[ 'status' ] = 'info',
 			/**
 			 * Notice content.
 			 */
-			content: Notice[ 'content' ] = '',
+			content: WPNotice[ 'content' ] = '',
 			/**
 			 * Notice options.
 			 */
