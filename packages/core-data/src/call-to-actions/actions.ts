@@ -55,10 +55,10 @@ const handleFieldValidationErrors = (
 			const notices = registry
 				.select( noticesStore )
 				.getNotices( NOTICE_CONTEXT );
-			const fieldErrors = notices.filter(
-				( n: Notice ) => n.id?.startsWith( `field-error-${ ctaId }-` )
+			const fieldErrors = notices.filter( ( n: WPNotice ) =>
+				n.id.startsWith( `field-error-${ ctaId }-` )
 			);
-			fieldErrors.forEach( ( n: Notice ) =>
+			fieldErrors.forEach( ( n: WPNotice ) =>
 				registry
 					.dispatch( noticesStore )
 					.removeNotice( n.id, NOTICE_CONTEXT )
