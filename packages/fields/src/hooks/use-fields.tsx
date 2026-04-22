@@ -31,11 +31,11 @@ export interface FieldsContextType<
 
 export const FieldsContext: React.Context< FieldsContextType > =
 	createContext< FieldsContextType >( {
-	context: '',
-	fields: [],
-	values: {} as Record< string, any >,
-	setValues: () => {},
-} );
+		context: '',
+		fields: [],
+		values: {} as Record< string, any >,
+		setValues: () => {},
+	} );
 
 export const FieldContextProvider = <
 	T extends FieldsContextType = FieldsContextType,

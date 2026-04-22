@@ -129,8 +129,7 @@ export const Component = ( {
 					options={ callToActionTypeOptions }
 					value={ settings.type ?? '' }
 					onChange={ ( type ) => {
-						const ctaType =
-							registeredCtaTypes[ type as string ];
+						const ctaType = registeredCtaTypes[ type as string ];
 
 						// Intercept locked types — revert to link, show upsell.
 						if ( ctaType?.pro_required ) {
@@ -157,16 +156,13 @@ export const Component = ( {
 					onDismiss={ () => setLockedType( null ) }
 					className="pro-cta-type-notice"
 				>
-					<strong>
-						{ registeredCtaTypes[ lockedType ]?.label }
-					</strong>
+					<strong>{ registeredCtaTypes[ lockedType ]?.label }</strong>
 					{ ' \u2014 ' }
 					{ registeredCtaTypes[ lockedType ]?.pro_description ||
 						'This action type requires Popup Maker Pro.' }{ ' ' }
 					<a
 						href={
-							registeredCtaTypes[ lockedType ]?.upgrade_url ||
-							'#'
+							registeredCtaTypes[ lockedType ]?.upgrade_url || '#'
 						}
 						target="_blank"
 						rel="noopener noreferrer"

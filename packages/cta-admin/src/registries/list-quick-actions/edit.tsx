@@ -3,7 +3,9 @@ import { useEditor } from '@popup-maker/cta-editor';
 import { Button } from '@wordpress/components';
 import type { ListQuickActionContext } from '../../registry';
 
-export const EditItemQuickAction = ( { values }: ListQuickActionContext ): JSX.Element => {
+export const EditItemQuickAction = ( {
+	values,
+}: ListQuickActionContext ): JSX.Element => {
 	// Get the shared method for setting editor Id & query params.
 	const { setEditorId } = useEditor();
 

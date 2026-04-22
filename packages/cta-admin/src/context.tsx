@@ -90,7 +90,10 @@ type ProviderProps = {
 	children: React.ReactNode;
 };
 
-export const ListProvider = ( { value = {}, children }: ProviderProps ): JSX.Element => {
+export const ListProvider = ( {
+	value = {},
+	children,
+}: ProviderProps ): JSX.Element => {
 	const [ bulkSelection, setBulkSelection ] = useState< number[] >( [] );
 
 	// Allow setting sort config from query params.

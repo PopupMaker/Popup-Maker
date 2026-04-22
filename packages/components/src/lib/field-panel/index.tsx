@@ -10,11 +10,7 @@ type Props = {
 	children: React.ReactNode;
 };
 
-const FieldPanel = ( {
-	title,
-	className,
-	children,
-}: Props ): JSX.Element => {
+const FieldPanel = ( { title, className, children }: Props ): JSX.Element => {
 	return (
 		<Panel
 			header={ title }

@@ -37,7 +37,13 @@ const renderer = () => {
 	return (
 		<BrowserRouter>
 			<QueryParamProvider adapter={ ReactRouter6Adapter }>
-				<RegistryProvider value={ registry as Parameters< typeof RegistryProvider >[ 0 ][ 'value' ] }>
+				<RegistryProvider
+					value={
+						registry as Parameters<
+							typeof RegistryProvider
+						>[ 0 ][ 'value' ]
+					}
+				>
 					<App />
 				</RegistryProvider>
 			</QueryParamProvider>

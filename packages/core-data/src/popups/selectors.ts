@@ -346,9 +346,11 @@ export const getNotices = createRegistrySelector( ( select ) => () => {
  */
 export const getNoticeById = createRegistrySelector(
 	( select ) =>
-		( id: string  ): WPNotice | undefined => {
+		( id: string ): WPNotice | undefined => {
 			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
-			return notices?.find( ( n ) => n.id === id )  as WPNotice | undefined;
+			return notices?.find( ( n ) => n.id === id ) as
+				| WPNotice
+				| undefined;
 		}
 );
 

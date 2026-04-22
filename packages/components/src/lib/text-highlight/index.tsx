@@ -36,9 +36,7 @@ export type TextHighlightProps = {
  *
  * @param {TextHighlightProps} props Text highlight props.
  */
-export const TextHighlight = (
-	props: TextHighlightProps
-): JSX.Element => {
+export const TextHighlight = ( props: TextHighlightProps ): JSX.Element => {
 	const { text = '', highlight = '' } = props;
 	// Convert single string to array, trim thim & filters empty|null values.
 	const trimmedHighlightText = (

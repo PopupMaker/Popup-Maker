@@ -29,7 +29,8 @@ export const PopupSelectControl = ( {
 		} ),
 	],
 	...props
-}: PopupSelectControlProps & Pick< SelectControlProps, 'help' > ): JSX.Element => {
+}: PopupSelectControlProps &
+	Pick< SelectControlProps, 'help' > ): JSX.Element => {
 	return (
 		<SelectControl
 			label={ label }
