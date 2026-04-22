@@ -316,6 +316,18 @@ final class Core extends \PopupMaker\Plugin\Container {
 			}
 		);
 
+		$this->set(
+			'notifications',
+			/**
+			 * Get notifications orchestrator service.
+			 *
+			 * @return \PopupMaker\Services\Notifications\Manager
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\Notifications\Manager( $container );
+			}
+		);
+
 		do_action( 'popup_maker/register_services', $this );
 	}
 
@@ -334,6 +346,17 @@ final class Core extends \PopupMaker\Plugin\Container {
 		// Initialize form conversion tracking.
 		$form_conversion_tracking = $this->get( 'form_conversion_tracking' );
 		$form_conversion_tracking->init();
+
+		/*
+		 * Defer notifications orchestrator init until WordPress's `init`
+		 * action. Core loads on plugins_loaded@11, but addons (Pro, Pro+,
+		 * integrations) load at priority 12+ and need a window to register
+		 * their own providers via the `popup_maker/notification_providers`
+		 * filter before the Manager resolves the provider list.
+		 */
+		add_action( 'init', function () {
+			$this->get( 'notifications' )->init();
+		}, 5 );
 	}
 
 	/**

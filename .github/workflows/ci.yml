@@ -85,7 +85,9 @@ jobs:
               - 'packages/**/src/**/*.scss'
             npm_deps:
               - 'package.json'
+              - 'packages/**/package.json'
               - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
             php_deps:
               - 'composer.json'
               - 'composer.lock'

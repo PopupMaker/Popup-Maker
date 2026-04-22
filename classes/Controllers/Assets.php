@@ -58,7 +58,7 @@ class Assets extends Controller {
 		}
 
 		$packages = [
-			'admin-bar'        => [
+			'admin-bar'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-admin-bar',
 				'styles'   => true,
@@ -74,12 +74,17 @@ class Assets extends Controller {
 					],
 				],
 			],
-			'admin-marketing'  => [
+			'admin-marketing'     => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-admin-marketing',
 				'styles'  => true,
 			],
-			'block-editor'     => [
+			'admin-notifications' => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-admin-notifications',
+				'styles'  => true,
+			],
+			'block-editor'        => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-block-editor',
 				'styles'   => true,
@@ -98,7 +103,7 @@ class Assets extends Controller {
 					),
 				],
 			],
-			'block-library'    => [
+			'block-library'       => [
 				'bundled'      => false,
 				'handle'       => 'popup-maker-block-library',
 				'styles'       => true,
@@ -110,7 +115,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'components'       => [
+			'components'          => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-components',
 				'styles'   => true,
@@ -121,7 +126,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'core-data'        => [
+			'core-data'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-core-data',
 				'styles'   => false,
@@ -136,7 +141,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'cta-admin'        => [
+			'cta-admin'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-cta-admin',
 				'styles'   => true,
@@ -147,7 +152,7 @@ class Assets extends Controller {
 					];
 				},
 			],
-			'cta-editor'       => [
+			'cta-editor'          => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-cta-editor',
 				'styles'   => true,
@@ -159,68 +164,68 @@ class Assets extends Controller {
 				},
 					// 'head'     => true,
 			],
-			'dashboard'        => [
+			'dashboard'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-dashboard',
 				'styles'   => true,
 				'varsName' => 'popupMakerDashboard',
 				'vars'     => [],
 			],
-			'data'             => [
+			'data'                => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-data',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerData',
 				// 'vars'     => [],
 			],
-			'fields'           => [
+			'fields'              => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-fields',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerFields',
 				// 'vars'     => [],
 			],
-			'i18n'             => [
+			'i18n'                => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-i18n',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerI18n',
 				// 'vars'     => [],
 			],
-			'icons'            => [
+			'icons'               => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-icons',
 				'styles'  => true,
 				// 'varsName' => 'popupMakerIcons',
 				// 'vars'     => [],
 			],
-			'layout'           => [
+			'layout'              => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-layout',
 				'styles'  => true,
 				// 'varsName' => 'popupMakerLayout',
 				// 'vars'     => [],
 			],
-			'popup-admin'      => [
+			'popup-admin'         => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-popup-admin',
 				'styles'  => true,
 			],
-			'registry'         => [
+			'registry'            => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-registry',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerRegistry',
 				// 'vars'     => [],
 			],
-			'use-query-params' => [
+			'use-query-params'    => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-use-query-params',
 				'styles'  => false,
 				// 'varsName' => 'popupMakerUseQueryParams',
 				// 'vars'     => [],
 			],
-			'utils'            => [
+			'utils'               => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-utils',
 				'styles'  => false,
@@ -279,47 +284,47 @@ class Assets extends Controller {
 					isset( $package_data['deps'] ) ? $package_data['deps'] : []
 				);
 
-				if ( 'block-editor' === $package ) {
-					if ( is_admin() && ( ! $screen || 'widgets' !== $screen->id ) ) {
-						$js_deps = array_merge( $js_deps, [ 'wp-edit-post' ] );
-					}
+			if ( 'block-editor' === $package ) {
+				if ( is_admin() && ( ! $screen || 'widgets' !== $screen->id ) ) {
+					$js_deps = array_merge( $js_deps, [ 'wp-edit-post' ] );
 				}
+			}
 
 				$footer = $package_data['head'] ?? true;
 
-				if ( $bundled ) {
-					pum_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
-				} else {
-					// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
-					wp_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
-				}
+			if ( $bundled ) {
+				pum_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
+			} else {
+				// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
+				wp_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
+			}
 
 				$css_path = $this->container->get_path( "$path/$package{$rtl}.css" );
 
-				if ( isset( $package_data['styles'] ) && $package_data['styles'] && file_exists( $css_path ) ) {
-					$css_file = $this->container->get_url( "$path/$package{$rtl}.css" );
-					$css_deps = [ 'wp-components', 'wp-block-editor', 'dashicons' ];
+			if ( isset( $package_data['styles'] ) && $package_data['styles'] && file_exists( $css_path ) ) {
+				$css_file = $this->container->get_url( "$path/$package{$rtl}.css" );
+				$css_deps = [ 'wp-components', 'wp-block-editor', 'dashicons' ];
 
-					if ( $bundled ) {
-						pum_register_style( $handle, $css_file, $css_deps, $meta['version'] );
-					} else {
-						// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
-						wp_register_style( $handle, $css_file, $css_deps, $meta['version'] );
-					}
+				if ( $bundled ) {
+					pum_register_style( $handle, $css_file, $css_deps, $meta['version'] );
+				} else {
+					// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
+					wp_register_style( $handle, $css_file, $css_deps, $meta['version'] );
 				}
+			}
 
 				$block_css_path = $this->container->get_path( "$path/$package-style{$rtl}.css" );
 
-				if ( isset( $package_data['block_styles'] ) && $package_data['block_styles'] && file_exists( $block_css_path ) ) {
-					$block_css_file = $this->container->get_url( "$path/$package-style{$rtl}.css" );
-					$block_css_deps = [ 'wp-block-editor' ];
+			if ( isset( $package_data['block_styles'] ) && $package_data['block_styles'] && file_exists( $block_css_path ) ) {
+				$block_css_file = $this->container->get_url( "$path/$package-style{$rtl}.css" );
+				$block_css_deps = [ 'wp-block-editor' ];
 
-					if ( $bundled ) {
-						pum_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
-					} else {
-						wp_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
-					}
+				if ( $bundled ) {
+					pum_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
+				} else {
+					wp_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
 				}
+			}
 
 				/**
 				 * TODO Create pum_set_script_translations() function.

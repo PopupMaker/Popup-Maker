@@ -59,6 +59,7 @@ class RestAPI extends Controller {
 		( new \PopupMaker\RestAPI\Connect() )->register_routes();
 		( new \PopupMaker\RestAPI\License() )->register_routes();
 		( new \PopupMaker\RestAPI\ObjectSearch() )->register_routes();
+		( new \PopupMaker\RestAPI\Notifications() )->register_routes();
 	}
 
 	/**

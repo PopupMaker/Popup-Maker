@@ -24,9 +24,10 @@ class Admin extends Controller {
 	 */
 	public function init() {
 		$this->container->register_controllers( [
-			'Admin\Toolbar'        => new \PopupMaker\Controllers\Admin\Toolbar( $this->container ),
-			'Admin\WP\PluginsPage' => new \PopupMaker\Controllers\Admin\WP\PluginsPage( $this->container ),
-			'Admin\CallToActions'  => new \PopupMaker\Controllers\Admin\CallToActions( $this->container ),
+			'Admin\Toolbar'              => new \PopupMaker\Controllers\Admin\Toolbar( $this->container ),
+			'Admin\ToolbarNotifications' => new \PopupMaker\Controllers\Admin\ToolbarNotifications( $this->container ),
+			'Admin\WP\PluginsPage'       => new \PopupMaker\Controllers\Admin\WP\PluginsPage( $this->container ),
+			'Admin\CallToActions'        => new \PopupMaker\Controllers\Admin\CallToActions( $this->container ),
 		] );
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );

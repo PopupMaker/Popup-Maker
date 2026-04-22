@@ -21,6 +21,9 @@
 			"path": "./packages/admin-marketing"
 		},
 		{
+			"path": "./packages/admin-notifications"
+		},
+		{
 			"path": "./packages/block-editor"
 		},
 		{

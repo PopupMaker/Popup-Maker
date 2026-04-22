@@ -1,6 +1,7 @@
 module.exports = [
 	'@popup-maker/admin-bar',
 	'@popup-maker/admin-marketing',
+	'@popup-maker/admin-notifications',
 	'@popup-maker/block-editor',
 	'@popup-maker/block-library',
 	'@popup-maker/components',

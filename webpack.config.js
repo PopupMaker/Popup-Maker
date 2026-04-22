@@ -13,6 +13,7 @@ const isProduction = NODE_ENV === 'production';
 const packages = {
 	'admin-bar': 'packages/admin-bar',
 	'admin-marketing': 'packages/admin-marketing',
+	'admin-notifications': 'packages/admin-notifications',
 	'block-editor': 'packages/block-editor',
 	'block-library': 'packages/block-library',
 	components: 'packages/components',
