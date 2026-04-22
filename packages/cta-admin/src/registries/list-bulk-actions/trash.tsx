@@ -61,7 +61,7 @@ const TrashBulkAction = (): JSX.Element | null => {
 					setConfirm( {
 						isDestructive: true,
 						message: sprintf(
-							// translators: 1. number of items
+							// translators: %d: number of items.
 							__(
 								'Are you sure you want to trash %d items?',
 								'popup-maker'
@@ -82,7 +82,7 @@ const TrashBulkAction = (): JSX.Element | null => {
 								createNotice(
 									'success',
 									sprintf(
-										// translators: 1. number of items
+										// translators: %d: number of items.
 										_n(
 											'%d call to action moved to trash.',
 											'%d call to actions moved to trash.',

@@ -28,13 +28,14 @@ function PopupView( {
 	);
 
 	const popup = getPopupById( popupId );
-	const label = popup
-		? /* translators: %s = popup title */
-		  sprintf(
-				__( 'Open "%s" popup', 'popup-maker' ),
-				decodeEntities( popup.title.rendered )
-		  )
-		: '';
+	let label = '';
+	if ( popup ) {
+		/* translators: %s: popup title. */
+		label = sprintf(
+			__( 'Open "%s" popup', 'popup-maker' ),
+			decodeEntities( popup.title.rendered )
+		);
+	}
 
 	return (
 		<span className={ spanClassName } role="button" aria-label={ label }>

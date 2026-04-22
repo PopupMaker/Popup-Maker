@@ -95,7 +95,7 @@ const ListBulkActions = (): JSX.Element | null => {
 					<Flex>
 						<span className="selected-items">
 							{ sprintf(
-								// translators: 1. number of items.
+								// translators: %d: number of items.
 								_n(
 									'%d item selected',
 									'%d items selected',

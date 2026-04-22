@@ -24,7 +24,10 @@ const eslintConfig = {
 			'error',
 			{
 				// Hate it but this is most reliable way to handle it since its already loaded.
-				ignore: [ 'jquery' ],
+				// @popup-maker/* are pnpm workspace packages — the resolver
+				// can't always follow their symlinks in CI, but they resolve
+				// correctly at runtime via tsconfig paths / webpack aliases.
+				ignore: [ 'jquery', '^@popup-maker/' ],
 			},
 		],
 	},

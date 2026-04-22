@@ -34,7 +34,7 @@ const Header = (): JSX.Element => {
 					<Spinner />
 				) : (
 					sprintf(
-						/* translators: 1. Number of items */
+						/* translators: %d: number of items. */
 						_n( '%d item', '%d items', count, 'popup-maker' ),
 						count
 					)

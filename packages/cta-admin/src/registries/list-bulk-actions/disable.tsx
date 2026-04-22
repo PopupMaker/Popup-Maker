@@ -66,7 +66,7 @@ const DisableBulkAction = (): JSX.Element | null => {
 						createNotice(
 							'success',
 							sprintf(
-								// translators: 1. number of items
+								// translators: %d: number of items.
 								_n(
 									'%d call to action disabled.',
 									'%d call to actions disabled.',
