@@ -18,7 +18,7 @@ const ConfirmDialogue = ( {
 	onClose,
 	isDestructive = false,
 	children,
-}: Props ) => {
+}: Props ): JSX.Element | null => {
 	const confirmButtonRef = useRef< HTMLButtonElement | null >( null );
 	const previousFocusRef = useRef< HTMLElement | null >( null );
 

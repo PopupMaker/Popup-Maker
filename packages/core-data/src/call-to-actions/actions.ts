@@ -11,7 +11,7 @@ import { DispatchStatus } from '../constants';
 import { fetchFromApi, getErrorMessage } from '../utils';
 import { validateCallToAction } from './validation';
 import { editableEntity } from './utils';
-import type { EditorId, Notice } from '../types';
+import type { EditorId, Notice, WPNotice } from '../types';
 import type {
 	CallToAction,
 	ThunkAction,
@@ -55,10 +55,10 @@ const handleFieldValidationErrors = (
 			const notices = registry
 				.select( noticesStore )
 				.getNotices( NOTICE_CONTEXT );
-			const fieldErrors = notices.filter(
-				( n: Notice ) => n.id?.startsWith( `field-error-${ ctaId }-` )
+			const fieldErrors = notices.filter( ( n: WPNotice ) =>
+				n.id.startsWith( `field-error-${ ctaId }-` )
 			);
-			fieldErrors.forEach( ( n: Notice ) =>
+			fieldErrors.forEach( ( n: WPNotice ) =>
 				registry
 					.dispatch( noticesStore )
 					.removeNotice( n.id, NOTICE_CONTEXT )
@@ -1033,9 +1033,9 @@ const noticeActions = {
 	/**
 	 * Create a notice.
 	 *
-	 * @param {Notice[ 'status' ]}  status  The notice status.
-	 * @param {Notice[ 'content' ]} content The notice content.
-	 * @param {Notice}              options The notice options.
+	 * @param {WPNotice[ 'status' ]}  status  The notice status.
+	 * @param {WPNotice[ 'content' ]} content The notice content.
+	 * @param {Notice}                options The notice options.
 	 * @return {Promise<void>}
 	 */
 	createNotice:
@@ -1043,11 +1043,11 @@ const noticeActions = {
 			/**
 			 * Notice status.
 			 */
-			status: Notice[ 'status' ] = 'info',
+			status: WPNotice[ 'status' ] = 'info',
 			/**
 			 * Notice content.
 			 */
-			content: Notice[ 'content' ] = '',
+			content: WPNotice[ 'content' ] = '',
 			/**
 			 * Notice options.
 			 */

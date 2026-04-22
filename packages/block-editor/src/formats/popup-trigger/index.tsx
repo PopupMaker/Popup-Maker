@@ -34,7 +34,7 @@ type Props = {
 const title = __( 'Popup Trigger', 'popup-maker' );
 export const name = `popup-maker/popup-trigger`;
 
-export const TriggerEdit = withSpokenMessages(
+export const TriggerEdit: React.ComponentType< Props > = withSpokenMessages(
 	( {
 		isActive,
 		activeAttributes,
@@ -42,7 +42,7 @@ export const TriggerEdit = withSpokenMessages(
 		onChange,
 		onFocus,
 		contentRef,
-	}: Props ) => {
+	}: Props ): JSX.Element => {
 		const [ addingTrigger, setAddingTrigger ] =
 			useState< boolean >( false );
 

@@ -17,7 +17,9 @@ type Props = {
 	[ key: string ]: any;
 };
 
-const Suggestion = forwardRef< HTMLButtonElement, Props >(
+const Suggestion: React.ForwardRefExoticComponent<
+	Props & React.RefAttributes< HTMLButtonElement >
+> = forwardRef< HTMLButtonElement, Props >(
 	(
 		{
 			icon,
@@ -31,7 +33,7 @@ const Suggestion = forwardRef< HTMLButtonElement, Props >(
 			...buttonProps
 		},
 		ref
-	) => {
+	): JSX.Element => {
 		return (
 			<Button
 				type="button"

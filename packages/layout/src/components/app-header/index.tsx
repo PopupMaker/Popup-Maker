@@ -27,7 +27,7 @@ export const AppHeader = ( {
 	supportMenuItems = [],
 	showSupport = true,
 	adminUrl = '',
-}: AppHeaderProps ) => {
+}: AppHeaderProps ): JSX.Element => {
 	const btnRef = useRef< HTMLButtonElement | null >( null );
 	const { assetsUrl } = window.popupMaker.globalVars;
 	// Default support menu items

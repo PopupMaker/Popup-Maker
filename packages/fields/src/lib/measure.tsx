@@ -12,7 +12,7 @@ const MeasureField = ( {
 	onChange,
 	units,
 	...fieldProps
-}: WithOnChange< MeasureFieldProps > ) => {
+}: WithOnChange< MeasureFieldProps > ): JSX.Element => {
 	const number = value ? parseInt( value ) : '';
 
 	const [ state, setState ] = useState( {

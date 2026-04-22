@@ -3,7 +3,7 @@
  */
 import { SVG, Path, G, Defs, Rect } from '@wordpress/primitives';
 
-const LockedUser = (
+const LockedUser: JSX.Element = (
 	<SVG
 		xmlns="http://www.w3.org/2000/svg"
 		viewBox="0 0 25 24"

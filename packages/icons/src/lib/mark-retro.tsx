@@ -1,6 +1,6 @@
 import { SVG, Path } from '@wordpress/primitives';
 
-const MarkRetro = (
+const MarkRetro: JSX.Element = (
 	<SVG
 		viewBox="0 0 106 84"
 		fill="none"

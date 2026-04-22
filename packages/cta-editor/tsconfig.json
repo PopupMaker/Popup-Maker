@@ -4,6 +4,7 @@
 		"rootDir": "src",
 		"outDir": "build",
 		"declarationDir": "build-types",
+		"types": [ "node" ],
 		"paths": {
 			"@popup-maker/components": [ "../components/src" ],
 			"@popup-maker/core-data": [ "../core-data/src" ],

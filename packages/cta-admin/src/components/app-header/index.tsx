@@ -18,7 +18,7 @@ type Props = {
 	tabs: TabComponent[];
 };
 
-const Header = ( { tabs }: Props ) => {
+const Header = ( { tabs }: Props ): JSX.Element => {
 	const { assetsUrl, adminUrl } = getGlobalVars();
 
 	const [ view = 'callToActions', setView ] = useQueryParam(

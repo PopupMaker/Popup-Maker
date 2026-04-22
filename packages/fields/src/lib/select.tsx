@@ -58,7 +58,7 @@ const SelectField = ( {
 	...fieldProps
 }:
 	| WithOnChange< SelectFieldProps >
-	| WithOnChange< MultiselectFieldProps > ) => {
+	| WithOnChange< MultiselectFieldProps > ): JSX.Element => {
 	const { multiple = false } = fieldProps;
 
 	const options = fieldProps.options ?? {};

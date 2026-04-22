@@ -11,7 +11,7 @@ const CheckboxField = ( {
 	onChange,
 	label,
 	...fieldProps
-}: WithOnChange< CheckboxFieldProps > ) => {
+}: WithOnChange< CheckboxFieldProps > ): JSX.Element => {
 	const toggle = false;
 
 	if ( ! toggle ) {

@@ -11,7 +11,7 @@ import type { EditorHeaderOptionsContext } from '../../registry';
 const DeleteEditorHeaderOption = ( {
 	values,
 	closeModal,
-}: EditorHeaderOptionsContext ) => {
+}: EditorHeaderOptionsContext ): JSX.Element => {
 	const [ forceDelete, setForceDelete ] = useState( false );
 	const forceDeleteRef = useRef( forceDelete ); // Add ref to track current value
 	const [ confirm, setConfirm ] = useState< {

@@ -11,7 +11,7 @@ const TokenSelectField = ( {
 	multiple = false,
 	placeholder = __( 'Search', 'popup-maker' ),
 	options = {},
-}: WithOnChange< TokenSelectFieldProps > ) => {
+}: WithOnChange< TokenSelectFieldProps > ): JSX.Element => {
 	const [ inputText, setInputText ] = useState( '' );
 
 	const values = ( () => {

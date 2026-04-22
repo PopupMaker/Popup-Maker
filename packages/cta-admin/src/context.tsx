@@ -81,14 +81,19 @@ const defaultContext: ListContext = {
 
 const Context = createContext< ListContext >( defaultContext );
 
-const { Provider, Consumer } = Context as React.Context< ListContext >;
+const TypedContext = Context as React.Context< ListContext >;
+const Provider: React.Provider< ListContext > = TypedContext.Provider;
+const Consumer: React.Consumer< ListContext > = TypedContext.Consumer;
 
 type ProviderProps = {
 	value?: Partial< ListContext >;
 	children: React.ReactNode;
 };
 
-export const ListProvider = ( { value = {}, children }: ProviderProps ) => {
+export const ListProvider = ( {
+	value = {},
+	children,
+}: ProviderProps ): JSX.Element => {
 	const [ bulkSelection, setBulkSelection ] = useState< number[] >( [] );
 
 	// Allow setting sort config from query params.

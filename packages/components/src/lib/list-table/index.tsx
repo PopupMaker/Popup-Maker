@@ -61,7 +61,7 @@ const ListTable = < T extends TableItemBase >( {
 	onSelectItems = () => {},
 	onSort,
 	initialSort,
-}: Props< T > ) => {
+}: Props< T > ): JSX.Element => {
 	const cols = { [ idCol ]: columns[ idCol ] ?? '', ...columns };
 	const colCount = Object.keys( cols ).length;
 

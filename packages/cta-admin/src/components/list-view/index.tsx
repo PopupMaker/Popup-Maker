@@ -15,7 +15,7 @@ import {
 /**
  * Generates the Call To Actions tab component & sub-app.
  */
-const CallToActionsView = () => {
+const CallToActionsView = (): JSX.Element => {
 	const { permissions = { edit_ctas: false } } = getGlobalVars();
 	const { edit_ctas: userCanEditCallToActions } = permissions;
 

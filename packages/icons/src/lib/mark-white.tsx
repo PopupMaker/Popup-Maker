@@ -3,7 +3,7 @@
  */
 import { SVG, Path } from '@wordpress/primitives';
 
-const MarkWhite = (
+const MarkWhite: JSX.Element = (
 	<SVG
 		viewBox="0 0 179 179"
 		fill="none"

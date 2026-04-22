@@ -8,7 +8,7 @@ import type { EditorHeaderActionContext } from '../../registry';
 
 const StatusEditorHeaderAction = ( {
 	values,
-}: EditorHeaderActionContext< EditableCta > ) => {
+}: EditorHeaderActionContext< EditableCta > ): JSX.Element => {
 	const isSaving = useSelect(
 		( select ) =>
 			select( callToActionStore ).isResolving( 'updateCallToAction' ),

@@ -6,7 +6,7 @@ import { callToActionStore } from '@popup-maker/core-data';
 
 import { useEditor } from '@popup-maker/cta-editor';
 
-const Header = () => {
+const Header = (): JSX.Element => {
 	const { setEditorId } = useEditor();
 
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
@@ -34,7 +34,7 @@ const Header = () => {
 					<Spinner />
 				) : (
 					sprintf(
-						/* translators: 1. Number of items */
+						/* translators: %d: number of items. */
 						_n( '%d item', '%d items', count, 'popup-maker' ),
 						count
 					)

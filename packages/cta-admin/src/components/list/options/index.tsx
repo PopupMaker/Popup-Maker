@@ -7,7 +7,7 @@ import { Button, Dropdown, NavigableMenu } from '@wordpress/components';
 
 import { useListOptions } from '../../../registry';
 
-const ListOptions = () => {
+const ListOptions = (): JSX.Element | null => {
 	const listOptionsBtnRef = useRef< HTMLButtonElement >();
 	const lastGroup = useRef< string | undefined >( undefined );
 	const [ isOpen, setIsOpen ] = useState( false );

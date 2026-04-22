@@ -36,7 +36,7 @@ const ObjectSelectField = ( {
 	| PostSelectFieldProps
 	| TaxonomySelectFieldProps
 	| UserSelectFieldProps
-> ) => {
+> ): JSX.Element => {
 	const [ queryText, setQueryText ] = useState( '' );
 	const [ usePopupMakerAPI, setUsePopupMakerAPI ] = useState( false );
 	const [ apiData, setApiData ] = useState< {

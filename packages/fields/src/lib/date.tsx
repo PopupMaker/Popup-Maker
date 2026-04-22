@@ -6,7 +6,7 @@ const DateField = ( {
 	value,
 	onChange,
 	...fieldProps
-}: WithOnChange< DateFieldProps > ) => {
+}: WithOnChange< DateFieldProps > ): JSX.Element => {
 	return (
 		<>
 			<BaseControl

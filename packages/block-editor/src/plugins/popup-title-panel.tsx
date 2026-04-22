@@ -50,7 +50,7 @@ function setupSaveSubscription() {
 	let wasSaving = false;
 
 	subscribe( () => {
-		const editor = select( 'core/editor' ) as EditorStore;
+		const editor = select( 'core/editor' ) as unknown as EditorStore;
 
 		const isSaving = editor.isSavingPost();
 		const isAutosaving = editor.isAutosavingPost();
@@ -78,7 +78,14 @@ function setupSaveSubscription() {
 				.catch( ( error ) => {
 					// eslint-disable-next-line no-console
 					console.error( 'Failed to save popup title:', error );
-					dispatch( 'core/notices' ).createErrorNotice(
+					(
+						dispatch( 'core/notices' ) as unknown as {
+							createErrorNotice: (
+								content: string,
+								options: { type: string }
+							) => void;
+						}
+					 ).createErrorNotice(
 						__( 'Failed to save popup title.', 'popup-maker' ),
 						{ type: 'snackbar' }
 					);
@@ -90,7 +97,7 @@ function setupSaveSubscription() {
 /**
  * Popup Title Panel Component.
  */
-const PopupTitlePanel = () => {
+const PopupTitlePanel = (): JSX.Element | null => {
 	const [ localTitle, setLocalTitle ] = useState( '' );
 	const [ isInitialized, setIsInitialized ] = useState( false );
 
@@ -151,7 +158,6 @@ const PopupTitlePanel = () => {
 
 registerPlugin( 'popup-maker-title-panel', {
 	render: PopupTitlePanel,
-	icon: null,
 } );
 
 export default PopupTitlePanel;

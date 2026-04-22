@@ -9,7 +9,7 @@ import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
 import { useList } from '../../context';
 import { callToActionStore } from '@popup-maker/core-data';
 
-const TrashBulkAction = () => {
+const TrashBulkAction = (): JSX.Element | null => {
 	const [ confirm, setConfirm ] = useState< {
 		message: string;
 		callback: () => void;
@@ -61,7 +61,7 @@ const TrashBulkAction = () => {
 					setConfirm( {
 						isDestructive: true,
 						message: sprintf(
-							// translators: 1. number of items
+							// translators: %d: number of items.
 							__(
 								'Are you sure you want to trash %d items?',
 								'popup-maker'
@@ -82,7 +82,7 @@ const TrashBulkAction = () => {
 								createNotice(
 									'success',
 									sprintf(
-										// translators: 1. number of items
+										// translators: %d: number of items.
 										_n(
 											'%d call to action moved to trash.',
 											'%d call to actions moved to trash.',

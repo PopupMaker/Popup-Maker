@@ -16,7 +16,7 @@ export const TypeFilter = ( {
 	onClose,
 	items,
 	filteredItems,
-}: ListFilterContext< TypeFilterKey, TypeFilterValue > ) => {
+}: ListFilterContext< TypeFilterKey, TypeFilterValue > ): JSX.Element => {
 	const [ isOpen, setIsOpen ] = useState( false );
 	const buttonRef = useRef< HTMLButtonElement >( null );
 

@@ -16,7 +16,7 @@ const EditorHeaderOptions = ( {
 }: {
 	values: EditableCta;
 	closeModal: () => void;
-} ) => {
+} ): JSX.Element => {
 	const lastGroup = useRef< string | undefined >( undefined );
 	const btnRef = useRef< HTMLButtonElement >();
 	const clickOffTimerRef = useRef< NodeJS.Timeout | null >( null );

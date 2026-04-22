@@ -70,7 +70,7 @@ const FieldComponent = ( fieldProps: FieldPropsWithOnChange ): JSX.Element => {
 	return (
 		<>
 			{ sprintf(
-				/* translators: 1. type of field not found. */
+				/* translators: %s: field type that was not found. */
 				__( 'Field type `%s` not found', 'popup-maker' ),
 				type
 			) }
@@ -78,7 +78,7 @@ const FieldComponent = ( fieldProps: FieldPropsWithOnChange ): JSX.Element => {
 	);
 };
 
-const Field = ( props: FieldPropsWithOnChange ) => {
+const Field = ( props: FieldPropsWithOnChange ): JSX.Element => {
 	const { type, className, onChange } = props;
 
 	return (
