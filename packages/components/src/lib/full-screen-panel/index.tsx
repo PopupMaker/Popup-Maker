@@ -7,7 +7,7 @@ type FullScreenPanelProps = {
 	children: React.ReactNode;
 };
 
-const FullScreenPanel = ( props: FullScreenPanelProps ) => {
+const FullScreenPanel = ( props: FullScreenPanelProps ): JSX.Element => {
 	const { className, children } = props;
 
 	const [ isFull, setIsFull ] = useState( false );

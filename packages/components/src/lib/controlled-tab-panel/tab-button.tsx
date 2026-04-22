@@ -16,7 +16,7 @@ const TabButton = ( {
 	children,
 	selected,
 	...rest
-}: Props ) => (
+}: Props ): JSX.Element => (
 	<Button
 		role="tab"
 		tabIndex={ selected ? undefined : -1 }

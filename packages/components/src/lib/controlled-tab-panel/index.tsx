@@ -98,4 +98,7 @@ const TabPanel = ( {
 	);
 };
 
-export default withInstanceId( TabPanel );
+const ControlledTabPanel: React.ComponentType< Omit< Props, 'instanceId' > > =
+	withInstanceId( TabPanel );
+
+export default ControlledTabPanel;

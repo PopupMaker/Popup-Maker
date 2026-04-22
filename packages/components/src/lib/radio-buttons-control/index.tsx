@@ -34,7 +34,7 @@ const RadioButtonControl = < T extends string | number = string | number >( {
 	equalWidth = false,
 	spacing,
 	hideLabelFromVision = false,
-}: Props< T > ) => {
+}: Props< T > ): JSX.Element => {
 	const instanceId = useInstanceId( RadioButtonControl );
 
 	return (

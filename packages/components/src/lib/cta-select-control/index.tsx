@@ -29,7 +29,7 @@ const CallToActionSelectControl = <
 	placeholder,
 	multiple = false,
 	...inputProps
-}: Props< T > ) => {
+}: Props< T > ): JSX.Element => {
 	const [ queryText, setQueryText ] = useState( '' );
 
 	const updateQueryText = useDebounce( ( text: string ) => {

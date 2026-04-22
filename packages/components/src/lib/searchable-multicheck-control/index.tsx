@@ -33,7 +33,7 @@ const SearchableMulticheckControl = < T extends string | number >( {
 	options = [],
 	onChange = () => {},
 	className = '',
-}: Props< T > ) => {
+}: Props< T > ): JSX.Element => {
 	const instanceId = useInstanceId( SearchableMulticheckControl );
 
 	const [ searchText, setSearchText ] = useState< string >( '' );
