@@ -86,6 +86,64 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 		dismiss( notification.code, action.action || 'dismiss' );
 	};
 
+	// Legacy notices (review_request, etc.) embed action links inside
+	// their `message` / `html` fields with class="pum-dismiss" and
+	// data-reason="...". The old admin-bar JS handler is scoped to a
+	// DOM container we don't render, so we wire these through our own
+	// dismiss flow here.
+	const handleLegacyClick = (
+		e: React.MouseEvent< HTMLDivElement >
+	): void => {
+		const target = e.target as HTMLElement | null;
+		const anchor = target?.closest?.( 'a' ) as HTMLAnchorElement | null;
+		if ( ! anchor ) {
+			return;
+		}
+
+		const isDismiss = anchor.classList.contains( 'pum-dismiss' );
+		const href = anchor.getAttribute( 'href' ) || '';
+
+		if ( isDismiss ) {
+			// Let "Ok, you deserve it" and similar external-destination
+			// dismiss links navigate (they go to wordpress.org review
+			// page in a new tab) while still recording the dismissal.
+			const reason = anchor.dataset.reason || 'maybe_later';
+			if ( href && href !== '#' ) {
+				// Fire dismiss in the background; let native nav happen.
+				dismiss( notification.code, reason );
+			} else {
+				e.preventDefault();
+				dismiss( notification.code, reason );
+			}
+			return;
+		}
+
+		// Non-dismiss anchors: native nav, nothing to do.
+	};
+
+	// Post-render: normalize links inside legacy body fields. External
+	// HTTP(S) links get target=_blank + rel="noopener noreferrer" so
+	// they never unload the admin page.
+	const bodyRef = useRef< HTMLElement | null >( null );
+	useEffect( () => {
+		const anchors = document.querySelectorAll< HTMLAnchorElement >(
+			`[data-code="${ CSS.escape( notification.code ) }"] .pum-notification-item__body a`
+		);
+		anchors.forEach( ( a ) => {
+			const href = a.getAttribute( 'href' ) || '';
+			const isExternal = /^https?:\/\//i.test( href );
+			if ( isExternal && ! a.hasAttribute( 'target' ) ) {
+				a.setAttribute( 'target', '_blank' );
+			}
+			if ( isExternal && ! a.hasAttribute( 'rel' ) ) {
+				a.setAttribute( 'rel', 'noopener noreferrer' );
+			}
+		} );
+	}, [ notification.code, notification.message, notification.html ] );
+
+	// Silence unused-var lint; ref is kept for future per-item scoping.
+	void bodyRef;
+
 	const iconSlug =
 		notification.icon ||
 		CATEGORY_ICONS[ notification.category ] ||
@@ -150,13 +208,21 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 				/>
 			) }
 
-			{ ( notification.message || notification.html ) && (
+			{ notification.message && (
 				<div
 					className="pum-notification-item__body"
+					onClick={ handleLegacyClick }
 					// eslint-disable-next-line react/no-danger
-					dangerouslySetInnerHTML={ renderHTML(
-						notification.message || notification.html
-					) }
+					dangerouslySetInnerHTML={ renderHTML( notification.message ) }
+				/>
+			) }
+
+			{ notification.html && (
+				<div
+					className="pum-notification-item__body pum-notification-item__body--legacy"
+					onClick={ handleLegacyClick }
+					// eslint-disable-next-line react/no-danger
+					dangerouslySetInnerHTML={ renderHTML( notification.html ) }
 				/>
 			) }
 
