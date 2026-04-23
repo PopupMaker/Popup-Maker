@@ -242,9 +242,10 @@ class PUM_Utils_Alerts {
 		if ( ! empty( $suggest_string ) ) {
 			$alerts[] = [
 				'code'     => $code,
+				'title'    => '🌍 ' . __( 'Help translate Popup Maker', 'popup-maker' ),
 				'message'  => $suggest_string,
 				'type'     => 'info',
-				'category' => 'announcement',
+				'category' => 'recommendation',
 			];
 		}
 
@@ -409,15 +410,6 @@ class PUM_Utils_Alerts {
 		$global_only = ! pum_is_admin_page();
 
 		$alerts = $global_only ? self::get_global_alerts() : self::get_alerts();
-
-		// Only render inline alerts that are blocking: errors, warnings, or marked global.
-		// Everything else surfaces via the notifications panel to avoid admin header noise.
-		$alerts = array_values( array_filter( $alerts, function ( $alert ) {
-			$type    = isset( $alert['type'] ) ? (string) $alert['type'] : 'info';
-			$is_bad  = in_array( $type, [ 'error', 'warning' ], true );
-			$is_glob = ! empty( $alert['global'] );
-			return $is_bad || $is_glob;
-		} ) );
 
 		$count = count( $alerts );
 
