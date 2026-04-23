@@ -25,10 +25,13 @@ class PUM_Telemetry {
 	 */
 	public static function init() {
 		add_action( 'pum_daily_scheduled_events', [ __CLASS__, 'track_check' ] );
-		if ( is_admin() && current_user_can( 'manage_options' ) ) {
-			add_filter( 'pum_alert_list', [ __CLASS__, 'optin_alert' ] );
-			add_action( 'pum_alert_dismissed', [ __CLASS__, 'optin_alert_check' ], 10, 2 );
-		}
+		// Register the alert filter unconditionally — the alert itself
+		// is gated by `should_show_alert()` (capability + install age).
+		// Restricting to is_admin() meant the WP REST `pum_alert_list`
+		// surface didn't see this alert, so the notifications panel
+		// showed "all caught up" while the sidebar [!] kept counting it.
+		add_filter( 'pum_alert_list', [ __CLASS__, 'optin_alert' ] );
+		add_action( 'pum_alert_dismissed', [ __CLASS__, 'optin_alert_check' ], 10, 2 );
 	}
 
 	/**
@@ -258,8 +261,10 @@ class PUM_Telemetry {
 
 		$alerts[] = [
 			'code'        => 'pum_telemetry_notice',
+			'title'       => '📊 ' . __( 'Help us make Popup Maker better', 'popup-maker' ),
 			'type'        => 'info',
-			'message'     => esc_html__( "We are constantly improving Popup Maker but that's difficult to do if we don't know how it's being used. Please allow data sharing so that we can receive a little information on how it is used. You can change this setting at any time on our Settings page. No user data is sent to our servers. No sensitive data is tracked.", 'popup-maker' ),
+			'category'    => 'recommendation',
+			'message'     => esc_html__( "Help us prioritize the features that matter most by sharing anonymous usage stats. No visitor data or popup content is ever collected.", 'popup-maker' ),
 			'priority'    => 10,
 			'dismissible' => true,
 			'global'      => false,
