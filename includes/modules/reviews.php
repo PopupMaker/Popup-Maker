@@ -30,6 +30,46 @@ class PUM_Modules_Reviews {
 	public static function init() {
 		add_filter( 'pum_alert_list', [ __CLASS__, 'review_alert' ] );
 		add_action( 'wp_ajax_pum_review_action', [ __CLASS__, 'ajax_handler' ] );
+		// Bridge the modern notification panel's dismiss flow into the
+		// legacy review trigger state. Without this, dismissing the
+		// review notice through the panel records nothing on this side
+		// and the notice reappears on the next page load.
+		add_action( 'pum_alert_dismissed', [ __CLASS__, 'on_panel_dismiss' ], 10, 2 );
+	}
+
+	/**
+	 * Map panel dismiss reasons onto legacy review state.
+	 *
+	 * @param string $code   Alert code that was dismissed.
+	 * @param string $reason Action / reason key.
+	 * @return void
+	 */
+	public static function on_panel_dismiss( $code, $reason = '' ) {
+		if ( 'review_request' !== $code ) {
+			return;
+		}
+
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			return;
+		}
+
+		// Always record dismissal of the current trigger so a later page
+		// load doesn't immediately re-show the same one.
+		$dismissed_triggers                              = self::dismissed_triggers();
+		$dismissed_triggers[ self::get_trigger_group() ] = self::get_current_trigger( 'pri' );
+		update_user_meta( $user_id, '_pum_reviews_dismissed_triggers', $dismissed_triggers );
+		update_user_meta( $user_id, '_pum_reviews_last_dismissed', current_time( 'mysql' ) );
+
+		switch ( $reason ) {
+			case 'am_now':
+			case 'already_did':
+				self::already_did( true );
+				break;
+			case 'never':
+				self::already_did( true );
+				break;
+		}
 	}
 
 	/**
@@ -350,10 +390,12 @@ class PUM_Modules_Reviews {
 		$html = ob_get_clean();
 
 		$alerts[] = [
-			'code'    => 'review_request',
-			'message' => '<strong>' . $trigger['message'] . '<br />~ danieliser</strong>',
-			'html'    => $html,
-			'type'    => 'success',
+			'code'     => 'review_request',
+			'title'    => '⭐ ' . __( 'Love Popup Maker? Leave a 5-star review!', 'popup-maker' ),
+			'message'  => '<strong>' . $trigger['message'] . '<br />~ danieliser</strong>',
+			'html'     => $html,
+			'type'     => 'success',
+			'category' => 'recommendation',
 		];
 
 		return $alerts;
