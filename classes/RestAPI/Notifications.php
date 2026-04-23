@@ -254,6 +254,17 @@ class Notifications extends WP_REST_Controller {
 			}
 		}
 
+		// Legacy fallback: admin-bar notices (review_request, etc.) embed
+		// dismiss links in their `html` field with data-reason values
+		// rather than declaring `actions[]`. Accept the known-safe set
+		// and forward the reason through to `pum_alert_dismissed` so
+		// provider-side handlers (review_request tracking, etc.) still
+		// run. Unknown actions still reject.
+		$legacy_reasons = [ 'dismiss', 'maybe_later', 'already_did', 'am_now', 'never' ];
+		if ( in_array( $action, $legacy_reasons, true ) ) {
+			return '';
+		}
+
 		return false;
 	}
 
@@ -271,6 +282,15 @@ class Notifications extends WP_REST_Controller {
 		$title_raw   = isset( $alert['title'] ) ? (string) $alert['title'] : '';
 		$message_raw = isset( $alert['message'] ) ? (string) $alert['message'] : '';
 		$html_raw    = isset( $alert['html'] ) ? (string) $alert['html'] : '';
+
+		// Strip <script>, <style>, and HTML comments BEFORE kses. Without
+		// this, kses removes the tags but leaves the body content as
+		// visible text — legacy admin-bar notices (review_request, etc.)
+		// embed nonce/UUID setup inside <script> blocks that would
+		// otherwise leak into the panel as raw JavaScript text.
+		$title_raw   = self::strip_executable_blocks( $title_raw );
+		$message_raw = self::strip_executable_blocks( $message_raw );
+		$html_raw    = self::strip_executable_blocks( $html_raw );
 
 		/*
 		 * Sanitize HTML server-side via wp_kses before it leaves the API
@@ -360,28 +380,89 @@ class Notifications extends WP_REST_Controller {
 	 * providers. Filterable so Pro/Pro+ can add back any safe tags they
 	 * legitimately need for richer provider content.
 	 *
+	 * Strip executable / non-renderable blocks (script, style, HTML
+	 * comments) along with their content before kses. wp_kses removes
+	 * disallowed tags but leaves the body text — this would leak inline
+	 * JavaScript or CSS as visible text in the panel. Run this BEFORE
+	 * kses on any field that may contain legacy admin-bar HTML.
+	 *
+	 * @param string $html Raw HTML from a provider.
+	 * @return string Cleaned HTML safe to pass to wp_kses.
+	 */
+	protected static function strip_executable_blocks( $html ) {
+		if ( '' === $html ) {
+			return $html;
+		}
+		// Order matters: strip elements with body first, then comments.
+		$html = preg_replace( '#<script\b[^>]*>.*?</script>#is', '', $html );
+		$html = preg_replace( '#<style\b[^>]*>.*?</style>#is', '', $html );
+		$html = preg_replace( '#<!--.*?-->#s', '', $html );
+		return is_string( $html ) ? $html : '';
+	}
+
+	/**
 	 * @return array<string,array<string,bool>>
 	 */
 	protected static function panel_allowed_tags() {
 		$tags = [
 			'a'      => [
-				'href'   => true,
-				'title'  => true,
-				'target' => true,
-				'rel'    => true,
+				'href'        => true,
+				'title'       => true,
+				'target'      => true,
+				'rel'         => true,
+				// Allow class + data-* so legacy admin-bar notices can
+				// declare their own dismiss/action handlers (e.g. the
+				// review_request notice's `class="pum-dismiss"` +
+				// `data-reason="..."` anchors).
+				'class'       => true,
+				'data-reason' => true,
+				'data-action' => true,
 			],
 			'strong' => [],
 			'b'      => [],
 			'em'     => [],
 			'i'      => [],
 			'br'     => [],
-			'p'      => [],
+			'p'      => [
+				'class' => true,
+			],
 			'span'   => [
 				'class' => true,
 			],
-			'ul'     => [],
-			'ol'     => [],
-			'li'     => [],
+			'ul'     => [
+				'class' => true,
+			],
+			'ol'     => [
+				'class' => true,
+			],
+			'li'     => [
+				'class' => true,
+			],
+			'h1'     => [
+				'class' => true,
+			],
+			'h2'     => [
+				'class' => true,
+			],
+			'h3'     => [
+				'class' => true,
+			],
+			'h4'     => [
+				'class' => true,
+			],
+			'h5'     => [
+				'class' => true,
+			],
+			'div'    => [
+				'class' => true,
+			],
+			'img'    => [
+				'src'    => true,
+				'alt'    => true,
+				'class'  => true,
+				'width'  => true,
+				'height' => true,
+			],
 			'code'   => [],
 		];
 
