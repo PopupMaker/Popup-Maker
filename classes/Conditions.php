@@ -226,8 +226,10 @@ class PUM_Conditions {
 				continue;
 			}
 
+			$post_type_conditions = [];
+
 			if ( $post_type->has_archive ) {
-				$conditions[ $name . '_index' ] = [
+				$post_type_conditions[ $name . '_index' ] = [
 					'group'    => $post_type->labels->name,
 					'name'     => sprintf(
 						/* translators: 1. Post type plural label. */
@@ -239,7 +241,7 @@ class PUM_Conditions {
 				];
 			}
 
-			$conditions[ $name . '_all' ] = [
+			$post_type_conditions[ $name . '_all' ] = [
 				'group'    => $post_type->labels->name,
 				'name'     => sprintf(
 					/* translators: 1. Post type plural label. */
@@ -249,7 +251,7 @@ class PUM_Conditions {
 				'callback' => [ 'PUM_ConditionCallbacks', 'post_type' ],
 			];
 
-			$conditions[ $name . '_selected' ] = [
+			$post_type_conditions[ $name . '_selected' ] = [
 				'group'    => $post_type->labels->name,
 				'name'     => sprintf(
 					/* translators: 1. Post type plural label. */
@@ -273,7 +275,7 @@ class PUM_Conditions {
 				'callback' => [ 'PUM_ConditionCallbacks', 'post_type' ],
 			];
 
-			$conditions[ $name . '_ID' ] = [
+			$post_type_conditions[ $name . '_ID' ] = [
 				'group'    => $post_type->labels->name,
 				'name'     => sprintf(
 					/* translators: 1. Post type plural label. */
@@ -294,7 +296,7 @@ class PUM_Conditions {
 			];
 
 			if ( is_post_type_hierarchical( $name ) ) {
-				$conditions[ $name . '_children' ] = [
+				$post_type_conditions[ $name . '_children' ] = [
 					'group'    => $post_type->labels->name,
 					'name'     => sprintf(
 						/* translators: 1. Post type plural label. */
@@ -317,7 +319,7 @@ class PUM_Conditions {
 					'callback' => [ 'PUM_ConditionCallbacks', 'post_type' ],
 				];
 
-				$conditions[ $name . '_ancestors' ] = [
+				$post_type_conditions[ $name . '_ancestors' ] = [
 					'group'    => $post_type->labels->name,
 					'name'     => sprintf(
 						/* translators: 1. Post type plural label. */
@@ -344,7 +346,7 @@ class PUM_Conditions {
 			$templates = wp_get_theme()->get_page_templates();
 
 			if ( 'page' === $name && ! empty( $templates ) ) {
-				$conditions[ $name . '_template' ] = [
+				$post_type_conditions[ $name . '_template' ] = [
 					'group'    => $post_type->labels->name,
 					'name'     => sprintf(
 						/* translators: 1. Post type plural label. */
@@ -364,7 +366,22 @@ class PUM_Conditions {
 				];
 			}
 
-			$conditions = array_merge( $conditions, $this->generate_post_type_tax_conditions( $name ) );
+			$post_type_conditions = array_merge( $post_type_conditions, $this->generate_post_type_tax_conditions( $name ) );
+
+			/**
+			 * Filters generated conditions for a specific post type.
+			 *
+			 * This runs once per post type during condition registration and allows
+			 * extensions to append post type specific conditions without duplicating
+			 * the core post type loop.
+			 *
+			 * @param array        $post_type_conditions Generated conditions for this post type.
+			 * @param string       $name                 Post type name.
+			 * @param \WP_Post_Type $post_type            Post type object.
+			 */
+			$post_type_conditions = apply_filters( 'popup_maker/post_type_conditions', $post_type_conditions, $name, $post_type );
+
+			$conditions = array_merge( $conditions, $post_type_conditions );
 		}
 
 		return $conditions;
@@ -384,8 +401,10 @@ class PUM_Conditions {
 				$taxonomy = get_taxonomy( $tax_name );
 			}
 
+			$taxonomy_conditions = [];
+
 			/* @var WP_Taxonomy[] $taxonomy */
-			$conditions[ $name . '_w_' . $tax_name ] = [
+			$taxonomy_conditions[ $name . '_w_' . $tax_name ] = [
 				'group'    => $post_type->labels->name,
 				'name'     => sprintf(
 					/* translators: 1. Post type plural label, 2. Taxonomy singular label. */
@@ -408,6 +427,19 @@ class PUM_Conditions {
 				],
 				'callback' => [ 'PUM_ConditionCallbacks', 'post_type_tax' ],
 			];
+
+			/**
+			 * Filters generated post type taxonomy conditions.
+			 *
+			 * @param array        $taxonomy_conditions Generated conditions for this taxonomy + post type pair.
+			 * @param string       $name                Post type name.
+			 * @param \WP_Post_Type $post_type           Post type object.
+			 * @param string       $tax_name            Taxonomy name.
+			 * @param \WP_Taxonomy $taxonomy            Taxonomy object.
+			 */
+			$taxonomy_conditions = apply_filters( 'popup_maker/post_type_tax_conditions', $taxonomy_conditions, $name, $post_type, $tax_name, $taxonomy );
+
+			$conditions = array_merge( $conditions, $taxonomy_conditions );
 		}
 
 		return $conditions;
@@ -423,7 +455,9 @@ class PUM_Conditions {
 		$taxonomies = get_taxonomies( [ 'public' => true ], 'objects' );
 
 		foreach ( $taxonomies as $tax_name => $taxonomy ) {
-			$conditions[ 'tax_' . $tax_name . '_all' ] = [
+			$taxonomy_conditions = [];
+
+			$taxonomy_conditions[ 'tax_' . $tax_name . '_all' ] = [
 				'group'    => $taxonomy->labels->name,
 				'name'     => sprintf(
 					/* translators: 1. Taxonomy plural label. */
@@ -433,7 +467,7 @@ class PUM_Conditions {
 				'callback' => [ 'PUM_ConditionCallbacks', 'taxonomy' ],
 			];
 
-			$conditions[ 'tax_' . $tax_name . '_selected' ] = [
+			$taxonomy_conditions[ 'tax_' . $tax_name . '_selected' ] = [
 				'group'    => $taxonomy->labels->name,
 				'name'     => sprintf(
 					/* translators: 1. Taxonomy plural label. */
@@ -456,7 +490,7 @@ class PUM_Conditions {
 				'callback' => [ 'PUM_ConditionCallbacks', 'taxonomy' ],
 			];
 
-			$conditions[ 'tax_' . $tax_name . '_ID' ] = [
+			$taxonomy_conditions[ 'tax_' . $tax_name . '_ID' ] = [
 				'group'    => $taxonomy->labels->name,
 				'name'     => sprintf(
 					/* translators: 1. Taxonomy plural label. */
@@ -475,6 +509,17 @@ class PUM_Conditions {
 				],
 				'callback' => [ 'PUM_ConditionCallbacks', 'taxonomy' ],
 			];
+
+			/**
+			 * Filters generated conditions for a specific taxonomy.
+			 *
+			 * @param array        $taxonomy_conditions Generated conditions for this taxonomy.
+			 * @param string       $tax_name            Taxonomy name.
+			 * @param \WP_Taxonomy $taxonomy            Taxonomy object.
+			 */
+			$taxonomy_conditions = apply_filters( 'popup_maker/taxonomy_conditions', $taxonomy_conditions, $tax_name, $taxonomy );
+
+			$conditions = array_merge( $conditions, $taxonomy_conditions );
 		}
 
 		return $conditions;
