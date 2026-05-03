@@ -306,6 +306,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Cache webpack build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            .webpack-cache
+            .webpack-cache-legacy
+          key: webpack-cache-${{ runner.os }}-${{ hashFiles('webpack.config.js', 'webpack.old.config.js', 'pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            webpack-cache-${{ runner.os }}-${{ hashFiles('webpack.config.js', 'webpack.old.config.js', 'pnpm-lock.yaml') }}-
+            webpack-cache-${{ runner.os }}-
+
       - name: Validate dependency tree
         continue-on-error: true
         id: dep-tree
