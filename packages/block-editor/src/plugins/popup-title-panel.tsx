@@ -135,6 +135,17 @@ const PopupTitlePanel = (): JSX.Element | null => {
 		setLocalTitle( value );
 		pendingValues.title = value;
 		pendingValues.hasChanges = true;
+
+		// Also write into the editor's edited-attributes store so
+		// `select('core/editor').getEditedPostAttribute('popup_title')`
+		// returns the live (unsaved) value. Other consumers — Pro's
+		// split-test wizard, future block-editor extensions, etc. —
+		// rely on this rather than re-reading the post.
+		(
+			dispatch( 'core/editor' ) as unknown as {
+				editPost: ( edits: Record< string, unknown > ) => void;
+			}
+		 ).editPost( { popup_title: value } );
 	};
 
 	return (
