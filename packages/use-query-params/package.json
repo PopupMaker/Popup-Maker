@@ -1,10 +1,9 @@
 {
 	"name": "@popup-maker/use-query-params",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Popup Maker Use Query Params",
 	"author": "Code Atlantic",
 	"license": "GPL-2.0-or-later",
-	"private": true,
 	"keywords": [
 		"wordpress",
 		"popup-maker"
@@ -44,6 +43,7 @@
 		"react-router": "^6.0.0 || ^7.0.0"
 	},
 	"scripts": {
+		"prepublishOnly": "pnpm run build:tsc && pnpm run build:types",
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
 		"watch:tsc": "tsc -w",
