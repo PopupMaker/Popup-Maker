@@ -30,6 +30,46 @@ const CATEGORY_ICONS: Record< string, string > = {
 // via wp_kses in the REST controller before reaching this component.
 const renderHTML = ( html: string ) => ( { __html: html } );
 
+declare global {
+	interface Window {
+		pum_review_api_url?: string;
+		pum_review_uuid?: string | null;
+		pum_review_trigger?: {
+			group?: string;
+			code?: string;
+			pri?: string | number;
+		};
+	}
+}
+
+const saveDismissReviewRequest = (
+	notification: Notification,
+	reason: string
+): void => {
+	if (
+		'review_request' !== notification.code ||
+		typeof window.pum_review_api_url === 'undefined'
+	) {
+		return;
+	}
+
+	const body = new window.URLSearchParams( {
+		trigger_group: window.pum_review_trigger?.group || '',
+		trigger_code: window.pum_review_trigger?.code || '',
+		reason: reason && reason !== 'dismiss' ? reason : 'maybe_later',
+		uuid: window.pum_review_uuid || '',
+	} );
+
+	window
+		.fetch( window.pum_review_api_url, {
+			method: 'POST',
+			body,
+			keepalive: true,
+			credentials: 'omit',
+		} )
+		.catch( () => {} );
+};
+
 interface Props {
 	notification: Notification;
 }
@@ -108,6 +148,11 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 			// dismiss links navigate (they go to wordpress.org review
 			// page in a new tab) while still recording the dismissal.
 			const reason = anchor.dataset.reason || 'maybe_later';
+
+			if ( 'review_request' === notification.code ) {
+				saveDismissReviewRequest( notification, reason );
+			}
+
 			if ( href && href !== '#' ) {
 				// Fire dismiss in the background; let native nav happen.
 				dismiss( notification.code, reason );
@@ -115,7 +160,6 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 				e.preventDefault();
 				dismiss( notification.code, reason );
 			}
-			return;
 		}
 
 		// Non-dismiss anchors: native nav, nothing to do.

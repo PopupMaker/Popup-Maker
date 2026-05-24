@@ -31,10 +31,48 @@ class PUM_Utils_Alerts {
 	/**
 	 * Gets a count of current alerts.
 	 *
+	 * Panel-eligible alerts are excluded — they render in the React
+	 * notifications panel instead of the legacy admin notice.
+	 *
 	 * @return int
 	 */
 	public static function alert_count() {
-		return count( self::get_alerts() );
+		$alerts = array_filter(
+			self::get_alerts(),
+			static function ( $alert ) {
+				return ! self::is_panel_eligible( $alert );
+			}
+		);
+
+		return count( $alerts );
+	}
+
+	/**
+	 * Whether an alert belongs in the React notifications panel rather
+	 * than the legacy `admin_notices` block.
+	 *
+	 * Blocking alerts (`type: error|warning`) and `global` alerts stay
+	 * in the legacy renderer because they need to interrupt the user
+	 * inline. Everything else is considered panel content.
+	 *
+	 * @param array<string,mixed> $alert Alert definition.
+	 * @return bool
+	 */
+	public static function is_panel_eligible( $alert ) {
+		if ( ! is_array( $alert ) ) {
+			return false;
+		}
+
+		$type = isset( $alert['type'] ) ? (string) $alert['type'] : 'info';
+		if ( in_array( $type, [ 'error', 'warning' ], true ) ) {
+			return false;
+		}
+
+		if ( ! empty( $alert['global'] ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -410,6 +448,17 @@ class PUM_Utils_Alerts {
 		$global_only = ! pum_is_admin_page();
 
 		$alerts = $global_only ? self::get_global_alerts() : self::get_alerts();
+
+		// Drop alerts that are now surfaced in the React notifications
+		// panel so they don't double-render here.
+		$alerts = array_values(
+			array_filter(
+				$alerts,
+				static function ( $alert ) {
+					return ! self::is_panel_eligible( $alert );
+				}
+			)
+		);
 
 		$count = count( $alerts );
 

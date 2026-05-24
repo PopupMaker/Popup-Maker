@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Modules_Reviews {
 
 	/**
-	 * Tracking API Endpoint.
+	 * Review API endpoint.
 	 *
 	 * @var string
 	 */
@@ -35,6 +35,31 @@ class PUM_Modules_Reviews {
 		// review notice through the panel records nothing on this side
 		// and the notice reappears on the next page load.
 		add_action( 'pum_alert_dismissed', [ __CLASS__, 'on_panel_dismiss' ], 10, 2 );
+	}
+
+	/**
+	 * Print review request vars for JS consumers.
+	 */
+	public static function print_review_request_vars() {
+		static $printed = false;
+
+		if ( $printed || self::hide_notices() ) {
+			return;
+		}
+
+		$printed = true;
+		?>
+		<script type="text/javascript">
+			window.pum_review_nonce = '<?php echo esc_html( wp_create_nonce( 'pum_review_action' ) ); ?>';
+			window.pum_review_api_url = '<?php echo esc_attr( self::$api_url ); ?>';
+			window.pum_review_uuid = '<?php echo esc_attr( wp_hash( home_url() . '-' . get_current_user_id() ) ); ?>';
+			window.pum_review_trigger = {
+				group: '<?php echo esc_attr( self::get_trigger_group() ); ?>',
+				code: '<?php echo esc_attr( self::get_trigger_code() ); ?>',
+				pri: '<?php echo esc_attr( self::get_current_trigger( 'pri' ) ); ?>'
+			};
+		</script>
+		<?php
 	}
 
 	/**
@@ -348,6 +373,8 @@ class PUM_Modules_Reviews {
 		if ( self::hide_notices() ) {
 			return $alerts;
 		}
+
+		add_action( 'admin_footer', [ __CLASS__, 'print_review_request_vars' ] );
 
 		$trigger = self::get_current_trigger();
 

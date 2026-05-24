@@ -212,14 +212,7 @@ class Notifications extends WP_REST_Controller {
 	 * @return bool
 	 */
 	protected static function is_panel_eligible( array $alert ) {
-		$type = isset( $alert['type'] ) ? (string) $alert['type'] : 'info';
-		if ( in_array( $type, [ 'error', 'warning' ], true ) ) {
-			return false;
-		}
-		if ( ! empty( $alert['global'] ) ) {
-			return false;
-		}
-		return true;
+		return \PUM_Utils_Alerts::is_panel_eligible( $alert );
 	}
 
 	/**
@@ -258,8 +251,8 @@ class Notifications extends WP_REST_Controller {
 		// dismiss links in their `html` field with data-reason values
 		// rather than declaring `actions[]`. Accept the known-safe set
 		// and forward the reason through to `pum_alert_dismissed` so
-		// provider-side handlers (review_request tracking, etc.) still
-		// run. Unknown actions still reject.
+		// provider-side handlers for review_request still run. Unknown
+		// actions still reject.
 		$legacy_reasons = [ 'dismiss', 'maybe_later', 'already_did', 'am_now', 'never' ];
 		if ( in_array( $action, $legacy_reasons, true ) ) {
 			return '';
