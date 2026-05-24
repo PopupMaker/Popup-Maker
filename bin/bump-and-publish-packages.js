@@ -358,6 +358,15 @@ function main() {
 
 	success( '✅ Changes committed' );
 
+	// Build packages before publish — the package.json `files` field
+	// lists `build` and `build-types`, and `types` points into them.
+	// Without this step, tarballs ship as source-only shells (broke
+	// i18n/data/registry@1.0.0 — types unresolvable for consumers).
+	log( '\n🔨 Building all packages before publish...' );
+	execCommand( 'pnpm run packages:build:tsc' );
+	execCommand( 'pnpm run packages:build:types' );
+	success( '✅ Build complete' );
+
 	// Publish packages
 	log( '\n🚀 Publishing packages to npm...' );
 
