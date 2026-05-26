@@ -2,6 +2,7 @@ import domReady from '@wordpress/dom-ready';
 
 // import './lib/call-to-action';
 
+import './style.scss';
 import * as blocks from './lib';
 
 declare global {

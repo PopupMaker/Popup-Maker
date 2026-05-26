@@ -1,0 +1,7 @@
+/**
+ * Frontend block styles for the block-library package entry.
+ *
+ * Imported from src/index.ts so webpack emits block-library-style.css.
+ */
+@import './lib/cta-button/style';
+@import './lib/cta-buttons/style';
