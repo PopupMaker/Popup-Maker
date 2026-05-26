@@ -1199,11 +1199,12 @@ class PUM_Admin_Settings {
 
 						$using_pro_license = ! empty( $field['options']['using_pro_license'] );
 						$pro_license_tier  = ! empty( $field['options']['pro_license_tier'] ) ? $field['options']['pro_license_tier'] : '';
+						$product_name      = ! empty( $field['options']['product_name'] ) ? $field['options']['product_name'] : null;
 
 						$settings[ $key ] = [
 							'key'               => \PopupMaker\plugin( 'license' )->star_key( trim( $value ) ),
 							'status'            => PUM_Licensing::get_status( $license, ! empty( $value ) ),
-							'messages'          => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
+							'messages'          => PUM_Licensing::get_status_messages( $license, trim( $value ), $product_name ),
 							'expires'           => PUM_Licensing::get_license_expiration( $license ),
 							'classes'           => PUM_Licensing::get_status_classes( $license ),
 							'using_pro_license' => $using_pro_license,

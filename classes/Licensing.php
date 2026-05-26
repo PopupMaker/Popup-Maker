@@ -79,15 +79,23 @@ class PUM_Licensing {
 
 	/**
 	 * @param object|bool|null $license
-	 *
 	 * @param string           $key
+	 * @param string|null      $product_name Product name for message strings.
 	 *
 	 * @return array
 	 */
-	public static function get_status_messages( $license = null, $key = '' ) {
-		$messages = [];
+	public static function get_status_messages( $license = null, $key = '', $product_name = null ) {
+		$messages     = [];
+		$product_name = $product_name ? $product_name : Popup_Maker::$NAME;
 
 		if ( self::has_license( $license ) ) {
+
+			// Prefer a stored error message from a recent API response.
+			if ( false === $license->success && ! empty( $license->error_message ) ) {
+				$messages[] = $license->error_message;
+
+				return $messages;
+			}
 
 			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
 			if ( false === $license->success ) {
@@ -123,7 +131,7 @@ class PUM_Licensing {
 						$messages[] = sprintf(
 							/* translators: 1. Plugin name. 2. Opening HTML link tag, 3. Closing HTML tag. */
 							__( 'Your %1$s is not active for this URL. Please %2$svisit your account page%3$s to manage your license key URLs.', 'popup-maker' ),
-							Popup_Maker::$NAME,
+							$product_name,
 							'<a target="_blank" href="https://wppopupmaker.com/your-account/license-keys/?utm_campaign=Licensing&utm_source=plugin-settings-page-licenses-tab&utm_content=pum_license&utm_medium=invalid">',
 							'</a>'
 						);
@@ -132,7 +140,7 @@ class PUM_Licensing {
 						$messages[] = sprintf(
 							/* translators: 1. Plugin name. */
 							__( 'This appears to be an invalid license key for %s.', 'popup-maker' ),
-							Popup_Maker::$NAME
+							$product_name
 						);
 						break;
 					case 'no_activations_left':
@@ -188,7 +196,7 @@ class PUM_Licensing {
 			$messages[] = sprintf(
 				/* translators: 1. Plugin name. */
 				__( 'To receive updates, please enter your valid %s license key.', 'popup-maker' ),
-				Popup_Maker::$NAME
+				$product_name
 			);
 		}
 
