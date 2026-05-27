@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Abstract base class for all Popup Maker extensions.
  *
+ * Override {@see Container::registered_controllers()} in child classes.
+ *
  * @since 1.21.0
  */
 abstract class Extension extends Container {
@@ -35,13 +37,6 @@ abstract class Extension extends Container {
 		// Get core plugin instance.
 		$this->core = \PopupMaker\plugin();
 	}
-
-	/**
-	 * Register all controllers.
-	 *
-	 * @return array<string,\PopupMaker\Base\Controller>
-	 */
-	abstract protected function registered_controllers();
 
 	/**
 	 * Get core plugin instance.

@@ -8,6 +8,7 @@
 
 **Bug Fixes**
 
+-   Fixed fatal error when loading v2 extensions caused by conflicting `registered_controllers()` declarations on `PopupMaker\Plugin\Extension`.
 -   Fixed the "Preview" button in the classic editor not opening popups — a regression introduced in 1.22.0. You can once again preview popups directly from the editor without having to save and view the live page. Thanks to @marklchaves for the fix.
 -   Fixed missing styles for Popup Maker blocks on the front end in some installs — blocks now render with the correct styling without a console warning about a missing stylesheet.
 -   Fixed "Disable popup open tracking" privacy setting not being fully respected — with analytics turned off, popup links no longer get tracking parameters appended and click beacons are no longer sent.
