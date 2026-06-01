@@ -229,7 +229,22 @@ class Popups extends Controller {
 
 		foreach ( $popups as $popup ) {
 			set_current_popup( $popup );
+
+			/**
+			 * Fires immediately before a popup is rendered in the footer.
+			 *
+			 * @param Popup $popup Popup being rendered.
+			 */
+			do_action( 'popup_maker/frontend/before_render_popup', $popup );
+
 			pum_template_part( 'popup' );
+
+			/**
+			 * Fires immediately after a popup is rendered in the footer.
+			 *
+			 * @param Popup $popup Popup that was rendered.
+			 */
+			do_action( 'popup_maker/frontend/after_render_popup', $popup );
 		}
 
 		set_current_popup( null );
