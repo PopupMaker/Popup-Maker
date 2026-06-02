@@ -67,8 +67,6 @@ const App = (): JSX.Element => {
 			__( 'Popup Maker', 'popup-maker' );
 	}, [ view, views ] );
 
-	const { adminUrl } = getGlobalVars();
-
 	return (
 		<AppLayout
 			className={ clsx( [
@@ -77,10 +75,10 @@ const App = (): JSX.Element => {
 			] ) }
 		>
 			<AppHeader
+				navTabId="call-to-actions"
 				tabs={ views }
 				currentTab={ view ?? undefined }
 				onTabChange={ ( tabName ) => setParams( { view: tabName } ) }
-				adminUrl={ adminUrl }
 			/>
 			<AppContent>
 				<ViewComponent />

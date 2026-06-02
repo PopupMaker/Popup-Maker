@@ -384,8 +384,109 @@ class Assets extends Controller {
 				'adminUrl'    => admin_url(),
 				'wpVersion'   => $wp_version,
 				'permissions' => $permissions,
+				'layoutVars'  => $this->get_layout_vars(),
 			]
 		);
+	}
+
+	/**
+	 * Vars consumed by `@popup-maker/layout` admin pages.
+	 *
+	 * @return array<string,mixed>
+	 */
+	private function get_layout_vars() {
+		$vars = apply_filters(
+			'popup_maker/layout_vars',
+			[
+				'navTabs'            => [],
+				'supportMenuItems'   => [],
+				'showSupport'        => true,
+			]
+		);
+
+		if ( ! is_array( $vars ) ) {
+			$vars = [
+				'navTabs'          => [],
+				'supportMenuItems' => [],
+				'showSupport'      => true,
+			];
+		}
+
+		if ( isset( $vars['navTabs'] ) ) {
+			$vars['navTabs'] = $this->sanitize_layout_nav_tabs( $vars['navTabs'] );
+		}
+
+		if ( isset( $vars['supportMenuItems'] ) ) {
+			$vars['supportMenuItems'] = $this->sanitize_layout_support_menu_items( $vars['supportMenuItems'] );
+		}
+
+		if ( isset( $vars['showSupport'] ) ) {
+			$vars['showSupport'] = (bool) $vars['showSupport'];
+		}
+
+		return $vars;
+	}
+
+	/**
+	 * Sanitize nav tab definitions before localizing to JS.
+	 *
+	 * @param mixed $tabs Shell tab list.
+	 * @return array<int,array<string,string>>
+	 */
+	private function sanitize_layout_nav_tabs( $tabs ) {
+		$sanitized = [];
+
+		foreach ( (array) $tabs as $tab ) {
+			if ( ! is_array( $tab ) || empty( $tab['id'] ) || empty( $tab['href'] ) ) {
+				continue;
+			}
+
+			$sanitized[] = [
+				'id'    => sanitize_key( $tab['id'] ),
+				'title' => sanitize_text_field( $tab['title'] ?? '' ),
+				'href'  => esc_url_raw( $tab['href'] ),
+			];
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Sanitize support menu items before localizing to JS.
+	 *
+	 * @param mixed $items Support menu item list.
+	 * @return array<int,array<string,string>>
+	 */
+	private function sanitize_layout_support_menu_items( $items ) {
+		$sanitized = [];
+
+		foreach ( (array) $items as $item ) {
+			if ( ! is_array( $item ) || empty( $item['id'] ) || empty( $item['label'] ) ) {
+				continue;
+			}
+
+			$sanitized_item = [
+				'id'    => sanitize_key( $item['id'] ),
+				'label' => sanitize_text_field( $item['label'] ),
+				'group' => sanitize_key( $item['group'] ?? 'primary' ),
+			];
+
+			if ( ! empty( $item['href'] ) ) {
+				$sanitized_item['href'] = esc_url_raw( $item['href'] );
+			}
+
+			if ( ! empty( $item['target'] ) ) {
+				$sanitized_item['target'] = sanitize_text_field( $item['target'] );
+			}
+
+			if ( ! empty( $item['icon'] ) ) {
+				$sanitized_item['icon'] = sanitize_key( $item['icon'] );
+			}
+
+			$sanitized[] = $sanitized_item;
+		}
+
+		return $sanitized;
 	}
 
 	/**

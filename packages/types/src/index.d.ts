@@ -64,6 +64,41 @@ export interface PopupMakerGlobalVars {
 	 * Whether the Pro version is activated.
 	 */
 	isProActivated?: '1' | '';
+	/**
+	 * Vars for `@popup-maker/layout` admin pages.
+	 */
+	layoutVars?: PopupMakerLayoutVars;
+}
+
+/**
+ * Cross-page header nav tabs localized for React admin headers.
+ */
+export interface LayoutNavTab {
+	id: string;
+	title: string;
+	href: string;
+}
+
+/**
+ * Layout package vars localized from PHP (`popup_maker/layout_vars`).
+ */
+export interface PopupMakerLayoutVars {
+	navTabs?: LayoutNavTab[];
+	supportMenuItems?: LayoutSupportMenuItem[];
+	showSupport?: boolean;
+}
+
+/**
+ * Support menu item shape localized from PHP.
+ */
+export interface LayoutSupportMenuItem {
+	id: string;
+	label: string;
+	href?: string;
+	target?: string;
+	group?: string;
+	/** Maps to a registered icon slug in `@popup-maker/layout`. */
+	icon?: string;
 }
 
 /**

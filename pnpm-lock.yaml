@@ -9,58 +9,58 @@ importers:
   .:
     dependencies:
       '@popup-maker/admin-bar':
-        specifier: file:./packages/admin-bar
-        version: file:packages/admin-bar(jquery@3.7.1)
+        specifier: workspace:*
+        version: link:packages/admin-bar
       '@popup-maker/admin-marketing':
-        specifier: file:./packages/admin-marketing
+        specifier: workspace:*
         version: link:packages/admin-marketing
       '@popup-maker/block-editor':
-        specifier: file:./packages/block-editor
-        version: file:packages/block-editor(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
+        specifier: workspace:*
+        version: link:packages/block-editor
       '@popup-maker/block-library':
-        specifier: file:./packages/block-library
-        version: file:packages/block-library(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react-native@0.76.9(@babel/core@7.29.0)(@babel/preset-env@7.29.2(@babel/core@7.29.0))(@types/react@18.3.28)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
+        specifier: workspace:*
+        version: link:packages/block-library
       '@popup-maker/components':
-        specifier: file:./packages/components
-        version: file:packages/components(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
+        specifier: workspace:*
+        version: link:packages/components
       '@popup-maker/core-data':
-        specifier: file:./packages/core-data
-        version: file:packages/core-data(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
+        specifier: workspace:*
+        version: link:packages/core-data
       '@popup-maker/cta-admin':
-        specifier: file:./packages/cta-admin
-        version: file:packages/cta-admin(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:packages/cta-admin
       '@popup-maker/cta-editor':
-        specifier: file:./packages/cta-editor
-        version: file:packages/cta-editor(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:packages/cta-editor
       '@popup-maker/dashboard':
-        specifier: file:./packages/dashboard
-        version: file:packages/dashboard
+        specifier: workspace:*
+        version: link:packages/dashboard
       '@popup-maker/data':
-        specifier: file:./packages/data
-        version: file:packages/data(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
+        specifier: workspace:*
+        version: link:packages/data
       '@popup-maker/fields':
-        specifier: file:./packages/fields
-        version: file:packages/fields(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
+        specifier: workspace:*
+        version: link:packages/fields
       '@popup-maker/i18n':
-        specifier: file:./packages/i18n
-        version: file:packages/i18n
+        specifier: workspace:*
+        version: link:packages/i18n
       '@popup-maker/icons':
-        specifier: file:./packages/icons
-        version: file:packages/icons(react@18.3.1)
+        specifier: workspace:*
+        version: link:packages/icons
       '@popup-maker/layout':
-        specifier: file:./packages/layout
-        version: file:packages/layout(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:packages/layout
       '@popup-maker/popup-admin':
-        specifier: file:./packages/popup-admin
+        specifier: workspace:*
         version: link:packages/popup-admin
       '@popup-maker/registry':
-        specifier: file:./packages/registry
-        version: file:packages/registry
+        specifier: workspace:*
+        version: link:packages/registry
       '@popup-maker/use-query-params':
-        specifier: file:./packages/use-query-params
+        specifier: workspace:*
         version: link:packages/use-query-params
       '@popup-maker/utils':
-        specifier: file:./packages/utils
+        specifier: workspace:*
         version: link:packages/utils
       iframe-resizer:
         specifier: ^4.2.10
@@ -91,13 +91,13 @@ importers:
         specifier: ^1.50.1
         version: 1.59.1
       '@popup-maker/custom-templated-path-webpack-plugin':
-        specifier: file:./packages/custom-templated-path-webpack-plugin
+        specifier: workspace:*
         version: link:packages/custom-templated-path-webpack-plugin
       '@popup-maker/dependency-extraction-webpack-plugin':
-        specifier: file:./packages/dependency-extraction-webpack-plugin
-        version: file:packages/dependency-extraction-webpack-plugin(webpack@5.105.4)
+        specifier: workspace:*
+        version: link:packages/dependency-extraction-webpack-plugin
       '@popup-maker/types':
-        specifier: file:./packages/types
+        specifier: workspace:*
         version: link:packages/types
       '@storybook/addon-actions':
         specifier: 8.6.14
@@ -119,7 +119,7 @@ importers:
         version: 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
       '@storybook/react-webpack5':
         specifier: 8.6.14
-        version: 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)(webpack-cli@5.1.4)
+        version: 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.9.1
@@ -137,7 +137,7 @@ importers:
         version: 1.43.0(@playwright/test@1.59.1)(@types/node@25.5.2)
       '@wordpress/scripts':
         specifier: ^31.6.0
-        version: 31.8.0(@playwright/test@1.59.1)(@types/eslint@9.6.1)(@types/node@25.5.2)(babel-plugin-macros@3.1.0)(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint-scss@6.14.0(stylelint@16.26.1(typescript@5.7.3)))(ts-node@10.9.1(@types/node@25.5.2)(typescript@5.7.3))(type-fest@4.41.0)(typescript@5.7.3)(webpack-hot-middleware@2.26.1)
+        version: 31.8.0(@playwright/test@1.59.1)(@types/eslint@9.6.1)(@types/node@25.5.2)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint-scss@6.14.0(stylelint@16.26.1(typescript@5.7.3)))(ts-node@10.9.1(@types/node@25.5.2)(typescript@5.7.3))(type-fest@4.41.0)(typescript@5.7.3)(webpack-hot-middleware@2.26.1)
       copy-webpack-plugin:
         specifier: ^12.0.2
         version: 12.0.2(webpack@5.105.4)
@@ -632,7 +632,7 @@ importers:
     dependencies:
       webpack:
         specifier: ^4.0.0 || ^5.0.0
-        version: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+        version: 5.105.4(webpack-cli@5.1.4)
 
   packages/dashboard:
     dependencies:
@@ -676,6 +676,33 @@ importers:
       '@types/jquery':
         specifier: ^3.5.32
         version: 3.5.34
+
+  packages/extension-build-tools:
+    dependencies:
+      '@popup-maker/custom-templated-path-webpack-plugin':
+        specifier: ^2.6.2
+        version: 2.6.2(webpack@5.105.4)
+      '@popup-maker/dependency-extraction-webpack-plugin':
+        specifier: ^6.23.1
+        version: 6.23.1(webpack@5.105.4)
+      '@wordpress/scripts':
+        specifier: '>=27.0.0'
+        version: 31.8.0(@playwright/test@1.59.1)(@types/eslint@9.6.1)(@types/node@25.5.2)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint-scss@6.14.0(stylelint@16.26.1(typescript@5.7.3)))(ts-node@10.9.1(@types/node@25.5.2)(typescript@5.7.3))(type-fest@4.41.0)(typescript@5.7.3)(webpack-hot-middleware@2.26.1)
+      copy-webpack-plugin:
+        specifier: ^12.0.2
+        version: 12.0.2(webpack@5.105.4)
+      glob:
+        specifier: ^13.0.6
+        version: 13.0.6
+      mini-css-extract-plugin:
+        specifier: ^2.9.2
+        version: 2.10.2(webpack@5.105.4)
+      rtlcss-webpack-plugin:
+        specifier: ^4.0.7
+        version: 4.0.7
+      webpack:
+        specifier: '>=5.0.0'
+        version: 5.105.4(webpack-cli@5.1.4)
 
   packages/fields:
     dependencies:
@@ -754,7 +781,7 @@ importers:
         version: 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
       '@storybook/react-webpack5':
         specifier: 8.6.14
-        version: 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)(webpack-cli@5.1.4)
+        version: 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
       '@storybook/testing-library':
         specifier: ^0.2.2
         version: 0.2.2
@@ -788,6 +815,9 @@ importers:
       '@wordpress/element':
         specifier: ^6.29.0
         version: 6.43.0
+      '@wordpress/hooks':
+        specifier: ^4.29.0
+        version: 4.44.0
       '@wordpress/icons':
         specifier: ^10.29.0
         version: 10.32.0(react@18.3.1)
@@ -2768,61 +2798,14 @@ packages:
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
-  '@popup-maker/admin-bar@file:packages/admin-bar':
-    resolution: {directory: packages/admin-bar, type: directory}
+  '@popup-maker/custom-templated-path-webpack-plugin@2.6.2':
+    resolution: {integrity: sha512-tR0DpFM2o1V64NwJgGp9njXVRGbINz+CfcSmiJ1913Y92ik0mGTHikGJxfUkvGZ93QV/R8TPF6wX9IXjV9ifBQ==}
+    engines: {node: '>=12'}
     peerDependencies:
-      jquery: ^3.5.32
+      webpack: ^4.0.0 || ^5.0.0
 
-  '@popup-maker/block-editor@file:packages/block-editor':
-    resolution: {directory: packages/block-editor, type: directory}
-
-  '@popup-maker/block-library@file:packages/block-library':
-    resolution: {directory: packages/block-library, type: directory}
-    peerDependencies:
-      react: ^18.3.1
-      react-native: ^0.76.5
-
-  '@popup-maker/components@file:packages/components':
-    resolution: {directory: packages/components, type: directory}
-    peerDependencies:
-      react: ^18.3.1
-
-  '@popup-maker/core-data@file:packages/core-data':
-    resolution: {directory: packages/core-data, type: directory}
-
-  '@popup-maker/cta-admin@file:packages/cta-admin':
-    resolution: {directory: packages/cta-admin, type: directory}
-
-  '@popup-maker/cta-editor@file:packages/cta-editor':
-    resolution: {directory: packages/cta-editor, type: directory}
-    peerDependencies:
-      react: ^18.3.1
-
-  '@popup-maker/dashboard@file:packages/dashboard':
-    resolution: {directory: packages/dashboard, type: directory}
-
-  '@popup-maker/data@file:packages/data':
-    resolution: {directory: packages/data, type: directory}
-
-  '@popup-maker/dependency-extraction-webpack-plugin@file:packages/dependency-extraction-webpack-plugin':
-    resolution: {directory: packages/dependency-extraction-webpack-plugin, type: directory}
-
-  '@popup-maker/fields@file:packages/fields':
-    resolution: {directory: packages/fields, type: directory}
-
-  '@popup-maker/i18n@file:packages/i18n':
-    resolution: {directory: packages/i18n, type: directory}
-
-  '@popup-maker/icons@file:packages/icons':
-    resolution: {directory: packages/icons, type: directory}
-    peerDependencies:
-      react: ^18.3.1
-
-  '@popup-maker/layout@file:packages/layout':
-    resolution: {directory: packages/layout, type: directory}
-
-  '@popup-maker/registry@file:packages/registry':
-    resolution: {directory: packages/registry, type: directory}
+  '@popup-maker/dependency-extraction-webpack-plugin@6.23.1':
+    resolution: {integrity: sha512-Ca3dj6aY7mAw+YA0qb8RlbylXpP6PjRyi6ZLbUt0+Dri4ZIOOW26wueWhy+q8OI2oawfdu5FJ7Ld1ONCGVVdpg==}
 
   '@preact/signals-core@1.14.1':
     resolution: {integrity: sha512-vxPpfXqrwUe9lpjqfYNjAF/0RF/eFGeLgdJzdmIIZjpOnTmGmAB4BjWone562mJGMRP4frU6iZ6ei3PDsu52Ng==}
@@ -4489,12 +4472,6 @@ packages:
 
   '@wordpress/primitives@4.43.0':
     resolution: {integrity: sha512-lU1vBSDyRkAYFEfbLyzjophDvIVCeQ7uuEXv5dBAbxkSLSsCcX6oLbWSwjkCEHp1R+9UtukLvbmXDdAbDYiEOA==}
-    engines: {node: '>=18.12.0', npm: '>=8.19.2'}
-    peerDependencies:
-      react: ^18.0.0
-
-  '@wordpress/primitives@4.44.0':
-    resolution: {integrity: sha512-IqLL1EfhhyD9hp3G0q0Djp5HYbqXr7/f+FIj98SCovZnoo6YrVYwzFSrUvjFLr7RchyF19VzOEc0w0PpyhtxYA==}
     engines: {node: '>=18.12.0', npm: '>=8.19.2'}
     peerDependencies:
       react: ^18.0.0
@@ -6690,6 +6667,10 @@ packages:
     engines: {node: 20 || >=22}
     deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
+
+  glob@13.0.6:
+    resolution: {integrity: sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==}
+    engines: {node: 18 || 20 || >=22}
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
@@ -9925,8 +9906,8 @@ packages:
   third-party-web@0.27.0:
     resolution: {integrity: sha512-h0JYX+dO2Zr3abCQpS6/uFjujaOjA1DyDzGQ41+oFn9VW/ARiq9g5ln7qEP9+BTzDpOMyIfsfj4OvfgXAsMUSA==}
 
-  third-party-web@0.29.0:
-    resolution: {integrity: sha512-nBDSJw5B7Sl1YfsATG2XkW5qgUPODbJhXw++BKygi9w6O/NKS98/uY/nR/DxDq2axEjL6halHW1v+jhm/j1DBQ==}
+  third-party-web@0.29.2:
+    resolution: {integrity: sha512-fegtha91tq2DHphyoiBXVHjVi2YG9zFaRnboT9C28tO1en9Y3wJsfspuy40F+u5wl3hHVbw7cnd1b67kEGHb8g==}
 
   throat@5.0.0:
     resolution: {integrity: sha512-fcwX4mndzpLQKBS1DVYhGAcYaYt7vsHNIvQV+WXMvnow5cgjPphq5CaayLaGsjRdSCKZFNGt7/GYAuXaNOiYCA==}
@@ -13757,7 +13738,7 @@ snapshots:
   '@paulirish/trace_engine@0.0.59':
     dependencies:
       legacy-javascript: 0.0.1
-      third-party-web: 0.29.0
+      third-party-web: 0.29.2
 
   '@phenomnomnominal/tsquery@5.0.1(typescript@5.7.3)':
     dependencies:
@@ -13780,7 +13761,7 @@ snapshots:
       react-refresh: 0.14.2
       schema-utils: 4.3.3
       source-map: 0.7.6
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
     optionalDependencies:
       type-fest: 4.41.0
       webpack-dev-server: 4.15.2(webpack-cli@5.1.4)(webpack@5.105.4)
@@ -13788,261 +13769,15 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@popup-maker/admin-bar@file:packages/admin-bar(jquery@3.7.1)':
+  '@popup-maker/custom-templated-path-webpack-plugin@2.6.2(webpack@5.105.4)':
     dependencies:
-      '@medv/finder': 3.2.0
-      '@popup-maker/i18n': link:packages/i18n
-      jquery: 3.7.1
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
-  '@popup-maker/block-editor@file:packages/block-editor(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))':
-    dependencies:
-      '@popup-maker/components': link:packages/components
-      '@popup-maker/core-data': link:packages/core-data
-      '@popup-maker/i18n': link:packages/i18n
-      '@popup-maker/icons': link:packages/icons
-      '@wordpress/a11y': 4.43.0
-      '@wordpress/api-fetch': 7.43.0
-      '@wordpress/base-styles': 6.19.0
-      '@wordpress/block-editor': 15.16.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/compose': 7.43.0(react@18.3.1)
-      '@wordpress/data': 10.43.0(react@18.3.1)
-      '@wordpress/edit-post': 8.43.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/element': 6.44.0
-      '@wordpress/hooks': 4.44.0
-      '@wordpress/html-entities': 4.43.0
-      '@wordpress/i18n': 6.17.0
-      '@wordpress/keycodes': 4.43.0
-      '@wordpress/plugins': 7.43.0(@emotion/is-prop-valid@1.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/rich-text': 7.43.0(react@18.3.1)
-      clsx: 2.1.1
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - '@types/react-dom'
-      - react
-      - react-dom
-      - stylelint
-      - supports-color
-
-  '@popup-maker/block-library@file:packages/block-library(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react-native@0.76.9(@babel/core@7.29.0)(@babel/preset-env@7.29.2(@babel/core@7.29.0))(@types/react@18.3.28)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))':
-    dependencies:
-      '@popup-maker/components': link:packages/components
-      '@popup-maker/core-data': link:packages/core-data
-      '@popup-maker/cta-editor': link:packages/cta-editor
-      '@popup-maker/i18n': link:packages/i18n
-      '@popup-maker/icons': link:packages/icons
-      '@wordpress/blob': 4.43.0
-      '@wordpress/block-editor': 15.16.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/blocks': 15.16.0(react@18.3.1)
-      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/compose': 7.43.0(react@18.3.1)
-      '@wordpress/core-data': 7.43.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/data': 10.43.0(react@18.3.1)
-      '@wordpress/dom-ready': 4.43.0
-      '@wordpress/edit-post': 8.43.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/editor': 14.43.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/element': 6.44.0
-      '@wordpress/hooks': 4.44.0
-      '@wordpress/html-entities': 4.43.0
-      '@wordpress/icons': 10.32.0(react@18.3.1)
-      '@wordpress/keycodes': 4.43.0
-      '@wordpress/rich-text': 7.43.0(react@18.3.1)
-      clsx: 2.1.1
-      react: 18.3.1
-      react-native: 0.76.9(@babel/core@7.29.0)(@babel/preset-env@7.29.2(@babel/core@7.29.0))(@types/react@18.3.28)(encoding@0.1.13)(react@18.3.1)
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - '@types/react-dom'
-      - react-dom
-      - stylelint
-      - supports-color
-
-  '@popup-maker/components@file:packages/components(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))':
-    dependencies:
-      '@popup-maker/core-data': link:packages/core-data
-      '@popup-maker/i18n': link:packages/i18n
-      '@popup-maker/utils': link:packages/utils
-      '@wordpress/base-styles': 6.19.0
-      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/compose': 7.43.0(react@18.3.1)
-      '@wordpress/core-data': 7.43.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/data': 10.43.0(react@18.3.1)
-      '@wordpress/element': 6.44.0
-      '@wordpress/html-entities': 4.43.0
-      '@wordpress/icons': 10.32.0(react@18.3.1)
-      '@wordpress/keycodes': 4.43.0
-      '@wordpress/url': 4.43.0
-      classnames: 2.5.1
-      clsx: 2.1.1
-      lodash: 4.18.1
-      react: 18.3.1
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - '@types/react-dom'
-      - react-dom
-      - stylelint
-      - supports-color
-
-  '@popup-maker/core-data@file:packages/core-data(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))':
-    dependencies:
-      '@popup-maker/i18n': link:packages/i18n
-      '@wordpress/api-fetch': 7.43.0
-      '@wordpress/core-data': 7.43.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/data': 10.43.0(react@18.3.1)
-      '@wordpress/element': 6.44.0
-      '@wordpress/hooks': 4.44.0
-      '@wordpress/html-entities': 4.43.0
-      '@wordpress/notices': 5.43.0(@emotion/is-prop-valid@1.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      fast-json-patch: 3.1.1
-      lodash: 4.18.1
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - '@types/react-dom'
-      - react
-      - react-dom
-      - stylelint
-      - supports-color
-
-  '@popup-maker/cta-admin@file:packages/cta-admin(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@popup-maker/components': link:packages/components
-      '@popup-maker/core-data': link:packages/core-data
-      '@popup-maker/cta-editor': link:packages/cta-editor
-      '@popup-maker/data': link:packages/data
-      '@popup-maker/fields': link:packages/fields
-      '@popup-maker/i18n': link:packages/i18n
-      '@popup-maker/icons': link:packages/icons
-      '@popup-maker/layout': link:packages/layout
-      '@popup-maker/registry': link:packages/registry
-      '@popup-maker/use-query-params': link:packages/use-query-params
-      '@popup-maker/utils': link:packages/utils
-      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/data': 10.43.0(react@18.3.1)
-      '@wordpress/dom-ready': 4.43.0
-      '@wordpress/element': 6.44.0
-      '@wordpress/hooks': 4.44.0
-      '@wordpress/html-entities': 4.43.0
-      '@wordpress/icons': 10.32.0(react@18.3.1)
-      clsx: 2.1.1
-      react-router-dom: 7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - react
-      - react-dom
-      - supports-color
-
-  '@popup-maker/cta-editor@file:packages/cta-editor(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@popup-maker/components': link:packages/components
-      '@popup-maker/core-data': link:packages/core-data
-      '@popup-maker/fields': link:packages/fields
-      '@popup-maker/i18n': link:packages/i18n
-      '@popup-maker/registry': link:packages/registry
-      '@popup-maker/use-query-params': link:packages/use-query-params
-      '@popup-maker/utils': link:packages/utils
-      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/data': 10.43.0(react@18.3.1)
-      '@wordpress/dom-ready': 4.43.0
-      '@wordpress/element': 6.44.0
-      '@wordpress/hooks': 4.44.0
-      '@wordpress/icons': 10.32.0(react@18.3.1)
-      '@wordpress/notices': 5.43.0(@emotion/is-prop-valid@1.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/url': 4.43.0
-      clsx: 2.1.1
-      lodash: 4.18.1
-      react: 18.3.1
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - react-dom
-      - supports-color
-
-  '@popup-maker/dashboard@file:packages/dashboard':
-    dependencies:
-      '@wordpress/element': 6.44.0
-      '@wordpress/hooks': 4.44.0
-
-  '@popup-maker/data@file:packages/data(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))':
-    dependencies:
-      '@popup-maker/core-data': link:packages/core-data
-      '@wordpress/core-data': 7.43.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/data': 10.43.0(react@18.3.1)
-      '@wordpress/hooks': 4.44.0
-      '@wordpress/notices': 5.43.0(@emotion/is-prop-valid@1.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - '@types/react-dom'
-      - react
-      - react-dom
-      - stylelint
-      - supports-color
-
-  '@popup-maker/dependency-extraction-webpack-plugin@file:packages/dependency-extraction-webpack-plugin(webpack@5.105.4)':
+  '@popup-maker/dependency-extraction-webpack-plugin@6.23.1(webpack@5.105.4)':
     dependencies:
       '@wordpress/dependency-extraction-webpack-plugin': 6.44.0(webpack@5.105.4)
     transitivePeerDependencies:
       - webpack
-
-  '@popup-maker/fields@file:packages/fields(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))':
-    dependencies:
-      '@popup-maker/components': link:packages/components
-      '@popup-maker/core-data': link:packages/core-data
-      '@popup-maker/i18n': link:packages/i18n
-      '@popup-maker/utils': link:packages/utils
-      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/compose': 7.43.0(react@18.3.1)
-      '@wordpress/core-data': 7.43.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint@16.26.1(typescript@5.7.3))
-      '@wordpress/data': 10.43.0(react@18.3.1)
-      '@wordpress/element': 6.44.0
-      '@wordpress/hooks': 4.44.0
-      '@wordpress/html-entities': 4.43.0
-      classnames: 2.5.1
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - '@types/react-dom'
-      - react
-      - react-dom
-      - stylelint
-      - supports-color
-
-  '@popup-maker/i18n@file:packages/i18n':
-    dependencies:
-      '@wordpress/i18n': 6.17.0
-
-  '@popup-maker/icons@file:packages/icons(react@18.3.1)':
-    dependencies:
-      '@wordpress/primitives': 4.44.0(react@18.3.1)
-      react: 18.3.1
-
-  '@popup-maker/layout@file:packages/layout(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@popup-maker/components': link:packages/components
-      '@popup-maker/i18n': link:packages/i18n
-      '@popup-maker/icons': link:packages/icons
-      '@popup-maker/types': link:packages/types
-      '@popup-maker/use-query-params': link:packages/use-query-params
-      '@wordpress/components': 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@wordpress/compose': 7.43.0(react@18.3.1)
-      '@wordpress/element': 6.44.0
-      '@wordpress/icons': 10.32.0(react@18.3.1)
-      clsx: 2.1.1
-    transitivePeerDependencies:
-      - '@emotion/is-prop-valid'
-      - '@types/react'
-      - react
-      - react-dom
-      - supports-color
-
-  '@popup-maker/registry@file:packages/registry':
-    dependencies:
-      '@wordpress/element': 6.44.0
 
   '@preact/signals-core@1.14.1': {}
 
@@ -14600,7 +14335,7 @@ snapshots:
   '@storybook/addon-styling-webpack@1.0.1(storybook@8.6.17(wp-prettier@3.0.3))(webpack@5.105.4)':
     dependencies:
       '@storybook/node-logger': 8.6.14(storybook@8.6.17(wp-prettier@3.0.3))
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
     transitivePeerDependencies:
       - storybook
 
@@ -14630,7 +14365,43 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@storybook/builder-webpack5@8.6.14(esbuild@0.25.12)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)(webpack-cli@5.1.4)':
+  '@storybook/builder-webpack5@8.6.14(esbuild@0.25.12)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)':
+    dependencies:
+      '@storybook/core-webpack': 8.6.14(storybook@8.6.17(wp-prettier@3.0.3))
+      '@types/semver': 7.7.1
+      browser-assert: 1.2.1
+      case-sensitive-paths-webpack-plugin: 2.4.0
+      cjs-module-lexer: 1.4.3
+      constants-browserify: 1.0.0
+      css-loader: 6.11.0(webpack@5.105.4(esbuild@0.25.12))
+      es-module-lexer: 1.7.0
+      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.7.3)(webpack@5.105.4(esbuild@0.25.12))
+      html-webpack-plugin: 5.6.6(webpack@5.105.4(esbuild@0.25.12))
+      magic-string: 0.30.21
+      path-browserify: 1.0.1
+      process: 0.11.10
+      semver: 7.7.4
+      storybook: 8.6.17(wp-prettier@3.0.3)
+      style-loader: 3.3.4(webpack@5.105.4(esbuild@0.25.12))
+      terser-webpack-plugin: 5.4.0(esbuild@0.25.12)(webpack@5.105.4(esbuild@0.25.12))
+      ts-dedent: 2.2.0
+      url: 0.11.4
+      util: 0.12.5
+      util-deprecate: 1.0.2
+      webpack: 5.105.4(esbuild@0.25.12)
+      webpack-dev-middleware: 6.1.3(webpack@5.105.4(esbuild@0.25.12))
+      webpack-hot-middleware: 2.26.1
+      webpack-virtual-modules: 0.6.2
+    optionalDependencies:
+      typescript: 5.7.3
+    transitivePeerDependencies:
+      - '@rspack/core'
+      - '@swc/core'
+      - esbuild
+      - uglify-js
+      - webpack-cli
+
+  '@storybook/builder-webpack5@8.6.14(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)':
     dependencies:
       '@storybook/core-webpack': 8.6.14(storybook@8.6.17(wp-prettier@3.0.3))
       '@types/semver': 7.7.1
@@ -14648,12 +14419,12 @@ snapshots:
       semver: 7.7.4
       storybook: 8.6.17(wp-prettier@3.0.3)
       style-loader: 3.3.4(webpack@5.105.4)
-      terser-webpack-plugin: 5.4.0(esbuild@0.25.12)(webpack@5.105.4)
+      terser-webpack-plugin: 5.4.0(webpack@5.105.4)
       ts-dedent: 2.2.0
       url: 0.11.4
       util: 0.12.5
       util-deprecate: 1.0.2
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
       webpack-dev-middleware: 6.1.3(webpack@5.105.4)
       webpack-hot-middleware: 2.26.1
       webpack-virtual-modules: 0.6.2
@@ -14722,7 +14493,33 @@ snapshots:
     dependencies:
       storybook: 8.6.17(wp-prettier@3.0.3)
 
-  '@storybook/preset-react-webpack@8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)(webpack-cli@5.1.4)':
+  '@storybook/preset-react-webpack@8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)':
+    dependencies:
+      '@storybook/core-webpack': 8.6.14(storybook@8.6.17(wp-prettier@3.0.3))
+      '@storybook/react': 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
+      '@storybook/react-docgen-typescript-plugin': 1.0.6--canary.9.0c3f3b7.0(typescript@5.7.3)(webpack@5.105.4(esbuild@0.25.12))
+      '@types/semver': 7.7.1
+      find-up: 5.0.0
+      magic-string: 0.30.21
+      react: 18.3.1
+      react-docgen: 7.1.1
+      react-dom: 18.3.1(react@18.3.1)
+      resolve: 1.22.11
+      semver: 7.7.4
+      storybook: 8.6.17(wp-prettier@3.0.3)
+      tsconfig-paths: 4.2.0
+      webpack: 5.105.4(esbuild@0.25.12)
+    optionalDependencies:
+      typescript: 5.7.3
+    transitivePeerDependencies:
+      - '@storybook/test'
+      - '@swc/core'
+      - esbuild
+      - supports-color
+      - uglify-js
+      - webpack-cli
+
+  '@storybook/preset-react-webpack@8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)':
     dependencies:
       '@storybook/core-webpack': 8.6.14(storybook@8.6.17(wp-prettier@3.0.3))
       '@storybook/react': 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
@@ -14737,7 +14534,7 @@ snapshots:
       semver: 7.7.4
       storybook: 8.6.17(wp-prettier@3.0.3)
       tsconfig-paths: 4.2.0
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
     optionalDependencies:
       typescript: 5.7.3
     transitivePeerDependencies:
@@ -14758,6 +14555,20 @@ snapshots:
     dependencies:
       storybook: 8.6.17(wp-prettier@3.0.3)
 
+  '@storybook/react-docgen-typescript-plugin@1.0.6--canary.9.0c3f3b7.0(typescript@5.7.3)(webpack@5.105.4(esbuild@0.25.12))':
+    dependencies:
+      debug: 4.4.3
+      endent: 2.1.0
+      find-cache-dir: 3.3.2
+      flat-cache: 3.2.0
+      micromatch: 4.0.8
+      react-docgen-typescript: 2.4.0(typescript@5.7.3)
+      tslib: 2.8.1
+      typescript: 5.7.3
+      webpack: 5.105.4(esbuild@0.25.12)
+    transitivePeerDependencies:
+      - supports-color
+
   '@storybook/react-docgen-typescript-plugin@1.0.6--canary.9.0c3f3b7.0(typescript@5.7.3)(webpack@5.105.4)':
     dependencies:
       debug: 4.4.3
@@ -14768,7 +14579,7 @@ snapshots:
       react-docgen-typescript: 2.4.0(typescript@5.7.3)
       tslib: 2.8.1
       typescript: 5.7.3
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -14778,10 +14589,29 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       storybook: 8.6.17(wp-prettier@3.0.3)
 
-  '@storybook/react-webpack5@8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)(webpack-cli@5.1.4)':
+  '@storybook/react-webpack5@8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)':
     dependencies:
-      '@storybook/builder-webpack5': 8.6.14(esbuild@0.25.12)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)(webpack-cli@5.1.4)
-      '@storybook/preset-react-webpack': 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)(webpack-cli@5.1.4)
+      '@storybook/builder-webpack5': 8.6.14(esbuild@0.25.12)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
+      '@storybook/preset-react-webpack': 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
+      '@storybook/react': 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      storybook: 8.6.17(wp-prettier@3.0.3)
+    optionalDependencies:
+      typescript: 5.7.3
+    transitivePeerDependencies:
+      - '@rspack/core'
+      - '@storybook/test'
+      - '@swc/core'
+      - esbuild
+      - supports-color
+      - uglify-js
+      - webpack-cli
+
+  '@storybook/react-webpack5@8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)':
+    dependencies:
+      '@storybook/builder-webpack5': 8.6.14(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
+      '@storybook/preset-react-webpack': 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
       '@storybook/react': 8.6.14(@storybook/test@8.6.14(storybook@8.6.17(wp-prettier@3.0.3)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))(typescript@5.7.3)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -15639,17 +15469,17 @@ snapshots:
 
   '@webpack-cli/configtest@2.1.1(webpack-cli@5.1.4)(webpack@5.105.4)':
     dependencies:
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.105.4)
 
   '@webpack-cli/info@2.0.2(webpack-cli@5.1.4)(webpack@5.105.4)':
     dependencies:
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.105.4)
 
   '@webpack-cli/serve@2.0.5(webpack-cli@5.1.4)(webpack-dev-server@4.15.2)(webpack@5.105.4)':
     dependencies:
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.105.4)
     optionalDependencies:
       webpack-dev-server: 4.15.2(webpack-cli@5.1.4)(webpack@5.105.4)
@@ -16098,12 +15928,12 @@ snapshots:
   '@wordpress/dependency-extraction-webpack-plugin@6.43.0(webpack@5.105.4)':
     dependencies:
       json2php: 0.0.7
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   '@wordpress/dependency-extraction-webpack-plugin@6.44.0(webpack@5.105.4)':
     dependencies:
       json2php: 0.0.7
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   '@wordpress/deprecated@4.43.0':
     dependencies:
@@ -16701,12 +16531,6 @@ snapshots:
       clsx: 2.1.1
       react: 18.3.1
 
-  '@wordpress/primitives@4.44.0(react@18.3.1)':
-    dependencies:
-      '@wordpress/element': 6.44.0
-      clsx: 2.1.1
-      react: 18.3.1
-
   '@wordpress/priority-queue@3.43.0':
     dependencies:
       requestidlecallback: 0.3.0
@@ -16778,7 +16602,7 @@ snapshots:
       react: 18.3.1
       route-recognizer: 0.3.4
 
-  '@wordpress/scripts@31.8.0(@playwright/test@1.59.1)(@types/eslint@9.6.1)(@types/node@25.5.2)(babel-plugin-macros@3.1.0)(esbuild@0.25.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint-scss@6.14.0(stylelint@16.26.1(typescript@5.7.3)))(ts-node@10.9.1(@types/node@25.5.2)(typescript@5.7.3))(type-fest@4.41.0)(typescript@5.7.3)(webpack-hot-middleware@2.26.1)':
+  '@wordpress/scripts@31.8.0(@playwright/test@1.59.1)(@types/eslint@9.6.1)(@types/node@25.5.2)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint-scss@6.14.0(stylelint@16.26.1(typescript@5.7.3)))(ts-node@10.9.1(@types/node@25.5.2)(typescript@5.7.3))(type-fest@4.41.0)(typescript@5.7.3)(webpack-hot-middleware@2.26.1)':
     dependencies:
       '@babel/core': 7.25.7
       '@playwright/test': 1.59.1
@@ -16836,9 +16660,9 @@ snapshots:
       schema-utils: 4.3.3
       source-map-loader: 3.0.2(webpack@5.105.4)
       stylelint: 16.26.1(typescript@5.7.3)
-      terser-webpack-plugin: 5.4.0(esbuild@0.25.12)(webpack@5.105.4)
+      terser-webpack-plugin: 5.4.0(webpack@5.105.4)
       url-loader: 4.1.1(webpack@5.105.4)
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
       webpack-bundle-analyzer: 4.10.2
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.105.4)
       webpack-dev-server: 4.15.2(webpack-cli@5.1.4)(webpack@5.105.4)
@@ -17363,14 +17187,14 @@ snapshots:
       '@babel/core': 7.25.7
       find-cache-dir: 4.0.0
       schema-utils: 4.3.3
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   babel-loader@9.2.1(@babel/core@7.29.0)(webpack@5.105.4):
     dependencies:
       '@babel/core': 7.29.0
       find-cache-dir: 4.0.0
       schema-utils: 4.3.3
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   babel-plugin-const-enum@1.2.0(@babel/core@7.29.0):
     dependencies:
@@ -18054,7 +17878,7 @@ snapshots:
       normalize-path: 3.0.0
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   copy-webpack-plugin@12.0.2(webpack@5.105.4):
     dependencies:
@@ -18064,7 +17888,7 @@ snapshots:
       normalize-path: 3.0.0
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   core-js-compat@3.49.0:
     dependencies:
@@ -18150,6 +17974,19 @@ snapshots:
 
   css-functions-list@3.3.3: {}
 
+  css-loader@6.11.0(webpack@5.105.4(esbuild@0.25.12)):
+    dependencies:
+      icss-utils: 5.1.0(postcss@8.5.8)
+      postcss: 8.5.8
+      postcss-modules-extract-imports: 3.1.0(postcss@8.5.8)
+      postcss-modules-local-by-default: 4.2.0(postcss@8.5.8)
+      postcss-modules-scope: 3.2.1(postcss@8.5.8)
+      postcss-modules-values: 4.0.0(postcss@8.5.8)
+      postcss-value-parser: 4.2.0
+      semver: 7.7.4
+    optionalDependencies:
+      webpack: 5.105.4(esbuild@0.25.12)
+
   css-loader@6.11.0(webpack@5.105.4):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.8)
@@ -18161,7 +17998,7 @@ snapshots:
       postcss-value-parser: 4.2.0
       semver: 7.7.4
     optionalDependencies:
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   css-select@4.3.0:
     dependencies:
@@ -19299,6 +19136,23 @@ snapshots:
       cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
+  fork-ts-checker-webpack-plugin@8.0.0(typescript@5.7.3)(webpack@5.105.4(esbuild@0.25.12)):
+    dependencies:
+      '@babel/code-frame': 7.29.0
+      chalk: 4.1.2
+      chokidar: 3.6.0
+      cosmiconfig: 7.1.0
+      deepmerge: 4.3.1
+      fs-extra: 10.1.0
+      memfs: 3.5.3
+      minimatch: 3.1.5
+      node-abort-controller: 3.1.1
+      schema-utils: 3.3.0
+      semver: 7.7.4
+      tapable: 2.3.2
+      typescript: 5.7.3
+      webpack: 5.105.4(esbuild@0.25.12)
+
   fork-ts-checker-webpack-plugin@8.0.0(typescript@5.7.3)(webpack@5.105.4):
     dependencies:
       '@babel/code-frame': 7.29.0
@@ -19314,7 +19168,7 @@ snapshots:
       semver: 7.7.4
       tapable: 2.3.2
       typescript: 5.7.3
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   form-data@4.0.5:
     dependencies:
@@ -19461,6 +19315,12 @@ snapshots:
       minimatch: 10.2.5
       minipass: 7.1.3
       package-json-from-dist: 1.0.1
+      path-scurry: 2.0.2
+
+  glob@13.0.6:
+    dependencies:
+      minimatch: 10.2.5
+      minipass: 7.1.3
       path-scurry: 2.0.2
 
   glob@7.2.3:
@@ -19665,6 +19525,16 @@ snapshots:
 
   html-tags@3.3.1: {}
 
+  html-webpack-plugin@5.6.6(webpack@5.105.4(esbuild@0.25.12)):
+    dependencies:
+      '@types/html-minifier-terser': 6.1.0
+      html-minifier-terser: 6.1.0
+      lodash: 4.18.1
+      pretty-error: 4.0.0
+      tapable: 2.3.2
+    optionalDependencies:
+      webpack: 5.105.4(esbuild@0.25.12)
+
   html-webpack-plugin@5.6.6(webpack@5.105.4):
     dependencies:
       '@types/html-minifier-terser': 6.1.0
@@ -19673,7 +19543,7 @@ snapshots:
       pretty-error: 4.0.0
       tapable: 2.3.2
     optionalDependencies:
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   htmlparser2@10.0.0:
     dependencies:
@@ -21143,7 +21013,7 @@ snapshots:
     dependencies:
       schema-utils: 4.3.3
       tapable: 2.3.2
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   minimalistic-assert@1.0.1: {}
 
@@ -21816,7 +21686,7 @@ snapshots:
       klona: 2.0.6
       postcss: 8.5.8
       semver: 7.7.4
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   postcss-media-query-parser@0.2.3: {}
 
@@ -22623,7 +22493,7 @@ snapshots:
       neo-async: 2.6.2
     optionalDependencies:
       sass: 1.99.0
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   sass@1.99.0:
     dependencies:
@@ -22882,7 +22752,7 @@ snapshots:
       abab: 2.0.6
       iconv-lite: 0.6.3
       source-map-js: 1.2.1
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   source-map-support@0.5.13:
     dependencies:
@@ -23119,9 +22989,13 @@ snapshots:
 
   stubborn-utils@1.0.2: {}
 
+  style-loader@3.3.4(webpack@5.105.4(esbuild@0.25.12)):
+    dependencies:
+      webpack: 5.105.4(esbuild@0.25.12)
+
   style-loader@3.3.4(webpack@5.105.4):
     dependencies:
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   style-search@0.1.0: {}
 
@@ -23312,15 +23186,23 @@ snapshots:
     dependencies:
       rimraf: 2.6.3
 
-  terser-webpack-plugin@5.4.0(esbuild@0.25.12)(webpack@5.105.4):
+  terser-webpack-plugin@5.4.0(esbuild@0.25.12)(webpack@5.105.4(esbuild@0.25.12)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       terser: 5.46.1
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(esbuild@0.25.12)
     optionalDependencies:
       esbuild: 0.25.12
+
+  terser-webpack-plugin@5.4.0(webpack@5.105.4):
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      jest-worker: 27.5.1
+      schema-utils: 4.3.3
+      terser: 5.46.1
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   terser@5.46.1:
     dependencies:
@@ -23345,7 +23227,7 @@ snapshots:
 
   third-party-web@0.27.0: {}
 
-  third-party-web@0.29.0: {}
+  third-party-web@0.29.2: {}
 
   throat@5.0.0: {}
 
@@ -23625,7 +23507,7 @@ snapshots:
       loader-utils: 2.0.4
       mime-types: 2.1.35
       schema-utils: 3.3.0
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   url@0.11.4:
     dependencies:
@@ -23777,7 +23659,7 @@ snapshots:
       import-local: 3.2.0
       interpret: 3.1.1
       rechoir: 0.8.0
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
       webpack-merge: 5.10.0
     optionalDependencies:
       webpack-bundle-analyzer: 4.10.2
@@ -23790,7 +23672,17 @@ snapshots:
       mime-types: 2.1.35
       range-parser: 1.2.1
       schema-utils: 4.3.3
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
+
+  webpack-dev-middleware@6.1.3(webpack@5.105.4(esbuild@0.25.12)):
+    dependencies:
+      colorette: 2.0.20
+      memfs: 3.5.3
+      mime-types: 2.1.35
+      range-parser: 1.2.1
+      schema-utils: 4.3.3
+    optionalDependencies:
+      webpack: 5.105.4(esbuild@0.25.12)
 
   webpack-dev-middleware@6.1.3(webpack@5.105.4):
     dependencies:
@@ -23800,7 +23692,7 @@ snapshots:
       range-parser: 1.2.1
       schema-utils: 4.3.3
     optionalDependencies:
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
 
   webpack-dev-server@4.15.2(webpack-cli@5.1.4)(webpack@5.105.4):
     dependencies:
@@ -23835,7 +23727,7 @@ snapshots:
       webpack-dev-middleware: 5.3.4(webpack@5.105.4)
       ws: 8.20.0
     optionalDependencies:
-      webpack: 5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4)
+      webpack: 5.105.4(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack-bundle-analyzer@4.10.2)(webpack-dev-server@4.15.2)(webpack@5.105.4)
     transitivePeerDependencies:
       - bufferutil
@@ -23859,7 +23751,7 @@ snapshots:
 
   webpack-virtual-modules@0.6.2: {}
 
-  webpack@5.105.4(esbuild@0.25.12)(webpack-cli@5.1.4):
+  webpack@5.105.4(esbuild@0.25.12):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -23883,7 +23775,39 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.2
-      terser-webpack-plugin: 5.4.0(esbuild@0.25.12)(webpack@5.105.4)
+      terser-webpack-plugin: 5.4.0(esbuild@0.25.12)(webpack@5.105.4(esbuild@0.25.12))
+      watchpack: 2.5.1
+      webpack-sources: 3.3.4
+    transitivePeerDependencies:
+      - '@swc/core'
+      - esbuild
+      - uglify-js
+
+  webpack@5.105.4(webpack-cli@5.1.4):
+    dependencies:
+      '@types/eslint-scope': 3.7.7
+      '@types/estree': 1.0.8
+      '@types/json-schema': 7.0.15
+      '@webassemblyjs/ast': 1.14.1
+      '@webassemblyjs/wasm-edit': 1.14.1
+      '@webassemblyjs/wasm-parser': 1.14.1
+      acorn: 8.16.0
+      acorn-import-phases: 1.0.4(acorn@8.16.0)
+      browserslist: 4.28.2
+      chrome-trace-event: 1.0.4
+      enhanced-resolve: 5.20.1
+      es-module-lexer: 2.0.0
+      eslint-scope: 5.1.1
+      events: 3.3.0
+      glob-to-regexp: 0.4.1
+      graceful-fs: 4.2.11
+      json-parse-even-better-errors: 2.3.1
+      loader-runner: 4.3.1
+      mime-types: 2.1.35
+      neo-async: 2.6.2
+      schema-utils: 4.3.3
+      tapable: 2.3.2
+      terser-webpack-plugin: 5.4.0(webpack@5.105.4)
       watchpack: 2.5.1
       webpack-sources: 3.3.4
     optionalDependencies:
