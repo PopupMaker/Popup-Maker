@@ -981,6 +981,16 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Tests safe_json_decode with escaped quotes inside JSON string values.
+	 */
+	public function test_safe_json_decode_quoted_string_values() {
+		$json     = '{"hypothesis":"Frame (B: \\"Build Popups\\") vs control."}';
+		$returned = PUM_Utils_Array::safe_json_decode( $json );
+		$this->assertIsArray( $returned );
+		$this->assertSame( 'Frame (B: "Build Popups") vs control.', $returned['hypothesis'] );
+	}
+
+	/**
 	 * Tests safe_json_decode with boolean string values.
 	 */
 	public function test_safe_json_decode_boolean_strings() {

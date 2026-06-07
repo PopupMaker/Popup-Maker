@@ -523,12 +523,17 @@ class PUM_Utils_Array {
 	 */
 	public static function safe_json_decode( $arr ) {
 		if ( ! empty( $arr ) && is_string( $arr ) ) {
-			if ( strpos( $arr, '\"' ) !== false ) {
-				$arr = stripslashes( $arr );
+			$decoded = json_decode( $arr );
+
+			// Legacy rows may store slash-escaped JSON ({\"key\":\"value\"}).
+			// Do not stripslashes before the first decode — valid JSON from
+			// wp_json_encode can contain \" inside string values and would
+			// break if slashes were stripped upfront.
+			if ( null === $decoded && JSON_ERROR_NONE !== json_last_error() && false !== strpos( $arr, '\"' ) ) {
+				$decoded = json_decode( stripslashes( $arr ) );
 			}
 
-			$arr = json_decode( $arr );
-			$arr = self::from_object( $arr );
+			$arr = self::from_object( $decoded );
 			$arr = self::fix_json_boolean_values( $arr );
 		}
 
