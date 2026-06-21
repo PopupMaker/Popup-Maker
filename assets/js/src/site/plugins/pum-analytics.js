@@ -9,92 +9,179 @@
 		typeof pum_vars.analytics_api !== 'undefined' && pum_vars.analytics_api
 	);
 
-	window.PUM_Analytics = {
-		beacon: function ( data, callback ) {
-			var url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl,
-				opts = {
-					route: window.pum.hooks.applyFilters(
-						'pum.analyticsBeaconRoute',
-						'/' + pum_vars.analytics_route + '/'
-					),
-					data: window.pum.hooks.applyFilters(
-						'pum.AnalyticsBeaconData',
-						$.extend(
-							true,
-							{
-								event: 'open',
-								pid: null,
-								_cache: +new Date(),
-							},
-							data
-						)
-					),
-					callback:
-						typeof callback === 'function'
-							? callback
-							: function () {},
-				};
+	// Debounce window (ms) for coalescing rapid events into one request. Events
+	// that fire close together (e.g. triggered + open on the same popup) are
+	// batched into a single beacon. Filterable for tuning.
+	var FLUSH_DEBOUNCE_MS = window.pum.hooks.applyFilters(
+		'pum.analyticsBeaconDebounce',
+		400
+	);
 
-			if ( ! rest_enabled ) {
-				opts.data.action = 'pum_analytics';
-			} else {
-				url += opts.route;
-			}
+	// Pending event payloads awaiting flush, and their callbacks.
+	var queue = [];
+	var queueCallbacks = [];
+	var flushTimer = null;
 
-			// Create a beacon if a url is provided
-			if ( url ) {
-				// Use modern sendBeacon API when available (more reliable for page exit events)
-				if ( 'sendBeacon' in navigator ) {
-					try {
-						// Convert data to FormData for sendBeacon
-						var formData = new FormData();
-						for ( var key in opts.data ) {
-							if (
-								Object.prototype.hasOwnProperty.call(
-									opts.data,
-									key
-								)
-							) {
-								// Check if the value is an object and serialize it
-								var value = opts.data[ key ];
-								if (
-									typeof value === 'object' &&
-									value !== null
-								) {
-									value = JSON.stringify( value );
-								}
-								formData.append( key, value );
-							}
+	/**
+	 * Resolve the beacon endpoint URL (REST or ajax fallback).
+	 *
+	 * @return {string} URL or '' when none configured.
+	 */
+	function beaconUrl() {
+		var url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl;
+		if ( ! url ) {
+			return '';
+		}
+		if ( rest_enabled ) {
+			url += window.pum.hooks.applyFilters(
+				'pum.analyticsBeaconRoute',
+				'/' + pum_vars.analytics_route + '/'
+			);
+		}
+		return url;
+	}
+
+	/**
+	 * POST a payload via sendBeacon (FormData), falling back to an image GET.
+	 * Object values are JSON-encoded so they survive FormData/query encoding.
+	 *
+	 * @param {Object}   payload  Request body keys.
+	 * @param {Function} callback Invoked on success (best effort).
+	 * @return {boolean} Whether the send was dispatched.
+	 */
+	function dispatch( payload, callback ) {
+		var url = beaconUrl();
+		if ( ! url ) {
+			return false;
+		}
+
+		if ( ! rest_enabled ) {
+			payload.action = 'pum_analytics';
+		}
+
+		if ( 'sendBeacon' in navigator ) {
+			try {
+				var formData = new FormData();
+				for ( var key in payload ) {
+					if (
+						Object.prototype.hasOwnProperty.call( payload, key )
+					) {
+						var value = payload[ key ];
+						if ( typeof value === 'object' && value !== null ) {
+							value = JSON.stringify( value );
 						}
-
-						// Send beacon - returns true if queued successfully
-						var success = navigator.sendBeacon( url, formData );
-
-						// Call callback if provided
-						if ( success ) {
-							opts.callback();
-						}
-
-						return;
-					} catch ( error ) {
-						// Fall back to image beacon if sendBeacon fails.
-						// eslint-disable-next-line no-console
-						console.warn(
-							'sendBeacon failed, falling back to image beacon:',
-							error
-						);
+						formData.append( key, value );
 					}
 				}
 
-				// Fallback: Use traditional image beacon method
-				var beacon = new Image();
-				// Attach the event handlers to the image object
-				$( beacon ).on( 'error success load done', opts.callback );
-				// Attach the src for the script call
-				beacon.src = url + '?' + $.param( opts.data );
+				var success = navigator.sendBeacon( url, formData );
+				if ( success && typeof callback === 'function' ) {
+					callback();
+				}
+				return true;
+			} catch ( error ) {
+				// eslint-disable-next-line no-console
+				console.warn(
+					'sendBeacon failed, falling back to image beacon:',
+					error
+				);
 			}
+		}
+
+		// Fallback: traditional image beacon (single-event only — GET length).
+		var beacon = new Image();
+		$( beacon ).on(
+			'error success load done',
+			typeof callback === 'function' ? callback : function () {}
+		);
+		beacon.src = url + '?' + $.param( payload );
+		return true;
+	}
+
+	/**
+	 * Flush all queued events as one batched request. sendBeacon is used so the
+	 * send survives page unload, making this safe to call on exit.
+	 */
+	function flush() {
+		if ( flushTimer ) {
+			clearTimeout( flushTimer );
+			flushTimer = null;
+		}
+
+		if ( ! queue.length ) {
+			return;
+		}
+
+		var events = queue;
+		var callbacks = queueCallbacks;
+		queue = [];
+		queueCallbacks = [];
+
+		var done = function () {
+			for ( var i = 0; i < callbacks.length; i++ ) {
+				if ( typeof callbacks[ i ] === 'function' ) {
+					callbacks[ i ]();
+				}
+			}
+		};
+
+		// Single event: send it flat (back-compat with the original payload
+		// shape). Multiple: send as an `events` batch the endpoint unpacks.
+		if ( events.length === 1 ) {
+			dispatch( events[ 0 ], done );
+			return;
+		}
+
+		dispatch( { events: events, _cache: +new Date() }, done );
+	}
+
+	window.PUM_Analytics = {
+		/**
+		 * Queue an analytics event for batched delivery.
+		 *
+		 * @param {Object}   data     Event payload (event, pid, eventData…).
+		 * @param {Function} callback Optional success callback.
+		 */
+		beacon: function ( data, callback ) {
+			var payload = window.pum.hooks.applyFilters(
+				'pum.AnalyticsBeaconData',
+				$.extend(
+					true,
+					{
+						event: 'open',
+						pid: null,
+						_cache: +new Date(),
+					},
+					data
+				)
+			);
+
+			queue.push( payload );
+			queueCallbacks.push(
+				typeof callback === 'function' ? callback : null
+			);
+
+			if ( flushTimer ) {
+				clearTimeout( flushTimer );
+			}
+			flushTimer = setTimeout( flush, FLUSH_DEBOUNCE_MS );
 		},
+
+		/**
+		 * Force-send any queued events immediately. Used on page exit.
+		 */
+		flush: flush,
 	};
+
+	// Guarantee delivery on page exit: pagehide covers navigation/close/bfcache,
+	// and visibilitychange→hidden covers tab switches and mobile backgrounding.
+	// sendBeacon is built to survive unload, so the full queue is flushed 100%.
+	window.addEventListener( 'pagehide', flush );
+	document.addEventListener( 'visibilitychange', function () {
+		if ( document.visibilityState === 'hidden' ) {
+			flush();
+		}
+	} );
 
 	if ( pum_vars.analytics_enabled ) {
 		// Only popups from the editor should fire analytics events.
