@@ -214,10 +214,9 @@ class Connect extends WP_REST_Controller {
 		// Layer 1: User Agent Verification.
 		$this->verify_user_agent();
 
-		// Layer 2: Referrer Domain Validation (production only).
-		if ( 'production' === wp_get_environment_type() ) {
-			$this->verify_referrer();
-		}
+		// Layer 2: Referrer Domain Validation. Enforced in all environments so a
+		// publicly reachable staging/dev site keeps the full defense-in-depth chain.
+		$this->verify_referrer();
 
 		// Layer 3: Bearer Token Authentication.
 		$this->verify_authentication();
