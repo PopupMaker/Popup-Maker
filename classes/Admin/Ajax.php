@@ -305,6 +305,16 @@ class PUM_Admin_Ajax {
 			);
 		}
 
+		// Capability check. Batch processes can run destructive operations (resets,
+		// exports, imports), so require an administrator regardless of the nonce.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				[
+					'error' => __( 'You do not have permission to initiate this request. Contact an administrator for more information.', 'popup-maker' ),
+				]
+			);
+		}
+
 		// Attempt to retrieve the batch attributes from memory.
 		$batch = PUM_Batch_Process_Registry::instance()->get( $batch_id );
 
