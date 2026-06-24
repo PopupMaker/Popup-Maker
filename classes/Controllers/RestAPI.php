@@ -45,8 +45,6 @@ class RestAPI extends Controller {
 
 		// Sanitize and validate filters.
 		add_filter( 'popup_maker/sanitize_popup_settings', [ $this, 'sanitize_popup_settings' ], 10, 2 );
-		// Validation is registered but currently a no-op (returns true); left disabled
-		// until per-setting type validation is implemented.
 		// add_filter( 'popup_maker/validate_popup_settings', [ $this, 'validate_popup_settings' ], 10, 2 );
 		add_filter( 'popup_maker/sanitize_call_to_action_settings', [ $this, 'sanitize_call_to_action_settings' ], 10, 2 );
 		add_filter( 'popup_maker/validate_call_to_action_settings', [ $this, 'validate_call_to_action_settings' ], 10, 2 );
@@ -469,14 +467,6 @@ class RestAPI extends Controller {
 
 	/**
 	 * Sanitize popup settings.
-	 *
-	 * Currently a pass-through. Popup settings are strongly typed (each field has a
-	 * registered type), so correct sanitization must key off the field schema rather
-	 * than apply a blanket string filter — a blanket wp_kses_post/sanitize_text_field
-	 * would corrupt legitimate values (CSS, measures, URLs, regex/selectors). The
-	 * filter is wired up so a field-type-aware sanitizer can be added later without a
-	 * structural change. Access is already gated by the edit_popups capability and
-	 * stored values are escaped on output (wp_json_encode), so this is not a sink.
 	 *
 	 * @param array<string,mixed> $settings The settings to sanitize.
 	 * @param int                 $id       The popup ID.

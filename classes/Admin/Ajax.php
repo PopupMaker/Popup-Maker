@@ -297,7 +297,7 @@ class PUM_Admin_Ajax {
 		}
 
 		// Nonce.
-		if ( ! isset( $_REQUEST['nonce'] ) || ( isset( $_REQUEST['nonce'] ) && false === wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), "{$batch_id}_step_nonce" ) ) ) {
+		if ( ! check_ajax_referer( "{$batch_id}_step_nonce", 'nonce', false ) ) {
 			wp_send_json_error(
 				[
 					'error' => __( 'You do not have permission to initiate this request. Contact an administrator for more information.', 'popup-maker' ),
