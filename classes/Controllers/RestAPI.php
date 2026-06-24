@@ -82,7 +82,7 @@ class RestAPI extends Controller {
 			[
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'rest_validate_license' ],
-				'permission_callback' => [ $this, 'rest_pro_upgrade_permissions' ],
+				'permission_callback' => [ $this, 'rest_manage_pro_permissions' ],
 				'args'                => [
 					'license_key' => [
 						'required'          => false,
@@ -163,11 +163,13 @@ class RestAPI extends Controller {
 		] );
 
 		// Connection info generation endpoint.
+		// This mints a server-installable connection token, so it must be limited to
+		// users who can actually install plugins (not merely edit popups).
 		register_rest_route( $namespace, '/connect/info', [
 			[
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'rest_get_connect_info' ],
-				'permission_callback' => [ $this, 'rest_pro_upgrade_permissions' ],
+				'permission_callback' => [ $this, 'rest_manage_pro_permissions' ],
 			],
 		] );
 	}
@@ -188,12 +190,16 @@ class RestAPI extends Controller {
 	}
 
 	/**
-	 * Permission callback for Pro upgrade endpoints.
+	 * Permission callback for Pro management endpoints (license + install).
+	 *
+	 * These endpoints either change the Pro license or mint a server-installable
+	 * connection token, so access must be limited to users who are actually allowed
+	 * to install plugins rather than merely edit popups.
 	 *
 	 * @return bool True if user has permission, false otherwise.
 	 */
-	public function rest_pro_upgrade_permissions() {
-		return current_user_can( $this->container->get_permission( 'edit_popups' ) );
+	public function rest_manage_pro_permissions() {
+		return current_user_can( $this->container->get_permission( 'install_pro' ) );
 	}
 
 	/**

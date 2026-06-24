@@ -25,6 +25,7 @@ function get_default_permissions() {
 		'edit_popup_themes' => 'edit_others_posts',
 		// Keep admin-only for plugin settings.
 		'manage_settings'   => 'manage_options',
+		'install_pro'       => 'install_plugins',
 	];
 
 	/**

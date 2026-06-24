@@ -108,12 +108,17 @@ class Connect extends WP_REST_Controller {
 	 */
 	public function install_webhook( $request ) {
 		try {
-			// Validate the connection using multi-layer security.
-			$this->validate_secure_connection();
+			// Determine up front whether this is a verification ping or a real install.
+			// Verification pings are allowed without a signature; installs are not.
+			$json_data       = json_decode( file_get_contents( 'php://input' ), true );
+			$is_verification = is_array( $json_data ) && isset( $json_data['action'] ) && 'verify' === $json_data['action'];
 
-			// Check if this is a verification request
-			$json_data = json_decode( file_get_contents( 'php://input' ), true );
-			if ( is_array( $json_data ) && isset( $json_data['action'] ) && 'verify' === $json_data['action'] ) {
+			// Validate the connection using multi-layer security.
+			// Installs MUST carry a valid HMAC signature; the bearer token alone is not sufficient.
+			$this->validate_secure_connection( ! $is_verification );
+
+			// Check if this is a verification request.
+			if ( $is_verification ) {
 				$this->connect_service->debug_log( 'Processing webhook verification request', 'DEBUG' );
 				return new WP_REST_Response(
 					[
@@ -179,7 +184,8 @@ class Connect extends WP_REST_Controller {
 	public function verify_webhook( $request ) {
 		try {
 			// Validate the connection using multi-layer security.
-			$this->validate_secure_connection();
+			// This endpoint only confirms connectivity, so a signature is not required.
+			$this->validate_secure_connection( false );
 
 			return new WP_REST_Response(
 				[
@@ -204,7 +210,7 @@ class Connect extends WP_REST_Controller {
 	 * @throws \Exception If validation fails.
 	 * @return void
 	 */
-	private function validate_secure_connection() {
+	private function validate_secure_connection( $require_signature = true ) {
 		// Layer 1: User Agent Verification.
 		$this->verify_user_agent();
 
@@ -217,7 +223,7 @@ class Connect extends WP_REST_Controller {
 		$this->verify_authentication();
 
 		// Layer 4: HMAC Signature Verification.
-		$this->verify_signature();
+		$this->verify_signature( $require_signature );
 
 		$this->connect_service->debug_log( 'All security layers validated successfully', 'DEBUG' );
 	}
@@ -233,8 +239,9 @@ class Connect extends WP_REST_Controller {
 		$this->connect_service->debug_log( 'Received User Agent: ' . $user_agent, 'DEBUG' );
 		$this->connect_service->debug_log( 'Expected User Agent pattern: PopupMakerUpgrader/*', 'DEBUG' );
 
-		// Check if User-Agent starts with "PopupMakerUpgrader/" (version-flexible)
-		if ( ! empty( $user_agent ) && ! preg_match( '/^PopupMakerUpgrader\/\d+\.\d+\.\d+$/', $user_agent ) ) {
+		// Require a User-Agent matching "PopupMakerUpgrader/x.y.z".
+		// An absent or empty header must be rejected, not silently allowed through.
+		if ( empty( $user_agent ) || ! preg_match( '/^PopupMakerUpgrader\/\d+\.\d+\.\d+$/', $user_agent ) ) {
 			throw new \Exception(
 				// translators: %s is the user agent.
 				esc_html( sprintf( __( 'Invalid user agent: %s', 'popup-maker' ), $user_agent ) )
@@ -316,8 +323,8 @@ class Connect extends WP_REST_Controller {
 	 * @throws \Exception If signature verification fails.
 	 * @return void
 	 */
-	private function verify_signature() {
-		// Try both possible signature header names for compatibility
+	private function verify_signature( $require_signature = true ) {
+		// Try both possible signature header names for compatibility.
 		$signature_header = '';
 		if ( isset( $_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'] ) ) {
 			$signature_header = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'] ) );
@@ -328,8 +335,15 @@ class Connect extends WP_REST_Controller {
 		$this->connect_service->debug_log( 'Signature header: ' . substr( $signature_header, 0, 20 ) . '...', 'DEBUG' );
 
 		if ( empty( $signature_header ) ) {
-			$this->connect_service->debug_log( 'No signature header found - signature verification skipped', 'DEBUG' );
-			// Signature is optional for some endpoints, but recommended.
+			// A missing signature is only acceptable for lightweight verification pings.
+			// Any request that performs an installation must be signed, otherwise a leaked
+			// bearer token alone would be enough to authorize an arbitrary plugin install.
+			if ( $require_signature ) {
+				$this->connect_service->debug_log( 'Missing required signature header for install request', 'ERROR' );
+				throw new \Exception( esc_html__( 'Missing request signature.', 'popup-maker' ) );
+			}
+
+			$this->connect_service->debug_log( 'No signature header found - signature verification skipped for verification request', 'DEBUG' );
 			return;
 		}
 
@@ -402,7 +416,71 @@ class Connect extends WP_REST_Controller {
 			throw new \Exception( esc_html__( 'Invalid installation type.', 'popup-maker' ) );
 		}
 
+		// Validate the download URL host against the allowlist.
+		// Without this, a request that satisfies the connection checks could install
+		// an arbitrary package from any attacker-controlled URL.
+		if ( ! $this->is_allowed_download_url( $args['file'] ) ) {
+			$this->connect_service->debug_log( 'Rejected install: download URL host not allowed: ' . $args['file'], 'ERROR' );
+			throw new \Exception( esc_html__( 'Download URL is not from an allowed source.', 'popup-maker' ) );
+		}
+
 		return $args;
+	}
+
+	/**
+	 * Get the list of hosts allowed to serve installable packages.
+	 *
+	 * @return array<int,string> Lowercase hostnames.
+	 */
+	private function get_allowed_download_hosts() {
+		$allowed_hosts = [
+			'wppopupmaker.com',
+			'upgrade.wppopupmaker.com',
+		];
+
+		/**
+		 * Filter: popup_maker/connect_allowed_download_hosts
+		 *
+		 * Allows trusted hosts that may serve installable Pro packages to be customized.
+		 * Returned hostnames are compared case-insensitively against the URL host.
+		 *
+		 * @param array<int,string> $allowed_hosts Allowed hostnames.
+		 */
+		$allowed_hosts = apply_filters( 'popup_maker/connect_allowed_download_hosts', $allowed_hosts );
+
+		return array_map( 'strtolower', array_filter( (array) $allowed_hosts ) );
+	}
+
+	/**
+	 * Determine whether a download URL points at an allowed host.
+	 *
+	 * Accepts only HTTPS URLs whose host exactly matches (or is a subdomain of)
+	 * an allowlisted host.
+	 *
+	 * @param string $url Download URL.
+	 * @return bool True when the URL is allowed.
+	 */
+	private function is_allowed_download_url( $url ) {
+		if ( empty( $url ) || ! is_string( $url ) ) {
+			return false;
+		}
+
+		$host   = wp_parse_url( $url, PHP_URL_HOST );
+		$scheme = strtolower( (string) wp_parse_url( $url, PHP_URL_SCHEME ) );
+
+		if ( empty( $host ) || 'https' !== $scheme ) {
+			return false;
+		}
+
+		$host = strtolower( $host );
+
+		foreach ( $this->get_allowed_download_hosts() as $allowed_host ) {
+			if ( $host === $allowed_host || substr( $host, -strlen( '.' . $allowed_host ) ) === '.' . $allowed_host ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -542,6 +620,14 @@ class Connect extends WP_REST_Controller {
 						return new WP_Error(
 							'invalid_file_url',
 							__( 'Valid file URL is required.', 'popup-maker' ),
+							[ 'status' => 400 ]
+						);
+					}
+					// Reject any URL that is not served from an allowed host.
+					if ( ! $this->is_allowed_download_url( $param ) ) {
+						return new WP_Error(
+							'invalid_file_url',
+							__( 'Download URL is not from an allowed source.', 'popup-maker' ),
 							[ 'status' => 400 ]
 						);
 					}

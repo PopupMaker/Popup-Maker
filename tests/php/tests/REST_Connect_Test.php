@@ -95,13 +95,13 @@ class REST_Connect_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test file parameter accepts valid URLs.
+	 * Test file parameter accepts valid allowlisted URLs.
 	 */
 	public function test_file_validate_callback_accepts_valid_url() {
 		$validate = $this->install_args['file']['validate_callback'];
 
-		$result = $validate( 'https://example.com/plugin.zip' );
-		$this->assertTrue( $result, 'Valid URL should pass validation.' );
+		$result = $validate( 'https://upgrade.wppopupmaker.com/plugin.zip' );
+		$this->assertTrue( $result, 'Valid allowlisted URL should pass validation.' );
 	}
 
 	/**
@@ -226,24 +226,24 @@ class REST_Connect_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test file validate_callback with various valid URL schemes.
+	 * Test file validate_callback accepts allowlisted HTTPS hosts.
 	 */
 	public function test_file_validate_callback_https_url() {
 		$validate = $this->install_args['file']['validate_callback'];
 
-		$this->assertTrue( $validate( 'https://upgrade.wppopupmaker.com/plugin.zip' ), 'HTTPS URL should pass.' );
-		$this->assertTrue( $validate( 'http://example.com/file.zip' ), 'HTTP URL should pass.' );
+		$this->assertTrue( $validate( 'https://upgrade.wppopupmaker.com/plugin.zip' ), 'Allowlisted HTTPS URL should pass.' );
+		$this->assertTrue( $validate( 'https://wppopupmaker.com/file.zip' ), 'Allowlisted apex HTTPS URL should pass.' );
 	}
 
 	/**
-	 * Test file validate_callback with special characters in URL.
+	 * Test file validate_callback with special characters in an allowlisted URL.
 	 */
 	public function test_file_validate_callback_url_with_params() {
 		$validate = $this->install_args['file']['validate_callback'];
 
 		$this->assertTrue(
-			$validate( 'https://example.com/download?file=plugin.zip&version=1.0' ),
-			'URL with query params should pass.'
+			$validate( 'https://upgrade.wppopupmaker.com/download?file=plugin.zip&version=1.0' ),
+			'Allowlisted URL with query params should pass.'
 		);
 	}
 
@@ -553,13 +553,14 @@ class REST_Connect_Test extends WP_UnitTestCase {
 
 	/**
 	 * Test file validate_callback rejects FTP scheme.
+	 *
+	 * FTP passes FILTER_VALIDATE_URL but is not HTTPS, so the allowlist must reject it.
 	 */
 	public function test_file_validate_callback_ftp() {
 		$validate = $this->install_args['file']['validate_callback'];
 
-		// FTP is technically a valid URL.
-		$result = $validate( 'ftp://example.com/file.zip' );
-		$this->assertTrue( $result, 'FTP URL should pass FILTER_VALIDATE_URL.' );
+		$result = $validate( 'ftp://upgrade.wppopupmaker.com/file.zip' );
+		$this->assertInstanceOf( WP_Error::class, $result, 'Non-HTTPS (FTP) URL should be rejected by the allowlist.' );
 	}
 
 	/**
@@ -570,5 +571,213 @@ class REST_Connect_Test extends WP_UnitTestCase {
 
 		$this->assertTrue( $sanitize( 'true' ), 'String "true" should become true.' );
 		$this->assertTrue( $sanitize( 'false' ), 'Non-empty string "false" should become true (PHP bool cast).' );
+	}
+
+	/**
+	 * The connection-info endpoint must mint install tokens for plugin installers only.
+	 *
+	 * Only users with the install_pro permission can obtain the token.
+	 */
+	public function test_connect_info_requires_install_capability() {
+		do_action( 'rest_api_init' );
+
+		$controller = \PopupMaker\plugin()->get_controller( 'RestAPI' );
+		$this->assertNotNull( $controller, 'RestAPI controller should be registered.' );
+
+		// Editor: has edit_others_posts but NOT install_pro.
+		$editor_id = self::factory()->user->create( [ 'role' => 'editor' ] );
+		wp_set_current_user( $editor_id );
+		$this->assertFalse(
+			$controller->rest_manage_pro_permissions(),
+			'Editor must NOT be allowed to obtain a Pro install token.'
+		);
+
+		// Administrator: has install_plugins.
+		$admin_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		wp_set_current_user( $admin_id );
+		$this->assertTrue(
+			$controller->rest_manage_pro_permissions(),
+			'Administrator must be allowed to obtain a Pro install token.'
+		);
+
+		wp_set_current_user( 0 );
+	}
+
+	/**
+	 * The install_pro permission must default to install_plugins, not an editor cap.
+	 */
+	public function test_install_pro_permission_defaults_to_install_plugins() {
+		$permissions = \PopupMaker\get_default_permissions();
+
+		$this->assertArrayHasKey( 'install_pro', $permissions, 'install_pro permission should be defined.' );
+		$this->assertEquals( 'install_plugins', $permissions['install_pro'], 'install_pro should default to install_plugins.' );
+		$this->assertNotEquals( 'edit_others_posts', $permissions['install_pro'], 'install_pro must not be an editor-level capability.' );
+	}
+
+	/**
+	 * The /connect/info route must be registered with the stricter install permission callback.
+	 */
+	public function test_connect_info_route_uses_install_permission_callback() {
+		do_action( 'rest_api_init' );
+
+		$routes = rest_get_server()->get_routes();
+		$this->assertArrayHasKey( '/popup-maker/v1/connect/info', $routes, 'connect/info route should be registered.' );
+
+		$callback = $routes['/popup-maker/v1/connect/info'][0]['permission_callback'];
+		$this->assertIsArray( $callback, 'Permission callback should be a method array.' );
+		$this->assertEquals(
+			'rest_manage_pro_permissions',
+			$callback[1],
+			'connect/info must use the install-capable permission callback, not the editor one.'
+		);
+	}
+
+	/**
+	 * The download-URL allowlist must reject arbitrary attacker-controlled hosts.
+	 */
+	public function test_download_url_allowlist_rejects_foreign_hosts() {
+		$validate = $this->install_args['file']['validate_callback'];
+
+		$rejected = [
+			'https://attacker.example.com/pum-rce-test.zip',
+			'https://evil.com/payload.zip',
+			// Look-alike that is NOT a subdomain of the allowed host.
+			'https://wppopupmaker.com.attacker.com/x.zip',
+			// Allowed host embedded in path, wrong host.
+			'https://attacker.com/wppopupmaker.com/x.zip',
+			'http://upgrade.wppopupmaker.com/x.zip',
+		];
+
+		foreach ( $rejected as $url ) {
+			$result = $validate( $url );
+			$this->assertInstanceOf( WP_Error::class, $result, "URL should be rejected by allowlist: $url" );
+			$this->assertEquals( 'invalid_file_url', $result->get_error_code(), "Rejection code should be invalid_file_url for: $url" );
+		}
+	}
+
+	/**
+	 * The download-URL allowlist must accept the legitimate upgrade hosts (and subdomains).
+	 */
+	public function test_download_url_allowlist_accepts_trusted_hosts() {
+		$validate = $this->install_args['file']['validate_callback'];
+
+		$allowed = [
+			'https://wppopupmaker.com/pro.zip',
+			'https://upgrade.wppopupmaker.com/pro.zip',
+			'https://cdn.wppopupmaker.com/pro.zip',
+		];
+
+		foreach ( $allowed as $url ) {
+			$this->assertTrue( $validate( $url ), "Trusted host URL should pass allowlist: $url" );
+		}
+	}
+
+	/**
+	 * The allowlist must be filterable for advanced/self-hosted setups.
+	 */
+	public function test_download_url_allowlist_is_filterable() {
+		$validate = $this->install_args['file']['validate_callback'];
+
+		$this->assertInstanceOf(
+			WP_Error::class,
+			$validate( 'https://my-mirror.example.org/pro.zip' ),
+			'Custom host should be rejected before filtering.'
+		);
+
+		$filter = function ( $hosts ) {
+			$hosts[] = 'my-mirror.example.org';
+			return $hosts;
+		};
+		add_filter( 'popup_maker/connect_allowed_download_hosts', $filter );
+
+		$this->assertTrue(
+			$validate( 'https://my-mirror.example.org/pro.zip' ),
+			'Custom host should pass once added via the filter.'
+		);
+
+		remove_filter( 'popup_maker/connect_allowed_download_hosts', $filter );
+	}
+
+	/**
+	 * A missing or empty User-Agent header must be rejected, not silently allowed.
+	 */
+	public function test_verify_user_agent_rejects_empty_header() {
+		$reflection = new \ReflectionMethod( Connect::class, 'verify_user_agent' );
+		$reflection->setAccessible( true );
+
+		[ $controller ] = $this->create_controller_with_mock_service( [ 'debug_log' ] );
+
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput -- Test fixture controls the header value directly.
+		$original_ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : null;
+
+		// Absent User-Agent header must throw.
+		unset( $_SERVER['HTTP_USER_AGENT'] );
+		$threw = false;
+		try {
+			$reflection->invoke( $controller );
+		} catch ( \Exception $e ) {
+			$threw = true;
+		}
+		$this->assertTrue( $threw, 'Absent User-Agent header must be rejected.' );
+
+		// Empty User-Agent header must throw.
+		$_SERVER['HTTP_USER_AGENT'] = '';
+		$threw                      = false;
+		try {
+			$reflection->invoke( $controller );
+		} catch ( \Exception $e ) {
+			$threw = true;
+		}
+		$this->assertTrue( $threw, 'Empty User-Agent header must be rejected.' );
+
+		// A valid upgrader User-Agent must pass.
+		$_SERVER['HTTP_USER_AGENT'] = 'PopupMakerUpgrader/1.2.3';
+		$threw                      = false;
+		try {
+			$reflection->invoke( $controller );
+		} catch ( \Exception $e ) {
+			$threw = true;
+		}
+		$this->assertFalse( $threw, 'Valid upgrader User-Agent must pass.' );
+
+		if ( null === $original_ua ) {
+			unset( $_SERVER['HTTP_USER_AGENT'] );
+		} else {
+			$_SERVER['HTTP_USER_AGENT'] = $original_ua;
+		}
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+	}
+
+	/**
+	 * An install request with no signature header must be rejected (mandatory signature).
+	 *
+	 * A verification ping ({"action":"verify"}) is exempt; an install is not.
+	 */
+	public function test_install_requires_signature() {
+		$reflection = new \ReflectionMethod( Connect::class, 'verify_signature' );
+		$reflection->setAccessible( true );
+
+		[ $controller ] = $this->create_controller_with_mock_service( [ 'debug_log' ] );
+
+		// Ensure no signature headers are present.
+		unset( $_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'], $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] );
+
+		// require_signature = true -> must throw.
+		$threw = false;
+		try {
+			$reflection->invoke( $controller, true );
+		} catch ( \Exception $e ) {
+			$threw = true;
+		}
+		$this->assertTrue( $threw, 'Install (require_signature=true) with no signature header must throw.' );
+
+		// require_signature = false (verification ping) -> must NOT throw.
+		$threw = false;
+		try {
+			$reflection->invoke( $controller, false );
+		} catch ( \Exception $e ) {
+			$threw = true;
+		}
+		$this->assertFalse( $threw, 'Verification (require_signature=false) with no signature header must not throw.' );
 	}
 }
