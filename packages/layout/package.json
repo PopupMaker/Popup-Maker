@@ -47,7 +47,7 @@
 		"@types/wordpress__element": "^2.14.1"
 	},
 	"scripts": {
-		"prepublishOnly": "pnpm run build:tsc && pnpm run build:types",
+		"prepack": "pnpm run build:tsc && pnpm run build:types",
 		"build:tsc": "tsc",
 		"build:types": "tsc --build",
 		"watch:tsc": "tsc -w",
