@@ -208,9 +208,18 @@
 			admin_debug: function () {
 				// Defer open until after all popups finish initializing.
 				var $popup = PUM.getPopup( this );
-				$( document ).one( 'pumInitialized', function () {
+				var open = function () {
 					$popup.popmake( 'open' );
-				} );
+				};
+
+				// If initialization already completed, the one-shot
+				// pumInitialized event has fired and would be missed, so
+				// open immediately. Otherwise wait for it. See issue #1199.
+				if ( window.PUM.initialized ) {
+					open();
+				} else {
+					$( document ).one( 'pumInitialized', open );
+				}
 			},
 		} );
 
