@@ -1,6 +1,5 @@
 includes:
-    # Uncomment for VSCode extension if it doesn't autodetect it.
-    # - vendor/szepeviktor/phpstan-wordpress/extension.neon
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
     level: 1
     # Complexity metrics (uncomment to enable)
@@ -24,6 +23,7 @@ parameters:
     bootstrapFiles:
         - bin/phpstan-bootstrap.php
     stubFiles:
+        - bin/stubs/acf.php
         - bin/stubs/buddypress.php
         - bin/stubs/easy-modal.php
         - bin/stubs/elementor.php

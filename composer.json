@@ -80,6 +80,11 @@
 		"exclude-from-classmap": [
 			"vendor/composer/installers/*"
 		],
+		"phpstan/extension-installer": {
+			"ignore": [
+				"szepeviktor/phpstan-wordpress"
+			]
+		},
 		"strauss": {
 			"target_directory": "/vendor-prefixed/",
 			"namespace_prefix": "PopupMaker\\Vendor\\",
