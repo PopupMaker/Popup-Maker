@@ -77,7 +77,20 @@
 					settings.extra_selectors &&
 					settings.extra_selectors !== ''
 				) {
-					trigger_selectors.push( settings.extra_selectors );
+					// A malformed Extra Selector (e.g. an unbalanced quote or
+					// bracket) makes the whole jQuery selector throw, breaking
+					// every click trigger on the page. Validate it first and
+					// skip it with a console warning instead. See issue #993.
+					if ( PUM.isValidSelector( settings.extra_selectors ) ) {
+						trigger_selectors.push( settings.extra_selectors );
+					} else if ( window.console && window.console.warn ) {
+						console.warn(
+							'Popup Maker: ignoring invalid Click Open "Extra Selectors" value for popup #' +
+								popup_settings.id +
+								': ' +
+								settings.extra_selectors
+						);
+					}
 				}
 
 				trigger_selectors = pum.hooks.applyFilters(

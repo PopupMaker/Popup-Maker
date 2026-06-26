@@ -177,6 +177,20 @@
 				callback();
 			}
 		},
+		isValidSelector: function ( selector ) {
+			if ( typeof selector !== 'string' || selector === '' ) {
+				return false;
+			}
+
+			// querySelector throws a SyntaxError on a malformed selector; use
+			// it as a cheap, side-effect-free validity check. See issue #993.
+			try {
+				document.createDocumentFragment().querySelector( selector );
+				return true;
+			} catch ( e ) {
+				return false;
+			}
+		},
 		getClickTriggerSelector: function ( el, trigger_settings ) {
 			var $popup = PUM.getPopup( el ),
 				settings = PUM.getSettings( el ),
@@ -188,7 +202,8 @@
 
 			if (
 				trigger_settings.extra_selectors &&
-				trigger_settings.extra_selectors !== ''
+				trigger_settings.extra_selectors !== '' &&
+				PUM.isValidSelector( trigger_settings.extra_selectors )
 			) {
 				trigger_selectors.push( trigger_settings.extra_selectors );
 			}

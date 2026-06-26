@@ -16,6 +16,7 @@
 -   Fixed PHP bug in `pum_get_asset_group_meta()` where `(array) file_exists()` always evaluated as truthy, causing fatal errors when build artifacts were missing.
 -   Fixed condition dropdowns (such as "Categories", "Tags", and other taxonomy selectors) showing duplicate entries and hiding some terms when you had more than ten — every term is now listed once and reachable as you scroll. Closes #1206.
 -   Fixed popups taller than the browser window having their top cut off above the screen, which made the start of the content and the close button impossible to reach. Tall popups now keep their top edge in view. Closes #1227.
+-   Fixed an invalid "Extra Selectors" value on a Click Open trigger breaking all popup triggers on the page. A malformed selector is now skipped (with a console notice) instead of stopping every trigger from working. Closes #993.
 
 ## v1.22.0 - 2026-03-31
 
