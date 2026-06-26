@@ -883,10 +883,28 @@
 				.position( reposition )
 				.trigger( 'popmakeAfterReposition' );
 
-			if ( location === 'center' && $container[ 0 ].offsetTop < 0 ) {
-				// Admin bar is 32px high, with a 10px margin that is 42
+			// If a popup is taller than the viewport its top edge can be pushed
+			// above the top of the screen, leaving the start of the content
+			// unreachable with no way to scroll up to it. Pin the top into view
+			// for any popup that overflows, regardless of configured position.
+			//
+			// Use the viewport-relative top (getBoundingClientRect) rather than
+			// offsetTop: offsetTop is measured from the offset parent and can be
+			// positive (e.g. a CSS top offset) while the rendered top is still
+			// off-screen, so the old offsetTop check missed real clipping.
+			// See issue #1227.
+			var containerRect = $container[ 0 ].getBoundingClientRect();
+
+			// Admin bar is 32px high, with a 10px margin that is 42.
+			var minTop = $( 'body' ).hasClass( 'admin-bar' ) ? 42 : 10;
+
+			if ( containerRect.top < minTop ) {
+				// Shift the container down by the amount it is clipped so its top
+				// lands at minTop, working from whatever top the positioner set.
+				var currentTop = parseFloat( $container.css( 'top' ) ) || 0;
+
 				$container.css( {
-					top: $( 'body' ).hasClass( 'admin-bar' ) ? 42 : 10,
+					top: currentTop + ( minTop - containerRect.top ),
 				} );
 			}
 
