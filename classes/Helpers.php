@@ -233,17 +233,26 @@ class PUM_Helpers {
 			'exclude'    => null,
 			'offset'     => 0,
 			'page'       => null,
+			'paged'      => null,
 			'taxonomy'   => $taxonomies,
 		];
 
 		$args = wp_parse_args( $args, $defaults );
 
+		// Callers (e.g. the object-search AJAX handler) pass 'paged'; get_terms
+		// has no paged concept, so treat it as an alias for 'page'. Without this
+		// the offset never advances and every page returns the same terms,
+		// causing duplicate and missing results in Select2. See issue #1206.
+		if ( ! $args['page'] && $args['paged'] ) {
+			$args['page'] = $args['paged'];
+		}
+
 		if ( $args['page'] ) {
 			$args['offset'] = ( $args['page'] - 1 ) * $args['number'];
 		}
 
-		// Remove page parameter as it's not a valid get_terms argument
-		unset( $args['page'] );
+		// Remove page parameters as they are not valid get_terms arguments.
+		unset( $args['page'], $args['paged'] );
 
 		// Query Caching.
 		static $queries = [];
