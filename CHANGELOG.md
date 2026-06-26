@@ -7,16 +7,16 @@
 -   Added a "Preview Popup" option to the block editor's Preview menu, matching the classic editor. It opens the popup on the front end in a dedicated tab; clicking it again reuses that same tab, and saving the popup automatically refreshes the open preview so you always see your latest changes.
 -   Added "Disable URL tracking parameters" privacy setting. When enabled, popup links no longer get `?pid=` appended — link clicks are tracked via browser beacons instead (less reliable but non-invasive to URLs).
 
-**Bug Fixes**
+**Fixes**
 
--   Fixed fatal error when loading v2 extensions caused by conflicting `registered_controllers()` declarations on `PopupMaker\Plugin\Extension`.
--   Fixed the "Preview" button in the classic editor not opening popups — a regression introduced in 1.22.0. You can once again preview popups directly from the editor without having to save and view the live page, now reliably regardless of how quickly the page finishes loading. Thanks to @marklchaves for the fix. Closes #1199.
+-   Fixed the "Preview" button in the classic editor not opening popups — a regression introduced in 1.22.0. You can once again preview popups directly from the editor without having to save and view the live page, now reliably regardless of how quickly the page finishes loading. Thanks to @marklchaves for the fix.
 -   Fixed missing styles for Popup Maker blocks on the front end in some installs — blocks now render with the correct styling without a console warning about a missing stylesheet.
--   Fixed "Disable popup open tracking" privacy setting not being fully respected — with analytics turned off, popup links no longer get tracking parameters appended and click beacons are no longer sent.
+-   Fixed "Disable popup open tracking" privacy setting now disables link tracking parameters appended and click beacon tracking.
 -   Fixed PHP bug in `pum_get_asset_group_meta()` where `(array) file_exists()` always evaluated as truthy, causing fatal errors when build artifacts were missing.
--   Fixed condition dropdowns (such as "Categories", "Tags", and other taxonomy selectors) showing duplicate entries and hiding some terms when you had more than ten — every term is now listed once and reachable as you scroll. Closes #1206.
--   Fixed popups taller than the browser window having their top cut off above the screen, which made the start of the content and the close button impossible to reach. Tall popups now keep their top edge in view. Closes #1227.
--   Fixed an invalid "Extra Selectors" value on a Click Open trigger breaking all popup triggers on the page. A malformed selector is now skipped (with a console notice) instead of stopping every trigger from working. Closes #993.
+-   Fixed condition dropdowns (such as "Categories", "Tags", and other taxonomy selectors) showing duplicate entries and hiding some terms when you had more than ten — every term is now listed once and reachable as you scroll.
+-   Fixed popups taller than the browser window having their top cut off above the screen, which made the start of the content and the close button impossible to reach. Tall popups now keep their top edge in view.
+-   Fixed an invalid "Extra Selectors" value on a Click Open trigger breaking all popup triggers on the page. A malformed selector is now skipped (with a console notice) instead of stopping every trigger from working.
+-   Fixed ACF (Advanced Custom Fields) shortcodes not displaying their values inside popups since ACF 6.3.4, which stopped resolving `[acf]` shortcodes on non-public content. ACF shortcodes now render in popup content again.
 
 ## v1.22.0 - 2026-03-31
 

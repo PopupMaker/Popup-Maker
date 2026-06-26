@@ -30,6 +30,7 @@ class Compatibility extends Controller {
 			'Compatibility\Backcompat\Filters' => new \PopupMaker\Controllers\Compatibility\Backcompat\Filters( $this->container ),
 			'Compatibility\SEO\Yoast'          => new \PopupMaker\Controllers\Compatibility\SEO\Yoast( $this->container ),
 			'Compatibility\Builder\Divi'       => new \PopupMaker\Controllers\Compatibility\Builder\Divi( $this->container ),
+			'Compatibility\Plugin\ACF'         => new \PopupMaker\Controllers\Compatibility\Plugin\ACF( $this->container ),
 		] );
 	}
 }
