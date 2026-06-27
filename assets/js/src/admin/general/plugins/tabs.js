@@ -10,8 +10,17 @@
 		storage = {};
 	}
 
+	// Scope the stored tab to the post being edited so each popup (or theme)
+	// remembers its own last-open tab rather than sharing one global value.
+	// On screens without a post (e.g. the Settings page) this is a no-op.
+	// See issue #1079.
+	const storageKey = function ( id ) {
+		const postId = $( '#post_ID' ).val();
+		return postId ? id + ':post-' + postId : id;
+	};
+
 	const updateStorage = function ( id, tab ) {
-		storage[ id ] = tab;
+		storage[ storageKey( id ) ] = tab;
 		sessionStorage.setItem( 'pum_tabs', JSON.stringify( storage ) );
 	};
 
@@ -28,10 +37,12 @@
 							? $this.attr( 'id' )
 							: $this.parents( '[id]' ).attr( 'id' );
 
-					if ( typeof storage[ id ] !== 'undefined' ) {
+					var storedTab = storage[ storageKey( id ) ];
+
+					if ( typeof storedTab !== 'undefined' ) {
 						// If we have a stored tab, check if it exists for this trigger type.
 						var $storedTab = $tabList
-							.find( 'a[href="' + storage[ id ] + '"]' )
+							.find( 'a[href="' + storedTab + '"]' )
 							.parent();
 
 						// Only use stored tab if it exists, otherwise fall back to first tab.

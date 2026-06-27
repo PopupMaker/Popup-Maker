@@ -7,6 +7,10 @@
 -   Added a "Preview Popup" option to the block editor's Preview menu, matching the classic editor. It opens the popup on the front end in a dedicated tab; clicking it again reuses that same tab, and saving the popup automatically refreshes the open preview so you always see your latest changes.
 -   Added "Disable URL tracking parameters" privacy setting. When enabled, popup links no longer get `?pid=` appended — link clicks are tracked via browser beacons instead (less reliable but non-invasive to URLs).
 
+**Improvements**
+
+-   The popup editor now remembers the last-open settings tab per popup instead of sharing a single tab across all popups, so each popup reopens to the tab you last used.
+
 **Fixes**
 
 -   Fixed the "Preview" button in the classic editor not opening popups — a regression introduced in 1.22.0. You can once again preview popups directly from the editor without having to save and view the live page, now reliably regardless of how quickly the page finishes loading. Thanks to @marklchaves for the fix.
