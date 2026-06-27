@@ -98,7 +98,7 @@ class Connect extends WP_REST_Controller {
 	 * This endpoint receives secure requests from the upgrade server to install Pro.
 	 * Multiple security layers are enforced:
 	 * 1. User agent verification
-	 * 2. Referrer domain validation (production only)
+	 * 2. Referrer domain validation
 	 * 3. Bearer token authentication
 	 * 4. HMAC signature verification
 	 * 5. License validation
@@ -109,13 +109,12 @@ class Connect extends WP_REST_Controller {
 	public function install_webhook( $request ) {
 		try {
 			// Determine up front whether this is a verification ping or a real install.
-			// Verification pings are allowed without a signature; installs are not.
 			$json_data       = json_decode( file_get_contents( 'php://input' ), true );
-			$is_verification = is_array( $json_data ) && isset( $json_data['action'] ) && 'verify' === $json_data['action'];
+			$is_verification = 'verify' === $request->get_param( 'action' ) ||
+				( is_array( $json_data ) && isset( $json_data['action'] ) && 'verify' === $json_data['action'] );
 
 			// Validate the connection using multi-layer security.
-			// Installs MUST carry a valid HMAC signature; the bearer token alone is not sufficient.
-			$this->validate_secure_connection( ! $is_verification );
+			$this->validate_secure_connection( $request );
 
 			// Check if this is a verification request.
 			if ( $is_verification ) {
@@ -159,7 +158,7 @@ class Connect extends WP_REST_Controller {
 			return new WP_Error(
 				'webhook_install_failed',
 				$e->getMessage(),
-				[ 'status' => 500 ]
+				[ 'status' => $this->get_exception_status( $e ) ]
 			);
 		} finally {
 			// Only clean up token for actual installation, not verification
@@ -184,8 +183,7 @@ class Connect extends WP_REST_Controller {
 	public function verify_webhook( $request ) {
 		try {
 			// Validate the connection using multi-layer security.
-			// This endpoint only confirms connectivity, so a signature is not required.
-			$this->validate_secure_connection( false );
+			$this->validate_secure_connection( $request );
 
 			return new WP_REST_Response(
 				[
@@ -199,7 +197,7 @@ class Connect extends WP_REST_Controller {
 			return new WP_Error(
 				'webhook_verify_failed',
 				$e->getMessage(),
-				[ 'status' => 403 ]
+				[ 'status' => $this->get_exception_status( $e ) ]
 			);
 		}
 	}
@@ -207,178 +205,39 @@ class Connect extends WP_REST_Controller {
 	/**
 	 * Validate secure connection with multi-layer security.
 	 *
+	 * @param WP_REST_Request $request Full data about the request.
 	 * @throws \Exception If validation fails.
 	 * @return void
 	 */
-	private function validate_secure_connection( $require_signature = true ) {
-		// Layer 1: User Agent Verification.
-		$this->verify_user_agent();
-
-		// Layer 2: Referrer Domain Validation.
-		$this->verify_referrer();
-
-		// Layer 3: Bearer Token Authentication.
-		$this->verify_authentication();
-
-		// Layer 4: HMAC Signature Verification.
-		$this->verify_signature( $require_signature );
-
+	private function validate_secure_connection( $request ) {
+		$this->connect_service->validate_rest_connection( $request );
 		$this->connect_service->debug_log( 'All security layers validated successfully', 'DEBUG' );
 	}
 
 	/**
-	 * Verify user agent matches expected value.
+	 * Get HTTP status for a webhook exception.
 	 *
-	 * @throws \Exception If user agent is invalid.
-	 * @return void
+	 * @param \Exception $e Exception.
+	 * @return int HTTP status.
 	 */
-	private function verify_user_agent() {
-		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-		$this->connect_service->debug_log( 'Received User Agent: ' . $user_agent, 'DEBUG' );
-		$this->connect_service->debug_log( 'Expected User Agent pattern: PopupMakerUpgrader/*', 'DEBUG' );
+	private function get_exception_status( \Exception $e ) {
+		$security_errors = [
+			\PopupMaker\Services\Connect::ERROR_REFERRER,
+			\PopupMaker\Services\Connect::ERROR_AUTHENTICATION,
+			\PopupMaker\Services\Connect::ERROR_USER_AGENT,
+			\PopupMaker\Services\Connect::ERROR_SIGNATURE,
+			\PopupMaker\Services\Connect::ERROR_NONCE,
+		];
 
-		// Require a User-Agent matching "PopupMakerUpgrader/x.y.z".
-		// An absent or empty header must be rejected, not silently allowed through.
-		if ( empty( $user_agent ) || ! preg_match( '/^PopupMakerUpgrader\/\d+\.\d+\.\d+$/', $user_agent ) ) {
-			throw new \Exception(
-				// translators: %s is the user agent.
-				esc_html( sprintf( __( 'Invalid user agent: %s', 'popup-maker' ), $user_agent ) )
-			);
+		if ( in_array( (int) $e->getCode(), $security_errors, true ) ) {
+			return 403;
 		}
 
-		$this->connect_service->debug_log( 'User agent validation passed', 'DEBUG' );
-	}
-
-	/**
-	 * Verify referrer domain is allowed.
-	 *
-	 * @throws \Exception If referrer is invalid.
-	 * @return void
-	 */
-	private function verify_referrer() {
-		// Upgrade server sends X-Sending-Domain header
-		$referer = isset( $_SERVER['HTTP_X_SENDING_DOMAIN'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_SENDING_DOMAIN'] ) ) : '';
-
-		$this->connect_service->debug_log( 'Referrer validation - X-Sending-Domain: ' . $referer, 'DEBUG' );
-
-		if ( empty( $referer ) ) {
-			$this->connect_service->debug_log( 'Missing X-Sending-Domain header', 'ERROR' );
-			throw new \Exception( esc_html__( 'Missing referrer domain.', 'popup-maker' ) );
+		if ( \PopupMaker\Services\Connect::ERROR_WEBHOOK_ARGS === (int) $e->getCode() ) {
+			return 400;
 		}
 
-		// Direct comparison - upgrade server sends the domain directly
-		if ( 'upgrade.wppopupmaker.com' !== $referer ) {
-			$this->connect_service->debug_log( 'Invalid referrer domain: ' . $referer, 'ERROR' );
-			throw new \Exception(
-				// translators: %s is the referrer domain.
-				esc_html( sprintf( __( 'Referrer domain not allowed: %s', 'popup-maker' ), $referer ) )
-			);
-		}
-
-		$this->connect_service->debug_log( 'Referrer validation passed', 'DEBUG' );
-	}
-
-	/**
-	 * Verify bearer token authentication.
-	 *
-	 * @throws \Exception If authentication fails.
-	 * @return void
-	 */
-	private function verify_authentication() {
-		// Identify request type for debugging
-		$json_data    = json_decode( file_get_contents( 'php://input' ), true );
-		$request_type = 'unknown';
-		if ( is_array( $json_data ) ) {
-			if ( isset( $json_data['action'] ) && 'verify' === $json_data['action'] ) {
-				$request_type = 'verification';
-			} elseif ( isset( $json_data['download_url'] ) || isset( $json_data['file'] ) ) {
-				$request_type = 'installation';
-			}
-		}
-
-		// Add timing debug to track token lifecycle
-		$this->connect_service->debug_log( "Authentication verification for {$request_type} request started at: " . current_time( 'mysql' ), 'DEBUG' );
-
-		$stored_token  = $this->connect_service->get_access_token();
-		$request_token = $this->connect_service->get_request_token();
-
-		// Validate authentication tokens.
-
-		if ( ! $stored_token || ! $request_token ) {
-			throw new \Exception( esc_html__( 'Missing authentication token.', 'popup-maker' ) );
-		}
-
-		if ( ! hash_equals( $stored_token, $request_token ) ) {
-			throw new \Exception( esc_html__( 'Invalid authentication token.', 'popup-maker' ) );
-		}
-
-		$this->connect_service->debug_log( 'Authentication verification passed', 'DEBUG' );
-	}
-
-	/**
-	 * Verify HMAC signature.
-	 *
-	 * @throws \Exception If signature verification fails.
-	 * @return void
-	 */
-	private function verify_signature( $require_signature = true ) {
-		// Try both possible signature header names for compatibility.
-		$signature_header = '';
-		if ( isset( $_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'] ) ) {
-			$signature_header = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'] ) );
-		} elseif ( isset( $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] ) ) {
-			$signature_header = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] ) );
-		}
-
-		$this->connect_service->debug_log( 'Signature header: ' . substr( $signature_header, 0, 20 ) . '...', 'DEBUG' );
-
-		if ( empty( $signature_header ) ) {
-			// A missing signature is only acceptable for lightweight verification pings.
-			// Any request that performs an installation must be signed, otherwise a leaked
-			// bearer token alone would be enough to authorize an arbitrary plugin install.
-			if ( $require_signature ) {
-				$this->connect_service->debug_log( 'Missing required signature header for install request', 'ERROR' );
-				throw new \Exception( esc_html__( 'Missing request signature.', 'popup-maker' ) );
-			}
-
-			$this->connect_service->debug_log( 'No signature header found - signature verification skipped for verification request', 'DEBUG' );
-			return;
-		}
-
-		$signature = sanitize_text_field( wp_unslash( $signature_header ) );
-		$token     = $this->connect_service->get_access_token();
-
-		// Get the request data for signature calculation
-		$request_data = json_decode( file_get_contents( 'php://input' ), true );
-
-		// Fallback to $_POST if JSON body is empty
-		if ( empty( $request_data ) ) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$request_data = $_POST;
-			$this->connect_service->debug_log( 'Using $_POST for signature verification', 'DEBUG' );
-		} else {
-			$this->connect_service->debug_log( 'Using JSON body for signature verification', 'DEBUG' );
-		}
-
-		// Handle empty request data - upgrade server now sends {"action": "verify"} for verification calls
-		if ( empty( $request_data ) ) {
-			// For POST requests with empty body, use empty array for signature verification
-			$request_data = [];
-			$this->connect_service->debug_log( 'Using empty array for signature verification (fallback)', 'DEBUG' );
-		}
-
-		$this->connect_service->debug_log( 'Request data for signature: ' . wp_json_encode( $request_data ), 'DEBUG' );
-
-		$expected_signature = $this->connect_service->generate_hash( $request_data, $token );
-		$this->connect_service->debug_log( 'Expected signature: ' . substr( $expected_signature, 0, 20 ) . '...', 'DEBUG' );
-		$this->connect_service->debug_log( 'Received signature: ' . substr( $signature, 0, 20 ) . '...', 'DEBUG' );
-
-		if ( ! hash_equals( $expected_signature, $signature ) ) {
-			$this->connect_service->debug_log( "Signature mismatch:\nReceived: " . $signature . "\nExpected: " . $expected_signature . "\nData: " . wp_json_encode( $request_data ), 'ERROR' );
-			throw new \Exception( esc_html__( 'Invalid request signature.', 'popup-maker' ) );
-		}
-
-		$this->connect_service->debug_log( 'Signature verification passed', 'DEBUG' );
+		return 500;
 	}
 
 	/**
@@ -406,12 +265,12 @@ class Connect extends WP_REST_Controller {
 		// Validate required parameters.
 		if ( empty( $args['file'] ) || empty( $args['slug'] ) ) {
 			$this->connect_service->debug_log( 'Missing required parameters - file: ' . ( $args['file'] ?: 'MISSING' ) . ', slug: ' . ( $args['slug'] ?: 'MISSING' ), 'ERROR' );
-			throw new \Exception( esc_html__( 'Missing required installation parameters.', 'popup-maker' ) );
+			throw new \Exception( esc_html__( 'Missing required installation parameters.', 'popup-maker' ), \PopupMaker\Services\Connect::ERROR_WEBHOOK_ARGS );
 		}
 
 		// Validate installation type.
 		if ( ! in_array( $args['type'], [ 'plugin', 'theme' ], true ) ) {
-			throw new \Exception( esc_html__( 'Invalid installation type.', 'popup-maker' ) );
+			throw new \Exception( esc_html__( 'Invalid installation type.', 'popup-maker' ), \PopupMaker\Services\Connect::ERROR_WEBHOOK_ARGS );
 		}
 
 		// Validate the download URL host against the allowlist.
@@ -419,7 +278,7 @@ class Connect extends WP_REST_Controller {
 		// an arbitrary package from any attacker-controlled URL.
 		if ( ! $this->is_allowed_download_url( $args['file'] ) ) {
 			$this->connect_service->debug_log( 'Rejected install: download URL host not allowed: ' . $args['file'], 'ERROR' );
-			throw new \Exception( esc_html__( 'Download URL is not from an allowed source.', 'popup-maker' ) );
+			throw new \Exception( esc_html__( 'Download URL is not from an allowed source.', 'popup-maker' ), \PopupMaker\Services\Connect::ERROR_WEBHOOK_ARGS );
 		}
 
 		return $args;

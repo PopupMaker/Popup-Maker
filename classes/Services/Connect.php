@@ -168,6 +168,179 @@ class Connect extends Service {
 	}
 
 	/**
+	 * Get the webhook signature header.
+	 *
+	 * @return string
+	 */
+	private function get_request_signature() {
+		if ( isset( $_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'] ) ) {
+			return sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'] ) );
+		}
+
+		if ( isset( $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] ) ) {
+			return sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] ) );
+		}
+
+		return '';
+	}
+
+	/**
+	 * Get request data used to verify the webhook signature.
+	 *
+	 * @param \WP_REST_Request|null $request Optional REST request object.
+	 * @return array<string,mixed>
+	 */
+	private function get_signature_request_data( $request = null ) {
+		if ( $request instanceof \WP_REST_Request ) {
+			$json_params = $request->get_json_params();
+			if ( is_array( $json_params ) && ! empty( $json_params ) ) {
+				return $json_params;
+			}
+
+			$body_params = $request->get_body_params();
+			if ( is_array( $body_params ) && ! empty( $body_params ) ) {
+				return $body_params;
+			}
+		}
+
+		$request_data = json_decode( file_get_contents( 'php://input' ), true );
+		if ( is_array( $request_data ) && ! empty( $request_data ) ) {
+			return $request_data;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		return ! empty( $_POST ) ? $_POST : [];
+	}
+
+	/**
+	 * Throw a connection validation exception for REST API handlers.
+	 *
+	 * @param int    $error_no Error number.
+	 * @param string $message  Error message.
+	 * @return void
+	 * @throws \Exception If validation fails.
+	 */
+	private function throw_connection_error( $error_no, $message ) {
+		throw new \Exception( esc_html( $message ), (int) $error_no );
+	}
+
+	/**
+	 * Normalize the sending domain header into a host.
+	 *
+	 * @param string $referer Sending domain or URL.
+	 * @return string
+	 */
+	private function normalize_sending_domain( $referer ) {
+		$referer_host = wp_parse_url( $referer, PHP_URL_HOST );
+
+		if ( ! $referer_host && preg_match( '/^[a-z0-9.-]+$/i', $referer ) ) {
+			$referer_host = $referer;
+		}
+
+		return is_string( $referer_host ) ? strtolower( $referer_host ) : '';
+	}
+
+	/**
+	 * Get allowed sending hosts.
+	 *
+	 * @return string[]
+	 */
+	private function get_allowed_sending_hosts() {
+		$allowed_hosts = [
+			'wppopupmaker.com',
+			'upgrade.wppopupmaker.com',
+		];
+
+		/**
+		 * Filter the allowed hosts for signed Popup Maker install webhooks.
+		 *
+		 * @param string[] $allowed_hosts Allowed host names.
+		 */
+		$allowed_hosts = apply_filters( 'popup_maker/connect/allowed_sending_hosts', $allowed_hosts );
+
+		return array_values( array_filter( array_map( 'strtolower', (array) $allowed_hosts ) ) );
+	}
+
+	/**
+	 * Assert the user agent is a Popup Maker upgrader.
+	 *
+	 * @return void
+	 * @throws \Exception If user agent validation fails.
+	 */
+	private function assert_user_agent() {
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+
+		if ( empty( $user_agent ) || ! preg_match( '/^PopupMakerUpgrader\/\d+\.\d+\.\d+$/', $user_agent ) ) {
+			$this->throw_connection_error( self::ERROR_USER_AGENT, 'User agent invalid: ' . $user_agent );
+		}
+	}
+
+	/**
+	 * Assert the request has an allowed sending domain.
+	 *
+	 * @return void
+	 * @throws \Exception If referrer validation fails.
+	 */
+	private function assert_referrer() {
+		$referer = isset( $_SERVER['HTTP_X_SENDING_DOMAIN'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_SENDING_DOMAIN'] ) ) : '';
+
+		if ( ! $referer ) {
+			$this->throw_connection_error( self::ERROR_REFERRER, 'Missing referrer' );
+		}
+
+		$referer_host = $this->normalize_sending_domain( $referer );
+
+		if ( ! $referer_host ) {
+			$this->throw_connection_error( self::ERROR_REFERRER, 'Invalid referrer' );
+		}
+
+		if ( ! in_array( $referer_host, $this->get_allowed_sending_hosts(), true ) ) {
+			$this->throw_connection_error( self::ERROR_REFERRER, 'Referrer doesn\'t match' );
+		}
+	}
+
+	/**
+	 * Assert the bearer token matches the locally stored token.
+	 *
+	 * @return void
+	 * @throws \Exception If authentication validation fails.
+	 */
+	private function assert_authentication() {
+		$token      = $this->get_access_token();
+		$auth_token = $this->get_request_token();
+
+		if ( ! $token || ! $auth_token ) {
+			$this->throw_connection_error( self::ERROR_AUTHENTICATION, 'Missing authentication' );
+		}
+
+		if ( ! hash_equals( $token, $auth_token ) ) {
+			$this->throw_connection_error( self::ERROR_AUTHENTICATION, 'Invalid authentication' );
+		}
+	}
+
+	/**
+	 * Assert the request signature matches the signed payload.
+	 *
+	 * @param \WP_REST_Request|null $request Optional REST request object.
+	 * @return void
+	 * @throws \Exception If signature validation fails.
+	 */
+	private function assert_signature( $request = null ) {
+		$signature = $this->get_request_signature();
+
+		if ( empty( $signature ) ) {
+			$this->throw_connection_error( self::ERROR_SIGNATURE, 'Missing signature' );
+		}
+
+		$request_data       = $this->get_signature_request_data( $request );
+		$expected_signature = $this->generate_hash( $request_data, $this->get_access_token() );
+
+		if ( ! hash_equals( $expected_signature, $signature ) ) {
+			$this->throw_connection_error( self::ERROR_SIGNATURE, 'Invalid signature' );
+		}
+	}
+
+	/**
 	 * Get the OAuth connect URL.
 	 *
 	 * @param string $license_key License key.
@@ -252,11 +425,10 @@ class Connect extends Service {
 	 * @return void
 	 */
 	public function verify_user_agent() {
-		// Check user agent matches Popup Maker Upgrader.
-		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-
-		if ( strpos( $user_agent, 'PopupMakerUpgrader' ) !== 0 ) {
-			$this->kill_connection( self::ERROR_USER_AGENT, 'User agent invalid: ' . $user_agent );
+		try {
+			$this->assert_user_agent();
+		} catch ( \Exception $e ) {
+			$this->kill_connection( self::ERROR_USER_AGENT, $e->getMessage() );
 		}
 	}
 
@@ -266,25 +438,10 @@ class Connect extends Service {
 	 * @return void
 	 */
 	public function verify_referrer() {
-		$referer = isset( $_SERVER['HTTP_X_SENDING_DOMAIN'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_SENDING_DOMAIN'] ) ) : '';
-
-		if ( ! $referer ) {
-			$this->kill_connection( self::ERROR_REFERRER, 'Missing referrer' );
-		}
-
-		$referer_host = wp_parse_url( $referer, PHP_URL_HOST );
-
-		if ( ! $referer_host ) {
-			$this->kill_connection( self::ERROR_REFERRER, 'Invalid referrer' );
-		}
-
-		$allowed_hosts = [
-			'wppopupmaker.com',
-			'upgrade.wppopupmaker.com',
-		];
-
-		if ( ! in_array( $referer_host, $allowed_hosts, true ) ) {
-			$this->kill_connection( self::ERROR_REFERRER, 'Referrer doesn\'t match' );
+		try {
+			$this->assert_referrer();
+		} catch ( \Exception $e ) {
+			$this->kill_connection( self::ERROR_REFERRER, $e->getMessage() );
 		}
 	}
 
@@ -316,17 +473,10 @@ class Connect extends Service {
 	 * @return void
 	 */
 	public function verify_authentication() {
-		// Get token from header Bearer.
-		$token      = $this->get_access_token();
-		$auth_token = $this->get_request_token();
-
-		if ( ! $token || ! $auth_token ) {
-			$this->kill_connection( self::ERROR_AUTHENTICATION, 'Missing authentication' );
-		}
-
-		// Verify hashes match.
-		if ( ! hash_equals( $token, $auth_token ) ) {
-			$this->kill_connection( self::ERROR_AUTHENTICATION, 'Invalid authentication' );
+		try {
+			$this->assert_authentication();
+		} catch ( \Exception $e ) {
+			$this->kill_connection( self::ERROR_AUTHENTICATION, $e->getMessage() );
 		}
 	}
 
@@ -342,14 +492,17 @@ class Connect extends Service {
 	 * @return string
 	 */
 	public function generate_hash( $data, $token ) {
-		// Convert boolean values to their string representation.
-		array_walk_recursive($data, function ( &$value ) {
-			if ( is_bool( $value ) ) {
-				$value = $value ? '1' : '0';
-			}
-		});
-
 		if ( ! is_string( $data ) ) {
+			// Convert boolean values to their string representation.
+			array_walk_recursive(
+				$data,
+				function ( &$value ) {
+					if ( is_bool( $value ) ) {
+						$value = $value ? '1' : '0';
+					}
+				}
+			);
+
 			// Sort the array before encoding it as JSON.
 			ksort( $data );
 
@@ -374,28 +527,10 @@ class Connect extends Service {
 	 * @return void
 	 */
 	public function verify_signature() {
-		if ( ! isset( $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] ) ) {
-			$this->kill_connection( self::ERROR_SIGNATURE, 'Missing signature' );
-		}
-
-		// Verify the webhook signature.
-		$signature = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] ) );
-
-		// Get the request data for signature calculation.
-		$request_data = json_decode( file_get_contents( 'php://input' ), true );
-
-		// Fallback to $_POST if JSON body is empty (backwards compatibility).
-		if ( empty( $request_data ) ) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$request_data = $_POST;
-		}
-
-		// Calculate the expected signature.
-		$expected_signature = $this->generate_hash( $request_data, $this->get_access_token() );
-
-		// Compare the expected signature to the received signature.
-		if ( ! hash_equals( $expected_signature, $signature ) ) {
-			$this->kill_connection( self::ERROR_SIGNATURE, 'Invalid signature' );
+		try {
+			$this->assert_signature();
+		} catch ( \Exception $e ) {
+			$this->kill_connection( self::ERROR_SIGNATURE, $e->getMessage() );
 		}
 	}
 
@@ -410,6 +545,20 @@ class Connect extends Service {
 		$this->verify_referrer();
 		$this->verify_authentication();
 		$this->verify_signature();
+	}
+
+	/**
+	 * Validate a REST webhook connection.
+	 *
+	 * @param \WP_REST_Request|null $request Optional REST request object.
+	 * @return void
+	 * @throws \Exception If validation fails.
+	 */
+	public function validate_rest_connection( $request = null ) {
+		$this->assert_user_agent();
+		$this->assert_referrer();
+		$this->assert_authentication();
+		$this->assert_signature( $request );
 	}
 
 	/**
@@ -573,7 +722,7 @@ class Connect extends Service {
 
 		try {
 			// Validate the connection security.
-			$this->validate_connection();
+			$this->validate_rest_connection( $request );
 
 			// Validate license is active.
 			if ( ! plugin( 'license' )->is_license_active() ) {

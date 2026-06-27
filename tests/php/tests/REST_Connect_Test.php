@@ -42,6 +42,58 @@ class REST_Connect_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Clean up test environment.
+	 */
+	public function tearDown(): void {
+		delete_site_transient( \PopupMaker\Services\Connect::TOKEN_OPTION_NAME );
+
+		unset(
+			$_SERVER['Authorization'],
+			$_SERVER['HTTP_AUTHORIZATION'],
+			$_SERVER['HTTP_USER_AGENT'],
+			$_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'],
+			$_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'],
+			$_SERVER['HTTP_X_SENDING_DOMAIN']
+		);
+
+		wp_set_current_user( 0 );
+
+		parent::tearDown();
+	}
+
+	/**
+	 * Create a request body for the verify webhook.
+	 *
+	 * @param array<string,mixed> $body Request body.
+	 * @return WP_REST_Request
+	 */
+	private function create_verify_request( array $body ) {
+		$request = new WP_REST_Request( 'POST', '/popup-maker/v2/connect/verify' );
+		$request->set_body_params( $body );
+
+		return $request;
+	}
+
+	/**
+	 * Set valid webhook headers for connect endpoint tests.
+	 *
+	 * @param string      $token     Access token.
+	 * @param string|null $signature Optional request signature.
+	 * @return void
+	 */
+	private function set_connect_webhook_headers( $token, $signature = null ) {
+		set_site_transient( \PopupMaker\Services\Connect::TOKEN_OPTION_NAME, $token, HOUR_IN_SECONDS );
+
+		$_SERVER['HTTP_AUTHORIZATION']    = 'Bearer ' . $token;
+		$_SERVER['HTTP_USER_AGENT']       = 'PopupMakerUpgrader/1.22.1';
+		$_SERVER['HTTP_X_SENDING_DOMAIN'] = 'upgrade.wppopupmaker.com';
+
+		if ( null !== $signature ) {
+			$_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] = $signature;
+		}
+	}
+
+	/**
 	 * Create a controller with a mock connect service.
 	 *
 	 * @param array $methods Methods to mock on the service.
@@ -633,6 +685,55 @@ class REST_Connect_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * The v2 license connect-info route must also require install permissions.
+	 */
+	public function test_v2_license_connect_info_route_uses_install_permission_callback() {
+		$routes = rest_get_server()->get_routes();
+		$this->assertArrayHasKey( '/popup-maker/v2/license/connect-info', $routes, 'v2 license connect-info route should be registered.' );
+
+		$callback = $routes['/popup-maker/v2/license/connect-info'][0]['permission_callback'];
+		$this->assertIsArray( $callback, 'Permission callback should be a method array.' );
+		$this->assertEquals(
+			'install_permissions_check',
+			$callback[1],
+			'v2 connect-info must use install permissions, not plain license management permissions.'
+		);
+	}
+
+	/**
+	 * v2 install-token permissions reject editors and allow plugin installers.
+	 */
+	public function test_v2_license_install_permissions_require_installer() {
+		$controller = new \PopupMaker\RestAPI\License();
+		$request    = new WP_REST_Request( 'GET', '/popup-maker/v2/license/connect-info' );
+
+		$editor_id = self::factory()->user->create( [ 'role' => 'editor' ] );
+		wp_set_current_user( $editor_id );
+
+		$this->assertInstanceOf(
+			WP_Error::class,
+			$controller->install_permissions_check( $request ),
+			'Editors must not be allowed to mint install tokens.'
+		);
+
+		$admin_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		if ( is_multisite() ) {
+			grant_super_admin( $admin_id );
+		}
+
+		wp_set_current_user( $admin_id );
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			$this->markTestSkipped( 'Current test environment does not grant install_plugins.' );
+		}
+
+		$this->assertTrue(
+			$controller->install_permissions_check( $request ),
+			'Administrators with install_plugins should mint install tokens.'
+		);
+	}
+
+	/**
 	 * The download-URL allowlist must reject arbitrary attacker-controlled hosts.
 	 */
 	public function test_download_url_allowlist_rejects_foreign_hosts() {
@@ -702,82 +803,55 @@ class REST_Connect_Test extends WP_UnitTestCase {
 	 * A missing or empty User-Agent header must be rejected, not silently allowed.
 	 */
 	public function test_verify_user_agent_rejects_empty_header() {
-		$reflection = new \ReflectionMethod( Connect::class, 'verify_user_agent' );
-		$reflection->setAccessible( true );
-
-		[ $controller ] = $this->create_controller_with_mock_service( [ 'debug_log' ] );
-
-		// phpcs:disable WordPress.Security.ValidatedSanitizedInput -- Test fixture controls the header value directly.
-		$original_ua = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : null;
+		$body      = [ 'action' => 'verify' ];
+		$token     = 'test-connect-token';
+		$signature = \PopupMaker\plugin( 'connect' )->generate_hash( $body, $token );
 
 		// Absent User-Agent header must throw.
+		$this->set_connect_webhook_headers( $token, $signature );
 		unset( $_SERVER['HTTP_USER_AGENT'] );
-		$threw = false;
-		try {
-			$reflection->invoke( $controller );
-		} catch ( \Exception $e ) {
-			$threw = true;
-		}
-		$this->assertTrue( $threw, 'Absent User-Agent header must be rejected.' );
+
+		$response = $this->controller->verify_webhook( $this->create_verify_request( $body ) );
+		$this->assertInstanceOf( WP_Error::class, $response, 'Absent User-Agent header must be rejected.' );
+		$this->assertSame( 403, $response->get_error_data()['status'], 'Absent User-Agent should be forbidden.' );
 
 		// Empty User-Agent header must throw.
+		$this->set_connect_webhook_headers( $token, $signature );
 		$_SERVER['HTTP_USER_AGENT'] = '';
-		$threw                      = false;
-		try {
-			$reflection->invoke( $controller );
-		} catch ( \Exception $e ) {
-			$threw = true;
-		}
-		$this->assertTrue( $threw, 'Empty User-Agent header must be rejected.' );
+		$response                   = $this->controller->verify_webhook( $this->create_verify_request( $body ) );
+		$this->assertInstanceOf( WP_Error::class, $response, 'Empty User-Agent header must be rejected.' );
+		$this->assertSame( 403, $response->get_error_data()['status'], 'Empty User-Agent should be forbidden.' );
 
 		// A valid upgrader User-Agent must pass.
-		$_SERVER['HTTP_USER_AGENT'] = 'PopupMakerUpgrader/1.2.3';
-		$threw                      = false;
-		try {
-			$reflection->invoke( $controller );
-		} catch ( \Exception $e ) {
-			$threw = true;
-		}
-		$this->assertFalse( $threw, 'Valid upgrader User-Agent must pass.' );
-
-		if ( null === $original_ua ) {
-			unset( $_SERVER['HTTP_USER_AGENT'] );
-		} else {
-			$_SERVER['HTTP_USER_AGENT'] = $original_ua;
-		}
-		// phpcs:enable WordPress.Security.ValidatedSanitizedInput
+		$this->set_connect_webhook_headers( $token, $signature );
+		$response = $this->controller->verify_webhook( $this->create_verify_request( $body ) );
+		$this->assertInstanceOf( WP_REST_Response::class, $response, 'Valid upgrader User-Agent must pass.' );
+		$this->assertSame( 200, $response->get_status(), 'Valid upgrader User-Agent should verify successfully.' );
 	}
 
 	/**
-	 * An install request with no signature header must be rejected (mandatory signature).
-	 *
-	 * A verification ping ({"action":"verify"}) is exempt; an install is not.
+	 * Any webhook request with no signature header must be rejected.
 	 */
-	public function test_install_requires_signature() {
-		$reflection = new \ReflectionMethod( Connect::class, 'verify_signature' );
-		$reflection->setAccessible( true );
-
-		[ $controller ] = $this->create_controller_with_mock_service( [ 'debug_log' ] );
+	public function test_webhooks_require_signature() {
+		$body  = [ 'action' => 'verify' ];
+		$token = 'test-connect-token';
 
 		// Ensure no signature headers are present.
+		$this->set_connect_webhook_headers( $token );
 		unset( $_SERVER['HTTP_X_CONTENTCONTROL_SIGNATURE'], $_SERVER['HTTP_X_POPUPMAKER_SIGNATURE'] );
 
-		// require_signature = true -> must throw.
-		$threw = false;
-		try {
-			$reflection->invoke( $controller, true );
-		} catch ( \Exception $e ) {
-			$threw = true;
-		}
-		$this->assertTrue( $threw, 'Install (require_signature=true) with no signature header must throw.' );
+		$response = $this->controller->verify_webhook( $this->create_verify_request( $body ) );
 
-		// require_signature = false (verification ping) -> must NOT throw.
-		$threw = false;
-		try {
-			$reflection->invoke( $controller, false );
-		} catch ( \Exception $e ) {
-			$threw = true;
-		}
-		$this->assertFalse( $threw, 'Verification (require_signature=false) with no signature header must not throw.' );
+		$this->assertInstanceOf( WP_Error::class, $response, 'Missing signature should return WP_Error.' );
+		$this->assertEquals( 'webhook_verify_failed', $response->get_error_code(), 'Error code should identify webhook verification failure.' );
+		$this->assertStringContainsString( 'Missing signature', $response->get_error_message(), 'Error should identify the missing signature.' );
+		$this->assertSame( 403, $response->get_error_data()['status'], 'Missing signature should be forbidden.' );
+
+		$signature = \PopupMaker\plugin( 'connect' )->generate_hash( $body, $token );
+		$this->set_connect_webhook_headers( $token, $signature );
+
+		$response = $this->controller->verify_webhook( $this->create_verify_request( $body ) );
+		$this->assertInstanceOf( WP_REST_Response::class, $response, 'Valid signature should return a REST response.' );
+		$this->assertSame( 200, $response->get_status(), 'Valid signature should verify successfully.' );
 	}
 }
