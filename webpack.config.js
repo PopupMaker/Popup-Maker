@@ -34,6 +34,9 @@ const packages = {
 
 const config = {
 	...defaultConfig,
+	// Never emit sourcemaps in production builds (they bloat the release zip
+	// and expose source structure); keep them for local development.
+	devtool: isProduction ? false : 'source-map',
 	// Maps our buildList into a new object of { key: build.entry }.
 	entry: {
 		...Object.entries( packages ).reduce(
