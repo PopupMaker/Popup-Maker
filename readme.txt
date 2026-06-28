@@ -5,7 +5,7 @@ Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Donate link:
 Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 6.7
-Tested up to: 6.9.4
+Tested up to: 7.0.0
 Requires PHP: 7.4
 Stable tag: 1.23.0
 License: GPLv2 or later
@@ -274,6 +274,11 @@ For the latest updates and release information:
 
 = 1.23.0 - 2026-06-28 =
 
+**Security**
+
+-   Tightened the permission checks required & improved validation for pro activation.
+-   Additional hardening based on continuous AI scanning.
+
 **Features**
 
 -   Added a "Preview Popup" option to the block editor's Preview menu, matching the classic editor. It opens the popup on the front end in a dedicated tab; clicking it again reuses that same tab, and saving the popup automatically refreshes the open preview so you always see your latest changes.
@@ -282,11 +287,6 @@ For the latest updates and release information:
 **Improvements**
 
 -   The popup editor now remembers the last-open settings tab per popup instead of sharing a single tab across all popups, so each popup reopens to the tab you last used.
-
-**Security**
-
--   Tightened the permission checks required & improved validation for pro activation.
--   Additional hardening based on continuous AI scanning.
 
 **Fixes**
 
