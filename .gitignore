@@ -69,3 +69,5 @@ repomix-output.txt
 .nx/cache
 .nx/workspace-data
 .env.secrets
+
+plans/
