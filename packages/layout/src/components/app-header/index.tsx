@@ -1,6 +1,6 @@
 import './styles.scss';
 
-import { useRef } from '@wordpress/element';
+import { useRef, useMemo } from '@wordpress/element';
 import {
 	Button,
 	DropdownMenu,
@@ -8,15 +8,21 @@ import {
 	MenuItem,
 } from '@wordpress/components';
 import { __ } from '@popup-maker/i18n';
-import { lifesaver, login, pages, people } from '@wordpress/icons';
+import { lifesaver } from '@wordpress/icons';
 import { ControlledTabPanel } from '@popup-maker/components';
-import type { AppHeaderProps } from '../../types';
+import type { AppHeaderProps, SupportMenuItem } from '../../types';
 import {
 	HeaderStartSlot,
 	HeaderEndSlot,
 	HeaderActionsSlot,
 	SupportMenuSlot,
 } from '../../slots';
+import {
+	getNavTabs,
+	getShowSupportMenu,
+	getSupportMenuItems,
+	mapNavTabsForHeader,
+} from '../../utils/layoutVars';
 
 export const AppHeader = ( {
 	title = __( 'Popup Maker', 'popup-maker' ),
@@ -24,43 +30,20 @@ export const AppHeader = ( {
 	tabs = [],
 	currentTab,
 	onTabChange,
+	navTabId,
 	supportMenuItems = [],
 	showSupport = true,
-	adminUrl = '',
-}: AppHeaderProps ) => {
+}: AppHeaderProps ): JSX.Element => {
 	const btnRef = useRef< HTMLButtonElement | null >( null );
 	const { assetsUrl } = window.popupMaker.globalVars;
-	// Default support menu items
-	const defaultSupportItems = [
-		{
-			icon: pages,
-			label: __( 'View Documentation', 'popup-maker' ),
-			href: 'https://wppopupmaker.com/docs/?utm_campaign=plugin-support&utm_source=plugin-admin-header&utm_medium=plugin-ui&utm_content=view-documentation-link',
-			target: '_blank',
-			group: 'primary',
-		},
-		{
-			icon: people,
-			label: __( 'Get Support', 'popup-maker' ),
-			href: 'https://wppopupmaker.com/support/?utm_campaign=plugin-support&utm_source=plugin-admin-header&utm_medium=plugin-ui&utm_content=get-support-link',
-			target: '_blank',
-			group: 'primary',
-		},
-		{
-			icon: login,
-			label: __( 'Grant Support Access', 'popup-maker' ),
-			onClick: () => {
-				if ( adminUrl ) {
-					window.location.href = `${ adminUrl }options-general.php?page=grant-popup-maker-access`;
-				}
-			},
-			group: 'secondary',
-		},
-		...supportMenuItems,
-	];
-
-	// Group support items
-	const groupedItems = defaultSupportItems.reduce(
+	const navTabs = getNavTabs();
+	const hasLayoutNav = navTabs.length > 0;
+	const headerTabs = hasLayoutNav ? mapNavTabsForHeader() : tabs;
+	const headerCurrentTab = hasLayoutNav && navTabId ? navTabId : currentTab;
+	const layoutSupportItems = useMemo( () => getSupportMenuItems(), [] );
+	const showSupportMenu = showSupport && getShowSupportMenu();
+	const supportItems = [ ...layoutSupportItems, ...supportMenuItems ];
+	const groupedItems = supportItems.reduce(
 		( acc, item ) => {
 			const group = item.group || 'primary';
 			if ( ! acc[ group ] ) {
@@ -69,7 +52,7 @@ export const AppHeader = ( {
 			acc[ group ].push( item );
 			return acc;
 		},
-		{} as Record< string, typeof defaultSupportItems >
+		{} as Record< string, SupportMenuItem[] >
 	);
 
 	return (
@@ -87,13 +70,13 @@ export const AppHeader = ( {
 				</a>
 			</h1>
 
-			{ tabs.length > 0 && (
+			{ headerTabs.length > 0 && (
 				<ControlledTabPanel
 					className="tabs"
 					orientation="horizontal"
-					selected={ currentTab || null }
+					selected={ headerCurrentTab || null }
 					onSelect={ ( tabName: string ) => {
-						const tab = tabs.find( ( t ) => t.name === tabName );
+						const tab = headerTabs.find( ( t ) => t.name === tabName );
 
 						if ( tab?.onClick ) {
 							// Allow short circuiting of tab change
@@ -102,16 +85,21 @@ export const AppHeader = ( {
 							}
 						}
 
+						if ( tab?.href ) {
+							window.location.assign( tab.href );
+							return;
+						}
+
 						onTabChange?.( tabName );
 					} }
-					tabs={ tabs }
+					tabs={ headerTabs }
 				/>
 			) }
 
 			<div className="popup-maker-app-header__actions">
 				<HeaderActionsSlot />
 
-				{ showSupport && (
+				{ showSupportMenu && (
 					<DropdownMenu
 						label={ __( 'Support', 'popup-maker' ) }
 						icon={ lifesaver }

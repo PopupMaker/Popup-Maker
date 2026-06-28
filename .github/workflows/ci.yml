@@ -85,7 +85,9 @@ jobs:
               - 'packages/**/src/**/*.scss'
             npm_deps:
               - 'package.json'
-              - 'package-lock.json'
+              - 'packages/**/package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
             php_deps:
               - 'composer.json'
               - 'composer.lock'
@@ -171,7 +173,7 @@ jobs:
       - name: Run PHPStan
         if: steps.changed-files.outputs.any_changed == 'true' && matrix.php-version == '8.2'
         continue-on-error: true
-        run: composer phpstan
+        run: vendor/bin/phpstan analyse --error-format=github
 
       - name: Check for PHPCS failures
         if: steps.changed-files.outputs.any_changed == 'true' && steps.phpcs.outcome == 'failure'
@@ -224,14 +226,23 @@ jobs:
             dist/**
             build/**
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+
+      - name: Enable ESLint problem matcher
+        if: steps.changed-js.outputs.any_changed == 'true'
+        run: |
+          MATCHER="node_modules/@wordpress/scripts/config/.eslintrc-problem-matcher.json"
+          [ -f "$MATCHER" ] && echo "::add-matcher::$MATCHER" || echo "ESLint problem matcher not found, skipping"
 
       - name: Run ESLint on changed files
         if: steps.changed-js.outputs.any_changed == 'true'
@@ -245,14 +256,20 @@ jobs:
         continue-on-error: true
         id: stylelint
         run: |
-          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs -r npm run lint:style -- --formatter=compact
+          echo "${{ steps.changed-css.outputs.all_changed_files }}" | xargs -r npm run lint:style -- --formatter=github
 
       # Only type-check when TypeScript files change
+      - name: Enable tsc problem matcher
+        if: needs.detect-changes.outputs.ts_src == 'true'
+        run: |
+          MATCHER="node_modules/typescript/lib/tsc-problem-matcher.json"
+          [ -f "$MATCHER" ] && echo "::add-matcher::$MATCHER" || echo "tsc problem matcher not found, skipping"
+
       - name: Run TypeScript type checking
         if: needs.detect-changes.outputs.ts_src == 'true'
         continue-on-error: true
         id: tsc
-        run: npm run build:tsc
+        run: pnpm run build:tsc
 
       - name: Check for linting failures
         if: steps.eslint.outcome == 'failure' || steps.stylelint.outcome == 'failure' || steps.tsc.outcome == 'failure'
@@ -277,23 +294,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache webpack build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            .webpack-cache
+            .webpack-cache-legacy
+          key: webpack-cache-${{ runner.os }}-${{ hashFiles('webpack.config.js', 'webpack.old.config.js', 'pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            webpack-cache-${{ runner.os }}-${{ hashFiles('webpack.config.js', 'webpack.old.config.js', 'pnpm-lock.yaml') }}-
+            webpack-cache-${{ runner.os }}-
 
       - name: Validate dependency tree
         continue-on-error: true
         id: dep-tree
-        run: npm run validate:dep-tree
+        run: pnpm run validate:dep-tree
 
       - name: Build project
         id: build
-        run: npm run build
+        run: pnpm run build
 
       - name: Check for build failures
         if: steps.build.outcome == 'failure'
@@ -311,7 +342,7 @@ jobs:
   # Security Scanning - NPM Dependencies
   # ============================================================================
   npm-security:
-    name: NPM Security Audit
+    name: pnpm Security Audit
     runs-on: ubuntu-latest
     needs: detect-changes
     if: ${{ github.event_name == 'pull_request' && needs.detect-changes.outputs.npm_deps == 'true' }}
@@ -320,18 +351,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
 
-      - name: Install npm dependencies
-        run: npm ci
+      - name: Install pnpm dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit
+      - name: Run pnpm audit
         continue-on-error: true
-        run: npm audit --audit-level=high || echo "⚠️ NPM audit found vulnerabilities"
+        run: pnpm audit --audit-level=high || echo "⚠️ pnpm audit found vulnerabilities"
 
   # ============================================================================
   # Security Scanning - Composer Dependencies
@@ -398,3 +432,62 @@ jobs:
 
       - name: Run PHPUnit tests
         run: composer tests
+
+  # ============================================================================
+  # CI Summary - Rollup gate for branch protection
+  # ============================================================================
+  # Aggregates all CI jobs so branch protection only needs to require this one
+  # context. A required job that gets skipped (e.g. no JS changes → js-quality
+  # skipped) would otherwise block merges; this job treats skipped-due-to-scope
+  # as pass and only fails on actual failure/cancellation.
+  ci-summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs:
+      [
+          detect-changes,
+          php-quality,
+          js-quality,
+          build-validation,
+          npm-security,
+          php-security,
+      ]
+    if: always()
+    steps:
+      - name: Check CI results
+        env:
+          PHP_QUALITY_RESULT: ${{ needs.php-quality.result }}
+          JS_QUALITY_RESULT: ${{ needs.js-quality.result }}
+          BUILD_RESULT: ${{ needs.build-validation.result }}
+          NPM_SEC_RESULT: ${{ needs.npm-security.result }}
+          PHP_SEC_RESULT: ${{ needs.php-security.result }}
+        run: |
+          echo "=== CI Results Summary ==="
+          echo ""
+
+          failed=0
+          check_result() {
+            local name=$1
+            local result=$2
+
+            case "$result" in
+              success)   echo "$name: PASSED" ;;
+              skipped)   echo "$name: SKIPPED (no relevant changes)" ;;
+              failure)   echo "$name: FAILED"; failed=1 ;;
+              cancelled) echo "$name: CANCELLED"; failed=1 ;;
+              *)         echo "$name: $result"; failed=1 ;;
+            esac
+          }
+
+          check_result "PHP Code Quality" "$PHP_QUALITY_RESULT"
+          check_result "JS/TS Code Quality" "$JS_QUALITY_RESULT"
+          check_result "Build Validation" "$BUILD_RESULT"
+          check_result "pnpm Security Audit" "$NPM_SEC_RESULT"
+          check_result "Composer Security Audit" "$PHP_SEC_RESULT"
+
+          echo ""
+          if [ "$failed" -eq 1 ]; then
+            echo "❌ CI Summary: one or more required checks failed."
+            exit 1
+          fi
+          echo "✅ CI Summary: all checks passed or skipped."

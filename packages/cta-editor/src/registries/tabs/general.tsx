@@ -18,7 +18,7 @@ import type { BaseEditorTabProps } from '../../types';
 
 export const name = 'general';
 
-export const title = __( 'General', 'popup-maker' );
+export const title: string = __( 'General', 'popup-maker' );
 
 export const getCallToActionTypeOptions = () => {
 	// Get all registered CTA types from the global data
@@ -59,7 +59,7 @@ export const Component = ( {
 	callToAction,
 	updateFields,
 	updateSettings,
-}: BaseEditorTabProps ) => {
+}: BaseEditorTabProps ): JSX.Element => {
 	const { getTabFields } = useFields();
 	const { clearAllErrors } = useAllFieldErrors();
 
@@ -116,14 +116,20 @@ export const Component = ( {
 				</Notice>
 			) }
 
+			{ /* Filtered fields with priority < 3 render before action type. */ }
+			{ getTabFields( 'general' )
+				.filter( ( field ) => field.priority < 3 )
+				.map( ( field ) => (
+					<Fragment key={ field.id }>{ field.component }</Fragment>
+				) ) }
+
 			{ callToActionTypeOptions.length > 1 && (
 				<SelectControl
 					label={ __( 'Action Type', 'popup-maker' ) }
 					options={ callToActionTypeOptions }
 					value={ settings.type ?? '' }
 					onChange={ ( type ) => {
-						const ctaType =
-							registeredCtaTypes[ type as string ];
+						const ctaType = registeredCtaTypes[ type ];
 
 						// Intercept locked types — revert to link, show upsell.
 						if ( ctaType?.pro_required ) {
@@ -150,16 +156,13 @@ export const Component = ( {
 					onDismiss={ () => setLockedType( null ) }
 					className="pro-cta-type-notice"
 				>
-					<strong>
-						{ registeredCtaTypes[ lockedType ]?.label }
-					</strong>
+					<strong>{ registeredCtaTypes[ lockedType ]?.label }</strong>
 					{ ' \u2014 ' }
 					{ registeredCtaTypes[ lockedType ]?.pro_description ||
 						'This action type requires Popup Maker Pro.' }{ ' ' }
 					<a
 						href={
-							registeredCtaTypes[ lockedType ]?.upgrade_url ||
-							'#'
+							registeredCtaTypes[ lockedType ]?.upgrade_url || '#'
 						}
 						target="_blank"
 						rel="noopener noreferrer"
@@ -171,9 +174,11 @@ export const Component = ( {
 				</Notice>
 			) }
 
-			{ getTabFields( 'general' ).map( ( field ) => (
-				<Fragment key={ field.id }>{ field.component }</Fragment>
-			) ) }
+			{ getTabFields( 'general' )
+				.filter( ( field ) => field.priority >= 3 )
+				.map( ( field ) => (
+					<Fragment key={ field.id }>{ field.component }</Fragment>
+				) ) }
 		</div>
 	);
 };

@@ -7,7 +7,7 @@ import { callToActionStore } from '@popup-maker/core-data';
 
 import { useList } from '../../context';
 
-export const EnableBulkAction = () => {
+export const EnableBulkAction = (): JSX.Element | null => {
 	const registry = useRegistry();
 	const { bulkSelection = [], setBulkSelection } = useList();
 
@@ -63,7 +63,7 @@ export const EnableBulkAction = () => {
 					createNotice(
 						'success',
 						sprintf(
-							// translators: 1. number of items
+							// translators: %d: number of items.
 							_n(
 								'%d call to action enabled.',
 								'%d call to actions enabled.',

@@ -98,12 +98,16 @@
 			var $this = $( this ),
 				$alert = $this.parents( '.pum-alert-holder' ),
 				reason = $this.data( 'reason' ) || 'maybe_later',
-				alertAction = $( this ).data( 'action' ) || 'dismiss';
+				alertAction = $( this ).data( 'action' ) || 'dismiss',
+				isReviewRequest = 'review_request' === $alert.data( 'code' ),
+				href = $this.attr( 'href' ) || '',
+				isExternalLink = /^https?:\/\//i.test( href );
 
-			// Prevent the PHP alert handler from also processing this.
-			event.preventDefault();
+			if ( ! isExternalLink ) {
+				event.preventDefault();
+			}
 
-			if ( 'review_request' !== $alert.data( 'code' ) ) {
+			if ( ! isReviewRequest ) {
 				dismissAlert( $alert, alertAction );
 			} else {
 				dismissReviewRequest( reason );

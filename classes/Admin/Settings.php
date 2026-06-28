@@ -426,6 +426,11 @@ class PUM_Admin_Settings {
 								'label' => __( 'Disables popup open tracking?', 'popup-maker' ),
 								'desc'  => __( 'This will disable the built in analytics functionality.', 'popup-maker' ),
 							],
+							'disable_pid_url_params'      => [
+								'type'  => 'checkbox',
+								'label' => __( 'Disable URL tracking parameters?', 'popup-maker' ),
+								'desc'  => __( 'Stops adding tracking parameters (pid) to links inside popups. Link clicks will be tracked via browser beacons instead (less reliable but non-invasive).', 'popup-maker' ),
+							],
 						],
 						'forms' => [
 							'forms_disclaimer'             => [
@@ -1194,11 +1199,12 @@ class PUM_Admin_Settings {
 
 						$using_pro_license = ! empty( $field['options']['using_pro_license'] );
 						$pro_license_tier  = ! empty( $field['options']['pro_license_tier'] ) ? $field['options']['pro_license_tier'] : '';
+						$product_name      = ! empty( $field['options']['product_name'] ) ? $field['options']['product_name'] : null;
 
 						$settings[ $key ] = [
 							'key'               => \PopupMaker\plugin( 'license' )->star_key( trim( $value ) ),
 							'status'            => PUM_Licensing::get_status( $license, ! empty( $value ) ),
-							'messages'          => PUM_Licensing::get_status_messages( $license, trim( $value ) ),
+							'messages'          => PUM_Licensing::get_status_messages( $license, trim( $value ), $product_name ),
 							'expires'           => PUM_Licensing::get_license_expiration( $license ),
 							'classes'           => PUM_Licensing::get_status_classes( $license ),
 							'using_pro_license' => $using_pro_license,

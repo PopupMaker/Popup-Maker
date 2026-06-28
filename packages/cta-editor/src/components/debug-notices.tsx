@@ -7,7 +7,7 @@ import { DEBUG_MODE } from '../';
  * Debug component to display all notices in the CTA editor context.
  * Only renders when DEBUG_MODE is enabled.
  */
-export const DebugNotices = () => {
+export const DebugNotices = (): JSX.Element | null => {
 	const notices = useSelect( ( select ) => {
 		return select( noticesStore ).getNotices( NOTICE_CONTEXT );
 	}, [] );

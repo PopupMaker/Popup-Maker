@@ -77,7 +77,20 @@
 					settings.extra_selectors &&
 					settings.extra_selectors !== ''
 				) {
-					trigger_selectors.push( settings.extra_selectors );
+					// A malformed Extra Selector (e.g. an unbalanced quote or
+					// bracket) makes the whole jQuery selector throw, breaking
+					// every click trigger on the page. Validate it first and
+					// skip it with a console warning instead. See issue #993.
+					if ( PUM.isValidSelector( settings.extra_selectors ) ) {
+						trigger_selectors.push( settings.extra_selectors );
+					} else if ( window.console && window.console.warn ) {
+						console.warn(
+							'Popup Maker: ignoring invalid Click Open "Extra Selectors" value for popup #' +
+								popup_settings.id +
+								': ' +
+								settings.extra_selectors
+						);
+					}
 				}
 
 				trigger_selectors = pum.hooks.applyFilters(
@@ -208,9 +221,18 @@
 			admin_debug: function () {
 				// Defer open until after all popups finish initializing.
 				var $popup = PUM.getPopup( this );
-				$( document ).one( 'pumInitialized', function () {
+				var open = function () {
 					$popup.popmake( 'open' );
-				} );
+				};
+
+				// If initialization already completed, the one-shot
+				// pumInitialized event has fired and would be missed, so
+				// open immediately. Otherwise wait for it. See issue #1199.
+				if ( window.PUM.initialized ) {
+					open();
+				} else {
+					$( document ).one( 'pumInitialized', open );
+				}
 			},
 		} );
 

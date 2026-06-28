@@ -15,7 +15,12 @@ type Props = {
 	onChange?: ( checked: boolean ) => void;
 };
 
-const DeviceToggle = ( { label, icon, isVisible, onChange = noop }: Props ) => {
+const DeviceToggle = ( {
+	label,
+	icon,
+	isVisible,
+	onChange = noop,
+}: Props ): JSX.Element => {
 	const toggleLabel = ! isVisible
 		? /* translators: 1. Device type. */
 		  _x( 'Hide on %1$s', 'Device toggle option', 'popup-maker' )

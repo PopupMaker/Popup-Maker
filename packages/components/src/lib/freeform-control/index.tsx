@@ -63,7 +63,9 @@ const {
 // 	return /^\n?$/.test( body.innerText || body.textContent );
 // }
 
-const FreeFormEditControl = < T extends string >( props: Props< T > ) => {
+const FreeFormEditControl = < T extends string >(
+	props: Props< T >
+): JSX.Element => {
 	const instanceId = useInstanceId( FreeFormEditControl );
 	const {
 		label,

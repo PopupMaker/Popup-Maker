@@ -13,9 +13,15 @@
 	// Here for backward compatibility.
 	window.ajaxurl = window.pum_vars.ajaxurl;
 
+	// Tracks whether initialization has completed so late-bound listeners
+	// (e.g. the admin_debug preview trigger) do not miss the one-shot
+	// pumInitialized event and fail to open. See issue #1199.
+	window.PUM.initialized = false;
+
 	window.PUM.init = function () {
 		$( document ).trigger( 'pumBeforeInit' );
 		$( '.pum' ).popmake();
+		window.PUM.initialized = true;
 		$( document ).trigger( 'pumInitialized' );
 
 		/**
@@ -79,4 +85,4 @@
 	$( '.pum .pum-cta a, .pum a.pum-cta' ).on( 'click', function () {
 		PUM.getPopup( this ).trigger( 'pumConversion' );
 	} );
-} )( jQuery );
+} )( jQuery, document );

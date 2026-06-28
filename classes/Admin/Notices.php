@@ -23,8 +23,6 @@ class PUM_Admin_Notices {
 	public static function init() {
 		if ( is_admin() && current_user_can( 'manage_options' ) ) {
 			add_filter( 'pum_alert_list', [ __CLASS__, 'tips_alert' ] );
-			add_filter( 'pum_alert_list', [ __CLASS__, 'bfcm_sale_notice' ] );
-			add_filter( 'pum_alert_list', [ __CLASS__, 'block_editor_migration_notice' ] );
 			add_action( 'pum_alert_dismissed', [ __CLASS__, 'alert_handler' ], 10, 2 );
 			add_filter( 'pum_alert_list', [ __CLASS__, 'upcoming_min_req_changes' ], 10 );
 		}
@@ -52,11 +50,12 @@ class PUM_Admin_Notices {
 		// Foreach notice, add it to the alerts array.
 		foreach ( $notices as $notice ) {
 			$alert = [
-				'code'    => 'pum_notice_' . $notice['id'],
-				'type'    => 'success',
-				'html'    => $notice['content'],
-				'actions' => [],
-				'global'  => $notice['is_global'] ? true : false,
+				'code'     => 'pum_notice_' . $notice['id'],
+				'type'     => 'success',
+				'category' => 'announcement',
+				'html'     => $notice['content'],
+				'actions'  => [],
+				'global'   => $notice['is_global'] ? true : false,
 			];
 
 			if ( ! empty( $notice['link'] ) ) {
@@ -200,15 +199,6 @@ class PUM_Admin_Notices {
 				pum_update_option( 'disable_notices', true );
 			}
 		}
-
-		// Handle block editor migration notice actions.
-		if ( 'pum_block_editor_migration' === $code ) {
-			delete_option( 'pum_show_block_editor_migration_notice' );
-
-			if ( 'switch_to_classic' === $action ) {
-				pum_update_option( 'enable_classic_editor', true );
-			}
-		}
 	}
 
 	/**
@@ -332,152 +322,32 @@ class PUM_Admin_Notices {
 		if ( $future_php_version && version_compare( $future_php_version, phpversion(), '>' ) ) {
 			$alerts[] = [
 				// Show the notice on every update. Yes, annoying, but not as annoying as a plugin breaking.
-				'code'   => sprintf( 'php_%s_%s', $future_php_version, $plugin_version ),
-				'type'   => 'error',
-				'html'   => self::wrap_notice(
+				'code'     => sprintf( 'php_%s_%s', $future_php_version, $plugin_version ),
+				'type'     => 'error',
+				'category' => 'warning',
+				'html'     => self::wrap_notice(
 					__( "%1\$sPopup Maker will soon require PHP Version %2\$s.%3\$s \n\nYou're using Version %4\$s. Please ask your host to upgrade your server's PHP.", 'popup-maker' ),
 					phpversion(),
 					$future_php_version
 				),
-				'global' => true,
+				'global'   => true,
 			];
 		}
 
 		if ( $future_wp_version && version_compare( $future_wp_version, $wp_version, '>' ) ) {
 			$alerts[] = [
 				// Show the notice on every update. Yes, annoying, but not as annoying as a plugin breaking.
-				'code'   => sprintf( 'wp_%s_%s', $future_wp_version, $plugin_version ),
-				'type'   => 'error',
-				'html'   => self::wrap_notice(
+				'code'     => sprintf( 'wp_%s_%s', $future_wp_version, $plugin_version ),
+				'type'     => 'error',
+				'category' => 'warning',
+				'html'     => self::wrap_notice(
 					__( "%1\$sPopup Maker will soon require WordPress Version %2\$s.%3\$s \n\nYou're using Version %4\$s. Please ask your host to upgrade your server's WordPress.", 'popup-maker' ),
 					$wp_version,
 					$future_wp_version
 				),
-				'global' => true,
+				'global'   => true,
 			];
 		}
-
-		return $alerts;
-	}
-
-	/**
-	 * Add BFCM sale notice
-	 *
-	 * @param array $alerts Current alerts array
-	 * @return array Modified alerts array
-	 */
-	public static function bfcm_sale_notice( $alerts ) {
-		// Check if within BFCM sale dates (Nov 26 - Dec 2)
-		$current_time = time();
-		$start_date   = strtotime( '2024-11-25 00:00:00' );
-		$end_date     = strtotime( '2024-11-30 23:59:59' );
-
-		if ( $current_time < $start_date || $current_time > $end_date ) {
-			return $alerts;
-		}
-
-		add_action( 'admin_print_footer_scripts', function () {
-			echo '<style>
-			[data-code="pum_bfcm_2024"] .pum-alert {color: #fff; background-color: #072c16 !important; padding: 1em; }
-			[data-code="pum_bfcm_2024"] .pum-alert h3 {font-size: 1.5em; background:transparent; color: #fff !important; border: none;}
-			[data-code="pum_bfcm_2024"] .pum-alert a {font-size: 1.1em;color: #fff !important;}
-			[data-code="pum_bfcm_2024"] .pum-alert li:first-child a {font-size: 1.2em;color: #fff !important;}
-			</style>';
-		} );
-
-		$discount_amount = ( time() < strtotime( '2024-11-30 23:59:59 EST' ) ) ? 40 : 30;
-
-		$alerts[] = [
-			'code'        => 'pum_bfcm_2024',
-			'type'        => 'success',
-			'html'        => sprintf(
-				'%s',
-				'<div style="font-size: 1.3em; font-weight: bold;">' .
-				'<h3 style="">🎁 Black Friday Sale! 🥳</h3>' .
-				sprintf( 'Save up to %s%% on all Popup Maker pro plans. Limited time offer - ends December 2nd!', $discount_amount ) . '<br/><br/>' .
-				sprintf( '<a href="%s" target="_blank">	See how Popup Maker can boost your holiday sales</a>', 'https://wppopupmaker.com/conversion-optimization/boost-your-black-friday-sales/?utm_source=plugin-notice&utm_campaign=bfcm2024' ) .
-				'</div>'
-			),
-
-			'dismissible' => false,
-			'global'      => false,
-			'actions'     => [
-				[
-					'primary' => true,
-					'type'    => 'link',
-					'action'  => '',
-					'href'    => \PopupMaker\get_upgrade_link( [
-						'utm_source'   => 'plugin-notice',
-						'utm_campaign' => 'bfcm2024',
-					] ),
-					'text'    => sprintf( 'Get %s%% Off Now', $discount_amount ),
-				],
-				[
-					'primary' => false,
-					'type'    => 'action',
-					'action'  => 'dismiss',
-					'text'    => __( 'Dismiss', 'popup-maker' ),
-				],
-			],
-		];
-
-		return $alerts;
-	}
-
-	/**
-	 * Add block editor migration notice for users who had it disabled.
-	 *
-	 * @param array $alerts Current alerts array.
-	 * @return array Modified alerts array.
-	 * @since 1.21.0
-	 */
-	public static function block_editor_migration_notice( $alerts ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return $alerts;
-		}
-
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		if (
-			! isset( $_GET['pum_block_editor_migration_notice'] ) &&
-			! get_option( 'pum_show_block_editor_migration_notice', false )
-		) {
-			// Only show if user should see the migration notice.
-			return $alerts;
-		}
-
-		$alerts[] = [
-			'code'        => 'pum_block_editor_migration',
-			'type'        => 'info',
-			'html'        => sprintf(
-				'%s',
-				'<div style="font-size: 1.3em; font-weight: bold;">' .
-				'<h4>🎉 ' . __( 'Popup Maker Update: Block Editor is Now Default!', 'popup-maker' ) . '</h4>' .
-				'<p>' . __( 'The block editor is now enabled by default for creating popups. You can start using it immediately, or continue with the classic editor if you prefer.', 'popup-maker' ) . '</p>' .
-				'</div>'
-			),
-			'dismissible' => true,
-			'global'      => false,
-			'actions'     => [
-				[
-					'primary' => true,
-					'type'    => 'action',
-					'action'  => 'keep_block_editor',
-					'text'    => __( 'Continue with Block Editor', 'popup-maker' ),
-				],
-				[
-					'primary' => false,
-					'type'    => 'action',
-					'action'  => 'switch_to_classic',
-					'text'    => __( 'Switch to Classic Editor', 'popup-maker' ),
-				],
-				[
-					'primary' => false,
-					'type'    => 'action',
-					'action'  => 'dismiss',
-					'text'    => __( 'Dismiss', 'popup-maker' ),
-				],
-			],
-		];
 
 		return $alerts;
 	}

@@ -1,0 +1,19 @@
+name: Auto-update PR branches
+
+on:
+    push:
+        branches:
+            - develop
+
+jobs:
+    update:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Update open PR branches
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  REPO: ${{ github.repository }}
+              run: |
+                  gh pr list --repo "$REPO" --base develop --state open --json number --jq '.[].number' \
+                    | xargs -I{} gh pr update-branch {} --repo "$REPO" 2>&1 \
+                    || true

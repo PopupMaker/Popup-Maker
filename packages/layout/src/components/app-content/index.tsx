@@ -3,7 +3,10 @@ import './styles.scss';
 import clsx from 'clsx';
 import type { AppContentProps } from '../../types';
 
-export const AppContent = ( { className, children }: AppContentProps ) => {
+export const AppContent = ( {
+	className,
+	children,
+}: AppContentProps ): JSX.Element => {
 	return (
 		<div className={ clsx( 'popup-maker-app-content', className ) }>
 			{ children }

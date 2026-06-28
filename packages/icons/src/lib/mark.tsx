@@ -1,6 +1,6 @@
 import { SVG, Path } from '@wordpress/primitives';
 
-const Mark = (
+const Mark: JSX.Element = (
 	<SVG
 		viewBox="0 0 179 179"
 		fill="none"

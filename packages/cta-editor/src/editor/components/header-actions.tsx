@@ -10,7 +10,7 @@ const EditorHeaderActions = ( {
 	closeModal,
 }: EditorHeaderActionContext< EditableCta > & {
 	closeModal: () => void;
-} ) => {
+} ): JSX.Element => {
 	const lastGroup = useRef< string | undefined >( undefined );
 
 	const headerActions = useEditorHeaderActions();

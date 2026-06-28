@@ -15,7 +15,7 @@ const PopupTriggerEditor = ( {
 	onChangeInputValue,
 	value,
 	...props
-}: Props ) => {
+}: Props ): JSX.Element => {
 	return (
 		<form
 			className={ clsx(

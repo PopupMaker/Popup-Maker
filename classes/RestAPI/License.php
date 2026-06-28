@@ -83,7 +83,7 @@ class License extends WP_REST_Controller {
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'activate_license_pro' ],
-					'permission_callback' => [ $this, 'license_action_permissions_check' ],
+					'permission_callback' => [ $this, 'install_permissions_check' ],
 					'args'                => $this->get_activate_license_args(),
 				],
 			]
@@ -97,7 +97,7 @@ class License extends WP_REST_Controller {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_connect_info' ],
-					'permission_callback' => [ $this, 'license_action_permissions_check' ],
+					'permission_callback' => [ $this, 'install_permissions_check' ],
 					'args'                => $this->get_connect_info_args(),
 				],
 			]
@@ -111,7 +111,7 @@ class License extends WP_REST_Controller {
 				[
 					'methods'             => WP_REST_Server::CREATABLE,
 					'callback'            => [ $this, 'activate_plugin' ],
-					'permission_callback' => [ $this, 'license_action_permissions_check' ],
+					'permission_callback' => [ $this, 'activate_plugin_permissions_check' ],
 					'args'                => [],
 				],
 			]
@@ -155,7 +155,11 @@ class License extends WP_REST_Controller {
 		];
 
 		// Add upgrade information if license is valid but Pro isn't installed.
-		if ( $license_service->is_license_active() && ! \PopupMaker\plugin()->is_pro_installed() ) {
+		if (
+			$license_service->is_license_active() &&
+			! \PopupMaker\plugin()->is_pro_installed() &&
+			true === $this->install_permissions_check( $request )
+		) {
 			$response_data['can_upgrade']  = true;
 			$response_data['connect_info'] = $license_service->generate_connect_info();
 		}
@@ -332,6 +336,42 @@ class License extends WP_REST_Controller {
 			return new WP_Error(
 				'rest_forbidden',
 				__( 'Sorry, you are not allowed to manage licenses.', 'popup-maker' ),
+				[ 'status' => rest_authorization_required_code() ]
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if a given request can install Pro packages.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return true|WP_Error True if the request has access, WP_Error object otherwise.
+	 */
+	public function install_permissions_check( $request ) {
+		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'install_plugins' ) ) {
+			return new WP_Error(
+				'rest_forbidden',
+				__( 'Sorry, you are not allowed to install plugins.', 'popup-maker' ),
+				[ 'status' => rest_authorization_required_code() ]
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if a given request can activate Pro plugins.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return true|WP_Error True if the request has access, WP_Error object otherwise.
+	 */
+	public function activate_plugin_permissions_check( $request ) {
+		if ( ! current_user_can( 'manage_options' ) || ! current_user_can( 'activate_plugins' ) ) {
+			return new WP_Error(
+				'rest_forbidden',
+				__( 'Sorry, you are not allowed to activate plugins.', 'popup-maker' ),
 				[ 'status' => rest_authorization_required_code() ]
 			);
 		}

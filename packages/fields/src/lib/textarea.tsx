@@ -7,7 +7,7 @@ const TextAreaField = ( {
 	onChange,
 	rows = 5,
 	...fieldProps
-}: WithOnChange< TextareaFieldProps > ) => {
+}: WithOnChange< TextareaFieldProps > ): JSX.Element => {
 	return (
 		<TextareaControl
 			{ ...fieldProps }

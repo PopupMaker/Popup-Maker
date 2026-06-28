@@ -1,28 +1,36 @@
 import { createSlotFill } from '@wordpress/components';
 
+// Shared Fill/Slot types — avoids TS2742 when destructured Fill/Slot
+// components are exported (otherwise tsc tries to name their type via the
+// .pnpm/@types+react hoisted path, which isn't portable).
+type SlotFillPair = ReturnType< typeof createSlotFill >;
+type SlotFillFill = SlotFillPair[ 'Fill' ];
+type SlotFillSlot = SlotFillPair[ 'Slot' ];
+
 /**
  * SlotFill for adding items to the start of the header
  */
-export const { Fill: HeaderStartFill, Slot: HeaderStartSlot } = createSlotFill(
-	'PopupMakerLayoutHeaderStart'
-);
+const headerStart = createSlotFill( 'PopupMakerLayoutHeaderStart' );
+export const HeaderStartFill: SlotFillFill = headerStart.Fill;
+export const HeaderStartSlot: SlotFillSlot = headerStart.Slot;
 
 /**
  * SlotFill for adding items to the end of the header
  */
-export const { Fill: HeaderEndFill, Slot: HeaderEndSlot } = createSlotFill(
-	'PopupMakerLayoutHeaderEnd'
-);
+const headerEnd = createSlotFill( 'PopupMakerLayoutHeaderEnd' );
+export const HeaderEndFill: SlotFillFill = headerEnd.Fill;
+export const HeaderEndSlot: SlotFillSlot = headerEnd.Slot;
 
 /**
  * SlotFill for adding action items to the header (before support dropdown)
  */
-export const { Fill: HeaderActionsFill, Slot: HeaderActionsSlot } =
-	createSlotFill( 'PopupMakerLayoutHeaderActions' );
+const headerActions = createSlotFill( 'PopupMakerLayoutHeaderActions' );
+export const HeaderActionsFill: SlotFillFill = headerActions.Fill;
+export const HeaderActionsSlot: SlotFillSlot = headerActions.Slot;
 
 /**
  * SlotFill for adding items to the support dropdown menu
  */
-export const { Fill: SupportMenuFill, Slot: SupportMenuSlot } = createSlotFill(
-	'PopupMakerLayoutSupportMenu'
-);
+const supportMenu = createSlotFill( 'PopupMakerLayoutSupportMenu' );
+export const SupportMenuFill: SlotFillFill = supportMenu.Fill;
+export const SupportMenuSlot: SlotFillSlot = supportMenu.Slot;

@@ -14,7 +14,7 @@ const FieldRow = ( {
 	description?: string;
 	className?: clsx.ClassValue;
 	children: JSX.Element;
-} ) => (
+} ): JSX.Element => (
 	<div className={ clsx( [ 'components-field-row', className ] ) }>
 		<div className="components-base-control">
 			<label

@@ -44,7 +44,7 @@ class RestAPI extends Controller {
 		add_action( 'wp_ajax_pum_check_license_status', [ $this, 'ajax_check_license_status' ] );
 
 		// Sanitize and validate filters.
-		// add_filter( 'popup_maker/sanitize_popup_settings', [ $this, 'sanitize_popup_settings' ], 10, 2 );
+		add_filter( 'popup_maker/sanitize_popup_settings', [ $this, 'sanitize_popup_settings' ], 10, 2 );
 		// add_filter( 'popup_maker/validate_popup_settings', [ $this, 'validate_popup_settings' ], 10, 2 );
 		add_filter( 'popup_maker/sanitize_call_to_action_settings', [ $this, 'sanitize_call_to_action_settings' ], 10, 2 );
 		add_filter( 'popup_maker/validate_call_to_action_settings', [ $this, 'validate_call_to_action_settings' ], 10, 2 );
@@ -59,6 +59,7 @@ class RestAPI extends Controller {
 		( new \PopupMaker\RestAPI\Connect() )->register_routes();
 		( new \PopupMaker\RestAPI\License() )->register_routes();
 		( new \PopupMaker\RestAPI\ObjectSearch() )->register_routes();
+		( new \PopupMaker\RestAPI\Notifications() )->register_routes();
 	}
 
 	/**
@@ -81,7 +82,7 @@ class RestAPI extends Controller {
 			[
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'rest_validate_license' ],
-				'permission_callback' => [ $this, 'rest_pro_upgrade_permissions' ],
+				'permission_callback' => [ $this, 'rest_manage_pro_permissions' ],
 				'args'                => [
 					'license_key' => [
 						'required'          => false,
@@ -162,11 +163,13 @@ class RestAPI extends Controller {
 		] );
 
 		// Connection info generation endpoint.
+		// This mints a server-installable connection token, so it must be limited to
+		// users who can actually install plugins (not merely edit popups).
 		register_rest_route( $namespace, '/connect/info', [
 			[
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'rest_get_connect_info' ],
-				'permission_callback' => [ $this, 'rest_pro_upgrade_permissions' ],
+				'permission_callback' => [ $this, 'rest_manage_pro_permissions' ],
 			],
 		] );
 	}
@@ -187,12 +190,16 @@ class RestAPI extends Controller {
 	}
 
 	/**
-	 * Permission callback for Pro upgrade endpoints.
+	 * Permission callback for Pro management endpoints (license + install).
+	 *
+	 * These endpoints either change the Pro license or mint a server-installable
+	 * connection token, so access must be limited to users who are actually allowed
+	 * to install plugins rather than merely edit popups.
 	 *
 	 * @return bool True if user has permission, false otherwise.
 	 */
-	public function rest_pro_upgrade_permissions() {
-		return current_user_can( $this->container->get_permission( 'edit_popups' ) );
+	public function rest_manage_pro_permissions() {
+		return current_user_can( $this->container->get_permission( 'install_pro' ) );
 	}
 
 	/**

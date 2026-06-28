@@ -13,6 +13,7 @@ const isProduction = NODE_ENV === 'production';
 const packages = {
 	'admin-bar': 'packages/admin-bar',
 	'admin-marketing': 'packages/admin-marketing',
+	'admin-notifications': 'packages/admin-notifications',
 	'block-editor': 'packages/block-editor',
 	'block-library': 'packages/block-library',
 	components: 'packages/components',
@@ -90,13 +91,10 @@ const config = {
 				plugin.constructor.name !== 'MiniCssExtractPlugin' &&
 				plugin.constructor.name !== 'RtlCssPlugin'
 		),
-		// Force all modules into single chunks per entry - eliminates dynamic import chunks
-		new ( require( 'webpack' ).optimize.LimitChunkCountPlugin )( {
-			maxChunks: 1,
-		} ),
 		new MiniCssExtractPlugin( {
 			filename: ( { chunk } ) => {
-				if ( chunk.name && chunk.name.includes( 'style' ) ) {
+				// Style-split chunks (from splitChunks.cacheGroups.style) have no name.
+				if ( ! chunk.name ) {
 					return `${ chunk.runtime }-style.css`;
 				}
 
@@ -105,7 +103,8 @@ const config = {
 		} ),
 		new RtlCssPlugin( {
 			filename: ( { chunk } ) => {
-				if ( chunk.name && chunk.name.includes( 'style-' ) ) {
+				// Style-split chunks (from splitChunks.cacheGroups.style) have no name.
+				if ( ! chunk.name ) {
 					return `${ chunk.runtime }-style-rtl.css`;
 				}
 				return `${ chunk.runtime }-rtl.css`;
@@ -182,6 +181,20 @@ const config = {
 		sideEffects: false, // Enable aggressive tree shaking
 		// Module concatenation (scope hoisting)
 		concatenateModules: isProduction,
+		splitChunks: {
+			cacheGroups: {
+				// Split style.scss imports into separate -style.css files (WordPress block convention).
+				style: {
+					type: 'css/mini-extract',
+					test: /[\\/]style(\.module)?\.(pc|sc|sa|c)ss$/,
+					chunks: 'all',
+					enforce: true,
+				},
+				// Prevent JS code-splitting — keep single JS bundle per entry.
+				default: false,
+				defaultVendors: false,
+			},
+		},
 	},
 	devServer: {
 		...( defaultConfig.devServer || {} ),

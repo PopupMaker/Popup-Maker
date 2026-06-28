@@ -28,13 +28,14 @@ function PopupView( {
 	);
 
 	const popup = getPopupById( popupId );
-	const label = popup
-		? /* translators: %s = popup title */
-		  sprintf(
-				__( 'Open "%s" popup', 'popup-maker' ),
-				decodeEntities( popup.title.rendered )
-		  )
-		: '';
+	let label = '';
+	if ( popup ) {
+		label = sprintf(
+			/* translators: %s: popup title. */
+			__( 'Open "%s" popup', 'popup-maker' ),
+			decodeEntities( popup.title.rendered )
+		);
+	}
 
 	return (
 		<span className={ spanClassName } role="button" aria-label={ label }>
@@ -59,7 +60,7 @@ export default function PopupTriggerViewer( {
 	onEditTriggerClick,
 	popupId,
 	...props
-}: PopupTriggerViewerProps ) {
+}: PopupTriggerViewerProps ): JSX.Element {
 	return (
 		<div
 			className={ clsx(

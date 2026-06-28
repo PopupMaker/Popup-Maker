@@ -251,7 +251,7 @@ function pum_get_asset_meta( $file, $default_args = [] ) {
 function pum_get_asset_group_meta( $group, $default_args = [] ) {
 	$file = plugin()->get_path( "dist/$group-assets.php" );
 
-	$meta = (array) file_exists( $file ) ? require $file : [];
+	$meta = file_exists( $file ) ? (array) require $file : [];
 
 	foreach ( $meta as $key => $value ) {
 		$meta[ $key ] = wp_parse_args( $value, $default_args );

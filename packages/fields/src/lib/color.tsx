@@ -10,7 +10,7 @@ const ColorField = ( {
 	value = '',
 	onChange,
 	...fieldProps
-}: WithOnChange< HexColorFieldProps > ) => {
+}: WithOnChange< HexColorFieldProps > ): JSX.Element => {
 	const colors = [
 		{ name: 'red', color: '#f00' },
 		{ name: 'white', color: '#fff' },

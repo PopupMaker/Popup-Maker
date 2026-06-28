@@ -36,12 +36,12 @@ export const withQueryParams = (
 	WrappedComponent: ComponentType<
 		EditorWithModalProps | EditorWithDataStoreProps
 	>
-) => {
+): ComponentType< EditorWithQueryParamsProps > => {
 	return function QueryParamsWrappedEditor( {
 		onSave: onSaveProp,
 		onClose: onCloseProp,
 		...componentProps
-	}: EditorWithQueryParamsProps ) {
+	}: EditorWithQueryParamsProps ): JSX.Element | null {
 		const closeOnSave = true;
 
 		const { tab, setTab, clearEditorParams, editorId } = useEditor();

@@ -65,7 +65,7 @@ const URLControl = (
 		className = '',
 	}: Props,
 	ref: React.ForwardedRef< HTMLInputElement | null >
-) => {
+): JSX.Element => {
 	// Set up instance ID & refs.
 	const instanceId = useInstanceId( URLControl );
 	const wrapperRef = useRef< HTMLDivElement | null >( null );

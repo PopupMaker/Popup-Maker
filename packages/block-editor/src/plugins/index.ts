@@ -3,3 +3,4 @@
  */
 
 import './popup-title-panel';
+import './popup-preview-button';

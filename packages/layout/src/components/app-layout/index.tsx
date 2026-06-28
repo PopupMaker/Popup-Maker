@@ -4,7 +4,10 @@ import clsx from 'clsx';
 import { SlotFillProvider } from '@wordpress/components';
 import type { AppLayoutProps } from '../../types';
 
-export const AppLayout = ( { className, children }: AppLayoutProps ) => {
+export const AppLayout = ( {
+	className,
+	children,
+}: AppLayoutProps ): JSX.Element => {
 	return (
 		<SlotFillProvider>
 			<div className={ clsx( 'popup-maker-app-layout', className ) }>

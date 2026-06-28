@@ -12,7 +12,7 @@ import { getGlobalVars } from './utils';
 
 import type { TabComponent } from '@popup-maker/types';
 
-const App = () => {
+const App = (): JSX.Element => {
 	const { permissions = { edit_ctas: false } } = getGlobalVars();
 	const { edit_ctas: userCanEditCallToActions } = permissions;
 
@@ -67,8 +67,6 @@ const App = () => {
 			__( 'Popup Maker', 'popup-maker' );
 	}, [ view, views ] );
 
-	const { adminUrl } = getGlobalVars();
-
 	return (
 		<AppLayout
 			className={ clsx( [
@@ -77,10 +75,10 @@ const App = () => {
 			] ) }
 		>
 			<AppHeader
+				navTabId="call-to-actions"
 				tabs={ views }
 				currentTab={ view ?? undefined }
 				onTabChange={ ( tabName ) => setParams( { view: tabName } ) }
-				adminUrl={ adminUrl }
 			/>
 			<AppContent>
 				<ViewComponent />

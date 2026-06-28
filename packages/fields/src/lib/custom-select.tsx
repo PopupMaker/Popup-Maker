@@ -19,7 +19,7 @@ const CustomSelectField = ( {
 	entityType,
 	multiple = false,
 	apiEndpoint = 'popup-maker/v2/object-search',
-}: WithOnChange< CustomSelectFieldProps > ) => {
+}: WithOnChange< CustomSelectFieldProps > ): JSX.Element => {
 	const [ queryText, setQueryText ] = useState( '' );
 	const [ apiData, setApiData ] = useState< {
 		prefill: CustomEntityOption[];

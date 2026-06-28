@@ -314,6 +314,19 @@ class License extends Service {
 	}
 
 	/**
+	 * Get license key for EDD API calls (extensions, updater, etc.).
+	 *
+	 * Unlike get_license_key(), this never returns display placeholders.
+	 *
+	 * @return string
+	 */
+	public function get_api_license_key(): string {
+		$key = $this->get_raw_license_key();
+
+		return null !== $key ? $key : '';
+	}
+
+	/**
 	 * Get raw license key for internal API calls only.
 	 *
 	 * This method should NEVER be used for display purposes.

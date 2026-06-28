@@ -10,7 +10,7 @@ export interface WPNotice {
 	 * Status of notice, one of `success`, `info`, `error`, or `warning`.
 	 * Defaults to `info`.
 	 */
-	status?: 'warning' | 'success' | 'error' | 'info' | string;
+	status?: 'warning' | 'success' | 'error' | 'info';
 	/**
 	 * Notice message.
 	 */
@@ -47,33 +47,82 @@ export interface WPNotice {
 }
 
 /**
- * Notice object from WordPress core.
+ * Options passed through to `@wordpress/notices::createNotice`.
+ *
+ * Shape matches WP's exported `NoticeOptions` so spreading into the
+ * createNotice call stays type-safe. Intentionally NOT extending
+ * WPNotice — NoticeOptions is a distinct narrower shape (no `status`,
+ * `content`, `spokenMessage`, etc; those are separate args).
  */
-export interface Notice extends WPNotice {
+export interface Notice {
 	/**
-	 * Notice context. Unused?.
+	 * Context under which to group notice.
 	 */
-	context?: string | undefined;
+	context?: string;
 	/**
-	 * Notice icon.
+	 * Identifier for notice. Auto-assigned if not specified.
 	 */
-	icon?: string | undefined;
+	id?: string;
 	/**
-	 * Notice explicit dismiss.
+	 * Whether the notice can be dismissed by the user.
 	 */
-	explicitDismiss?: boolean | undefined;
+	isDismissible?: boolean;
 	/**
-	 * Notice on dismiss.
+	 * Type of notice.
 	 */
-	onDismiss?: Function | undefined;
+	type?: 'default' | 'snackbar' | ( string & {} );
 	/**
-	 * Notice close delay.
+	 * Whether the notice content should be announced to screen readers.
 	 */
-	closeDelay?: number | undefined;
+	speak?: boolean;
+	/**
+	 * User actions presented with the notice.
+	 */
+	actions?: NoticeAction[];
+	/**
+	 * Icon displayed with the notice. Only used when type is `snackbar`.
+	 */
+	icon?: string | null;
+	/**
+	 * Whether the notice includes an explicit dismiss button. Only applies
+	 * when type is set to `snackbar`.
+	 */
+	explicitDismiss?: boolean;
+	/**
+	 * Called when the notice is dismissed.
+	 */
+	onDismiss?: () => void;
+	/**
+	 * Auto-close delay (ms). Snackbar-only.
+	 */
+	closeDelay?: number;
+	/**
+	 * Whether the message should be shown as raw HTML. Matches
+	 * `@wordpress/notices`' NoticeOptions flag — subject to removal
+	 * upstream, so use sparingly.
+	 */
+	__unstableHTML?: boolean;
 }
 
 /**
- * WP notice action.
+ * Predicate that narrows an incoming notice's loose `status: string` to
+ * the four known literals WPNotice declares. Use when casting
+ * `@wordpress/notices` output where the upstream type is wider than
+ * ours and we only want to forward known-safe statuses.
+ *
+ * @param {unknown} status The raw status value to check.
+ * @return {boolean} True when status is one of the known WPNotice literals.
+ */
+export const isValidNoticeStatus = (
+	status: unknown
+): status is NonNullable< WPNotice[ 'status' ] > =>
+	status === 'warning' ||
+	status === 'success' ||
+	status === 'error' ||
+	status === 'info';
+
+/**
+ * WP notice action. Shape matches `@wordpress/notices::NoticeAction`.
  */
 export type NoticeAction = {
 	/**
@@ -83,9 +132,9 @@ export type NoticeAction = {
 	/**
 	 * Notice action url.
 	 */
-	url: string | null;
+	url?: string;
 	/**
 	 * Notice action onClick.
 	 */
-	onClick: Function | null;
+	onClick?: () => void;
 };

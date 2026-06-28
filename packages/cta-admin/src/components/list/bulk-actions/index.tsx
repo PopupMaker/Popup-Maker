@@ -16,7 +16,7 @@ import { chevronDown, chevronUp } from '@wordpress/icons';
 import { useList } from '../../../context';
 import { useListBulkActions } from '../../../registry';
 
-const ListBulkActions = () => {
+const ListBulkActions = (): JSX.Element | null => {
 	const lastGroup = useRef< string | undefined >( undefined );
 	const btnRef = useRef< HTMLButtonElement >();
 	const [ isOpen, setIsOpen ] = useState( false );
@@ -95,7 +95,7 @@ const ListBulkActions = () => {
 					<Flex>
 						<span className="selected-items">
 							{ sprintf(
-								// translators: 1. number of items.
+								// translators: %d: number of items.
 								_n(
 									'%d item selected',
 									'%d items selected',

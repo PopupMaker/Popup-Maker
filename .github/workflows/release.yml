@@ -88,19 +88,22 @@ jobs:
           tools: composer:v2
           coverage: none
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: |
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-          npm ci
+          pnpm install --frozen-lockfile
 
       - name: Build production assets
-        run: npm run build:production
+        run: pnpm run build:production
 
       - name: Create release package
         id: package

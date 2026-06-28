@@ -8,4 +8,6 @@ export * from './url-search';
 export * from './hooks';
 export * from './utils';
 
+export { isValidNoticeStatus } from './types/notices';
+
 export type * from './types';

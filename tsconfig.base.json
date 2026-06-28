@@ -26,12 +26,24 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		/* Module Resolution Options */
+		/* "node" is deprecated in TS 5.x (renamed to "node10"). Switching
+		   to "bundler" is the long-term fix but breaks type-root resolution
+		   in this monorepo (hoisted @types/* aren't found from package
+		   dirs). Silence the deprecation until TS 7.0 ships and a full
+		   migration to bundler/node16 can be done as its own task. */
 		"moduleResolution": "node",
+		"ignoreDeprecations": "5.0",
 		/* This needs to be false so our types are possible to consume without setting this */
 		"esModuleInterop": false,
 		"resolveJsonModule": true,
 		"strictNullChecks": true,
-		"types": [ "node", "react", "jest", "@testing-library/jest-dom" ]
+		/* Opt-in ambient types only. Empty list disables TS's default
+		   "include every @types/* reachable from node_modules" behaviour,
+		   which in a pnpm-hoisted monorepo pulls in type packages whose
+		   peer deps aren't present in each package (e.g. jest-dom types
+		   fail to resolve from `@popup-maker/types`). Packages that need
+		   globals like jquery declare them in their own tsconfig. */
+		"types": []
 	},
 	"exclude": [
 		"node_modules",
@@ -44,6 +56,9 @@
 		"**/build/**",
 		"**/dist/**",
 		"**/vendor/**",
-		"**/test/**"
+		"**/test/**",
+		"**/__tests__/**",
+		"**/*.test.ts",
+		"**/*.test.tsx"
 	]
 }

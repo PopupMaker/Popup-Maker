@@ -96,6 +96,14 @@ class PUM_Analytics {
 			return;
 		}
 
+		// The analytics endpoints are intentionally public (tracking pixels fire for
+		// logged-out visitors), so they cannot use a nonce. Apply a lightweight
+		// per-visitor rate limit to blunt automated counter inflation while leaving
+		// legitimate tracking untouched.
+		if ( self::is_rate_limited( (int) $args['pid'], $event ) ) {
+			return;
+		}
+
 		$popup->increase_event_count( $event );
 
 		if ( has_action( 'pum_analytics_' . $event ) ) {
@@ -103,6 +111,70 @@ class PUM_Analytics {
 		}
 
 		do_action( 'pum_analytics_event', $args );
+	}
+
+	/**
+	 * Determine whether the current visitor has exceeded the analytics rate limit
+	 * for a given popup + event.
+	 *
+	 * The analytics endpoints are unauthenticated by design, so this provides a
+	 * coarse per-visitor throttle to limit automated counter inflation. The cap is
+	 * deliberately high so it never drops a real visitor's events; only abusive
+	 * volumes are blocked.
+	 *
+	 * @param int    $pid   Popup ID.
+	 * @param string $event Event key.
+	 * @return bool True when the request should be dropped.
+	 */
+	protected static function is_rate_limited( $pid, $event ) {
+		/**
+		 * Filters the analytics rate limit window (seconds) and max events per window.
+		 *
+		 * @param array $limits [ 'window' => int seconds, 'max' => int events ].
+		 */
+		$limits = apply_filters(
+			'popup_maker/analytics/rate_limit',
+			[
+				'window' => 5 * MINUTE_IN_SECONDS,
+				'max'    => 30,
+			]
+		);
+
+		// A non-positive max disables rate limiting entirely.
+		if ( empty( $limits['max'] ) || $limits['max'] < 1 ) {
+			return false;
+		}
+
+		$visitor = self::get_visitor_hash();
+		$key     = 'pum_alrl_' . md5( $visitor . '|' . $pid . '|' . $event );
+
+		$count = (int) get_transient( $key );
+
+		if ( $count >= (int) $limits['max'] ) {
+			return true;
+		}
+
+		set_transient( $key, $count + 1, (int) $limits['window'] );
+
+		return false;
+	}
+
+	/**
+	 * Build a privacy-preserving identifier for the current visitor.
+	 *
+	 * Hashes the client IP together with the auth salt so no raw IP is ever stored
+	 * in a transient key. Logged-in users are keyed by user ID.
+	 *
+	 * @return string
+	 */
+	protected static function get_visitor_hash() {
+		if ( is_user_logged_in() ) {
+			return 'u' . get_current_user_id();
+		}
+
+		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+
+		return wp_hash( $ip );
 	}
 
 	/**
@@ -147,6 +219,24 @@ class PUM_Analytics {
 	public static function analytics_endpoint( WP_REST_Request $request ) {
 		$args = $request->get_params();
 
+		// Batch beacon: the client may send multiple events in one request as
+		// an `events` array (debounced/flush-on-exit batching). Each entry is a
+		// full event payload; process them through the same single-event path.
+		// Back-compatible — a single-event POST (top-level pid/event) still works.
+		$batch = self::parse_batch_events( $request, $args );
+
+		if ( null !== $batch ) {
+			foreach ( $batch as $event_args ) {
+				if ( is_array( $event_args ) && ! empty( $event_args['pid'] ) ) {
+					self::track( $event_args );
+				}
+			}
+
+			self::serve_no_content();
+
+			return true;
+		}
+
 		if ( ! $args || empty( $args['pid'] ) ) {
 			return new WP_Error( 'missing_params', __( 'Missing Parameters.', 'default' ), [ 'status' => 404 ] );
 		}
@@ -156,6 +246,41 @@ class PUM_Analytics {
 		self::serve_no_content();
 
 		return true;
+	}
+
+	/**
+	 * Extract a batch of event payloads from the request, if present.
+	 *
+	 * Accepts an `events` parameter that is either a JSON-encoded array
+	 * (sendBeacon FormData can only carry strings) or an already-decoded array.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @param array           $args    Parsed params.
+	 * @return array<int,array>|null Array of event payloads, or null when not a batch.
+	 */
+	protected static function parse_batch_events( WP_REST_Request $request, $args ) {
+		$events = isset( $args['events'] ) ? $args['events'] : $request->get_param( 'events' );
+
+		if ( empty( $events ) ) {
+			return null;
+		}
+
+		if ( is_string( $events ) ) {
+			$decoded = json_decode( $events, true );
+			$events  = is_array( $decoded ) ? $decoded : null;
+		}
+
+		if ( ! is_array( $events ) || empty( $events ) ) {
+			return null;
+		}
+
+		// Must be a list of event objects, not an associative single event.
+		$first = reset( $events );
+		if ( ! is_array( $first ) ) {
+			return null;
+		}
+
+		return array_values( $events );
 	}
 
 	/**

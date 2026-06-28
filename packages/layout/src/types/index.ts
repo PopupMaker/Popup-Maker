@@ -8,12 +8,14 @@ export interface AppLayoutProps {
 export interface AppHeaderProps {
 	title?: string;
 	brandingUrl?: string;
+	/** In-app tabs when no PHP nav tabs are localized. */
 	tabs?: TabComponent[];
 	currentTab?: string;
 	onTabChange?: ( tabName: string ) => void;
+	/** Active cross-page nav tab id from `layoutVars.navTabs`. */
+	navTabId?: string;
 	supportMenuItems?: SupportMenuItem[];
 	showSupport?: boolean;
-	adminUrl?: string;
 }
 
 export interface AppContentProps {

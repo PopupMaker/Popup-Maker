@@ -61,13 +61,13 @@ export interface EditorWithDataStoreProps
  */
 export const withDataStore = (
 	WrappedComponent: ComponentType< BaseEditorProps >
-) => {
+): ComponentType< EditorWithDataStoreProps > => {
 	return function DataStoreWrappedEditor( {
 		id,
 		defaultValues = defaultCtaValues,
 		onSave,
 		...componentProps
-	}: EditorWithDataStoreProps ) {
+	}: EditorWithDataStoreProps ): JSX.Element | null {
 		/**
 		 * State for tracking save attempts and preventing duplicate saves
 		 *

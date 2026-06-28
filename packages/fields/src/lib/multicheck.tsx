@@ -12,7 +12,7 @@ const MulticheckField = ( {
 	value,
 	onChange,
 	...fieldProps
-}: WithOnChange< MulticheckFieldProps > ) => {
+}: WithOnChange< MulticheckFieldProps > ): JSX.Element => {
 	const toggle = false;
 
 	const checked = value ?? [];

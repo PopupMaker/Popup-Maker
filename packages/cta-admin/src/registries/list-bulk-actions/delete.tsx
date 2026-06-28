@@ -9,7 +9,7 @@ import { useRegistry, useDispatch } from '@wordpress/data';
 
 import { useList } from '../../context';
 
-const DeleteBulkAction = () => {
+const DeleteBulkAction = (): JSX.Element | null => {
 	const [ confirm, setConfirm ] = useState< {
 		message: string;
 		callback: () => void;
@@ -43,7 +43,7 @@ const DeleteBulkAction = () => {
 					setConfirm( {
 						isDestructive: true,
 						message: sprintf(
-							// translators: 1. call to action label.
+							// translators: %d: number of items.
 							__(
 								'Are you sure you want to premanently delete %d items?',
 								'popup-maker'
@@ -64,7 +64,7 @@ const DeleteBulkAction = () => {
 								createNotice(
 									'success',
 									sprintf(
-										// translators: 1. number of items
+										// translators: %d: number of items.
 										_n(
 											'%d call to action deleted.',
 											'%d call to actions deleted.',
