@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.23.0 - 2026-06-28
+
 **Features**
 
 -   Added a "Preview Popup" option to the block editor's Preview menu, matching the classic editor. It opens the popup on the front end in a dedicated tab; clicking it again reuses that same tab, and saving the popup automatically refreshes the open preview so you always see your latest changes.
@@ -10,6 +12,10 @@
 **Improvements**
 
 -   The popup editor now remembers the last-open settings tab per popup instead of sharing a single tab across all popups, so each popup reopens to the tab you last used.
+
+**Security**
+
+-   Tightened the permission checks required & improved validation for pro activation.
 
 **Fixes**
 

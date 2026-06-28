@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * guard only while popup content is being rendered, so ACF shortcodes resolve
  * in popups without exposing non-public field access anywhere else.
  *
- * @since X.X.X
+ * @since 1.23.0
  */
 class ACF extends Controller {
 
