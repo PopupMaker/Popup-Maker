@@ -220,6 +220,11 @@ class Assets extends Controller {
 				// 'varsName' => 'popupMakerRegistry',
 				// 'vars'     => [],
 			],
+			'skeleton'            => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-skeleton',
+				'styles'  => true,
+			],
 			'use-query-params'    => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-use-query-params',

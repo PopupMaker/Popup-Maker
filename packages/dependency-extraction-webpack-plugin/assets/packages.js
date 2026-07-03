@@ -16,6 +16,7 @@ module.exports = [
 	'@popup-maker/layout',
 	'@popup-maker/popup-admin',
 	'@popup-maker/registry',
+	'@popup-maker/skeleton',
 	'@popup-maker/use-query-params',
 	'@popup-maker/utils',
 ];

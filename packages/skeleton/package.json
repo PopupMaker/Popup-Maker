@@ -1,0 +1,62 @@
+{
+	"name": "@popup-maker/skeleton",
+	"version": "1.0.0",
+	"description": "Loading skeleton primitives for Popup Maker admin UI",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/trunk/packages/skeleton/README.md",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/skeleton"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index.js",
+	"module": "src/index.js",
+	"types": "build-types/index.d.ts",
+	"sideEffects": [
+		"*.scss",
+		"*.css"
+	],
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"wpScript": true,
+	"dependencies": {
+		"@wordpress/components": "^30.2.0",
+		"@wordpress/element": "^6.29.0"
+	},
+	"peerDependencies": {
+		"react": "^18.3.1"
+	},
+	"scripts": {
+		"prepack": "pnpm run build:tsc && pnpm run build:types",
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
+}
