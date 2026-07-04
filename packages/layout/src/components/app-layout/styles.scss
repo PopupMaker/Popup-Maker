@@ -6,5 +6,8 @@
 }
 
 .popup-maker-app-content {
-	padding: 20px 0 20px 20px;
+	// Symmetric horizontal inset. The right value was 0, so page content
+	// (tables, tab bars, action buttons) ran flush to the viewport edge
+	// while the header kept its 20px inset — a visible containment break.
+	padding: 20px;
 }

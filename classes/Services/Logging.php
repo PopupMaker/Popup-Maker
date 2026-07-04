@@ -251,7 +251,7 @@ class Logging extends Service {
 	 * @return void
 	 */
 	public function log( $message = '' ) {
-		$this->write_to_log( wp_date( 'Y-n-d H:i:s' ) . ' - ' . $message );
+		$this->write_to_log( wp_date( 'Y-m-d H:i:s' ) . ' - ' . $message );
 	}
 
 	/**
@@ -392,7 +392,7 @@ class Logging extends Service {
 	 * @return void
 	 */
 	public function setup_new_log() {
-		$this->set_log_content( $this->container->get( 'name' ) . " Debug Logs:\r\n" . wp_date( 'Y-n-d H:i:s' ) . " - Log file initialized\r\n", true );
+		$this->set_log_content( $this->container->get( 'name' ) . " Debug Logs:\r\n" . wp_date( 'Y-m-d H:i:s' ) . " - Log file initialized\r\n", true );
 	}
 
 	/**

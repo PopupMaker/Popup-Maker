@@ -523,6 +523,16 @@ class PUM_Utils_Upgrades {
 			);
 		}
 
+		// Capability check. Upgrade routines run schema/data migrations, so require
+		// an administrator regardless of the nonce.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				[
+					'error' => __( 'You do not have permission to initiate this request. Contact an administrator for more information.', 'popup-maker' ),
+				]
+			);
+		}
+
 		if ( ! $upgrade_id ) {
 			$upgrade_id = $this->get_current_upgrade_id();
 		}

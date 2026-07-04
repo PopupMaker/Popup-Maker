@@ -673,6 +673,12 @@ class PUM_Utils_Alerts {
 			wp_send_json_error();
 		}
 
+		// Capability check. Alerts are only shown to edit_posts users; require the
+		// same capability to dismiss them.
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error();
+		}
+
 		$args = wp_parse_args(
 			$_REQUEST,
 			[
@@ -702,6 +708,12 @@ class PUM_Utils_Alerts {
 		}
 
 		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['nonce'] ) ), 'pum_alerts_action' ) ) {
+			return;
+		}
+
+		// Capability check. Alerts are only shown to edit_posts users; require the
+		// same capability to dismiss them.
+		if ( ! current_user_can( 'edit_posts' ) ) {
 			return;
 		}
 

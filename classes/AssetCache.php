@@ -807,7 +807,11 @@ class PUM_AssetCache {
 
 
 	/**
-	 * Retrieve asset contents while ignoring SSL verification errors.
+	 * Retrieve asset contents from a URL or local path.
+	 *
+	 * Remote URLs are fetched via wp_remote_get. When that fails (common on local
+	 * dev with self-signed certs), same-site URLs fall back to the filesystem.
+	 * Never passes a remote URL to file_get_contents().
 	 *
 	 * @param string $src URL or path to the asset.
 	 *
@@ -816,18 +820,87 @@ class PUM_AssetCache {
 	 * @since 1.21.0
 	 */
 	private static function get_asset_contents( $src ) {
+		if ( empty( $src ) || ! is_string( $src ) ) {
+			return false;
+		}
+
+		if ( 0 === strpos( $src, '//' ) ) {
+			return self::get_asset_contents( ( is_ssl() ? 'https:' : 'http:' ) . $src );
+		}
+
 		$scheme = wp_parse_url( $src, PHP_URL_SCHEME );
 
 		if ( in_array( $scheme, [ 'http', 'https' ], true ) ) {
-				$response = wp_remote_get( $src, [ 'sslverify' => false ] );
+			$response = wp_remote_get(
+				$src,
+				[
+					'sslverify' => apply_filters( 'pum_asset_cache_sslverify', false, $src ),
+					'timeout'   => 15,
+				]
+			);
 
 			if ( ! is_wp_error( $response ) ) {
+				$code = wp_remote_retrieve_response_code( $response );
+				if ( $code >= 200 && $code < 300 ) {
 					return wp_remote_retrieve_body( $response );
+				}
 			}
+
+			$path = self::url_to_local_path( $src );
+			if ( $path ) {
+				return self::read_local_file( $path );
+			}
+
+			return false;
+		}
+
+		return self::read_local_file( $src );
+	}
+
+	/**
+	 * Read a local file path, returning false when missing or unreadable.
+	 *
+	 * @param string $path Absolute filesystem path.
+	 *
+	 * @return string|false
+	 */
+	private static function read_local_file( $path ) {
+		$path = wp_normalize_path( $path );
+
+		if ( ! is_readable( $path ) || ! is_file( $path ) ) {
+			return false;
 		}
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		return file_get_contents( $src );
+		$contents = file_get_contents( $path );
+
+		return false !== $contents ? $contents : false;
+	}
+
+	/**
+	 * Map a same-site asset URL to an absolute filesystem path when possible.
+	 *
+	 * @param string $url Asset URL.
+	 *
+	 * @return string|false Local path or false when not on this install.
+	 */
+	private static function url_to_local_path( $url ) {
+		$url = wp_normalize_path( $url );
+
+		$bases = [
+			wp_normalize_path( content_url( '/' ) ) => wp_normalize_path( WP_CONTENT_DIR . '/' ),
+			wp_normalize_path( site_url( '/' ) )    => wp_normalize_path( ABSPATH ),
+		];
+
+		foreach ( $bases as $url_base => $path_base ) {
+			if ( 0 === strpos( $url, $url_base ) ) {
+				$path = $path_base . substr( $url, strlen( $url_base ) );
+
+				return is_file( $path ) ? $path : false;
+			}
+		}
+
+		return false;
 	}
 
 	/**

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v1.23.0 - 2026-06-28
+
+**Security**
+
+-   Tightened the permission checks required & improved validation for pro activation.
+-   Additional hardening based on continuous AI scanning.
+
 **Features**
 
 -   Added a "Preview Popup" option to the block editor's Preview menu, matching the classic editor. It opens the popup on the front end in a dedicated tab; clicking it again reuses that same tab, and saving the popup automatically refreshes the open preview so you always see your latest changes.
