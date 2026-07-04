@@ -16,7 +16,8 @@ const HistoryEditorHeaderAction = ( {
 
 	const { hasUndo, hasRedo, hasEdits } = useSelect(
 		( select ) => {
-			if ( ! values.id ) {
+			// values.id doubles as the edits record key (0 for drafts).
+			if ( typeof values.id !== 'number' ) {
 				return {
 					hasUndo: false,
 					hasRedo: false,

@@ -3,6 +3,7 @@ import './editor.scss';
 import clsx from 'clsx';
 
 import { __ } from '@popup-maker/i18n';
+import { SkeletonTableRow } from '@popup-maker/skeleton';
 import { arrowDown, arrowUp } from '@wordpress/icons';
 import { useEffect } from '@wordpress/element';
 import { Button, CheckboxControl, Icon } from '@wordpress/components';
@@ -31,7 +32,15 @@ type Props< T extends TableItemBase > = {
 	onSelectItems?: ( selectedItems: number[] ) => void;
 	onSort?: ( orderby: string, order: SortDirection ) => void;
 	initialSort?: SortConfig | null;
+	/**
+	 * Render shimmering placeholder rows instead of items while loading.
+	 */
+	isLoading?: boolean;
+	loadingRowCount?: number;
 };
+
+// Staggered widths so skeleton rows don't look stamped from one mold.
+const SKELETON_WIDTHS = [ '80%', '55%', '70%', '45%', '65%' ];
 
 type CellProps = {
 	heading?: boolean;
@@ -61,6 +70,8 @@ const ListTable = < T extends TableItemBase >( {
 	onSelectItems = () => {},
 	onSort,
 	initialSort,
+	isLoading = false,
+	loadingRowCount = 5,
 }: Props< T > ): JSX.Element => {
 	const cols = { [ idCol ]: columns[ idCol ] ?? '', ...columns };
 	const colCount = Object.keys( cols ).length;
@@ -187,7 +198,8 @@ const ListTable = < T extends TableItemBase >( {
 				className,
 				'component-list-table',
 				'list-table',
-				items.length === 0 && 'no-items',
+				isLoading && 'is-loading',
+				! isLoading && items.length === 0 && 'no-items',
 			] ) }
 		>
 			<thead>
@@ -196,66 +208,96 @@ const ListTable = < T extends TableItemBase >( {
 				</tr>
 			</thead>
 			<tbody>
-				{ items.length ? (
-					items.map( ( item, rowIndex ) => (
-						<tr
-							key={ item.id }
-							className={ clsx( rowClasses( item ) ) }
-						>
-							{ Object.entries( cols ).map( ( [ col ] ) => {
-								const isIdCol = col === idCol;
+				{ isLoading &&
+					Array.from( { length: loadingRowCount } ).map(
+						( _, rowIndex ) => (
+							<SkeletonTableRow
+								key={ rowIndex }
+								cells={ Object.keys( cols ).map(
+									( col, colIndex ) => ( {
+										key: col,
+										width:
+											col === idCol
+												? 16
+												: SKELETON_WIDTHS[
+														( rowIndex +
+															colIndex ) %
+															SKELETON_WIDTHS.length
+												  ],
+									} )
+								) }
+							/>
+						)
+					) }
+				{ ! isLoading &&
+					( items.length ? (
+						items.map( ( item, rowIndex ) => (
+							<tr
+								key={ item.id }
+								className={ clsx( rowClasses( item ) ) }
+							>
+								{ Object.entries( cols ).map( ( [ col ] ) => {
+									const isIdCol = col === idCol;
 
-								return (
-									<TableCell
-										key={ col }
-										heading={ isIdCol }
-										className={ clsx( [
-											`column-${ col }`,
-											showBulkSelect &&
-												isIdCol &&
-												'check-column',
-										] ) }
-										scope={ isIdCol ? 'row' : undefined }
-									>
-										{ isIdCol ? (
-											<CheckboxControl
-												onChange={ ( checked ) => {
-													const newSelectedItems =
-														! checked
-															? selectedItems.filter(
-																	( id ) =>
-																		id !==
-																		item.id
-															  )
-															: [
-																	...selectedItems,
-																	item.id,
-															  ];
+									return (
+										<TableCell
+											key={ col }
+											heading={ isIdCol }
+											className={ clsx( [
+												`column-${ col }`,
+												showBulkSelect &&
+													isIdCol &&
+													'check-column',
+											] ) }
+											scope={
+												isIdCol ? 'row' : undefined
+											}
+										>
+											{ isIdCol ? (
+												<CheckboxControl
+													onChange={ ( checked ) => {
+														const newSelectedItems =
+															! checked
+																? selectedItems.filter(
+																		(
+																			id
+																		) =>
+																			id !==
+																			item.id
+																  )
+																: [
+																		...selectedItems,
+																		item.id,
+																  ];
 
-													setSelectedItems(
-														newSelectedItems
-													);
-												} }
-												checked={
-													selectedItems.indexOf(
-														item.id
-													) >= 0
-												}
-												__nextHasNoMarginBottom
-											/>
-										) : (
-											renderCell( col, item, rowIndex )
-										) }
-									</TableCell>
-								);
-							} ) }
+														setSelectedItems(
+															newSelectedItems
+														);
+													} }
+													checked={
+														selectedItems.indexOf(
+															item.id
+														) >= 0
+													}
+													__nextHasNoMarginBottom
+												/>
+											) : (
+												renderCell(
+													col,
+													item,
+													rowIndex
+												)
+											) }
+										</TableCell>
+									);
+								} ) }
+							</tr>
+						) )
+					) : (
+						<tr>
+							<td colSpan={ colCount }>{ noItemsText }</td>
 						</tr>
-					) )
-				) : (
-					<tr>
-						<td colSpan={ colCount }>{ noItemsText }</td>
-					</tr>
-				) }
+					) ) }
 			</tbody>
 			<tfoot>
 				<tr>

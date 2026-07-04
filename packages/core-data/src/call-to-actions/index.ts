@@ -5,6 +5,7 @@ import type {
 
 export { default as callToActionStore } from './store';
 export * from './validation';
+export { editableEntity, editorRecordKey } from './utils';
 
 export {
 	defaultValues as defaultCtaValues,

@@ -955,6 +955,8 @@ function ButtonEdit( props: ButtonEditProps ) {
 					} }
 					closeOnSave={ true }
 					onClose={ () => {
+						// The editor no longer resets its own id on unmount.
+						changeEditorId( undefined );
 						setNewCta( false );
 					} }
 				/>

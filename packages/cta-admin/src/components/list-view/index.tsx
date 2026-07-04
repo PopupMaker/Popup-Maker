@@ -12,6 +12,11 @@ import {
 	withQueryParams,
 } from '@popup-maker/cta-editor';
 
+// Composed once at module scope. Composing inside the component created a new
+// component type every render, remounting the editor (and closing the modal)
+// whenever this view re-rendered.
+const Editor = withQueryParams( withModal( BaseEditor ) );
+
 /**
  * Generates the Call To Actions tab component & sub-app.
  */
@@ -36,8 +41,6 @@ const CallToActionsView = (): JSX.Element => {
 			</div>
 		);
 	}
-
-	const Editor = withQueryParams( withModal( BaseEditor ) );
 
 	return (
 		<div className="call-to-action-list">

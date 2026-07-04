@@ -51,7 +51,9 @@ export const withQueryParams = (
 
 			return {
 				isEditorActive: store.isEditorActive(),
-				isSaving: store.isResolving( 'updateCallToAction' ),
+				isSaving:
+					store.isResolving( 'updateCallToAction' ) ||
+					store.isResolving( 'createCallToAction' ),
 			};
 		}, [] );
 

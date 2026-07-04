@@ -10,10 +10,11 @@ import { ACTION_TYPES, NOTICE_CONTEXT } from './constants';
 import { DispatchStatus } from '../constants';
 import { fetchFromApi, getErrorMessage } from '../utils';
 import { validateCallToAction } from './validation';
-import { editableEntity } from './utils';
-import type { EditorId, Notice, WPNotice } from '../types';
+import { editableEntity, editorRecordKey } from './utils';
+import type { Notice, WPNotice } from '../types';
 import type {
 	CallToAction,
+	CtaEditorId,
 	ThunkAction,
 	EditableCta,
 	PartialEditableCta,
@@ -846,10 +847,16 @@ const editorActions = {
 	undo:
 		( id: number, steps: number = 1 ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			const ctaId = id > 0 ? id : select.getEditorId();
+			let ctaId = id;
 
-			if ( typeof ctaId === 'undefined' ) {
-				return;
+			if ( ctaId <= 0 ) {
+				const editorId = select.getEditorId();
+
+				if ( typeof editorId === 'undefined' ) {
+					return;
+				}
+
+				ctaId = editorRecordKey( editorId );
 			}
 
 			await dispatch( {
@@ -871,10 +878,16 @@ const editorActions = {
 	redo:
 		( id: number, steps: number = 1 ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			const ctaId = id > 0 ? id : select.getEditorId();
+			let ctaId = id;
 
-			if ( typeof ctaId === 'undefined' ) {
-				return;
+			if ( ctaId <= 0 ) {
+				const editorId = select.getEditorId();
+
+				if ( typeof editorId === 'undefined' ) {
+					return;
+				}
+
+				ctaId = editorRecordKey( editorId );
 			}
 
 			await dispatch( {
@@ -895,10 +908,16 @@ const editorActions = {
 	resetRecordEdits:
 		( id: number ): ThunkAction =>
 		async ( { select, dispatch } ) => {
-			const ctaId = id > 0 ? id : select.getEditorId();
+			let ctaId = id;
 
-			if ( typeof ctaId === 'undefined' ) {
-				return;
+			if ( ctaId <= 0 ) {
+				const editorId = select.getEditorId();
+
+				if ( typeof editorId === 'undefined' ) {
+					return;
+				}
+
+				ctaId = editorRecordKey( editorId );
 			}
 
 			dispatch( {
@@ -924,7 +943,8 @@ const editorActions = {
 				return;
 			}
 
-			dispatch.editRecord( editorId, values );
+			// Drafts ('new') store their edits under record key 0.
+			dispatch.editRecord( editorRecordKey( editorId ), values );
 		},
 
 	/**
@@ -934,7 +954,7 @@ const editorActions = {
 	 */
 	saveEditorValues:
 		(): ThunkAction< boolean > =>
-		async ( { dispatch, select } ) => {
+		async ( { dispatch, select, registry } ) => {
 			const editorId = select.getEditorId();
 			const editorValues = select.getCurrentEditorValues();
 
@@ -943,6 +963,33 @@ const editorActions = {
 					__( 'No editor values to save', 'popup-maker' )
 				);
 				return false;
+			}
+
+			// First save of an unsaved draft — create the record now.
+			if ( 'new' === editorId ) {
+				const { id: _draftId, ...newValues } = editorValues;
+
+				const result = await dispatch.createCallToAction( newValues );
+
+				if ( ! result ) {
+					return false;
+				}
+
+				registry.batch( () => {
+					// Discard the draft & point the editor at the saved record.
+					dispatch( {
+						type: RESET_EDIT_RECORD,
+						payload: {
+							id: 0,
+						},
+					} );
+
+					if ( 'new' === select.getEditorId() ) {
+						dispatch.changeEditorId( result.id );
+					}
+				} );
+
+				return true;
 			}
 
 			return dispatch.saveEditedRecord( editorId );
@@ -962,18 +1009,21 @@ const editorActions = {
 				return;
 			}
 
-			dispatch.resetRecordEdits( editorId );
+			dispatch.resetRecordEdits( editorRecordKey( editorId ) );
 		},
 
 	/**
 	 * Change the editor ID.
 	 *
+	 * Opens the editor immediately. If the entity isn't in the store yet it is
+	 * resolved in the background while consumers render a loading state.
+	 *
 	 * @param {EditorId} editorId The editor ID.
 	 * @return {Promise<void>}
 	 */
 	changeEditorId:
-		( editorId: EditorId ): ThunkAction< void > =>
-		async ( { select, dispatch } ) => {
+		( editorId: CtaEditorId ): ThunkAction< void > =>
+		async ( { select, resolveSelect, dispatch, registry } ) => {
 			try {
 				if ( typeof editorId === 'undefined' ) {
 					dispatch( {
@@ -985,34 +1035,97 @@ const editorActions = {
 					return;
 				}
 
-				if ( ! select.hasEditedEntity( editorId ) ) {
-					const entity = await fetchFromApi< CallToAction< 'edit' > >(
-						`ctas/${ editorId }?context=edit`
-					);
+				// Unsaved draft — seed local defaults, nothing is persisted
+				// until the user saves for the first time.
+				if ( 'new' === editorId ) {
+					registry.batch( () => {
+						if ( ! select.hasEditedEntity( 0 ) ) {
+							dispatch( {
+								type: START_EDITING_RECORD,
+								payload: {
+									id: 0,
+									editableEntity: {
+										...select.getDefaultValues(),
+										id: 0,
+									},
+									setEditorId: false,
+								},
+							} );
+						}
 
-					if ( ! entity ) {
-						dispatch.createErrorNotice(
-							__( 'Call to action not found', 'popup-maker' )
-						);
-						return;
-					}
-
-					dispatch( {
-						type: START_EDITING_RECORD,
-						payload: {
-							id: editorId,
-							editableEntity: editableEntity( entity ),
-							setEditorId: true,
-						},
+						dispatch( {
+							type: EDITOR_CHANGE_ID,
+							payload: {
+								editorId,
+							},
+						} );
 					} );
-				} else {
+					return;
+				}
+
+				// Already being edited — switch to it instantly.
+				if ( select.hasEditedEntity( editorId ) ) {
 					dispatch( {
 						type: EDITOR_CHANGE_ID,
 						payload: {
 							editorId,
 						},
 					} );
+					return;
 				}
+
+				// Seed from an already fetched record for instant opens.
+				const record = select.getCallToAction( editorId );
+
+				if ( record ) {
+					dispatch( {
+						type: START_EDITING_RECORD,
+						payload: {
+							id: editorId,
+							editableEntity: editableEntity( record ),
+							setEditorId: true,
+						},
+					} );
+					return;
+				}
+
+				// Nothing cached. Open the editor first so the UI can show a
+				// loading state, then resolve the record in the background.
+				dispatch( {
+					type: EDITOR_CHANGE_ID,
+					payload: {
+						editorId,
+					},
+				} );
+
+				const entity = await resolveSelect.getCallToAction( editorId );
+
+				if ( ! entity ) {
+					dispatch.createErrorNotice(
+						__( 'Call to action not found', 'popup-maker' )
+					);
+					dispatch( {
+						type: EDITOR_CHANGE_ID,
+						payload: {
+							editorId: undefined,
+						},
+					} );
+					return;
+				}
+
+				// Bail if the editor moved on while the record was loading.
+				if ( select.getEditorId() !== editorId ) {
+					return;
+				}
+
+				dispatch( {
+					type: START_EDITING_RECORD,
+					payload: {
+						id: editorId,
+						editableEntity: editableEntity( entity ),
+						setEditorId: true,
+					},
+				} );
 			} catch ( error ) {
 				const errorMessage = getErrorMessage( error );
 
@@ -1021,6 +1134,14 @@ const editorActions = {
 
 				dispatch.createErrorNotice( errorMessage, {
 					id: 'call-to-action-editor-error',
+				} );
+
+				// Close the editor rather than leave it stuck loading.
+				dispatch( {
+					type: EDITOR_CHANGE_ID,
+					payload: {
+						editorId: undefined,
+					},
 				} );
 			}
 		},

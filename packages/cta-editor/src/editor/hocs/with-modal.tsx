@@ -74,32 +74,44 @@ export const withModal = (
 		// Fetch values separately so they will still be available to the component.
 		const values = useSelect( ( select ) => {
 			const store = select( callToActionStore );
+			const currentValues = store.getCurrentEditorValues();
 
-			return store.getCurrentEditorValues() ?? store.getDefaultValues();
+			if ( currentValues ) {
+				return currentValues;
+			}
+
+			// Instant-open: the record hasn't resolved yet. Fall back to
+			// defaults but keep the real id so the title & buttons are right.
+			const editorId = store.getEditorId();
+
+			return {
+				...store.getDefaultValues(),
+				id: typeof editorId === 'number' ? editorId : 0,
+			};
 		}, [] );
 
-		const isSaving = useSelect(
-			( select ) =>
-				select( callToActionStore ).isResolving( 'updateCallToAction' ),
+		// Live handle to store selectors for fresh reads inside callbacks
+		// (never re-renders — the bound selector map is referentially stable).
+		const storeSelectors = useSelect(
+			( select ) => select( callToActionStore ),
 			[]
 		);
 
-		const { hasEdits, getHasEdits } = useSelect(
-			( select ) => {
-				if ( ! values.id ) {
-					return {
-						hasEdits: false,
-						getHasEdits: () => false,
-					};
-				}
+		const isSaving = useSelect(
+			( select ) =>
+				select( callToActionStore ).isResolving(
+					'updateCallToAction'
+				) ||
+				select( callToActionStore ).isResolving( 'createCallToAction' ),
+			[]
+		);
 
-				const store = select( callToActionStore );
-
-				return {
-					hasEdits: store.hasEdits( values.id ),
-					getHasEdits: store.hasEdits,
-				};
-			},
+		// values.id doubles as the edits record key (0 for unsaved drafts).
+		const hasEdits = useSelect(
+			( select ) =>
+				typeof values.id === 'number'
+					? select( callToActionStore ).hasEdits( values.id )
+					: false,
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 			[ values, isSaving ]
 		);
@@ -133,14 +145,24 @@ export const withModal = (
 
 		/**
 		 * Handle the close event.
+		 *
+		 * Reads saving/edits state fresh from the store — this callback runs
+		 * from async continuations (post-save) where render-time values are
+		 * stale.
 		 */
 		const closeModal = useCallback(
 			() => {
-				if ( isSaving ) {
-					return; // Prevent closing while saving
+				if (
+					storeSelectors.isResolving( 'updateCallToAction' ) ||
+					storeSelectors.isResolving( 'createCallToAction' )
+				) {
+					return; // Prevent closing while saving.
 				}
 
-				if ( hasEdits ) {
+				if (
+					typeof values.id === 'number' &&
+					storeSelectors.hasEdits( values.id )
+				) {
 					setConfirm( {
 						message: __(
 							'Changes you made may not be saved.',
@@ -159,7 +181,7 @@ export const withModal = (
 				onClose?.();
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ isSaving, onClose, hasEdits ]
+			[ storeSelectors, onClose, values.id ]
 		);
 
 		/**
@@ -179,7 +201,9 @@ export const withModal = (
 					// Call the onSave callback if it exists
 					componentProps?.onSave?.( values );
 
-					const hasRemainingEdits = getHasEdits( values.id );
+					const hasRemainingEdits = storeSelectors.hasEdits(
+						values.id
+					);
 					// Handle modal closing if needed
 					if ( ! hasRemainingEdits && closeOnSave ) {
 						closeModal();
@@ -190,7 +214,7 @@ export const withModal = (
 				}
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ closeOnSave, closeModal, getHasEdits, hasAnyError ]
+			[ closeOnSave, closeModal, storeSelectors, hasAnyError, values ]
 		);
 
 		const { id: valuesId } = values;

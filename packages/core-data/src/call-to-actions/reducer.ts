@@ -1,8 +1,8 @@
 import { ACTION_TYPES, initialState } from './constants';
 
 import type { DispatchStatuses, ResolutionState } from '../constants';
-import type { EditorId, Notice, GetRecordsHttpQuery } from '../types';
-import type { CallToAction, EditableCta } from './types';
+import type { Notice, GetRecordsHttpQuery } from '../types';
+import type { CallToAction, CtaEditorId, EditableCta } from './types';
 import type { Operation } from 'fast-json-patch';
 
 const {
@@ -43,9 +43,9 @@ export type State = {
 	queries?: Record< string, number[] >;
 
 	/**
-	 * The ID of the editor.
+	 * The ID of the editor. `'new'` is an unsaved draft (keyed under 0).
 	 */
-	editorId: number | undefined;
+	editorId: CtaEditorId;
 
 	/**
 	 * The edited entities.
@@ -135,7 +135,7 @@ export type PurgeRecordsAction = BaseAction & {
 export type ChangeEditorAction = BaseAction & {
 	type: typeof EDITOR_CHANGE_ID;
 	payload: {
-		editorId: EditorId;
+		editorId: CtaEditorId;
 	};
 };
 

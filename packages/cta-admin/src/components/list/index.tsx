@@ -1,7 +1,6 @@
 import {
 	Button,
 	Icon,
-	Spinner,
 	TextControl,
 	ToggleControl,
 	Tooltip,
@@ -68,12 +67,6 @@ const List = (): JSX.Element => {
 							onClose={ clearConfirm }
 						/>
 						<div className="list-table-container">
-							{ isLoading && (
-								<div className="is-loading">
-									<Spinner />
-								</div>
-							) }
-
 							<div className="list-table-header">
 								<div className="list-search">
 									<Icon icon={ search } />
@@ -125,6 +118,7 @@ const List = (): JSX.Element => {
 							{ showFilters && <ListFilters /> }
 
 							<ListTable
+								isLoading={ isLoading }
 								selectedItems={ bulkSelection }
 								onSelectItems={ ( newSelection ) =>
 									setBulkSelection( newSelection )

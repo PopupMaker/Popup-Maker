@@ -1,5 +1,19 @@
 import type { Updatable } from '@wordpress/core-data';
 import type { BaseEntity } from '../types';
+import type { CtaEditorId } from './types';
+
+/**
+ * Resolve the record key edits are stored under for a given editor id.
+ *
+ * Unsaved drafts (`'new'`) are keyed under `0` so the number-keyed edit
+ * maps (editedEntities, editHistory, …) work unchanged.
+ *
+ * @param {CtaEditorId} editorId The editor id.
+ * @return {number} The record key.
+ */
+export function editorRecordKey( editorId: CtaEditorId ): number {
+	return typeof editorId === 'number' ? editorId : 0;
+}
 
 // Simple type guard for RenderedText fields
 export function isRenderedText(

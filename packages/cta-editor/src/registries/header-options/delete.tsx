@@ -24,12 +24,18 @@ const DeleteEditorHeaderOption = ( {
 		forceDeleteRef.current = forceDelete;
 	}, [ forceDelete ] );
 
-	const { deleteCallToAction } = useDispatch( callToActionStore );
+	const { deleteCallToAction, resetRecordEdits } =
+		useDispatch( callToActionStore );
 
 	const handleDelete = useCallback( () => {
-		deleteCallToAction( values.id, forceDeleteRef.current );
+		if ( values.id > 0 ) {
+			deleteCallToAction( values.id, forceDeleteRef.current );
+		} else {
+			// Unsaved draft — nothing on the server, just discard it.
+			resetRecordEdits( values.id );
+		}
 		closeModal();
-	}, [ deleteCallToAction, values.id, closeModal ] );
+	}, [ deleteCallToAction, resetRecordEdits, values.id, closeModal ] );
 
 	return (
 		<>

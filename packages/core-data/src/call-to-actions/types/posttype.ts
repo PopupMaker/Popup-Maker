@@ -94,3 +94,11 @@ export type PartialEditableCta = Partial< EditableCta > & { id: number };
  * Used for edits that are not yet saved.
  */
 export type CtaEdit = Omit< PartialEditableCta, 'id' >;
+
+/**
+ * The CTA editor id.
+ *
+ * `'new'` represents an unsaved draft — nothing is persisted to the server
+ * until the user saves it for the first time.
+ */
+export type CtaEditorId = number | 'new' | undefined;

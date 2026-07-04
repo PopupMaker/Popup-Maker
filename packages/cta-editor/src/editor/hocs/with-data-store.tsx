@@ -2,6 +2,7 @@ import { __ } from '@popup-maker/i18n';
 import {
 	defaultCtaValues,
 	callToActionStore,
+	editorRecordKey,
 	DispatchStatus,
 	NOTICE_CONTEXT,
 } from '@popup-maker/core-data';
@@ -10,10 +11,11 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
 import { useEffect, useState, useRef, useMemo } from '@wordpress/element';
 import { DebugNotices } from '../../components';
+import { EditorSkeleton } from '../components';
 import { useAllFieldErrors } from '../../hooks/use-field-error';
 
 import type { ComponentType } from 'react';
-import type { EditorId, EditableCta } from '@popup-maker/core-data';
+import type { CtaEditorId, EditableCta } from '@popup-maker/core-data';
 import type { BaseEditorProps } from '../../types';
 
 type Editable = EditableCta;
@@ -33,9 +35,9 @@ type Editable = EditableCta;
 export interface EditorWithDataStoreProps
 	extends Omit< BaseEditorProps, 'values' | 'onChange' > {
 	/**
-	 * The editor id.
+	 * The editor id. Pass 'new' for an unsaved draft.
 	 */
-	id: NonNullable< EditorId >;
+	id: NonNullable< CtaEditorId >;
 
 	/**
 	 * The default values for the editor, only applicable when creating a new call to action.
@@ -76,13 +78,16 @@ export const withDataStore = (
 		const [ triedSaving, setTriedSaving ] = useState< boolean >( false );
 		const saveHandledRef = useRef( false );
 
+		// Edits for drafts ('new') are stored under record key 0.
+		const recordKey = editorRecordKey( id );
+
 		const fullDefaultValues = useMemo( () => {
 			return {
 				...defaultCtaValues,
 				...defaultValues,
-				id,
+				id: recordKey,
 			};
-		}, [ defaultValues, id ] );
+		}, [ defaultValues, recordKey ] );
 
 		const {
 			values = fullDefaultValues,
@@ -90,6 +95,8 @@ export const withDataStore = (
 			isSaving,
 			savedSuccessfully,
 			getEditorValues,
+			isLoadingEntity,
+			fetchError,
 		} = useSelect(
 			( select ) => {
 				const store = select( callToActionStore );
@@ -99,15 +106,29 @@ export const withDataStore = (
 					store.getResolutionState( 'updateCallToAction' );
 
 				return {
-					values: store.getEditedCallToAction( id ),
+					values: store.getEditedCallToAction( recordKey ),
 					isEditorActive: store.isEditorActive(),
-					isSaving: store.isResolving( 'updateCallToAction' ),
+					isSaving:
+						store.isResolving( 'updateCallToAction' ) ||
+						store.isResolving( 'createCallToAction' ),
 					getEditorValues: store.getEditedCallToAction,
 					savedSuccessfully:
 						resolutionState?.status === DispatchStatus.Success,
+					// True while an instant-open editor waits on its record.
+					// Drafts ('new') are seeded locally and never load.
+					// Reading getCallToAction also kicks off its resolver, so
+					// the record loads even if the opener didn't fetch it.
+					isLoadingEntity:
+						typeof id === 'number' &&
+						! store.hasEditedEntity( id ) &&
+						! store.getCallToAction( id ),
+					fetchError:
+						typeof id === 'number'
+							? store.getFetchError( id )
+							: undefined,
 				};
 			},
-			[ id ]
+			[ id, recordKey ]
 		);
 
 		const { id: valuesId } = values;
@@ -130,23 +151,38 @@ export const withDataStore = (
 		const { removeNotice } = useDispatch( noticesStore );
 		const { clearAllErrors } = useAllFieldErrors();
 
+		// Keep a live reference so unmount cleanup clears current errors, not
+		// the set captured when the effect last ran.
+		const clearAllErrorsRef = useRef( clearAllErrors );
+		clearAllErrorsRef.current = clearAllErrors;
+
+		/**
+		 * Ensure the editor is marked active when mounted directly with an id
+		 * (consumers that render the editor without dispatching changeEditorId).
+		 */
 		useEffect(
 			() => {
 				if ( ! isEditorActive && id ) {
 					changeEditorId( id );
 				}
-
-				return () => {
-					if ( valuesId && isEditorActive ) {
-						// Clear all field errors for this CTA when editor closes
-						clearAllErrors();
-						changeEditorId( undefined );
-					}
-				};
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ id, valuesId, isEditorActive, changeEditorId ] // Adding clearAllErrors here causes errors in the editor to not work properly.
+			[ id ]
 		);
+
+		/**
+		 * Clear lingering field errors when switching records or unmounting.
+		 *
+		 * NOTE: This cleanup intentionally does NOT reset the editor id. Doing
+		 * so closed the editor whenever React remounted this tree — the cause
+		 * of the save-then-reopen "blink". Closing the editor is owned by the
+		 * onClose/onSave consumers (withQueryParams, block-editor, etc.).
+		 */
+		useEffect( () => {
+			return () => {
+				clearAllErrorsRef.current();
+			};
+		}, [ id ] );
 
 		/**
 		 * Save the CallToAction when the editor is saved.
@@ -238,6 +274,22 @@ export const withDataStore = (
 
 		if ( ! isEditorActive ) {
 			return null;
+		}
+
+		// Instant-open: the editor is active but the record hasn't resolved
+		// yet. Show the fetch error, or a skeleton while it loads.
+		if ( isLoadingEntity ) {
+			return fetchError ? (
+				<Notice
+					status="error"
+					isDismissible={ false }
+					className="call-to-action-editor-error"
+				>
+					{ fetchError }
+				</Notice>
+			) : (
+				<EditorSkeleton />
+			);
 		}
 
 		/**
