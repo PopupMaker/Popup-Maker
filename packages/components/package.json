@@ -30,6 +30,7 @@
   "dependencies": {
     "@popup-maker/core-data": "workspace:*",
     "@popup-maker/i18n": "workspace:*",
+    "@popup-maker/skeleton": "workspace:*",
     "@popup-maker/utils": "workspace:*",
     "@wordpress/base-styles": "^6.5.0",
     "@wordpress/components": "^30.2.0",

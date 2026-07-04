@@ -11,6 +11,7 @@
 			"@popup-maker/fields": [ "../fields/src" ],
 			"@popup-maker/i18n": [ "../i18n/src" ],
 			"@popup-maker/registry": [ "../registry/src" ],
+			"@popup-maker/skeleton": [ "../skeleton/src" ],
 			"@popup-maker/types": [ "../types/src" ],
 			"@popup-maker/use-query-params": [ "../use-query-params/src" ],
 			"@popup-maker/utils": [ "../utils/src" ]
@@ -32,6 +33,9 @@
 		},
 		{
 			"path": "../registry"
+		},
+		{
+			"path": "../skeleton"
 		},
 		{
 			"path": "../use-query-params"

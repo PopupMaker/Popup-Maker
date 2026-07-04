@@ -28,6 +28,7 @@ const packages = {
 	layout: 'packages/layout',
 	'popup-admin': 'packages/popup-admin',
 	registry: 'packages/registry',
+	skeleton: 'packages/skeleton',
 	'use-query-params': 'packages/use-query-params',
 	utils: 'packages/utils',
 };
