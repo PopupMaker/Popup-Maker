@@ -398,8 +398,14 @@ class RestAPI extends Controller {
 				return $settings;
 			},
 			'update_callback'     => function ( $value, $obj ) {
-				$popup = pum_get_popup( $obj->ID );
-				$popup->update_settings( $value );
+				$popup  = pum_get_popup( $obj->ID );
+				$result = $popup->update_settings( $value );
+
+				// Surface a refused destructive write to the editor instead
+				// of silently reporting success.
+				if ( is_wp_error( $result ) ) {
+					return $result;
+				}
 			},
 			'schema'              => [
 				'type'        => 'object',

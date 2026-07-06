@@ -257,6 +257,27 @@ function pum_popup_migration_2( &$popup ) {
 	 * Save only if something changed.
 	 */
 	if ( $changed ) {
+		// Guard: never let the migration collapse a popup that had settings down
+		// to a theme-only record. If the fold produced nothing meaningful while
+		// the popup previously had content, abort the write AND the source-key
+		// deletion so the legacy data survives and can be recovered on retry.
+		$existing = $popup->get_meta( 'popup_settings' );
+		$existing = is_array( $existing ) ? $existing : [];
+
+		if (
+			PUM_Model_Popup::is_destructive_settings_write( $existing, $settings ) ||
+			(
+				! empty( $delete_meta ) &&
+				! PUM_Model_Popup::settings_have_content( $settings )
+			)
+		) {
+			if ( function_exists( 'pum_log_message' ) ) {
+				pum_log_message( sprintf( 'Aborted passive migration for popup #%d: fold produced empty settings, preserving legacy meta.', $popup->ID ) );
+			}
+
+			return;
+		}
+
 		$popup->update_meta( 'popup_settings', $settings );
 	}
 

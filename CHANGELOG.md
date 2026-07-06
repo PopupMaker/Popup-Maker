@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed a bug where a popup could unexpectedly lose its triggers, conditions, and display settings — leaving only its theme — after saving, a plugin update, or when another plugin or page builder saved the popup. Saves that would erase an existing popup's settings are now prevented and report an error instead of silently discarding your configuration.
+
 ## v1.23.0 - 2026-06-28
 
 **Security**

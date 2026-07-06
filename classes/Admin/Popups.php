@@ -491,20 +491,26 @@ class PUM_Admin_Popups {
 			$popup->update_meta( 'popup_title', $title );
 		}
 
-		// Ignored because this is a dynamic array and has sanitization applid to keys before usage.
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : [];
+		// Only update settings if the field was actually submitted. A save_post
+		// fired by a page builder or the block editor does not include our
+		// popup_settings field, and treating that absence as "clear everything"
+		// would erase the popup's triggers, conditions, and display settings.
+		if ( isset( $_POST['popup_settings'] ) ) {
+			// Ignored because this is a dynamic array and has sanitization applid to keys before usage.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			$settings = ! empty( $_POST['popup_settings'] ) ? $_POST['popup_settings'] : [];
 
-		// Sanitize JSON values.
-		$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : [];
-		$settings['triggers']   = isset( $settings['triggers'] ) ? self::sanitize_meta( $settings['triggers'] ) : [];
-		$settings['cookies']    = isset( $settings['cookies'] ) ? self::sanitize_meta( $settings['cookies'] ) : [];
+			// Sanitize JSON values.
+			$settings['conditions'] = isset( $settings['conditions'] ) ? self::sanitize_meta( $settings['conditions'] ) : [];
+			$settings['triggers']   = isset( $settings['triggers'] ) ? self::sanitize_meta( $settings['triggers'] ) : [];
+			$settings['cookies']    = isset( $settings['cookies'] ) ? self::sanitize_meta( $settings['cookies'] ) : [];
 
-		$settings = apply_filters( 'pum_popup_setting_pre_save', $settings, $post->ID );
+			$settings = apply_filters( 'pum_popup_setting_pre_save', $settings, $post->ID );
 
-		$settings = self::sanitize_settings( $settings );
+			$settings = self::sanitize_settings( $settings );
 
-		$popup->update_settings( $settings, false );
+			$popup->update_settings( $settings, false );
+		}
 
 		// TODO Remove this and all other code here. This should be clean and all code more compartmentalized.
 		foreach ( self::deprecated_meta_fields() as $field ) {
