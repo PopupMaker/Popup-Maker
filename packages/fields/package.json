@@ -30,11 +30,11 @@
     "@popup-maker/utils": "workspace:*",
     "@wordpress/components": "^30.2.0",
     "@wordpress/compose": "^7.29.0",
-    "@wordpress/core-data": "^7.29.0",
-    "@wordpress/data": "^10.29.0",
+    "@wordpress/core-data": "^7.50.0",
+    "@wordpress/data": "^10.50.0",
     "@wordpress/element": "^6.29.0",
-    "@wordpress/hooks": "^4.29.0",
-    "@wordpress/html-entities": "^4.29.0",
+    "@wordpress/hooks": "^4.50.0",
+    "@wordpress/html-entities": "^4.50.0",
     "classnames": "^2.5.1"
   },
   "scripts": {
