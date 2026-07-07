@@ -90,20 +90,29 @@ class Assets extends Controller {
 				'styles'   => true,
 				'deps'     => [],
 				'varsName' => 'popupMakerBlockEditor',
-				'vars'     => [
-					'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
-					'popups'                     => pum_get_all_popups(),
-					'homeUrl'                    => home_url(),
-					'previewNonce'               => wp_create_nonce( 'popup-preview' ),
-					'popupTriggerExcludedBlocks' => apply_filters(
-						'pum_block_editor_popup_trigger_excluded_blocks',
-						[
-							'core/nextpage',
-							'popup-maker/call-to-action',
-							'popup-maker/call-to-actions',
-						]
-					),
-				],
+				'vars'     => function () {
+					$vars = [
+						'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
+						'popups'                     => pum_get_all_popups(),
+						'homeUrl'                    => home_url(),
+						'previewNonce'               => wp_create_nonce( 'popup-preview' ),
+						'popupTriggerExcludedBlocks' => apply_filters(
+							'pum_block_editor_popup_trigger_excluded_blocks',
+							[
+								'core/nextpage',
+								'popup-maker/call-to-action',
+								'popup-maker/call-to-actions',
+							]
+						),
+					];
+
+					// Template picker data is only needed in the popup editor itself.
+					if ( pum_is_popup_editor() ) {
+						$vars['templateLibrary'] = $this->container->get( 'template_library' )->get_editor_data();
+					}
+
+					return $vars;
+				},
 			],
 			'block-library'       => [
 				'bundled'      => false,
@@ -405,9 +414,9 @@ class Assets extends Controller {
 		$vars = apply_filters(
 			'popup_maker/layout_vars',
 			[
-				'navTabs'            => [],
-				'supportMenuItems'   => [],
-				'showSupport'        => true,
+				'navTabs'          => [],
+				'supportMenuItems' => [],
+				'showSupport'      => true,
 			]
 		);
 
