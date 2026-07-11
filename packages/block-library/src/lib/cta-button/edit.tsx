@@ -327,11 +327,19 @@ function ButtonEdit( props: ButtonEditProps ) {
 	const isLinkTag = 'a' === TagName;
 
 	// Get available CTAs from the store
-	const selectedCTA = useSelect(
-		( select ) =>
-			ctaId
-				? select( callToActionStore ).getCallToAction( ctaId )
-				: undefined,
+	const { selectedCTA, hasResolvedSelectedCTA } = useSelect(
+		( select ) => {
+			const state = select( callToActionStore );
+
+			return {
+				selectedCTA: ctaId ? state.getCallToAction( ctaId ) : undefined,
+				hasResolvedSelectedCTA: ctaId
+					? state.hasFinishedResolution( 'getCallToAction', [
+							ctaId,
+					  ] )
+					: false,
+			};
+		},
 		[ ctaId ]
 	);
 
@@ -416,7 +424,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 						? NOFOLLOW_REL
 						: undefined,
 				} );
-			} else {
+			} else if ( hasResolvedSelectedCTA ) {
 				setAttributes( {
 					url: undefined,
 					linkTarget: undefined,
@@ -427,6 +435,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 	}, [
 		ctaId,
 		selectedCTA,
+		hasResolvedSelectedCTA,
 		currentPostType,
 		currentPostId,
 		homeUrl,
