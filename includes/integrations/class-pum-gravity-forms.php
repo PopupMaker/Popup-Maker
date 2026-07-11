@@ -16,6 +16,12 @@ class PUM_Gravity_Forms_Integation {
 		add_action( 'popmake_preload_popup', [ __CLASS__, 'preload' ] );
 		add_action( 'popmake_popup_before_inner', [ __CLASS__, 'force_ajax' ] );
 		add_action( 'popmake_popup_after_inner', [ __CLASS__, 'force_ajax' ] );
+
+		// Popup content is pre-rendered & cached (blocks at priority 9,
+		// shortcodes at 11), so the template hooks above fire after the
+		// form has already rendered. Sandwich the content pipeline too.
+		add_filter( 'pum_popup_content', [ __CLASS__, 'begin_force_ajax' ], 5 );
+		add_filter( 'pum_popup_content', [ __CLASS__, 'end_force_ajax' ], 99 );
 	}
 
 	public static function force_ajax() {
@@ -25,6 +31,32 @@ class PUM_Gravity_Forms_Integation {
 		if ( current_action() === 'popmake_popup_after_inner' ) {
 			remove_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
 		}
+	}
+
+	/**
+	 * Force AJAX on Gravity Forms rendered within popup content.
+	 *
+	 * @param string $content Popup content.
+	 *
+	 * @return string
+	 */
+	public static function begin_force_ajax( $content ) {
+		add_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
+
+		return $content;
+	}
+
+	/**
+	 * Stop forcing AJAX once popup content has rendered.
+	 *
+	 * @param string $content Popup content.
+	 *
+	 * @return string
+	 */
+	public static function end_force_ajax( $content ) {
+		remove_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
+
+		return $content;
 	}
 
 	public static function gfrorms_shortcode_atts( $out ) {
