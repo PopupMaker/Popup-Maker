@@ -33,8 +33,18 @@ jobs:
               id: flags
               env:
                   DRY_RUN_INPUT: ${{ inputs.dry_run }}
+                  GITHUB_REF: ${{ github.ref }}
               run: |
-                  echo "dry_run=${DRY_RUN_INPUT:-false}" >> $GITHUB_OUTPUT
+                  DRY_RUN="${DRY_RUN_INPUT:-false}"
+
+                  # Only the protected master branch may perform a real deploy.
+                  # Any other ref (e.g. a manually dispatched branch) is forced to dry-run.
+                  if [ "${GITHUB_REF}" != "refs/heads/master" ]; then
+                    echo "⚠️ Ref is ${GITHUB_REF}, not refs/heads/master — forcing dry-run."
+                    DRY_RUN="true"
+                  fi
+
+                  echo "dry_run=${DRY_RUN}" >> $GITHUB_OUTPUT
 
             - name: Extract version from plugin header
               id: version
@@ -43,43 +53,12 @@ jobs:
                   echo "version=${VERSION}" >> $GITHUB_OUTPUT
                   echo "📦 Version: ${VERSION}"
 
-            - name: Try downloading release zip
-              id: download
-              env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  VERSION: ${{ steps.version.outputs.version }}
-                  REPO: ${{ github.repository }}
-              run: |
-                  ZIP_NAME="${{ env.PLUGIN_SLUG }}_${VERSION}.zip"
-
-                  gh release download "${VERSION}" \
-                    --pattern "${ZIP_NAME}" \
-                    --dir . \
-                    --repo "${REPO}" 2>/dev/null || true
-
-                  if [ -f "${ZIP_NAME}" ]; then
-                    echo "✅ Downloaded ${ZIP_NAME}"
-                    echo "found=true" >> $GITHUB_OUTPUT
-                    echo "zip_name=${ZIP_NAME}" >> $GITHUB_OUTPUT
-                  else
-                    echo "⚠️ Release zip not found, will build from source"
-                    echo "found=false" >> $GITHUB_OUTPUT
-                  fi
-
-            # --- Path A: Extract release zip into BUILD_DIR ---
-            - name: Extract release zip
-              if: steps.download.outputs.found == 'true'
-              env:
-                  ZIP_NAME: ${{ steps.download.outputs.zip_name }}
-              run: |
-                  mkdir -p "${{ env.BUILD_DIR }}"
-                  unzip -o "${ZIP_NAME}" -d /tmp/svn-source
-                  echo "✅ Extracted to ${{ env.BUILD_DIR }}"
-                  ls -la "${{ env.BUILD_DIR }}"
-
-            # --- Path B: Build from source into BUILD_DIR ---
+            # Deploy always builds from the checked-out source that triggered this
+            # run. We intentionally do NOT download a prebuilt GitHub release asset:
+            # release assets are mutable, so trusting one would let anyone who can
+            # edit an asset publish arbitrary code to WordPress.org. The source tree
+            # is the trust boundary.
             - name: Setup PHP
-              if: steps.download.outputs.found != 'true'
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
@@ -87,24 +66,20 @@ jobs:
                   coverage: none
 
             - name: Setup pnpm
-              if: steps.download.outputs.found != 'true'
               uses: pnpm/action-setup@v4
 
             - name: Setup Node.js
-              if: steps.download.outputs.found != 'true'
               uses: actions/setup-node@v6
               with:
                   node-version: '20'
                   cache: 'pnpm'
 
             - name: Install dependencies
-              if: steps.download.outputs.found != 'true'
               run: |
                   composer install --no-dev --optimize-autoloader --no-interaction --no-progress
                   pnpm install --frozen-lockfile
 
             - name: Build into BUILD_DIR
-              if: steps.download.outputs.found != 'true'
               run: |
                   pnpm run build:production
 
