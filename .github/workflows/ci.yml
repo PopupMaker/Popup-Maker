@@ -456,6 +456,7 @@ jobs:
     steps:
       - name: Check CI results
         env:
+          DETECT_RESULT: ${{ needs.detect-changes.result }}
           PHP_QUALITY_RESULT: ${{ needs.php-quality.result }}
           JS_QUALITY_RESULT: ${{ needs.js-quality.result }}
           BUILD_RESULT: ${{ needs.build-validation.result }}
@@ -478,6 +479,15 @@ jobs:
               *)         echo "$name: $result"; failed=1 ;;
             esac
           }
+
+          # If change detection didn't succeed, downstream jobs skip and would
+          # look like passes — fail the gate on anything but success/skipped.
+          case "$DETECT_RESULT" in
+            success)          echo "Change Detection: PASSED" ;;
+            skipped)          echo "Change Detection: SKIPPED (non-PR event)" ;;
+            failure|cancelled) echo "Change Detection: $DETECT_RESULT"; failed=1 ;;
+            *)                echo "Change Detection: $DETECT_RESULT"; failed=1 ;;
+          esac
 
           check_result "PHP Code Quality" "$PHP_QUALITY_RESULT"
           check_result "JS/TS Code Quality" "$JS_QUALITY_RESULT"
