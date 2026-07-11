@@ -16,7 +16,31 @@
 
 const fs = require( 'fs' );
 const path = require( 'path' );
-const { execSync } = require( 'child_process' );
+const { execSync, execFileSync } = require( 'child_process' );
+
+// Valid npm names/semvers can't contain shell metacharacters; validate before
+// interpolating a package manifest's values into any shell command.
+const NPM_NAME_RE =
+	/^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
+const SEMVER_RE = /^[0-9A-Za-z.+-]+$/;
+
+/**
+ * Assert a package name/version pair is safe to use in shell contexts.
+ * @param {string} name    Package name.
+ * @param {string} version Package version.
+ * @return {void}
+ * @throws {Error} When either value is not a safe, expected token.
+ */
+function assertSafePackageIdentity( name, version ) {
+	if ( typeof name !== 'string' || ! NPM_NAME_RE.test( name ) ) {
+		throw new Error( `Refusing to proceed: unsafe package name "${ name }".` );
+	}
+	if ( typeof version !== 'string' || ! SEMVER_RE.test( version ) ) {
+		throw new Error(
+			`Refusing to proceed: unsafe version "${ version }" for ${ name }.`
+		);
+	}
+}
 const minimist = require( 'minimist' );
 
 const argv = minimist( process.argv.slice( 2 ) );
@@ -346,6 +370,9 @@ function main() {
 		return;
 	}
 
+	// Validate before any value reaches a shell command/script below.
+	updates.forEach( ( u ) => assertSafePackageIdentity( u.name, u.newVersion ) );
+
 	// Commit changes
 	log( '\n📝 Committing changes...' );
 	const versionList = updates
@@ -354,7 +381,20 @@ function main() {
 	const commitMessage = `chore: bump package versions to ${ versionType }\n\n${ versionList }`;
 
 	execCommand( 'git add packages/*/package.json' );
-	execCommand( `git commit -m "${ commitMessage }"` );
+
+	// argv entry, not a shell string, so the message is never shell-interpreted.
+	if ( dryRun ) {
+		info( '[DRY RUN] Would execute: git commit -m <message>' );
+	} else {
+		try {
+			execFileSync( 'git', [ 'commit', '-m', commitMessage ], {
+				encoding: 'utf8',
+				stdio: 'inherit',
+			} );
+		} catch ( err ) {
+			throw new Error( `Command failed: git commit\n${ err.message }` );
+		}
+	}
 
 	success( '✅ Changes committed' );
 
@@ -406,8 +446,17 @@ function main() {
 ${ failedPackages
 	.map( ( name ) => {
 		const pkg = updates.find( ( u ) => u.name === name );
+		const dir = path.basename( pkg.path );
+
+			// dir is written into a shell script; keep it to a safe set.
+		if ( ! /^[A-Za-z0-9._-]+$/.test( dir ) ) {
+			throw new Error(
+				`Refusing to write retry script: unsafe package directory "${ dir }".`
+			);
+		}
+
 		return `echo "Publishing ${ name }..."
-cd packages/${ path.basename( pkg.path ) }
+cd packages/${ dir }
 pnpm publish --access public --no-git-checks
 cd ../..`;
 	} )
