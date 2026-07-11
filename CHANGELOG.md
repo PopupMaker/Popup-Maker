@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Security**
+
+-   Security and resilience hardening based on continuous AI scanning.
+
 **Improvements**
 
 -   Corrected the plural of "Call to Action" to "Calls to Action" across the admin. Thanks @swinggraphics.
