@@ -9,6 +9,21 @@ declare const popupMakerAdminBar:
 	  }
 	| undefined;
 
+/**
+ * Escape a string for safe interpolation into innerHTML.
+ *
+ * @param {string} value Untrusted string.
+ * @return {string} HTML-escaped string.
+ */
+function escapeHtml( value: string ): string {
+	return String( value )
+		.replace( /&/g, '&amp;' )
+		.replace( /</g, '&lt;' )
+		.replace( />/g, '&gt;' )
+		.replace( /"/g, '&quot;' )
+		.replace( /'/g, '&#039;' );
+}
+
 interface ModalOptions {
 	title: string;
 	content: string;
@@ -225,7 +240,7 @@ export class AdminBar {
 			title: this.text.results,
 			content: `
 				<div class="pum-modal-copy">
-					<p>${ selector }</p>
+					<p>${ escapeHtml( selector ) }</p>
 					<button class="copy-clipboard button button-secondary">
 						<span class="dashicons dashicons-clipboard"></span>
 						<span class="screen-reader-text">${ this.text.copy }</span>
