@@ -86,7 +86,11 @@ jobs:
                   mkdir -p "${{ env.BUILD_DIR }}"
 
                   if [ -f "bin/build-release.js" ]; then
-                    node bin/build-release.js --output-dir "${{ env.BUILD_DIR }}"
+                    # --output-dir only controls where the zip lands; the SVN deploy
+                    # needs the unpacked plugin tree. Keep the assembled build/ tree
+                    # (renamed to ./popup-maker) and copy its contents into BUILD_DIR.
+                    node bin/build-release.js --keep-build
+                    cp -r popup-maker/. "${{ env.BUILD_DIR }}/"
                   else
                     # Manual copy matching what build-release.js produces.
                     cp -r classes "${{ env.BUILD_DIR }}/"
