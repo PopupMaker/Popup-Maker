@@ -10,6 +10,9 @@ import { useCallback, useEffect, useState, useRef } from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { __, _x } from '@popup-maker/i18n';
 import {
+	RichText,
+	BlockControls,
+	InspectorControls,
 	store as blockEditorStore,
 	getColorObjectByAttributeValues,
 	getGradientValueBySlug,
@@ -22,6 +25,10 @@ import {
 	getValueAndUnit,
 	BottomSheetSelectControl,
 	CSS_UNITS,
+	PanelBody,
+	ToolbarGroup,
+	ToolbarButton,
+	filterUnitsWithSettings,
 } from '@wordpress/components';
 import { link } from '@wordpress/icons';
 // eslint-disable-next-line no-restricted-imports
@@ -32,6 +39,7 @@ import { store as editPostStore } from '@wordpress/edit-post';
  */
 import richTextStyle from './rich-text.scss';
 import styles from './editor.scss';
+import ColorBackground from './color-background.native';
 
 const MIN_BORDER_RADIUS_VALUE = 0;
 const MAX_BORDER_RADIUS_VALUE = 50;
@@ -81,7 +89,7 @@ function WidthPanel( { selectedWidth, setAttributes } ) {
 }
 
 function ButtonEdit( props ) {
-	const { isSelected, parentWidth } = props;
+	const { isSelected, parentWidth, clientId } = props;
 	const initialBorderRadius = props?.attributes?.style?.border?.radius;
 	const { valueUnit = 'px' } = getValueAndUnit( initialBorderRadius ) || {};
 
@@ -399,14 +407,7 @@ function ButtonEdit( props ) {
 		return defaultBorderRadius;
 	}
 
-	const {
-		attributes,
-		clientId,
-		onReplace,
-		mergeBlocks,
-		setAttributes,
-		style,
-	} = props;
+	const { attributes, onReplace, mergeBlocks, setAttributes, style } = props;
 	const {
 		placeholder,
 		text,
