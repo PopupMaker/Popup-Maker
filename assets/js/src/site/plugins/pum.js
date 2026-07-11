@@ -188,7 +188,17 @@
 				document.createDocumentFragment().querySelector( selector );
 				return true;
 			} catch ( e ) {
-				return false;
+				// Some selectors are invalid CSS but accepted by jQuery's
+				// engine (e.g. classes starting with a digit like
+				// `.2026-selector`) and have always worked as click triggers.
+				// jQuery does the actual matching, so defer to it before
+				// rejecting; truly malformed selectors still throw here.
+				try {
+					$( document.createDocumentFragment() ).find( selector );
+					return true;
+				} catch ( err ) {
+					return false;
+				}
 			}
 		},
 		getClickTriggerSelector: function ( el, trigger_settings ) {
