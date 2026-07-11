@@ -53,7 +53,14 @@ class PUM_Site_Popups {
 	 * @deprecated 1.8.0 Use pum()->current_popup directly or PopupMaker\set_current_popup()
 	 */
 	public static function current_popup( $new_popup = false ) {
-		return \PopupMaker\get_current_popup();
+		global $popup;
+
+		if ( false !== $new_popup ) {
+			\PopupMaker\set_current_popup( $new_popup );
+			$popup = $new_popup;
+		}
+
+		return pum()->current_popup;
 	}
 
 	/**
@@ -63,7 +70,28 @@ class PUM_Site_Popups {
 	 * @deprecated 1.21.0 Use \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups
 	 */
 	public static function get_loaded_popups() {
-		return \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups();
+		if ( ! self::$loaded instanceof WP_Query ) {
+			self::$loaded        = new WP_Query();
+			self::$loaded->posts = [];
+		}
+
+		$popups = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups();
+
+		self::$loaded->posts       = array_values( $popups );
+		self::$loaded->post_count  = count( self::$loaded->posts );
+		self::$loaded->found_posts = self::$loaded->post_count;
+		self::$loaded->post        = null;
+		self::$loaded_ids          = [];
+
+		foreach ( self::$loaded->posts as $popup ) {
+			if ( isset( $popup->ID ) ) {
+				self::$loaded_ids[] = (int) $popup->ID;
+			}
+		}
+
+		self::$loaded->rewind_posts();
+
+		return self::$loaded;
 	}
 
 	/**
