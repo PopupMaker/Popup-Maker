@@ -834,7 +834,7 @@ class PUM_AssetCache {
 			$response = wp_remote_get(
 				$src,
 				[
-					'sslverify' => apply_filters( 'pum_asset_cache_sslverify', false, $src ),
+					'sslverify' => apply_filters( 'pum_asset_cache_sslverify', true, $src ),
 					'timeout'   => 15,
 				]
 			);
