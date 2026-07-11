@@ -189,6 +189,12 @@ class PUM_Shortcode_CallToAction extends PUM_Shortcode {
 			return 'Missing Call To Action';
 		}
 
+		// This shortcode runs in any post, and get_cta_by_id() ignores status —
+		// only render published CTAs so authors can't surface non-public UUIDs.
+		if ( 'publish' !== $cta->status ) {
+			return 'Missing Call To Action';
+		}
+
 		$type = $cta->get_setting( 'type', 'link' );
 		$uuid = $cta->get_uuid();
 

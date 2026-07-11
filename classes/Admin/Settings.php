@@ -891,6 +891,12 @@ class PUM_Admin_Settings {
 	 */
 	public static function page() {
 
+		// Also reachable via the edit_posts-gated "Go Pro" submenu, and it dumps all
+		// settings into inline JS — enforce the settings capability here.
+		if ( ! current_user_can( \PopupMaker\plugin()->get_permission( 'manage_settings' ) ) ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'popup-maker' ), 403 );
+		}
+
 		$settings = PUM_Utils_Options::get_all();
 
 		if ( empty( $settings ) ) {
