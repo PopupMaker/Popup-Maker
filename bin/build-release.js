@@ -286,6 +286,15 @@ class PluginReleaseBuilder {
 		const zipName =
 			this.options.zipFileName ||
 			`${ this.pluginName }_${ this.version }.zip`;
+
+		// Reject anything but a plain zip filename. The name can originate from a
+		// git tag (via --zip-name) and is used in shell/path operations below.
+		if ( ! /^[A-Za-z0-9._-]+\.zip$/.test( zipName ) ) {
+			throw new Error(
+				`Refusing unsafe zip name: "${ zipName }". Expected [A-Za-z0-9._-] and a .zip extension.`
+			);
+		}
+
 		const zipPath = path.join( this.outputDir, zipName );
 
 		// Move build directory to plugin name
@@ -301,10 +310,14 @@ class PluginReleaseBuilder {
 			`Creating latest zip file`
 		);
 
-		// Copy (cp) to versioned zip file
-		this.executeCommand(
-			`cp "${ this.pluginName }-latest.zip" "${ zipName }"`,
-			`Creating versioned zip file`
+		// Copy to versioned zip file. Use fs (not a shell) so a crafted zip name
+		// cannot break out of the command.
+		if ( ! this.options.quiet ) {
+			console.log( 'Creating versioned zip file...' );
+		}
+		fs.copyFileSync(
+			path.join( this.projectRoot, `${ this.pluginName }-latest.zip` ),
+			path.join( this.projectRoot, zipName )
 		);
 
 		// Move zip to output directory if different from project root
