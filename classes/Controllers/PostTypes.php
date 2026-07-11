@@ -62,6 +62,38 @@ class PostTypes extends Controller {
 	}
 
 	/**
+	 * Full primitive-capability map for a map_meta_cap post type.
+	 *
+	 * Overriding only edit_posts/delete_posts leaves the rest (edit_published_posts,
+	 * etc.) on the default `post` caps; mapping all of them keeps every status
+	 * behind the same permission.
+	 *
+	 * @param string $permission Capability required for all operations.
+	 *
+	 * @return array<string,string>
+	 */
+	private function full_capabilities( $permission ) {
+		return [
+			// Meta caps (map_meta_cap maps these to the primitives below).
+			'edit_post'              => $permission,
+			'read_post'              => $permission,
+			'delete_post'            => $permission,
+			// Primitive caps.
+			'create_posts'           => $permission,
+			'edit_posts'             => $permission,
+			'edit_others_posts'      => $permission,
+			'edit_published_posts'   => $permission,
+			'edit_private_posts'     => $permission,
+			'publish_posts'          => $permission,
+			'read_private_posts'     => $permission,
+			'delete_posts'           => $permission,
+			'delete_others_posts'    => $permission,
+			'delete_published_posts' => $permission,
+			'delete_private_posts'   => $permission,
+		];
+	}
+
+	/**
 	 * Register post types.
 	 *
 	 * @return void
@@ -132,11 +164,7 @@ class PostTypes extends Controller {
 			'can_export'          => true,
 			'map_meta_cap'        => true,
 			'delete_with_user'    => false,
-			'capabilities'        => [
-				'create_posts' => $this->container->get_permission( 'edit_popups' ),
-				'edit_posts'   => $this->container->get_permission( 'edit_popups' ),
-				'delete_posts' => $this->container->get_permission( 'edit_popups' ),
-			],
+			'capabilities'        => $this->full_capabilities( $this->container->get_permission( 'edit_popups' ) ),
 		];
 
 		/**
@@ -173,7 +201,6 @@ class PostTypes extends Controller {
 				},
 			]
 		);
-
 	}
 
 	/**
@@ -226,11 +253,7 @@ class PostTypes extends Controller {
 			'can_export'          => true,
 			'map_meta_cap'        => true,
 			'delete_with_user'    => false,
-			'capabilities'        => [
-				'create_posts' => $this->container->get_permission( 'edit_popup_themes' ),
-				'edit_posts'   => $this->container->get_permission( 'edit_popup_themes' ),
-				'delete_posts' => $this->container->get_permission( 'edit_popup_themes' ),
-			],
+			'capabilities'        => $this->full_capabilities( $this->container->get_permission( 'edit_popup_themes' ) ),
 		];
 
 		/**
@@ -299,11 +322,7 @@ class PostTypes extends Controller {
 			'can_export'        => true,
 			'map_meta_cap'      => true,
 			'delete_with_user'  => false,
-			'capabilities'      => [
-				'create_posts' => $this->container->get_permission( 'edit_ctas' ),
-				'edit_posts'   => $this->container->get_permission( 'edit_ctas' ),
-				'delete_posts' => $this->container->get_permission( 'edit_ctas' ),
-			],
+			'capabilities'      => $this->full_capabilities( $this->container->get_permission( 'edit_ctas' ) ),
 		];
 
 		/**

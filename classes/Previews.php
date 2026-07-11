@@ -87,6 +87,12 @@ class PUM_Previews {
 	public static function force_load_preview() {
 		$preview_id = static::get_popup_preview();
 
+		// The preview nonce is shared across block-editor screens; require edit
+		// access to this specific popup before force-loading draft/private content.
+		if ( ! $preview_id || ! current_user_can( 'edit_post', $preview_id ) ) {
+			return;
+		}
+
 		$popup = pum_get_popup( $preview_id );
 
 		if ( $popup->is_valid() && $preview_id === $popup->ID ) {

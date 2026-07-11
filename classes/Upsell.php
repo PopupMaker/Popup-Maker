@@ -43,6 +43,12 @@ class PUM_Upsell {
 	 * @since 1.14.0
 	 */
 	public static function notice_bar_display() {
+		// pum_is_admin_page() trusts the post_type param; gate on capability so the
+		// notice can't leak installed integrations to low-privileged users.
+		if ( ! current_user_can( plugin()->get_permission( 'edit_popups' ) ) ) {
+			return;
+		}
+
 		if ( pum_is_admin_page() ) {
 			// Temporarily disable for CTA post type screens.
 			if ( isset( $_GET['page'] ) && 'popup-maker-call-to-actions' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended

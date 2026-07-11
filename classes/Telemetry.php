@@ -304,6 +304,12 @@ class PUM_Telemetry {
 	public static function optin_alert_check( $code, $action ) {
 		if ( 'pum_telemetry_notice' === $code ) {
 			if ( 'pum_optin_check_allow' === $action ) {
+				// The alert dismiss handler only requires edit_posts; enabling
+				// telemetry is a settings-level decision.
+				if ( ! current_user_can( \PopupMaker\plugin()->get_permission( 'manage_settings' ) ) ) {
+					return;
+				}
+
 				pum_update_option( 'telemetry', true );
 			}
 		}
