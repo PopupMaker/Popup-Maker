@@ -33,7 +33,7 @@ const CallToActionsView = (): JSX.Element => {
 				<p>
 					<strong>
 						{ __(
-							'You do not have permission to manage Call To Actions.',
+							'You do not have permission to manage Calls to Action.',
 							'popup-maker'
 						) }
 					</strong>

@@ -264,14 +264,14 @@ class PostTypes extends Controller {
 
 		$cta_labels = $this->post_type_labels(
 			__( 'Call to Action', 'popup-maker' ),
-			__( 'Call to Actions', 'popup-maker' ),
+			__( 'Calls to Action', 'popup-maker' ),
 			$post_type_key
 		);
 
 		$cta_args = [
 			'label'             => __( 'Call to Action', 'popup-maker' ),
 			'labels'            => array_merge( $cta_labels, [
-				'all_items' => __( 'Call to Actions', 'popup-maker' ),
+				'all_items' => __( 'Calls to Action', 'popup-maker' ),
 			] ),
 			'description'       => '',
 			// Basic.

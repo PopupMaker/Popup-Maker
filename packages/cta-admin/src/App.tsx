@@ -27,10 +27,10 @@ const App = (): JSX.Element => {
 		if ( userCanEditCallToActions ) {
 			_views.push( {
 				name: 'call-to-actions',
-				title: __( 'Call to Actions', 'popup-maker' ),
+				title: __( 'Calls to Action', 'popup-maker' ),
 				className: 'call-to-actions',
-				pageTitle: __( 'Popup Maker - Call to Actions', 'popup-maker' ),
-				heading: __( 'Popup Maker - Call to Actions', 'popup-maker' ),
+				pageTitle: __( 'Popup Maker - Calls to Action', 'popup-maker' ),
+				heading: __( 'Popup Maker - Calls to Action', 'popup-maker' ),
 				comp: CallToActionsView,
 			} );
 		}
