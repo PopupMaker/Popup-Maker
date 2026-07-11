@@ -280,22 +280,30 @@ export class AdminBar {
 			}
 		);
 
-		$( document ).on(
+		// Scope to the admin bar only so page content cannot inject matching anchors.
+		$( '#wpadminbar' ).on(
 			'click',
 			'.pum-toolbar-action',
 			( event: JQuery.ClickEvent ) => {
 				event.preventDefault();
 				event.stopPropagation();
 
-				const href = $( event.target ).attr( 'href' );
+				const href = $( event.currentTarget ).attr( 'href' );
 
 				if ( ! href ) {
 					return;
 				}
 
-				const [ action, popupId ] = href
+				const [ action, rawPopupId ] = href
 					.split( '__' )[ 1 ]
 					.split( '--' );
+
+				// Require a strictly numeric popup ID before handing it to PUM APIs.
+				if ( ! /^\d+$/.test( rawPopupId ?? '' ) ) {
+					return;
+				}
+
+				const popupId = rawPopupId;
 
 				switch ( action ) {
 					case 'open':

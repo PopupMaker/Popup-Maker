@@ -137,9 +137,22 @@ class Assets extends Controller {
 				],
 				'varsName' => 'popupMakerCoreData',
 				'vars'     => function () {
+					$settings = \pum_get_options();
+
+					// Never expose raw license keys in page JS. This covers the Pro key
+					// (popup_maker_pro_license_key) and legacy addon keys (*_license_key).
+					// The license UIs have their own masked source of truth.
+					if ( is_array( $settings ) ) {
+						foreach ( array_keys( $settings ) as $setting_key ) {
+							if ( is_string( $setting_key ) && '_license_key' === substr( $setting_key, -12 ) ) {
+								unset( $settings[ $setting_key ] );
+							}
+						}
+					}
+
 					return [
 						// TODO Migrate to use plugin('options')->get_all();
-						'currentSettings' => \pum_get_options(),
+						'currentSettings' => $settings,
 					];
 				},
 			],
