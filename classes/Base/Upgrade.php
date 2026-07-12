@@ -131,43 +131,28 @@ abstract class Upgrade implements \PopupMaker\Interfaces\Upgrade {
 	/**
 	 * Return the stream.
 	 *
-	 * If no stream is available it returns a mock object with no-op methods to prevent errors.
+	 * If no stream is available it returns a mock object whose methods are all
+	 * no-ops so callers can invoke stream methods without a fatal.
 	 *
-	 * @return \PopupMaker\Services\UpgradeStream|(object{
-	 *      send_event: Closure,
-	 *      send_error: Closure,
-	 *      send_data: Closure,
-	 *      update_status: Closure,
-	 *      update_task_status: Closure,
-	 *      start_upgrades: Closure,
-	 *      complete_upgrades: Closure,
-	 *      start_task: Closure,
-	 *      update_task_progress: Closure,
-	 *      complete_task: Closure
-	 * }&\stdClass) Stream instance or mock object with no-op methods.
+	 * @return \PopupMaker\Services\UpgradeStream|object Stream instance or no-op mock.
 	 */
 	public function stream() {
-		$noop =
-		/**
-		 * No-op function for mock stream methods.
-		 *
-		 * @param mixed ...$args Variable arguments (ignored).
-		 *
-		 * @return void
-		 */
-		function () {};
+		if ( is_a( $this->stream, '\PopupMaker\Services\UpgradeStream' ) ) {
+			return $this->stream;
+		}
 
-		return is_a( $this->stream, '\PopupMaker\Services\UpgradeStream' ) ? $this->stream : (object) [
-			'send_event'           => $noop,
-			'send_error'           => $noop,
-			'send_data'            => $noop,
-			'update_status'        => $noop,
-			'update_task_status'   => $noop,
-			'start_upgrades'       => $noop,
-			'complete_upgrades'    => $noop,
-			'start_task'           => $noop,
-			'update_task_progress' => $noop,
-			'complete_task'        => $noop,
-		];
+		// A stdClass with closure properties cannot be called as methods, so use
+		// an anonymous class whose __call swallows any stream method invocation.
+		return new class() {
+			/**
+			 * No-op for any stream method call.
+			 *
+			 * @param string $name Method name.
+			 * @param array  $args Arguments (ignored).
+			 *
+			 * @return void
+			 */
+			public function __call( $name, $args ) {}
+		};
 	}
 }

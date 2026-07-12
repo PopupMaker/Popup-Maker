@@ -22,8 +22,7 @@
 	"exports": {
 		".": {
 			"types": "./build-types/src/index.d.ts",
-			"default": "./build/src/index.js",
-			"adapters": "./build/src/adapters"
+			"default": "./build/src/index.js"
 		}
 	},
 	"wpScript": true,

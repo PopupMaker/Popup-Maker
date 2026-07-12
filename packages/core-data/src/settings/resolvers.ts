@@ -18,20 +18,27 @@ const settingsResolvers = {
 				registry.batch( () => {
 					if ( settings ) {
 						dispatch.hydrate( settings );
+						return;
 					}
 
+					// Only an empty/missing response is a failure; a successful
+					// load must not also dispatch an error.
 					dispatch( {
 						type: SETTINGS_FETCH_ERROR,
-						message: __(
-							'An error occurred, settings were not loaded.',
-							'popup-maker'
-						),
+						payload: {
+							message: __(
+								'An error occurred, settings were not loaded.',
+								'popup-maker'
+							),
+						},
 					} );
 				} );
 			} catch ( error ) {
 				dispatch( {
 					type: SETTINGS_FETCH_ERROR,
-					message: getErrorMessage( error ),
+					payload: {
+						message: getErrorMessage( error ),
+					},
 				} );
 			}
 		},

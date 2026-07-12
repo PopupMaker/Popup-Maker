@@ -92,7 +92,21 @@ class PUM_Licensing {
 
 			// Prefer a stored error message from a recent API response.
 			if ( false === $license->success && ! empty( $license->error_message ) ) {
-				$messages[] = $license->error_message;
+				// error_message is untrusted (remote API) and the template renders
+				// messages unescaped; allow only safe inline markup.
+				$messages[] = wp_kses(
+					$license->error_message,
+					[
+						'a'      => [
+							'href'   => true,
+							'target' => true,
+							'rel'    => true,
+						],
+						'strong' => [],
+						'em'     => [],
+						'br'     => [],
+					]
+				);
 
 				return $messages;
 			}

@@ -1,8 +1,10 @@
 import './editor.scss';
 
 import { BrowserRouter } from 'react-router-dom';
-import { QueryParamProvider } from '@popup-maker/use-query-params';
-import { ReactRouter6Adapter } from '@popup-maker/use-query-params/adapters/react-router-6';
+import {
+	QueryParamProvider,
+	ReactRouter6Adapter,
+} from '@popup-maker/use-query-params';
 
 import domReady from '@wordpress/dom-ready';
 import { doAction } from '@wordpress/hooks';

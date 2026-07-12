@@ -202,7 +202,9 @@ const config = {
 	},
 	devServer: {
 		...( defaultConfig.devServer || {} ),
-		allowedHosts: 'all',
+		// Scoped instead of 'all' to keep the Host-header check (DNS-rebinding);
+		// .local covers Local by Flywheel.
+		allowedHosts: [ 'localhost', '.local' ],
 		// port: 8887,
 		// Fix for webpack-dev-server proxy configuration issue
 		proxy: undefined, // Remove any inherited proxy configuration that might be causing the array format issue

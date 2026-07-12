@@ -791,7 +791,9 @@ class PUM_Admin_Settings {
 		// Detect integrations for contextual messaging.
 		$integrations    = PUM_Admin_Helpers::get_detected_integrations();
 		$has_woocommerce = isset( $integrations['woocommerce'] );
-		$has_edd         = isset( $integrations['edd'] );
+		// The flat helper derives the slug from the label ("Easy Digital
+		// Downloads" => "easy_digital_downloads"); accept the legacy "edd" key too.
+		$has_edd         = isset( $integrations['edd'] ) || isset( $integrations['easy_digital_downloads'] );
 		$has_lms         = isset( $integrations['lifterlms'] );
 		$has_ecommerce   = $has_woocommerce || $has_edd;
 		// Check individual Pro+ addon status — show bar when platform detected but addon missing.
@@ -890,6 +892,12 @@ class PUM_Admin_Settings {
 	 * Render settings page with tabs.
 	 */
 	public static function page() {
+
+		// Also reachable via the edit_posts-gated "Go Pro" submenu, and it dumps all
+		// settings into inline JS — enforce the settings capability here.
+		if ( ! current_user_can( \PopupMaker\plugin()->get_permission( 'manage_settings' ) ) ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'popup-maker' ), 403 );
+		}
 
 		$settings = PUM_Utils_Options::get_all();
 

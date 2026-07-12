@@ -99,7 +99,7 @@
 		"webpack-bundle-analyzer": "^4.10.2"
 	},
 	"scripts": {
-		"preinstall": "npx -y only-allow pnpm",
+		"preinstall": "npx -y only-allow@1.2.2 pnpm",
 		"build": "wp-scripts build --config webpack.config.js --config webpack.old.config.js",
 		"build:production": "NODE_ENV=production wp-scripts build --mode production --config webpack.config.js --config webpack.old.config.js",
 		"build:tsc": "pnpm -r --sort --if-present run build:tsc",

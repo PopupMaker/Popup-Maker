@@ -58,6 +58,7 @@ const searchActions = {
 						);
 
 						dispatch.searchSuccess( queryText, results );
+						return;
 					}
 
 					const errorMessage = __(

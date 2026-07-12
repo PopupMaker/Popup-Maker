@@ -72,7 +72,7 @@ const List = (): JSX.Element => {
 									<Icon icon={ search } />
 									<TextControl
 										placeholder={ __(
-											'Search Call to Actions…',
+											'Search Calls to Action…',
 											'popup-maker'
 										) }
 										value={ searchText ?? '' }

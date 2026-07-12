@@ -20,7 +20,6 @@
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
 	"main": "build/index.js",
-	"module": "src/index.js",
 	"types": "build-types/index.d.ts",
 	"sideEffects": [
 		"*.scss",

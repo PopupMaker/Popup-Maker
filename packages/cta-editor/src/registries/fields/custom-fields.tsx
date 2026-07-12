@@ -88,6 +88,16 @@ export const initCustomFields = () => {
 											return value === dependencyValue;
 										}
 
+										if ( typeof value === 'number' ) {
+											if (
+												typeof dependencyValue ===
+												'undefined'
+											) {
+												return value === 0;
+											}
+											return value === dependencyValue;
+										}
+
 										return false;
 									} );
 								};

@@ -11,8 +11,17 @@ const https = require( 'https' );
  * and updates the local google-fonts.json file used by Popup Maker.
  */
 
-const API_KEY = 'AIzaSyCjkbFHtpK1fwdqTfACg_wZ9iJ0DtXjqrg';
+// Key comes from the environment, never source (it ships with the repo).
+const API_KEY = process.env.GOOGLE_FONTS_API_KEY;
 const FONTS_JSON_PATH = path.join( __dirname, '../includes/google-fonts.json' );
+
+if ( ! API_KEY ) {
+	console.error(
+		'❌ Missing GOOGLE_FONTS_API_KEY environment variable. ' +
+			'Set it to a restricted Google Fonts API key before running this script.'
+	);
+	process.exit( 1 );
+}
 
 /**
  * Fetch data from Google Fonts API

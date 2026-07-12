@@ -2,8 +2,23 @@
 
 ## Unreleased
 
+**Security**
+
+-   Security and resilience hardening based on continuous AI scanning.
+
+**Features**
+
+-   Added an "Open Popup" click action to the Beaver Builder Button module, so you can open any popup on click without writing custom code. The chosen popup is automatically loaded on the page even if its display conditions wouldn't otherwise match.
+
+**Improvements**
+
+-   Corrected the plural of "Call to Action" to "Calls to Action" across the admin. Thanks @swinggraphics.
+
 **Fixes**
 
+-   Fixed Gravity Forms inside popups no longer submitting via AJAX (regression since 1.21.0), which broke text confirmations and Form Submission triggers after submit.
+-   Improved keyboard focus when closing popups: focus returns to the previously focused element, or to the top of the document when there wasn't one (auto-open popups) or it no longer exists. Thanks @swinggraphics.
+-   Fixed Click Open "Extra Selectors" starting with a number (e.g. `.2026-selector`) being rejected as invalid. Selectors are now validated against jQuery's engine, which handles the actual matching.
 -   Fixed a bug where a popup could unexpectedly lose its triggers, conditions, and display settings — leaving only its theme — after saving, a plugin update, or when another plugin or page builder saved the popup. Saves that would erase an existing popup's settings are now prevented and report an error instead of silently discarding your configuration.
 
 ## v1.23.0 - 2026-06-28

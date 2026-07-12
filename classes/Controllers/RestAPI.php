@@ -514,6 +514,16 @@ class RestAPI extends Controller {
 				return get_post_status( $obj['id'] );
 			},
 			'update_callback'     => function ( $value, $obj ) {
+				// Trashing is a delete action; the field only checks edit_ctas, so
+				// require delete rights for this object before allowing it.
+				if ( 'trash' === $value && ! current_user_can( 'delete_post', $obj->ID ) ) {
+					return new \WP_Error(
+						'rest_cannot_delete',
+						__( 'You do not have permission to trash this call to action.', 'popup-maker' ),
+						[ 'status' => rest_authorization_required_code() ]
+					);
+				}
+
 				wp_update_post( [
 					'ID'          => $obj->ID,
 					'post_status' => $value,
@@ -571,7 +581,7 @@ class RestAPI extends Controller {
 					'description' => __( 'Stats for this CTA.', 'popup-maker' ),
 					'type'        => 'object',
 					'properties'  => [
-						'conversion' => [
+						'conversions' => [
 							'type'    => 'integer',
 							'minimum' => 0,
 						],

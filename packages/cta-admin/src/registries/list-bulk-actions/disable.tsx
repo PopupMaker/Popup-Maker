@@ -69,7 +69,7 @@ const DisableBulkAction = (): JSX.Element | null => {
 								// translators: %d: number of items.
 								_n(
 									'%d call to action disabled.',
-									'%d call to actions disabled.',
+									'%d calls to action disabled.',
 									count,
 									'popup-maker'
 								),

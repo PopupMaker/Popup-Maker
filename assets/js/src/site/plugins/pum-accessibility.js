@@ -125,8 +125,31 @@ var PUM_Accessibility;
 				.attr( 'aria-modal', 'false' );
 
 			// Accessibility: Focus back on the previously focused element.
-			if ( previouslyFocused !== undefined && previouslyFocused.length ) {
+			if (
+				previouslyFocused !== undefined &&
+				previouslyFocused.length &&
+				previouslyFocused.is( ':visible' )
+			) {
 				previouslyFocused.trigger( 'focus' );
+			} else {
+				// Nothing had focus before the popup opened (ex. auto-open
+				// triggers), or that element is gone. Move focus to <body>
+				// so the next Tab starts from the top of the document
+				// instead of the popup's position at the end of the page.
+				var $body = $( 'body' ),
+					hadTabindex = undefined !== $body.attr( 'tabindex' );
+
+				if ( ! hadTabindex ) {
+					$body.attr( 'tabindex', '-1' );
+				}
+
+				$body.trigger( 'focus' );
+
+				// Only remove the attribute we added; leave any
+				// pre-existing tabindex untouched.
+				if ( ! hadTabindex ) {
+					$body.removeAttr( 'tabindex' );
+				}
 			}
 
 			// Accessibility: Clears the currentModal var.

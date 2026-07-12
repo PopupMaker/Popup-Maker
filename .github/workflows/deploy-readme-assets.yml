@@ -7,9 +7,15 @@ jobs:
     update:
         name: Update WordPress.org readme & assets
         runs-on: ubuntu-latest
+        # Only run against the protected master branch. A manual dispatch on any
+        # other ref must not be able to sync unreviewed content — or a malicious
+        # branch copy of this workflow — using the WordPress.org SVN credentials.
+        if: github.ref == 'refs/heads/master'
 
         steps:
             - uses: actions/checkout@v6
+              with:
+                  ref: master
 
             - uses: 10up/action-wordpress-plugin-asset-update@stable
               env:
