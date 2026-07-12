@@ -118,7 +118,10 @@ export const parseOldArgsToProps = (
 			return fieldProps;
 
 		case 'html':
-			return fieldProps;
+			return {
+				...fieldProps,
+				content: args.type === 'html' ? args.content ?? '' : '',
+			};
 
 		case 'license_key':
 			return fieldProps;
@@ -127,7 +130,18 @@ export const parseOldArgsToProps = (
 			// customselect is a new field type, return as-is
 			return {
 				...fieldProps,
-				entityType: fieldProps.entityType ?? 'custom',
+				entityType:
+					args.type === 'customselect'
+						? args.entityType ??
+						  args.post_type ??
+						  args.taxonomy ??
+						  args.object_key ??
+						  'custom'
+						: 'custom',
+				...( args.type === 'customselect' &&
+					typeof args.apiEndpoint !== 'undefined' && {
+						apiEndpoint: args.apiEndpoint,
+					} ),
 			};
 
 		case 'text':
@@ -218,15 +232,33 @@ export const parseOldArgsToProps = (
 				return {
 					...fieldProps,
 					entityKind: 'postType',
-					entityType: args?.post_type ?? 'post',
+					entityType: args?.post_type ?? args?.object_key ?? 'post',
 				};
 			} else if ( args.type === 'taxonomyselect' ) {
 				return {
 					...fieldProps,
 					entityKind: 'taxonomy',
-					entityType: args?.taxonomy ?? 'category',
+					entityType:
+						args?.taxonomy ?? args?.object_key ?? 'category',
 				};
 			} else if ( args.type === 'userselect' ) {
+				return {
+					...fieldProps,
+					entityKind: 'user',
+					entityType: 'user',
+				};
+			}
+
+			if ( args?.object_type === 'taxonomy' || args?.taxonomy ) {
+				return {
+					...fieldProps,
+					entityKind: 'taxonomy',
+					entityType:
+						args?.taxonomy ?? args?.object_key ?? 'category',
+				};
+			}
+
+			if ( args?.object_type === 'user' ) {
 				return {
 					...fieldProps,
 					entityKind: 'user',
@@ -237,7 +269,7 @@ export const parseOldArgsToProps = (
 			return {
 				...fieldProps,
 				entityKind: 'postType',
-				entityType: 'post',
+				entityType: args?.post_type ?? args?.object_key ?? 'post',
 			};
 
 		case 'textarea':
