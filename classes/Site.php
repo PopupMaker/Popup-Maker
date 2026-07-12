@@ -18,7 +18,40 @@ class PUM_Site {
 
 		self::add_core_content_filters();
 
+		add_action( 'pum_styles', [ __CLASS__, 'overlay_zindex_css' ] );
+
 		add_action( 'init', [ __CLASS__, 'actions' ] );
+	}
+
+	/**
+	 * Default z-index applied to the popup overlay and container.
+	 *
+	 * Kept intentionally high so popups sit above most themes/plugins. The
+	 * downside is that it also covers the logged-in admin bar; the
+	 * `popup_maker/overlay_zindex` filter lets sites lower it (e.g. below the
+	 * admin bar's 99999) when that trade-off is preferred. See issue #838.
+	 */
+	const DEFAULT_OVERLAY_ZINDEX = 1999999999;
+
+	/**
+	 * Print a z-index override for the popup overlay/container when the
+	 * `popup_maker/overlay_zindex` filter changes it from the default.
+	 *
+	 * Hooked on `pum_styles`, which runs in both the cached and inline CSS
+	 * paths, and after the core popup styles so this override wins. Nothing is
+	 * printed at the default value, so existing sites are unaffected.
+	 *
+	 * @return void
+	 */
+	public static function overlay_zindex_css() {
+		$zindex = (int) apply_filters( 'popup_maker/overlay_zindex', self::DEFAULT_OVERLAY_ZINDEX );
+
+		// Only emit an override when a site actually changes the value.
+		if ( $zindex === self::DEFAULT_OVERLAY_ZINDEX ) {
+			return;
+		}
+
+		echo '.pum-overlay,.pum-container{z-index:' . esc_attr( $zindex ) . ';}';
 	}
 
 	/**
