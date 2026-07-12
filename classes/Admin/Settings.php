@@ -791,7 +791,9 @@ class PUM_Admin_Settings {
 		// Detect integrations for contextual messaging.
 		$integrations    = PUM_Admin_Helpers::get_detected_integrations();
 		$has_woocommerce = isset( $integrations['woocommerce'] );
-		$has_edd         = isset( $integrations['edd'] );
+		// The flat helper derives the slug from the label ("Easy Digital
+		// Downloads" => "easy_digital_downloads"); accept the legacy "edd" key too.
+		$has_edd         = isset( $integrations['edd'] ) || isset( $integrations['easy_digital_downloads'] );
 		$has_lms         = isset( $integrations['lifterlms'] );
 		$has_ecommerce   = $has_woocommerce || $has_edd;
 		// Check individual Pro+ addon status — show bar when platform detected but addon missing.
