@@ -2,16 +2,13 @@ const omit = < T extends object, K extends keyof T >(
 	obj: T,
 	...keys: K[]
 ): Omit< T, K > => {
-	const r: any = {};
-	let length = keys.length;
+	const result = { ...obj } as Record< string, unknown >;
 
-	while ( length-- ) {
-		const key = keys[ length ];
+	keys.forEach( ( key ) => {
+		delete result[ key as string ];
+	} );
 
-		r[ key ] = obj[ key ];
-	}
-
-	return r;
+	return result as Omit< T, K >;
 };
 
 export default omit;
