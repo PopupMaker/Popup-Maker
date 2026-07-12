@@ -581,7 +581,7 @@ class RestAPI extends Controller {
 					'description' => __( 'Stats for this CTA.', 'popup-maker' ),
 					'type'        => 'object',
 					'properties'  => [
-						'conversion' => [
+						'conversions' => [
 							'type'    => 'integer',
 							'minimum' => 0,
 						],

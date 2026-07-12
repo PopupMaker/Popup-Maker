@@ -51,6 +51,8 @@ const handleFieldValidationErrors = (
 ) => {
 	// Handle field-specific validation errors
 	if ( error?.code === 'rest_invalid_param' && error?.data?.params ) {
+		let createdFieldNotices = false;
+
 		// Clear previous field errors for this CTA
 		if ( ctaId ) {
 			const notices = registry
@@ -81,6 +83,7 @@ const handleFieldValidationErrors = (
 						isDismissible: false,
 						type: 'default', // Prevent auto-dismiss
 					} );
+					createdFieldNotices = true;
 				}
 
 				// Handle additional errors
@@ -104,6 +107,7 @@ const handleFieldValidationErrors = (
 										type: 'default', // Prevent auto-dismiss
 									}
 								);
+								createdFieldNotices = true;
 							}
 						}
 					);
@@ -115,9 +119,10 @@ const handleFieldValidationErrors = (
 					isDismissible: false,
 					type: 'default', // Prevent auto-dismiss
 				} );
+				createdFieldNotices = true;
 			}
 		} );
-		return true;
+		return createdFieldNotices;
 	}
 	return false;
 };
