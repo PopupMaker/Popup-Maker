@@ -210,7 +210,9 @@ class PUM_Upsell {
 
 		// New installs (after form tracking shipped) get celebration messaging.
 		// Existing installs get "tracking is now live" messaging instead.
-		$installed_on   = get_option( 'pum_installed_on', '' );
+		// The legacy pum_installed_on option is removed after migration; read the
+		// install date from the current version info instead.
+		$installed_on   = \PopupMaker\get_current_install_info( 'installed_on' );
 		$is_new_install = ! empty( $installed_on ) && strtotime( $installed_on ) >= strtotime( '2026-03-25' );
 
 		$triggers = [
