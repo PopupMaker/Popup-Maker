@@ -888,6 +888,9 @@ importers:
       react-router:
         specifier: 7.18.0
         version: 7.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-router-dom:
+        specifier: 7.18.0
+        version: 7.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       serialize-query-params:
         specifier: ^2.0.2
         version: 2.0.4

@@ -1,7 +1,10 @@
 import './editor.scss';
 
-import { BrowserRouter } from 'react-router-dom';
+// BrowserRouter MUST come from @popup-maker/use-query-params, not
+// react-router-dom — the router and the query-param adapter have to share one
+// react-router module instance or the adapter's context comes back null.
 import {
+	BrowserRouter,
 	QueryParamProvider,
 	ReactRouter6Adapter,
 } from '@popup-maker/use-query-params';
