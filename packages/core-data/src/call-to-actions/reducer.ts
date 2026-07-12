@@ -335,36 +335,42 @@ export const reducer = (
 				return state;
 			}
 
+			// allIds holds numeric IDs while the object maps are keyed by string,
+			// so compare against a stringified set to purge from every structure.
+			const purgeKeys = new Set(
+				ids.map( ( purgeId ) => String( purgeId ) )
+			);
+
 			// Remove the entity from the allIds array.
 			const allIds = state.allIds.filter(
-				( _id ) => ! ids.includes( _id )
+				( _id ) => ! purgeKeys.has( String( _id ) )
 			);
 
 			// Remove the entity from the byId object.
 			const byId = Object.fromEntries(
 				Object.entries( state.byId ).filter(
-					( [ _id ] ) => ! ids.includes( _id )
+					( [ _id ] ) => ! purgeKeys.has( _id )
 				)
 			);
 
 			// Remove the entity from the editedEntities object.
 			const editedEntities = Object.fromEntries(
 				Object.entries( state.editedEntities ).filter(
-					( [ _id ] ) => ! ids.includes( _id )
+					( [ _id ] ) => ! purgeKeys.has( _id )
 				)
 			);
 
 			// Remove the entity from the editHistory object.
 			const editHistory = Object.fromEntries(
 				Object.entries( state.editHistory ).filter(
-					( [ _id ] ) => ! ids.includes( _id )
+					( [ _id ] ) => ! purgeKeys.has( _id )
 				)
 			);
 
 			// Remove the entity from the editHistoryIndex object.
 			const editHistoryIndex = Object.fromEntries(
 				Object.entries( state.editHistoryIndex ).filter(
-					( [ _id ] ) => ! ids.includes( _id )
+					( [ _id ] ) => ! purgeKeys.has( _id )
 				)
 			);
 
