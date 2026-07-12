@@ -392,15 +392,12 @@ class PostTypes extends Controller {
 
 		$tag_labels = (array) get_taxonomy_labels( get_taxonomy( 'post_tag' ) );
 
-		$tag_args = apply_filters(
-			'popmake_tag_args',
-			[
-				'hierarchical' => false,
-				'labels'       => $tag_labels,
-				'public'       => false,
-				'show_ui'      => true,
-			]
-		);
+		$tag_args = [
+			'hierarchical' => false,
+			'labels'       => $tag_labels,
+			'public'       => false,
+			'show_ui'      => true,
+		];
 
 		/**
 		 * Filter: popup_maker/popup_tag_tax_args
