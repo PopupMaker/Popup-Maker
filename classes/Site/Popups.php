@@ -70,26 +70,8 @@ class PUM_Site_Popups {
 	 * @deprecated 1.21.0 Use \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups
 	 */
 	public static function get_loaded_popups() {
-		if ( ! self::$loaded instanceof WP_Query ) {
-			self::$loaded        = new WP_Query();
-			self::$loaded->posts = [];
-		}
-
-		$popups = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups();
-
-		self::$loaded->posts       = array_values( $popups );
-		self::$loaded->post_count  = count( self::$loaded->posts );
-		self::$loaded->found_posts = self::$loaded->post_count;
-		self::$loaded->post        = null;
-		self::$loaded_ids          = [];
-
-		foreach ( self::$loaded->posts as $popup ) {
-			if ( isset( $popup->ID ) ) {
-				self::$loaded_ids[] = (int) $popup->ID;
-			}
-		}
-
-		self::$loaded->rewind_posts();
+		self::$loaded     = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups_query();
+		self::$loaded_ids = wp_list_pluck( self::$loaded->posts, 'ID' );
 
 		return self::$loaded;
 	}
