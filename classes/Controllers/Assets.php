@@ -311,7 +311,8 @@ class Assets extends Controller {
 				}
 			}
 
-				$footer = $package_data['head'] ?? true;
+				// 'head' => true means load in the head, i.e. NOT in the footer.
+				$footer = ! ( $package_data['head'] ?? false );
 
 			if ( $bundled ) {
 				pum_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );

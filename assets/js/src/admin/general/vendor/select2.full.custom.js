@@ -6797,10 +6797,11 @@
 				setup: function () {
 					if ( this.addEventListener ) {
 						for ( var i = toBind.length; i;  ) {
-							// Add passive option for wheel events
+							// Wheel handler calls preventDefault at scroll
+							// boundaries, so it must be non-passive.
 							var options =
 								toBind[ --i ] === 'wheel'
-									? { passive: true }
+									? { passive: false }
 									: false;
 
 							this.addEventListener(
