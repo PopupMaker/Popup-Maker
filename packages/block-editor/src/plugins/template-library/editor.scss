@@ -1,0 +1,149 @@
+.pum-template-library {
+	&.components-modal__frame {
+		width: 960px;
+		max-width: calc(100% - 32px);
+		height: 70vh;
+		max-height: 720px;
+	}
+
+	&__browser {
+		display: flex;
+		gap: 24px;
+		height: 100%;
+	}
+
+	&__sidebar {
+		flex: 0 0 200px;
+
+		.components-search-control {
+			margin-bottom: 16px;
+		}
+	}
+
+	&__categories {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		li {
+			margin: 0 0 4px;
+		}
+
+		.components-button {
+			text-decoration: none;
+			color: inherit;
+			width: 100%;
+			justify-content: flex-start;
+			padding: 4px 8px;
+			border-radius: 2px;
+
+			&.is-active {
+				background: var(--wp-admin-theme-color, #3858e9);
+				color: #fff;
+			}
+		}
+	}
+
+	&__grid {
+		flex: 1;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		gap: 16px;
+		align-content: start;
+		overflow-y: auto;
+		padding-right: 4px;
+	}
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 8px;
+		background: none;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		padding: 0 0 12px;
+		cursor: pointer;
+		text-align: left;
+		transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+		&:hover,
+		&:focus-visible {
+			border-color: var(--wp-admin-theme-color, #3858e9);
+			box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #3858e9);
+		}
+
+		&--locked &-preview {
+			background: #f6f7f7;
+		}
+	}
+
+	&__card-preview {
+		min-height: 140px;
+		max-height: 180px;
+		overflow: hidden;
+		border-bottom: 1px solid #eee;
+		border-radius: 4px 4px 0 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&__card-lock {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		min-height: 140px;
+	}
+
+	&__card-footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 0 12px;
+	}
+
+	&__card-title {
+		font-weight: 600;
+	}
+
+	&__card-description {
+		padding: 0 12px;
+		color: #757575;
+		font-size: 12px;
+	}
+
+	&__badge {
+		font-size: 10px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		padding: 2px 6px;
+		border-radius: 3px;
+		background: #f0b849;
+		color: #1e1e1e;
+
+		&--pro_plus {
+			background: #674399;
+			color: #fff;
+		}
+	}
+
+	&__apply-list {
+		list-style: disc;
+		padding-left: 20px;
+	}
+
+	&__apply-actions {
+		display: flex;
+		gap: 8px;
+		margin-top: 16px;
+	}
+
+	&__empty {
+		grid-column: 1 / -1;
+		color: #757575;
+	}
+}

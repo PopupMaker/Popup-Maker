@@ -43,6 +43,12 @@ class PUM_Upsell {
 	 * @since 1.14.0
 	 */
 	public static function notice_bar_display() {
+		// pum_is_admin_page() trusts the post_type param; gate on capability so the
+		// notice can't leak installed integrations to low-privileged users.
+		if ( ! current_user_can( plugin()->get_permission( 'edit_popups' ) ) ) {
+			return;
+		}
+
 		if ( pum_is_admin_page() ) {
 			// Temporarily disable for CTA post type screens.
 			if ( isset( $_GET['page'] ) && 'popup-maker-call-to-actions' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -204,7 +210,9 @@ class PUM_Upsell {
 
 		// New installs (after form tracking shipped) get celebration messaging.
 		// Existing installs get "tracking is now live" messaging instead.
-		$installed_on   = get_option( 'pum_installed_on', '' );
+		// The legacy pum_installed_on option is removed after migration; read the
+		// install date from the current version info instead.
+		$installed_on   = \PopupMaker\get_current_install_info( 'installed_on' );
 		$is_new_install = ! empty( $installed_on ) && strtotime( $installed_on ) >= strtotime( '2026-03-25' );
 
 		$triggers = [

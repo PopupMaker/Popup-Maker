@@ -219,8 +219,10 @@ class CallToAction extends Post {
 	 * @return string
 	 */
 	public function generate_url( $base_url = '', $extra_args = [] ) {
+		$cta_param = \PopupMaker\get_param_name( 'cta' );
+
 		$args = wp_parse_args( $extra_args, [
-			'cta' => $this->get_uuid(),
+			$cta_param => $this->get_uuid(),
 		] );
 
 		return \add_query_arg( $args, $base_url );

@@ -1,0 +1,58 @@
+name: Update Google Fonts
+
+# Refreshes includes/google-fonts.json and opens a PR with any changes. Kept out
+# of the release pipeline so releases stay reproducible and font changes are
+# reviewable. Requires the GOOGLE_FONTS_API_KEY repository secret.
+
+on:
+  schedule:
+    # 06:00 UTC on the 1st of each month.
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-google-fonts:
+    name: Update Google Fonts data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Update Google Fonts JSON
+        env:
+          GOOGLE_FONTS_API_KEY: ${{ secrets.GOOGLE_FONTS_API_KEY }}
+        run: pnpm run fonts:update
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore(fonts): refresh Google Fonts data'
+          branch: chore/update-google-fonts
+          delete-branch: true
+          title: 'chore(fonts): refresh Google Fonts data'
+          body: |
+            Automated refresh of `includes/google-fonts.json` from the Google Fonts API.
+
+            Review the diff for added/removed fonts before merging. If there are no
+            changes, this PR will not be created.
+          labels: |
+            dependencies
+            automated
+          add-paths: |
+            includes/google-fonts.json

@@ -8,13 +8,29 @@
 
 	// Hook into jQuery AJAX complete for all Beaver Builder forms.
 	$( document ).on( 'ajaxComplete', function ( _event, xhr, settings ) {
+		const requestData = settings.data;
+		let params;
+
+		if (
+			typeof requestData === 'string' ||
+			requestData instanceof URLSearchParams
+		) {
+			params = new URLSearchParams( requestData );
+		} else if (
+			window.FormData &&
+			requestData instanceof window.FormData
+		) {
+			params = new URLSearchParams( requestData );
+		} else {
+			return;
+		}
+
+		const action = params.get( 'action' );
+
 		// Check if this is a Beaver Builder form submission.
 		if (
-			! settings.data ||
-			( settings.data.indexOf( 'action=fl_builder_email' ) === -1 &&
-				settings.data.indexOf(
-					'action=fl_builder_subscribe_form_submit'
-				) === -1 )
+			action !== 'fl_builder_email' &&
+			action !== 'fl_builder_subscribe_form_submit'
 		) {
 			return;
 		}
@@ -39,7 +55,6 @@
 		}
 
 		// Extract form type and node ID from AJAX data.
-		const params = new URLSearchParams( settings.data );
 		const nodeId = params.get( 'node_id' );
 
 		if ( ! nodeId ) {
@@ -57,7 +72,6 @@
 		}
 
 		// Determine form type from action.
-		const action = params.get( 'action' );
 		let formType = 'unknown';
 		if ( action === 'fl_builder_email' ) {
 			formType = 'contact';

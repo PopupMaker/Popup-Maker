@@ -11,6 +11,12 @@
 
 namespace PHPSTORM_META;
 
+// IDE-only file; the pseudo-functions below fatal if executed. IDEs parse it
+// statically, so bailing at runtime is safe and avoids a path-disclosing error.
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
+
 /**
  * Provide autocompletion for plugin container access.
  *

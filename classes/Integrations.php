@@ -58,6 +58,7 @@ class PUM_Integrations {
 				// Page Builders.
 				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
 				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
+				'beaverbuilder_button' => new PUM_Integration_Builder_BeaverBuilder(),
 				// 'bricks'          => new PUM_Integration_Builder_Bricks(),
 			]
 		);

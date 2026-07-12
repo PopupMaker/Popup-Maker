@@ -227,9 +227,11 @@ const resolutionActions = {
 
 			dispatch( {
 				type: CHANGE_ACTION_STATUS,
-				actionName,
-				status,
-				message,
+				payload: {
+					actionName,
+					status,
+					message,
+				},
 			} );
 		},
 

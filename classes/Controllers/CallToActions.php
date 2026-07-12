@@ -41,6 +41,12 @@ class CallToActions extends Controller {
 		$popup_id = \PopupMaker\get_param_value( 'popup_id', null, 'int' );
 		$notrack  = \PopupMaker\get_param_value( 'notrack', false, 'bool' );
 
+		// Only honor notrack for editors (preview links); otherwise anyone could
+		// append notrack=1 to suppress conversion tracking.
+		if ( $notrack && ! current_user_can( \PopupMaker\plugin()->get_permission( 'edit_popups' ) ) ) {
+			$notrack = false;
+		}
+
 		/**
 		 * Filter the CTA identifier before lookup.
 		 *
@@ -68,6 +74,12 @@ class CallToActions extends Controller {
 
 		// If no uuid is found, we don't have what we need, so return.
 		if ( ! $call_to_action ) {
+			return;
+		}
+
+		// The UUID->ID cache isn't invalidated on status change, so only act on
+		// published CTAs — a stale entry must not keep a disabled CTA live.
+		if ( 'publish' !== $call_to_action->status ) {
 			return;
 		}
 
@@ -182,8 +194,11 @@ class CallToActions extends Controller {
 			\pum_track_conversion_event( $popup_id, $extra_args );
 		}
 
+		// remove_query_arg() builds from REQUEST_URI, which can be a protocol-relative
+		// URL (//evil.example/...); this same-page reload must stay on-site.
 		$url = remove_query_arg( $cta_args );
-		\PopupMaker\safe_redirect( $url );
+		$url = wp_validate_redirect( $url, home_url( '/' ) );
+		wp_safe_redirect( $url );
 		exit;
 	}
 }

@@ -90,20 +90,29 @@ class Assets extends Controller {
 				'styles'   => true,
 				'deps'     => [],
 				'varsName' => 'popupMakerBlockEditor',
-				'vars'     => [
-					'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
-					'popups'                     => pum_get_all_popups(),
-					'homeUrl'                    => home_url(),
-					'previewNonce'               => wp_create_nonce( 'popup-preview' ),
-					'popupTriggerExcludedBlocks' => apply_filters(
-						'pum_block_editor_popup_trigger_excluded_blocks',
-						[
-							'core/nextpage',
-							'popup-maker/call-to-action',
-							'popup-maker/call-to-actions',
-						]
-					),
-				],
+				'vars'     => function () {
+					$vars = [
+						'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
+						'popups'                     => pum_get_all_popups(),
+						'homeUrl'                    => home_url(),
+						'previewNonce'               => wp_create_nonce( 'popup-preview' ),
+						'popupTriggerExcludedBlocks' => apply_filters(
+							'pum_block_editor_popup_trigger_excluded_blocks',
+							[
+								'core/nextpage',
+								'popup-maker/call-to-action',
+								'popup-maker/call-to-actions',
+							]
+						),
+					];
+
+					// Template picker data is only needed in the popup editor itself.
+					if ( pum_is_popup_editor() ) {
+						$vars['templateLibrary'] = $this->container->get( 'template_library' )->get_editor_data();
+					}
+
+					return $vars;
+				},
 			],
 			'block-library'       => [
 				'bundled'      => false,
@@ -113,7 +122,8 @@ class Assets extends Controller {
 				'varsName'     => 'popupMakerBlockLibrary',
 				'vars'         => function () {
 					return [
-						'homeUrl' => home_url(),
+						'homeUrl'    => home_url(),
+						'paramNames' => \PopupMaker\get_param_names(),
 					];
 				},
 			],
@@ -137,9 +147,22 @@ class Assets extends Controller {
 				],
 				'varsName' => 'popupMakerCoreData',
 				'vars'     => function () {
+					$settings = \pum_get_options();
+
+					// Never expose raw license keys in page JS. This covers the Pro key
+					// (popup_maker_pro_license_key) and legacy addon keys (*_license_key).
+					// The license UIs have their own masked source of truth.
+					if ( is_array( $settings ) ) {
+						foreach ( array_keys( $settings ) as $setting_key ) {
+							if ( is_string( $setting_key ) && '_license_key' === substr( $setting_key, -12 ) ) {
+								unset( $settings[ $setting_key ] );
+							}
+						}
+					}
+
 					return [
 						// TODO Migrate to use plugin('options')->get_all();
-						'currentSettings' => \pum_get_options(),
+						'currentSettings' => $settings,
 					];
 				},
 			],
@@ -297,7 +320,8 @@ class Assets extends Controller {
 				}
 			}
 
-				$footer = $package_data['head'] ?? true;
+				// 'head' => true means load in the head, i.e. NOT in the footer.
+				$footer = ! ( $package_data['head'] ?? false );
 
 			if ( $bundled ) {
 				pum_register_script( $handle, $js_file, $js_deps, $meta['version'], $footer );
@@ -405,9 +429,9 @@ class Assets extends Controller {
 		$vars = apply_filters(
 			'popup_maker/layout_vars',
 			[
-				'navTabs'            => [],
-				'supportMenuItems'   => [],
-				'showSupport'        => true,
+				'navTabs'          => [],
+				'supportMenuItems' => [],
+				'showSupport'      => true,
 			]
 		);
 

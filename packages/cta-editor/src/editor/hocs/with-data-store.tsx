@@ -19,6 +19,7 @@ import type { CtaEditorId, EditableCta } from '@popup-maker/core-data';
 import type { BaseEditorProps } from '../../types';
 
 type Editable = EditableCta;
+type SaveAction = 'createCallToAction' | 'updateCallToAction';
 
 /**
  * Higher Order Component (HOC) that provides data store integration for Call To Action editors.
@@ -77,6 +78,7 @@ export const withDataStore = (
 		 */
 		const [ triedSaving, setTriedSaving ] = useState< boolean >( false );
 		const saveHandledRef = useRef( false );
+		const saveActionRef = useRef< SaveAction | undefined >( undefined );
 
 		// Edits for drafts ('new') are stored under record key 0.
 		const recordKey = editorRecordKey( id );
@@ -93,27 +95,37 @@ export const withDataStore = (
 			values = fullDefaultValues,
 			isEditorActive,
 			isSaving,
-			savedSuccessfully,
+			savingAction,
+			createSavedSuccessfully,
+			updateSavedSuccessfully,
 			getEditorValues,
 			isLoadingEntity,
 			fetchError,
 		} = useSelect(
 			( select ) => {
 				const store = select( callToActionStore );
+				const isUpdating = store.isResolving( 'updateCallToAction' );
+				const isCreating = store.isResolving( 'createCallToAction' );
+				let currentSavingAction: SaveAction | undefined;
 
-				const resolutionState =
-					store.getResolutionState( 'createCallToAction' ) ||
-					store.getResolutionState( 'updateCallToAction' );
+				if ( isUpdating ) {
+					currentSavingAction = 'updateCallToAction';
+				} else if ( isCreating ) {
+					currentSavingAction = 'createCallToAction';
+				}
 
 				return {
 					values: store.getEditedCallToAction( recordKey ),
 					isEditorActive: store.isEditorActive(),
-					isSaving:
-						store.isResolving( 'updateCallToAction' ) ||
-						store.isResolving( 'createCallToAction' ),
+					isSaving: isUpdating || isCreating,
+					savingAction: currentSavingAction,
 					getEditorValues: store.getEditedCallToAction,
-					savedSuccessfully:
-						resolutionState?.status === DispatchStatus.Success,
+					createSavedSuccessfully:
+						store.getResolutionState( 'createCallToAction' )
+							.status === DispatchStatus.Success,
+					updateSavedSuccessfully:
+						store.getResolutionState( 'updateCallToAction' )
+							.status === DispatchStatus.Success,
 					// True while an instant-open editor waits on its record.
 					// Drafts ('new') are seeded locally and never load.
 					// Reading getCallToAction also kicks off its resolver, so
@@ -188,16 +200,26 @@ export const withDataStore = (
 		 * Save the CallToAction when the editor is saved.
 		 */
 		useEffect( () => {
+			let savedSuccessfully = false;
+
+			if ( saveActionRef.current === 'createCallToAction' ) {
+				savedSuccessfully = createSavedSuccessfully;
+			} else if ( saveActionRef.current === 'updateCallToAction' ) {
+				savedSuccessfully = updateSavedSuccessfully;
+			}
+
 			if ( ! triedSaving ) {
 				if ( isSaving ) {
 					setTriedSaving( true );
 					saveHandledRef.current = false;
+					saveActionRef.current = savingAction;
 				}
 				return;
 			}
 
 			if ( savedSuccessfully && ! saveHandledRef.current ) {
 				saveHandledRef.current = true;
+				saveActionRef.current = undefined;
 				setTriedSaving( false );
 				// Get the latest CTA from the store after save
 				const latestCta = getEditorValues( values.id );
@@ -206,10 +228,12 @@ export const withDataStore = (
 		}, [
 			onSave,
 			triedSaving,
-			savedSuccessfully,
+			createSavedSuccessfully,
+			updateSavedSuccessfully,
 			getEditorValues,
 			values,
 			isSaving,
+			savingAction,
 		] );
 
 		const hasEdits = useSelect(

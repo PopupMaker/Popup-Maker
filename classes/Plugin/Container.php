@@ -99,7 +99,9 @@ class Container extends \PopupMaker\Base\Container {
 
 		$controller = $this->controllers->get( $name );
 
-		if ( $controller instanceof Controller ) {
+		// Match the registration check so controllers that implement the interface
+		// without extending Base\Controller remain retrievable.
+		if ( $controller instanceof \PopupMaker\Interfaces\Controller ) {
 			return $controller;
 		}
 

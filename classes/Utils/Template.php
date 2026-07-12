@@ -151,7 +151,7 @@ class PUM_Utils_Template {
 			return;
 		}
 
-		if ( $args ) {
+		if ( is_array( $args ) && ! empty( $args ) ) {
 			// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 			extract( $args );
 		}

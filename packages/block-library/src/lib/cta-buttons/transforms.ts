@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { createBlock } from '@wordpress/blocks';
+import { createBlock, cloneBlock } from '@wordpress/blocks';
 import { getTransformedMetadata } from '../utils/get-transformed-metadata';
 // import { __unstableCreateElement as createElement } from '@wordpress/rich-text';
 
@@ -75,15 +75,16 @@ const transforms = {
 			type: 'block',
 			isMultiBlock: true,
 			blocks: [ 'core/buttons' ],
-			transform: ( buttons ) =>
-				// Creates the cta-buttons block.
+			// core/buttons is a container; its real content is the inner
+			// core/button blocks (second arg). Clone those through instead of
+			// reading the container's own attributes, which would drop them.
+			transform: ( _buttonsAttributes, innerBlocks ) =>
 				createBlock(
 					'popup-maker/cta-buttons',
 					{},
-					// Loop the selected buttons.
-					buttons.map( ( attributes ) =>
-						createBlock( 'core/button', attributes )
-					)
+					( innerBlocks || [] )
+						.flat()
+						.map( ( button ) => cloneBlock( button ) )
 				),
 		},
 		{

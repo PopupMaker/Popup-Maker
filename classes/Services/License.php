@@ -528,7 +528,13 @@ class License extends Service {
 	 *
 	 * @return bool
 	 */
-	private function update_license_status( array $license_status ): bool {
+	private function update_license_status( ?array $license_status ): bool {
+		// Callers may pass null/empty on a failed or empty API response; never
+		// fatal the typed setter and never clobber stored status with nothing.
+		if ( empty( $license_status ) ) {
+			return false;
+		}
+
 		$license_data = $this->get_license_data();
 
 		$previous_status = isset( $license_data['status'] ) ? $license_data['status'] : [];
@@ -595,6 +601,11 @@ class License extends Service {
 			$status = $this->check_license_status();
 		} catch ( \Exception $e ) {
 			$status = null;
+		}
+
+		// A transient failure must not overwrite a previously valid status.
+		if ( empty( $status ) ) {
+			return false;
 		}
 
 		return $this->update_license_status( $status );
@@ -724,13 +735,13 @@ class License extends Service {
 	public function deactivate_license(): bool {
 		$license_status = $this->api_call( 'deactivate_license' );
 
-		$this->update_license_status( $license_status );
-
 		if ( empty( $license_status ) ) {
 			return false;
 		}
 
-		$succeeded = 'deactivated' === $license_status['license'];
+		$this->update_license_status( $license_status );
+
+		$succeeded = isset( $license_status['license'] ) && 'deactivated' === $license_status['license'];
 
 		/**
 		 * Fires when license is activated.

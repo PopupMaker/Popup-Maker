@@ -58,7 +58,7 @@ class Admin extends Controller {
 		if ( is_string( $edit_ctas_cap ) && $edit_ctas_cap && current_user_can( $edit_ctas_cap ) ) {
 			$vars['navTabs'][] = [
 				'id'    => 'call-to-actions',
-				'title' => __( 'Call to Actions', 'popup-maker' ),
+				'title' => __( 'Calls to Action', 'popup-maker' ),
 				'href'  => admin_url( 'edit.php?post_type=popup&page=popup-maker-call-to-actions' ),
 			];
 		}

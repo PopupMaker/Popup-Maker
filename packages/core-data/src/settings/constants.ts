@@ -60,7 +60,8 @@ export const defaultValues: Settings =
 /**
  * Prefill settings from window global varis if set.
  */
-const { currentSettings = defaultValues } = popupMakerCoreData ?? {};
+const { currentSettings = defaultValues } =
+	typeof popupMakerCoreData !== 'undefined' ? popupMakerCoreData : {};
 
 export const initialState: State = {
 	settings: currentSettings,

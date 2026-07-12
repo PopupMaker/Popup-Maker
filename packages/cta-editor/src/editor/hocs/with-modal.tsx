@@ -6,7 +6,7 @@ import { callToActionStore } from '@popup-maker/core-data';
 import { close, link } from '@wordpress/icons';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { Button, Modal, Spinner } from '@wordpress/components';
-import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
+import { useCallback, useMemo, useState } from '@wordpress/element';
 
 import { EditorHeaderActions, EditorHeaderOptions } from '../components';
 import { useAllFieldErrors } from '../../hooks';
@@ -106,20 +106,18 @@ export const withModal = (
 			[]
 		);
 
-		// values.id doubles as the edits record key (0 for unsaved drafts).
+		const { saveEditorValues, resetRecordEdits } =
+			useDispatch( callToActionStore );
+
+		const { hasAnyError } = useAllFieldErrors();
+
 		const hasEdits = useSelect(
 			( select ) =>
 				typeof values.id === 'number'
 					? select( callToActionStore ).hasEdits( values.id )
 					: false,
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ values, isSaving ]
+			[ values.id ]
 		);
-
-		const { saveEditorValues, resetRecordEdits } =
-			useDispatch( callToActionStore );
-
-		const { hasAnyError } = useAllFieldErrors();
 
 		/**
 		 * Get the modal title based on the CTA state.
@@ -135,13 +133,6 @@ export const withModal = (
 				  }${ values?.title ? ` - ${ values.title }` : '' }`
 				: __( 'New Call to Action', 'popup-maker' );
 		}, [ modalProps?.title, values?.id, values?.title ] );
-
-		const confirmLoss = () => {
-			// eslint-disable-next-line no-alert, no-restricted-globals
-			return window.confirm(
-				__( 'Changes you made may not be saved.', 'popup-maker' )
-			);
-		};
 
 		/**
 		 * Handle the close event.
@@ -196,7 +187,11 @@ export const withModal = (
 
 				try {
 					// Save to the database
-					await saveEditorValues();
+					const saved = await saveEditorValues();
+
+					if ( ! saved ) {
+						return;
+					}
 
 					// Call the onSave callback if it exists
 					componentProps?.onSave?.( values );
@@ -215,43 +210,6 @@ export const withModal = (
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 			[ closeOnSave, closeModal, storeSelectors, hasAnyError, values ]
-		);
-
-		const { id: valuesId } = values;
-
-		// Set up confirm to close dialogue as well as prevent changing pages in the brower while hasEdits.
-		useEffect(
-			() => {
-				// On beforeunload event, confirm loss of unsaved changes.
-				const confirmLossOfUnsavedChanges = (
-					event: BeforeUnloadEvent
-				) => {
-					if ( hasEdits ) {
-						if ( confirmLoss() ) {
-							resetRecordEdits( valuesId );
-						} else {
-							event.preventDefault();
-							return false;
-						}
-					}
-
-					return true;
-				};
-
-				window.addEventListener(
-					'beforeunload',
-					confirmLossOfUnsavedChanges
-				);
-
-				return () => {
-					window.removeEventListener(
-						'beforeunload',
-						confirmLossOfUnsavedChanges
-					);
-				};
-			},
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ hasEdits, valuesId ]
 		);
 
 		return (

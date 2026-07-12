@@ -40,16 +40,17 @@ final class Core extends \PopupMaker\Plugin\Container {
 	 */
 	protected function registered_controllers() {
 		return [
-			'Admin'         => new \PopupMaker\Controllers\Admin( $this ),
-			'Assets'        => new \PopupMaker\Controllers\Assets( $this ),
-			'CallToActions' => new \PopupMaker\Controllers\CallToActions( $this ),
-			'Compatibility' => new \PopupMaker\Controllers\Compatibility( $this ),
-			'Debug'         => new \PopupMaker\Controllers\Debug( $this ),
-			'PostTypes'     => new \PopupMaker\Controllers\PostTypes( $this ),
-			'RestAPI'       => new \PopupMaker\Controllers\RestAPI( $this ),
-			'Upgrades'      => new \PopupMaker\Controllers\Upgrades( $this ),
-			'WP'            => new \PopupMaker\Controllers\WP( $this ),
-			'Frontend'      => new \PopupMaker\Controllers\Frontend( $this ),
+			'Admin'           => new \PopupMaker\Controllers\Admin( $this ),
+			'Assets'          => new \PopupMaker\Controllers\Assets( $this ),
+			'CallToActions'   => new \PopupMaker\Controllers\CallToActions( $this ),
+			'Compatibility'   => new \PopupMaker\Controllers\Compatibility( $this ),
+			'Debug'           => new \PopupMaker\Controllers\Debug( $this ),
+			'PostTypes'       => new \PopupMaker\Controllers\PostTypes( $this ),
+			'RestAPI'         => new \PopupMaker\Controllers\RestAPI( $this ),
+			'TemplateLibrary' => new \PopupMaker\Controllers\TemplateLibrary( $this ),
+			'Upgrades'        => new \PopupMaker\Controllers\Upgrades( $this ),
+			'WP'              => new \PopupMaker\Controllers\WP( $this ),
+			'Frontend'        => new \PopupMaker\Controllers\Frontend( $this ),
 			// 'BlockEditor'            => new \PopupMaker\Controllers\BlockEditor( $this ),
 			// 'Frontend'               => new \PopupMaker\Controllers\Frontend( $this ),
 			// 'Shortcodes'             => new \PopupMaker\Controllers\Shortcodes( $this ),
@@ -279,6 +280,18 @@ final class Core extends \PopupMaker\Plugin\Container {
 			// return new \PopupMaker\RuleEngine\Rules();
 			// }
 		// );
+
+		$this->set(
+			'template_library',
+			/**
+			 * Get popup template library.
+			 *
+			 * @return \PopupMaker\Services\TemplateLibrary
+			 */
+			function ( $container ) {
+				return new \PopupMaker\Services\TemplateLibrary( $container );
+			}
+		);
 
 		$this->set(
 			'globals',

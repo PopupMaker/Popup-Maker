@@ -57,6 +57,10 @@ export interface OldFieldBase {
 	class?: string;
 	classes?: string | string[];
 	required?: boolean;
+	object_type?: 'post' | 'post_type' | 'taxonomy' | 'user' | 'custom_entity';
+	object_key?: string;
+	post_type?: string;
+	taxonomy?: string;
 	meta?: {
 		[ key: string ]: any;
 	};
@@ -158,6 +162,14 @@ export interface OldUserSelectField extends OldObjectSelectField {
 	user_roles?: string[];
 }
 
+export interface OldCustomSelectField extends OldFieldBase {
+	type: 'customselect';
+	entityType?: string;
+	apiEndpoint?: string;
+	multiple?: boolean;
+	placeholder?: string;
+}
+
 export interface OldCheckboxField extends OldFieldBase {
 	type: 'checkbox';
 }
@@ -183,6 +195,7 @@ export type OldFieldProps =
 	| OldObjectSelectField
 	| OldPostSelectField
 	| OldTaxnomySelectField
+	| OldCustomSelectField
 	| OldCheckboxField
 	| OldTextareaField
 	| OldUserSelectField;
@@ -196,6 +209,7 @@ export type OldFieldMap = {
 	html: OldHtmlField;
 	checkbox: OldCheckboxField;
 	color: OldColorField;
+	customselect: OldCustomSelectField;
 	email: OldTextField;
 	hidden: OldHiddenField;
 	license_key: OldLicenseField;

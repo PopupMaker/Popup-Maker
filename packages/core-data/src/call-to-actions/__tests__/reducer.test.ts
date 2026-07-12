@@ -43,13 +43,17 @@ const mockEditable = ( id: number, title = `CTA ${ id }` ) =>
 
 describe( 'CTA Reducer', () => {
 	it( 'returns initial state for unknown action', () => {
-		const state = reducer( undefined, { type: 'UNKNOWN' } as unknown as ReducerAction );
+		const state = reducer( undefined, {
+			type: 'UNKNOWN',
+		} as unknown as ReducerAction );
 		expect( state ).toEqual( initialState );
 	} );
 
 	it( 'returns existing state for unknown action', () => {
 		const existing = { ...initialState, editorId: 42 };
-		const state = reducer( existing, { type: 'NONSENSE' } as unknown as ReducerAction );
+		const state = reducer( existing, {
+			type: 'NONSENSE',
+		} as unknown as ReducerAction );
 		expect( state ).toBe( existing );
 	} );
 
@@ -207,16 +211,22 @@ describe( 'CTA Reducer', () => {
 	} );
 
 	describe( 'PURGE_RECORD', () => {
-		// BUG: Same string/number key mismatch as PURGE_RECORDS.
-		// allIds is purged correctly (number-to-number), but byId is not
-		// (Object.entries string key vs number id). See BUGS-FOUND-BY-TESTS.md #1.
-
 		const stateWithEdits: State = {
 			...initialState,
 			byId: { 1: mockCta( 1 ), 2: mockCta( 2 ) },
 			allIds: [ 1, 2 ],
 			editedEntities: { 1: mockEditable( 1 ) },
-			editHistory: { 1: [ [ { op: 'replace', path: '/title', value: 'X' } as Operation ] ] },
+			editHistory: {
+				1: [
+					[
+						{
+							op: 'replace',
+							path: '/title',
+							value: 'X',
+						} as Operation,
+					],
+				],
+			},
 			editHistoryIndex: { 1: 0 },
 		};
 
@@ -229,14 +239,13 @@ describe( 'CTA Reducer', () => {
 			expect( state.allIds ).toEqual( [ 2 ] );
 		} );
 
-		it( 'BUG: does NOT remove byId entry (string/number key mismatch)', () => {
+		it( 'removes the byId entry', () => {
 			const state = reducer( stateWithEdits, {
 				type: PURGE_RECORD,
 				payload: { id: 1 },
 			} );
 
-			// byId[1] SHOULD be removed but isn't due to the bug.
-			expect( state.byId[ 1 ] ).toBeDefined();
+			expect( state.byId[ 1 ] ).toBeUndefined();
 			expect( state.byId[ 2 ] ).toBeDefined();
 		} );
 
@@ -251,11 +260,6 @@ describe( 'CTA Reducer', () => {
 	} );
 
 	describe( 'PURGE_RECORDS', () => {
-		// BUG: Object.entries() returns string keys but ids array has numbers.
-		// ids.includes("1") !== ids.includes(1), so byId/editedEntities/editHistory/
-		// editHistoryIndex entries are NEVER actually removed. Only allIds is purged
-		// correctly (number-to-number comparison). See BUGS-FOUND-BY-TESTS.md #1.
-
 		it( 'removes from allIds correctly', () => {
 			const existing: State = {
 				...initialState,
@@ -274,7 +278,7 @@ describe( 'CTA Reducer', () => {
 			expect( state.allIds ).toEqual( [ 3 ] );
 		} );
 
-		it( 'BUG: does NOT remove byId entries (string/number key mismatch)', () => {
+		it( 'removes byId, editedEntities, editHistory and editHistoryIndex entries', () => {
 			const existing: State = {
 				...initialState,
 				byId: { 1: mockCta( 1 ), 2: mockCta( 2 ), 3: mockCta( 3 ) },
@@ -289,11 +293,10 @@ describe( 'CTA Reducer', () => {
 				payload: { ids: [ 1, 2 ] },
 			} );
 
-			// These SHOULD be purged but aren't due to the bug.
-			expect( Object.keys( state.byId ) ).toEqual( [ '1', '2', '3' ] );
-			expect( Object.keys( state.editedEntities ) ).toEqual( [ '1', '2' ] );
-			expect( Object.keys( state.editHistory ) ).toEqual( [ '1', '2' ] );
-			expect( Object.keys( state.editHistoryIndex ) ).toEqual( [ '1', '2' ] );
+			expect( Object.keys( state.byId ) ).toEqual( [ '3' ] );
+			expect( Object.keys( state.editedEntities ) ).toEqual( [] );
+			expect( Object.keys( state.editHistory ) ).toEqual( [] );
+			expect( Object.keys( state.editHistoryIndex ) ).toEqual( [] );
 		} );
 
 		it( 'returns state unchanged for empty ids array', () => {
@@ -629,12 +632,12 @@ describe( 'CTA Reducer', () => {
 
 			// ID 5 should be invalidated.
 			expect(
-				state.resolutionState[ 'getCallToAction' ]?.[ 5 ]
+				state.resolutionState.getCallToAction?.[ 5 ]
 			).toBeUndefined();
 			// ID 6 should remain.
-			expect(
-				state.resolutionState[ 'getCallToAction' ]?.[ 6 ]
-			).toEqual( { status: 'SUCCESS' } );
+			expect( state.resolutionState.getCallToAction?.[ 6 ] ).toEqual( {
+				status: 'SUCCESS',
+			} );
 		} );
 	} );
 

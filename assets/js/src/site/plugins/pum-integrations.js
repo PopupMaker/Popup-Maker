@@ -67,8 +67,8 @@
 					.join( '_' );
 
 			if ( args.popup && args.popup.length ) {
-				args.popupId = PUM.getSetting( $popup, 'id' );
-				$popup.trigger( 'pumConversion' );
+				args.popupId = PUM.getSetting( args.popup, 'id' );
+				args.popup.trigger( 'pumConversion' );
 				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
 				// $popup.trigger('pumFormSuccess');
 			}
