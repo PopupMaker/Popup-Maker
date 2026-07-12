@@ -6,6 +6,10 @@
 
 -   Security and resilience hardening based on continuous AI scanning.
 
+**Features**
+
+-   Added an "Open Popup" click action to the Beaver Builder Button module, so you can open any popup on click without writing custom code. The chosen popup is automatically loaded on the page even if its display conditions wouldn't otherwise match.
+
 **Improvements**
 
 -   Corrected the plural of "Call to Action" to "Calls to Action" across the admin. Thanks @swinggraphics.
