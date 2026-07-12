@@ -100,7 +100,7 @@ interface ButtonAttributes {
 	text: string;
 	url?: string;
 	width?: number;
-	metadata?: any;
+	metadata?: unknown;
 	ctaId?: number;
 }
 
@@ -109,10 +109,10 @@ interface ButtonEditProps {
 	setAttributes: ( attrs: Partial< ButtonAttributes > ) => void;
 	className?: string;
 	isSelected: boolean;
-	onReplace: ( blocks: any[] ) => void;
+	onReplace: ( blocks: BlockInstance[] ) => void;
 	mergeBlocks: ( forward: boolean ) => void;
 	clientId: string;
-	context: any;
+	context: unknown;
 }
 
 interface WidthPanelProps {
@@ -243,7 +243,6 @@ function ButtonEdit( props: ButtonEditProps ) {
 		onReplace,
 		mergeBlocks,
 		clientId,
-		context,
 	} = props;
 
 	const {
@@ -254,9 +253,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 		rel,
 		style,
 		text,
-		url,
 		width,
-		metadata,
 		ctaId,
 	} = attributes;
 
@@ -270,7 +267,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 	/**
 	 * Flag: Whether to show the editor for creating a new CTA.
 	 */
-	const [ newCta, setNewCta ] = useState< number | boolean >( false );
+	const [ newCta, setNewCta ] = useState< number | 'new' | false >( false );
 
 	/**
 	 * Flag: Whether the user is editing a CTA.
@@ -352,8 +349,21 @@ function ButtonEdit( props: ButtonEditProps ) {
 		[]
 	);
 
+	const blockLibraryVars = window.popupMakerBlockLibrary as {
+		homeUrl?: string;
+		paramNames?: {
+			cta?: string;
+			popup_id?: string;
+			notrack?: string;
+		};
+	};
+
 	// Get localized home URL
-	const homeUrl = window.popupMakerBlockLibrary?.homeUrl || '/';
+	const homeUrl = blockLibraryVars?.homeUrl || '/';
+	const paramNames = blockLibraryVars?.paramNames || {};
+	const ctaParamName = paramNames.cta || 'cta';
+	const popupIdParamName = paramNames.popup_id || 'pid';
+	const notrackParamName = paramNames.notrack || 'notrack';
 
 	/**
 	 * Helper function to generate CTA URLs with proper base URL and conditional parameters.
@@ -366,27 +376,39 @@ function ButtonEdit( props: ButtonEditProps ) {
 	const generateCtaUrl = useCallback(
 		( ctaUuid: string, notrack = false ): string => {
 			const params = new URLSearchParams();
-			params.set( 'cta', ctaUuid );
+			params.set( ctaParamName, ctaUuid );
 
 			// Add post ID if editing a popup
 			if ( currentPostType === 'popup' && currentPostId ) {
-				params.set( 'pid', currentPostId.toString() );
+				params.set( popupIdParamName, currentPostId.toString() );
 			}
 
 			// Add notrack parameter if requested
 			if ( notrack ) {
-				params.set( 'notrack', '1' );
+				params.set( notrackParamName, '1' );
 			}
 
 			// Remove trailing slash from home URL and add query parameters
 			const baseUrl = homeUrl.replace( /\/$/, '' );
 			return `${ baseUrl }/?${ params.toString() }`;
 		},
-		[ currentPostId, currentPostType, homeUrl ]
+		[
+			ctaParamName,
+			currentPostId,
+			currentPostType,
+			homeUrl,
+			notrackParamName,
+			popupIdParamName,
+		]
 	);
 
-	const { createCallToAction, changeEditorId } =
+	const { changeEditorId, updateEditorValues } =
 		useDispatch( callToActionStore );
+
+	const callToActionSelectors = useSelect(
+		( select ) => select( callToActionStore ),
+		[]
+	);
 
 	function startEditing() {
 		setIsExplicitlyEditing( true );
@@ -463,40 +485,15 @@ function ButtonEdit( props: ButtonEditProps ) {
 		( !! ctaId || isExplicitlyEditing ) &&
 		!! popoverAnchor;
 
-	const [ _forceRefresh, setForceRefresh ] = useState( 0 );
-
-	// If a new CTA is created, don't show the popover
-	useEffect( () => {
-		async function createNewCTA() {
-			if ( false === newCta ) {
-				return;
-			}
-
-			if ( true === newCta ) {
-				const createdCta = await createCallToAction( {
-					title: __( 'New call to action', 'popup-maker' ),
-					status: 'publish',
-				} );
-
-				if ( createdCta ) {
-					changeEditorId( createdCta.id );
-					setNewCta( createdCta.id );
-					// Set editing state after the CTA is created, not before
-					setIsExplicitlyEditing( true );
-				} else {
-					// Reset if creation failed
-					setNewCta( false );
-				}
-			} else if ( typeof newCta === 'number' && newCta > 0 ) {
-				// CTA was already created, just ensure editing state
-				setIsExplicitlyEditing( true );
-			}
-
-			setForceRefresh( ( prev ) => prev + 1 );
-		}
-
-		createNewCTA();
-	}, [ newCta, createCallToAction, changeEditorId ] );
+	async function openNewCTA() {
+		await changeEditorId( 'new' );
+		await updateEditorValues( {
+			title: __( 'New call to action', 'popup-maker' ),
+			status: 'publish',
+		} );
+		setNewCta( 'new' );
+		setIsExplicitlyEditing( true );
+	}
 
 	const [ fluidTypographySettings, layout ] = useSettings(
 		'typography.fluid',
@@ -617,15 +614,15 @@ function ButtonEdit( props: ButtonEditProps ) {
 						isActive
 					/>
 				) }
-			</BlockControls>
-			{ showPopover && (
-				<Popover
-					placement="bottom"
-					onClose={ () => {
-						setIsExplicitlyEditing( false );
-						( richTextRef.current as any )?.focus?.();
-					} }
-					anchor={ popoverAnchor }
+				</BlockControls>
+				{ showPopover && (
+					<Popover
+						placement="bottom"
+						onClose={ () => {
+							setIsExplicitlyEditing( false );
+							richTextRef.current?.focus?.();
+						} }
+						anchor={ popoverAnchor }
 					focusOnMount={ isEditingCTA ? 'firstElement' : false }
 					__unstableSlotName="__unstable-block-tools-after"
 					shift
@@ -653,7 +650,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 												newId: number | string
 											) => {
 												if ( newId === 'create_new' ) {
-													setNewCta( true );
+													await openNewCTA();
 													return;
 												}
 												setAttributes( {
@@ -912,7 +909,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 							) }
 							onChange={ async ( newId: number | string ) => {
 								if ( newId === 'create_new' ) {
-									setNewCta( true );
+									await openNewCTA();
 									return;
 								}
 								setAttributes( {
@@ -954,13 +951,21 @@ function ButtonEdit( props: ButtonEditProps ) {
 				) }
 			</InspectorControls>
 
-			{ typeof newCta === 'number' && newCta > 0 && (
+			{ ( newCta === 'new' ||
+				( typeof newCta === 'number' && newCta > 0 ) ) && (
 				<Editor
 					key={ newCta }
 					id={ newCta }
 					defaultValues={ { status: 'publish' } }
 					onSave={ ( values ) => {
-						setAttributes( { ctaId: values.id } );
+						const savedId =
+							values.id > 0
+								? values.id
+								: callToActionSelectors.getEditorId();
+
+						if ( typeof savedId === 'number' && savedId > 0 ) {
+							setAttributes( { ctaId: savedId } );
+						}
 					} }
 					closeOnSave={ true }
 					onClose={ () => {
