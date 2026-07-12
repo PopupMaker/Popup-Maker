@@ -113,7 +113,8 @@ class Assets extends Controller {
 				'varsName'     => 'popupMakerBlockLibrary',
 				'vars'         => function () {
 					return [
-						'homeUrl' => home_url(),
+						'homeUrl'    => home_url(),
+						'paramNames' => \PopupMaker\get_param_names(),
 					];
 				},
 			],
