@@ -145,7 +145,7 @@ class PUM_Admin_BlockEditor {
 			[
 				'slug'  => 'popup-maker',
 				'title' => __( 'Popup Maker', 'popup-maker' ),
-				'icon'  => pum_asset_url( 'mark.svg' ),
+				'icon'  => pum_asset_url( 'images/mark.svg' ),
 			],
 		] );
 

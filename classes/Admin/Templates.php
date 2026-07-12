@@ -514,7 +514,7 @@ class PUM_Admin_Templates {
 							<table class="pum-license-details-table">
 								<tr>
 									<th><?php esc_html_e( 'Status:', 'popup-maker' ); ?></th>
-									<td class="pum-license-status <# if (isActive) { #>pum-license-status--active<# } else if (isDeactivated) { #>pum-license-status--deactivated<# } #>"><?php esc_html_e( 'Active', 'popup-maker' ); ?></td>
+									<td class="pum-license-status <# if (isActive) { #>pum-license-status--active<# } else if (isDeactivated) { #>pum-license-status--deactivated<# } #>"><# if (isActive) { #><?php esc_html_e( 'Active', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?><# } #></td>
 								</tr>
 								<tr>
 									<th><?php esc_html_e( 'License Key:', 'popup-maker' ); ?></th>
