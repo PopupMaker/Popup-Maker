@@ -8,7 +8,8 @@
 			"@popup-maker/components": [ "../components/src" ],
 			"@popup-maker/core-data": [ "../core-data/src" ],
 			"@popup-maker/cta-editor": [ "../cta-editor/src" ],
-			"@popup-maker/i18n": [ "../i18n/src" ]
+			"@popup-maker/i18n": [ "../i18n/src" ],
+			"@popup-maker/icons": [ "../icons/src" ]
 		}
 	},
 	"include": [ "src/**/*.{ts,tsx}", "src/**/*.json" ],
@@ -16,6 +17,9 @@
 	"references": [
 		{
 			"path": "../i18n"
+		},
+		{
+			"path": "../icons"
 		},
 		{
 			"path": "../components"

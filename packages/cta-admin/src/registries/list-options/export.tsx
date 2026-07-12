@@ -35,7 +35,7 @@ export const ExportListOption = (): JSX.Element => {
 
 						<p style={ { margin: 0 } }>
 							{ __(
-								'Popup Maker Pro gives you the power to import & export your call to actions to a JSON file in seconds.',
+								'Popup Maker Pro gives you the power to import & export your calls to action to a JSON file in seconds.',
 								'popup-maker'
 							) }
 						</p>

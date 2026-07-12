@@ -834,7 +834,7 @@ class PUM_AssetCache {
 			$response = wp_remote_get(
 				$src,
 				[
-					'sslverify' => apply_filters( 'pum_asset_cache_sslverify', false, $src ),
+					'sslverify' => apply_filters( 'pum_asset_cache_sslverify', true, $src ),
 					'timeout'   => 15,
 				]
 			);
@@ -858,6 +858,55 @@ class PUM_AssetCache {
 	}
 
 	/**
+	 * Canonicalize a path and confirm it stays within WP_CONTENT_DIR/ABSPATH.
+	 *
+	 * Blocks traversal and stream wrappers so a caller-supplied asset source can't
+	 * read arbitrary files into the public cache.
+	 *
+	 * @param string $path Candidate filesystem path.
+	 *
+	 * @return string|false Canonical path within an allowed base, or false.
+	 */
+	private static function resolve_allowed_local_path( $path ) {
+		if ( ! is_string( $path ) || '' === $path ) {
+			return false;
+		}
+
+		// Reject stream wrappers (phar://, file://, ...); local paths only.
+		if ( false !== strpos( $path, '://' ) ) {
+			return false;
+		}
+
+		// realpath() resolves symlinks/.. and returns false when missing.
+		$real = realpath( $path );
+
+		if ( false === $real ) {
+			return false;
+		}
+
+		$real = wp_normalize_path( $real );
+
+		$content_base = realpath( WP_CONTENT_DIR );
+		$abspath_base = realpath( ABSPATH );
+
+		$allowed_bases = [];
+		if ( false !== $content_base ) {
+			$allowed_bases[] = trailingslashit( wp_normalize_path( $content_base ) );
+		}
+		if ( false !== $abspath_base ) {
+			$allowed_bases[] = trailingslashit( wp_normalize_path( $abspath_base ) );
+		}
+
+		foreach ( $allowed_bases as $base ) {
+			if ( 0 === strpos( $real, $base ) ) {
+				return $real;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Read a local file path, returning false when missing or unreadable.
 	 *
 	 * @param string $path Absolute filesystem path.
@@ -865,7 +914,11 @@ class PUM_AssetCache {
 	 * @return string|false
 	 */
 	private static function read_local_file( $path ) {
-		$path = wp_normalize_path( $path );
+		$path = self::resolve_allowed_local_path( $path );
+
+		if ( false === $path ) {
+			return false;
+		}
 
 		if ( ! is_readable( $path ) || ! is_file( $path ) ) {
 			return false;
@@ -894,9 +947,12 @@ class PUM_AssetCache {
 
 		foreach ( $bases as $url_base => $path_base ) {
 			if ( 0 === strpos( $url, $url_base ) ) {
-				$path = $path_base . substr( $url, strlen( $url_base ) );
+				$candidate = $path_base . substr( $url, strlen( $url_base ) );
 
-				return is_file( $path ) ? $path : false;
+				// Range-check to reject traversal outside the base.
+				$path = self::resolve_allowed_local_path( $candidate );
+
+				return ( $path && is_file( $path ) ) ? $path : false;
 			}
 		}
 

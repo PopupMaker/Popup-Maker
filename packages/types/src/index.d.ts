@@ -3,6 +3,14 @@
  */
 
 /**
+ * An icon: a rendered element, a component, or a registered icon name.
+ */
+export type IconType =
+	| JSX.Element
+	| React.ComponentType< Record< string, unknown > >
+	| string;
+
+/**
  * The permissions for the current user.
  */
 export interface PopupMakerPermissions {

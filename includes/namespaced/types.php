@@ -46,7 +46,7 @@ function get_post_type_labels( $post_type ) {
 
 	$post_type_object = get_post_type_object( $post_type );
 
-	return $post_type_object ? $post_type_object->labels : [];
+	return $post_type_object ? (array) $post_type_object->labels : [];
 }
 
 /**

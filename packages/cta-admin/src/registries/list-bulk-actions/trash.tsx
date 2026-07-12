@@ -85,7 +85,7 @@ const TrashBulkAction = (): JSX.Element | null => {
 										// translators: %d: number of items.
 										_n(
 											'%d call to action moved to trash.',
-											'%d call to actions moved to trash.',
+											'%d calls to action moved to trash.',
 											count,
 											'popup-maker'
 										),

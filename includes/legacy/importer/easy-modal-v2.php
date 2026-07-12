@@ -31,22 +31,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 function popmake_emodal_v2_import() {
 	global $wpdb, $popmake_options, $wp_version, $popmake_tools_page;
 
-	require_once POPMAKE_DIR . 'includes/importer/easy-modal-v2/functions.php';
+	require_once POPMAKE_DIR . 'includes/legacy/importer/easy-modal-v2/functions.php';
 
 	if ( ! class_exists( 'EModal_Model' ) ) {
-		require_once POPMAKE_DIR . '/includes/importer/easy-modal-v2/model.php';
+		require_once POPMAKE_DIR . '/includes/legacy/importer/easy-modal-v2/model.php';
 	}
 	if ( ! class_exists( 'EModal_Model_Modal' ) ) {
-		require_once POPMAKE_DIR . '/includes/importer/easy-modal-v2/model/modal.php';
+		require_once POPMAKE_DIR . '/includes/legacy/importer/easy-modal-v2/model/modal.php';
 	}
 	if ( ! class_exists( 'EModal_Model_Theme' ) ) {
-		require_once POPMAKE_DIR . '/includes/importer/easy-modal-v2/model/theme.php';
+		require_once POPMAKE_DIR . '/includes/legacy/importer/easy-modal-v2/model/theme.php';
 	}
 	if ( ! class_exists( 'EModal_Model_Theme_Meta' ) ) {
-		require_once POPMAKE_DIR . '/includes/importer/easy-modal-v2/model/theme/meta.php';
+		require_once POPMAKE_DIR . '/includes/legacy/importer/easy-modal-v2/model/theme/meta.php';
 	}
 	if ( ! class_exists( 'EModal_Model_Modal_Meta' ) ) {
-		require_once POPMAKE_DIR . '/includes/importer/easy-modal-v2/model/modal/meta.php';
+		require_once POPMAKE_DIR . '/includes/legacy/importer/easy-modal-v2/model/modal/meta.php';
 	}
 
 	$themes       = get_all_modal_themes( '1 = 1' );

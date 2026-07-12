@@ -90,6 +90,14 @@ class UpgradeStream extends \PopupMaker\Base\Stream {
 	 * @return void
 	 */
 	public function send_event( $event, $data = [] ) {
+		// Inherited callers such as send_error() may pass a string or scalar;
+		// normalize to an array so the offset writes below never hit a scalar.
+		if ( ! is_array( $data ) ) {
+			$data = ( null === $data || '' === $data )
+				? []
+				: [ 'message' => is_scalar( $data ) ? (string) $data : \wp_json_encode( $data ) ];
+		}
+
 		// Always send the status.
 		$data['status'] = $this->status;
 

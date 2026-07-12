@@ -25,7 +25,7 @@ const Header = (): JSX.Element => {
 	return (
 		<header className="popup-maker-call-to-actions-view__header">
 			<h1 className="view-title wp-heading-inline">
-				{ __( 'Call to Actions', 'popup-maker' ) }
+				{ __( 'Calls to Action', 'popup-maker' ) }
 			</h1>
 			<span className="item-count">
 				{ isLoading ? (

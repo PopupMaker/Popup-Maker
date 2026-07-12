@@ -118,6 +118,8 @@
 						'Invalid connection parameters. Please try again.'
 					);
 					this.closePopup();
+					// Re-enable the button so the user can retry.
+					$button.prop( 'disabled', false );
 					return;
 				}
 

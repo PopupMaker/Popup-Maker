@@ -40,8 +40,8 @@ class CallToActions extends Controller {
 	public function register_page() {
 		add_submenu_page(
 			'edit.php?post_type=popup',
-			__( 'Call to Actions', 'popup-maker' ),
-			__( 'Call to Actions', 'popup-maker' ),
+			__( 'Calls to Action', 'popup-maker' ),
+			__( 'Calls to Action', 'popup-maker' ),
 			$this->container->get_permission( 'edit_ctas' ),
 			'popup-maker-call-to-actions',
 			[ $this, 'render_page' ]
