@@ -17,13 +17,15 @@
 	"bugs": {
 		"url": "https://github.com/popupmaker/popup-maker/issues"
 	},
-	"main": "build/index.js",
-	"module": "src/index.js",
-	"types": "build-types/index.d.ts",
-	"sideEffects": [
-		"*.scss",
-		"*.css"
+	"files": [
+		"build",
+		"build-types",
+		"src",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
 	],
+	"main": "build/index.js",
 	"exports": {
 		".": {
 			"types": "./build-types/index.d.ts",
@@ -31,12 +33,20 @@
 		}
 	},
 	"wpScript": true,
+	"types": "build-types/index.d.ts",
+	"sideEffects": [
+		"*.scss",
+		"*.css"
+	],
 	"dependencies": {
 		"@wordpress/components": "^30.2.0",
 		"@wordpress/element": "^6.29.0"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"scripts": {
 		"prepack": "pnpm run build:tsc && pnpm run build:types",
@@ -47,16 +57,5 @@
 		"lint": "wp-scripts lint-js .",
 		"format": "wp-scripts lint-js . --fix",
 		"packages-update": "wp-scripts packages-update"
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"files": [
-		"build",
-		"build-types",
-		"src",
-		"tsconfig.json",
-		"README.md",
-		"LICENSE"
-	]
+	}
 }
