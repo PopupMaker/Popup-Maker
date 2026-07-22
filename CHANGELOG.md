@@ -12,6 +12,7 @@
 
 **Improvements**
 
+-   Improved compatibility with popular post duplication plugins so cloned popups start with fresh analytics stats and other popup-specific identity data.
 -   Corrected the plural of "Call to Action" to "Calls to Action" across the admin. Thanks @swinggraphics.
 -   Added a `popup_maker/overlay_zindex` filter to control the popup overlay's stacking order, so sites can lower it below the WordPress admin bar (or other elements) when needed.
 
