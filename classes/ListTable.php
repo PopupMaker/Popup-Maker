@@ -655,7 +655,7 @@ class PUM_ListTable {
 			}
 			printf(
 				"<a href='%s' class='%s' id='view-switch-" . esc_attr( $mode ) . "'><span class='screen-reader-text'>%s</span></a>\n",
-				esc_url_raw( add_query_arg( 'mode', $mode ) ),
+				esc_url( add_query_arg( 'mode', $mode ) ),
 				esc_attr( implode( ' ', $classes ) ),
 				esc_html( $title )
 			);
@@ -876,7 +876,7 @@ class PUM_ListTable {
 		} else {
 			$page_links[] = sprintf(
 				"<a class='first-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-				esc_url_raw( remove_query_arg( 'paged', $current_url ) ),
+				esc_url( remove_query_arg( 'paged', $current_url ) ),
 				__( 'First page' ),
 				'&laquo;'
 			);
@@ -887,7 +887,7 @@ class PUM_ListTable {
 		} else {
 			$page_links[] = sprintf(
 				"<a class='prev-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-				esc_url_raw( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
+				esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
 				__( 'Previous page' ),
 				'&lsaquo;'
 			);
@@ -917,7 +917,7 @@ class PUM_ListTable {
 		} else {
 			$page_links[] = sprintf(
 				"<a class='next-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-				esc_url_raw( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
+				esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
 				__( 'Next page' ),
 				'&rsaquo;'
 			);
@@ -928,7 +928,7 @@ class PUM_ListTable {
 		} else {
 			$page_links[] = sprintf(
 				"<a class='last-page' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
-				esc_url_raw( add_query_arg( 'paged', $total_pages, $current_url ) ),
+				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
 				__( 'Last page' ),
 				'&raquo;'
 			);
@@ -1199,7 +1199,7 @@ class PUM_ListTable {
 					$class[] = $desc_first ? 'asc' : 'desc';
 				}
 
-				$column_display_name = '<a href="' . esc_url_raw( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
+				$column_display_name = '<a href="' . esc_url( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
 			}
 
 			$tag   = ( 'cb' === $column_key ) ? 'td' : 'th';
