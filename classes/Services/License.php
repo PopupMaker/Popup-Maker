@@ -88,6 +88,10 @@ class License extends Service {
 	 * @return void
 	 */
 	public function register_hooks() {
+		if ( ! $this->owns_license_lifecycle() ) {
+			return;
+		}
+
 		add_action( 'init', [ $this, 'autoregister' ] );
 		add_action( 'popup_maker_license_status_check', [ $this, 'refresh_license_status' ] );
 		add_action( 'admin_init', [ $this, 'schedule_crons' ] );
@@ -106,6 +110,10 @@ class License extends Service {
 	 * @return void
 	 */
 	public function autoregister() {
+		if ( ! $this->owns_license_lifecycle() ) {
+			return;
+		}
+
 		$constant_key = defined( 'POPUP_MAKER_PRO_LICENSE' ) && '' !== POPUP_MAKER_PRO_LICENSE ? POPUP_MAKER_PRO_LICENSE : false;
 		$license_data = $this->get_license_data();
 
@@ -249,6 +257,10 @@ class License extends Service {
 	 * @return void
 	 */
 	public function schedule_crons() {
+		if ( ! $this->owns_license_lifecycle() ) {
+			return;
+		}
+
 		if ( ! wp_next_scheduled( 'popup_maker_license_status_check' ) ) {
 			wp_schedule_event( time(), 'weekly', 'popup_maker_license_status_check' );
 		}
@@ -591,6 +603,10 @@ class License extends Service {
 	 * @return bool
 	 */
 	public function refresh_license_status(): bool {
+		if ( ! $this->owns_license_lifecycle() ) {
+			return false;
+		}
+
 		$key = $this->get_raw_license_key();
 
 		if ( empty( $key ) ) {
@@ -956,77 +972,6 @@ class License extends Service {
 	}
 
 	/**
-	 * Generate connection information for Pro upgrade.
-	 *
-	 * This method creates the necessary connection data for upgrading to Pro
-	 * when Pro is not already installed.
-	 *
-	 * @return array{url:string,back_url:string}|null Returns connection info or null if conditions not met.
-	 */
-	public function generate_connect_info(): ?array {
-		// Only generate connect info if license is active and Pro is not installed.
-		if ( ! $this->is_license_active() || $this->container->is_pro_installed() ) {
-			return null;
-		}
-
-		$license_key = $this->get_license_key();
-		if ( empty( $license_key ) ) {
-			return null;
-		}
-
-		// Use the Connect service to generate connection info.
-		$connect_service = $this->container->get( 'connect' );
-		return $connect_service->get_connect_info( $license_key );
-	}
-
-	/**
-	 * Validate license for Pro upgrade workflow.
-	 *
-	 * Determines if the current license state allows for Pro upgrade.
-	 *
-	 * @return array{valid:bool,can_upgrade:bool,reason:string}
-	 */
-	public function validate_for_upgrade(): array {
-		$license_key      = $this->get_license_key();
-		$license_status   = $this->get_license_status();
-		$is_pro_installed = $this->container->is_pro_installed();
-
-		// No license key provided.
-		if ( empty( $license_key ) ) {
-			return [
-				'valid'       => false,
-				'can_upgrade' => false,
-				'reason'      => 'no_license_key',
-			];
-		}
-
-		// License is not active.
-		if ( 'valid' !== $license_status ) {
-			return [
-				'valid'       => false,
-				'can_upgrade' => false,
-				'reason'      => "license_{$license_status}",
-			];
-		}
-
-		// Pro is already installed.
-		if ( $is_pro_installed ) {
-			return [
-				'valid'       => true,
-				'can_upgrade' => false,
-				'reason'      => 'pro_already_installed',
-			];
-		}
-
-		// License is valid and Pro is not installed - can upgrade.
-		return [
-			'valid'       => true,
-			'can_upgrade' => true,
-			'reason'      => 'ready_for_upgrade',
-		];
-	}
-
-	/**
 	 * Filter settings editor args.
 	 *
 	 * Add the license key value to the settings editor args, since its not actually stored in options array.
@@ -1035,6 +980,10 @@ class License extends Service {
 	 * @return mixed Settings editor args.
 	 */
 	public function filter_settings_editor_args( $args ) {
+		if ( ! $this->owns_license_lifecycle() || ! $this->container->is_pro_active() ) {
+			return $args;
+		}
+
 		$value = isset( $args['current_values'][ self::SETTINGS_KEY ] ) ? $args['current_values'][ self::SETTINGS_KEY ] : '';
 
 		try {
@@ -1140,6 +1089,15 @@ class License extends Service {
 					'classes' => 'pum-license-invalid',
 				];
 		}
+	}
+
+	/**
+	 * Check whether Core owns the active license lifecycle.
+	 *
+	 * @return bool
+	 */
+	private function owns_license_lifecycle() {
+		return \PopupMaker\owns_licensing_capability( 'license_provider', 'popup-maker' );
 	}
 
 		/**

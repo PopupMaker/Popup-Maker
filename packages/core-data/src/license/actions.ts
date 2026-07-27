@@ -17,7 +17,6 @@ import type {
 
 const {
 	ACTIVATE_LICENSE,
-	CONNECT_SITE,
 	DEACTIVATE_LICENSE,
 	UPDATE_LICENSE_KEY,
 	REMOVE_LICENSE,
@@ -78,20 +77,12 @@ export const activateLicense =
 			);
 
 			if ( result ) {
-				const { status, connectInfo } = result;
+				const { status } = result;
 
 				dispatch.changeActionStatus(
 					actionName,
 					DispatchStatus.Success
 				);
-
-				if ( connectInfo !== undefined ) {
-					dispatch( {
-						type: CONNECT_SITE,
-						licenseStatus: status,
-						connectInfo,
-					} );
-				}
 
 				dispatch( {
 					type: ACTIVATE_LICENSE,
@@ -325,51 +316,6 @@ export const removeLicense =
 				dispatch( {
 					type: REMOVE_LICENSE,
 				} );
-
-				return;
-			}
-
-			dispatch.changeActionStatus(
-				actionName,
-				DispatchStatus.Error,
-				__(
-					'An error occurred, license were not saved.',
-					'popup-maker'
-				)
-			);
-		} catch ( error ) {
-			// returning an action object that will save the update error to the state.
-			dispatch.changeActionStatus(
-				actionName,
-				DispatchStatus.Error,
-				getErrorMessage( error )
-			);
-		}
-	};
-
-/**
- * Activate pro version if installed.
- */
-export const activatePro =
-	(): ThunkAction =>
-	async ( { dispatch } ) => {
-		const actionName = 'activatePro';
-
-		try {
-			dispatch.changeActionStatus( actionName, DispatchStatus.Resolving );
-
-			const result = await fetchFromApi< boolean >(
-				apiPath( 'activate-pro' ),
-				{
-					method: 'POST',
-				}
-			);
-
-			if ( result ) {
-				dispatch.changeActionStatus(
-					actionName,
-					DispatchStatus.Success
-				);
 
 				return;
 			}

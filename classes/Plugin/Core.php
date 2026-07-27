@@ -185,18 +185,6 @@ final class Core extends \PopupMaker\Plugin\Container {
 		);
 
 		$this->set(
-			'connect',
-			/**
-			 * Get plugin connect.
-			 *
-			 * @return Connect
-			 */
-			function ( $container ) {
-				return new \PopupMaker\Services\Connect( $container );
-			}
-		);
-
-		$this->set(
 			'license',
 			/**
 			 * Get plugin license.
@@ -217,18 +205,6 @@ final class Core extends \PopupMaker\Plugin\Container {
 			 */
 			function ( $container ) {
 				return new \PopupMaker\Services\Logging( $container );
-			}
-		);
-
-		$this->set(
-			'upgrader',
-			/**
-			 * Get plugin upgrader.
-			 *
-			 * @return Upgrader
-			 */
-			function ( $container ) {
-				return new \PopupMaker\Services\Upgrader( $container );
 			}
 		);
 

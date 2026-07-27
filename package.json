@@ -132,6 +132,7 @@
 		"start": "wp-scripts start --config webpack.config.js --config webpack.old.config.js",
 		"start:hot": "wp-scripts start --hot --config webpack.config.js",
 		"release": "node bin/build-release.js",
+		"verify:wporg-artifact": "node bin/verify-wporg-artifact.js",
 		"prepare-release": "node bin/prepare-release.js",
 		"prepare-release:patch": "node bin/prepare-release.js --patch",
 		"prepare-release:minor": "node bin/prepare-release.js --minor",

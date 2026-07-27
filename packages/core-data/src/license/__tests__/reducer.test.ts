@@ -89,39 +89,6 @@ describe( 'license reducer', () => {
 		} );
 	} );
 
-	describe( 'CONNECT_SITE', () => {
-		it( 'updates license status and stores connect info', () => {
-			const connectInfo = {
-				url: 'https://example.com/connect',
-				back_url: 'https://example.com/back',
-			};
-
-			const state = reducer( initialState, {
-				type: ACTION_TYPES.CONNECT_SITE,
-				licenseStatus: validStatus,
-				connectInfo,
-			} as any );
-
-			expect( state.license.status ).toEqual( validStatus );
-			expect( state.connectInfo ).toEqual( connectInfo );
-		} );
-
-		it( 'preserves existing license key', () => {
-			const stateWithKey: State = {
-				...initialState,
-				license: { key: 'existing-key', status: licenseStatusDefaults },
-			};
-
-			const state = reducer( stateWithKey, {
-				type: ACTION_TYPES.CONNECT_SITE,
-				licenseStatus: validStatus,
-				connectInfo: { url: 'http://a.com', back_url: 'http://b.com' },
-			} as any );
-
-			expect( state.license.key ).toBe( 'existing-key' );
-		} );
-	} );
-
 	describe( 'UPDATE_LICENSE_KEY', () => {
 		it( 'updates both key and status', () => {
 			const state = reducer( initialState, {

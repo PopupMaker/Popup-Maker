@@ -1,16 +1,10 @@
 import { ACTION_TYPES, initialState } from './constants';
 
 import type { DispatchStatuses } from '../constants';
-import type {
-	License,
-	LicenseConnect,
-	LicenseStatus,
-	StoreActionNames,
-} from './types';
+import type { License, LicenseStatus, StoreActionNames } from './types';
 
 const {
 	ACTIVATE_LICENSE,
-	CONNECT_SITE,
 	DEACTIVATE_LICENSE,
 	REMOVE_LICENSE,
 	UPDATE_LICENSE_KEY,
@@ -22,7 +16,6 @@ const {
 
 export type State = {
 	license: License;
-	connectInfo?: LicenseConnect;
 	// Boilerplate
 	dispatchStatus?: {
 		[ Property in StoreActionNames ]?: {
@@ -43,12 +36,6 @@ type LicenseStatusAction = BaseAction & {
 		| typeof DEACTIVATE_LICENSE
 		| typeof CHECK_LICENSE_STATUS;
 	licenseStatus: LicenseStatus;
-};
-
-type ConnectSiteAction = BaseAction & {
-	type: typeof CONNECT_SITE;
-	licenseStatus: LicenseStatus;
-	connectInfo: LicenseConnect;
 };
 
 type UpdateLicenseKeyAction = BaseAction & {
@@ -80,7 +67,6 @@ type ChangeActionStatusAction = BaseAction & {
 
 export type ReducerAction =
 	| LicenseStatusAction
-	| ConnectSiteAction
 	| UpdateLicenseKeyAction
 	| RemoveLicenseAction
 	| HydrateLicenseDataAction
@@ -100,16 +86,6 @@ const reducer = ( state: State = initialState, action: ReducerAction ) => {
 				},
 			};
 			return state;
-
-		case CONNECT_SITE:
-			return {
-				...state,
-				license: {
-					...state.license,
-					status: action.licenseStatus,
-				},
-				connectInfo: action.connectInfo,
-			};
 
 		case UPDATE_LICENSE_KEY:
 			return {

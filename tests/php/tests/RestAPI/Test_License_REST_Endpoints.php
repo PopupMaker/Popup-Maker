@@ -11,27 +11,10 @@ if ( ! class_exists( 'WP_UnitTestCase' ) ) {
 	require_once dirname( dirname( __DIR__ ) ) . '/config/bootstrap.php';
 }
 
-use PopupMaker\Services\License;
-
 /**
  * License REST API endpoints test case.
  */
 class Test_License_REST_Endpoints extends \WP_UnitTestCase {
-
-	/**
-	 * License service instance.
-	 *
-	 * @var \PopupMaker\Services\License
-	 */
-	private $license_service;
-
-	/**
-	 * Mock license service.
-	 *
-	 * @var \PHPUnit\Framework\MockObject\MockObject
-	 */
-	private $mock_license_service;
-
 
 	/**
 	 * REST API server instance.
@@ -60,9 +43,6 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		// PopupMaker\Plugin\Core is declared final and cannot be mocked.
-		$this->markTestSkipped( 'License REST tests require a mockable Core class (Core is final).' );
-
 		// Initialize REST API server.
 		global $wp_rest_server;
 		$wp_rest_server = new WP_REST_Server();
@@ -72,33 +52,10 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 		$this->admin_user_id      = $this->factory->user->create( [ 'role' => 'administrator' ] );
 		$this->subscriber_user_id = $this->factory->user->create( [ 'role' => 'subscriber' ] );
 
-		// Create mock services.
-		$this->mock_license_service = $this->createMock( License::class );
-
-		// Initialize real license service if available.
-		if ( class_exists( '\PopupMaker\Services\License' ) ) {
-			$container             = $this->createMock( \PopupMaker\Plugin\Core::class );
-			$this->license_service = new \PopupMaker\Services\License( $container );
-		}
-
-		// Mock global functions for testing.
-		if ( ! function_exists( 'plugin' ) ) {
-			function plugin( $service = null ) {
-				global $test_container;
-				return $test_container[ $service ] ?? $test_container;
-			}
-		}
-
-		// Set up global test container.
-		global $test_container;
-		$test_container = [
-			'license'          => $this->mock_license_service,
-			'is_pro_installed' => false,
-			'is_pro_active'    => false,
-		];
-
 		// Initialize REST API routes.
 		do_action( 'rest_api_init' );
+		( new \PopupMaker\RestAPI\License() )->register_routes();
+		$this->reset_license_cache();
 	}
 
 	/**
@@ -174,7 +131,7 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 		$data = $response->get_data();
 
 		$this->assertArrayHasKey( 'status', $data );
-		$this->assertArrayHasKey( 'license', $data );
+		$this->assertArrayHasKey( 'is_active', $data );
 		$this->assertEquals( 'valid', $data['status'] );
 	}
 
@@ -315,7 +272,7 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 			$this->markTestSkipped( 'License activation endpoint not implemented yet.' );
 		}
 
-		$this->assertEquals( 500, $response->get_status() );
+		$this->assertEquals( 400, $response->get_status() );
 		$this->assertArrayHasKey( 'message', $response->get_data() );
 	}
 
@@ -351,35 +308,6 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 		// Second request might be rate limited (if implemented).
 		// This would depend on implementation details.
 		$this->assertTrue( in_array( $response2->get_status(), [ 200, 429 ], true ) );
-	}
-
-	/**
-	 * Test license data export for privacy compliance.
-	 */
-	public function test_license_data_export() {
-		wp_set_current_user( $this->admin_user_id );
-
-		// Set up license data.
-		update_option( 'popup_maker_license', [
-			'key'    => 'test-license-key',
-			'status' => [
-				'customer_email' => 'test@example.com',
-				'customer_name'  => 'Test Customer',
-			],
-		] );
-
-		$request  = new WP_REST_Request( 'GET', '/popup-maker/v2/license/export' );
-		$response = $this->server->dispatch( $request );
-
-		if ( $response->get_status() === 404 ) {
-			$this->markTestSkipped( 'License export endpoint not implemented yet.' );
-		}
-
-		$this->assertEquals( 200, $response->get_status() );
-		$data = $response->get_data();
-
-		$this->assertArrayHasKey( 'customer_data', $data );
-		$this->assertArrayNotHasKey( 'license_key', $data ); // Sensitive data should be excluded.
 	}
 
 	/**
@@ -448,38 +376,6 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 		}
 
 		return new WP_Error( 'http_request_failed', 'Network connection failed.' );
-	}
-
-	/**
-	 * Test license pro activation endpoint.
-	 */
-	public function test_license_pro_activation_endpoint() {
-		wp_set_current_user( $this->admin_user_id );
-
-		$request = new WP_REST_Request( 'POST', '/popup-maker/v2/license/activate-pro' );
-		$request->set_body_params( [
-			'license_key' => 'test-license-key-pro',
-		] );
-
-		// Mock the HTTP request to the license server.
-		add_filter( 'pre_http_request', [ $this, 'mock_license_activation_response' ], 10, 3 );
-
-		$response = $this->server->dispatch( $request );
-
-		// Remove the filter.
-		remove_filter( 'pre_http_request', [ $this, 'mock_license_activation_response' ] );
-
-		if ( $response->get_status() === 404 ) {
-			$this->markTestSkipped( 'License pro activation endpoint not implemented yet.' );
-		}
-
-		$this->assertEquals( 200, $response->get_status() );
-		$data = $response->get_data();
-
-		$this->assertArrayHasKey( 'success', $data );
-		$this->assertArrayHasKey( 'can_upgrade', $data );
-		$this->assertArrayHasKey( 'connect_info', $data );
-		$this->assertTrue( $data['success'] );
 	}
 
 	/**
@@ -558,6 +454,7 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 				'key'    => 'test-license-key-' . $error_type,
 				'status' => $license_data,
 			] );
+			$this->reset_license_cache();
 
 			$request  = new WP_REST_Request( 'GET', '/popup-maker/v2/license' );
 			$response = $this->server->dispatch( $request );
@@ -572,6 +469,19 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 			$this->assertArrayHasKey( 'status', $data );
 			$this->assertNotEquals( 'valid', $data['status'] );
 		}
+	}
+
+	/**
+	 * Reset the service cache after direct option changes.
+	 *
+	 * @return void
+	 */
+	private function reset_license_cache() {
+		$property = new ReflectionProperty( \PopupMaker\plugin( 'license' ), 'license_data' );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$property->setAccessible( true );
+		}
+		$property->setValue( \PopupMaker\plugin( 'license' ), null );
 	}
 
 	/**
@@ -638,10 +548,6 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 			'status',
 			'status_data',
 			'is_active',
-			'is_pro_installed',
-			'is_pro_active',
-			'can_upgrade',
-			'connect_info',
 		];
 
 		foreach ( $required_fields as $field ) {
@@ -652,9 +558,6 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 		$this->assertIsString( $data['license_key'] );
 		$this->assertIsString( $data['status'] );
 		$this->assertIsBool( $data['is_active'] );
-		$this->assertIsBool( $data['is_pro_installed'] );
-		$this->assertIsBool( $data['is_pro_active'] );
-		$this->assertIsBool( $data['can_upgrade'] );
 	}
 
 	/**

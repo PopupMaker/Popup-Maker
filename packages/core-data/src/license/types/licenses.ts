@@ -25,15 +25,8 @@ export type License = {
 	status: LicenseStatus;
 };
 
-export type LicenseConnect = {
-	url: string;
-	back_url: string;
-};
-
 export type LicenseStatusResponse = {
 	status: LicenseStatus;
 };
 
-export type LicenseActivationResponse = LicenseStatusResponse & {
-	connectInfo?: LicenseConnect;
-};
+export type LicenseActivationResponse = LicenseStatusResponse;

@@ -102,6 +102,10 @@ class PUM_Admin_Settings {
 	 * Process license activation when hooked to pum_save_settings.
 	 */
 	public static function process_license_operation() {
+		if ( ! \PopupMaker\owns_licensing_capability( 'license_ui_owner', 'popup-maker' ) ) {
+			return;
+		}
+
 		// Handle license operations.
 		if (
 			! isset( $_POST['pum_license_operation_nonce'] ) ||
@@ -649,6 +653,22 @@ class PUM_Admin_Settings {
 					],
 				]
 			);
+
+			if ( ! \PopupMaker\plugin()->is_pro_active() || ! \PopupMaker\owns_licensing_capability( 'license_ui_owner', 'popup-maker' ) ) {
+				unset( $fields['go-pro']['main']['popup_maker_pro_license_key'] );
+			}
+
+			if ( ! \PopupMaker\plugin()->is_pro_active() ) {
+				$fields['go-pro']['main']['popup_maker_pro_external'] = [
+					'type'    => 'html',
+					'content' => sprintf(
+						'<p>%1$s</p><p><a class="button button-primary" href="%2$s" target="_blank" rel="noopener noreferrer">%3$s</a></p>',
+						esc_html__( 'Popup Maker Pro is downloaded from your Popup Maker account and installed manually.', 'popup-maker' ),
+						esc_url( 'https://wppopupmaker.com/pricing/?utm_source=plugin-settings&utm_medium=go-pro&utm_campaign=wordpress-org' ),
+						esc_html__( 'Get Popup Maker Pro', 'popup-maker' )
+					),
+				];
+			}
 
 			$fields = apply_filters( 'pum_settings_fields', $fields );
 

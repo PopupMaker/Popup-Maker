@@ -5,17 +5,9 @@ import { licenseStore } from '../license';
 
 const useLicense = () => {
 	// Fetch needed data from the @popup-maker/core-data & @wordpress/data stores.
-	const {
-		connectInfo,
-		licenseKey,
-		licenseStatus,
-		isSaving,
-		proWasActivated,
-		isActivatingPro,
-	} = useSelect( ( select ) => {
+	const { licenseKey, licenseStatus, isSaving } = useSelect( ( select ) => {
 		const storeSelect = select( licenseStore );
 		return {
-			connectInfo: storeSelect.getConnectInfo(),
 			licenseKey: storeSelect.getLicenseKey(),
 			licenseStatus: storeSelect.getLicenseStatus(),
 			isSaving:
@@ -24,8 +16,6 @@ const useLicense = () => {
 				storeSelect.isDispatching( 'checkLicenseStatus' ) ||
 				storeSelect.isDispatching( 'updateLicenseKey' ) ||
 				storeSelect.isDispatching( 'removeLicense' ),
-			isActivatingPro: storeSelect.isDispatching( 'activatePro' ),
-			proWasActivated: storeSelect.hasDispatched( 'activatePro' ),
 		};
 	}, [] );
 
@@ -36,7 +26,6 @@ const useLicense = () => {
 		checkLicenseStatus,
 		updateLicenseKey,
 		removeLicense,
-		activatePro,
 	} = useDispatch( licenseStore );
 
 	// Create some helper variables.
@@ -155,7 +144,6 @@ const useLicense = () => {
 	}, [ licenseStatus?.price_id ] );
 
 	return {
-		connectInfo,
 		licenseKey,
 		licenseStatus,
 		licenseLevel,
@@ -164,11 +152,8 @@ const useLicense = () => {
 		checkLicenseStatus,
 		updateLicenseKey,
 		removeLicense,
-		activatePro,
 		getLicenseStatusName,
 		isSaving,
-		isActivatingPro,
-		proWasActivated,
 		isLicenseKeyValid,
 		isLicenseActive,
 		isLicenseDeactivated,

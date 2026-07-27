@@ -370,8 +370,11 @@ class PluginReleaseBuilder {
 			await this.runParallelBuilds();
 
 			this.copyDistributionFiles();
-			// eslint-disable-next-line no-unused-vars
-			const _zipPath = this.createZipFiles();
+			const zipPath = this.createZipFiles();
+			this.executeCommand(
+				`node bin/verify-wporg-artifact.js "${ zipPath }"`,
+				'Verifying WordPress.org artifact'
+			);
 			this.cleanup();
 
 			if ( ! this.options.quiet ) {
@@ -496,12 +499,12 @@ class PluginReleaseBuilder {
 				this.packageJSON.scripts &&
 				this.packageJSON.scripts[ 'build:production' ]
 			) {
-				buildCommand = 'npm run build:production';
+				buildCommand = 'pnpm run build:production';
 			} else if (
 				this.packageJSON.scripts &&
 				this.packageJSON.scripts.build
 			) {
-				buildCommand = 'NODE_ENV=production npm run build';
+				buildCommand = 'NODE_ENV=production pnpm run build';
 			} else {
 				if ( ! this.options.quiet ) {
 					console.log(
