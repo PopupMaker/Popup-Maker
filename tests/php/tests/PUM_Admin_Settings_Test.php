@@ -68,6 +68,35 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'misc', $fields, 'Missing misc tab.' );
 	}
 
+	/**
+	 * Core alone keeps the Go Pro tab without rendering a redundant CTA field.
+	 */
+	public function test_core_alone_uses_hidden_go_pro_placeholder() {
+		if ( \PopupMaker\plugin()->is_pro_active() ) {
+			$this->markTestSkipped( 'Core-only UI assertion requires Pro to be inactive.' );
+		}
+
+		$placeholder = PUM_Admin_Settings::get_field( 'popup_maker_pro_placeholder' );
+
+		$this->assertIsArray( $placeholder );
+		$this->assertSame( 'html', $placeholder['type'] );
+		$this->assertSame( '', $placeholder['content'] );
+		$this->assertSame( 'pum-go-pro-placeholder', $placeholder['class'] );
+		$this->assertFalse( PUM_Admin_Settings::get_field( 'popup_maker_pro_external' ) );
+	}
+
+	/**
+	 * The Go Pro hero gives existing customers a direct account download link.
+	 */
+	public function test_go_pro_hero_links_existing_customers_to_downloads() {
+		$hero = PUM_Admin_Settings::field_go_pro_hero();
+
+		$this->assertStringContainsString( 'https://wppopupmaker.com/account/file-downloads/', $hero );
+		$this->assertStringContainsString( 'Already own Pro? Download it', $hero );
+		$this->assertStringContainsString( '[New] Split Testing', $hero );
+		$this->assertStringNotContainsString( 'FluentCRM Marketing Automation', $hero );
+	}
+
 	// ------------------------------------------------------------------
 	// get_field() — looks up a field definition by ID.
 	// ------------------------------------------------------------------

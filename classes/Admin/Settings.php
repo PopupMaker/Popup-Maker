@@ -659,14 +659,10 @@ class PUM_Admin_Settings {
 			}
 
 			if ( ! \PopupMaker\plugin()->is_pro_active() ) {
-				$fields['go-pro']['main']['popup_maker_pro_external'] = [
+				$fields['go-pro']['main']['popup_maker_pro_placeholder'] = [
 					'type'    => 'html',
-					'content' => sprintf(
-						'<p>%1$s</p><p><a class="button button-primary" href="%2$s" target="_blank" rel="noopener noreferrer">%3$s</a></p>',
-						esc_html__( 'Popup Maker Pro is downloaded from your Popup Maker account and installed manually.', 'popup-maker' ),
-						esc_url( 'https://wppopupmaker.com/pricing/?utm_source=plugin-settings&utm_medium=go-pro&utm_campaign=wordpress-org' ),
-						esc_html__( 'Get Popup Maker Pro', 'popup-maker' )
-					),
+					'content' => '',
+					'class'   => 'pum-go-pro-placeholder',
 				];
 			}
 
@@ -761,7 +757,7 @@ class PUM_Admin_Settings {
 						<li><?php esc_html_e( '6 Exit Intent Methods — desktop + mobile', 'popup-maker' ); ?></li>
 						<li><?php esc_html_e( 'Event-Based Analytics Dashboard', 'popup-maker' ); ?></li>
 						<li><?php esc_html_e( '50+ Advanced Targeting Conditions', 'popup-maker' ); ?></li>
-						<li><?php esc_html_e( 'FluentCRM Marketing Automation', 'popup-maker' ); ?></li>
+						<li><?php esc_html_e( '[New] Split Testing', 'popup-maker' ); ?></li>
 						<li><?php esc_html_e( 'CTA Value Tracking & Export/Import', 'popup-maker' ); ?></li>
 						<li><?php esc_html_e( 'Campaign Scheduling with Timezones', 'popup-maker' ); ?></li>
 					</ul>
@@ -784,12 +780,25 @@ class PUM_Admin_Settings {
 			</div>
 
 			<div class="pum-go-pro-hero__footer">
-				<a href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'settings-hero', 'get-pro-cta' ) ); ?>"
-				   target="_blank" rel="noopener"
-				   class="pum-go-pro-hero__cta">
-					<?php esc_html_e( 'Increase My Conversion Rate', 'popup-maker' ); ?>
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-				</a>
+				<div class="pum-go-pro-hero__actions">
+					<a
+						href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'settings-hero', 'get-pro-cta' ) ); ?>"
+						target="_blank"
+						rel="noopener"
+						class="pum-go-pro-hero__cta"
+					>
+						<?php esc_html_e( 'Increase My Conversion Rate', 'popup-maker' ); ?>
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+					</a>
+					<a
+						href="<?php echo esc_url( 'https://wppopupmaker.com/account/file-downloads/?utm_source=plugin-settings&utm_medium=go-pro&utm_campaign=wordpress-org' ); ?>"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="pum-go-pro-hero__download-link"
+					>
+						<?php esc_html_e( 'Already own Pro? Download it', 'popup-maker' ); ?>
+					</a>
+				</div>
 				<span class="pum-go-pro-hero__price-note"><?php esc_html_e( 'Upgrade to Pro — $99/yr', 'popup-maker' ); ?></span>
 			</div>
 		</div>
@@ -979,7 +988,7 @@ class PUM_Admin_Settings {
 					;
 				</script>
 
-				<button class="button-primary bottom" style="margin-left: 156px;"><?php esc_html_e( 'Save', 'popup-maker' ); ?></button>
+				<button id="pum-settings-save" class="button-primary bottom pum-settings-save" style="margin-left: 156px;"><?php esc_html_e( 'Save', 'popup-maker' ); ?></button>
 
 			</form>
 
