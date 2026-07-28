@@ -5,6 +5,7 @@
 **Security**
 
 -   Security and resilience hardening based on continuous AI scanning.
+-   Hardened Subscribers page pagination URL escaping to prevent cross-site scripting (XSS).
 
 **Features**
 
@@ -18,6 +19,7 @@
 
 **Fixes**
 
+-   Fixed generic WordPress editors and page builders receiving 404 responses for Popup and Popup Theme REST collections by exposing standard `wp/v2` aliases while preserving Popup Maker's versioned API.
 -   Fixed Gravity Forms inside popups no longer submitting via AJAX (regression since 1.21.0), which broke text confirmations and Form Submission triggers after submit.
 -   Improved keyboard focus when closing popups: focus returns to the previously focused element, or to the top of the document when there wasn't one (auto-open popups) or it no longer exists. Thanks @swinggraphics.
 -   Fixed Click Open "Extra Selectors" starting with a number (e.g. `.2026-selector`) being rejected as invalid. Selectors are now validated against jQuery's engine, which handles the actual matching.
