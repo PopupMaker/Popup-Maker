@@ -26,6 +26,7 @@ class PostTypes extends Controller {
 	 */
 	public function init() {
 		add_action( 'init', [ $this, 'register_post_types' ] );
+		add_action( 'rest_api_init', [ $this, 'register_standard_rest_routes' ] );
 		add_action( 'save_post_popup', [ $this, 'save_post' ], 10, 3 );
 		add_filter( 'post_updated_messages', [ $this, 'updated_messages' ] );
 
@@ -120,6 +121,48 @@ class PostTypes extends Controller {
 		$this->register_popup_tag_tax();
 
 		do_action( 'popup_maker/register_post_types' );
+	}
+
+	/**
+	 * Register standard WordPress REST aliases for builder compatibility.
+	 *
+	 * Popup Maker's own editor uses the versioned `popup-maker/v2` namespace.
+	 * Generic WordPress editors expect post types exposed through `wp/v2`, so
+	 * register aliases without removing or changing the existing API routes.
+	 *
+	 * @return void
+	 */
+	public function register_standard_rest_routes() {
+		$rest_bases = [
+			$this->get_type_key( 'popup' )       => 'popups',
+			$this->get_type_key( 'popup_theme' ) => 'popup-themes',
+		];
+
+		foreach ( $rest_bases as $post_type => $rest_base ) {
+			$post_type_object = get_post_type_object( $post_type );
+
+			if ( ! $post_type_object || ! $post_type_object->show_in_rest || 'wp/v2' === $post_type_object->rest_namespace ) {
+				continue;
+			}
+
+			$controller = new class( $post_type, $rest_base ) extends \WP_REST_Posts_Controller {
+
+				/**
+				 * Set up a standard WordPress route for a Popup Maker post type.
+				 *
+				 * @param string $post_type Post type key.
+				 * @param string $rest_base REST collection base.
+				 */
+				public function __construct( $post_type, $rest_base ) {
+					parent::__construct( $post_type );
+
+					$this->namespace = 'wp/v2';
+					$this->rest_base = $rest_base;
+				}
+			};
+
+			$controller->register_routes();
+		}
 	}
 
 	/**
