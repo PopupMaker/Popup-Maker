@@ -1,0 +1,7 @@
+<?php
+
+class License {
+	public function request() {
+		return wp_remote_post( 'https://licenses.example.test/' );
+	}
+}

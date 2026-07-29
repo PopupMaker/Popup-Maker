@@ -273,7 +273,10 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 		}
 
 		$this->assertEquals( 400, $response->get_status() );
-		$this->assertArrayHasKey( 'message', $response->get_data() );
+		$data = $response->get_data();
+
+		$this->assertArrayHasKey( 'message', $data );
+		$this->assertSame( 'License activation failed. Check your connection and try again.', $data['message'] );
 	}
 
 	/**

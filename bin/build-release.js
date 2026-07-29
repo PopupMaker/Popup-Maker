@@ -4,7 +4,7 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 const glob = require( 'glob' );
-const { execSync } = require( 'child_process' );
+const { execFileSync, execSync } = require( 'child_process' );
 
 /**
  * Unified Plugin Release Builder
@@ -148,7 +148,55 @@ class PluginReleaseBuilder {
 			}
 
 			console.error( `Exit code: ${ error.status }` );
-			process.exit( 1 );
+			throw error;
+		}
+	}
+
+	executeFile( executable, args, description ) {
+		if ( this.options.verbose ) {
+			console.log( `${ description }...` );
+			console.log( `Running: ${ executable } ${ args.join( ' ' ) }` );
+		} else if ( this.options.quiet ) {
+			process.stdout.write( `${ description }... ` );
+		} else {
+			console.log( `${ description }...` );
+		}
+
+		try {
+			const result = execFileSync( executable, args, {
+				cwd: this.projectRoot,
+				stdio: this.options.verbose ? 'inherit' : 'pipe',
+				encoding: 'utf8',
+				env: { ...process.env },
+			} );
+
+			if ( this.options.quiet ) {
+				console.log( '✅' );
+			} else if ( ! this.options.verbose ) {
+				console.log( '✅ Done' );
+			}
+
+			return result;
+		} catch ( error ) {
+			if ( this.options.quiet || ! this.options.verbose ) {
+				console.log( '❌' );
+			}
+
+			console.error(
+				`\n❌ Failed to execute: ${ executable } ${ args.join( ' ' ) }`
+			);
+
+			if ( error.stdout ) {
+				console.error( 'STDOUT:' );
+				console.error( error.stdout.toString() );
+			}
+			if ( error.stderr ) {
+				console.error( 'STDERR:' );
+				console.error( error.stderr.toString() );
+			}
+
+			console.error( `Exit code: ${ error.status }` );
+			throw error;
 		}
 	}
 
@@ -198,6 +246,23 @@ class PluginReleaseBuilder {
 				);
 			}
 			fs.unlinkSync( latestZip );
+		}
+
+		const configuredZip = path.join(
+			this.outputDir,
+			this.getZipFileName()
+		);
+
+		if ( fs.existsSync( configuredZip ) ) {
+			if ( this.options.verbose ) {
+				console.log(
+					`Removing existing zip: ${ path.relative(
+						this.projectRoot,
+						configuredZip
+					) }`
+				);
+			}
+			fs.unlinkSync( configuredZip );
 		}
 	}
 
@@ -277,25 +342,35 @@ class PluginReleaseBuilder {
 		}
 	}
 
-	createZipFiles() {
-		if ( ! this.options.quiet ) {
-			console.log( '\n=== Creating release zip ===' );
-		}
-
-		const pluginDir = path.join( this.projectRoot, this.pluginName );
+	getZipFileName() {
 		const zipName =
 			this.options.zipFileName ||
 			`${ this.pluginName }_${ this.version }.zip`;
 
-		// Reject anything but a plain zip filename. The name can originate from a
-		// git tag (via --zip-name) and is used in shell/path operations below.
 		if ( ! /^[A-Za-z0-9._-]+\.zip$/.test( zipName ) ) {
 			throw new Error(
 				`Refusing unsafe zip name: "${ zipName }". Expected [A-Za-z0-9._-] and a .zip extension.`
 			);
 		}
 
+		return zipName;
+	}
+
+	createZipFiles() {
+		if ( ! this.options.quiet ) {
+			console.log( '\n=== Creating release zip ===' );
+		}
+
+		const pluginDir = path.join( this.projectRoot, this.pluginName );
+		const zipName = this.getZipFileName();
 		const zipPath = path.join( this.outputDir, zipName );
+		const latestZipPath = path.join(
+			this.projectRoot,
+			`${ this.pluginName }-latest.zip`
+		);
+		const stagedZipPath = path.join( this.projectRoot, zipName );
+
+		this.releaseArtifactPaths = [ latestZipPath, stagedZipPath, zipPath ];
 
 		// Move build directory to plugin name
 		if ( fs.existsSync( pluginDir ) ) {
@@ -315,10 +390,7 @@ class PluginReleaseBuilder {
 		if ( ! this.options.quiet ) {
 			console.log( 'Creating versioned zip file...' );
 		}
-		fs.copyFileSync(
-			path.join( this.projectRoot, `${ this.pluginName }-latest.zip` ),
-			path.join( this.projectRoot, zipName )
-		);
+		fs.copyFileSync( latestZipPath, stagedZipPath );
 
 		// Move zip to output directory if different from project root
 		if ( this.outputDir !== this.projectRoot ) {
@@ -328,15 +400,53 @@ class PluginReleaseBuilder {
 			}
 		}
 
-		// Always show the final result
+		return zipPath;
+	}
+
+	verifyArtifact( zipPath ) {
+		this.executeFile(
+			process.execPath,
+			[
+				path.join( this.projectRoot, 'bin/verify-wporg-artifact.js' ),
+				zipPath,
+			],
+			'Verifying WordPress.org artifact'
+		);
+	}
+
+	announceRelease( zipPath ) {
 		console.log(
 			`\n✅ Release created: \n- ${ path.relative(
 				process.cwd(),
 				`${ this.pluginName }-latest.zip`
 			) } \n- ${ path.relative( process.cwd(), zipPath ) }`
 		);
+	}
 
-		return zipPath;
+	removeReleaseArtifacts( zipPath = null ) {
+		const artifactPaths = new Set( this.releaseArtifactPaths || [] );
+
+		if ( zipPath ) {
+			artifactPaths.add( zipPath );
+		}
+
+		artifactPaths.add(
+			path.join( this.projectRoot, `${ this.pluginName }-latest.zip` )
+		);
+
+		for ( const artifactPath of artifactPaths ) {
+			if ( artifactPath && fs.existsSync( artifactPath ) ) {
+				if ( this.options.verbose ) {
+					console.log(
+						`Removing invalid artifact: ${ path.relative(
+							this.projectRoot,
+							artifactPath
+						) }`
+					);
+				}
+				fs.unlinkSync( artifactPath );
+			}
+		}
 	}
 
 	cleanup() {
@@ -363,6 +473,8 @@ class PluginReleaseBuilder {
 			}`
 		);
 
+		let zipPath = null;
+
 		try {
 			this.cleanBuildArtifacts();
 
@@ -370,19 +482,20 @@ class PluginReleaseBuilder {
 			await this.runParallelBuilds();
 
 			this.copyDistributionFiles();
-			const zipPath = this.createZipFiles();
-			this.executeCommand(
-				`node bin/verify-wporg-artifact.js "${ zipPath }"`,
-				'Verifying WordPress.org artifact'
-			);
+			zipPath = this.createZipFiles();
+			this.verifyArtifact( zipPath );
+			this.announceRelease( zipPath );
 			this.cleanup();
 
 			if ( ! this.options.quiet ) {
 				console.log( `\n✅ Release build completed successfully!` );
 			}
+
+			return zipPath;
 		} catch ( error ) {
-			console.error( `\n❌ Release build failed:`, error.message );
-			process.exit( 1 );
+			this.removeReleaseArtifacts( zipPath );
+			this.cleanup();
+			throw error;
 		}
 	}
 
@@ -654,8 +767,10 @@ if ( require.main === module ) {
 	const builder = new PluginReleaseBuilder( options );
 	builder.build().catch( ( error ) => {
 		console.error( `\n❌ Release build failed:`, error.message );
-		process.exit( 1 );
+		process.exitCode = 1;
 	} );
 }
 
 module.exports = PluginReleaseBuilder;
+
+/* eslint-enable no-console */

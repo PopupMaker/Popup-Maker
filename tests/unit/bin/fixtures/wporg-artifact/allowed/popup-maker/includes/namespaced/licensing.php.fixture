@@ -1,0 +1,5 @@
+<?php
+
+function licensing_capabilities() {
+	return [];
+}

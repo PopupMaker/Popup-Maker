@@ -1,0 +1,8 @@
+<?php
+
+class PUM_Extensions {
+	public function reactivate_renamed_plugin( $plugin ) {
+		deactivate_plugins( $plugin );
+		activate_plugin( $plugin );
+	}
+}

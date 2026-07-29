@@ -118,9 +118,15 @@ class License extends WP_REST_Controller {
 		}
 
 		if ( ! $license->maybe_activate_license( $key ) ) {
+			$error_message = $license->get_license_error_message();
+
+			if ( '' === trim( $error_message ) ) {
+				$error_message = __( 'License activation failed. Check your connection and try again.', 'popup-maker' );
+			}
+
 			return new WP_Error(
 				'license_activation_failed',
-				$license->get_license_error_message(),
+				$error_message,
 				[ 'status' => 400 ]
 			);
 		}

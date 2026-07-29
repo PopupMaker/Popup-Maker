@@ -94,17 +94,17 @@ does not write merely to migrate it.
 
 ## Release order
 
-Use this exact order:
+Transition Core and new Pro may ship independently, in either order:
 
-1. Release new Popup Maker Pro.
-2. Release new Ecommerce Popups and LMS Popups after the new Pro package is
-   available.
-3. Release transition Core to WordPress.org.
+1. Release transition Core to WordPress.org and new Popup Maker Pro as
+   independently scheduled releases.
+2. Release new Ecommerce Popups and LMS Popups only after the new Pro package
+   is available.
 
-New Pro deliberately delegates to older/private Core, so step 1 is safe before
-Core. New addons require the resolver shipped by step 1. Transition Core keeps
-released Pro 1.1.0 and historical addons operational, so a site that receives
-the public Core update before a private plugin update still does not fatal.
+New Pro deliberately delegates to older/private Core, so Pro does not depend on
+transition Core shipping first. Transition Core keeps released Pro 1.1.0 and
+historical addons operational, so Core does not depend on new Pro shipping
+first. Only the new addon releases depend on the resolver shipped by new Pro.
 
 ## Compatibility matrix
 
@@ -127,8 +127,10 @@ intentionally unsupported until minimum addon versions are established.
 
 ## Phase two
 
-After telemetry and support policy establish minimum versions of new Pro,
-Ecommerce, and LMS, the smallest follow-up Core change is:
+Phase two does not begin when transition Core or new Pro ships. It waits until
+the new Pro, Ecommerce, and LMS releases are available and telemetry plus
+support policy establish and enforce their minimum supported versions. The
+smallest follow-up Core change is then:
 
 1. Remove the `license` container service and `classes/Services/License.php`.
 2. Remove Core's license field/template/form handling and license REST facade.
