@@ -102,7 +102,7 @@ class PUM_Admin_Settings {
 	 * Process license activation when hooked to pum_save_settings.
 	 */
 	public static function process_license_operation() {
-		if ( ! \PopupMaker\owns_licensing_capability( 'license_ui_owner', 'popup-maker' ) ) {
+		if ( ! \PopupMaker\plugin()->is_pro_installed() ) {
 			return;
 		}
 
@@ -320,8 +320,13 @@ class PUM_Admin_Settings {
 	public static function fields() {
 
 		static $fields;
+		static $pro_installed;
 
-		if ( ! isset( $fields ) ) {
+		$current_pro_installed = \PopupMaker\plugin()->is_pro_installed();
+
+		if ( ! isset( $fields ) || $pro_installed !== $current_pro_installed ) {
+			$pro_installed = $current_pro_installed;
+
 			$fields = [
 				'general' => [
 					'main' => [
@@ -654,11 +659,11 @@ class PUM_Admin_Settings {
 				]
 			);
 
-			if ( ! \PopupMaker\plugin()->is_pro_active() || ! \PopupMaker\owns_licensing_capability( 'license_ui_owner', 'popup-maker' ) ) {
+			if ( ! $pro_installed ) {
 				unset( $fields['go-pro']['main']['popup_maker_pro_license_key'] );
 			}
 
-			if ( ! \PopupMaker\plugin()->is_pro_active() ) {
+			if ( ! $pro_installed ) {
 				$fields['go-pro']['main']['popup_maker_pro_placeholder'] = [
 					'type'    => 'html',
 					'content' => '',
@@ -757,7 +762,7 @@ class PUM_Admin_Settings {
 						<li><?php esc_html_e( '6 Exit Intent Methods — desktop + mobile', 'popup-maker' ); ?></li>
 						<li><?php esc_html_e( 'Event-Based Analytics Dashboard', 'popup-maker' ); ?></li>
 						<li><?php esc_html_e( '50+ Advanced Targeting Conditions', 'popup-maker' ); ?></li>
-						<li><?php esc_html_e( '[New] Split Testing', 'popup-maker' ); ?></li>
+						<li><?php esc_html_e( 'FluentCRM Marketing Automation', 'popup-maker' ); ?></li>
 						<li><?php esc_html_e( 'CTA Value Tracking & Export/Import', 'popup-maker' ); ?></li>
 						<li><?php esc_html_e( 'Campaign Scheduling with Timezones', 'popup-maker' ); ?></li>
 					</ul>
@@ -996,7 +1001,7 @@ class PUM_Admin_Settings {
 
 		<?php
 		// Output upsell template — hero for free users, Pro+ bars for anyone missing addons.
-		$upsell_hero     = \PopupMaker\plugin( 'license' )->is_license_active() ? '' : self::field_go_pro_hero();
+		$upsell_hero     = \PopupMaker\plugin()->is_license_active() ? '' : self::field_go_pro_hero();
 		$upsell_features = self::field_go_pro_features();
 
 		// Only output template if there's something to show.
@@ -1113,7 +1118,7 @@ class PUM_Admin_Settings {
 					'licenses'      => __( 'Licenses', 'popup-maker' ),
 					'privacy'       => __( 'Privacy', 'popup-maker' ),
 					'misc'          => __( 'Misc', 'popup-maker' ),
-					'go-pro'        => \PopupMaker\plugin( 'license' )->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
+					'go-pro'        => \PopupMaker\plugin()->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
 				]
 			);
 
@@ -1154,7 +1159,7 @@ class PUM_Admin_Settings {
 					'assets' => __( 'Assets', 'popup-maker' ),
 				],
 				'go-pro'        => [
-					'main' => \PopupMaker\plugin( 'license' )->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
+					'main' => \PopupMaker\plugin()->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
 				],
 			]
 		);

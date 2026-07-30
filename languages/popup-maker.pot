@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Popup Maker <support@wppopupmaker.com>\n"
-"POT-Creation-Date: 2025-08-14 04:28+0000\n"
+"POT-Creation-Date: 2026-07-30 00:00+0000\n"
 "Report-Msgid-Bugs-To: https://wppopupmaker.com/support/\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -2477,18 +2477,6 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: classes/Services/Connect.php:220
-msgid "Sorry, You Are Not Allowed to Access This Page."
-msgstr ""
-
-#: classes/Services/Connect.php:454, classes/Services/Connect.php:514
-msgid "There was an error while installing an upgrade. Please download the plugin from wppopupmaker.com and install it manually."
-msgstr ""
-
-#: classes/Services/Connect.php:494, classes/Services/Connect.php:505
-msgid "Plugin installed & activated."
-msgstr ""
-
 #: classes/Services/License.php:384, classes/Services/License.php:435, classes/Services/License.php:492
 msgid "An error occurred, please try again."
 msgstr ""
@@ -2512,18 +2500,6 @@ msgstr ""
 
 #: classes/Services/License.php:488
 msgid "Your license key has reached its activation limit."
-msgstr ""
-
-#: classes/Services/Upgrader.php:94
-msgid "Plugin basename empty."
-msgstr ""
-
-#: classes/Services/Upgrader.php:123
-msgid "Unable to get filesystem credentials."
-msgstr ""
-
-#: classes/Services/Upgrader.php:135
-msgid "Upgrader missing install method."
 msgstr ""
 
 #: classes/Services/UpgradeStream.php:126
@@ -3402,4 +3378,20 @@ msgstr ""
 
 #: includes/integrations/ninja-forms/Actions/ClosePopup.php:56
 msgid "0"
+msgstr ""
+
+#: classes/Admin/Settings.php:804
+msgid "Already own Pro? Download it"
+msgstr ""
+
+#: classes/Admin/Templates.php:516
+msgid "Not Active"
+msgstr ""
+
+#: classes/RestAPI/License.php:115
+msgid "Enter a valid license key."
+msgstr ""
+
+#: classes/Admin/Settings.php:151, classes/RestAPI/License.php:156
+msgid "License deactivation failed."
 msgstr ""

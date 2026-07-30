@@ -143,7 +143,7 @@ class PUM_Extension_License {
 	}
 
 	/**
-	 * Check if Pro/Pro+ license key exists (active or not).
+	 * Check if an installed Pro/Pro+ plugin has a license key (active or not).
 	 *
 	 * This prevents users from managing extension licenses when a Pro key
 	 * is present, even if that Pro key is currently deactivated.
@@ -156,7 +156,12 @@ class PUM_Extension_License {
 		}
 
 		try {
-			$license_service = \PopupMaker\plugin()->get( 'license' );
+			$core = \PopupMaker\plugin();
+			if ( ! $core->is_pro_installed() ) {
+				return false;
+			}
+
+			$license_service = $core->get( 'license' );
 			$license_key     = $license_service->get_license_key();
 			// Check if Pro key exists and is not empty.
 			return ! empty( $license_key );
@@ -176,7 +181,12 @@ class PUM_Extension_License {
 		}
 
 		try {
-			$license_service = \PopupMaker\plugin()->get( 'license' );
+			$core = \PopupMaker\plugin();
+			if ( ! $core->is_pro_installed() ) {
+				return '';
+			}
+
+			$license_service = $core->get( 'license' );
 
 			if ( method_exists( $license_service, 'get_api_license_key' ) ) {
 				return $license_service->get_api_license_key();

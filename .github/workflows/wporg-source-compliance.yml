@@ -1,0 +1,29 @@
+name: WordPress.org Source Compliance
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+            - master
+            - develop
+
+permissions:
+    contents: read
+
+jobs:
+    verify-source:
+        name: Verify product source
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '20'
+
+            - name: Reject private plugin-delivery implementation
+              run: node bin/verify-wporg-artifact.js --source .

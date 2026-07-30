@@ -72,8 +72,8 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	 * Core alone keeps the Go Pro tab without rendering a redundant CTA field.
 	 */
 	public function test_core_alone_uses_hidden_go_pro_placeholder() {
-		if ( \PopupMaker\plugin()->is_pro_active() ) {
-			$this->markTestSkipped( 'Core-only UI assertion requires Pro to be inactive.' );
+		if ( \PopupMaker\plugin()->is_pro_installed() ) {
+			$this->markTestSkipped( 'Core-only UI assertion requires Pro to be absent.' );
 		}
 
 		$placeholder = PUM_Admin_Settings::get_field( 'popup_maker_pro_placeholder' );
@@ -86,6 +86,79 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Installed but inactive Pro keeps license UI and license-only REST routes.
+	 */
+	public function test_installed_inactive_pro_keeps_compatibility_surface() {
+		if ( function_exists( '\PopupMaker\Pro\plugin' ) ) {
+			$this->markTestSkipped( 'This compatibility assertion requires Pro to be inactive.' );
+		}
+
+		$pro_directory     = WP_PLUGIN_DIR . '/popup-maker-pro';
+		$pro_file          = $pro_directory . '/popup-maker-pro.php';
+		$created_directory = false;
+		$created_file      = false;
+
+		global $wp_rest_server;
+		$previous_server = $wp_rest_server;
+
+		try {
+			if ( ! file_exists( $pro_file ) ) {
+				if ( ! is_dir( $pro_directory ) ) {
+					$created_directory = wp_mkdir_p( $pro_directory );
+				}
+
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- The fixture needs to look like an installed plugin.
+				$created_file = false !== file_put_contents( $pro_file, "<?php\n" );
+				$this->assertTrue( $created_file, 'Could not create the dormant Pro fixture.' );
+			}
+
+			$wp_rest_server = new WP_REST_Server();
+
+			$this->assertTrue( \PopupMaker\plugin()->is_pro_installed() );
+			$this->assertFalse( \PopupMaker\plugin()->is_pro_active() );
+
+			$license_service = \PopupMaker\plugin( 'license' );
+			$this->assertNotFalse( has_action( 'init', [ $license_service, 'autoregister' ] ) );
+			$this->assertNotFalse( has_action( 'admin_init', [ $license_service, 'schedule_crons' ] ) );
+			$this->assertNotFalse( has_action( 'popup_maker_license_status_check', [ $license_service, 'refresh_license_status' ] ) );
+
+			$license_field = PUM_Admin_Settings::get_field( 'popup_maker_pro_license_key' );
+			$this->assertIsArray( $license_field );
+			$this->assertSame( 'pro_license', $license_field['type'] );
+
+			ob_start();
+			PUM_Admin_Templates::general_fields();
+			$templates = ob_get_clean();
+
+			$this->assertStringContainsString( 'tmpl-pum-field-pro_license', $templates );
+			$this->assertStringNotContainsString( 'pum-install-pro-button', $templates );
+			$this->assertStringNotContainsString( 'pum-license-connect-trigger', $templates );
+
+			\PopupMaker\plugin()->get_controller( 'RestAPI' )->register_routes();
+			$routes = $wp_rest_server->get_routes();
+
+			$this->assertArrayHasKey( '/popup-maker/v2/license', $routes );
+			$this->assertArrayHasKey( '/popup-maker/v2/license/activate', $routes );
+			$this->assertArrayHasKey( '/popup-maker/v2/license/deactivate', $routes );
+			$this->assertArrayNotHasKey( '/popup-maker/v2/license/activate-pro', $routes );
+			$this->assertArrayNotHasKey( '/popup-maker/v2/license/activate-plugin', $routes );
+			$this->assertArrayNotHasKey( '/popup-maker/v2/connect/install', $routes );
+		} finally {
+			$wp_rest_server = $previous_server;
+
+			if ( $created_file && file_exists( $pro_file ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Remove only the test-created fixture.
+				unlink( $pro_file );
+			}
+
+			if ( $created_directory && is_dir( $pro_directory ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Remove only the test-created empty directory.
+				rmdir( $pro_directory );
+			}
+		}
+	}
+
+	/**
 	 * The Go Pro hero gives existing customers a direct account download link.
 	 */
 	public function test_go_pro_hero_links_existing_customers_to_downloads() {
@@ -93,8 +166,127 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 
 		$this->assertStringContainsString( 'https://wppopupmaker.com/account/file-downloads/', $hero );
 		$this->assertStringContainsString( 'Already own Pro? Download it', $hero );
-		$this->assertStringContainsString( '[New] Split Testing', $hero );
-		$this->assertStringNotContainsString( 'FluentCRM Marketing Automation', $hero );
+		$this->assertStringContainsString( 'FluentCRM Marketing Automation', $hero );
+	}
+
+	/**
+	 * A historical stored license cannot hide Core's manual Pro acquisition path.
+	 */
+	public function test_core_alone_with_stored_license_keeps_manual_download_path() {
+		if ( \PopupMaker\plugin()->is_pro_installed() ) {
+			$this->markTestSkipped( 'Core-only migration assertion requires Pro to be absent.' );
+		}
+
+		$missing          = new stdClass();
+		$previous_license = get_option( 'popup_maker_license', $missing );
+		$license_service  = \PopupMaker\plugin( 'license' );
+		$cache_property   = new ReflectionProperty( $license_service, 'license_data' );
+
+		if ( PHP_VERSION_ID < 80100 ) {
+			$cache_property->setAccessible( true );
+		}
+
+		try {
+			update_option(
+				'popup_maker_license',
+				[
+					'key'    => 'historical-license-key',
+					'status' => [
+						'success'      => true,
+						'license'      => 'valid',
+						'license_tier' => 'pro_plus',
+					],
+				]
+			);
+			$cache_property->setValue( $license_service, null );
+
+			$this->assertTrue( $license_service->is_license_active() );
+			$this->assertFalse( \PopupMaker\plugin()->is_license_active() );
+			$this->assertSame( 'Go Pro', PUM_Admin_Settings::tabs()['go-pro'] );
+			$this->assertSame( 'Go Pro', PUM_Admin_Settings::sections()['go-pro']['main'] );
+
+			ob_start();
+			PUM_Admin_Settings::page();
+			$page = ob_get_clean();
+
+			$this->assertStringContainsString( 'https://wppopupmaker.com/account/file-downloads/', $page );
+			$this->assertStringContainsString( 'Already own Pro? Download it', $page );
+		} finally {
+			if ( $missing === $previous_license ) {
+				delete_option( 'popup_maker_license' );
+			} else {
+				update_option( 'popup_maker_license', $previous_license );
+			}
+
+			$cache_property->setValue( $license_service, null );
+		}
+	}
+
+	/**
+	 * A stale Core Pro key cannot replace an add-on's own license without Pro.
+	 */
+	public function test_core_alone_with_stored_license_keeps_addon_license() {
+		if ( \PopupMaker\plugin()->is_pro_installed() ) {
+			$this->markTestSkipped( 'Core-only add-on assertion requires Pro to be absent.' );
+		}
+
+		$missing                   = new stdClass();
+		$previous_license          = get_option( 'popup_maker_license', $missing );
+		$addon_license_option      = 'popmake_legacy_addon_test_license_key';
+		$previous_addon_license    = PUM_Utils_Options::get( $addon_license_option, $missing );
+		$license_service           = \PopupMaker\plugin( 'license' );
+		$cache_property            = new ReflectionProperty( $license_service, 'license_data' );
+		$extension_reflection      = new ReflectionClass( PUM_Extension_License::class );
+		$extension                 = $extension_reflection->newInstanceWithoutConstructor();
+		$item_name_property        = $extension_reflection->getProperty( 'item_name' );
+		$item_shortname_property   = $extension_reflection->getProperty( 'item_shortname' );
+		$effective_license_method  = $extension_reflection->getMethod( 'get_effective_license_key' );
+		$extension_settings_method = $extension_reflection->getMethod( 'settings' );
+
+		if ( PHP_VERSION_ID < 80100 ) {
+			$cache_property->setAccessible( true );
+			$item_name_property->setAccessible( true );
+			$item_shortname_property->setAccessible( true );
+			$effective_license_method->setAccessible( true );
+		}
+
+		try {
+			update_option(
+				'popup_maker_license',
+				[
+					'key'    => 'historical-pro-license-key',
+					'status' => [
+						'success' => false,
+						'license' => 'expired',
+					],
+				]
+			);
+			PUM_Utils_Options::update( $addon_license_option, 'addon-specific-key' );
+			$cache_property->setValue( $license_service, null );
+			$item_name_property->setValue( $extension, 'Legacy Addon Test' );
+			$item_shortname_property->setValue( $extension, 'popmake_legacy_addon_test' );
+
+			$fields = $extension_settings_method->invoke( $extension, [] );
+
+			$this->assertSame( 'addon-specific-key', $effective_license_method->invoke( $extension ) );
+			$this->assertFalse(
+				$fields['licenses']['main'][ $addon_license_option ]['options']['using_pro_license']
+			);
+		} finally {
+			if ( $missing === $previous_license ) {
+				delete_option( 'popup_maker_license' );
+			} else {
+				update_option( 'popup_maker_license', $previous_license );
+			}
+
+			if ( $missing === $previous_addon_license ) {
+				PUM_Utils_Options::delete( $addon_license_option );
+			} else {
+				PUM_Utils_Options::update( $addon_license_option, $previous_addon_license );
+			}
+
+			$cache_property->setValue( $license_service, null );
+		}
 	}
 
 	// ------------------------------------------------------------------

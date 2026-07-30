@@ -202,6 +202,35 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 	}
 
 	/**
+	 * Test license deactivation handles transport errors.
+	 */
+	public function test_license_deactivation_api_error() {
+		wp_set_current_user( $this->admin_user_id );
+
+		update_option( 'popup_maker_license', [
+			'key'    => 'test-license-key-error',
+			'status' => [
+				'success' => true,
+				'license' => 'valid',
+			],
+		] );
+		$this->reset_license_cache();
+
+		$request = new WP_REST_Request( 'POST', '/popup-maker/v2/license/deactivate' );
+
+		add_filter( 'pre_http_request', [ $this, 'mock_license_api_error' ], 10, 3 );
+
+		try {
+			$response = $this->server->dispatch( $request );
+		} finally {
+			remove_filter( 'pre_http_request', [ $this, 'mock_license_api_error' ] );
+		}
+
+		$this->assertEquals( 400, $response->get_status() );
+		$this->assertSame( 'license_deactivation_failed', $response->get_data()['code'] );
+	}
+
+	/**
 	 * Test invalid license key validation.
 	 */
 	public function test_invalid_license_key_validation() {

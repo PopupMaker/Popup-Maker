@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Pro license management.
  *
- * NOTE: For wordpress.org admins: This is only used if:
- * - The user explicitly entered a Pro license key.
+ * Retained for separately installed Pro and legacy private extensions. Its
+ * lifecycle callbacks only run while Pro is installed.
  *
  * @package PopupMaker
  */
@@ -88,10 +88,6 @@ class License extends Service {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( ! $this->owns_license_lifecycle() ) {
-			return;
-		}
-
 		add_action( 'init', [ $this, 'autoregister' ] );
 		add_action( 'popup_maker_license_status_check', [ $this, 'refresh_license_status' ] );
 		add_action( 'admin_init', [ $this, 'schedule_crons' ] );
@@ -110,7 +106,7 @@ class License extends Service {
 	 * @return void
 	 */
 	public function autoregister() {
-		if ( ! $this->owns_license_lifecycle() ) {
+		if ( ! $this->should_run_license_lifecycle() ) {
 			return;
 		}
 
@@ -257,7 +253,7 @@ class License extends Service {
 	 * @return void
 	 */
 	public function schedule_crons() {
-		if ( ! $this->owns_license_lifecycle() ) {
+		if ( ! $this->should_run_license_lifecycle() ) {
 			return;
 		}
 
@@ -603,7 +599,7 @@ class License extends Service {
 	 * @return bool
 	 */
 	public function refresh_license_status(): bool {
-		if ( ! $this->owns_license_lifecycle() ) {
+		if ( ! $this->should_run_license_lifecycle() ) {
 			return false;
 		}
 
@@ -980,7 +976,7 @@ class License extends Service {
 	 * @return mixed Settings editor args.
 	 */
 	public function filter_settings_editor_args( $args ) {
-		if ( ! $this->owns_license_lifecycle() || ! $this->container->is_pro_active() ) {
+		if ( ! $this->should_run_license_lifecycle() ) {
 			return $args;
 		}
 
@@ -1092,21 +1088,21 @@ class License extends Service {
 	}
 
 	/**
-	 * Check whether Core owns the active license lifecycle.
+	 * Check whether the compatibility license lifecycle is needed.
 	 *
 	 * @return bool
 	 */
-	private function owns_license_lifecycle() {
-		return \PopupMaker\owns_licensing_capability( 'license_provider', 'popup-maker' );
+	private function should_run_license_lifecycle() {
+		return $this->container->is_pro_installed();
 	}
 
-		/**
-		 * Star the key.
-		 *
-		 * @param string $key The key to star.
-		 *
-		 * @return string The starred key.
-		 */
+	/**
+	 * Star the key.
+	 *
+	 * @param string $key The key to star.
+	 *
+	 * @return string The starred key.
+	 */
 	public static function star_key( string $key ): string {
 		if ( empty( $key ) ) {
 			return '';

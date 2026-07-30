@@ -212,57 +212,18 @@ class PluginReleaseBuilder {
 		const pluginDir = path.join( this.projectRoot, this.pluginName );
 		this.removeDirectory( pluginDir );
 
-		// Clean any existing zip files for this version
-		const existingZip = path.join(
-			this.outputDir,
-			`${ this.pluginName }_${ this.version }.zip`
-		);
-
-		if ( fs.existsSync( existingZip ) ) {
-			if ( this.options.verbose ) {
-				console.log(
-					`Removing existing zip: ${ path.relative(
-						this.projectRoot,
-						existingZip
-					) }`
-				);
+		for ( const artifactPath of this.getReleaseArtifactCandidates() ) {
+			if ( fs.existsSync( artifactPath ) ) {
+				if ( this.options.verbose ) {
+					console.log(
+						`Removing existing zip: ${ path.relative(
+							this.projectRoot,
+							artifactPath
+						) }`
+					);
+				}
+				fs.unlinkSync( artifactPath );
 			}
-			fs.unlinkSync( existingZip );
-		}
-
-		// Clean any existing zip files for -latest.zip
-		const latestZip = path.join(
-			this.outputDir,
-			`${ this.pluginName }-latest.zip`
-		);
-
-		if ( fs.existsSync( latestZip ) ) {
-			if ( this.options.verbose ) {
-				console.log(
-					`Removing existing zip: ${ path.relative(
-						this.projectRoot,
-						latestZip
-					) }`
-				);
-			}
-			fs.unlinkSync( latestZip );
-		}
-
-		const configuredZip = path.join(
-			this.outputDir,
-			this.getZipFileName()
-		);
-
-		if ( fs.existsSync( configuredZip ) ) {
-			if ( this.options.verbose ) {
-				console.log(
-					`Removing existing zip: ${ path.relative(
-						this.projectRoot,
-						configuredZip
-					) }`
-				);
-			}
-			fs.unlinkSync( configuredZip );
 		}
 	}
 
@@ -356,6 +317,30 @@ class PluginReleaseBuilder {
 		return zipName;
 	}
 
+	getReleaseArtifactCandidates() {
+		const directories = new Set( [ this.projectRoot, this.outputDir ] );
+		const fileNames = new Set( [
+			`${ this.pluginName }-latest.zip`,
+			`${ this.pluginName }_${ this.version }.zip`,
+		] );
+
+		try {
+			fileNames.add( this.getZipFileName() );
+		} catch {
+			// Preserve the original build error; unsafe names cannot be artifacts.
+		}
+
+		const artifactPaths = [];
+
+		for ( const directory of directories ) {
+			for ( const fileName of fileNames ) {
+				artifactPaths.push( path.join( directory, fileName ) );
+			}
+		}
+
+		return artifactPaths;
+	}
+
 	createZipFiles() {
 		if ( ! this.options.quiet ) {
 			console.log( '\n=== Creating release zip ===' );
@@ -414,6 +399,18 @@ class PluginReleaseBuilder {
 		);
 	}
 
+	verifySource() {
+		this.executeFile(
+			process.execPath,
+			[
+				path.join( this.projectRoot, 'bin/verify-wporg-artifact.js' ),
+				'--source',
+				this.projectRoot,
+			],
+			'Verifying WordPress.org source'
+		);
+	}
+
 	announceRelease( zipPath ) {
 		console.log(
 			`\n✅ Release created: \n- ${ path.relative(
@@ -424,15 +421,14 @@ class PluginReleaseBuilder {
 	}
 
 	removeReleaseArtifacts( zipPath = null ) {
-		const artifactPaths = new Set( this.releaseArtifactPaths || [] );
+		const artifactPaths = new Set( [
+			...this.getReleaseArtifactCandidates(),
+			...( this.releaseArtifactPaths || [] ),
+		] );
 
 		if ( zipPath ) {
 			artifactPaths.add( zipPath );
 		}
-
-		artifactPaths.add(
-			path.join( this.projectRoot, `${ this.pluginName }-latest.zip` )
-		);
 
 		for ( const artifactPath of artifactPaths ) {
 			if ( artifactPath && fs.existsSync( artifactPath ) ) {
@@ -476,6 +472,7 @@ class PluginReleaseBuilder {
 		let zipPath = null;
 
 		try {
+			this.verifySource();
 			this.cleanBuildArtifacts();
 
 			// Run composer and npm builds in parallel for significant time savings
@@ -484,8 +481,8 @@ class PluginReleaseBuilder {
 			this.copyDistributionFiles();
 			zipPath = this.createZipFiles();
 			this.verifyArtifact( zipPath );
-			this.announceRelease( zipPath );
 			this.cleanup();
+			this.announceRelease( zipPath );
 
 			if ( ! this.options.quiet ) {
 				console.log( `\n✅ Release build completed successfully!` );

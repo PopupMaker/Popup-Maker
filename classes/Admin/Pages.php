@@ -49,6 +49,15 @@ class PUM_Admin_Pages {
 	 * @return array|null Menu item array or null to exclude from menu.
 	 */
 	private static function get_upgrade_menu_item() {
+		if ( ! \PopupMaker\plugin()->is_pro_installed() ) {
+			return [
+				'page_title' => __( 'Go Pro', 'popup-maker' ),
+				'menu_slug'  => 'pum-settings#go-pro',
+				'capability' => 'edit_posts',
+				'callback'   => [ 'PUM_Admin_Settings', 'page' ],
+			];
+		}
+
 		try {
 			$license_service = \PopupMaker\plugin( 'license' );
 			$license_status  = $license_service->get_license_status();

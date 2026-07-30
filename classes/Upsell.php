@@ -127,7 +127,7 @@ class PUM_Upsell {
 		 */
 
 		// 1. Pro Plus users with valid license see nothing.
-		if ( 'valid' === $license_status && 'pro_plus' === $license_tier ) {
+		if ( \PopupMaker\plugin()->is_pro_installed() && 'valid' === $license_status && 'pro_plus' === $license_tier ) {
 			return '';
 		}
 
@@ -194,13 +194,14 @@ class PUM_Upsell {
 			return $triggers;
 		}
 
-		$license_service = \PopupMaker\plugin( 'license' );
-		$license_tier    = $license_service->get_license_tier();
-		$license_status  = $license_service->get_license_status();
-		$integrations    = self::detect_integrations();
-		$has_ecommerce   = ! empty( $integrations['pro_plus']['ecommerce'] );
-		$has_lms         = ! empty( $integrations['pro_plus']['lms'] );
-		$has_crm         = ! empty( $integrations['pro']['crm'] );
+		$license_service  = \PopupMaker\plugin( 'license' );
+		$is_pro_installed = \PopupMaker\plugin()->is_pro_installed();
+		$license_tier     = $is_pro_installed ? $license_service->get_license_tier() : 'pro';
+		$license_status   = $is_pro_installed ? $license_service->get_license_status() : 'empty';
+		$integrations     = self::detect_integrations();
+		$has_ecommerce    = ! empty( $integrations['pro_plus']['ecommerce'] );
+		$has_lms          = ! empty( $integrations['pro_plus']['lms'] );
+		$has_crm          = ! empty( $integrations['pro']['crm'] );
 
 		// Get form conversion count (will be 0 if service not available).
 		$form_count = self::get_form_conversion_count();
@@ -1116,23 +1117,25 @@ class PUM_Upsell {
 				'class' => 'pum-upgrade-tab pum-upgrade-tab-pro',
 			];
 
-			// Adjust based on license status.
-			try {
-				$license_service = \PopupMaker\plugin( 'license' );
-				$license_status  = $license_service->get_license_status();
-				$license_tier    = $license_service->get_license_tier();
+			// Adjust based on license status only when Pro is installed.
+			if ( \PopupMaker\plugin()->is_pro_installed() ) {
+				try {
+					$license_service = \PopupMaker\plugin( 'license' );
+					$license_status  = $license_service->get_license_status();
+					$license_tier    = $license_service->get_license_tier();
 
-				if ( 'valid' === $license_status ) {
-					if ( 'pro_plus' === $license_tier ) {
-						$upgrade_tab = null; // Pro Plus - hide upgrade tab.
-					} elseif ( 'pro' === $license_tier ) {
-						$upgrade_tab['name']  = esc_html__( 'Go Pro+', 'popup-maker' );
-						$upgrade_tab['class'] = 'pum-upgrade-tab pum-upgrade-tab-pro-plus';
+					if ( 'valid' === $license_status ) {
+						if ( 'pro_plus' === $license_tier ) {
+							$upgrade_tab = null; // Pro Plus - hide upgrade tab.
+						} elseif ( 'pro' === $license_tier ) {
+							$upgrade_tab['name']  = esc_html__( 'Go Pro+', 'popup-maker' );
+							$upgrade_tab['class'] = 'pum-upgrade-tab pum-upgrade-tab-pro-plus';
+						}
 					}
+				} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+					// Use default configuration if license service unavailable.
+					unset( $e ); // Prevent unused variable warning.
 				}
-			} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-				// Use default configuration if license service unavailable.
-				unset( $e ); // Prevent unused variable warning.
 			}
 
 			$tabs = [

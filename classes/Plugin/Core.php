@@ -456,7 +456,7 @@ final class Core extends \PopupMaker\Plugin\Container {
 	 * @return boolean
 	 */
 	public function is_license_active() {
-		return $this->get( 'license' )->is_license_active();
+		return $this->is_pro_installed() && $this->get( 'license' )->is_license_active();
 	}
 
 	/**

@@ -144,7 +144,13 @@ class License extends WP_REST_Controller {
 	public function deactivate_license( $request ) {
 		unset( $request );
 
-		if ( ! \PopupMaker\plugin( 'license' )->deactivate_license() ) {
+		try {
+			$deactivated = \PopupMaker\plugin( 'license' )->deactivate_license();
+		} catch ( \Exception $e ) {
+			$deactivated = false;
+		}
+
+		if ( ! $deactivated ) {
 			return new WP_Error(
 				'license_deactivation_failed',
 				__( 'License deactivation failed.', 'popup-maker' ),

@@ -58,6 +58,7 @@ describe( 'PluginReleaseBuilder verification safety', () => {
 	test( 'removes every ZIP and reports no success when verification fails', async () => {
 		const builder = createBuilder();
 		const artifacts = mockZipCreation( builder );
+		builder.verifySource = jest.fn();
 		builder.runParallelBuilds = jest.fn().mockResolvedValue();
 		builder.copyDistributionFiles = jest.fn();
 		builder.cleanup = jest.fn();
@@ -85,9 +86,17 @@ describe( 'PluginReleaseBuilder verification safety', () => {
 		const builder = createBuilder();
 		const { versionedZip } = mockZipCreation( builder );
 		const callOrder = [];
-		builder.runParallelBuilds = jest.fn().mockResolvedValue();
+		builder.verifySource = jest.fn( () => {
+			callOrder.push( 'source' );
+		} );
+		builder.runParallelBuilds = jest.fn( () => {
+			callOrder.push( 'build' );
+			return Promise.resolve();
+		} );
 		builder.copyDistributionFiles = jest.fn();
-		builder.cleanup = jest.fn();
+		builder.cleanup = jest.fn( () => {
+			callOrder.push( 'cleanup' );
+		} );
 		builder.verifyArtifact = jest.fn( () => {
 			callOrder.push( 'verify' );
 		} );
@@ -97,8 +106,62 @@ describe( 'PluginReleaseBuilder verification safety', () => {
 
 		await expect( builder.build() ).resolves.toBe( versionedZip );
 
-		expect( callOrder ).toEqual( [ 'verify', 'announce' ] );
+		expect( callOrder ).toEqual( [
+			'source',
+			'build',
+			'verify',
+			'cleanup',
+			'announce',
+		] );
 		expect( fs.existsSync( versionedZip ) ).toBe( true );
 		expect( console ).toHaveLoggedWith( '🚀 Building popup-maker v1.23.0' );
+	} );
+
+	test( 'removes stale release ZIPs when source verification fails', async () => {
+		const builder = createBuilder();
+		const latestZip = path.join(
+			builder.projectRoot,
+			'popup-maker-latest.zip'
+		);
+		const versionedZip = path.join(
+			builder.projectRoot,
+			'popup-maker_1.23.0.zip'
+		);
+
+		fs.writeFileSync( latestZip, 'stale latest artifact' );
+		fs.writeFileSync( versionedZip, 'stale versioned artifact' );
+
+		builder.verifySource = jest.fn( () => {
+			throw new Error( 'source verification failed' );
+		} );
+		builder.cleanup = jest.fn();
+		builder.announceRelease = jest.fn();
+
+		await expect( builder.build() ).rejects.toThrow(
+			'source verification failed'
+		);
+
+		expect( fs.existsSync( latestZip ) ).toBe( false );
+		expect( fs.existsSync( versionedZip ) ).toBe( false );
+		expect( builder.announceRelease ).not.toHaveBeenCalled();
+		expect( console ).toHaveLoggedWith( '🚀 Building popup-maker v1.23.0' );
+	} );
+
+	test( 'cleans stale root and custom-output artifacts before building', () => {
+		const builder = createBuilder();
+		const outputDir = path.join( builder.projectRoot, 'release-output' );
+		fs.mkdirSync( outputDir );
+		builder.outputDir = outputDir;
+
+		const artifactPaths = builder.getReleaseArtifactCandidates();
+		for ( const artifactPath of artifactPaths ) {
+			fs.writeFileSync( artifactPath, 'stale artifact' );
+		}
+
+		builder.cleanBuildArtifacts();
+
+		for ( const artifactPath of artifactPaths ) {
+			expect( fs.existsSync( artifactPath ) ).toBe( false );
+		}
 	} );
 } );

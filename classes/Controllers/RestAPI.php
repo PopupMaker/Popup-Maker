@@ -50,7 +50,7 @@ class RestAPI extends Controller {
 	 * @return void
 	 */
 	public function register_routes() {
-		if ( \PopupMaker\owns_licensing_capability( 'license_ui_owner', 'popup-maker' ) && $this->container->is_pro_active() ) {
+		if ( $this->container->is_pro_installed() ) {
 			( new \PopupMaker\RestAPI\License() )->register_routes();
 		}
 
