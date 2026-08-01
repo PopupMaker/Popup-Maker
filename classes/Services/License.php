@@ -183,6 +183,14 @@ class License extends Service {
 		$license_data = $this->get_license_data();
 		$db_key       = isset( $license_data['key'] ) ? $license_data['key'] : '';
 
+		// A manually configured license takes precedence. Add-on packages can
+		// ship a POPUP_MAKER_PRO_LICENSE constant; converting an existing real
+		// key to auto-management would leave the site unlicensed when the
+		// defining add-on is later deactivated.
+		if ( '' !== $db_key && '***AUTO***' !== $db_key ) {
+			return;
+		}
+
 		// Self-healing: ensure DB has placeholder, not real key
 		if ( '***AUTO***' !== $db_key || empty( $license_data['auto_activation']['enabled'] ) ) {
 			$license_data = [
@@ -232,6 +240,23 @@ class License extends Service {
 		// A real key means the user activated manually — never wipe it.
 		if ( '***AUTO***' !== ( $license_data['key'] ?? '' ) ) {
 			$this->clear_transients();
+			return;
+		}
+
+		// Prefer restoring the retained settings key over leaving the site
+		// unlicensed — the constant's key is mirrored there on activation.
+		$mirror_key = \PUM_Utils_Options::get( self::SETTINGS_KEY, '' );
+
+		if ( is_string( $mirror_key ) && '' !== trim( $mirror_key ) && '***AUTO***' !== trim( $mirror_key ) ) {
+			$license_data['key']             = trim( $mirror_key );
+			$license_data['status']          = null;
+			$license_data['auto_activation'] = null;
+
+			$this->update_license_data( $license_data );
+			$this->clear_transients();
+
+			\PopupMaker\logging()->info( 'Auto-activation constant POPUP_MAKER_PRO_LICENSE was removed; restored the retained license key at ' . gmdate( 'Y-m-d H:i:s' ) );
+
 			return;
 		}
 
