@@ -250,7 +250,7 @@ class PUM_Admin_Templates {
 		</script>
 
 		<?php
-		if ( \PopupMaker\plugin()->is_pro_installed() ) {
+		if ( \PopupMaker\plugin()->should_run_legacy_license_compatibility() ) {
 			$license_service   = \PopupMaker\plugin( 'license' );
 			$is_auto_activated = $license_service->is_auto_activated();
 

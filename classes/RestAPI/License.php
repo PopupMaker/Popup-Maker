@@ -18,6 +18,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Keeps released Pro versions compatible without exposing installation routes.
+ *
+ * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
  */
 class License extends WP_REST_Controller {
 
@@ -38,9 +40,15 @@ class License extends WP_REST_Controller {
 	/**
 	 * Register license-only routes.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return void
 	 */
 	public function register_routes() {
+		if ( ! $this->compatibility_enabled() ) {
+			return;
+		}
+
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base,
@@ -88,6 +96,8 @@ class License extends WP_REST_Controller {
 	/**
 	 * Get license information.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return WP_REST_Response
@@ -100,6 +110,12 @@ class License extends WP_REST_Controller {
 
 	/**
 	 * Activate a stored license.
+	 *
+	 * Kept callable so existing Core 1.23.x and Pro versions older than 1.2.0
+	 * can activate, deactivate, and recover licenses during the short migration
+	 * window. Pro 1.2.0+ does not use this endpoint.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 *
@@ -137,6 +153,8 @@ class License extends WP_REST_Controller {
 	/**
 	 * Deactivate the stored license.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return WP_REST_Response|WP_Error
@@ -164,6 +182,8 @@ class License extends WP_REST_Controller {
 	/**
 	 * Check license-management permissions.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return true|WP_Error
@@ -171,7 +191,7 @@ class License extends WP_REST_Controller {
 	public function permissions_check( $request ) {
 		unset( $request );
 
-		if ( current_user_can( 'manage_options' ) ) {
+		if ( $this->compatibility_enabled() && current_user_can( 'manage_options' ) ) {
 			return true;
 		}
 
@@ -180,6 +200,17 @@ class License extends WP_REST_Controller {
 			__( 'Sorry, you are not allowed to manage licenses.', 'popup-maker' ),
 			[ 'status' => rest_authorization_required_code() ]
 		);
+	}
+
+	/**
+	 * Check the guarded legacy compatibility state.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
+	 * @return bool
+	 */
+	protected function compatibility_enabled() {
+		return \PopupMaker\plugin()->should_run_legacy_license_compatibility();
 	}
 
 	/**

@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 final class Core extends \PopupMaker\Plugin\Container {
 
 	/**
+	 * Flag defined by Pro 1.2.0+ when Pro owns license management.
+	 *
+	 * @var string
+	 */
+	const PRO_LICENSE_OWNER_FLAG = 'POPUP_MAKER_PRO_OWNS_LICENSE_MANAGEMENT';
+
+	/**
 	 * Initiate the plugin.
 	 *
 	 * @param array<string,string|bool> $config Configuration variables passed from main plugin file.
@@ -187,7 +194,14 @@ final class Core extends \PopupMaker\Plugin\Container {
 		$this->set(
 			'license',
 			/**
-			 * Get plugin license.
+			 * Get the legacy Pro license compatibility service.
+			 *
+			 * Retained only for active Pro versions older than 1.2.0, including
+			 * activation of an invalid or deactivated license. Pro 1.2.0+ owns
+			 * license management and disables this compatibility service
+			 * with POPUP_MAKER_PRO_OWNS_LICENSE_MANAGEMENT.
+			 *
+			 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 			 *
 			 * @return License
 			 */
@@ -313,7 +327,9 @@ final class Core extends \PopupMaker\Plugin\Container {
 	 * @return void
 	 */
 	protected function init_services() {
-		$license = $this->get( 'license' );
+		// Resolve the legacy service for its guarded, deferred bootstrap.
+		// This runs only after all active plugins, including Pro, have loaded.
+		$this->get( 'license' );
 
 		// Initialize link click tracking.
 		$link_click_tracking = $this->get( 'link_click_tracking' );
@@ -453,10 +469,48 @@ final class Core extends \PopupMaker\Plugin\Container {
 	/**
 	 * Check if license is active.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return boolean
 	 */
 	public function is_license_active() {
-		return $this->is_pro_installed() && $this->get( 'license' )->is_license_active();
+		return $this->should_run_legacy_license_compatibility()
+			&& $this->get( 'license' )->is_license_active();
+	}
+
+	/**
+	 * Check whether Pro has taken ownership of license management.
+	 *
+	 * Pro 1.2.0+ defines POPUP_MAKER_PRO_OWNS_LICENSE_MANAGEMENT before Core's
+	 * deferred compatibility bootstrap runs. The version check is a defensive
+	 * fallback. When either signal is present, Core must not expose its legacy
+	 * license hooks, settings operations, or REST endpoints.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
+	 * @return bool
+	 */
+	public function pro_owns_license_management() {
+		$pro_version = $this->get_pro_version();
+
+		return defined( self::PRO_LICENSE_OWNER_FLAG )
+			|| ( '' !== $pro_version && version_compare( $pro_version, '1.2.0', '>=' ) );
+	}
+
+	/**
+	 * Check whether Core should expose its legacy Pro license compatibility.
+	 *
+	 * This path exists only for active Pro versions older than 1.2.0. It remains
+	 * available regardless of current license status so those users can activate,
+	 * deactivate, and recover licenses. New Pro releases own the lifecycle.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
+	 * @return bool
+	 */
+	public function should_run_legacy_license_compatibility() {
+		return ! $this->pro_owns_license_management()
+			&& $this->is_pro_active();
 	}
 
 	/**

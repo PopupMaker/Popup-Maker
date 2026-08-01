@@ -392,22 +392,10 @@ class PluginReleaseBuilder {
 		this.executeFile(
 			process.execPath,
 			[
-				path.join( this.projectRoot, 'bin/verify-wporg-artifact.js' ),
+				path.join( this.projectRoot, 'bin/verify-release-artifact.js' ),
 				zipPath,
 			],
-			'Verifying WordPress.org artifact'
-		);
-	}
-
-	verifySource() {
-		this.executeFile(
-			process.execPath,
-			[
-				path.join( this.projectRoot, 'bin/verify-wporg-artifact.js' ),
-				'--source',
-				this.projectRoot,
-			],
-			'Verifying WordPress.org source'
+			'Verifying release artifact'
 		);
 	}
 
@@ -472,7 +460,6 @@ class PluginReleaseBuilder {
 		let zipPath = null;
 
 		try {
-			this.verifySource();
 			this.cleanBuildArtifacts();
 
 			// Run composer and npm builds in parallel for significant time savings

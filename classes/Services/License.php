@@ -16,9 +16,12 @@ defined( 'ABSPATH' ) || exit;
  * Pro license management.
  *
  * Retained for separately installed Pro and legacy private extensions. Its
- * lifecycle callbacks only run while Pro is installed.
+ * lifecycle callbacks only run for active Pro versions older than 1.2.0,
+ * including when their license needs activation. Pro 1.2.0+ defines
+ * POPUP_MAKER_PRO_OWNS_LICENSE_MANAGEMENT and owns this lifecycle completely.
  *
  * @package PopupMaker
+ * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
  */
 class License extends Service {
 
@@ -72,12 +75,38 @@ class License extends Service {
 	private $license_data;
 
 	/**
+	 * Whether the guarded legacy hooks have been registered.
+	 *
+	 * @var bool
+	 */
+	private $hooks_registered = false;
+
+	/**
 	 * Initialize license management.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @param \PopupMaker\Plugin\Core $container Plugin container.
 	 */
 	public function __construct( $container ) {
 		parent::__construct( $container );
+
+		// Core initializes at plugins_loaded priority 11 and Pro at 12.
+		// Defer until Pro has declared whether it owns license management.
+		add_action( 'plugins_loaded', [ $this, 'maybe_register_hooks' ], 100 );
+	}
+
+	/**
+	 * Register the legacy hooks only for an active old Pro install.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
+	 * @return void
+	 */
+	public function maybe_register_hooks() {
+		if ( ! $this->should_run_license_lifecycle() ) {
+			return;
+		}
 
 		$this->register_hooks();
 	}
@@ -85,9 +114,17 @@ class License extends Service {
 	/**
 	 * Register hooks.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return void
 	 */
 	public function register_hooks() {
+		if ( $this->hooks_registered || ! $this->should_run_license_lifecycle() ) {
+			return;
+		}
+
+		$this->hooks_registered = true;
+
 		add_action( 'init', [ $this, 'autoregister' ] );
 		add_action( 'popup_maker_license_status_check', [ $this, 'refresh_license_status' ] );
 		add_action( 'admin_init', [ $this, 'schedule_crons' ] );
@@ -102,6 +139,8 @@ class License extends Service {
 	 * - Simple detection and setup without complex monitoring
 	 * - Self-healing: automatically corrects DB state if needed
 	 * - Detects loss of auto-activation for debugging
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return void
 	 */
@@ -260,6 +299,8 @@ class License extends Service {
 	/**
 	 * Schedule cron jobs.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return void
 	 */
 	public function schedule_crons() {
@@ -274,6 +315,8 @@ class License extends Service {
 
 	/**
 	 * Get license data.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return array{key:string|null,status:array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null,auto_activation?:array{enabled:bool,constant_lost_at?:string|null}}
 	 */
@@ -314,6 +357,8 @@ class License extends Service {
 	 *
 	 * @uses \PopupMaker\Services\License::get_license_data() For source of truth.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return string
 	 */
 	public function get_license_key(): string {
@@ -335,6 +380,8 @@ class License extends Service {
 	 * Get license key for EDD API calls (extensions, updater, etc.).
 	 *
 	 * Unlike get_license_key(), this never returns display placeholders.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return string
 	 */
@@ -371,6 +418,8 @@ class License extends Service {
 	 *
 	 * @param bool $refresh Whether to refresh license status.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null
 	 */
 	public function get_license_status_data( ?bool $refresh = false ) {
@@ -401,6 +450,8 @@ class License extends Service {
 
 	/**
 	 * Get license status.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return 'empty'|'inactive'|'expired'|'error'|'valid'
 	 */
@@ -447,6 +498,8 @@ class License extends Service {
 	 *
 	 * Only used in pro version.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return int Integer representing license level.
 	 */
 	public function get_license_level(): int {
@@ -476,6 +529,8 @@ class License extends Service {
 
 	/**
 	 * Get license tier (pro or pro_plus).
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return string 'pro' or 'pro_plus' based on license data.
 	 */
@@ -586,6 +641,8 @@ class License extends Service {
 	 *
 	 * @param bool $as_datetime Whether to return as DateTime object.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return string|null|\DateTime
 	 */
 	public function get_license_expiration( ?bool $as_datetime = false ) {
@@ -605,6 +662,8 @@ class License extends Service {
 	/**
 	 * Fetch license status from remote server.
 	 * This is a blocking request.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return bool
 	 */
@@ -713,6 +772,12 @@ class License extends Service {
 	 * - Update Pro Activation Date
 	 * - Update License Status
 	 *
+	 * Kept callable so existing Core 1.23.x and Pro versions older than 1.2.0
+	 * can activate, deactivate, and recover licenses during the short migration
+	 * window. Pro 1.2.0+ does not use this method.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 *
 	 * @throws \Exception If there is an error.
@@ -750,6 +815,8 @@ class License extends Service {
 	 * - API Call: Deactivate License
 	 * - Update License Status
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 *
 	 * @throws \Exception If there is an error.
@@ -780,6 +847,8 @@ class License extends Service {
 	 * Convert license error to human readable message.
 	 *
 	 * @param array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null $license_status License status data.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return string
 	 */
@@ -840,6 +909,8 @@ class License extends Service {
 	 *
 	 * Caution: Destructive, this will remove the license key and status.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function remove_license(): bool {
@@ -876,6 +947,8 @@ class License extends Service {
 	 *
 	 * @param string $key License key.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function maybe_update_license_key( string $key ): bool {
@@ -905,6 +978,8 @@ class License extends Service {
 	 *
 	 * @param string $key License key.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function maybe_activate_license( ?string $key = null ): bool {
@@ -924,6 +999,8 @@ class License extends Service {
 	/**
 	 * Check if license is active.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function is_license_active() {
@@ -935,6 +1012,8 @@ class License extends Service {
 	 *
 	 * Uses database flag for reliable detection even when constant is removed.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function is_auto_activated(): bool {
@@ -944,6 +1023,8 @@ class License extends Service {
 
 	/**
 	 * Get auto-activation info for debugging.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return array{enabled:bool,constant_present:bool,db_key:string,constant_lost_at:string|null,status:string}|null
 	 */
@@ -983,6 +1064,9 @@ class License extends Service {
 	 * Add the license key value to the settings editor args, since its not actually stored in options array.
 	 *
 	 * @param mixed $args Settings editor args.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return mixed Settings editor args.
 	 */
 	public function filter_settings_editor_args( $args ) {
@@ -1064,6 +1148,9 @@ class License extends Service {
 	 * Map license status to template data.
 	 *
 	 * @param string $status License status from service.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return array Template data for license status.
 	 */
 	public function map_license_status( string $status ): array {
@@ -1103,13 +1190,15 @@ class License extends Service {
 	 * @return bool
 	 */
 	private function should_run_license_lifecycle() {
-		return $this->container->is_pro_installed();
+		return $this->container->should_run_legacy_license_compatibility();
 	}
 
 	/**
 	 * Star the key.
 	 *
 	 * @param string $key The key to star.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return string The starred key.
 	 */
