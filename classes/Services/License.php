@@ -120,11 +120,15 @@ class License extends Service {
 
 			$this->ensure_auto_activation_setup( $constant_key );
 		} else {
-			$is_auto_activated = isset( $license_data['auto_activation']['enabled'] );
+			$is_auto_activated = ! empty( $license_data['auto_activation']['enabled'] );
 			$constant_lost     = ! empty( $license_data['auto_activation']['constant_lost_at'] );
 
-			// If auto-activation is enabled and constant is not lost, handle loss.
-			if ( $is_auto_activated && ! $constant_lost ) {
+			// Only auto-managed placeholder keys are subject to constant-loss
+			// handling. A manually entered key must never be wiped by it, and
+			// stale enabled=false metadata must not arm the detector.
+			$is_placeholder = '***AUTO***' === ( $license_data['key'] ?? '' );
+
+			if ( $is_auto_activated && $is_placeholder && ! $constant_lost ) {
 				$this->handle_auto_activation_loss_with_delay();
 			}
 		}
@@ -224,6 +228,12 @@ class License extends Service {
 	 */
 	private function handle_auto_activation_loss(): void {
 		$license_data = $this->get_license_data();
+
+		// A real key means the user activated manually — never wipe it.
+		if ( '***AUTO***' !== ( $license_data['key'] ?? '' ) ) {
+			$this->clear_transients();
+			return;
+		}
 
 		// Mark as lost and clear license status so UI reflects the change
 		$license_data['auto_activation']['constant_lost_at'] = gmdate( 'Y-m-d H:i:s' );
