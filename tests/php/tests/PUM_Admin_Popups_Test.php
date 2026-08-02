@@ -364,6 +364,49 @@ class PUM_Admin_Popups_Test extends WP_UnitTestCase {
 	}
 
 	// ------------------------------------------------------------------
+	// add_popup_filters() — taxonomy filters and nonce handling.
+	// ------------------------------------------------------------------
+
+	/**
+	 * Popup filters use their own nonce without replacing the bulk action nonce.
+	 */
+	public function test_add_popup_filters_uses_distinct_nonce_and_restores_selection() {
+		global $typenow;
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		$original_get     = $_GET;
+		$original_typenow = $typenow;
+		$category         = wp_insert_term( 'Filter Category', 'popup_category' );
+		$tag              = wp_insert_term( 'Filter Tag', 'popup_tag' );
+
+		$this->assertNotWPError( $category );
+		$this->assertNotWPError( $tag );
+
+		$popup_id = self::factory()->post->create( [ 'post_type' => 'popup' ] );
+		wp_set_object_terms( $popup_id, [ $category['term_id'] ], 'popup_category' );
+		wp_set_object_terms( $popup_id, [ $tag['term_id'] ], 'popup_tag' );
+
+		$typenow = 'popup';
+		$_GET    = [
+			'pum_filter_nonce' => wp_create_nonce( 'pum-popup-filter-nonce' ),
+			'popup_category'   => get_term( $category['term_id'] )->slug,
+			'popup_tag'        => get_term( $tag['term_id'] )->slug,
+		];
+
+		ob_start();
+		PUM_Admin_Popups::add_popup_filters();
+		$output = (string) ob_get_clean();
+
+		$_GET    = $original_get;
+		$typenow = $original_typenow;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		$this->assertSame( 1, substr_count( $output, 'name="pum_filter_nonce"' ) );
+		$this->assertStringNotContainsString( 'name="_wpnonce"', $output );
+		$this->assertSame( 2, substr_count( $output, "selected='selected'" ) );
+	}
+
+	// ------------------------------------------------------------------
 	// handle_bulk_actions() — bulk enable/disable toggle logic.
 	// ------------------------------------------------------------------
 

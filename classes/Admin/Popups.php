@@ -1599,24 +1599,26 @@ class PUM_Admin_Popups {
 
 		// Checks if the current post type is 'popup'
 		if ( 'popup' === $typenow ) {
+			$filter_nonce_is_valid = isset( $_GET['pum_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['pum_filter_nonce'] ) ), 'pum-popup-filter-nonce' );
+			$has_filters           = false;
+
 			if ( get_taxonomy( 'popup_category' ) ) {
 				$terms = get_terms( 'popup_category' );
 
 				if ( count( $terms ) > 0 ) {
-					$category = '';
+					$has_filters = true;
+					$category    = '';
 
-					if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'pum-popup-filter-nonce' ) ) {
+					if ( $filter_nonce_is_valid ) {
 						$category = isset( $_GET['popup_category'] ) ? sanitize_key( wp_unslash( $_GET['popup_category'] ) ) : '';
 					}
 
 					echo "<select name='popup_category' id='popup_category' class='postform'>";
 					echo "<option value=''>" . esc_html__( 'Show all categories', 'popup-maker' ) . '</option>';
 					foreach ( $terms as $term ) {
-						$selected = $category === $term->slug ? 'selected="selected"' : '';
-						echo '<option value="' . esc_attr( $term->slug ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $term->name ) . ' (' . esc_html( $term->count ) . ')</option>';
+						echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( $category, $term->slug, false ) . '>' . esc_html( $term->name ) . ' (' . esc_html( $term->count ) . ')</option>';
 					}
 					echo '</select>';
-					wp_nonce_field( 'pum-popup-filter-nonce' );
 				}
 			}
 
@@ -1624,21 +1626,24 @@ class PUM_Admin_Popups {
 				$terms = get_terms( 'popup_tag' );
 
 				if ( count( $terms ) > 0 ) {
-					$tag = '';
+					$has_filters = true;
+					$tag         = '';
 
-					if ( isset( $_GET['_wpnonce'] ) && ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'pum-popup-filter-nonce' ) ) {
+					if ( $filter_nonce_is_valid ) {
 						$tag = isset( $_GET['popup_tag'] ) ? sanitize_key( wp_unslash( $_GET['popup_tag'] ) ) : '';
 					}
 
 					echo "<select name='popup_tag' id='popup_tag' class='postform'>";
 					echo "<option value=''>" . esc_html__( 'Show all tags', 'popup-maker' ) . '</option>';
 					foreach ( $terms as $term ) {
-						$selected = $tag === $term->slug ? 'selected="selected"' : '';
-						echo '<option value="' . esc_attr( $term->slug ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $term->name ) . ' (' . esc_html( $term->count ) . ')</option>';
+						echo '<option value="' . esc_attr( $term->slug ) . '" ' . selected( $tag, $term->slug, false ) . '>' . esc_html( $term->name ) . ' (' . esc_html( $term->count ) . ')</option>';
 					}
 					echo '</select>';
-					wp_nonce_field( 'pum-popup-filter-nonce' );
 				}
+			}
+
+			if ( $has_filters ) {
+				wp_nonce_field( 'pum-popup-filter-nonce', 'pum_filter_nonce' );
 			}
 		}
 	}
