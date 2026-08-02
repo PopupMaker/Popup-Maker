@@ -19,6 +19,7 @@
 
 **Fixes**
 
+-   Fixed pending upgrade notices causing a fatal error on logged-in front-end pages by removing reliance on admin-only form helpers. Closes #1253.
 -   Fixed generic WordPress editors and page builders receiving 404 responses for Popup and Popup Theme REST collections by exposing standard `wp/v2` aliases while preserving Popup Maker's versioned API.
 -   Fixed Gravity Forms inside popups no longer submitting via AJAX (regression since 1.21.0), which broke text confirmations and Form Submission triggers after submit.
 -   Improved keyboard focus when closing popups: focus returns to the previously focused element, or to the top of the document when there wasn't one (auto-open popups) or it no longer exists. Thanks @swinggraphics.
