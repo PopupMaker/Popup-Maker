@@ -21,11 +21,11 @@ class AddonCatalog {
 	 */
 	public function get_categories() {
 		return [
-			'ecommerce'  => __( 'Ecommerce', 'popup-maker' ),
-			'forms'      => __( 'Forms & Email', 'popup-maker' ),
-			'targeting'  => __( 'Targeting', 'popup-maker' ),
-			'content'    => __( 'Content', 'popup-maker' ),
-			'compliance' => __( 'Compliance', 'popup-maker' ),
+			'ecommerce'  => 'Ecommerce',
+			'forms'      => 'Forms & Email',
+			'targeting'  => 'Targeting',
+			'content'    => 'Content',
+			'compliance' => 'Compliance',
 		];
 	}
 
@@ -34,19 +34,22 @@ class AddonCatalog {
 	 *
 	 * This is intentionally local. The WordPress.org build does not fetch
 	 * remote catalog, entitlement, update, or delivery data to render the page.
+	 * Product names and marketing copy intentionally remain English so this
+	 * optional catalog does not add dozens of strings to community translation
+	 * packs. Functional interface and error text remain translatable elsewhere.
 	 *
 	 * @return array<string,array<string,mixed>>
 	 */
 	public function get_items() {
 		return [
 			'popup-maker-age-verification-modals' => [
-				'name'            => __( 'Age Verification Modals', 'popup-maker' ),
-				'description'     => __( 'Require visitors to confirm their age before viewing protected content.', 'popup-maker' ),
-				'longDescription' => __( 'A blocking modal that gates restricted content until a visitor confirms their age, with a remembered choice per device.', 'popup-maker' ),
+				'name'            => 'Age Verification Modals',
+				'description'     => 'Require visitors to confirm their age before viewing protected content.',
+				'longDescription' => 'A blocking modal that gates restricted content until a visitor confirms their age, with a remembered choice per device.',
 				'features'        => [
-					__( 'Date-of-birth or yes/no gate', 'popup-maker' ),
-					__( 'Remembers the answer', 'popup-maker' ),
-					__( 'Per-page targeting', 'popup-maker' ),
+					'Date-of-birth or yes/no gate',
+					'Remembers the answer',
+					'Per-page targeting',
 				],
 				'category'        => 'compliance',
 				'pluginBasename'  => 'popup-maker-age-verification-modals/popup-maker-age-verification-modals.php',
@@ -54,13 +57,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/age-verification-modals/',
 			],
 			'popup-maker-ajax-login-modals'       => [
-				'name'            => __( 'AJAX Login Modals', 'popup-maker' ),
-				'description'     => __( 'Add login, registration, and password recovery forms to your popups.', 'popup-maker' ),
-				'longDescription' => __( 'Full account flows inside a popup — sign in, register, and reset a password without ever leaving the page.', 'popup-maker' ),
+				'name'            => 'AJAX Login Modals',
+				'description'     => 'Add login, registration, and password recovery forms to your popups.',
+				'longDescription' => 'Full account flows inside a popup — sign in, register, and reset a password without ever leaving the page.',
 				'features'        => [
-					__( 'Login, register, and reset', 'popup-maker' ),
-					__( 'Inline validation', 'popup-maker' ),
-					__( 'Redirect after login', 'popup-maker' ),
+					'Login, register, and reset',
+					'Inline validation',
+					'Redirect after login',
 				],
 				'category'        => 'forms',
 				'pluginBasename'  => 'popup-maker-ajax-login-modals/popup-maker-ajax-login-modals.php',
@@ -68,13 +71,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/ajax-login-modals/',
 			],
 			'popup-maker-aweber-integration'      => [
-				'name'            => __( 'AWeber Integration', 'popup-maker' ),
-				'description'     => __( 'Connect Popup Maker forms directly to your AWeber mailing lists.', 'popup-maker' ),
-				'longDescription' => __( 'Send subscribers straight into AWeber lists with tags and custom fields, no third-party connector needed.', 'popup-maker' ),
+				'name'            => 'AWeber Integration',
+				'description'     => 'Connect Popup Maker forms directly to your AWeber mailing lists.',
+				'longDescription' => 'Send subscribers straight into AWeber lists with tags and custom fields, no third-party connector needed.',
 				'features'        => [
-					__( 'List and tag mapping', 'popup-maker' ),
-					__( 'Custom field support', 'popup-maker' ),
-					__( 'Per-popup list routing', 'popup-maker' ),
+					'List and tag mapping',
+					'Custom field support',
+					'Per-popup list routing',
 				],
 				'category'        => 'forms',
 				'pluginBasename'  => 'popup-maker-aweber-integration/pum-aweber-integration.php',
@@ -83,13 +86,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/aweber-integration/',
 			],
 			'popup-maker-ecommerce-popups'        => [
-				'name'            => __( 'Ecommerce Popups', 'popup-maker' ),
-				'description'     => __( 'Target shoppers and measure popup-driven revenue across your ecommerce store.', 'popup-maker' ),
-				'longDescription' => __( 'Trigger popups from cart value, product category, or purchase history, then attribute revenue back to the popup that earned it.', 'popup-maker' ),
+				'name'            => 'Ecommerce Popups',
+				'description'     => 'Target shoppers and measure popup-driven revenue across your ecommerce store.',
+				'longDescription' => 'Trigger popups from cart value, product category, or purchase history, then attribute revenue back to the popup that earned it.',
 				'features'        => [
-					__( 'Cart-value and product triggers', 'popup-maker' ),
-					__( 'Revenue attribution per popup', 'popup-maker' ),
-					__( 'WooCommerce and EDD support', 'popup-maker' ),
+					'Cart-value and product triggers',
+					'Revenue attribution per popup',
+					'WooCommerce and EDD support',
 				],
 				'category'        => 'ecommerce',
 				'pluginBasename'  => 'popup-maker-ecommerce-popups/popup-maker-ecommerce-popups.php',
@@ -98,13 +101,13 @@ class AddonCatalog {
 				'isProPlus'       => true,
 			],
 			'popup-maker-geotargeting'            => [
-				'name'            => __( 'Geotargeting', 'popup-maker' ),
-				'description'     => __( 'Show personalized popups based on a visitor’s geographic location.', 'popup-maker' ),
-				'longDescription' => __( 'Target down to country, region, or city and localize your offer for the visitors who can actually take it.', 'popup-maker' ),
+				'name'            => 'Geotargeting',
+				'description'     => 'Show personalized popups based on a visitor’s geographic location.',
+				'longDescription' => 'Target down to country, region, or city and localize your offer for the visitors who can actually take it.',
 				'features'        => [
-					__( 'Country, region, and city rules', 'popup-maker' ),
-					__( 'Radius targeting', 'popup-maker' ),
-					__( 'Cached lookups', 'popup-maker' ),
+					'Country, region, and city rules',
+					'Radius targeting',
+					'Cached lookups',
 				],
 				'category'        => 'targeting',
 				'pluginBasename'  => 'popup-maker-geotargeting/popup-maker-geotargeting.php',
@@ -112,13 +115,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/geotargeting/',
 			],
 			'popup-maker-leaving-notices'         => [
-				'name'            => __( 'Leaving Notices', 'popup-maker' ),
-				'description'     => __( 'Warn visitors before they follow links that leave your website.', 'popup-maker' ),
-				'longDescription' => __( 'Catch outbound clicks with a confirmation popup — useful for affiliate links, partner sites, and compliance notices.', 'popup-maker' ),
+				'name'            => 'Leaving Notices',
+				'description'     => 'Warn visitors before they follow links that leave your website.',
+				'longDescription' => 'Catch outbound clicks with a confirmation popup — useful for affiliate links, partner sites, and compliance notices.',
 				'features'        => [
-					__( 'Outbound link detection', 'popup-maker' ),
-					__( 'Per-domain allowlist', 'popup-maker' ),
-					__( 'Custom notice copy', 'popup-maker' ),
+					'Outbound link detection',
+					'Per-domain allowlist',
+					'Custom notice copy',
 				],
 				'category'        => 'targeting',
 				'pluginBasename'  => 'popup-maker-leaving-notices/popup-maker-leaving-notices.php',
@@ -126,13 +129,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/leaving-notices/',
 			],
 			'popup-maker-lms-popups'              => [
-				'name'            => __( 'LMS Popups', 'popup-maker' ),
-				'description'     => __( 'Target students by enrollment, course progress, membership, and more.', 'popup-maker' ),
-				'longDescription' => __( 'Show the right message at the right point in a course — nudge enrollment, celebrate completion, or upsell the next tier.', 'popup-maker' ),
+				'name'            => 'LMS Popups',
+				'description'     => 'Target students by enrollment, course progress, membership, and more.',
+				'longDescription' => 'Show the right message at the right point in a course — nudge enrollment, celebrate completion, or upsell the next tier.',
 				'features'        => [
-					__( 'Enrollment and progress conditions', 'popup-maker' ),
-					__( 'LearnDash and LifterLMS', 'popup-maker' ),
-					__( 'Membership-level targeting', 'popup-maker' ),
+					'Enrollment and progress conditions',
+					'LearnDash and LifterLMS',
+					'Membership-level targeting',
 				],
 				'category'        => 'ecommerce',
 				'pluginBasename'  => 'popup-maker-lms-popups/popup-maker-lms-popups.php',
@@ -141,13 +144,13 @@ class AddonCatalog {
 				'isProPlus'       => true,
 			],
 			'popup-maker-mailchimp-integration'   => [
-				'name'            => __( 'MailChimp Integration', 'popup-maker' ),
-				'description'     => __( 'Subscribe popup visitors to Mailchimp audiences and interest groups.', 'popup-maker' ),
-				'longDescription' => __( 'Connect any Popup Maker form to a Mailchimp audience, map custom fields, and set interest groups per popup.', 'popup-maker' ),
+				'name'            => 'MailChimp Integration',
+				'description'     => 'Subscribe popup visitors to Mailchimp audiences and interest groups.',
+				'longDescription' => 'Connect any Popup Maker form to a Mailchimp audience, map custom fields, and set interest groups per popup.',
 				'features'        => [
-					__( 'Audience and group mapping', 'popup-maker' ),
-					__( 'Double opt-in support', 'popup-maker' ),
-					__( 'Custom merge fields', 'popup-maker' ),
+					'Audience and group mapping',
+					'Double opt-in support',
+					'Custom merge fields',
 				],
 				'category'        => 'forms',
 				'pluginBasename'  => 'popup-maker-mailchimp-integration/pum-mailchimp-integration.php',
@@ -156,13 +159,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/mailchimp-integration/',
 			],
 			'popup-maker-remote-content'          => [
-				'name'            => __( 'Remote Content', 'popup-maker' ),
-				'description'     => __( 'Load external or dynamic content into popups only when it is needed.', 'popup-maker' ),
-				'longDescription' => __( 'Fetch popup content on open instead of on page load, so heavy or personalized content never slows down the page.', 'popup-maker' ),
+				'name'            => 'Remote Content',
+				'description'     => 'Load external or dynamic content into popups only when it is needed.',
+				'longDescription' => 'Fetch popup content on open instead of on page load, so heavy or personalized content never slows down the page.',
 				'features'        => [
-					__( 'Lazy-loaded content', 'popup-maker' ),
-					__( 'External URL or shortcode', 'popup-maker' ),
-					__( 'Caching controls', 'popup-maker' ),
+					'Lazy-loaded content',
+					'External URL or shortcode',
+					'Caching controls',
 				],
 				'category'        => 'content',
 				'pluginBasename'  => 'popup-maker-remote-content/popup-maker-remote-content.php',
@@ -170,13 +173,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/remote-content/',
 			],
 			'popup-maker-secure-idle-user-logout' => [
-				'name'            => __( 'Secure Idle User Logout', 'popup-maker' ),
-				'description'     => __( 'Protect sessions by securely logging out users after a period of inactivity.', 'popup-maker' ),
-				'longDescription' => __( 'Warn users before an idle timeout and log them out cleanly when the timer runs down.', 'popup-maker' ),
+				'name'            => 'Secure Idle User Logout',
+				'description'     => 'Protect sessions by securely logging out users after a period of inactivity.',
+				'longDescription' => 'Warn users before an idle timeout and log them out cleanly when the timer runs down.',
 				'features'        => [
-					__( 'Configurable idle window', 'popup-maker' ),
-					__( 'Countdown warning popup', 'popup-maker' ),
-					__( 'Per-role rules', 'popup-maker' ),
+					'Configurable idle window',
+					'Countdown warning popup',
+					'Per-role rules',
 				],
 				'category'        => 'compliance',
 				'pluginBasename'  => 'popup-maker-secure-idle-user-logout/popup-maker-secure-idle-user-logout.php',
@@ -184,13 +187,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/secure-idle-user-logout/',
 			],
 			'popup-maker-terms-conditions-popups' => [
-				'name'            => __( 'Terms & Conditions Popups', 'popup-maker' ),
-				'description'     => __( 'Require visitors to review and accept terms before continuing.', 'popup-maker' ),
-				'longDescription' => __( 'Present terms in a scrollable modal and require an explicit accept before the visitor can continue.', 'popup-maker' ),
+				'name'            => 'Terms & Conditions Popups',
+				'description'     => 'Require visitors to review and accept terms before continuing.',
+				'longDescription' => 'Present terms in a scrollable modal and require an explicit accept before the visitor can continue.',
 				'features'        => [
-					__( 'Scroll-to-accept option', 'popup-maker' ),
-					__( 'Logs acceptance', 'popup-maker' ),
-					__( 'Works with forms and checkout', 'popup-maker' ),
+					'Scroll-to-accept option',
+					'Logs acceptance',
+					'Works with forms and checkout',
 				],
 				'category'        => 'compliance',
 				'pluginBasename'  => 'popup-maker-terms-conditions-popups/popup-maker-terms-conditions-popups.php',
@@ -198,13 +201,13 @@ class AddonCatalog {
 				'url'             => 'https://wppopupmaker.com/extensions/terms-conditions-popups/',
 			],
 			'popup-maker-videos'                  => [
-				'name'            => __( 'Videos', 'popup-maker' ),
-				'description'     => __( 'Create responsive video popups with reliable playback controls.', 'popup-maker' ),
-				'longDescription' => __( 'Drop YouTube, Vimeo, or self-hosted video into a popup that sizes itself and stops playback on close.', 'popup-maker' ),
+				'name'            => 'Videos',
+				'description'     => 'Create responsive video popups with reliable playback controls.',
+				'longDescription' => 'Drop YouTube, Vimeo, or self-hosted video into a popup that sizes itself and stops playback on close.',
 				'features'        => [
-					__( 'YouTube, Vimeo, and self-hosted', 'popup-maker' ),
-					__( 'Auto-pause on close', 'popup-maker' ),
-					__( 'Responsive sizing', 'popup-maker' ),
+					'YouTube, Vimeo, and self-hosted',
+					'Auto-pause on close',
+					'Responsive sizing',
 				],
 				'category'        => 'content',
 				'pluginBasename'  => 'popup-maker-videos/pum-videos.php',
