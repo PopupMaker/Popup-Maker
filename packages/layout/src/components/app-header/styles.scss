@@ -45,7 +45,7 @@
 	}
 
 	.components-tab-panel__tabs-item {
-		// Right-aligned nav tabs (className comes from the nav tab id).
+		/* Right-aligned nav tabs (className comes from the nav tab id). */
 		&.extend {
 			margin-left: auto;
 		}
@@ -69,4 +69,3 @@
 		}
 	}
 }
-

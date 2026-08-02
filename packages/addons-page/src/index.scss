@@ -124,6 +124,9 @@ $pum-text-soft: #666;
 }
 
 .pum-addons__plan--warning {
+	--pum-addons-plan-action-background: #{$pum-yellow};
+	--pum-addons-plan-action-hover-background: #{$pum-yellow-dark};
+
 	background: #29230e;
 	border-left-color: $pum-yellow;
 }
@@ -184,17 +187,8 @@ $pum-text-soft: #666;
 	line-height: 1.5;
 }
 
-.pum-addons__plan--warning .pum-addons__plan-action.components-button.is-primary {
-	background: $pum-yellow;
-
-	&:hover,
-	&:focus:not(:disabled) {
-		background: $pum-yellow-dark;
-	}
-}
-
 .pum-addons__plan-action.components-button.is-primary {
-	background: $pum-green;
+	background: var(--pum-addons-plan-action-background, #{$pum-green});
 	border-radius: 6px;
 	color: $pum-ink;
 	flex: none;
@@ -203,7 +197,10 @@ $pum-text-soft: #666;
 
 	&:hover,
 	&:focus:not(:disabled) {
-		background: $pum-green-dark;
+		background: var(
+			--pum-addons-plan-action-hover-background,
+			#{$pum-green-dark}
+		);
 		color: $pum-ink;
 	}
 }

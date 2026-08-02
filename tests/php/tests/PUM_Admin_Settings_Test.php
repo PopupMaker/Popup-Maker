@@ -134,7 +134,7 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 			$this->assertStringNotContainsString( 'pum-install-pro-button', $templates );
 			$this->assertStringNotContainsString( 'pum-license-connect-trigger', $templates );
 
-			\PopupMaker\plugin()->get_controller( 'RestAPI' )->register_routes();
+			do_action( 'rest_api_init', $wp_rest_server );
 			$routes = $wp_rest_server->get_routes();
 
 			$this->assertArrayNotHasKey( '/popup-maker/v2/license', $routes );
