@@ -26,7 +26,22 @@ class PUM_Admin_Settings {
 	public static function init() {
 		add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
 		add_action( 'admin_init', [ __CLASS__, 'save' ] );
-		add_action( 'pum_save_settings', [ __CLASS__, 'process_license_operation' ], 10, 1 );
+		add_action( 'plugins_loaded', [ __CLASS__, 'maybe_register_legacy_license_operation' ], 100 );
+	}
+
+	/**
+	 * Register old Pro's settings operation only when compatibility is active.
+	 *
+	 * @since 1.23.0
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
+	 * @return void
+	 */
+	public static function maybe_register_legacy_license_operation() {
+		if ( \PopupMaker\plugin()->should_run_legacy_license_compatibility() ) {
+			add_action( 'pum_save_settings', [ __CLASS__, 'process_license_operation' ], 10, 1 );
+		}
 	}
 
 	// display default admin notice
@@ -100,9 +115,11 @@ class PUM_Admin_Settings {
 
 	/**
 	 * Process license activation when hooked to pum_save_settings.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 */
 	public static function process_license_operation() {
-		if ( ! \PopupMaker\plugin()->is_pro_installed() ) {
+		if ( ! \PopupMaker\plugin()->should_run_legacy_license_compatibility() ) {
 			return;
 		}
 
@@ -320,12 +337,12 @@ class PUM_Admin_Settings {
 	public static function fields() {
 
 		static $fields;
-		static $pro_installed;
+		static $legacy_license_compatibility;
 
-		$current_pro_installed = \PopupMaker\plugin()->is_pro_installed();
+		$current_legacy_license_compatibility = \PopupMaker\plugin()->should_run_legacy_license_compatibility();
 
-		if ( ! isset( $fields ) || $pro_installed !== $current_pro_installed ) {
-			$pro_installed = $current_pro_installed;
+		if ( ! isset( $fields ) || $legacy_license_compatibility !== $current_legacy_license_compatibility ) {
+			$legacy_license_compatibility = $current_legacy_license_compatibility;
 
 			$fields = [
 				'general' => [
@@ -659,11 +676,8 @@ class PUM_Admin_Settings {
 				]
 			);
 
-			if ( ! $pro_installed ) {
+			if ( ! $legacy_license_compatibility ) {
 				unset( $fields['go-pro']['main']['popup_maker_pro_license_key'] );
-			}
-
-			if ( ! $pro_installed ) {
 				$fields['go-pro']['main']['popup_maker_pro_placeholder'] = [
 					'type'    => 'html',
 					'content' => '',

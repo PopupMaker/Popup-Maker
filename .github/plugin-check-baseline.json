@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "plugin_check_version": "2.0.0",
+  "scope": "errors",
+  "tracking_issue": "https://github.com/PopupMaker/Popup-Maker/issues/1254",
+  "findings": [
+    {
+      "file": "classes/Extension/Updater.php",
+      "type": "ERROR",
+      "code": "plugin_updater_detected",
+      "message": "Plugin Updater detected. These are not permitted in WordPress.org hosted plugins. Detected: site_transient_update_plugins",
+      "count": 1
+    },
+    {
+      "file": "classes/Integration/Form/PirateForms.php",
+      "type": "ERROR",
+      "code": "WordPress.WP.I18n.MissingArgDomain",
+      "message": "Missing $domain parameter in function call to esc_html__().",
+      "count": 1
+    },
+    {
+      "file": "classes/ListTable.php",
+      "type": "ERROR",
+      "code": "WordPress.WP.I18n.MissingArgDomain",
+      "message": "Missing $domain parameter in function call to __().",
+      "count": 12
+    },
+    {
+      "file": "classes/ListTable.php",
+      "type": "ERROR",
+      "code": "WordPress.WP.I18n.MissingArgDomain",
+      "message": "Missing $domain parameter in function call to _n().",
+      "count": 5
+    },
+    {
+      "file": "classes/ListTable.php",
+      "type": "ERROR",
+      "code": "WordPress.WP.I18n.MissingArgDomain",
+      "message": "Missing $domain parameter in function call to _x().",
+      "count": 1
+    },
+    {
+      "file": "classes/ListTable.php",
+      "type": "ERROR",
+      "code": "WordPress.WP.I18n.MissingArgDomain",
+      "message": "Missing $domain parameter in function call to esc_attr_e().",
+      "count": 2
+    },
+    {
+      "file": "classes/ListTable.php",
+      "type": "ERROR",
+      "code": "WordPress.WP.I18n.MissingArgDomain",
+      "message": "Missing $domain parameter in function call to esc_html__().",
+      "count": 2
+    },
+    {
+      "file": "classes/ListTable.php",
+      "type": "ERROR",
+      "code": "WordPress.WP.I18n.MissingArgDomain",
+      "message": "Missing $domain parameter in function call to esc_html_e().",
+      "count": 1
+    },
+    {
+      "file": "includes/compatibility/function-wp_removable_query_args.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "includes/entry--failsafes.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "includes/functions/popups/deprecated.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "includes/functions/popups/migrations.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "includes/functions/themes/migrations.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "includes/functions/themes/portability.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "includes/legacy/deprecated-classes.php",
+      "type": "ERROR",
+      "code": "plugin_updater_detected",
+      "message": "Plugin Updater detected. These are not permitted in WordPress.org hosted plugins. Detected: class PopupMaker_Plugin_Updater",
+      "count": 1
+    },
+    {
+      "file": "includes/modules/menus/class-nav-menu-edit-custom-fields-deprecated.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "includes/modules/menus/class-nav-menu-edit-custom-fields.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "templates/popup.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    },
+    {
+      "file": "templates/single-popup.php",
+      "type": "ERROR",
+      "code": "missing_direct_file_access_protection",
+      "message": "PHP file should prevent direct access. Add a check like: if ( ! defined( 'ABSPATH' ) ) exit;",
+      "count": 1
+    }
+  ]
+}

@@ -54,7 +54,17 @@ class Test_License_REST_Endpoints extends \WP_UnitTestCase {
 
 		// Initialize REST API routes.
 		do_action( 'rest_api_init' );
-		( new \PopupMaker\RestAPI\License() )->register_routes();
+		$controller = new class() extends \PopupMaker\RestAPI\License {
+			/**
+			 * Enable the deprecated controller in isolation for contract tests.
+			 *
+			 * @return bool
+			 */
+			protected function compatibility_enabled() {
+				return true;
+			}
+		};
+		$controller->register_routes();
 		$this->reset_license_cache();
 	}
 

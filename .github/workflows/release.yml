@@ -113,9 +113,9 @@ jobs:
           ZIP_NAME="${{ env.PLUGIN_SLUG }}_${VERSION}.zip"
 
           if [ -f "bin/build-release.js" ]; then
-            node bin/build-release.js --zip-name "${ZIP_NAME}"
+            node bin/build-release.js --zip-name "${ZIP_NAME}" --keep-build
           else
-            npm run release
+            pnpm run release -- --keep-build
           fi
 
           if [ ! -f "${ZIP_NAME}" ]; then
@@ -126,6 +126,21 @@ jobs:
           FILE_SIZE=$(ls -lh "${ZIP_NAME}" | awk '{print $5}')
           echo "✅ Package created: ${ZIP_NAME} (${FILE_SIZE})"
           echo "name=${ZIP_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Run WordPress Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: ./popup-maker
+          slug: popup-maker
+          exclude-checks: plugin_review_phpcs
+          exclude-directories: vendor-prefixed
+          exclude-files: |
+            classes/Extension/Updater.php
+            includes/legacy/deprecated-classes.php
+          ignore-codes: |
+            WordPress.WP.I18n.MissingArgDomain
+            missing_direct_file_access_protection
+          ignore-warnings: true
 
       - name: Upload artifact
         uses: actions/upload-artifact@v6

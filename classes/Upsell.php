@@ -555,8 +555,8 @@ class PUM_Upsell {
 
 		if ( ! \PopupMaker\plugin()->is_pro_active() ) {
 			foreach ( [ 'overlay', 'container', 'close' ] as $tab ) {
-				/* translators: %s url to product page. */
 				$message = sprintf(
+					/* translators: %s url to product page. */
 					__( 'Unlock background images, parallax effects, and advanced styling with <a href="%s" target="_blank" rel="noopener">Popup Maker Pro</a>.', 'popup-maker' ),
 					'https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_campaign=upsell&utm_source=plugin-theme-editor&utm_medium=text-link&utm_content=' . $tab . '-settings'
 				);

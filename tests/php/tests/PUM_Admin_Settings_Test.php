@@ -86,9 +86,9 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Installed but inactive Pro keeps license UI and license-only REST routes.
+	 * Installed but inactive Pro does not enable legacy license compatibility.
 	 */
-	public function test_installed_inactive_pro_keeps_compatibility_surface() {
+	public function test_installed_inactive_pro_does_not_enable_compatibility_surface() {
 		if ( function_exists( '\PopupMaker\Pro\plugin' ) ) {
 			$this->markTestSkipped( 'This compatibility assertion requires Pro to be inactive.' );
 		}
@@ -116,30 +116,30 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 
 			$this->assertTrue( \PopupMaker\plugin()->is_pro_installed() );
 			$this->assertFalse( \PopupMaker\plugin()->is_pro_active() );
+			$this->assertFalse( \PopupMaker\plugin()->should_run_legacy_license_compatibility() );
 
 			$license_service = \PopupMaker\plugin( 'license' );
-			$this->assertNotFalse( has_action( 'init', [ $license_service, 'autoregister' ] ) );
-			$this->assertNotFalse( has_action( 'admin_init', [ $license_service, 'schedule_crons' ] ) );
-			$this->assertNotFalse( has_action( 'popup_maker_license_status_check', [ $license_service, 'refresh_license_status' ] ) );
+			$this->assertFalse( has_action( 'init', [ $license_service, 'autoregister' ] ) );
+			$this->assertFalse( has_action( 'admin_init', [ $license_service, 'schedule_crons' ] ) );
+			$this->assertFalse( has_action( 'popup_maker_license_status_check', [ $license_service, 'refresh_license_status' ] ) );
 
 			$license_field = PUM_Admin_Settings::get_field( 'popup_maker_pro_license_key' );
-			$this->assertIsArray( $license_field );
-			$this->assertSame( 'pro_license', $license_field['type'] );
+			$this->assertFalse( $license_field );
 
 			ob_start();
 			PUM_Admin_Templates::general_fields();
 			$templates = ob_get_clean();
 
-			$this->assertStringContainsString( 'tmpl-pum-field-pro_license', $templates );
+			$this->assertStringNotContainsString( 'tmpl-pum-field-pro_license', $templates );
 			$this->assertStringNotContainsString( 'pum-install-pro-button', $templates );
 			$this->assertStringNotContainsString( 'pum-license-connect-trigger', $templates );
 
 			\PopupMaker\plugin()->get_controller( 'RestAPI' )->register_routes();
 			$routes = $wp_rest_server->get_routes();
 
-			$this->assertArrayHasKey( '/popup-maker/v2/license', $routes );
-			$this->assertArrayHasKey( '/popup-maker/v2/license/activate', $routes );
-			$this->assertArrayHasKey( '/popup-maker/v2/license/deactivate', $routes );
+			$this->assertArrayNotHasKey( '/popup-maker/v2/license', $routes );
+			$this->assertArrayNotHasKey( '/popup-maker/v2/license/activate', $routes );
+			$this->assertArrayNotHasKey( '/popup-maker/v2/license/deactivate', $routes );
 			$this->assertArrayNotHasKey( '/popup-maker/v2/license/activate-pro', $routes );
 			$this->assertArrayNotHasKey( '/popup-maker/v2/license/activate-plugin', $routes );
 			$this->assertArrayNotHasKey( '/popup-maker/v2/connect/install', $routes );

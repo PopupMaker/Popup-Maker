@@ -103,7 +103,6 @@ class PluginsPage extends Controller {
             $docs_url = add_query_arg( $utm_args, 'https://wppopupmaker.com/docs/' );
 
 			$row_meta = [
-				// 'review'     => '<a href="https://wordpress.org/support/plugin/popup-maker/reviews/?filter=5#new-post" target="_blank" rel="noopener noreferrer">★ ' . __( 'Rate 5 stars', 'popup-maker' ) . ' ★</a>',
 				'documentation'    => '<a href="' . $docs_url . '" target="_blank" rel="noopener noreferrer">' . __( 'Documentation', 'popup-maker' ) . '</a>',
 				'support'    => '<a href="' . $support_url . '" target="_blank" rel="noopener noreferrer">' . __( 'Get Support', 'popup-maker' ) . '</a>',
 				// 'extensions' => '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) . '">' . __( 'Extensions', 'popup-maker' ) . '</a>',
