@@ -6,6 +6,7 @@ on:
 
 env:
   WP_VERSION: 6.1.1
+  PLUGIN_CHECK_VERSION: 2.0.0
 
 # Cancels all previous workflow runs for the same branch that have not yet completed.
 concurrency:
@@ -339,6 +340,103 @@ jobs:
           echo "Run 'npm run validate:dep-tree:fix' locally to resolve"
 
   # ============================================================================
+  # WordPress Plugin Check - New errors only
+  # ============================================================================
+  # Plugin Check scans the assembled plugin, while the delta gate compares its
+  # results with the approved legacy baseline. Existing debt stays out of PR
+  # annotations; only a new finding or increased occurrence count fails CI.
+  plugin-check:
+    name: WordPress Plugin Check Delta
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: ${{ always() && (needs.detect-changes.result == 'success' || needs.detect-changes.result == 'skipped') }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+          pnpm install --frozen-lockfile
+
+      - name: Assemble release plugin
+        run: |
+          pnpm run build:production
+          node bin/build-release.js --skip-composer --skip-npm --keep-build
+
+      - name: Load target-branch baseline
+        id: baseline
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          previous_baseline=""
+          if [ -n "$BASE_SHA" ] && git cat-file -e "$BASE_SHA:.github/plugin-check-baseline.json" 2>/dev/null; then
+            previous_baseline="$RUNNER_TEMP/plugin-check-base-baseline.json"
+            git show "$BASE_SHA:.github/plugin-check-baseline.json" > "$previous_baseline"
+          fi
+          echo "previous=$previous_baseline" >> "$GITHUB_OUTPUT"
+
+      - name: Configure Plugin Check environment
+        run: |
+          jq -n --arg plugin "$GITHUB_WORKSPACE/popup-maker" '{
+            core: null,
+            testsEnvironment: false,
+            port: 8888,
+            mappings: {"wp-content/plugins/popup-maker": $plugin}
+          }' > "$RUNNER_TEMP/plugin-check.wp-env.json"
+
+      - name: Start WordPress and install Plugin Check
+        run: |
+          pnpm exec wp-env start --config "$RUNNER_TEMP/plugin-check.wp-env.json" --update
+          pnpm exec wp-env run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
+
+      - name: Scan assembled plugin
+        run: |
+          pnpm exec wp-env run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin check popup-maker \
+            --exclude-checks=plugin_review_phpcs \
+            --ignore-warnings \
+            --exclude-directories=vendor-prefixed \
+            --format=strict-json \
+            --fields=file,line,column,type,code,message,docs \
+            --slug=popup-maker > "$RUNNER_TEMP/plugin-check-results.txt" 2>&1
+
+      - name: Fail on new Plugin Check errors
+        env:
+          PREVIOUS_BASELINE: ${{ steps.baseline.outputs.previous }}
+        run: |
+          args=(
+            --results "$RUNNER_TEMP/plugin-check-results.txt"
+            --baseline .github/plugin-check-baseline.json
+          )
+          if [ -n "$PREVIOUS_BASELINE" ]; then
+            args+=(--previous-baseline "$PREVIOUS_BASELINE")
+          fi
+          node bin/check-plugin-check-delta.js "${args[@]}"
+
+      - name: Stop Plugin Check environment
+        if: always()
+        run: pnpm exec wp-env stop --config "$RUNNER_TEMP/plugin-check.wp-env.json" || true
+
+  # ============================================================================
   # Security Scanning - NPM Dependencies
   # ============================================================================
   npm-security:
@@ -451,6 +549,7 @@ jobs:
           build-validation,
           npm-security,
           php-security,
+          plugin-check,
       ]
     if: always()
     steps:
@@ -462,6 +561,7 @@ jobs:
           BUILD_RESULT: ${{ needs.build-validation.result }}
           NPM_SEC_RESULT: ${{ needs.npm-security.result }}
           PHP_SEC_RESULT: ${{ needs.php-security.result }}
+          PLUGIN_CHECK_RESULT: ${{ needs.plugin-check.result }}
         run: |
           echo "=== CI Results Summary ==="
           echo ""
@@ -494,6 +594,7 @@ jobs:
           check_result "Build Validation" "$BUILD_RESULT"
           check_result "pnpm Security Audit" "$NPM_SEC_RESULT"
           check_result "Composer Security Audit" "$PHP_SEC_RESULT"
+          check_result "WordPress Plugin Check Delta" "$PLUGIN_CHECK_RESULT"
 
           echo ""
           if [ "$failed" -eq 1 ]; then
