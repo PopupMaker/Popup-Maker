@@ -1275,9 +1275,7 @@ class PUM_Admin_Settings {
 	}
 
 	/**
-	 * Legacy no-op license callback.
 	 *
-	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 */
 	public static function license_deactivated() {
 	}
