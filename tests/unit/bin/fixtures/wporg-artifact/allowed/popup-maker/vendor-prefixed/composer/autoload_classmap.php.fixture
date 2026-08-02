@@ -1,0 +1,6 @@
+<?php
+return [
+	'PopupMaker\\RestAPI\\Addons' => '/classes/RestAPI/Addons.php',
+	'PopupMaker\\Services\\AddonCatalog' => '/classes/Services/AddonCatalog.php',
+	'PopupMaker\\Services\\AddonLifecycle' => '/classes/Services/AddonLifecycle.php',
+];

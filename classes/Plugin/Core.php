@@ -197,6 +197,20 @@ final class Core extends \PopupMaker\Plugin\Container {
 		);
 
 		$this->set(
+			'addon_catalog',
+			function () {
+				return new \PopupMaker\Services\AddonCatalog();
+			}
+		);
+
+		$this->set(
+			'addon_lifecycle',
+			function ( $container ) {
+				return new \PopupMaker\Services\AddonLifecycle( $container->get( 'addon_catalog' ) );
+			}
+		);
+
+		$this->set(
 			'logging',
 			/**
 			 * Get plugin logging.

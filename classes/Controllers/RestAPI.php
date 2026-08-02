@@ -50,6 +50,8 @@ class RestAPI extends Controller {
 	 * @return void
 	 */
 	public function register_routes() {
+		( new \PopupMaker\RestAPI\Addons() )->register_routes();
+
 		if ( $this->container->is_pro_installed() ) {
 			( new \PopupMaker\RestAPI\License() )->register_routes();
 		}

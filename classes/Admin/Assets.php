@@ -185,7 +185,7 @@ class PUM_Admin_Assets {
 			wp_enqueue_style( 'pum-admin-theme-editor' );
 		}
 
-		if ( pum_is_extensions_page() ) {
+		if ( pum_is_extensions_page() && 'core' === apply_filters( 'pum_admin_extend_page_owner', 'core' ) ) {
 			wp_enqueue_style( 'pum-admin-extensions-page' );
 		}
 

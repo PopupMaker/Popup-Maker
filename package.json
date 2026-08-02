@@ -40,6 +40,7 @@
 		"*.php"
 	],
 	"dependencies": {
+		"@popup-maker/addons-page": "workspace:*",
 		"@popup-maker/admin-bar": "workspace:*",
 		"@popup-maker/admin-marketing": "workspace:*",
 		"@popup-maker/block-editor": "workspace:*",

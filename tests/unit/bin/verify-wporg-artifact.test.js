@@ -63,8 +63,220 @@ describe( 'WordPress.org artifact verifier', () => {
 		expect( verifySourceTree( sourceRoot ).failures ).toEqual( [] );
 	} );
 
+	test( 'accepts a clean source checkout without generated classmaps', () => {
+		const sourceRoot = fs.mkdtempSync(
+			path.join( os.tmpdir(), 'popup-maker-clean-source-verifier-' )
+		);
+		const sourceFiles = new Map( [
+			[ 'classes/Services/License.php', '<?php // License fixture.' ],
+			[
+				'classes/Extension/License.php',
+				'<?php // Extension license fixture.',
+			],
+			[
+				'classes/Extension/Updater.php',
+				'<?php // Extension updater fixture.',
+			],
+			[
+				'classes/Services/AddonCatalog.php',
+				'<?php // Catalog fixture.',
+			],
+			[ 'classes/RestAPI/Addons.php', '<?php // REST fixture.' ],
+			[
+				'classes/Services/AddonLifecycle.php',
+				`<?php
+class AddonLifecycle {
+	private $catalog;
+	private function get_installed_basename( $slug ) {
+		$item = $this->catalog->get_item( $slug );
+		if ( null === $item ) { return new WP_Error(); }
+		$basename = $this->catalog->find_installed_basename( $item );
+		if ( '' === $basename ) { return new WP_Error(); }
+		return $basename;
+	}
+	public function activate( $slug ) {
+		$basename = $this->get_installed_basename( $slug );
+		return activate_plugin( $basename );
+	}
+}`,
+			],
+		] );
+
+		try {
+			for ( const [ relativePath, contents ] of sourceFiles ) {
+				const filePath = path.join( sourceRoot, relativePath );
+				fs.mkdirSync( path.dirname( filePath ), { recursive: true } );
+				fs.writeFileSync( filePath, contents );
+			}
+
+			expect( verifySourceTree( sourceRoot ).failures ).toEqual( [] );
+		} finally {
+			fs.rmSync( sourceRoot, { recursive: true, force: true } );
+		}
+	} );
+
+	test( 'still requires generated classmaps in release artifacts', () => {
+		const fixtureEntries = loadFixtureTree( 'allowed' );
+		fixtureEntries.delete(
+			'popup-maker/vendor-prefixed/composer/autoload_classmap.php'
+		);
+		fixtureEntries.delete(
+			'popup-maker/vendor-prefixed/composer/autoload_static.php'
+		);
+
+		const failures = verifyArtifactEntries(
+			[ ...fixtureEntries.keys() ],
+			( entry ) => fixtureEntries.get( entry )
+		);
+
+		expect( failures ).toEqual(
+			expect.arrayContaining( [
+				'missing compatibility path: vendor-prefixed/composer/autoload_classmap.php',
+				'missing compatibility path: vendor-prefixed/composer/autoload_static.php',
+			] )
+		);
+	} );
+
 	test( 'allows only the named legacy updater and plugin lifecycle paths', () => {
 		expect( verifyFixture( 'allowed' ) ).toEqual( [] );
+	} );
+
+	test( 'allows the exact local add-on lifecycle service without allowing delivery', () => {
+		const failures = verifyFixture(
+			'allowed',
+			new Map( [
+				[
+					'popup-maker/classes/Services/AddonLifecycle.php',
+					`<?php
+class AddonLifecycle {
+	private $catalog;
+	private function get_installed_basename( $slug ) {
+		$item = $this->catalog->get_item( $slug );
+		if ( null === $item ) { return new WP_Error(); }
+		$basename = $this->catalog->find_installed_basename( $item );
+		if ( '' === $basename ) { return new WP_Error(); }
+		return $basename;
+	}
+	public function activate( $slug ) {
+		$basename = $this->get_installed_basename( $slug );
+		return activate_plugin( $basename );
+	}
+	public function deactivate( $slug ) {
+		$basename = $this->get_installed_basename( $slug );
+		deactivate_plugins( $basename );
+	}
+}`,
+				],
+			] )
+		);
+
+		expect( failures ).toEqual( [] );
+	} );
+
+	test( 'rejects arbitrary plugin input inside the lifecycle exception', () => {
+		const failures = verifyFixture(
+			'allowed',
+			new Map( [
+				[
+					'popup-maker/classes/Services/AddonLifecycle.php',
+					`<?php
+class AddonLifecycle {
+	public function activate( $plugin ) {
+		return activate_plugin( $plugin );
+	}
+}`,
+				],
+			] )
+		);
+
+		expect( failures ).toEqual(
+			expect.arrayContaining( [
+				'unsafe add-on lifecycle boundary in popup-maker/classes/Services/AddonLifecycle.php',
+				'unsafe add-on lifecycle argument in popup-maker/classes/Services/AddonLifecycle.php',
+			] )
+		);
+	} );
+
+	test( 'does not extend local lifecycle compatibility to a copied service', () => {
+		const failures = verifyFixture(
+			'allowed',
+			new Map( [
+				[
+					'popup-maker/classes/Services/CopiedAddonLifecycle.php',
+					`<?php
+activate_plugin( $plugin );
+deactivate_plugins( $plugin );`,
+				],
+			] )
+		);
+
+		expect( failures ).toEqual(
+			expect.arrayContaining( [
+				'plugin activation capability in popup-maker/classes/Services/CopiedAddonLifecycle.php',
+			] )
+		);
+	} );
+
+	test( 'rejects delivery capability inside the local lifecycle exception', () => {
+		const failures = verifyFixture(
+			'allowed',
+			new Map( [
+				[
+					'popup-maker/classes/Services/AddonLifecycle.php',
+					`<?php
+class AddonLifecycle {
+	public function activate( $plugin, $package ) {
+		$upgrader = new Plugin_Upgrader();
+		$result = $upgrader->install( $package );
+		return activate_plugin( $plugin );
+	}
+}`,
+				],
+			] )
+		);
+
+		expect( failures ).toEqual(
+			expect.arrayContaining( [
+				'plugin package upgrader capability in popup-maker/classes/Services/AddonLifecycle.php',
+				'plugin package execution in popup-maker/classes/Services/AddonLifecycle.php',
+			] )
+		);
+	} );
+
+	test( 'does not mistake installed lifecycle copy for a delivery REST route', () => {
+		const failures = verifyFixture(
+			'allowed',
+			new Map( [
+				[
+					'popup-maker/classes/RestAPI/Addons.php',
+					`<?php
+register_rest_route( 'popup-maker/v2', '/addons/activate', [
+	'callback' => 'activate_installed_addon',
+] );`,
+				],
+			] )
+		);
+
+		expect( failures ).toEqual( [] );
+	} );
+
+	test( 'rejects installer-named REST delivery routes', () => {
+		const failures = verifyFixture(
+			'allowed',
+			new Map( [
+				[
+					'popup-maker/classes/RestAPI/Addons.php',
+					`<?php
+register_rest_route( 'popup-maker/v2', '/addons/installer', [
+	'callback' => 'run_installer',
+] );`,
+				],
+			] )
+		);
+
+		expect( failures ).toContain(
+			'plugin delivery REST route in popup-maker/classes/RestAPI/Addons.php'
+		);
 	} );
 
 	test( 'detects a renamed remote plugin delivery implementation', () => {

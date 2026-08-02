@@ -61,6 +61,41 @@ class Test_Distribution_REST_Routes extends WP_UnitTestCase {
 		foreach ( $removed_routes as $route ) {
 			$this->assertArrayNotHasKey( $route, $routes );
 		}
+
+		$this->assertArrayNotHasKey( '/popup-maker/v2/addons/install', $routes );
+		$this->assertArrayNotHasKey( '/popup-maker/v2/addons/download', $routes );
+	}
+
+	/**
+	 * Core exposes only its local catalog and installed-plugin lifecycle routes.
+	 */
+	public function test_core_addon_catalog_routes_are_registered_without_delivery() {
+		$routes = $this->server->get_routes();
+
+		$this->assertArrayHasKey( '/popup-maker/v2/addons', $routes );
+		$this->assertArrayHasKey( '/popup-maker/v2/addons/activate', $routes );
+		$this->assertArrayHasKey( '/popup-maker/v2/addons/deactivate', $routes );
+	}
+
+	/**
+	 * The public catalog response contains no entitlement or delivery metadata.
+	 */
+	public function test_core_addon_catalog_contains_only_static_product_and_local_status_data() {
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		wp_set_current_user( $user_id );
+
+		$response = rest_do_request( new WP_REST_Request( 'GET', '/popup-maker/v2/addons' ) );
+		$data     = $response->get_data();
+
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertNotEmpty( $data );
+
+		foreach ( $data as $item ) {
+			$this->assertArrayNotHasKey( 'package', $item );
+			$this->assertArrayNotHasKey( 'downloadUrl', $item );
+			$this->assertArrayNotHasKey( 'license', $item );
+			$this->assertArrayNotHasKey( 'hasPackage', $item );
+		}
 	}
 
 	/**

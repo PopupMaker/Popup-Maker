@@ -1,0 +1,2 @@
+<?php
+register_rest_route( 'popup-maker/v2', '/addons/activate' );

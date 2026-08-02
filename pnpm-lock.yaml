@@ -31,6 +31,9 @@ importers:
 
   .:
     dependencies:
+      '@popup-maker/addons-page':
+        specifier: workspace:*
+        version: link:packages/addons-page
       '@popup-maker/admin-bar':
         specifier: workspace:*
         version: link:packages/admin-bar
@@ -200,6 +203,46 @@ importers:
       webpack-bundle-analyzer:
         specifier: ^4.10.2
         version: 4.10.2
+
+  packages/addons-page:
+    dependencies:
+      '@popup-maker/components':
+        specifier: workspace:*
+        version: link:../components
+      '@popup-maker/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@popup-maker/layout':
+        specifier: workspace:*
+        version: link:../layout
+      '@wordpress/api-fetch':
+        specifier: ^7.29.0
+        version: 7.43.0
+      '@wordpress/components':
+        specifier: ^30.2.0
+        version: 30.9.0(@emotion/is-prop-valid@1.4.0)(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@wordpress/dom-ready':
+        specifier: ^4.29.0
+        version: 4.43.0
+      '@wordpress/i18n':
+        specifier: ^6.2.0
+        version: 6.17.0
+      '@wordpress/icons':
+        specifier: ^10.29.0
+        version: 10.32.0(react@18.3.1)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.28
+        version: 18.3.28
 
   packages/admin-bar:
     dependencies:

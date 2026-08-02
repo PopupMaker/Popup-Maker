@@ -58,6 +58,11 @@ class Assets extends Controller {
 		}
 
 		$packages = [
+			'addons-page'          => [
+				'bundled' => false,
+				'handle'  => 'popup-maker-addons-page',
+				'styles'  => true,
+			],
 			'admin-bar'           => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-admin-bar',

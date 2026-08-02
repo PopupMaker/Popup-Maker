@@ -24,6 +24,9 @@
 			"path": "./packages/admin-notifications"
 		},
 		{
+			"path": "./packages/addons-page"
+		},
+		{
 			"path": "./packages/block-editor"
 		},
 		{

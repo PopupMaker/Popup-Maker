@@ -823,6 +823,11 @@
 			flex: 1;
 		}
 
+		.pum-license-addons-link {
+			flex-shrink: 0;
+			text-decoration: none;
+		}
+
 		&--activated {
 			background: linear-gradient(135deg, rgb(233, 252, 241) 0%, rgb(242, 242, 243) 100%);
 			border-color: rgb(188, 245, 212);

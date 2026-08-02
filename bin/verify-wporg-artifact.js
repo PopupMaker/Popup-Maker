@@ -18,10 +18,25 @@ const forbiddenPaths = [
 	'bin/self-hosted-injectable.php',
 ];
 
-const requiredPaths = [
+const requiredSourcePaths = [
 	'classes/Services/License.php',
 	'classes/Extension/License.php',
 	'classes/Extension/Updater.php',
+	'classes/Services/AddonCatalog.php',
+	'classes/Services/AddonLifecycle.php',
+	'classes/RestAPI/Addons.php',
+];
+
+const requiredArtifactPaths = [
+	...requiredSourcePaths,
+	'vendor-prefixed/composer/autoload_classmap.php',
+	'vendor-prefixed/composer/autoload_static.php',
+];
+
+const requiredAutoloadClasses = [
+	'PopupMaker\\\\RestAPI\\\\Addons',
+	'PopupMaker\\\\Services\\\\AddonCatalog',
+	'PopupMaker\\\\Services\\\\AddonLifecycle',
 ];
 
 const forbiddenReleasePathPrefixes = [
@@ -89,6 +104,7 @@ const compatibilityAllowlists = {
 	pluginLifecycle: new Set( [
 		'popup-maker.php',
 		'classes/Activator.php',
+		'classes/Services/AddonLifecycle.php',
 		'classes/Deactivator.php',
 		'classes/Extensions.php',
 		'classes/Install.php',
@@ -125,7 +141,7 @@ const capabilityRules = [
 	{
 		label: 'plugin delivery REST route',
 		pattern:
-			/register_rest_route\s*\([\s\S]{0,600}['"`][^'"`]*(?:connect|install|download|upgrade|deploy|sideload)[^'"`]*['"`]/i,
+			/register_rest_route\s*\([\s\S]{0,600}['"`][^'"`]*[-_/](?:connect[a-z0-9]*|install(?!ed(?:[-_/.'"`]|$))[a-z0-9]*|download[a-z0-9]*|upgrade[a-z0-9]*|deploy[a-z0-9]*|sideload[a-z0-9]*)(?=[-_/.'"`]|$)[^'"`]*['"`]/i,
 		allowedPaths: new Set(),
 	},
 	{
@@ -249,7 +265,43 @@ function scanCapabilities( entry, contents ) {
 	return failures;
 }
 
-function verifyArtifactEntries( entries, readEntry ) {
+function verifyAddonLifecycleBoundary( entry, contents ) {
+	if (
+		'classes/Services/AddonLifecycle.php' !== relativeArtifactPath( entry )
+	) {
+		return [];
+	}
+
+	const failures = [];
+	const requiredBoundaries = [
+		/\$this->catalog->get_item\(\s*\$slug\s*\)/,
+		/null\s*===\s*\$item/,
+		/\$this->catalog->find_installed_basename\(\s*\$item\s*\)/,
+		/['"]{2}\s*===\s*\$basename/,
+	];
+
+	if (
+		requiredBoundaries.some( ( pattern ) => ! pattern.test( contents ) )
+	) {
+		failures.push( `unsafe add-on lifecycle boundary in ${ entry }` );
+	}
+
+	for ( const match of contents.matchAll(
+		/\b(?:activate_plugin|deactivate_plugins)\s*\(\s*([^,)]+)/gi
+	) ) {
+		if ( '$basename' !== match[ 1 ].trim() ) {
+			failures.push( `unsafe add-on lifecycle argument in ${ entry }` );
+		}
+	}
+
+	return failures;
+}
+
+function verifyArtifactEntries(
+	entries,
+	readEntry,
+	requiredPaths = requiredArtifactPaths
+) {
 	const failures = [];
 	const relativePaths = new Set( entries.map( relativeArtifactPath ) );
 
@@ -268,6 +320,29 @@ function verifyArtifactEntries( entries, readEntry ) {
 	for ( const requiredPath of requiredPaths ) {
 		if ( ! relativePaths.has( requiredPath ) ) {
 			failures.push( `missing compatibility path: ${ requiredPath }` );
+		}
+	}
+
+	for ( const autoloadPath of [
+		'vendor-prefixed/composer/autoload_classmap.php',
+		'vendor-prefixed/composer/autoload_static.php',
+	] ) {
+		const autoloadEntry = entries.find(
+			( entry ) => relativeArtifactPath( entry ) === autoloadPath
+		);
+
+		if ( ! autoloadEntry ) {
+			continue;
+		}
+
+		const autoloadContents = readEntry( autoloadEntry ).toString();
+
+		for ( const className of requiredAutoloadClasses ) {
+			if ( ! autoloadContents.includes( className ) ) {
+				failures.push(
+					`missing add-on classmap entry ${ className } in ${ autoloadEntry }`
+				);
+			}
 		}
 	}
 
@@ -301,6 +376,7 @@ function verifyArtifactEntries( entries, readEntry ) {
 		}
 
 		failures.push( ...scanCapabilities( entry, contents ) );
+		failures.push( ...verifyAddonLifecycleBoundary( entry, contents ) );
 	}
 
 	return [ ...new Set( failures ) ];
@@ -438,8 +514,10 @@ function verifySourceTree( projectRoot ) {
 	);
 	const failures = [
 		...symlinkEntries.map( ( entry ) => `source symlink: ${ entry }` ),
-		...verifyArtifactEntries( regularEntries, ( entry ) =>
-			fs.readFileSync( path.join( projectRoot, entry ) )
+		...verifyArtifactEntries(
+			regularEntries,
+			( entry ) => fs.readFileSync( path.join( projectRoot, entry ) ),
+			requiredSourcePaths
 		),
 	];
 

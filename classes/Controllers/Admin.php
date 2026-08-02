@@ -63,6 +63,18 @@ class Admin extends Controller {
 			];
 		}
 
+		$manage_settings_cap = class_exists( '\\PUM_Admin_Pages' )
+			? \PUM_Admin_Pages::get_submenu_capability( 'extensions' )
+			: 'manage_options';
+
+		if ( is_string( $manage_settings_cap ) && $manage_settings_cap && current_user_can( $manage_settings_cap ) ) {
+			$vars['navTabs'][] = [
+				'id'    => 'extend',
+				'title' => __( 'Extend', 'popup-maker' ),
+				'href'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions' ),
+			];
+		}
+
 		$vars['supportMenuItems'] = array_merge(
 			[
 				[
