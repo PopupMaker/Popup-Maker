@@ -15,10 +15,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Pro license management.
  *
- * Retained for separately installed Pro and legacy private extensions. Its
- * lifecycle callbacks only run for active Pro versions older than 1.2.0,
- * including when their license needs activation. Pro 1.2.0+ defines
- * POPUP_MAKER_PRO_OWNS_LICENSE_MANAGEMENT and owns this lifecycle completely.
+ * Retained as a thin, temporary compatibility bridge for active Pro 1.1.0 and
+ * older installations, including when their license needs activation. Pro
+ * 1.2.0+ does not use this Core lifecycle.
  *
  * @package PopupMaker
  * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
@@ -92,7 +91,7 @@ class License extends Service {
 		parent::__construct( $container );
 
 		// Core initializes at plugins_loaded priority 11 and Pro at 12.
-		// Defer until Pro has declared whether it owns license management.
+		// Defer until Pro is loaded so its active state and version are available.
 		add_action( 'plugins_loaded', [ $this, 'maybe_register_hooks' ], 100 );
 	}
 

@@ -21,13 +21,6 @@ defined( 'ABSPATH' ) || exit;
 final class Core extends \PopupMaker\Plugin\Container {
 
 	/**
-	 * Flag defined by Pro 1.2.0+ when Pro owns license management.
-	 *
-	 * @var string
-	 */
-	const PRO_LICENSE_OWNER_FLAG = 'POPUP_MAKER_PRO_OWNS_LICENSE_MANAGEMENT';
-
-	/**
 	 * Initiate the plugin.
 	 *
 	 * @param array<string,string|bool> $config Configuration variables passed from main plugin file.
@@ -197,9 +190,8 @@ final class Core extends \PopupMaker\Plugin\Container {
 			 * Get the legacy Pro license compatibility service.
 			 *
 			 * Retained only for active Pro versions older than 1.2.0, including
-			 * activation of an invalid or deactivated license. Pro 1.2.0+ owns
-			 * license management and disables this compatibility service
-			 * with POPUP_MAKER_PRO_OWNS_LICENSE_MANAGEMENT.
+			 * activation of an invalid or deactivated license. This is a thin,
+			 * temporary bridge for Pro 1.1.0 and older; Pro 1.2.0+ does not use it.
 			 *
 			 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 			 *
@@ -479,38 +471,26 @@ final class Core extends \PopupMaker\Plugin\Container {
 	}
 
 	/**
-	 * Check whether Pro has taken ownership of license management.
-	 *
-	 * Pro 1.2.0+ defines POPUP_MAKER_PRO_OWNS_LICENSE_MANAGEMENT before Core's
-	 * deferred compatibility bootstrap runs. The version check is a defensive
-	 * fallback. When either signal is present, Core must not expose its legacy
-	 * license hooks, settings operations, or REST endpoints.
-	 *
-	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
-	 *
-	 * @return bool
-	 */
-	public function pro_owns_license_management() {
-		$pro_version = $this->get_pro_version();
-
-		return defined( self::PRO_LICENSE_OWNER_FLAG )
-			|| ( '' !== $pro_version && version_compare( $pro_version, '1.2.0', '>=' ) );
-	}
-
-	/**
 	 * Check whether Core should expose its legacy Pro license compatibility.
 	 *
-	 * This path exists only for active Pro versions older than 1.2.0. It remains
-	 * available regardless of current license status so those users can activate,
-	 * deactivate, and recover licenses. New Pro releases own the lifecycle.
+	 * This is a thin, temporary stopgap solely to keep active Pro 1.1.0 and older
+	 * working with Core 1.23.x while users can activate, deactivate, or recover a
+	 * license. Pro 1.2.0+ does not use any Core license-management behavior.
+	 *
+	 * @since 1.23.0
 	 *
 	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return bool
 	 */
 	public function should_run_legacy_license_compatibility() {
-		return ! $this->pro_owns_license_management()
-			&& $this->is_pro_active();
+		if ( ! $this->is_pro_active() ) {
+			return false;
+		}
+
+		$pro_version = $this->get_pro_version();
+
+		return '' !== $pro_version && version_compare( $pro_version, '1.2.0', '<' );
 	}
 
 	/**

@@ -205,6 +205,8 @@ class License extends WP_REST_Controller {
 	/**
 	 * Check the guarded legacy compatibility state.
 	 *
+	 * @since 1.23.0
+	 *
 	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return bool

@@ -32,6 +32,8 @@ class PUM_Admin_Settings {
 	/**
 	 * Register old Pro's settings operation only when compatibility is active.
 	 *
+	 * @since 1.23.0
+	 *
 	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return void
