@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.24.0 - 2026-08-03
+
 **Security**
 
 -   Security and resilience hardening based on continuous AI scanning.

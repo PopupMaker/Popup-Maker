@@ -7,7 +7,7 @@ Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.23.0
+Stable tag: 1.24.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -271,6 +271,32 @@ For the latest updates and release information:
 * Join our [community](https://wppopupmaker.com/community/) for important release announcements and discussions
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
+
+= 1.24.0 - 2026-08-03 =
+
+**Security**
+
+-   Security and resilience hardening based on continuous AI scanning.
+-   Hardened Subscribers page pagination URL escaping to prevent cross-site scripting (XSS).
+
+**Features**
+
+-   Added an "Open Popup" click action to the Beaver Builder Button module, so you can open any popup on click without writing custom code. The chosen popup is automatically loaded on the page even if its display conditions wouldn't otherwise match.
+
+**Improvements**
+
+-   Improved compatibility with popular post duplication plugins so cloned popups start with fresh analytics stats and other popup-specific identity data.
+-   Corrected the plural of "Call to Action" to "Calls to Action" across the admin. Thanks @swinggraphics.
+-   Added a `popup_maker/overlay_zindex` filter to control the popup overlay's stacking order, so sites can lower it below the WordPress admin bar (or other elements) when needed.
+
+**Fixes**
+
+-   Fixed pending upgrade notices causing a fatal error on logged-in front-end pages by removing reliance on admin-only form helpers. Closes #1253.
+-   Fixed generic WordPress editors and page builders receiving 404 responses for Popup and Popup Theme REST collections by exposing standard `wp/v2` aliases while preserving Popup Maker's versioned API.
+-   Fixed Gravity Forms inside popups no longer submitting via AJAX (regression since 1.21.0), which broke text confirmations and Form Submission triggers after submit.
+-   Improved keyboard focus when closing popups: focus returns to the previously focused element, or to the top of the document when there wasn't one (auto-open popups) or it no longer exists. Thanks @swinggraphics.
+-   Fixed Click Open "Extra Selectors" starting with a number (e.g. `.2026-selector`) being rejected as invalid. Selectors are now validated against jQuery's engine, which handles the actual matching.
+-   Fixed a bug where a popup could unexpectedly lose its triggers, conditions, and display settings — leaving only its theme — after saving, a plugin update, or when another plugin or page builder saved the popup. Saves that would erase an existing popup's settings are now prevented and report an error instead of silently discarding your configuration.
 
 = 1.23.0 - 2026-06-28 =
 
