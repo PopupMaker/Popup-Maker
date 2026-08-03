@@ -285,6 +285,7 @@ For the latest updates and release information:
 
 **Improvements**
 
+-   Reorganized the Popup Maker admin menu into clearer creation, audience, performance, and administration groups. The Subscribers page now remains hidden until subscriber storage has been initialized.
 -   Improved Calls to Action management with instant-opening editors, loading placeholders, draft-first creation that avoids abandoned records, and more reliable saving and sorting.
 -   Improved compatibility with popular post duplication plugins so cloned popups start with fresh analytics stats and other popup-specific identity data.
 -   Corrected the plural of "Call to Action" to "Calls to Action" across the admin. Thanks @swinggraphics.
