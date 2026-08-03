@@ -1,0 +1,82 @@
+'use strict';
+
+const baseConfig = require( '@code-atlantic/stylelint-config' );
+const rules = { ...baseConfig.rules };
+
+// Stylelint 16 removed the formatting rules retained by the shared config.
+const removedRules = [
+	'at-rule-name-case',
+	'at-rule-name-space-after',
+	'at-rule-semicolon-newline-after',
+	'block-closing-brace-newline-after',
+	'block-closing-brace-newline-before',
+	'block-opening-brace-newline-after',
+	'block-opening-brace-space-before',
+	'color-hex-case',
+	'declaration-bang-space-after',
+	'declaration-bang-space-before',
+	'declaration-block-semicolon-newline-after',
+	'declaration-block-semicolon-space-before',
+	'declaration-block-trailing-semicolon',
+	'declaration-colon-newline-after',
+	'declaration-colon-space-after',
+	'declaration-colon-space-before',
+	'function-calc-no-invalid',
+	'function-comma-space-after',
+	'function-comma-space-before',
+	'function-max-empty-lines',
+	'function-parentheses-space-inside',
+	'function-whitespace-after',
+	'indentation',
+	'linebreaks',
+	'max-empty-lines',
+	'max-line-length',
+	'media-feature-colon-space-after',
+	'media-feature-colon-space-before',
+	'media-feature-range-operator-space-after',
+	'media-feature-range-operator-space-before',
+	'media-query-list-comma-newline-after',
+	'media-query-list-comma-space-after',
+	'media-query-list-comma-space-before',
+	'no-empty-first-line',
+	'no-eol-whitespace',
+	'no-extra-semicolons',
+	'no-descending-specificity',
+	'no-missing-end-of-source-newline',
+	'number-leading-zero',
+	'number-no-trailing-zeros',
+	'order/properties-alphabetical-order',
+	'property-case',
+	'rule-empty-line-before',
+	'selector-attribute-brackets-space-inside',
+	'selector-attribute-operator-space-after',
+	'selector-attribute-operator-space-before',
+	'selector-combinator-space-after',
+	'selector-combinator-space-before',
+	'selector-list-comma-newline-after',
+	'selector-list-comma-space-before',
+	'selector-max-empty-lines',
+	'selector-id-pattern',
+	'selector-pseudo-class-case',
+	'selector-pseudo-class-parentheses-space-inside',
+	'selector-pseudo-element-case',
+	'string-quotes',
+	'unit-case',
+	'value-keyword-case',
+	'declaration-property-unit-allowed-list',
+	'value-list-comma-newline-after',
+	'value-list-comma-space-after',
+	'value-list-comma-space-before',
+];
+
+for ( const ruleName of removedRules ) {
+	delete rules[ ruleName ];
+}
+
+module.exports = {
+	...baseConfig,
+	customSyntax: require.resolve( 'postcss-scss', {
+		paths: [ require.resolve( '@wordpress/scripts/package.json' ) ],
+	} ),
+	rules,
+};

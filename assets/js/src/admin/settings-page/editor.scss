@@ -93,8 +93,6 @@
 		border-color: #00a0d2;
 	}
 
-	.popmake-license-data.popmake-license-valid {}
-
 	.popmake-license-data.popmake-license-expired {
 		background-color: #e24e4e;
 		color: #fff;
@@ -234,7 +232,7 @@
 				&.active {
 					background: linear-gradient(to right, #1dbe61, #179b4e);
 					color: #fff;
-					box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
+					box-shadow: rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.1) 0 4px 6px -4px;
 
 					// Pro+ active badge styling
 					&.pro-plus {
@@ -387,7 +385,6 @@
 					border: 1px solid rgb(217, 215, 218);
 					border-right: none;
 					border-radius: 3px 0 0 3px;
-					font-size: 14px;
 					background: #fff;
 					padding: 0.75rem 1rem;
 					font-size: 0.875rem;
@@ -559,7 +556,6 @@
 				display: flex;
 				align-items: center;
 				gap: 0.5em;
-				align-items: center;
 
 				h4 {
 					margin: 0;
