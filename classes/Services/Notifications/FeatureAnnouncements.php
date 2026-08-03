@@ -284,6 +284,34 @@ class FeatureAnnouncements extends Service implements Provider {
 				],
 			],
 
+			// Split Testing — relevant once the user manages multiple live popups.
+			[
+				'code'      => 'pm_upsell_split_testing_2026',
+				'category'  => 'recommendation',
+				'priority'  => 82,
+				'condition' => [ $this, 'needs_split_testing' ],
+				'title'     => __( 'Find out which popup actually wins', 'popup-maker' ),
+				'message'   => __( 'You manage multiple live popups. <strong>Split Testing in Popup Maker Pro</strong> lets you divide traffic between variants and measure opens, conversions, purchases, and revenue—including true holdout tests.', 'popup-maker' ),
+				'subtitle'  => __( 'new in Pro 1.2', 'popup-maker' ),
+				'icon'      => 'chart-bar',
+				'actions'   => [
+					[
+						'text'     => __( 'Explore Split Testing', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => $this->upgrade_url( 'split-testing' ),
+						'primary'  => true,
+						'external' => true,
+					],
+					[
+						'text'    => __( 'Not now', 'popup-maker' ),
+						'type'    => 'action',
+						'action'  => 'dismiss',
+						'expires' => '30 days',
+					],
+				],
+			],
+
 			// CTAs — new call-to-action system (core/free).
 			[
 				'code'      => 'pm_feat_ctas_2026',
@@ -422,6 +450,30 @@ class FeatureAnnouncements extends Service implements Provider {
 	}
 
 	/**
+	 * True when multiple published popups could benefit from Split Testing.
+	 *
+	 * The recommendation resolves as soon as Pro 1.2.0 or newer is installed,
+	 * even when Pro is temporarily inactive.
+	 *
+	 * @return bool
+	 */
+	public function needs_split_testing() {
+		if ( $this->has_pro_version( '1.2.0' ) ) {
+			return false;
+		}
+
+		$popups = get_posts( [
+			'post_type'      => 'popup',
+			'post_status'    => 'publish',
+			'posts_per_page' => 2,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		] );
+
+		return count( $popups ) >= 2;
+	}
+
+	/**
 	 * True when no CTA records exist yet.
 	 *
 	 * @return bool
@@ -452,20 +504,26 @@ class FeatureAnnouncements extends Service implements Provider {
 	 * @return array<int,array<string,mixed>>
 	 */
 	protected function personalize_for_request( array $announcements ) {
-		if ( ! $this->is_desktop_chrome() ) {
-			return $announcements;
-		}
+		$personalized    = [];
+		$desktop_chrome  = $this->is_desktop_chrome();
+		$has_split_tests = $this->has_pro_version( '1.2.0' );
 
-		foreach ( $announcements as &$announcement ) {
-			if ( 'pm_tip_chrome_debug_tools_2026' !== ( $announcement['code'] ?? '' ) || empty( $announcement['actions'][0] ) ) {
+		foreach ( $announcements as $announcement ) {
+			$code = $announcement['code'] ?? '';
+
+			// Remove a cached upsell immediately after Pro gains the feature.
+			if ( $has_split_tests && 'pm_upsell_split_testing_2026' === $code ) {
 				continue;
 			}
 
-			$announcement['actions'][0]['text'] = __( 'Add to Chrome', 'popup-maker' );
-		}
-		unset( $announcement );
+			if ( $desktop_chrome && 'pm_tip_chrome_debug_tools_2026' === $code && ! empty( $announcement['actions'][0] ) ) {
+				$announcement['actions'][0]['text'] = __( 'Add to Chrome', 'popup-maker' );
+			}
 
-		return $announcements;
+			$personalized[] = $announcement;
+		}
+
+		return $personalized;
 	}
 
 	/**
@@ -485,6 +543,24 @@ class FeatureAnnouncements extends Service implements Provider {
 			&& false === strpos( $user_agent, 'Mobile' )
 			&& false === strpos( $user_agent, 'Edg/' )
 			&& false === strpos( $user_agent, 'OPR/' );
+	}
+
+	/**
+	 * Check whether a qualifying Pro version is installed.
+	 *
+	 * @param string $minimum_version Minimum qualifying version.
+	 * @return bool
+	 */
+	protected function has_pro_version( $minimum_version ) {
+		if ( ! method_exists( $this->container, 'get_pro_version' ) ) {
+			return false;
+		}
+
+		$pro_version = $this->container->get_pro_version();
+
+		return is_string( $pro_version )
+			&& '' !== $pro_version
+			&& version_compare( $pro_version, $minimum_version, '>=' );
 	}
 
 	/**
