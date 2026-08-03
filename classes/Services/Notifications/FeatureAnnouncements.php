@@ -54,7 +54,7 @@ class FeatureAnnouncements extends Service implements Provider {
 	 *
 	 * @var string
 	 */
-	const CACHE_KEY = 'pum_feature_announcements';
+	const CACHE_KEY = 'pum_feature_announcements_v2';
 
 	/**
 	 * Option name storing the list of cache keys we've written — used to
@@ -71,6 +71,13 @@ class FeatureAnnouncements extends Service implements Provider {
 	 * @var int
 	 */
 	const CACHE_TTL = 12 * HOUR_IN_SECONDS;
+
+	/**
+	 * Popup Maker Debug Tools Chrome Web Store URL.
+	 *
+	 * @var string
+	 */
+	const CHROME_EXTENSION_URL = 'https://chromewebstore.google.com/detail/popup-maker-debug-tools/hhkgmkibaalfkkndobkckdopemgioago';
 
 	/**
 	 * Hook into the alert list filter.
@@ -164,7 +171,7 @@ class FeatureAnnouncements extends Service implements Provider {
 			$this->remember_cache_key( $cache_key );
 		}
 
-		return array_merge( $alerts, $cached );
+		return array_merge( $alerts, $this->personalize_for_request( $cached ) );
 	}
 
 	/**
@@ -249,6 +256,33 @@ class FeatureAnnouncements extends Service implements Provider {
 	 */
 	protected function definitions() {
 		return [
+
+			// Debug Tools — relevant once there is a live popup to test.
+			[
+				'code'      => 'pm_tip_chrome_debug_tools_2026',
+				'category'  => 'recommendation',
+				'priority'  => 84,
+				'condition' => [ $this, 'has_published_popup' ],
+				'title'     => __( 'Test popups while logged out', 'popup-maker' ),
+				'message'   => __( 'Use the free <strong>Popup Maker Debug Tools</strong> Chrome extension to test and troubleshoot popups from the front end—even while logged out of WordPress.', 'popup-maker' ),
+				'subtitle'  => __( 'free debugging tool', 'popup-maker' ),
+				'icon'      => 'admin-tools',
+				'actions'   => [
+					[
+						'text'     => __( 'View Chrome extension', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => self::CHROME_EXTENSION_URL,
+						'primary'  => true,
+						'external' => true,
+					],
+					[
+						'text'   => __( 'Dismiss', 'popup-maker' ),
+						'type'   => 'action',
+						'action' => 'dismiss',
+					],
+				],
+			],
 
 			// CTAs — new call-to-action system (core/free).
 			[
@@ -371,6 +405,23 @@ class FeatureAnnouncements extends Service implements Provider {
 	 */
 
 	/**
+	 * True when at least one popup has been published.
+	 *
+	 * @return bool
+	 */
+	public function has_published_popup() {
+		$popups = get_posts( [
+			'post_type'      => 'popup',
+			'post_status'    => 'publish',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		] );
+
+		return ! empty( $popups );
+	}
+
+	/**
 	 * True when no CTA records exist yet.
 	 *
 	 * @return bool
@@ -389,6 +440,51 @@ class FeatureAnnouncements extends Service implements Provider {
 		] );
 
 		return empty( $ctas );
+	}
+
+	/**
+	 * Apply request-specific presentation after loading cached definitions.
+	 *
+	 * Browser detection cannot happen while building the shared transient or
+	 * one administrator's browser would determine the CTA shown to everyone.
+	 *
+	 * @param array<int,array<string,mixed>> $announcements Cached announcements.
+	 * @return array<int,array<string,mixed>>
+	 */
+	protected function personalize_for_request( array $announcements ) {
+		if ( ! $this->is_desktop_chrome() ) {
+			return $announcements;
+		}
+
+		foreach ( $announcements as &$announcement ) {
+			if ( 'pm_tip_chrome_debug_tools_2026' !== ( $announcement['code'] ?? '' ) || empty( $announcement['actions'][0] ) ) {
+				continue;
+			}
+
+			$announcement['actions'][0]['text'] = __( 'Add to Chrome', 'popup-maker' );
+		}
+		unset( $announcement );
+
+		return $announcements;
+	}
+
+	/**
+	 * Check whether the current request comes from desktop Google Chrome.
+	 *
+	 * @return bool
+	 */
+	protected function is_desktop_chrome() {
+		if ( empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			return false;
+		}
+
+		$user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
+
+		return false !== strpos( $user_agent, 'Chrome/' )
+			&& false === strpos( $user_agent, 'Android' )
+			&& false === strpos( $user_agent, 'Mobile' )
+			&& false === strpos( $user_agent, 'Edg/' )
+			&& false === strpos( $user_agent, 'OPR/' );
 	}
 
 	/**
