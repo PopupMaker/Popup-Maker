@@ -281,6 +281,7 @@ For the latest updates and release information:
 
 **Features**
 
+-   Added the free [Popup Maker Debug Tools Chrome extension](https://chromewebstore.google.com/detail/popup-maker-debug-tools/hhkgmkibaalfkkndobkckdopemgioago) for testing and troubleshooting popups—even while logged out of WordPress.
 -   Added an "Open Popup" click action to the Beaver Builder Button module, so you can open any popup on click without writing custom code. The chosen popup is automatically loaded on the page even if its display conditions wouldn't otherwise match.
 
 **Improvements**

@@ -59,6 +59,13 @@ class WhatsNew extends Service implements Provider {
 	const HIGHLIGHT_LIMIT = 6;
 
 	/**
+	 * Popup Maker Debug Tools Chrome Web Store URL.
+	 *
+	 * @var string
+	 */
+	const CHROME_EXTENSION_URL = 'https://chromewebstore.google.com/detail/popup-maker-debug-tools/hhkgmkibaalfkkndobkckdopemgioago';
+
+	/**
 	 * Wire hooks.
 	 *
 	 * @return void
@@ -180,13 +187,26 @@ class WhatsNew extends Service implements Provider {
 	 * @return array<int,array<string,mixed>>
 	 */
 	protected function build_actions() {
+		$actions = [];
+
+		if ( $this->is_desktop_chrome() ) {
+			$actions[] = [
+				'text'     => __( 'Add to Chrome', 'popup-maker' ),
+				'type'     => 'link',
+				'action'   => '',
+				'href'     => self::CHROME_EXTENSION_URL,
+				'primary'  => true,
+				'external' => true,
+			];
+		}
+
 		if ( current_user_can( 'install_plugins' ) ) {
 			$view = [
 				'text'    => __( 'View changelog', 'popup-maker' ),
 				'type'    => 'iframe',
 				'action'  => '',
 				'href'    => $this->changelog_url(),
-				'primary' => true,
+				'primary' => empty( $actions ),
 			];
 		} else {
 			$view = [
@@ -194,19 +214,41 @@ class WhatsNew extends Service implements Provider {
 				'type'     => 'link',
 				'action'   => '',
 				'href'     => $this->public_changelog_url(),
-				'primary'  => true,
+				'primary'  => empty( $actions ),
 				'external' => true,
 			];
 		}
 
-		return [
-			$view,
-			[
-				'text'   => __( 'Dismiss', 'popup-maker' ),
-				'type'   => 'action',
-				'action' => 'dismiss',
-			],
+		$actions[] = $view;
+		$actions[] = [
+			'text'   => __( 'Dismiss', 'popup-maker' ),
+			'type'   => 'action',
+			'action' => 'dismiss',
 		];
+
+		return $actions;
+	}
+
+	/**
+	 * Check whether the current request comes from desktop Google Chrome.
+	 *
+	 * Chrome on Android and iOS cannot install desktop Chrome extensions.
+	 * Edge and Opera include Chrome's user-agent token, so exclude them.
+	 *
+	 * @return bool
+	 */
+	protected function is_desktop_chrome() {
+		if ( empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			return false;
+		}
+
+		$user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
+
+		return false !== strpos( $user_agent, 'Chrome/' )
+			&& false === strpos( $user_agent, 'Android' )
+			&& false === strpos( $user_agent, 'Mobile' )
+			&& false === strpos( $user_agent, 'Edg/' )
+			&& false === strpos( $user_agent, 'OPR/' );
 	}
 
 	/**
