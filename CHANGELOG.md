@@ -15,6 +15,7 @@
 
 **Improvements**
 
+-   Improved Calls to Action management with instant-opening editors, loading placeholders, draft-first creation that avoids abandoned records, and more reliable saving and sorting.
 -   Improved compatibility with popular post duplication plugins so cloned popups start with fresh analytics stats and other popup-specific identity data.
 -   Corrected the plural of "Call to Action" to "Calls to Action" across the admin. Thanks @swinggraphics.
 -   Added a `popup_maker/overlay_zindex` filter to control the popup overlay's stacking order, so sites can lower it below the WordPress admin bar (or other elements) when needed.
@@ -27,6 +28,14 @@
 -   Improved keyboard focus when closing popups: focus returns to the previously focused element, or to the top of the document when there wasn't one (auto-open popups) or it no longer exists. Thanks @swinggraphics.
 -   Fixed Click Open "Extra Selectors" starting with a number (e.g. `.2026-selector`) being rejected as invalid. Selectors are now validated against jQuery's engine, which handles the actual matching.
 -   Fixed a bug where a popup could unexpectedly lose its triggers, conditions, and display settings — leaving only its theme — after saving, a plugin update, or when another plugin or page builder saved the popup. Saves that would erase an existing popup's settings are now prevented and report an error instead of silently discarding your configuration.
+-   Fixed CTA Button blocks losing button content during transforms, clearing links while CTA data loaded, and reporting validation errors for blocks saved by previous versions.
+-   Fixed non-AJAX form submissions being attributed to the wrong popup—or no popup—and improved Newsletter and Beaver Builder conversion tracking reliability.
+-   Fixed temporary license API failures causing fatal errors or replacing known license status, and prevented manually entered keys from being lost when add-on-provided license constants appeared or disappeared.
+-   Fixed disabled or unpublished Calls to Action continuing to render or process clicks.
+-   Fixed Popup Category and Tag filters not retaining their selected values and interfering with popup bulk actions.
+-   Fixed bundled translations not loading correctly and plural translations receiving incorrect arguments.
+-   Fixed the Easy Modal v2 importer crashing because its bundled files were loaded from outdated paths.
+-   Fixed “Previous Opens” showing incorrectly after resetting popup analytics.
 
 ## v1.23.0 - 2026-06-28
 
