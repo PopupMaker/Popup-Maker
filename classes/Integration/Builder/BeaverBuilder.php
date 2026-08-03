@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * class, which Popup Maker's built-in Click Open trigger uses to open the
  * popup — the same mechanism as the block editor button and shortcodes.
  *
- * @since X.X.X
+ * @since 1.24.0
  */
 class PUM_Integration_Builder_BeaverBuilder extends PUM_Abstract_Integration {
 

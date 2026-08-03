@@ -67,11 +67,11 @@ class PUM_Admin_Pages {
 		$admin_pages = apply_filters(
 			'pum_admin_pages',
 			[
-				'subscribers' => [
+				'subscribers' => self::subscribers_initialized() ? [
 					'page_title' => __( 'Subscribers', 'popup-maker' ),
 					'capability' => 'manage_options',
 					'callback'   => [ 'PUM_Admin_Subscribers', 'page' ],
-				],
+				] : null,
 				'settings'    => [
 					'page_title' => __( 'Settings', 'popup-maker' ),
 					'capability' => 'manage_options',
@@ -135,6 +135,24 @@ class PUM_Admin_Pages {
 
 		// Add shortcut to theme editor from Appearance menu.
 		add_theme_page( __( 'Popup Themes', 'popup-maker' ), __( 'Popup Themes', 'popup-maker' ), 'edit_posts', 'edit.php?post_type=popup_theme' );
+	}
+
+	/**
+	 * Whether subscriber storage has been initialized at least once.
+	 *
+	 * Reading the stored schema version avoids instantiating the database class,
+	 * which would create the table merely by building the admin menu.
+	 *
+	 * @return bool
+	 */
+	public static function subscribers_initialized() {
+		$db_versions = get_option( 'pum_db_versions', [] );
+
+		if ( is_array( $db_versions ) && ! empty( $db_versions['pum_subscribers'] ) ) {
+			return true;
+		}
+
+		return (bool) get_option( 'pum_subscribers_db_version', false );
 	}
 
 
@@ -230,9 +248,9 @@ class PUM_Admin_Pages {
 				__( 'All Themes', 'popup-maker' ),
 				__( 'Popup Themes', 'popup-maker' ),
 				__( 'Calls to Action', 'popup-maker' ),
-				__( 'Subscribers', 'popup-maker' ),
 				__( 'Categories', 'popup-maker' ),
 				__( 'Tags', 'popup-maker' ),
+				__( 'Subscribers', 'popup-maker' ),
 			]
 		);
 

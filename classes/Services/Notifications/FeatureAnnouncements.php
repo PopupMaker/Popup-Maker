@@ -32,6 +32,13 @@ class FeatureAnnouncements extends Service implements Provider {
 	const EXIT_INTENT_MIN_CONVERSIONS = 10;
 
 	/**
+	 * Minimum total conversions before advanced analytics becomes relevant.
+	 *
+	 * @var int
+	 */
+	const ADVANCED_ANALYTICS_MIN_CONVERSIONS = 25;
+
+	/**
 	 * Minimum popup count before the scheduling upsell fires.
 	 *
 	 * @var int
@@ -54,7 +61,7 @@ class FeatureAnnouncements extends Service implements Provider {
 	 *
 	 * @var string
 	 */
-	const CACHE_KEY = 'pum_feature_announcements';
+	const CACHE_KEY = 'pum_feature_announcements_v2';
 
 	/**
 	 * Option name storing the list of cache keys we've written — used to
@@ -71,6 +78,13 @@ class FeatureAnnouncements extends Service implements Provider {
 	 * @var int
 	 */
 	const CACHE_TTL = 12 * HOUR_IN_SECONDS;
+
+	/**
+	 * Popup Maker Debug Tools Chrome Web Store URL.
+	 *
+	 * @var string
+	 */
+	const CHROME_EXTENSION_URL = 'https://chromewebstore.google.com/detail/popup-maker-debug-tools/hhkgmkibaalfkkndobkckdopemgioago';
 
 	/**
 	 * Hook into the alert list filter.
@@ -101,7 +115,10 @@ class FeatureAnnouncements extends Service implements Provider {
 		 * reflects current state.
 		 */
 		add_action( 'update_option_pum_form_conversion_count', [ $this, 'flush_cache' ] );
+		add_action( 'update_option_pum_total_conversion_count', [ $this, 'flush_cache' ] );
 		add_action( 'update_option_pum_bypass_adblockers', [ $this, 'flush_cache' ] );
+		add_action( 'activated_plugin', [ $this, 'flush_cache' ] );
+		add_action( 'deactivated_plugin', [ $this, 'flush_cache' ] );
 	}
 
 	/**
@@ -164,7 +181,7 @@ class FeatureAnnouncements extends Service implements Provider {
 			$this->remember_cache_key( $cache_key );
 		}
 
-		return array_merge( $alerts, $cached );
+		return array_merge( $alerts, $this->personalize_for_request( $cached ) );
 	}
 
 	/**
@@ -237,9 +254,9 @@ class FeatureAnnouncements extends Service implements Provider {
 	/**
 	 * Announcement definitions.
 	 *
-	 * Only surface features that ship in the FREE version of Popup Maker
-	 * here. Pro, Pro+ and addon announcements belong in their own plugins
-	 * so they only appear when that plugin is active.
+	 * Core owns free-feature adoption tips and behaviorally targeted upsells.
+	 * Adoption announcements for features already supplied by Pro or another
+	 * addon belong to that plugin so they only appear while it is active.
 	 *
 	 * Upsells in core are ALLOWED when they are behaviorally targeted —
 	 * the user has demonstrated usage that makes the Pro capability a
@@ -249,6 +266,145 @@ class FeatureAnnouncements extends Service implements Provider {
 	 */
 	protected function definitions() {
 		return [
+
+			// Debug Tools — relevant once there is a live popup to test.
+			[
+				'code'      => 'pm_tip_chrome_debug_tools_2026',
+				'category'  => 'recommendation',
+				'priority'  => 84,
+				'condition' => [ $this, 'has_published_popup' ],
+				'title'     => __( 'Test popups while logged out', 'popup-maker' ),
+				'message'   => __( 'Use the free <strong>Popup Maker Debug Tools</strong> Chrome extension to test and troubleshoot popups from the front end—even while logged out of WordPress.', 'popup-maker' ),
+				'subtitle'  => __( 'free debugging tool', 'popup-maker' ),
+				'icon'      => 'admin-tools',
+				'actions'   => [
+					[
+						'text'     => __( 'View Chrome extension', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => self::CHROME_EXTENSION_URL,
+						'primary'  => true,
+						'external' => true,
+					],
+					[
+						'text'   => __( 'Dismiss', 'popup-maker' ),
+						'type'   => 'action',
+						'action' => 'dismiss',
+					],
+				],
+			],
+
+			// Advanced Analytics — relevant after the site has meaningful conversion data.
+			[
+				'code'      => 'pm_upsell_advanced_analytics_2026',
+				'category'  => 'recommendation',
+				'priority'  => 81,
+				'condition' => [ $this, 'needs_advanced_analytics' ],
+				'title'     => __( 'See what is driving your conversions', 'popup-maker' ),
+				'message'   => __( 'You have enough conversion activity to spot real trends. <strong>Advanced Analytics in Popup Maker Pro</strong> adds visual reports, URL performance, campaign attribution, filters, and deeper conversion insights.', 'popup-maker' ),
+				'subtitle'  => __( 'based on your conversion activity', 'popup-maker' ),
+				'icon'      => 'chart-area',
+				'actions'   => [
+					[
+						'text'     => __( 'Explore Advanced Analytics', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => $this->upgrade_url( 'advanced-analytics' ),
+						'primary'  => true,
+						'external' => true,
+					],
+					[
+						'text'    => __( 'Not now', 'popup-maker' ),
+						'type'    => 'action',
+						'action'  => 'dismiss',
+						'expires' => '30 days',
+					],
+				],
+			],
+
+			// MCP — relevant only when the site can immediately use the integration.
+			[
+				'code'      => 'pm_upsell_mcp_integration_2026',
+				'category'  => 'recommendation',
+				'priority'  => 79,
+				'condition' => [ $this, 'needs_mcp_integration' ],
+				'title'     => __( 'Manage Popup Maker with your AI assistant', 'popup-maker' ),
+				'message'   => __( 'Your site already has the WordPress MCP foundation. <strong>Popup Maker Pro</strong> connects it to AI tools so authorized users can inspect analytics and manage popups, themes, and CTAs through natural conversation.', 'popup-maker' ),
+				'subtitle'  => __( 'MCP-ready site', 'popup-maker' ),
+				'icon'      => 'superhero-alt',
+				'actions'   => [
+					[
+						'text'     => __( 'Explore AI integration', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => $this->upgrade_url( 'mcp-integration' ),
+						'primary'  => true,
+						'external' => true,
+					],
+					[
+						'text'    => __( 'Not now', 'popup-maker' ),
+						'type'    => 'action',
+						'action'  => 'dismiss',
+						'expires' => '30 days',
+					],
+				],
+			],
+
+			// Split Testing — relevant once the user manages multiple live popups.
+			[
+				'code'      => 'pm_upsell_split_testing_2026',
+				'category'  => 'recommendation',
+				'priority'  => 82,
+				'condition' => [ $this, 'needs_split_testing' ],
+				'title'     => __( 'Find out which popup actually wins', 'popup-maker' ),
+				'message'   => __( 'You manage multiple live popups. <strong>Split Testing in Popup Maker Pro</strong> lets you divide traffic between variants and measure opens, conversions, purchases, and revenue—including true holdout tests.', 'popup-maker' ),
+				'subtitle'  => __( 'new in Pro 1.2', 'popup-maker' ),
+				'icon'      => 'chart-bar',
+				'actions'   => [
+					[
+						'text'     => __( 'Explore Split Testing', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => $this->upgrade_url( 'split-testing' ),
+						'primary'  => true,
+						'external' => true,
+					],
+					[
+						'text'    => __( 'Not now', 'popup-maker' ),
+						'type'    => 'action',
+						'action'  => 'dismiss',
+						'expires' => '30 days',
+					],
+				],
+			],
+
+			// Vanity URLs — relevant after the user has created a CTA.
+			[
+				'code'      => 'pm_upsell_vanity_cta_urls_2026',
+				'category'  => 'recommendation',
+				'priority'  => 77,
+				'condition' => [ $this, 'needs_vanity_cta_urls' ],
+				'title'     => __( 'Give your CTAs clean, memorable URLs', 'popup-maker' ),
+				'message'   => __( 'Your CTAs already track clicks. <strong>Vanity URLs in Popup Maker Pro</strong> replace long tracking links with branded paths such as <code>/go/summer-sale</code> that are easier to share and recognize.', 'popup-maker' ),
+				'subtitle'  => __( 'built for your CTAs', 'popup-maker' ),
+				'icon'      => 'admin-links',
+				'actions'   => [
+					[
+						'text'     => __( 'Explore Vanity URLs', 'popup-maker' ),
+						'type'     => 'link',
+						'action'   => '',
+						'href'     => $this->upgrade_url( 'vanity-cta-urls' ),
+						'primary'  => true,
+						'external' => true,
+					],
+					[
+						'text'    => __( 'Not now', 'popup-maker' ),
+						'type'    => 'action',
+						'action'  => 'dismiss',
+						'expires' => '30 days',
+					],
+				],
+			],
 
 			// CTAs — new call-to-action system (core/free).
 			[
@@ -371,11 +527,61 @@ class FeatureAnnouncements extends Service implements Provider {
 	 */
 
 	/**
+	 * True when at least one popup has been published.
+	 *
+	 * @return bool
+	 */
+	public function has_published_popup() {
+		$popups = get_posts( [
+			'post_type'      => 'popup',
+			'post_status'    => 'publish',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		] );
+
+		return ! empty( $popups );
+	}
+
+	/**
+	 * True when multiple published popups could benefit from Split Testing.
+	 *
+	 * The recommendation resolves as soon as Pro 1.2.0 or newer is installed,
+	 * even when Pro is temporarily inactive.
+	 *
+	 * @return bool
+	 */
+	public function needs_split_testing() {
+		if ( $this->has_pro_version( '1.2.0' ) ) {
+			return false;
+		}
+
+		$popups = get_posts( [
+			'post_type'      => 'popup',
+			'post_status'    => 'publish',
+			'posts_per_page' => 2,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		] );
+
+		return count( $popups ) >= 2;
+	}
+
+	/**
 	 * True when no CTA records exist yet.
 	 *
 	 * @return bool
 	 */
 	public function has_no_ctas() {
+		return ! $this->has_ctas();
+	}
+
+	/**
+	 * True when at least one CTA record exists.
+	 *
+	 * @return bool
+	 */
+	public function has_ctas() {
 		if ( ! post_type_exists( 'pum_cta' ) ) {
 			return false;
 		}
@@ -388,7 +594,115 @@ class FeatureAnnouncements extends Service implements Provider {
 			'no_found_rows'  => true,
 		] );
 
-		return empty( $ctas );
+		return ! empty( $ctas );
+	}
+
+	/**
+	 * True when the site has enough data to benefit from advanced reporting.
+	 *
+	 * @return bool
+	 */
+	public function needs_advanced_analytics() {
+		return ! $this->has_pro_version( '1.2.0' )
+			&& (int) get_option( 'pum_total_conversion_count', 0 ) >= self::ADVANCED_ANALYTICS_MIN_CONVERSIONS;
+	}
+
+	/**
+	 * True when WordPress and the active MCP Adapter can use Pro's integration.
+	 *
+	 * @return bool
+	 */
+	public function needs_mcp_integration() {
+		global $wp_version;
+
+		return ! $this->has_pro_version( '1.2.0' )
+			&& is_string( $wp_version )
+			&& version_compare( $wp_version, '6.9', '>=' )
+			&& class_exists( '\\WP\\MCP\\Core\\McpAdapter' );
+	}
+
+	/**
+	 * True when existing CTAs could benefit from shareable vanity URLs.
+	 *
+	 * @return bool
+	 */
+	public function needs_vanity_cta_urls() {
+		return ! $this->has_pro_version( '1.2.0' ) && $this->has_ctas();
+	}
+
+	/**
+	 * Apply request-specific presentation after loading cached definitions.
+	 *
+	 * Browser detection cannot happen while building the shared transient or
+	 * one administrator's browser would determine the CTA shown to everyone.
+	 *
+	 * @param array<int,array<string,mixed>> $announcements Cached announcements.
+	 * @return array<int,array<string,mixed>>
+	 */
+	protected function personalize_for_request( array $announcements ) {
+		$personalized    = [];
+		$desktop_chrome  = $this->is_desktop_chrome();
+		$has_pro_12      = $this->has_pro_version( '1.2.0' );
+		$pro_12_upsells  = [
+			'pm_upsell_split_testing_2026',
+			'pm_upsell_advanced_analytics_2026',
+			'pm_upsell_mcp_integration_2026',
+			'pm_upsell_vanity_cta_urls_2026',
+		];
+
+		foreach ( $announcements as $announcement ) {
+			$code = $announcement['code'] ?? '';
+
+			// Remove a cached upsell immediately after Pro gains the feature.
+			if ( $has_pro_12 && in_array( $code, $pro_12_upsells, true ) ) {
+				continue;
+			}
+
+			if ( $desktop_chrome && 'pm_tip_chrome_debug_tools_2026' === $code && ! empty( $announcement['actions'][0] ) ) {
+				$announcement['actions'][0]['text'] = __( 'Add to Chrome', 'popup-maker' );
+			}
+
+			$personalized[] = $announcement;
+		}
+
+		return $personalized;
+	}
+
+	/**
+	 * Check whether the current request comes from desktop Google Chrome.
+	 *
+	 * @return bool
+	 */
+	protected function is_desktop_chrome() {
+		if ( empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			return false;
+		}
+
+		$user_agent = sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
+
+		return false !== strpos( $user_agent, 'Chrome/' )
+			&& false === strpos( $user_agent, 'Android' )
+			&& false === strpos( $user_agent, 'Mobile' )
+			&& false === strpos( $user_agent, 'Edg/' )
+			&& false === strpos( $user_agent, 'OPR/' );
+	}
+
+	/**
+	 * Check whether a qualifying Pro version is installed.
+	 *
+	 * @param string $minimum_version Minimum qualifying version.
+	 * @return bool
+	 */
+	protected function has_pro_version( $minimum_version ) {
+		if ( ! method_exists( $this->container, 'get_pro_version' ) ) {
+			return false;
+		}
+
+		$pro_version = $this->container->get_pro_version();
+
+		return is_string( $pro_version )
+			&& '' !== $pro_version
+			&& version_compare( $pro_version, $minimum_version, '>=' );
 	}
 
 	/**
