@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1fbf9993b749aa5804d6468583b1b6c",
+    "content-hash": "00dbff562d84bf7fa4a897d4562c1d75",
     "packages": [
         {
             "name": "code-atlantic/prerequisite-checks",
