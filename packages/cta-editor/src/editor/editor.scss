@@ -234,9 +234,9 @@ $gap4: $gap * 4;
 		}
 
 		.title-field-notice {
-			margin-bottom: $gap2;
-			margin-top: -$gap2;
-			margin-left: 0;
+			// Sits directly under the Name field; keep it tucked close to the
+			// input above without overlapping it.
+			margin: 6px 0 $gap;
 			line-height: 1;
 
 			.components-notice__content {
@@ -330,6 +330,36 @@ $gap4: $gap * 4;
 					border-left: 4px solid #cc1818;
 				}
 			}
+		}
+	}
+
+	// Loading placeholder layout while the record resolves.
+	&--loading {
+		.editor-tabs--skeleton {
+			display: flex;
+			gap: $gap;
+			width: 100%;
+		}
+
+		.editor-tabs__sidebar-skeleton {
+			flex: 1 0 150px;
+			display: flex;
+			flex-direction: column;
+			gap: $gap;
+			padding-top: 4px;
+		}
+
+		.editor-tabs__content-skeleton {
+			flex: 3 1 100%;
+			display: flex;
+			flex-direction: column;
+			gap: $gap;
+		}
+
+		.editor-tabs__field-skeleton {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
 		}
 	}
 }

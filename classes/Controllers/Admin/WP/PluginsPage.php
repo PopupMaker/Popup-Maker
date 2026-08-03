@@ -103,7 +103,6 @@ class PluginsPage extends Controller {
             $docs_url = add_query_arg( $utm_args, 'https://wppopupmaker.com/docs/' );
 
 			$row_meta = [
-				// 'review'     => '<a href="https://wordpress.org/support/plugin/popup-maker/reviews/?filter=5#new-post" target="_blank" rel="noopener noreferrer">★ ' . __( 'Rate 5 stars', 'popup-maker' ) . ' ★</a>',
 				'documentation'    => '<a href="' . $docs_url . '" target="_blank" rel="noopener noreferrer">' . __( 'Documentation', 'popup-maker' ) . '</a>',
 				'support'    => '<a href="' . $support_url . '" target="_blank" rel="noopener noreferrer">' . __( 'Get Support', 'popup-maker' ) . '</a>',
 				// 'extensions' => '<a href="' . admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) . '">' . __( 'Extensions', 'popup-maker' ) . '</a>',
@@ -149,6 +148,7 @@ class PluginsPage extends Controller {
 
                     // Process main plugin if present
                     const mainPlugin = document.querySelector('tr[data-slug="popup-maker"]');
+                    const addons = Array.from(document.querySelectorAll('tr[data-slug^="popup-maker-"]:not(.plugin-update-tr), tr[data-slug^="pum-"]:not(.plugin-update-tr)'));
 
                     // Store update notices keyed by their plugin slug
                     const updateNotices = new Map();
@@ -161,29 +161,30 @@ class PluginsPage extends Controller {
                         mainPlugin.classList.add('pum-main-plugin');
                         addLogo(mainPlugin);
 
-                        const titleStrong = mainPlugin.querySelector('.plugin-title strong');
-                        titleStrong.innerHTML += TOGGLE_HTML;
-                        titleStrong.style.cursor = 'pointer';
+                        if (addons.length) {
+                            const titleStrong = mainPlugin.querySelector('.plugin-title strong');
+                            titleStrong.innerHTML += TOGGLE_HTML;
+                            titleStrong.style.cursor = 'pointer';
 
-                        const icon = titleStrong.querySelector('.pum-toggle-icon');
-                        icon.classList.add('dashicons-arrow-down-alt2');
+                            const icon = titleStrong.querySelector('.pum-toggle-icon');
+                            icon.classList.add('dashicons-arrow-down-alt2');
 
-                        titleStrong.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            const isCollapsed = icon.classList.toggle('dashicons-arrow-up-alt2');
-                            icon.classList.toggle('dashicons-arrow-down-alt2', !isCollapsed);
+                            titleStrong.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                const isCollapsed = icon.classList.toggle('dashicons-arrow-up-alt2');
+                                icon.classList.toggle('dashicons-arrow-down-alt2', !isCollapsed);
 
-                            const display = isCollapsed ? 'none' : 'table-row';
-                            document.querySelectorAll('.pum-addon-plugin').forEach(addon => {
-                                addon.style.display = display;
-                                const notice = updateNotices.get(addon.getAttribute('data-slug'));
-                                if (notice) notice.style.display = display;
+                                const display = isCollapsed ? 'none' : 'table-row';
+                                document.querySelectorAll('.pum-addon-plugin').forEach(addon => {
+                                    addon.style.display = display;
+                                    const notice = updateNotices.get(addon.getAttribute('data-slug'));
+                                    if (notice) notice.style.display = display;
+                                });
                             });
-                        });
+                        }
                     }
 
                     // Get and process addons
-                    const addons = Array.from(document.querySelectorAll('tr[data-slug^="popup-maker-"]:not(.plugin-update-tr), tr[data-slug^="pum-"]:not(.plugin-update-tr)'));
                     if (!addons.length) return;
 
                     // Initial addon setup

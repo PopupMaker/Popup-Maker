@@ -9,6 +9,8 @@ import { callToActionStore } from '@popup-maker/core-data';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useCallback } from '@wordpress/element';
 
+import type { CtaEditorId } from '@popup-maker/core-data';
+
 let initialized = false;
 
 const useEditor = () => {
@@ -33,7 +35,7 @@ const useEditor = () => {
 	} );
 
 	// Extract params with usable names.
-	const { edit, tab } = queryParams;
+	const { edit, add, tab } = queryParams;
 
 	// Initialize on mount if URL has an ID
 	useEffect(
@@ -44,7 +46,14 @@ const useEditor = () => {
 
 			// Only once on app load.
 			initialized = true;
-			const urlId = edit && edit > 0 ? edit : undefined;
+
+			let urlId: CtaEditorId;
+
+			if ( edit && edit > 0 ) {
+				urlId = edit;
+			} else if ( add ) {
+				urlId = 'new';
+			}
 
 			// Only initialize if we have a URL ID and no current editor ID
 			if ( urlId && ! editorId ) {
@@ -59,18 +68,21 @@ const useEditor = () => {
 	/**
 	 * Set the editor to edit a specific call to action.
 	 *
+	 * Pass `'new'` to start an unsaved draft.
+	 *
 	 * This both updates the editorId & sets matching url params.
 	 *
 	 * NOTE: It is important that both get updated at the same time, to prevent
 	 * infinite state updates via useEffect above.
 	 *
-	 * @param {number|undefined} id Id to edit.
+	 * @param {CtaEditorId} id Id to edit, or 'new' for a draft.
 	 */
 	const setEditorId = useCallback(
-		( id: number | undefined ) => {
+		( id: CtaEditorId ) => {
 			changeEditorId( id );
 			setQueryParams( {
-				edit: id,
+				edit: typeof id === 'number' ? id : undefined,
+				add: 'new' === id ? true : undefined,
 			} );
 		},
 		[ changeEditorId, setQueryParams ]

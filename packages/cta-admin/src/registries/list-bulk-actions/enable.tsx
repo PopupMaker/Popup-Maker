@@ -66,7 +66,7 @@ export const EnableBulkAction = (): JSX.Element | null => {
 							// translators: %d: number of items.
 							_n(
 								'%d call to action enabled.',
-								'%d call to actions enabled.',
+								'%d calls to action enabled.',
 								count,
 								'popup-maker'
 							),

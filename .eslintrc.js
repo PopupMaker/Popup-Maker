@@ -13,7 +13,16 @@ const eslintConfig = {
 	env: {
 		jquery: true,
 	},
+	settings: {
+		jsdoc: {
+			mode: 'typescript',
+		},
+	},
 	rules: {
+		// Types live in TypeScript — don't require JSDoc param/type blocks.
+		'jsdoc/require-param': 'off',
+		'jsdoc/require-param-type': 'off',
+		'jsdoc/require-returns-type': 'off',
 		'@wordpress/i18n-text-domain': [
 			'error',
 			{

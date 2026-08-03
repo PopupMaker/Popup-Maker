@@ -93,6 +93,19 @@ export const Component = ( {
 				__nextHasNoMarginBottom
 			/>
 
+			{ ( callToAction.title ?? '' ).length <= 0 && (
+				<Notice
+					status="warning"
+					isDismissible={ false }
+					className="title-field-notice"
+				>
+					{ __(
+						'Enter a name for this call to action.',
+						'popup-maker'
+					) }
+				</Notice>
+			) }
+
 			<TextareaControl
 				rows={ descriptionRows }
 				// @ts-ignore
@@ -105,16 +118,6 @@ export const Component = ( {
 				onChange={ ( excerpt ) => updateFields( { excerpt } ) }
 				__nextHasNoMarginBottom
 			/>
-
-			{ ( callToAction.title ?? '' ).length <= 0 && (
-				<Notice
-					status="warning"
-					isDismissible={ false }
-					className="title-field-notice"
-				>
-					{ __( 'Enter a label for this set.', 'popup-maker' ) }
-				</Notice>
-			) }
 
 			{ /* Filtered fields with priority < 3 render before action type. */ }
 			{ getTabFields( 'general' )

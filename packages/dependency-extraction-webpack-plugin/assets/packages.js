@@ -1,4 +1,5 @@
 module.exports = [
+	'@popup-maker/addons-page',
 	'@popup-maker/admin-bar',
 	'@popup-maker/admin-marketing',
 	'@popup-maker/admin-notifications',
@@ -16,6 +17,7 @@ module.exports = [
 	'@popup-maker/layout',
 	'@popup-maker/popup-admin',
 	'@popup-maker/registry',
+	'@popup-maker/skeleton',
 	'@popup-maker/use-query-params',
 	'@popup-maker/utils',
 ];

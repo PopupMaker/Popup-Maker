@@ -1,19 +1,18 @@
 .popup-maker-app-header {
+	align-items: center;
 	background-color: #fff;
 	border-bottom: 1px solid #ddd;
-	padding-right: 20px;
-
 	display: flex;
-	align-items: center;
 	gap: 20px;
+	padding-right: 20px;
 
 	.branding {
 		margin: 0 20px;
 
 		a {
-			display: flex;
 			align-items: center;
 			color: inherit;
+			display: flex;
 			text-decoration: none;
 		}
 
@@ -28,9 +27,9 @@
 	}
 
 	.components-tab-panel__tabs-item {
+		color: #1e1e1e;
 		font-size: 1.125em;
 		height: 60px;
-		color: #1e1e1e;
 		text-decoration: none;
 
 		&.is-active {
@@ -42,9 +41,12 @@
 		&:hover {
 			color: var(--wp-admin-theme-color);
 		}
-	}
 
-	.components-tab-panel__tabs-item {
+		/* Right-aligned nav tabs (className comes from the nav tab id). */
+		&.extend {
+			margin-left: auto;
+		}
+
 		&.upgrade {
 			margin-left: auto;
 
@@ -64,4 +66,3 @@
 		}
 	}
 }
-

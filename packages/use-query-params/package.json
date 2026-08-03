@@ -22,8 +22,7 @@
 	"exports": {
 		".": {
 			"types": "./build-types/src/index.d.ts",
-			"default": "./build/src/index.js",
-			"adapters": "./build/src/adapters"
+			"default": "./build/src/index.js"
 		}
 	},
 	"wpScript": true,
@@ -40,7 +39,8 @@
 		"use-query-params": "^2.2.1"
 	},
 	"peerDependencies": {
-		"react-router": "^6.0.0 || ^7.0.0"
+		"react-router": "^6.0.0 || ^7.0.0",
+		"react-router-dom": "^6.0.0 || ^7.0.0"
 	},
 	"scripts": {
 		"prepack": "pnpm run build:tsc && pnpm run build:types",

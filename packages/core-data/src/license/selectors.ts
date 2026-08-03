@@ -8,7 +8,6 @@ import type {
 	License,
 	LicenseKey,
 	LicenseStatus,
-	LicenseConnect,
 	StoreActionNames,
 } from './types';
 
@@ -51,16 +50,6 @@ export const getLicenseStatus = createSelector(
 	},
 	( state: State ) => [ state.license.status ]
 );
-
-/**
- * Get connect info for pro upgrade.
- *
- * @param {State} state State.
- *
- * @return {LicenseConnect | undefined} Connect info.
- */
-export const getConnectInfo = ( state: State ): LicenseConnect | undefined =>
-	state.connectInfo;
 
 /**
  * Get current status for dispatched action.

@@ -26,7 +26,22 @@ class PUM_Admin_Settings {
 	public static function init() {
 		add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
 		add_action( 'admin_init', [ __CLASS__, 'save' ] );
-		add_action( 'pum_save_settings', [ __CLASS__, 'process_license_operation' ], 10, 1 );
+		add_action( 'plugins_loaded', [ __CLASS__, 'maybe_register_legacy_license_operation' ], 100 );
+	}
+
+	/**
+	 * Register old Pro's settings operation only when compatibility is active.
+	 *
+	 * @since 1.23.0
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
+	 * @return void
+	 */
+	public static function maybe_register_legacy_license_operation() {
+		if ( \PopupMaker\plugin()->should_run_legacy_license_compatibility() ) {
+			add_action( 'pum_save_settings', [ __CLASS__, 'process_license_operation' ], 10, 1 );
+		}
 	}
 
 	// display default admin notice
@@ -100,8 +115,14 @@ class PUM_Admin_Settings {
 
 	/**
 	 * Process license activation when hooked to pum_save_settings.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 */
 	public static function process_license_operation() {
+		if ( ! \PopupMaker\plugin()->should_run_legacy_license_compatibility() ) {
+			return;
+		}
+
 		// Handle license operations.
 		if (
 			! isset( $_POST['pum_license_operation_nonce'] ) ||
@@ -316,8 +337,13 @@ class PUM_Admin_Settings {
 	public static function fields() {
 
 		static $fields;
+		static $legacy_license_compatibility;
 
-		if ( ! isset( $fields ) ) {
+		$current_legacy_license_compatibility = \PopupMaker\plugin()->should_run_legacy_license_compatibility();
+
+		if ( ! isset( $fields ) || $legacy_license_compatibility !== $current_legacy_license_compatibility ) {
+			$legacy_license_compatibility = $current_legacy_license_compatibility;
+
 			$fields = [
 				'general' => [
 					'main' => [
@@ -650,6 +676,15 @@ class PUM_Admin_Settings {
 				]
 			);
 
+			if ( ! $legacy_license_compatibility ) {
+				unset( $fields['go-pro']['main']['popup_maker_pro_license_key'] );
+				$fields['go-pro']['main']['popup_maker_pro_placeholder'] = [
+					'type'    => 'html',
+					'content' => '',
+					'class'   => 'pum-go-pro-placeholder',
+				];
+			}
+
 			$fields = apply_filters( 'pum_settings_fields', $fields );
 
 			$fields = PUM_Admin_Helpers::parse_tab_fields(
@@ -764,12 +799,25 @@ class PUM_Admin_Settings {
 			</div>
 
 			<div class="pum-go-pro-hero__footer">
-				<a href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'settings-hero', 'get-pro-cta' ) ); ?>"
-				   target="_blank" rel="noopener"
-				   class="pum-go-pro-hero__cta">
-					<?php esc_html_e( 'Increase My Conversion Rate', 'popup-maker' ); ?>
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-				</a>
+				<div class="pum-go-pro-hero__actions">
+					<a
+						href="<?php echo esc_url( \PopupMaker\generate_upgrade_url( 'settings-hero', 'get-pro-cta' ) ); ?>"
+						target="_blank"
+						rel="noopener"
+						class="pum-go-pro-hero__cta"
+					>
+						<?php esc_html_e( 'Increase My Conversion Rate', 'popup-maker' ); ?>
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+					</a>
+					<a
+						href="<?php echo esc_url( 'https://wppopupmaker.com/account/file-downloads/?utm_source=plugin-settings&utm_medium=go-pro&utm_campaign=wordpress-org' ); ?>"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="pum-go-pro-hero__download-link"
+					>
+						<?php esc_html_e( 'Already own Pro? Download it', 'popup-maker' ); ?>
+					</a>
+				</div>
 				<span class="pum-go-pro-hero__price-note"><?php esc_html_e( 'Upgrade to Pro — $99/yr', 'popup-maker' ); ?></span>
 			</div>
 		</div>
@@ -791,7 +839,9 @@ class PUM_Admin_Settings {
 		// Detect integrations for contextual messaging.
 		$integrations    = PUM_Admin_Helpers::get_detected_integrations();
 		$has_woocommerce = isset( $integrations['woocommerce'] );
-		$has_edd         = isset( $integrations['edd'] );
+		// The flat helper derives the slug from the label ("Easy Digital
+		// Downloads" => "easy_digital_downloads"); accept the legacy "edd" key too.
+		$has_edd         = isset( $integrations['edd'] ) || isset( $integrations['easy_digital_downloads'] );
 		$has_lms         = isset( $integrations['lifterlms'] );
 		$has_ecommerce   = $has_woocommerce || $has_edd;
 		// Check individual Pro+ addon status — show bar when platform detected but addon missing.
@@ -891,6 +941,12 @@ class PUM_Admin_Settings {
 	 */
 	public static function page() {
 
+		// Also reachable via the edit_posts-gated "Go Pro" submenu, and it dumps all
+		// settings into inline JS — enforce the settings capability here.
+		if ( ! current_user_can( \PopupMaker\plugin()->get_permission( 'manage_settings' ) ) ) {
+			wp_die( esc_html__( 'You do not have permission to access this page.', 'popup-maker' ), 403 );
+		}
+
 		$settings = PUM_Utils_Options::get_all();
 
 		if ( empty( $settings ) ) {
@@ -951,7 +1007,7 @@ class PUM_Admin_Settings {
 					;
 				</script>
 
-				<button class="button-primary bottom" style="margin-left: 156px;"><?php esc_html_e( 'Save', 'popup-maker' ); ?></button>
+				<button id="pum-settings-save" class="button-primary bottom pum-settings-save" style="margin-left: 156px;"><?php esc_html_e( 'Save', 'popup-maker' ); ?></button>
 
 			</form>
 
@@ -959,7 +1015,7 @@ class PUM_Admin_Settings {
 
 		<?php
 		// Output upsell template — hero for free users, Pro+ bars for anyone missing addons.
-		$upsell_hero     = \PopupMaker\plugin( 'license' )->is_license_active() ? '' : self::field_go_pro_hero();
+		$upsell_hero     = \PopupMaker\plugin()->is_license_active() ? '' : self::field_go_pro_hero();
 		$upsell_features = self::field_go_pro_features();
 
 		// Only output template if there's something to show.
@@ -1076,7 +1132,7 @@ class PUM_Admin_Settings {
 					'licenses'      => __( 'Licenses', 'popup-maker' ),
 					'privacy'       => __( 'Privacy', 'popup-maker' ),
 					'misc'          => __( 'Misc', 'popup-maker' ),
-					'go-pro'        => \PopupMaker\plugin( 'license' )->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
+					'go-pro'        => \PopupMaker\plugin()->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
 				]
 			);
 
@@ -1117,7 +1173,7 @@ class PUM_Admin_Settings {
 					'assets' => __( 'Assets', 'popup-maker' ),
 				],
 				'go-pro'        => [
-					'main' => \PopupMaker\plugin( 'license' )->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
+					'main' => \PopupMaker\plugin()->is_license_active() ? __( 'Pro', 'popup-maker' ) : __( 'Go Pro', 'popup-maker' ),
 				],
 			]
 		);

@@ -14,7 +14,7 @@ on:
 env:
     PLUGIN_SLUG: popup-maker
     PLUGIN_NAME: Popup Maker
-    BUILD_DIR: /tmp/svn-source/popup-maker
+    BUILD_DIR: ${{ github.workspace }}/.wordpress-org-build/popup-maker
     FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -33,8 +33,18 @@ jobs:
               id: flags
               env:
                   DRY_RUN_INPUT: ${{ inputs.dry_run }}
+                  GITHUB_REF: ${{ github.ref }}
               run: |
-                  echo "dry_run=${DRY_RUN_INPUT:-false}" >> $GITHUB_OUTPUT
+                  DRY_RUN="${DRY_RUN_INPUT:-false}"
+
+                  # Only the protected master branch may perform a real deploy.
+                  # Any other ref (e.g. a manually dispatched branch) is forced to dry-run.
+                  if [ "${GITHUB_REF}" != "refs/heads/master" ]; then
+                    echo "⚠️ Ref is ${GITHUB_REF}, not refs/heads/master — forcing dry-run."
+                    DRY_RUN="true"
+                  fi
+
+                  echo "dry_run=${DRY_RUN}" >> $GITHUB_OUTPUT
 
             - name: Extract version from plugin header
               id: version
@@ -43,6 +53,9 @@ jobs:
                   echo "version=${VERSION}" >> $GITHUB_OUTPUT
                   echo "📦 Version: ${VERSION}"
 
+            # Primary path: deploy the published release asset that was built and
+            # tested during the release. Fall back to building from source only when
+            # the asset is missing.
             - name: Try downloading release zip
               id: download
               env:
@@ -66,18 +79,24 @@ jobs:
                     echo "found=false" >> $GITHUB_OUTPUT
                   fi
 
-            # --- Path A: Extract release zip into BUILD_DIR ---
+            - name: Verify downloaded release zip
+              if: steps.download.outputs.found == 'true'
+              env:
+                  ZIP_NAME: ${{ steps.download.outputs.zip_name }}
+              run: node bin/verify-release-artifact.js "${ZIP_NAME}"
+
+            # --- Path A: extract the release zip into BUILD_DIR ---
             - name: Extract release zip
               if: steps.download.outputs.found == 'true'
               env:
                   ZIP_NAME: ${{ steps.download.outputs.zip_name }}
               run: |
                   mkdir -p "${{ env.BUILD_DIR }}"
-                  unzip -o "${ZIP_NAME}" -d /tmp/svn-source
+                  unzip -o "${ZIP_NAME}" -d "$(dirname "${{ env.BUILD_DIR }}")"
                   echo "✅ Extracted to ${{ env.BUILD_DIR }}"
                   ls -la "${{ env.BUILD_DIR }}"
 
-            # --- Path B: Build from source into BUILD_DIR ---
+            # --- Path B: build from source into BUILD_DIR (fallback) ---
             - name: Setup PHP
               if: steps.download.outputs.found != 'true'
               uses: shivammathur/setup-php@v2
@@ -111,7 +130,11 @@ jobs:
                   mkdir -p "${{ env.BUILD_DIR }}"
 
                   if [ -f "bin/build-release.js" ]; then
-                    node bin/build-release.js --output-dir "${{ env.BUILD_DIR }}"
+                    # --output-dir only controls where the zip lands; the SVN deploy
+                    # needs the unpacked plugin tree. Keep the assembled build/ tree
+                    # (renamed to ./popup-maker) and copy its contents into BUILD_DIR.
+                    node bin/build-release.js --keep-build
+                    cp -r popup-maker/. "${{ env.BUILD_DIR }}/"
                   else
                     # Manual copy matching what build-release.js produces.
                     cp -r classes "${{ env.BUILD_DIR }}/"
@@ -127,6 +150,21 @@ jobs:
 
                   echo "✅ Built into ${{ env.BUILD_DIR }}"
                   ls -la "${{ env.BUILD_DIR }}"
+
+            - name: Run WordPress Plugin Check
+              uses: wordpress/plugin-check-action@v1
+              with:
+                  build-dir: ${{ env.BUILD_DIR }}
+                  slug: popup-maker
+                  exclude-checks: plugin_review_phpcs
+                  exclude-directories: vendor-prefixed
+                  exclude-files: |
+                      classes/Extension/Updater.php
+                      includes/legacy/deprecated-classes.php
+                  ignore-codes: |
+                      WordPress.WP.I18n.MissingArgDomain
+                      missing_direct_file_access_protection
+                  ignore-warnings: true
 
             # --- Deploy (same for both paths) ---
             - name: Deploy to WordPress.org

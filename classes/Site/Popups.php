@@ -53,7 +53,14 @@ class PUM_Site_Popups {
 	 * @deprecated 1.8.0 Use pum()->current_popup directly or PopupMaker\set_current_popup()
 	 */
 	public static function current_popup( $new_popup = false ) {
-		return \PopupMaker\get_current_popup();
+		global $popup;
+
+		if ( false !== $new_popup ) {
+			\PopupMaker\set_current_popup( $new_popup );
+			$popup = $new_popup;
+		}
+
+		return pum()->current_popup;
 	}
 
 	/**
@@ -63,7 +70,10 @@ class PUM_Site_Popups {
 	 * @deprecated 1.21.0 Use \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups
 	 */
 	public static function get_loaded_popups() {
-		return \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups();
+		self::$loaded     = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' )->get_loaded_popups_query();
+		self::$loaded_ids = wp_list_pluck( self::$loaded->posts, 'ID' );
+
+		return self::$loaded;
 	}
 
 	/**

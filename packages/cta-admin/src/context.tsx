@@ -173,17 +173,22 @@ export const ListProvider = ( {
 		// Apply sorting if sort config exists
 		if ( sortConfig !== null ) {
 			filtered.sort( ( a, b ) => {
-				const aValue =
-					// TODO This will use TableColumnRegistry
-					sortConfig.orderby === 'type'
-						? a.settings.type
-						: a.title.rendered.toLowerCase();
+				const getSortValue = ( record: CallToAction< 'edit' > ) => {
+					switch ( sortConfig.orderby ) {
+						case 'id':
+							return record.id;
+						case 'type':
+							return record.settings.type;
+						case 'conversions':
+							return record.stats?.conversions ?? 0;
+						case 'title':
+						default:
+							return record.title.rendered.toLowerCase();
+					}
+				};
 
-				const bValue =
-					// TODO This will use TableColumnRegistry
-					sortConfig.orderby === 'type'
-						? b.settings.type
-						: b.title.rendered.toLowerCase();
+				const aValue = getSortValue( a );
+				const bValue = getSortValue( b );
 
 				if ( aValue < bValue ) {
 					return sortConfig.order === SortDirection.ASC ? -1 : 1;

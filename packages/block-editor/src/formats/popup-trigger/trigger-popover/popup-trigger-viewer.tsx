@@ -5,14 +5,19 @@ import { decodeEntities } from '@wordpress/html-entities';
 
 import { __, sprintf } from '@popup-maker/i18n';
 
-const { popups = [] } = window.popupMakerBlockEditor;
+type LocalizedPopup = {
+	ID: number;
+	post_title: string;
+};
+
+const { popups = [] } = window.popupMakerBlockEditor as {
+	popups?: LocalizedPopup[];
+};
 
 const getPopupById = ( popupId: number | string = 0 ) => {
 	popupId = parseInt( String( popupId ) ) || 0;
 
-	const popup = popups.filter( ( { id } ) => popupId === id );
-
-	return popup.length === 1 ? popup[ 0 ] : false;
+	return popups.find( ( { ID } ) => popupId === ID ) || false;
 };
 
 function PopupView( {
@@ -33,7 +38,7 @@ function PopupView( {
 		label = sprintf(
 			/* translators: %s: popup title. */
 			__( 'Open "%s" popup', 'popup-maker' ),
-			decodeEntities( popup.title.rendered )
+			decodeEntities( popup.post_title )
 		);
 	}
 

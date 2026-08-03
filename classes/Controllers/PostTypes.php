@@ -26,6 +26,7 @@ class PostTypes extends Controller {
 	 */
 	public function init() {
 		add_action( 'init', [ $this, 'register_post_types' ] );
+		add_action( 'rest_api_init', [ $this, 'register_standard_rest_routes' ] );
 		add_action( 'save_post_popup', [ $this, 'save_post' ], 10, 3 );
 		add_filter( 'post_updated_messages', [ $this, 'updated_messages' ] );
 
@@ -62,6 +63,51 @@ class PostTypes extends Controller {
 	}
 
 	/**
+	 * Full primitive-capability map for a map_meta_cap post type.
+	 *
+	 * Overriding only edit_posts/delete_posts leaves the rest (edit_published_posts,
+	 * etc.) on the default `post` caps; mapping all of them keeps every status
+	 * behind the same permission.
+	 *
+	 * The three meta caps (edit_post/read_post/delete_post) MUST point at the
+	 * per-object singular primitives, not at a shared plural primitive. Mapping
+	 * e.g. delete_post directly to edit_others_posts makes map_meta_cap treat a
+	 * plural primitive as a per-post meta cap and re-enter with delete_post and
+	 * no post ID, tripping WordPress's `_doing_it_wrong` and failing the check —
+	 * which hides the admin menu. Singular primitives resolve through
+	 * map_meta_cap normally and then land on the permission below.
+	 *
+	 * @param string $permission Capability required for all operations.
+	 * @param string $singular   Singular base for this type's meta caps (e.g. 'popup').
+	 *
+	 * @return array<string,string>
+	 */
+	private function full_capabilities( $permission, $singular ) {
+		return [
+			// Meta caps -> per-object singular primitives (resolved by map_meta_cap).
+			'edit_post'                    => 'edit_' . $singular,
+			'read_post'                    => 'read_' . $singular,
+			'delete_post'                  => 'delete_' . $singular,
+			// Singular primitives the meta caps resolve to -> the permission.
+			'edit_' . $singular            => $permission,
+			'read_' . $singular            => $permission,
+			'delete_' . $singular          => $permission,
+			// Plural primitive caps -> the permission.
+			'create_posts'                 => $permission,
+			'edit_posts'                   => $permission,
+			'edit_others_posts'            => $permission,
+			'edit_published_posts'         => $permission,
+			'edit_private_posts'           => $permission,
+			'publish_posts'                => $permission,
+			'read_private_posts'           => $permission,
+			'delete_posts'                 => $permission,
+			'delete_others_posts'          => $permission,
+			'delete_published_posts'       => $permission,
+			'delete_private_posts'         => $permission,
+		];
+	}
+
+	/**
 	 * Register post types.
 	 *
 	 * @return void
@@ -75,6 +121,48 @@ class PostTypes extends Controller {
 		$this->register_popup_tag_tax();
 
 		do_action( 'popup_maker/register_post_types' );
+	}
+
+	/**
+	 * Register standard WordPress REST aliases for builder compatibility.
+	 *
+	 * Popup Maker's own editor uses the versioned `popup-maker/v2` namespace.
+	 * Generic WordPress editors expect post types exposed through `wp/v2`, so
+	 * register aliases without removing or changing the existing API routes.
+	 *
+	 * @return void
+	 */
+	public function register_standard_rest_routes() {
+		$rest_bases = [
+			$this->get_type_key( 'popup' )       => 'popups',
+			$this->get_type_key( 'popup_theme' ) => 'popup-themes',
+		];
+
+		foreach ( $rest_bases as $post_type => $rest_base ) {
+			$post_type_object = get_post_type_object( $post_type );
+
+			if ( ! $post_type_object || ! $post_type_object->show_in_rest || 'wp/v2' === $post_type_object->rest_namespace ) {
+				continue;
+			}
+
+			$controller = new class( $post_type, $rest_base ) extends \WP_REST_Posts_Controller {
+
+				/**
+				 * Set up a standard WordPress route for a Popup Maker post type.
+				 *
+				 * @param string $post_type Post type key.
+				 * @param string $rest_base REST collection base.
+				 */
+				public function __construct( $post_type, $rest_base ) {
+					parent::__construct( $post_type );
+
+					$this->namespace = 'wp/v2';
+					$this->rest_base = $rest_base;
+				}
+			};
+
+			$controller->register_routes();
+		}
 	}
 
 	/**
@@ -132,11 +220,7 @@ class PostTypes extends Controller {
 			'can_export'          => true,
 			'map_meta_cap'        => true,
 			'delete_with_user'    => false,
-			'capabilities'        => [
-				'create_posts' => $this->container->get_permission( 'edit_popups' ),
-				'edit_posts'   => $this->container->get_permission( 'edit_popups' ),
-				'delete_posts' => $this->container->get_permission( 'edit_popups' ),
-			],
+			'capabilities'        => $this->full_capabilities( $this->container->get_permission( 'edit_popups' ), $post_type_key ),
 		];
 
 		/**
@@ -173,7 +257,6 @@ class PostTypes extends Controller {
 				},
 			]
 		);
-
 	}
 
 	/**
@@ -226,11 +309,7 @@ class PostTypes extends Controller {
 			'can_export'          => true,
 			'map_meta_cap'        => true,
 			'delete_with_user'    => false,
-			'capabilities'        => [
-				'create_posts' => $this->container->get_permission( 'edit_popup_themes' ),
-				'edit_posts'   => $this->container->get_permission( 'edit_popup_themes' ),
-				'delete_posts' => $this->container->get_permission( 'edit_popup_themes' ),
-			],
+			'capabilities'        => $this->full_capabilities( $this->container->get_permission( 'edit_popup_themes' ), $post_type_key ),
 		];
 
 		/**
@@ -264,14 +343,14 @@ class PostTypes extends Controller {
 
 		$cta_labels = $this->post_type_labels(
 			__( 'Call to Action', 'popup-maker' ),
-			__( 'Call to Actions', 'popup-maker' ),
+			__( 'Calls to Action', 'popup-maker' ),
 			$post_type_key
 		);
 
 		$cta_args = [
 			'label'             => __( 'Call to Action', 'popup-maker' ),
 			'labels'            => array_merge( $cta_labels, [
-				'all_items' => __( 'Call to Actions', 'popup-maker' ),
+				'all_items' => __( 'Calls to Action', 'popup-maker' ),
 			] ),
 			'description'       => '',
 			// Basic.
@@ -299,11 +378,7 @@ class PostTypes extends Controller {
 			'can_export'        => true,
 			'map_meta_cap'      => true,
 			'delete_with_user'  => false,
-			'capabilities'      => [
-				'create_posts' => $this->container->get_permission( 'edit_ctas' ),
-				'edit_posts'   => $this->container->get_permission( 'edit_ctas' ),
-				'delete_posts' => $this->container->get_permission( 'edit_ctas' ),
-			],
+			'capabilities'      => $this->full_capabilities( $this->container->get_permission( 'edit_ctas' ), $post_type_key ),
 		];
 
 		/**
@@ -373,15 +448,12 @@ class PostTypes extends Controller {
 
 		$tag_labels = (array) get_taxonomy_labels( get_taxonomy( 'post_tag' ) );
 
-		$tag_args = apply_filters(
-			'popmake_tag_args',
-			[
-				'hierarchical' => false,
-				'labels'       => $tag_labels,
-				'public'       => false,
-				'show_ui'      => true,
-			]
-		);
+		$tag_args = [
+			'hierarchical' => false,
+			'labels'       => $tag_labels,
+			'public'       => false,
+			'show_ui'      => true,
+		];
 
 		/**
 		 * Filter: popup_maker/popup_tag_tax_args

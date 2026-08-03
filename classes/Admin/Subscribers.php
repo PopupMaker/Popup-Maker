@@ -68,6 +68,10 @@ class PUM_Admin_Subscribers {
 	}
 
 	public static function after_page_registration() {
+		if ( empty( PUM_Admin_Pages::$pages['subscribers'] ) ) {
+			return;
+		}
+
 		add_action( 'load-' . PUM_Admin_Pages::$pages['subscribers'], [ 'PUM_Admin_Subscribers', 'load_user_list_table_screen_options' ] );
 	}
 

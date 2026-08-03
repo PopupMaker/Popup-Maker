@@ -17,6 +17,9 @@
 			"path": "../i18n"
 		},
 		{
+			"path": "../skeleton"
+		},
+		{
 			"path": "../types"
 		},
 		{

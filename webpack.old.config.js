@@ -46,6 +46,9 @@ const jsBuilds = {
 
 const config = {
 	...defaultConfig,
+	// Never emit sourcemaps in production builds (they bloat the release zip
+	// and expose source structure); keep them for local development.
+	devtool: isProduction ? false : 'source-map',
 	entry: Object.entries( jsBuilds ).reduce(
 		( entry, [ packageName, packagePath ] ) => {
 			entry[ packageName ] = packagePath;

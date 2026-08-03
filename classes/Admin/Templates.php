@@ -250,10 +250,11 @@ class PUM_Admin_Templates {
 		</script>
 
 		<?php
-		$license_service   = \PopupMaker\plugin( 'license' );
-		$is_auto_activated = $license_service->is_auto_activated();
+		if ( \PopupMaker\plugin()->should_run_legacy_license_compatibility() ) {
+			$license_service   = \PopupMaker\plugin( 'license' );
+			$is_auto_activated = $license_service->is_auto_activated();
 
-		?>
+			?>
 
 		<script type="text/html" id="tmpl-pum-field-pro_license">
 			<#
@@ -274,8 +275,7 @@ class PUM_Admin_Templates {
 			var licenseTier = (data.value && data.value.license_tier) ? data.value.license_tier : 'pro';
 			var isProPlus = licenseTier === 'pro_plus';
 
-			// Get Pro installation status.
-			var isProInstalled = (data.value && data.value.is_pro_installed) ? data.value.is_pro_installed : false;
+			// Get Pro activation status for the compatibility details panel.
 			var isProActive = (data.value && data.value.is_pro_active) ? data.value.is_pro_active : false;
 
 			// Add status class to parent field wrapper after render
@@ -427,19 +427,6 @@ class PUM_Admin_Templates {
 											<span class="description" style="color: #0073aa; font-style: italic;"><?php esc_html_e( '(Auto-activated)', 'popup-maker' ); ?></span>
 											<# } #>
 
-											<!-- Install Pro Button - when Pro is not installed -->
-											<# if (isActive && !isProInstalled) { #>
-												<button type="button" class="button pum-install-pro-button pum-license-connect-trigger <# if (isProPlus) { #>pum-install-pro-plus<# } #>" data-source="settings-page" data-product="popup-maker-pro">
-													<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="download-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7,10 12,15 17,10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-													<?php esc_html_e( 'INSTALL PRO!', 'popup-maker' ); ?>
-												</button>
-											<!-- Activate Pro Button - when Pro is installed but not active -->
-											<# } else if (isActive && isProInstalled && !isProActive) { #>
-												<button type="button" class="button pum-install-pro-button pum-license-connect-trigger <# if (isProPlus) { #>pum-install-pro-plus<# } #>" data-source="settings-page" data-product="popup-maker-pro">
-													<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="power-icon"><circle cx="12" cy="12" r="10"></circle><path d="m12 6-4 6 7 0-4 6"></path></svg>
-													<?php esc_html_e( 'ACTIVATE PRO NOW!', 'popup-maker' ); ?>
-												</button>
-											<# } #>
 										</div>
 
 									</div>
@@ -461,15 +448,21 @@ class PUM_Admin_Templates {
 										<!-- Pro installed and Pro+ license -->
 										<div class="pum-license-callout pum-license-callout--activated">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
-											<?php esc_html_e( 'Your Pro+ license key is active.', 'popup-maker' ); ?>
-											<?php esc_html_e( 'Thank you for supporting Popup Maker!', 'popup-maker' ); ?> 😊
+											<span>
+												<?php esc_html_e( 'Your Pro+ license key is active.', 'popup-maker' ); ?>
+												<?php esc_html_e( 'Thank you for supporting Popup Maker!', 'popup-maker' ); ?> 😊
+											</span>
+											<a class="button button-primary pum-license-addons-link" href="<?php echo esc_url( admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) ); ?>"><?php esc_html_e( 'Manage add-ons', 'popup-maker' ); ?></a>
 										</div>
 									<# } else { #>
 										<!-- Pro installed and regular Pro license -->
 										<div class="pum-license-callout pum-license-callout--activated">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
-											<?php esc_html_e( 'Your Pro license key is active.', 'popup-maker' ); ?>
-											<?php esc_html_e( 'Thank you for supporting Popup Maker!', 'popup-maker' ); ?> 😊
+											<span>
+												<?php esc_html_e( 'Your Pro license key is active.', 'popup-maker' ); ?>
+												<?php esc_html_e( 'Thank you for supporting Popup Maker!', 'popup-maker' ); ?> 😊
+											</span>
+											<a class="button button-primary pum-license-addons-link" href="<?php echo esc_url( admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) ); ?>"><?php esc_html_e( 'Manage add-ons', 'popup-maker' ); ?></a>
 										</div>
 									<# } #>
 								<# } else if (isDeactivated) { #>
@@ -484,12 +477,15 @@ class PUM_Admin_Templates {
 						<# } else { #>
 							<div class="pum-license-callout pum-license-callout--activated">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="star-icon"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg>
-								<# if (isProPlus) { #>
-									<?php esc_html_e( 'Your Pro+ license is automatically activated.', 'popup-maker' ); ?>
-								<# } else { #>
-									<?php esc_html_e( 'Your Pro license is automatically activated.', 'popup-maker' ); ?>
-								<# } #>
-								<?php esc_html_e( 'Thank you for supporting Popup Maker!', 'popup-maker' ); ?> 😊
+								<span>
+									<# if (isProPlus) { #>
+										<?php esc_html_e( 'Your Pro+ license is automatically activated.', 'popup-maker' ); ?>
+									<# } else { #>
+										<?php esc_html_e( 'Your Pro license is automatically activated.', 'popup-maker' ); ?>
+									<# } #>
+									<?php esc_html_e( 'Thank you for supporting Popup Maker!', 'popup-maker' ); ?> 😊
+								</span>
+								<a class="button button-primary pum-license-addons-link" href="<?php echo esc_url( admin_url( 'edit.php?post_type=popup&page=pum-extensions' ) ); ?>"><?php esc_html_e( 'Manage add-ons', 'popup-maker' ); ?></a>
 							</div>
 						<# } #>
 
@@ -514,7 +510,7 @@ class PUM_Admin_Templates {
 							<table class="pum-license-details-table">
 								<tr>
 									<th><?php esc_html_e( 'Status:', 'popup-maker' ); ?></th>
-									<td class="pum-license-status <# if (isActive) { #>pum-license-status--active<# } else if (isDeactivated) { #>pum-license-status--deactivated<# } #>"><?php esc_html_e( 'Active', 'popup-maker' ); ?></td>
+									<td class="pum-license-status <# if (isActive) { #>pum-license-status--active<# } else if (isDeactivated) { #>pum-license-status--deactivated<# } #>"><# if (isActive) { #><?php esc_html_e( 'Active', 'popup-maker' ); ?><# } else { #><?php esc_html_e( 'Deactivated', 'popup-maker' ); ?><# } #></td>
 								</tr>
 								<tr>
 									<th><?php esc_html_e( 'License Key:', 'popup-maker' ); ?></th>
@@ -522,13 +518,11 @@ class PUM_Admin_Templates {
 								</tr>
 								<tr>
 									<th><?php esc_html_e( 'Pro Plugin:', 'popup-maker' ); ?></th>
-									<td class="pum-pro-status <# if (isProActive) { #>pum-pro-status--active<# } else if (isProInstalled) { #>pum-pro-status--installed<# } else { #>pum-pro-status--not-installed<# } #>">
+									<td class="pum-pro-status <# if (isProActive) { #>pum-pro-status--active<# } else { #>pum-pro-status--not-active<# } #>">
 										<# if (isProActive) { #>
 											<?php esc_html_e( 'Active', 'popup-maker' ); ?><# if (safeValue.pro_version) { #> (v{{safeValue.pro_version}})<# } #>
-										<# } else if (isProInstalled) { #>
-											<?php esc_html_e( 'Installed', 'popup-maker' ); ?><# if (safeValue.pro_version) { #> (v{{safeValue.pro_version}})<# } #>
 										<# } else { #>
-											<?php esc_html_e( 'Not Installed', 'popup-maker' ); ?>
+											<?php esc_html_e( 'Not Active', 'popup-maker' ); ?>
 										<# } #>
 									</td>
 								</tr>
@@ -658,7 +652,10 @@ class PUM_Admin_Templates {
 					</div>
 				</div>
 			</div>
-		</script>
+			</script>
+			<?php
+		}
+		?>
 
 		<script type="text/html" id="tmpl-pum-field-datetime">
 			<div class="pum-datetime">

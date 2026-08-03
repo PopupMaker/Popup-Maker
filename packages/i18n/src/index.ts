@@ -47,13 +47,14 @@ export const _n = (
 };
 
 export const _nx = (
-	text: string,
-	context: string,
+	single: string,
+	plural: string,
 	number: number,
+	context: string,
 	domain: TextDomain
 ) => {
 	// eslint-disable-next-line @wordpress/i18n-text-domain, @wordpress/i18n-no-variables
-	return i18n._nx( text, context, number, domain );
+	return i18n._nx( single, plural, number, context, domain );
 };
 
 export const isRTL = () => i18n.isRTL();

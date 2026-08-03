@@ -11,6 +11,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const isProduction = NODE_ENV === 'production';
 
 const packages = {
+	'addons-page': 'packages/addons-page',
 	'admin-bar': 'packages/admin-bar',
 	'admin-marketing': 'packages/admin-marketing',
 	'admin-notifications': 'packages/admin-notifications',
@@ -28,12 +29,16 @@ const packages = {
 	layout: 'packages/layout',
 	'popup-admin': 'packages/popup-admin',
 	registry: 'packages/registry',
+	skeleton: 'packages/skeleton',
 	'use-query-params': 'packages/use-query-params',
 	utils: 'packages/utils',
 };
 
 const config = {
 	...defaultConfig,
+	// Never emit sourcemaps in production builds (they bloat the release zip
+	// and expose source structure); keep them for local development.
+	devtool: isProduction ? false : 'source-map',
 	// Maps our buildList into a new object of { key: build.entry }.
 	entry: {
 		...Object.entries( packages ).reduce(
@@ -198,7 +203,9 @@ const config = {
 	},
 	devServer: {
 		...( defaultConfig.devServer || {} ),
-		allowedHosts: 'all',
+		// Scoped instead of 'all' to keep the Host-header check (DNS-rebinding);
+		// .local covers Local by Flywheel.
+		allowedHosts: [ 'localhost', '.local' ],
 		// port: 8887,
 		// Fix for webpack-dev-server proxy configuration issue
 		proxy: undefined, // Remove any inherited proxy configuration that might be causing the array format issue

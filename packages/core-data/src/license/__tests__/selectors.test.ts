@@ -6,7 +6,6 @@ import {
 	getLicenseData,
 	getLicenseKey,
 	getLicenseStatus,
-	getConnectInfo,
 	getDispatchStatus,
 	isDispatching,
 	hasDispatched,
@@ -78,25 +77,6 @@ describe( 'license selectors', () => {
 			expect( result.success ).toBe( true );
 			// Defaults fill in the rest.
 			expect( result.license_limit ).toBe( 1 );
-		} );
-	} );
-
-	describe( 'getConnectInfo', () => {
-		it( 'returns undefined when no connect info', () => {
-			expect( getConnectInfo( initialState ) ).toBeUndefined();
-		} );
-
-		it( 'returns connect info when set', () => {
-			const state = stateWith( {
-				connectInfo: {
-					url: 'https://example.com',
-					back_url: 'https://example.com/back',
-				},
-			} );
-
-			expect( getConnectInfo( state )?.url ).toBe(
-				'https://example.com'
-			);
 		} );
 	} );
 

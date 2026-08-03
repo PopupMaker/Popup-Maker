@@ -6,7 +6,7 @@ import { callToActionStore } from '@popup-maker/core-data';
 import { close, link } from '@wordpress/icons';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { Button, Modal, Spinner } from '@wordpress/components';
-import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
+import { useCallback, useMemo, useState } from '@wordpress/element';
 
 import { EditorHeaderActions, EditorHeaderOptions } from '../components';
 import { useAllFieldErrors } from '../../hooks';
@@ -74,40 +74,50 @@ export const withModal = (
 		// Fetch values separately so they will still be available to the component.
 		const values = useSelect( ( select ) => {
 			const store = select( callToActionStore );
+			const currentValues = store.getCurrentEditorValues();
 
-			return store.getCurrentEditorValues() ?? store.getDefaultValues();
+			if ( currentValues ) {
+				return currentValues;
+			}
+
+			// Instant-open: the record hasn't resolved yet. Fall back to
+			// defaults but keep the real id so the title & buttons are right.
+			const editorId = store.getEditorId();
+
+			return {
+				...store.getDefaultValues(),
+				id: typeof editorId === 'number' ? editorId : 0,
+			};
 		}, [] );
 
-		const isSaving = useSelect(
-			( select ) =>
-				select( callToActionStore ).isResolving( 'updateCallToAction' ),
+		// Live handle to store selectors for fresh reads inside callbacks
+		// (never re-renders — the bound selector map is referentially stable).
+		const storeSelectors = useSelect(
+			( select ) => select( callToActionStore ),
 			[]
 		);
 
-		const { hasEdits, getHasEdits } = useSelect(
-			( select ) => {
-				if ( ! values.id ) {
-					return {
-						hasEdits: false,
-						getHasEdits: () => false,
-					};
-				}
-
-				const store = select( callToActionStore );
-
-				return {
-					hasEdits: store.hasEdits( values.id ),
-					getHasEdits: store.hasEdits,
-				};
-			},
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ values, isSaving ]
+		const isSaving = useSelect(
+			( select ) =>
+				select( callToActionStore ).isResolving(
+					'updateCallToAction'
+				) ||
+				select( callToActionStore ).isResolving( 'createCallToAction' ),
+			[]
 		);
 
 		const { saveEditorValues, resetRecordEdits } =
 			useDispatch( callToActionStore );
 
 		const { hasAnyError } = useAllFieldErrors();
+
+		const hasEdits = useSelect(
+			( select ) =>
+				typeof values.id === 'number'
+					? select( callToActionStore ).hasEdits( values.id )
+					: false,
+			[ values.id ]
+		);
 
 		/**
 		 * Get the modal title based on the CTA state.
@@ -124,23 +134,26 @@ export const withModal = (
 				: __( 'New Call to Action', 'popup-maker' );
 		}, [ modalProps?.title, values?.id, values?.title ] );
 
-		const confirmLoss = () => {
-			// eslint-disable-next-line no-alert, no-restricted-globals
-			return window.confirm(
-				__( 'Changes you made may not be saved.', 'popup-maker' )
-			);
-		};
-
 		/**
 		 * Handle the close event.
+		 *
+		 * Reads saving/edits state fresh from the store — this callback runs
+		 * from async continuations (post-save) where render-time values are
+		 * stale.
 		 */
 		const closeModal = useCallback(
 			() => {
-				if ( isSaving ) {
-					return; // Prevent closing while saving
+				if (
+					storeSelectors.isResolving( 'updateCallToAction' ) ||
+					storeSelectors.isResolving( 'createCallToAction' )
+				) {
+					return; // Prevent closing while saving.
 				}
 
-				if ( hasEdits ) {
+				if (
+					typeof values.id === 'number' &&
+					storeSelectors.hasEdits( values.id )
+				) {
 					setConfirm( {
 						message: __(
 							'Changes you made may not be saved.',
@@ -159,7 +172,7 @@ export const withModal = (
 				onClose?.();
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ isSaving, onClose, hasEdits ]
+			[ storeSelectors, onClose, values.id ]
 		);
 
 		/**
@@ -174,12 +187,18 @@ export const withModal = (
 
 				try {
 					// Save to the database
-					await saveEditorValues();
+					const saved = await saveEditorValues();
+
+					if ( ! saved ) {
+						return;
+					}
 
 					// Call the onSave callback if it exists
 					componentProps?.onSave?.( values );
 
-					const hasRemainingEdits = getHasEdits( values.id );
+					const hasRemainingEdits = storeSelectors.hasEdits(
+						values.id
+					);
 					// Handle modal closing if needed
 					if ( ! hasRemainingEdits && closeOnSave ) {
 						closeModal();
@@ -190,44 +209,7 @@ export const withModal = (
 				}
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ closeOnSave, closeModal, getHasEdits, hasAnyError ]
-		);
-
-		const { id: valuesId } = values;
-
-		// Set up confirm to close dialogue as well as prevent changing pages in the brower while hasEdits.
-		useEffect(
-			() => {
-				// On beforeunload event, confirm loss of unsaved changes.
-				const confirmLossOfUnsavedChanges = (
-					event: BeforeUnloadEvent
-				) => {
-					if ( hasEdits ) {
-						if ( confirmLoss() ) {
-							resetRecordEdits( valuesId );
-						} else {
-							event.preventDefault();
-							return false;
-						}
-					}
-
-					return true;
-				};
-
-				window.addEventListener(
-					'beforeunload',
-					confirmLossOfUnsavedChanges
-				);
-
-				return () => {
-					window.removeEventListener(
-						'beforeunload',
-						confirmLossOfUnsavedChanges
-					);
-				};
-			},
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ hasEdits, valuesId ]
+			[ closeOnSave, closeModal, storeSelectors, hasAnyError, values ]
 		);
 
 		return (

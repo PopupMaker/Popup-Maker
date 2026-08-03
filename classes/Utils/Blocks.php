@@ -35,7 +35,17 @@ class PUM_Utils_Blocks {
 				$found_blocks = array_merge( $found_blocks, self::find_blocks( $block['innerBlocks'], $search_name ) );
 			}
 
-			if ( $search_name === $block['blockName'] ) {
+			$block_name = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+
+			if ( '/*' === substr( $search_name, -2 ) ) {
+				// Wildcard like 'pum/*' matches any block sharing the prefix.
+				$prefix = substr( $search_name, 0, -1 );
+				$matches = '' !== $block_name && 0 === strpos( $block_name, $prefix );
+			} else {
+				$matches = $search_name === $block_name;
+			}
+
+			if ( $matches ) {
 				$found_blocks[] = $block;
 			}
 		}

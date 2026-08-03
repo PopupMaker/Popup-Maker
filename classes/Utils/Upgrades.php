@@ -325,6 +325,8 @@ class PUM_Utils_Upgrades {
 		if ( $resume_upgrade && is_array( $resume_upgrade ) ) {
 			$args = wp_parse_args( $resume_upgrade, $args );
 		}
+
+		$submit_text = ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Changes', 'popup-maker' );
 		?>
 
 		<form method="post" class="pum-form  pum-batch-form  pum-upgrade-form" data-ays="<?php esc_attr_e( 'This can sometimes take a few minutes, are you ready to begin?', 'popup-maker' ); ?>" data-upgrade_id="<?php echo esc_attr( $args['upgrade_id'] ); ?>" data-step="<?php echo (int) $args['step']; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'pum_upgrade_ajax_nonce' ) ); ?>">
@@ -333,7 +335,7 @@ class PUM_Utils_Upgrades {
 				<p>
 					<small><?php esc_html_e( 'The button below will process these changes automatically for you.', 'popup-maker' ); ?></small>
 				</p>
-				<?php submit_button( ! empty( $resume_upgrade ) ? __( 'Finish Upgrades', 'popup-maker' ) : __( 'Process Changes', 'popup-maker' ), 'secondary', 'submit', false ); ?>
+				<input type="submit" name="submit" id="submit" class="button" value="<?php echo esc_attr( $submit_text ); ?>" />
 			</div>
 
 			<div class="pum-batch-progress">

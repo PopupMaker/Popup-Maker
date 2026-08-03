@@ -15,10 +15,12 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Pro license management.
  *
- * NOTE: For wordpress.org admins: This is only used if:
- * - The user explicitly entered a Pro license key.
+ * Retained as a thin, temporary compatibility bridge for active Pro 1.1.0 and
+ * older installations, including when their license needs activation. Pro
+ * 1.2.0+ does not use this Core lifecycle.
  *
  * @package PopupMaker
+ * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
  */
 class License extends Service {
 
@@ -72,12 +74,38 @@ class License extends Service {
 	private $license_data;
 
 	/**
+	 * Whether the guarded legacy hooks have been registered.
+	 *
+	 * @var bool
+	 */
+	private $hooks_registered = false;
+
+	/**
 	 * Initialize license management.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @param \PopupMaker\Plugin\Core $container Plugin container.
 	 */
 	public function __construct( $container ) {
 		parent::__construct( $container );
+
+		// Core initializes at plugins_loaded priority 11 and Pro at 12.
+		// Defer until Pro is loaded so its active state and version are available.
+		add_action( 'plugins_loaded', [ $this, 'maybe_register_hooks' ], 100 );
+	}
+
+	/**
+	 * Register the legacy hooks only for an active old Pro install.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
+	 * @return void
+	 */
+	public function maybe_register_hooks() {
+		if ( ! $this->should_run_license_lifecycle() ) {
+			return;
+		}
 
 		$this->register_hooks();
 	}
@@ -85,9 +113,17 @@ class License extends Service {
 	/**
 	 * Register hooks.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return void
 	 */
 	public function register_hooks() {
+		if ( $this->hooks_registered || ! $this->should_run_license_lifecycle() ) {
+			return;
+		}
+
+		$this->hooks_registered = true;
+
 		add_action( 'init', [ $this, 'autoregister' ] );
 		add_action( 'popup_maker_license_status_check', [ $this, 'refresh_license_status' ] );
 		add_action( 'admin_init', [ $this, 'schedule_crons' ] );
@@ -103,9 +139,15 @@ class License extends Service {
 	 * - Self-healing: automatically corrects DB state if needed
 	 * - Detects loss of auto-activation for debugging
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return void
 	 */
 	public function autoregister() {
+		if ( ! $this->should_run_license_lifecycle() ) {
+			return;
+		}
+
 		$constant_key = defined( 'POPUP_MAKER_PRO_LICENSE' ) && '' !== POPUP_MAKER_PRO_LICENSE ? POPUP_MAKER_PRO_LICENSE : false;
 		$license_data = $this->get_license_data();
 
@@ -116,11 +158,15 @@ class License extends Service {
 
 			$this->ensure_auto_activation_setup( $constant_key );
 		} else {
-			$is_auto_activated = isset( $license_data['auto_activation']['enabled'] );
+			$is_auto_activated = ! empty( $license_data['auto_activation']['enabled'] );
 			$constant_lost     = ! empty( $license_data['auto_activation']['constant_lost_at'] );
 
-			// If auto-activation is enabled and constant is not lost, handle loss.
-			if ( $is_auto_activated && ! $constant_lost ) {
+			// Only auto-managed placeholder keys are subject to constant-loss
+			// handling. A manually entered key must never be wiped by it, and
+			// stale enabled=false metadata must not arm the detector.
+			$is_placeholder = '***AUTO***' === ( $license_data['key'] ?? '' );
+
+			if ( $is_auto_activated && $is_placeholder && ! $constant_lost ) {
 				$this->handle_auto_activation_loss_with_delay();
 			}
 		}
@@ -175,6 +221,14 @@ class License extends Service {
 		$license_data = $this->get_license_data();
 		$db_key       = isset( $license_data['key'] ) ? $license_data['key'] : '';
 
+		// A manually configured license takes precedence. Add-on packages can
+		// ship a POPUP_MAKER_PRO_LICENSE constant; converting an existing real
+		// key to auto-management would leave the site unlicensed when the
+		// defining add-on is later deactivated.
+		if ( '' !== $db_key && '***AUTO***' !== $db_key ) {
+			return;
+		}
+
 		// Self-healing: ensure DB has placeholder, not real key
 		if ( '***AUTO***' !== $db_key || empty( $license_data['auto_activation']['enabled'] ) ) {
 			$license_data = [
@@ -221,6 +275,29 @@ class License extends Service {
 	private function handle_auto_activation_loss(): void {
 		$license_data = $this->get_license_data();
 
+		// A real key means the user activated manually — never wipe it.
+		if ( '***AUTO***' !== ( $license_data['key'] ?? '' ) ) {
+			$this->clear_transients();
+			return;
+		}
+
+		// Prefer restoring the retained settings key over leaving the site
+		// unlicensed — the constant's key is mirrored there on activation.
+		$mirror_key = \PUM_Utils_Options::get( self::SETTINGS_KEY, '' );
+
+		if ( is_string( $mirror_key ) && '' !== trim( $mirror_key ) && '***AUTO***' !== trim( $mirror_key ) ) {
+			$license_data['key']             = trim( $mirror_key );
+			$license_data['status']          = null;
+			$license_data['auto_activation'] = null;
+
+			$this->update_license_data( $license_data );
+			$this->clear_transients();
+
+			\PopupMaker\logging()->info( 'Auto-activation constant POPUP_MAKER_PRO_LICENSE was removed; restored the retained license key at ' . gmdate( 'Y-m-d H:i:s' ) );
+
+			return;
+		}
+
 		// Mark as lost and clear license status so UI reflects the change
 		$license_data['auto_activation']['constant_lost_at'] = gmdate( 'Y-m-d H:i:s' );
 
@@ -246,9 +323,15 @@ class License extends Service {
 	/**
 	 * Schedule cron jobs.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return void
 	 */
 	public function schedule_crons() {
+		if ( ! $this->should_run_license_lifecycle() ) {
+			return;
+		}
+
 		if ( ! wp_next_scheduled( 'popup_maker_license_status_check' ) ) {
 			wp_schedule_event( time(), 'weekly', 'popup_maker_license_status_check' );
 		}
@@ -256,6 +339,8 @@ class License extends Service {
 
 	/**
 	 * Get license data.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return array{key:string|null,status:array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null,auto_activation?:array{enabled:bool,constant_lost_at?:string|null}}
 	 */
@@ -296,6 +381,8 @@ class License extends Service {
 	 *
 	 * @uses \PopupMaker\Services\License::get_license_data() For source of truth.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return string
 	 */
 	public function get_license_key(): string {
@@ -317,6 +404,8 @@ class License extends Service {
 	 * Get license key for EDD API calls (extensions, updater, etc.).
 	 *
 	 * Unlike get_license_key(), this never returns display placeholders.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return string
 	 */
@@ -353,6 +442,8 @@ class License extends Service {
 	 *
 	 * @param bool $refresh Whether to refresh license status.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null
 	 */
 	public function get_license_status_data( ?bool $refresh = false ) {
@@ -383,6 +474,8 @@ class License extends Service {
 
 	/**
 	 * Get license status.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return 'empty'|'inactive'|'expired'|'error'|'valid'
 	 */
@@ -429,6 +522,8 @@ class License extends Service {
 	 *
 	 * Only used in pro version.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return int Integer representing license level.
 	 */
 	public function get_license_level(): int {
@@ -458,6 +553,8 @@ class License extends Service {
 
 	/**
 	 * Get license tier (pro or pro_plus).
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return string 'pro' or 'pro_plus' based on license data.
 	 */
@@ -528,7 +625,13 @@ class License extends Service {
 	 *
 	 * @return bool
 	 */
-	private function update_license_status( array $license_status ): bool {
+	private function update_license_status( ?array $license_status ): bool {
+		// Callers may pass null/empty on a failed or empty API response; never
+		// fatal the typed setter and never clobber stored status with nothing.
+		if ( empty( $license_status ) ) {
+			return false;
+		}
+
 		$license_data = $this->get_license_data();
 
 		$previous_status = isset( $license_data['status'] ) ? $license_data['status'] : [];
@@ -562,6 +665,8 @@ class License extends Service {
 	 *
 	 * @param bool $as_datetime Whether to return as DateTime object.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return string|null|\DateTime
 	 */
 	public function get_license_expiration( ?bool $as_datetime = false ) {
@@ -582,9 +687,15 @@ class License extends Service {
 	 * Fetch license status from remote server.
 	 * This is a blocking request.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function refresh_license_status(): bool {
+		if ( ! $this->should_run_license_lifecycle() ) {
+			return false;
+		}
+
 		$key = $this->get_raw_license_key();
 
 		if ( empty( $key ) ) {
@@ -595,6 +706,11 @@ class License extends Service {
 			$status = $this->check_license_status();
 		} catch ( \Exception $e ) {
 			$status = null;
+		}
+
+		// A transient failure must not overwrite a previously valid status.
+		if ( empty( $status ) ) {
+			return false;
 		}
 
 		return $this->update_license_status( $status );
@@ -680,6 +796,12 @@ class License extends Service {
 	 * - Update Pro Activation Date
 	 * - Update License Status
 	 *
+	 * Kept callable so existing Core 1.23.x and Pro versions older than 1.2.0
+	 * can activate, deactivate, and recover licenses during the short migration
+	 * window. Pro 1.2.0+ does not use this method.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 *
 	 * @throws \Exception If there is an error.
@@ -717,6 +839,8 @@ class License extends Service {
 	 * - API Call: Deactivate License
 	 * - Update License Status
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 *
 	 * @throws \Exception If there is an error.
@@ -724,13 +848,13 @@ class License extends Service {
 	public function deactivate_license(): bool {
 		$license_status = $this->api_call( 'deactivate_license' );
 
-		$this->update_license_status( $license_status );
-
 		if ( empty( $license_status ) ) {
 			return false;
 		}
 
-		$succeeded = 'deactivated' === $license_status['license'];
+		$this->update_license_status( $license_status );
+
+		$succeeded = isset( $license_status['license'] ) && 'deactivated' === $license_status['license'];
 
 		/**
 		 * Fires when license is activated.
@@ -747,6 +871,8 @@ class License extends Service {
 	 * Convert license error to human readable message.
 	 *
 	 * @param array{success:bool,license:'invalid'|'valid',item_id:int|false,item_name:string,license_limit:int,site_count:int,expires:string,activations_left:int,checksum:string,payment_id:int,customer_name:string,customer_email:string,price_id:string|int,error?:'no_activations_left'|'license_not_activable'|'missing'|'invalid'|'expired'|'revoked'|'item_name_mismatch'|'site_inactive'|'no_activations_left'|string|null,error_message?:string}|null $license_status License status data.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return string
 	 */
@@ -807,6 +933,8 @@ class License extends Service {
 	 *
 	 * Caution: Destructive, this will remove the license key and status.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function remove_license(): bool {
@@ -843,6 +971,8 @@ class License extends Service {
 	 *
 	 * @param string $key License key.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function maybe_update_license_key( string $key ): bool {
@@ -872,6 +1002,8 @@ class License extends Service {
 	 *
 	 * @param string $key License key.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function maybe_activate_license( ?string $key = null ): bool {
@@ -891,6 +1023,8 @@ class License extends Service {
 	/**
 	 * Check if license is active.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function is_license_active() {
@@ -902,6 +1036,8 @@ class License extends Service {
 	 *
 	 * Uses database flag for reliable detection even when constant is removed.
 	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return bool
 	 */
 	public function is_auto_activated(): bool {
@@ -911,6 +1047,8 @@ class License extends Service {
 
 	/**
 	 * Get auto-activation info for debugging.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
 	 *
 	 * @return array{enabled:bool,constant_present:bool,db_key:string,constant_lost_at:string|null,status:string}|null
 	 */
@@ -945,85 +1083,21 @@ class License extends Service {
 	}
 
 	/**
-	 * Generate connection information for Pro upgrade.
-	 *
-	 * This method creates the necessary connection data for upgrading to Pro
-	 * when Pro is not already installed.
-	 *
-	 * @return array{url:string,back_url:string}|null Returns connection info or null if conditions not met.
-	 */
-	public function generate_connect_info(): ?array {
-		// Only generate connect info if license is active and Pro is not installed.
-		if ( ! $this->is_license_active() || $this->container->is_pro_installed() ) {
-			return null;
-		}
-
-		$license_key = $this->get_license_key();
-		if ( empty( $license_key ) ) {
-			return null;
-		}
-
-		// Use the Connect service to generate connection info.
-		$connect_service = $this->container->get( 'connect' );
-		return $connect_service->get_connect_info( $license_key );
-	}
-
-	/**
-	 * Validate license for Pro upgrade workflow.
-	 *
-	 * Determines if the current license state allows for Pro upgrade.
-	 *
-	 * @return array{valid:bool,can_upgrade:bool,reason:string}
-	 */
-	public function validate_for_upgrade(): array {
-		$license_key      = $this->get_license_key();
-		$license_status   = $this->get_license_status();
-		$is_pro_installed = $this->container->is_pro_installed();
-
-		// No license key provided.
-		if ( empty( $license_key ) ) {
-			return [
-				'valid'       => false,
-				'can_upgrade' => false,
-				'reason'      => 'no_license_key',
-			];
-		}
-
-		// License is not active.
-		if ( 'valid' !== $license_status ) {
-			return [
-				'valid'       => false,
-				'can_upgrade' => false,
-				'reason'      => "license_{$license_status}",
-			];
-		}
-
-		// Pro is already installed.
-		if ( $is_pro_installed ) {
-			return [
-				'valid'       => true,
-				'can_upgrade' => false,
-				'reason'      => 'pro_already_installed',
-			];
-		}
-
-		// License is valid and Pro is not installed - can upgrade.
-		return [
-			'valid'       => true,
-			'can_upgrade' => true,
-			'reason'      => 'ready_for_upgrade',
-		];
-	}
-
-	/**
 	 * Filter settings editor args.
 	 *
 	 * Add the license key value to the settings editor args, since its not actually stored in options array.
 	 *
 	 * @param mixed $args Settings editor args.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return mixed Settings editor args.
 	 */
 	public function filter_settings_editor_args( $args ) {
+		if ( ! $this->should_run_license_lifecycle() ) {
+			return $args;
+		}
+
 		$value = isset( $args['current_values'][ self::SETTINGS_KEY ] ) ? $args['current_values'][ self::SETTINGS_KEY ] : '';
 
 		try {
@@ -1098,6 +1172,9 @@ class License extends Service {
 	 * Map license status to template data.
 	 *
 	 * @param string $status License status from service.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
 	 * @return array Template data for license status.
 	 */
 	public function map_license_status( string $status ): array {
@@ -1131,13 +1208,24 @@ class License extends Service {
 		}
 	}
 
-		/**
-		 * Star the key.
-		 *
-		 * @param string $key The key to star.
-		 *
-		 * @return string The starred key.
-		 */
+	/**
+	 * Check whether the compatibility license lifecycle is needed.
+	 *
+	 * @return bool
+	 */
+	private function should_run_license_lifecycle() {
+		return $this->container->should_run_legacy_license_compatibility();
+	}
+
+	/**
+	 * Star the key.
+	 *
+	 * @param string $key The key to star.
+	 *
+	 * @deprecated 1.23.0 Temporary Pro 1.1.0 compatibility. Scheduled for removal in Core 1.25.0.
+	 *
+	 * @return string The starred key.
+	 */
 	public static function star_key( string $key ): string {
 		if ( empty( $key ) ) {
 			return '';

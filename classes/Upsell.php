@@ -43,6 +43,12 @@ class PUM_Upsell {
 	 * @since 1.14.0
 	 */
 	public static function notice_bar_display() {
+		// pum_is_admin_page() trusts the post_type param; gate on capability so the
+		// notice can't leak installed integrations to low-privileged users.
+		if ( ! current_user_can( plugin()->get_permission( 'edit_popups' ) ) ) {
+			return;
+		}
+
 		if ( pum_is_admin_page() ) {
 			// Temporarily disable for CTA post type screens.
 			if ( isset( $_GET['page'] ) && 'popup-maker-call-to-actions' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -121,7 +127,7 @@ class PUM_Upsell {
 		 */
 
 		// 1. Pro Plus users with valid license see nothing.
-		if ( 'valid' === $license_status && 'pro_plus' === $license_tier ) {
+		if ( \PopupMaker\plugin()->is_pro_installed() && 'valid' === $license_status && 'pro_plus' === $license_tier ) {
 			return '';
 		}
 
@@ -188,13 +194,14 @@ class PUM_Upsell {
 			return $triggers;
 		}
 
-		$license_service = \PopupMaker\plugin( 'license' );
-		$license_tier    = $license_service->get_license_tier();
-		$license_status  = $license_service->get_license_status();
-		$integrations    = self::detect_integrations();
-		$has_ecommerce   = ! empty( $integrations['pro_plus']['ecommerce'] );
-		$has_lms         = ! empty( $integrations['pro_plus']['lms'] );
-		$has_crm         = ! empty( $integrations['pro']['crm'] );
+		$license_service  = \PopupMaker\plugin( 'license' );
+		$is_pro_installed = \PopupMaker\plugin()->is_pro_installed();
+		$license_tier     = $is_pro_installed ? $license_service->get_license_tier() : 'pro';
+		$license_status   = $is_pro_installed ? $license_service->get_license_status() : 'empty';
+		$integrations     = self::detect_integrations();
+		$has_ecommerce    = ! empty( $integrations['pro_plus']['ecommerce'] );
+		$has_lms          = ! empty( $integrations['pro_plus']['lms'] );
+		$has_crm          = ! empty( $integrations['pro']['crm'] );
 
 		// Get form conversion count (will be 0 if service not available).
 		$form_count = self::get_form_conversion_count();
@@ -204,7 +211,9 @@ class PUM_Upsell {
 
 		// New installs (after form tracking shipped) get celebration messaging.
 		// Existing installs get "tracking is now live" messaging instead.
-		$installed_on   = get_option( 'pum_installed_on', '' );
+		// The legacy pum_installed_on option is removed after migration; read the
+		// install date from the current version info instead.
+		$installed_on   = \PopupMaker\get_current_install_info( 'installed_on' );
 		$is_new_install = ! empty( $installed_on ) && strtotime( $installed_on ) >= strtotime( '2026-03-25' );
 
 		$triggers = [
@@ -546,8 +555,8 @@ class PUM_Upsell {
 
 		if ( ! \PopupMaker\plugin()->is_pro_active() ) {
 			foreach ( [ 'overlay', 'container', 'close' ] as $tab ) {
-				/* translators: %s url to product page. */
 				$message = sprintf(
+					/* translators: %s url to product page. */
 					__( 'Unlock background images, parallax effects, and advanced styling with <a href="%s" target="_blank" rel="noopener">Popup Maker Pro</a>.', 'popup-maker' ),
 					'https://wppopupmaker.com/extensions/advanced-theme-builder/?utm_campaign=upsell&utm_source=plugin-theme-editor&utm_medium=text-link&utm_content=' . $tab . '-settings'
 				);
@@ -1108,23 +1117,25 @@ class PUM_Upsell {
 				'class' => 'pum-upgrade-tab pum-upgrade-tab-pro',
 			];
 
-			// Adjust based on license status.
-			try {
-				$license_service = \PopupMaker\plugin( 'license' );
-				$license_status  = $license_service->get_license_status();
-				$license_tier    = $license_service->get_license_tier();
+			// Adjust based on license status only when Pro is installed.
+			if ( \PopupMaker\plugin()->is_pro_installed() ) {
+				try {
+					$license_service = \PopupMaker\plugin( 'license' );
+					$license_status  = $license_service->get_license_status();
+					$license_tier    = $license_service->get_license_tier();
 
-				if ( 'valid' === $license_status ) {
-					if ( 'pro_plus' === $license_tier ) {
-						$upgrade_tab = null; // Pro Plus - hide upgrade tab.
-					} elseif ( 'pro' === $license_tier ) {
-						$upgrade_tab['name']  = esc_html__( 'Go Pro+', 'popup-maker' );
-						$upgrade_tab['class'] = 'pum-upgrade-tab pum-upgrade-tab-pro-plus';
+					if ( 'valid' === $license_status ) {
+						if ( 'pro_plus' === $license_tier ) {
+							$upgrade_tab = null; // Pro Plus - hide upgrade tab.
+						} elseif ( 'pro' === $license_tier ) {
+							$upgrade_tab['name']  = esc_html__( 'Go Pro+', 'popup-maker' );
+							$upgrade_tab['class'] = 'pum-upgrade-tab pum-upgrade-tab-pro-plus';
+						}
 					}
+				} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+					// Use default configuration if license service unavailable.
+					unset( $e ); // Prevent unused variable warning.
 				}
-			} catch ( \Exception $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-				// Use default configuration if license service unavailable.
-				unset( $e ); // Prevent unused variable warning.
 			}
 
 			$tabs = [

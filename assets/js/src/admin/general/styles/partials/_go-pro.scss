@@ -10,6 +10,10 @@
 	margin-bottom: 12px !important;
 }
 
+.pum-go-pro-placeholder {
+	display: none;
+}
+
 .pum-pro-upsell-banner {
 	margin: -8px 0 16px;
 }
@@ -249,6 +253,13 @@
 	border-top: 1px solid rgba(100, 116, 139, 0.3);
 }
 
+.pum-go-pro-hero__actions {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px 18px;
+}
+
 .pum-go-pro-hero__cta {
 	position: relative;
 	z-index: 1;
@@ -275,6 +286,21 @@
 
 	svg {
 		flex-shrink: 0;
+	}
+}
+
+.pum-go-pro-hero__download-link {
+	color: #cbd5e1;
+	font-size: 14px;
+	font-weight: 600;
+	position: relative;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	z-index: 1;
+
+	&:hover,
+	&:focus {
+		color: #fff;
 	}
 }
 

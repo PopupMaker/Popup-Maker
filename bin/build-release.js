@@ -4,7 +4,7 @@
 const fs = require( 'fs' );
 const path = require( 'path' );
 const glob = require( 'glob' );
-const { execSync } = require( 'child_process' );
+const { execFileSync, execSync } = require( 'child_process' );
 
 /**
  * Unified Plugin Release Builder
@@ -148,7 +148,55 @@ class PluginReleaseBuilder {
 			}
 
 			console.error( `Exit code: ${ error.status }` );
-			process.exit( 1 );
+			throw error;
+		}
+	}
+
+	executeFile( executable, args, description ) {
+		if ( this.options.verbose ) {
+			console.log( `${ description }...` );
+			console.log( `Running: ${ executable } ${ args.join( ' ' ) }` );
+		} else if ( this.options.quiet ) {
+			process.stdout.write( `${ description }... ` );
+		} else {
+			console.log( `${ description }...` );
+		}
+
+		try {
+			const result = execFileSync( executable, args, {
+				cwd: this.projectRoot,
+				stdio: this.options.verbose ? 'inherit' : 'pipe',
+				encoding: 'utf8',
+				env: { ...process.env },
+			} );
+
+			if ( this.options.quiet ) {
+				console.log( '✅' );
+			} else if ( ! this.options.verbose ) {
+				console.log( '✅ Done' );
+			}
+
+			return result;
+		} catch ( error ) {
+			if ( this.options.quiet || ! this.options.verbose ) {
+				console.log( '❌' );
+			}
+
+			console.error(
+				`\n❌ Failed to execute: ${ executable } ${ args.join( ' ' ) }`
+			);
+
+			if ( error.stdout ) {
+				console.error( 'STDOUT:' );
+				console.error( error.stdout.toString() );
+			}
+			if ( error.stderr ) {
+				console.error( 'STDERR:' );
+				console.error( error.stderr.toString() );
+			}
+
+			console.error( `Exit code: ${ error.status }` );
+			throw error;
 		}
 	}
 
@@ -164,40 +212,18 @@ class PluginReleaseBuilder {
 		const pluginDir = path.join( this.projectRoot, this.pluginName );
 		this.removeDirectory( pluginDir );
 
-		// Clean any existing zip files for this version
-		const existingZip = path.join(
-			this.outputDir,
-			`${ this.pluginName }_${ this.version }.zip`
-		);
-
-		if ( fs.existsSync( existingZip ) ) {
-			if ( this.options.verbose ) {
-				console.log(
-					`Removing existing zip: ${ path.relative(
-						this.projectRoot,
-						existingZip
-					) }`
-				);
+		for ( const artifactPath of this.getReleaseArtifactCandidates() ) {
+			if ( fs.existsSync( artifactPath ) ) {
+				if ( this.options.verbose ) {
+					console.log(
+						`Removing existing zip: ${ path.relative(
+							this.projectRoot,
+							artifactPath
+						) }`
+					);
+				}
+				fs.unlinkSync( artifactPath );
 			}
-			fs.unlinkSync( existingZip );
-		}
-
-		// Clean any existing zip files for -latest.zip
-		const latestZip = path.join(
-			this.outputDir,
-			`${ this.pluginName }-latest.zip`
-		);
-
-		if ( fs.existsSync( latestZip ) ) {
-			if ( this.options.verbose ) {
-				console.log(
-					`Removing existing zip: ${ path.relative(
-						this.projectRoot,
-						latestZip
-					) }`
-				);
-			}
-			fs.unlinkSync( latestZip );
 		}
 	}
 
@@ -277,16 +303,59 @@ class PluginReleaseBuilder {
 		}
 	}
 
+	getZipFileName() {
+		const zipName =
+			this.options.zipFileName ||
+			`${ this.pluginName }_${ this.version }.zip`;
+
+		if ( ! /^[A-Za-z0-9._-]+\.zip$/.test( zipName ) ) {
+			throw new Error(
+				`Refusing unsafe zip name: "${ zipName }". Expected [A-Za-z0-9._-] and a .zip extension.`
+			);
+		}
+
+		return zipName;
+	}
+
+	getReleaseArtifactCandidates() {
+		const directories = new Set( [ this.projectRoot, this.outputDir ] );
+		const fileNames = new Set( [
+			`${ this.pluginName }-latest.zip`,
+			`${ this.pluginName }_${ this.version }.zip`,
+		] );
+
+		try {
+			fileNames.add( this.getZipFileName() );
+		} catch {
+			// Preserve the original build error; unsafe names cannot be artifacts.
+		}
+
+		const artifactPaths = [];
+
+		for ( const directory of directories ) {
+			for ( const fileName of fileNames ) {
+				artifactPaths.push( path.join( directory, fileName ) );
+			}
+		}
+
+		return artifactPaths;
+	}
+
 	createZipFiles() {
 		if ( ! this.options.quiet ) {
 			console.log( '\n=== Creating release zip ===' );
 		}
 
 		const pluginDir = path.join( this.projectRoot, this.pluginName );
-		const zipName =
-			this.options.zipFileName ||
-			`${ this.pluginName }_${ this.version }.zip`;
+		const zipName = this.getZipFileName();
 		const zipPath = path.join( this.outputDir, zipName );
+		const latestZipPath = path.join(
+			this.projectRoot,
+			`${ this.pluginName }-latest.zip`
+		);
+		const stagedZipPath = path.join( this.projectRoot, zipName );
+
+		this.releaseArtifactPaths = [ latestZipPath, stagedZipPath, zipPath ];
 
 		// Move build directory to plugin name
 		if ( fs.existsSync( pluginDir ) ) {
@@ -301,11 +370,12 @@ class PluginReleaseBuilder {
 			`Creating latest zip file`
 		);
 
-		// Copy (cp) to versioned zip file
-		this.executeCommand(
-			`cp "${ this.pluginName }-latest.zip" "${ zipName }"`,
-			`Creating versioned zip file`
-		);
+		// Copy to versioned zip file. Use fs (not a shell) so a crafted zip name
+		// cannot break out of the command.
+		if ( ! this.options.quiet ) {
+			console.log( 'Creating versioned zip file...' );
+		}
+		fs.copyFileSync( latestZipPath, stagedZipPath );
 
 		// Move zip to output directory if different from project root
 		if ( this.outputDir !== this.projectRoot ) {
@@ -315,15 +385,52 @@ class PluginReleaseBuilder {
 			}
 		}
 
-		// Always show the final result
+		return zipPath;
+	}
+
+	verifyArtifact( zipPath ) {
+		this.executeFile(
+			process.execPath,
+			[
+				path.join( this.projectRoot, 'bin/verify-release-artifact.js' ),
+				zipPath,
+			],
+			'Verifying release artifact'
+		);
+	}
+
+	announceRelease( zipPath ) {
 		console.log(
 			`\n✅ Release created: \n- ${ path.relative(
 				process.cwd(),
 				`${ this.pluginName }-latest.zip`
 			) } \n- ${ path.relative( process.cwd(), zipPath ) }`
 		);
+	}
 
-		return zipPath;
+	removeReleaseArtifacts( zipPath = null ) {
+		const artifactPaths = new Set( [
+			...this.getReleaseArtifactCandidates(),
+			...( this.releaseArtifactPaths || [] ),
+		] );
+
+		if ( zipPath ) {
+			artifactPaths.add( zipPath );
+		}
+
+		for ( const artifactPath of artifactPaths ) {
+			if ( artifactPath && fs.existsSync( artifactPath ) ) {
+				if ( this.options.verbose ) {
+					console.log(
+						`Removing invalid artifact: ${ path.relative(
+							this.projectRoot,
+							artifactPath
+						) }`
+					);
+				}
+				fs.unlinkSync( artifactPath );
+			}
+		}
 	}
 
 	cleanup() {
@@ -350,6 +457,8 @@ class PluginReleaseBuilder {
 			}`
 		);
 
+		let zipPath = null;
+
 		try {
 			this.cleanBuildArtifacts();
 
@@ -357,16 +466,20 @@ class PluginReleaseBuilder {
 			await this.runParallelBuilds();
 
 			this.copyDistributionFiles();
-			// eslint-disable-next-line no-unused-vars
-			const _zipPath = this.createZipFiles();
+			zipPath = this.createZipFiles();
+			this.verifyArtifact( zipPath );
 			this.cleanup();
+			this.announceRelease( zipPath );
 
 			if ( ! this.options.quiet ) {
 				console.log( `\n✅ Release build completed successfully!` );
 			}
+
+			return zipPath;
 		} catch ( error ) {
-			console.error( `\n❌ Release build failed:`, error.message );
-			process.exit( 1 );
+			this.removeReleaseArtifacts( zipPath );
+			this.cleanup();
+			throw error;
 		}
 	}
 
@@ -483,12 +596,12 @@ class PluginReleaseBuilder {
 				this.packageJSON.scripts &&
 				this.packageJSON.scripts[ 'build:production' ]
 			) {
-				buildCommand = 'npm run build:production';
+				buildCommand = 'pnpm run build:production';
 			} else if (
 				this.packageJSON.scripts &&
 				this.packageJSON.scripts.build
 			) {
-				buildCommand = 'NODE_ENV=production npm run build';
+				buildCommand = 'NODE_ENV=production pnpm run build';
 			} else {
 				if ( ! this.options.quiet ) {
 					console.log(
@@ -638,8 +751,10 @@ if ( require.main === module ) {
 	const builder = new PluginReleaseBuilder( options );
 	builder.build().catch( ( error ) => {
 		console.error( `\n❌ Release build failed:`, error.message );
-		process.exit( 1 );
+		process.exitCode = 1;
 	} );
 }
 
 module.exports = PluginReleaseBuilder;
+
+/* eslint-enable no-console */

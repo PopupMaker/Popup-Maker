@@ -7,6 +7,7 @@ import { createRegistrySelector, createSelector } from '@wordpress/data';
 import { DispatchStatus } from '../constants';
 import { isValidNoticeStatus } from '../types';
 import { defaultValues, NOTICE_CONTEXT } from './constants';
+import { editorRecordKey } from './utils';
 
 import type { Updatable } from '@wordpress/core-data';
 import type { WPNotice } from '../types';
@@ -140,12 +141,16 @@ const editorSelectors = {
 				return undefined;
 			}
 
-			return editorSelectors.getEditedCallToAction( state, editorId );
+			// Unsaved drafts ('new') are keyed under 0.
+			return editorSelectors.getEditedCallToAction(
+				state,
+				editorRecordKey( editorId )
+			);
 		},
 		( state: State ) => [
-			state.editedEntities?.[ state.editorId || 0 ],
-			state.editHistoryIndex?.[ state.editorId || 0 ],
-			state.editHistory?.[ state.editorId || 0 ],
+			state.editedEntities?.[ editorRecordKey( state.editorId ) ],
+			state.editHistoryIndex?.[ editorRecordKey( state.editorId ) ],
+			state.editHistory?.[ editorRecordKey( state.editorId ) ],
 			state.editorId,
 		]
 	),

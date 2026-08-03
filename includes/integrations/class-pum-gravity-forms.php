@@ -16,6 +16,12 @@ class PUM_Gravity_Forms_Integation {
 		add_action( 'popmake_preload_popup', [ __CLASS__, 'preload' ] );
 		add_action( 'popmake_popup_before_inner', [ __CLASS__, 'force_ajax' ] );
 		add_action( 'popmake_popup_after_inner', [ __CLASS__, 'force_ajax' ] );
+
+		// Popup content is pre-rendered & cached (blocks at priority 9,
+		// shortcodes at 11), so the template hooks above fire after the
+		// form has already rendered. Sandwich the content pipeline too.
+		add_filter( 'pum_popup_content', [ __CLASS__, 'begin_force_ajax' ], 5 );
+		add_filter( 'pum_popup_content', [ __CLASS__, 'end_force_ajax' ], 99 );
 	}
 
 	public static function force_ajax() {
@@ -25,6 +31,32 @@ class PUM_Gravity_Forms_Integation {
 		if ( current_action() === 'popmake_popup_after_inner' ) {
 			remove_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
 		}
+	}
+
+	/**
+	 * Force AJAX on Gravity Forms rendered within popup content.
+	 *
+	 * @param string $content Popup content.
+	 *
+	 * @return string
+	 */
+	public static function begin_force_ajax( $content ) {
+		add_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
+
+		return $content;
+	}
+
+	/**
+	 * Stop forcing AJAX once popup content has rendered.
+	 *
+	 * @param string $content Popup content.
+	 *
+	 * @return string
+	 */
+	public static function end_force_ajax( $content ) {
+		remove_filter( 'shortcode_atts_gravityforms', [ __CLASS__, 'gfrorms_shortcode_atts' ] );
+
+		return $content;
 	}
 
 	public static function gfrorms_shortcode_atts( $out ) {
@@ -63,7 +95,7 @@ class PUM_Gravity_Forms_Integation {
 
 	public static function get_form( $form_string, $form ) {
 		$settings    = wp_json_encode( self::form_options( $form['id'] ) );
-		$field       = "<input type='hidden' class='gforms-pum' value='$settings' />";
+		$field       = '<input type="hidden" class="gforms-pum" value="' . esc_attr( $settings ) . '" />';
 		$form_string = preg_replace( '/(<form.*>)/', "$1 \r\n " . $field, $form_string );
 
 		return $form_string;
@@ -92,8 +124,10 @@ class PUM_Gravity_Forms_Integation {
 	 */
 	public static function form_options( $id ) {
 		$settings = get_option( 'gforms_pum_' . $id, self::defaults() );
+		$settings = wp_parse_args( $settings, self::defaults() );
 
-		return wp_parse_args( $settings, self::defaults() );
+		// Restrict to known keys so legacy/poisoned option data cannot reach the render sink.
+		return array_intersect_key( $settings, self::defaults() );
 	}
 
 	/**
@@ -273,12 +307,15 @@ class PUM_Gravity_Forms_Integation {
 
 			// Check if JSON decode was successful.
 			if ( is_array( $settings ) ) {
-				$settings['openpopup']    = ! empty( $settings['openpopup'] );
-				$settings['openpopup_id'] = ! empty( $settings['openpopup_id'] ) ? absint( $settings['openpopup_id'] ) : 0;
-				$settings['closepopup']   = ! empty( $settings['closepopup'] );
-				$settings['closedelay']   = ! empty( $settings['closedelay'] ) ? absint( $settings['closedelay'] ) : 0;
+				// Only persist the known keys. Discard any attacker-supplied extras.
+				$clean = [
+					'openpopup'    => ! empty( $settings['openpopup'] ),
+					'openpopup_id' => ! empty( $settings['openpopup_id'] ) ? absint( $settings['openpopup_id'] ) : 0,
+					'closepopup'   => ! empty( $settings['closepopup'] ),
+					'closedelay'   => ! empty( $settings['closedelay'] ) ? absint( $settings['closedelay'] ) : 0,
+				];
 
-				update_option( 'gforms_pum_' . $form_id, $settings );
+				update_option( 'gforms_pum_' . $form_id, $clean );
 			}
 		} else {
 			delete_option( 'gforms_pum_' . $form_id );

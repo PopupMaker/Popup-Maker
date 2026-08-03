@@ -1,7 +1,6 @@
 import {
 	Button,
 	Icon,
-	Spinner,
 	TextControl,
 	ToggleControl,
 	Tooltip,
@@ -68,18 +67,12 @@ const List = (): JSX.Element => {
 							onClose={ clearConfirm }
 						/>
 						<div className="list-table-container">
-							{ isLoading && (
-								<div className="is-loading">
-									<Spinner />
-								</div>
-							) }
-
 							<div className="list-table-header">
 								<div className="list-search">
 									<Icon icon={ search } />
 									<TextControl
 										placeholder={ __(
-											'Search Call to Actions…',
+											'Search Calls to Action…',
 											'popup-maker'
 										) }
 										value={ searchText ?? '' }
@@ -125,6 +118,7 @@ const List = (): JSX.Element => {
 							{ showFilters && <ListFilters /> }
 
 							<ListTable
+								isLoading={ isLoading }
 								selectedItems={ bulkSelection }
 								onSelectItems={ ( newSelection ) =>
 									setBulkSelection( newSelection )

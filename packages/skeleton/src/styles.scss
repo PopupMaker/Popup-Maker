@@ -1,0 +1,62 @@
+@import "./variables";
+
+// Shared skeleton shimmer primitives (bars, cards, spinner overlay).
+.pum-skeleton {
+
+	&__bar {
+		display: inline-block;
+		flex-shrink: 0;
+		background: linear-gradient(90deg, #eaeaeb 25%, #f7f7f7 50%, #eaeaeb 75%);
+		background-size: 200% 100%;
+		animation: pum-skeleton-shimmer 1.5s infinite;
+		border-radius: $pum-radius-control;
+
+		&--pill {
+			border-radius: $pum-radius-pill;
+		}
+
+		&--button {
+			border-radius: $pum-radius-control;
+		}
+	}
+
+	&__card {
+		background: linear-gradient(90deg, #eaeaeb 25%, #f7f7f7 50%, #eaeaeb 75%);
+		background-size: 200% 100%;
+		animation: pum-skeleton-shimmer 1.5s infinite;
+		border: 1px solid #e5e5e5;
+		border-radius: $pum-radius-surface;
+	}
+
+	&__spinner {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		pointer-events: none;
+	}
+}
+
+@keyframes pum-skeleton-shimmer {
+
+	0% {
+		background-position: 200% 0;
+	}
+
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+// Inline shimmer for dynamic values (counts, metrics, cell data).
+.pum-skeleton-value,
+.pum-skeleton__bar.pum-skeleton-value {
+	display: inline-block;
+	flex-shrink: 0;
+	vertical-align: middle;
+	background: linear-gradient(90deg, #eaeaeb 25%, #f7f7f7 50%, #eaeaeb 75%);
+	background-size: 200% 100%;
+	animation: pum-skeleton-shimmer 1.5s infinite;
+	border-radius: $pum-radius-control;
+}

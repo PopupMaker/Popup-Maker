@@ -1,6 +1,6 @@
 {
 	"name": "popup-maker",
-	"version": "1.23.0",
+	"version": "1.24.0",
 	"description": "WordPress Popup Plugin",
 	"author": "Code Atlantic LLC",
 	"license": "GPL-2.0-or-later",
@@ -40,6 +40,7 @@
 		"*.php"
 	],
 	"dependencies": {
+		"@popup-maker/addons-page": "workspace:*",
 		"@popup-maker/admin-bar": "workspace:*",
 		"@popup-maker/admin-marketing": "workspace:*",
 		"@popup-maker/block-editor": "workspace:*",
@@ -93,15 +94,16 @@
 		"react": "^18.3.1",
 		"react-docgen-typescript": "^2.2.2",
 		"react-dom": "^18.3.1",
+		"rimraf": "5.0.10",
 		"rtlcss-webpack-plugin": "^4.0.7",
 		"storybook": "8.6.17",
 		"typescript": "5.7.3",
 		"webpack-bundle-analyzer": "^4.10.2"
 	},
 	"scripts": {
-		"preinstall": "npx -y only-allow pnpm",
+		"preinstall": "npx -y only-allow@1.2.2 pnpm",
 		"build": "wp-scripts build --config webpack.config.js --config webpack.old.config.js",
-		"build:production": "NODE_ENV=production npm run build",
+		"build:production": "NODE_ENV=production wp-scripts build --mode production --config webpack.config.js --config webpack.old.config.js",
 		"build:tsc": "pnpm -r --sort --if-present run build:tsc",
 		"build:types": "pnpm -r --sort --if-present run build:types",
 		"check-engines": "wp-scripts check-engines",
@@ -131,6 +133,7 @@
 		"start": "wp-scripts start --config webpack.config.js --config webpack.old.config.js",
 		"start:hot": "wp-scripts start --hot --config webpack.config.js",
 		"release": "node bin/build-release.js",
+		"verify:release-artifact": "node bin/verify-release-artifact.js",
 		"prepare-release": "node bin/prepare-release.js",
 		"prepare-release:patch": "node bin/prepare-release.js --patch",
 		"prepare-release:minor": "node bin/prepare-release.js --minor",

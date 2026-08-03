@@ -30,6 +30,7 @@ class PUM_Admin_Pages {
 	public static function init() {
 		add_action( 'admin_menu', [ __CLASS__, 'register_pages' ] );
 		add_action( 'admin_head', [ __CLASS__, 'reorder_admin_submenu' ] );
+		add_action( 'admin_head', [ __CLASS__, 'output_admin_menu_styles' ] );
 	}
 
 	/**
@@ -44,44 +45,17 @@ class PUM_Admin_Pages {
 	}
 
 	/**
-	 * Get upgrade menu item based on license status.
+	 * Resolve a submenu capability through the retained compatibility filter.
 	 *
-	 * @return array|null Menu item array or null to exclude from menu.
+	 * @param string $key      Submenu key.
+	 * @param string $fallback Default capability.
+	 *
+	 * @return string
 	 */
-	private static function get_upgrade_menu_item() {
-		try {
-			$license_service = \PopupMaker\plugin( 'license' );
-			$license_status  = $license_service->get_license_status();
-			$license_tier    = $license_service->get_license_tier();
+	public static function get_submenu_capability( $key, $fallback = 'manage_options' ) {
+		$capability = apply_filters( 'popmake_admin_submenu_' . $key . '_capability', $fallback );
 
-			// Pro Plus license - don't show upgrade menu.
-			if ( 'valid' === $license_status && 'pro_plus' === $license_tier ) {
-				return null;
-			}
-
-			// Pro license (valid) - show "Go Pro+".
-			if ( 'valid' === $license_status && 'pro' === $license_tier ) {
-				$menu_title = __( 'Go Pro+', 'popup-maker' );
-			} else {
-				// No license or invalid license - show "Go Pro".
-				$menu_title = __( 'Go Pro', 'popup-maker' );
-			}
-
-			return [
-				'page_title' => $menu_title,
-				'menu_slug'  => 'pum-settings#go-pro',
-				'capability' => 'edit_posts',
-				'callback'   => [ 'PUM_Admin_Settings', 'page' ],
-			];
-		} catch ( \Exception $e ) {
-			// Fallback to default if license service unavailable.
-			return [
-				'page_title' => __( 'Go Pro', 'popup-maker' ),
-				'menu_slug'  => 'pum-settings#go-pro',
-				'capability' => 'edit_posts',
-				'callback'   => [ 'PUM_Admin_Settings', 'page' ],
-			];
-		}
+		return is_string( $capability ) && '' !== $capability ? $capability : $fallback;
 	}
 
 	/**
@@ -90,23 +64,26 @@ class PUM_Admin_Pages {
 	 */
 	public static function register_pages() {
 
-		// Determine upgrade menu item based on license status.
-		$upgrade_menu_item = self::get_upgrade_menu_item();
-
 		$admin_pages = apply_filters(
 			'pum_admin_pages',
 			[
-				'subscribers' => [
+				'subscribers' => self::subscribers_initialized() ? [
 					'page_title' => __( 'Subscribers', 'popup-maker' ),
 					'capability' => 'manage_options',
 					'callback'   => [ 'PUM_Admin_Subscribers', 'page' ],
-				],
+				] : null,
 				'settings'    => [
 					'page_title' => __( 'Settings', 'popup-maker' ),
 					'capability' => 'manage_options',
 					'callback'   => [ 'PUM_Admin_Settings', 'page' ],
 				],
-				'extensions'  => $upgrade_menu_item,
+				'extensions'  => [
+					'page_title' => __( 'Popup Maker Add-ons', 'popup-maker' ),
+					'menu_title' => __( 'Extend', 'popup-maker' ),
+					'capability' => 'manage_options',
+					'menu_slug'  => 'pum-extensions',
+					'callback'   => [ 'PUM_Admin_Extend', 'page' ],
+				],
 				'support'     => [
 					'page_title' => __( 'Help & Support', 'popup-maker' ),
 					'capability' => 'edit_posts',
@@ -121,7 +98,7 @@ class PUM_Admin_Pages {
 		);
 
 		foreach ( $admin_pages as $key => $page ) {
-			// Skip null pages (e.g., upgrade menu for Pro Plus users).
+			// Skip pages removed by an integration.
 			if ( null === $page ) {
 				continue;
 			}
@@ -139,7 +116,7 @@ class PUM_Admin_Pages {
 			);
 
 			// Backward compatibility.
-			$page['capability'] = apply_filters( 'popmake_admin_submenu_' . $key . '_capability', $page['capability'] );
+			$page['capability'] = self::get_submenu_capability( $key, $page['capability'] );
 
 			if ( empty( $page['menu_slug'] ) ) {
 				$page['menu_slug'] = 'pum-' . $key;
@@ -160,6 +137,24 @@ class PUM_Admin_Pages {
 		add_theme_page( __( 'Popup Themes', 'popup-maker' ), __( 'Popup Themes', 'popup-maker' ), 'edit_posts', 'edit.php?post_type=popup_theme' );
 	}
 
+	/**
+	 * Whether subscriber storage has been initialized at least once.
+	 *
+	 * Reading the stored schema version avoids instantiating the database class,
+	 * which would create the table merely by building the admin menu.
+	 *
+	 * @return bool
+	 */
+	public static function subscribers_initialized() {
+		$db_versions = get_option( 'pum_db_versions', [] );
+
+		if ( is_array( $db_versions ) && ! empty( $db_versions['pum_subscribers'] ) ) {
+			return true;
+		}
+
+		return (bool) get_option( 'pum_subscribers_db_version', false );
+	}
+
 
 	/**
 	 * Submenu filter function. Tested with WordPress 4.1.1
@@ -171,9 +166,62 @@ class PUM_Admin_Pages {
 		global $submenu;
 
 		if ( isset( $submenu['edit.php?post_type=popup'] ) ) {
-			// Sort the menu according to your preferences
+			// Sort the menu according to your preferences.
 			usort( $submenu['edit.php?post_type=popup'], [ __CLASS__, 'reorder_submenu_array' ] );
+			self::add_submenu_separator_classes( $submenu['edit.php?post_type=popup'] );
 		}
+	}
+
+	/**
+	 * Mark logical Popup Maker submenu groups without adding fake menu entries.
+	 *
+	 * @param array<int,array<int,mixed>> $items Popup Maker submenu items.
+	 *
+	 * @return void
+	 */
+	public static function add_submenu_separator_classes( &$items ) {
+		$separator_pages = apply_filters(
+			'pum_admin_submenu_separator_before_pages',
+			[
+				__( 'Subscribers', 'popup-maker' ),
+				__( 'Extend', 'popup-maker' ),
+				__( 'Go Pro', 'popup-maker' ),
+				__( 'Go Pro+', 'popup-maker' ),
+			]
+		);
+
+		foreach ( $items as &$item ) {
+			$title = isset( $item[0] ) ? strip_tags( $item[0], false ) : '';
+
+			if ( ! in_array( $title, $separator_pages, true ) ) {
+				continue;
+			}
+
+			$classes   = isset( $item[4] ) && is_string( $item[4] )
+				? preg_split( '/\s+/', trim( $item[4] ) )
+				: [];
+			$classes   = is_array( $classes ) ? $classes : [];
+			$classes[] = 'pum-submenu-separator-before';
+			$item[4]   = implode( ' ', array_unique( array_filter( $classes ) ) );
+		}
+		unset( $item );
+	}
+
+	/**
+	 * Add subtle visual grouping to the Popup Maker submenu.
+	 *
+	 * @return void
+	 */
+	public static function output_admin_menu_styles() {
+		?>
+		<style id="popup-maker-admin-menu-groups">
+			#adminmenu #menu-posts-popup .wp-submenu li.pum-submenu-separator-before {
+				margin-top: 7px;
+				padding-top: 7px;
+				border-top: 1px solid rgba(255, 255, 255, 0.14);
+			}
+		</style>
+		<?php
 	}
 
 	/**
@@ -196,22 +244,26 @@ class PUM_Admin_Pages {
 			[
 				__( 'All Popups', 'popup-maker' ),
 				__( 'Add New', 'popup-maker' ),
+				__( 'Add New Popup', 'popup-maker' ),
 				__( 'All Themes', 'popup-maker' ),
+				__( 'Popup Themes', 'popup-maker' ),
+				__( 'Calls to Action', 'popup-maker' ),
 				__( 'Categories', 'popup-maker' ),
 				__( 'Tags', 'popup-maker' ),
+				__( 'Subscribers', 'popup-maker' ),
 			]
 		);
 
 		$last_pages = apply_filters(
 			'pum_admin_submenu_last_pages',
 			[
+				__( 'Go Pro', 'popup-maker' ),
+				__( 'Go Pro+', 'popup-maker' ),
 				__( 'Settings', 'popup-maker' ),
 				__( 'Tools', 'popup-maker' ),
 				__( 'Support Forum', 'popup-maker' ),
 				__( 'Account', 'popup-maker' ),
 				__( 'Contact Us', 'popup-maker' ),
-				__( 'Go Pro', 'popup-maker' ),
-				__( 'Go Pro+', 'popup-maker' ),
 				__( 'Help & Support', 'popup-maker' ),
 			]
 		);

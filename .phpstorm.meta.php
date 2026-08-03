@@ -11,6 +11,12 @@
 
 namespace PHPSTORM_META;
 
+// IDE-only file; the pseudo-functions below fatal if executed. IDEs parse it
+// statically, so bailing at runtime is safe and avoids a path-disclosing error.
+if ( ! defined( 'ABSPATH' ) ) {
+	return;
+}
+
 /**
  * Provide autocompletion for plugin container access.
  *
@@ -55,7 +61,6 @@ override(\PopupMaker\Plugin\Core::get(0), map([
     'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
     'license'      => \PopupMaker\Services\License::class,
-	'connect'      => \PopupMaker\Services\Connect::class,
 
     // Config Values
     'path'         => 'string',
@@ -94,7 +99,6 @@ override( \PopupMaker\Plugin\Container::get(0), map([
     'globals'      => \PopupMaker\Services\Globals::class,
     'logging'      => \PopupMaker\Services\Logging::class,
     'license'      => \PopupMaker\Services\License::class,
-	'connect'      => \PopupMaker\Services\Connect::class,
 
     // Config Values
     'path'         => 'string',

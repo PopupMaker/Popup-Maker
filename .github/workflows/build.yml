@@ -66,9 +66,12 @@ jobs:
 
       - name: Generate build version
         id: version
+        env:
+          # Passed via env (not interpolated into the script) so crafted input
+          # values cannot break out of the assignment and run shell commands.
+          REF_NAME: ${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}
+          VERSION_SUFFIX: ${{ github.event.inputs.version_suffix }}
         run: |
-          REF_NAME="${{ github.event.inputs.ref || github.event.client_payload.ref || 'develop' }}"
-          VERSION_SUFFIX="${{ github.event.inputs.version_suffix }}"
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 
           if [ -n "$VERSION_SUFFIX" ]; then
@@ -556,6 +559,11 @@ jobs:
       # We'll provide clear instructions to the artifacts section instead
 
       - name: Generate summary
+        env:
+          # User-controlled dispatch input — pass via env so it cannot break out
+          # of the summary shell script and execute commands.
+          SOURCE_REF: ${{ github.event.inputs.ref || 'develop' }}
+          CHANGELOG_CONTENT: ${{ needs.build.outputs.changelog_content }}
         run: |
           BUILD_VERSION="${{ needs.validate.outputs.build_version }}"
           PLUGIN_INFO='${{ needs.validate.outputs.plugin_info }}'
@@ -564,7 +572,7 @@ jobs:
           echo "# 🔨 Test Build Summary for ${PLUGIN_NAME}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** ${BUILD_VERSION}" >> $GITHUB_STEP_SUMMARY
-          echo "**Source:** ${{ github.event.inputs.ref || 'develop' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Source:** ${SOURCE_REF}" >> $GITHUB_STEP_SUMMARY
           echo "**Requested by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
@@ -627,13 +635,13 @@ jobs:
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📝 Build Information" >> $GITHUB_STEP_SUMMARY
-          echo "**Source:** [\`${{ github.event.inputs.ref || 'develop' }}\`](https://github.com/${{ github.repository }}/tree/${{ github.event.inputs.ref || 'develop' }})" >> $GITHUB_STEP_SUMMARY
+          echo "**Source:** [\`${SOURCE_REF}\`](https://github.com/${{ github.repository }}/tree/${SOURCE_REF})" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** [\`${{ needs.build.outputs.commit_short }}\`](https://github.com/${{ github.repository }}/commit/${{ needs.build.outputs.commit_hash }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Recent Changes:**" >> $GITHUB_STEP_SUMMARY
-          echo "${{ needs.build.outputs.changelog_content }}" >> $GITHUB_STEP_SUMMARY
+          echo "${CHANGELOG_CONTENT}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📖 **[View Full Changelog](https://github.com/${{ github.repository }}/blob/${{ github.event.inputs.ref || 'develop' }}/CHANGELOG.md)**" >> $GITHUB_STEP_SUMMARY
+          echo "📖 **[View Full Changelog](https://github.com/${{ github.repository }}/blob/${SOURCE_REF}/CHANGELOG.md)**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## ℹ️ Note" >> $GITHUB_STEP_SUMMARY

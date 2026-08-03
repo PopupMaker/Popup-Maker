@@ -58,8 +58,20 @@ class Admin extends Controller {
 		if ( is_string( $edit_ctas_cap ) && $edit_ctas_cap && current_user_can( $edit_ctas_cap ) ) {
 			$vars['navTabs'][] = [
 				'id'    => 'call-to-actions',
-				'title' => __( 'Call to Actions', 'popup-maker' ),
+				'title' => __( 'Calls to Action', 'popup-maker' ),
 				'href'  => admin_url( 'edit.php?post_type=popup&page=popup-maker-call-to-actions' ),
+			];
+		}
+
+		$manage_settings_cap = class_exists( '\\PUM_Admin_Pages' )
+			? \PUM_Admin_Pages::get_submenu_capability( 'extensions' )
+			: 'manage_options';
+
+		if ( is_string( $manage_settings_cap ) && $manage_settings_cap && current_user_can( $manage_settings_cap ) ) {
+			$vars['navTabs'][] = [
+				'id'    => 'extend',
+				'title' => __( 'Extend', 'popup-maker' ),
+				'href'  => admin_url( 'edit.php?post_type=popup&page=pum-extensions' ),
 			];
 		}
 

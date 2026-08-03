@@ -33,6 +33,9 @@ class I18n extends Controller {
 	 * @return void
 	 */
 	public function load_textdomain() {
-		load_plugin_textdomain( $this->container['text_domain'], false, $this->container->get_path( 'languages' ) );
+		// The third argument must be relative to WP_PLUGIN_DIR, not an absolute path.
+		$languages_rel_path = dirname( $this->container->get( 'basename' ) ) . '/languages';
+
+		load_plugin_textdomain( $this->container['text_domain'], false, $languages_rel_path );
 	}
 }

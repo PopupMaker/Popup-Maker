@@ -1,23 +1,32 @@
 <?php
 /**
- * Class for Admin Extend
+ * Popup Maker Extend admin page.
  *
- * @package   PopupMaker
- * @copyright Copyright (c) 2024, Code Atlantic LLC
+ * @package PopupMaker
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Class PUM_Admin_Extend
+ * Renders the bundled WordPress.org add-on catalog.
  */
 class PUM_Admin_Extend {
+
 	/**
-	 * Return array of Popup Maker extensions.
+	 * Register page assets.
 	 *
-	 * @return array|mixed|object
+	 * @return void
+	 */
+	public static function init() {
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_assets' ] );
+	}
+
+	/**
+	 * Return the legacy static extension catalog for third-party callers.
+	 *
+	 * @deprecated The Extend page now uses PopupMaker\Services\AddonCatalog.
+	 *
+	 * @return array<int,array<string,mixed>>|mixed
 	 */
 	public static function available_extensions() {
 		$json_data = file_get_contents( Popup_Maker::$DIR . 'includes/extension-list.json' );
@@ -26,169 +35,59 @@ class PUM_Admin_Extend {
 	}
 
 	/**
-	 * Support Page
+	 * Render the legacy marketing list for backward compatibility.
 	 *
-	 * Renders the support page contents.
-	 */
-	public static function page() {
-		$upgrade_link = \PopupMaker\get_upgrade_link( [
-			'utm_source'   => 'plugin-extension-page',
-			'utm_medium'   => 'text-link',
-			'utm_campaign' => 'upsell',
-			'utm_content'  => 'hero-cta',
-		] );
-		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Upgrade', 'popup-maker' ); ?></h1>
-			<?php PUM_Upsell::display_addon_tabs(); ?>
-			<article class="upgrade-wrapper">
-				<section class="upgrade-wrapper-hero">
-					<h2>Drive Even More Opt-Ins and Sales With Our Premium Features</h2>
-					<p>Our premium plans give you more:</p>
-					<ul>
-						<li>Triggers - Scroll, Exit-intent, Add-to-cart, and more</li>
-						<li>Integrations - MailChimp, WooCommerce, and more</li>
-						<li>Conditions - Show popups to visitors from a certain site, from search engines, using certain browsers, who has viewed X pages, and more </li>
-						<li>And much more!</li>
-					</ul>
-					<a href="<?php echo esc_url( $upgrade_link ); ?>" class="button button-primary" target="_blank" rel="noreferrer noopener">View pricing</a>
-				</section>
-				<section class="upgrade-wrapper-features">
-					<h2>Our Most Popular Premium Features</h2>
-					<?php self::render_extension_list(); ?>
-					<a href="https://wppopupmaker.com/extensions/?utm_campaign=upsell&utm_medium=plugin&utm_source=plugin-extension-page&utm_content=browse-all-bottom" class="button-primary" title="<?php esc_attr_e( 'See All Premium Features', 'popup-maker' ); ?>" target="_blank" rel="noreferrer noopener"><?php esc_html_e( 'See All Premium Features', 'popup-maker' ); ?></a>
-				</section>
-			</article>
-		</div>
-		<?php
-	}
-
-
-	/**
-	 * Render extension tab extensions list.
+	 * This intentionally contains no installation controls.
+	 *
+	 * @deprecated The Extend page now renders the bundled React catalog.
+	 *
+	 * @return void
 	 */
 	public static function render_extension_list() {
-		// Set a new campaign for tracking purposes
-		$campaign   = 'PUMExtensionsPage';
 		$extensions = self::available_extensions();
 
+		if ( ! is_array( $extensions ) ) {
+			return;
+		}
+
+		$local_images = self::extensions_with_local_image();
 		?>
 		<ul class="extensions-available">
-			<?php
-			// $plugins           = get_plugins();
-			// $installed_plugins = array();
-			// foreach ( $plugins as $key => $plugin ) {
-			// $is_active                          = is_plugin_active( $key );
-			// $installed_plugin                   = array(
-			// 'is_active' => $is_active,
-			// );
-			// $installerUrl                       = add_query_arg( array(
-			// 'action' => 'activate',
-			// 'plugin' => $key,
-			// 'em'     => 1,
-			// ), network_admin_url( 'plugins.php' ) //admin_url('update.php')
-			// );
-			// $installed_plugin["activation_url"] = $is_active ? "" : wp_nonce_url( $installerUrl, 'activate-plugin_' . $key );
-			//
-			//
-			// $installerUrl                         = add_query_arg( array(
-			// 'action' => 'deactivate',
-			// 'plugin' => $key,
-			// 'em'     => 1,
-			// ), network_admin_url( 'plugins.php' ) //admin_url('update.php')
-			// );
-			// $installed_plugin["deactivation_url"] = ! $is_active ? "" : wp_nonce_url( $installerUrl, 'deactivate-plugin_' . $key );
-			// $installed_plugins[ $key ]            = $installed_plugin;
-			// }
-
-			$existing_extension_images = self::extensions_with_local_image();
-
-			if ( ! empty( $extensions ) ) {
-				shuffle( $extensions );
-
-				foreach ( $extensions as $key => $ext ) {
-					unset( $extensions[ $key ] );
-					$extensions[ $ext['slug'] ] = $ext;
+			<?php foreach ( $extensions as $extension ) : ?>
+				<?php
+				if ( ! is_array( $extension ) ) {
+					continue;
 				}
 
-				$i = 0;
+				$slug     = isset( $extension['slug'] ) ? sanitize_key( $extension['slug'] ) : '';
+				$name     = isset( $extension['name'] ) ? (string) $extension['name'] : '';
+				$homepage = isset( $extension['homepage'] ) ? (string) $extension['homepage'] : '';
+				$excerpt  = isset( $extension['excerpt'] ) ? (string) $extension['excerpt'] : '';
+				$image    = isset( $extension['image'] ) ? (string) $extension['image'] : '';
 
-				foreach ( $extensions as $extension ) :
-					?>
-					<li class="available-extension-inner <?php echo esc_attr( $extension['slug'] ); ?>">
-						<h3>
-							<a target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( rawurlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>">
-								<?php echo esc_html( $extension['name'] ); ?>
-							</a>
-						</h3>
-						<?php $image = in_array( $extension['slug'], $existing_extension_images, true ) ? POPMAKE_URL . '/assets/images/extensions/' . $extension['slug'] . '.png' : $extension['image']; ?>
-						<img class="extension-thumbnail" src="<?php echo esc_attr( $image ); ?>" />
-
-						<p><?php echo wp_kses( $extension['excerpt'], wp_kses_allowed_html( 'data' ) ); ?></p>
-
-						<span class="action-links">
-						<a class="button" target="_blank" href="<?php echo esc_url( $extension['homepage'] ); ?>?utm_source=plugin-extension-page&utm_medium=plugin&utm_campaign=upsell&utm_content=<?php echo esc_attr( rawurlencode( str_replace( ' ', '+', $extension['name'] ) ) ); ?>-<?php echo esc_attr( $i ); ?>"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a>
-					</span>
-
-						<!--					-->
-						<?php
-						//
-						// if ( ! empty( $extension->download_link ) && ! isset( $installed_plugins[ $extension->slug . '/' . $extension->slug . '.php' ] ) ) {
-						// $installerUrl = add_query_arg( array(
-						// 'action'            => 'install-plugin',
-						// 'plugin'            => $extension->slug,
-						// 'edd_sample_plugin' => 1,
-						// ), network_admin_url( 'update.php' ) //admin_url('update.php')
-						// );
-						// $installerUrl = wp_nonce_url( $installerUrl, 'install-plugin_' . $extension->slug )
-						?>
-						<!--						<span class="action-links">-->
-						<!--							-->
-						<?php
-						// printf( '<a class="button install" href="%s">%s</a>', esc_attr( $installerUrl ), __( 'Install' ) );
-						?>
-						<!--						</span>-->
-						<!--						-->
-						<?php
-						// } elseif ( isset( $installed_plugins[ $extension->slug . '/' . $extension->slug . '.php' ]['is_active'] ) ) {
-						//
-						?>
-						<!--						<span class="action-links">-->
-						<!--						-->
-						<?php
-						// if ( ! $installed_plugins[ $extension->slug . '/' . $extension->slug . '.php' ]['is_active'] ) {
-						// printf( '<a class="button install" href="%s">%s</a>', esc_attr( $installed_plugins[ $extension->slug . '/' . $extension->slug . '.php' ]["activation_url"] ), __( 'Activate' ) );
-						//
-						// } else {
-						// printf( '<a class="button install" href="%s">%s</a>', esc_attr( $installed_plugins[ $extension->slug . '/' . $extension->slug . '.php' ]["deactivation_url"] ), __( 'Deactivate' ) );
-						// }
-						?>
-						<!--						</span>-->
-						<!--						-->
-						<?php
-						// } else {
-						//
-						?>
-						<!--						<span class="action-links"><a class="button" target="_blank" href="--><?php // esc_attr_e( $extension->homepage ); ?><!--">--><?php // _e( 'Get It Now' ); ?><!--</a></span>-->
-						<!--						-->
-						<?php
-						// }
-						//
-						?>
-
-					</li>
-					<?php
-					++$i;
-				endforeach;
-			}
-			?>
+				if ( in_array( $slug, $local_images, true ) ) {
+					$image = POPMAKE_URL . '/assets/images/extensions/' . $slug . '.png';
+				}
+				?>
+				<li class="available-extension-inner <?php echo esc_attr( $slug ); ?>">
+					<h3><a target="_blank" rel="noreferrer noopener" href="<?php echo esc_url( $homepage ); ?>"><?php echo esc_html( $name ); ?></a></h3>
+					<?php if ( '' !== $image ) : ?>
+						<img class="extension-thumbnail" src="<?php echo esc_url( $image ); ?>" alt="" />
+					<?php endif; ?>
+					<p><?php echo wp_kses( $excerpt, wp_kses_allowed_html( 'data' ) ); ?></p>
+					<span class="action-links"><a class="button" target="_blank" rel="noreferrer noopener" href="<?php echo esc_url( $homepage ); ?>"><?php esc_html_e( 'Learn more', 'popup-maker' ); ?></a></span>
+				</li>
+			<?php endforeach; ?>
 		</ul>
-
 		<?php
 	}
 
 	/**
-	 * @return array
+	 * Return legacy extension slugs with bundled marketing images.
+	 *
+	 * @deprecated The Extend page catalog owns its image map.
+	 *
+	 * @return array<int,string>
 	 */
 	public static function extensions_with_local_image() {
 		return apply_filters(
@@ -215,5 +114,76 @@ class PUM_Admin_Extend {
 				'scheduling',
 			]
 		);
+	}
+
+	/**
+	 * Enqueue the Core catalog app when Pro has not replaced the page.
+	 *
+	 * Hooked to WordPress and therefore intentionally untyped.
+	 *
+	 * @param string $hook_suffix Current admin hook.
+	 *
+	 * @return void
+	 */
+	public static function enqueue_assets( $hook_suffix = '' ) {
+		unset( $hook_suffix );
+
+		if ( ! function_exists( 'pum_is_extensions_page' ) || ! pum_is_extensions_page() ) {
+			return;
+		}
+
+		if ( 'core' !== apply_filters( 'pum_admin_extend_page_owner', 'core' ) ) {
+			return;
+		}
+
+		$handle = 'popup-maker-addons-page';
+
+		wp_enqueue_script( $handle );
+		wp_enqueue_style( $handle );
+		wp_enqueue_style( 'popup-maker-layout' );
+
+		wp_localize_script(
+			$handle,
+			'popupMakerAddonsPage',
+			[
+				'restPath'          => '/popup-maker/v2/addons',
+				'canActivate'       => current_user_can( 'activate_plugins' ),
+				'proUpgradeUrl'     => \PopupMaker\generate_upgrade_url( 'addons-catalog', 'pro-addons' ),
+				'proPlusUpgradeUrl' => \PopupMaker\generate_upgrade_url( 'addons-catalog', 'pro-plus-addons' ),
+				'supportUrl'        => 'https://wppopupmaker.com/support/?utm_campaign=plugin-support&utm_source=addons-catalog&utm_medium=plugin-ui&utm_content=action-error',
+				'pluginsUrl'        => admin_url( 'plugins.php' ),
+				'categories'        => \PopupMaker\plugin( 'addon_catalog' )->get_categories(),
+				'planLogoUrl'       => POPMAKE_URL . '/assets/images/mark-light.svg',
+				'planState'         => 'default',
+				'planStatus'        => '',
+				'planTitle'         => __( 'Unlock every Popup Maker add-on', 'popup-maker' ),
+				'planSubtitle'      => __( 'Add advanced targeting, integrations, ecommerce tools, and more with Popup Maker Pro.', 'popup-maker' ),
+				'upgradeLabel'      => __( 'View Pro plans', 'popup-maker' ),
+				'upgradeUrl'        => \PopupMaker\generate_upgrade_url( 'addons-catalog', 'catalog-banner' ),
+				'upgradeExternal'   => true,
+			]
+		);
+	}
+
+	/**
+	 * Render the React mount point.
+	 *
+	 * @return void
+	 */
+	public static function page() {
+		$capability = PUM_Admin_Pages::get_submenu_capability( 'extensions' );
+
+		if ( ! current_user_can( $capability ) ) {
+			wp_die(
+				esc_html__( 'You do not have permission to manage Popup Maker add-ons.', 'popup-maker' ),
+				esc_html__( 'Popup Maker Add-ons', 'popup-maker' ),
+				[ 'response' => 403 ]
+			);
+		}
+		?>
+		<div id="popup-maker-addons">
+			<p><?php esc_html_e( 'Loading add-ons…', 'popup-maker' ); ?></p>
+		</div>
+		<?php
 	}
 }

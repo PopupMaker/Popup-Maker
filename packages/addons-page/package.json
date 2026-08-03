@@ -1,0 +1,66 @@
+{
+	"name": "@popup-maker/addons-page",
+	"version": "1.0.0",
+	"description": "Popup Maker bundled add-on catalog admin page",
+	"author": "Code Atlantic",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"wordpress",
+		"popup-maker"
+	],
+	"homepage": "https://github.com/popupmaker/popup-maker/tree/develop/packages/addons-page/README.md",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/popupmaker/popup-maker.git",
+		"directory": "packages/addons-page"
+	},
+	"bugs": {
+		"url": "https://github.com/popupmaker/popup-maker/issues"
+	},
+	"main": "build/index.js",
+	"module": "src/index.tsx",
+	"types": "build-types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./build-types/index.d.ts",
+			"default": "./build/index.js"
+		}
+	},
+	"wpScript": true,
+	"dependencies": {
+		"@popup-maker/components": "workspace:*",
+		"@popup-maker/i18n": "workspace:*",
+		"@popup-maker/layout": "workspace:*",
+		"@wordpress/api-fetch": "^7.29.0",
+		"@wordpress/components": "^30.2.0",
+		"@wordpress/dom-ready": "^4.29.0",
+		"@wordpress/i18n": "^6.2.0",
+		"@wordpress/icons": "^10.29.0",
+		"clsx": "^2.1.1",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"devDependencies": {
+		"@types/react": "^18.3.28"
+	},
+	"scripts": {
+		"prepack": "pnpm run build:tsc && pnpm run build:types",
+		"build:tsc": "tsc",
+		"build:types": "tsc --build",
+		"watch:tsc": "tsc -w",
+		"clean": "rimraf build build-types tsconfig.tsbuildinfo",
+		"lint": "wp-scripts lint-js .",
+		"format": "wp-scripts lint-js . --fix",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"files": [
+		"build",
+		"build-types",
+		"tsconfig.json",
+		"README.md",
+		"LICENSE"
+	]
+}

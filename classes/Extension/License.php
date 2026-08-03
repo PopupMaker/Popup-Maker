@@ -143,10 +143,9 @@ class PUM_Extension_License {
 	}
 
 	/**
-	 * Check if Pro/Pro+ license key exists (active or not).
+	 * Check whether an active Pro+ license covers this extension.
 	 *
-	 * This prevents users from managing extension licenses when a Pro key
-	 * is present, even if that Pro key is currently deactivated.
+	 * Pro-tier and inactive Pro keys must not mask a retained product license.
 	 *
 	 * @return bool
 	 */
@@ -156,10 +155,28 @@ class PUM_Extension_License {
 		}
 
 		try {
-			$license_service = \PopupMaker\plugin()->get( 'license' );
-			$license_key     = $license_service->get_license_key();
-			// Check if Pro key exists and is not empty.
-			return ! empty( $license_key );
+			$core = \PopupMaker\plugin();
+			if ( ! $core->is_pro_installed() ) {
+				return false;
+			}
+
+			$license_service = $core->get( 'license' );
+
+			if (
+				! is_object( $license_service )
+				|| ! is_callable( [ $license_service, 'is_license_active' ] )
+				|| ! is_callable( [ $license_service, 'get_license_tier' ] )
+				|| true !== $license_service->is_license_active()
+				|| 'pro_plus' !== $license_service->get_license_tier()
+			) {
+				return false;
+			}
+
+			$license_key = is_callable( [ $license_service, 'get_api_license_key' ] )
+				? $license_service->get_api_license_key()
+				: $license_service->get_license_key();
+
+			return is_string( $license_key ) && '' !== trim( $license_key );
 		} catch ( \Exception $e ) {
 			return false;
 		}
@@ -176,7 +193,12 @@ class PUM_Extension_License {
 		}
 
 		try {
-			$license_service = \PopupMaker\plugin()->get( 'license' );
+			$core = \PopupMaker\plugin();
+			if ( ! $core->is_pro_installed() ) {
+				return '';
+			}
+
+			$license_service = $core->get( 'license' );
 
 			if ( method_exists( $license_service, 'get_api_license_key' ) ) {
 				return $license_service->get_api_license_key();

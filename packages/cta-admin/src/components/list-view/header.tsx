@@ -1,4 +1,4 @@
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
 import { __, _n, sprintf } from '@popup-maker/i18n';
 import { Button, Spinner } from '@wordpress/components';
 
@@ -20,14 +20,12 @@ const Header = (): JSX.Element => {
 		[]
 	);
 
-	const { createCallToAction } = useDispatch( callToActionStore );
-
 	const count = callToActions?.length ?? 0;
 
 	return (
 		<header className="popup-maker-call-to-actions-view__header">
 			<h1 className="view-title wp-heading-inline">
-				{ __( 'Call to Actions', 'popup-maker' ) }
+				{ __( 'Calls to Action', 'popup-maker' ) }
 			</h1>
 			<span className="item-count">
 				{ isLoading ? (
@@ -42,14 +40,10 @@ const Header = (): JSX.Element => {
 			</span>
 			<Button
 				className="add-call-to-action"
-				onClick={ async () => {
-					const newCta = await createCallToAction( {
-						title: __( 'New Call to Action', 'popup-maker' ),
-					} );
-
-					if ( newCta ) {
-						setEditorId( newCta.id );
-					}
+				onClick={ () => {
+					// Opens a local draft — nothing is saved until the user
+					// saves it for the first time.
+					setEditorId( 'new' );
 				} }
 				variant="primary"
 			>

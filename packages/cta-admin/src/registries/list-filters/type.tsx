@@ -83,7 +83,12 @@ export const TypeFilter = ( {
 				</span>
 				&nbsp;
 				<span className="filter-selection">
-					{ typeOptionLabels[ filters?.type ?? 'all' ] }
+					{ Object.prototype.hasOwnProperty.call(
+						typeOptionLabels,
+						filters?.type ?? 'all'
+					)
+						? typeOptionLabels[ filters?.type ?? 'all' ]
+						: typeOptionLabels.all }
 				</span>
 				<Icon
 					className="filter-icon"

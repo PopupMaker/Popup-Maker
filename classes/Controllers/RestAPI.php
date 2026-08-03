@@ -34,14 +34,8 @@ class RestAPI extends Controller {
 		// Register custom REST API endpoints.
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 
-		// Register Pro upgrader REST routes.
-		add_action( 'rest_api_init', [ $this, 'register_pro_upgrader_routes' ] );
-
 		// Authentication.
 		add_filter( 'rest_pre_dispatch', [ $this, 'rest_pre_dispatch' ], 10, 3 );
-
-		// Legacy AJAX handlers for license status polling.
-		add_action( 'wp_ajax_pum_check_license_status', [ $this, 'ajax_check_license_status' ] );
 
 		// Sanitize and validate filters.
 		add_filter( 'popup_maker/sanitize_popup_settings', [ $this, 'sanitize_popup_settings' ], 10, 2 );
@@ -56,274 +50,15 @@ class RestAPI extends Controller {
 	 * @return void
 	 */
 	public function register_routes() {
-		( new \PopupMaker\RestAPI\Connect() )->register_routes();
-		( new \PopupMaker\RestAPI\License() )->register_routes();
+		( new \PopupMaker\RestAPI\Addons() )->register_routes();
+
+		if ( $this->container->should_run_legacy_license_compatibility() ) {
+			( new \PopupMaker\RestAPI\License() )->register_routes();
+		}
+
 		( new \PopupMaker\RestAPI\ObjectSearch() )->register_routes();
 		( new \PopupMaker\RestAPI\Notifications() )->register_routes();
 	}
-
-	/**
-	 * Register Pro upgrader REST API routes.
-	 *
-	 * Registers endpoints for Pro upgrade workflow including license validation,
-	 * connection verification, and upgrade processing.
-	 *
-	 * @return void
-	 */
-	public function register_pro_upgrader_routes() {
-		// Register v2 REST API controllers.
-		$this->register_v2_controllers();
-
-		// Legacy v1 namespace for backward compatibility.
-		$namespace = 'popup-maker/v1';
-
-		// License validation endpoint.
-		register_rest_route( $namespace, '/license/validate', [
-			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'rest_validate_license' ],
-				'permission_callback' => [ $this, 'rest_manage_pro_permissions' ],
-				'args'                => [
-					'license_key' => [
-						'required'          => false,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-						'validate_callback' => function ( $param ) {
-							return is_string( $param ) && ! empty( trim( $param ) );
-						},
-					],
-				],
-			],
-		] );
-
-		// Connection verification endpoint.
-		register_rest_route( $namespace, '/connect/verify', [
-			[
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $this, 'rest_verify_connection' ],
-				'permission_callback' => '__return_true', // Webhook uses own authentication.
-				'args'                => [
-					'token' => [
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'nonce' => [
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-				],
-			],
-		] );
-
-		// Pro upgrade installation endpoint.
-		register_rest_route( $namespace, '/upgrade/install', [
-			[
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => [ $this, 'rest_install_pro' ],
-				'permission_callback' => '__return_true', // Webhook uses own authentication.
-				'args'                => [
-					'token' => [
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'nonce' => [
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-					],
-					'file'  => [
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'esc_url_raw',
-						'validate_callback' => function ( $param ) {
-							return filter_var( $param, FILTER_VALIDATE_URL ) !== false;
-						},
-					],
-					'slug'  => [
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-						'validate_callback' => function ( $param ) {
-							return is_string( $param ) && ! empty( trim( $param ) );
-						},
-					],
-					'force' => [
-						'required'          => false,
-						'type'              => 'boolean',
-						'default'           => false,
-						'sanitize_callback' => function ( $param ) {
-							return (bool) $param;
-						},
-					],
-				],
-			],
-		] );
-
-		// Connection info generation endpoint.
-		// This mints a server-installable connection token, so it must be limited to
-		// users who can actually install plugins (not merely edit popups).
-		register_rest_route( $namespace, '/connect/info', [
-			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'rest_get_connect_info' ],
-				'permission_callback' => [ $this, 'rest_manage_pro_permissions' ],
-			],
-		] );
-	}
-
-	/**
-	 * Register v2 REST API controllers.
-	 *
-	 * @return void
-	 */
-	private function register_v2_controllers() {
-		// License controller.
-		$license_controller = new \PopupMaker\RestAPI\License();
-		$license_controller->register_routes();
-
-		// Connect controller.
-		$connect_controller = new \PopupMaker\RestAPI\Connect();
-		$connect_controller->register_routes();
-	}
-
-	/**
-	 * Permission callback for Pro management endpoints (license + install).
-	 *
-	 * These endpoints either change the Pro license or mint a server-installable
-	 * connection token, so access must be limited to users who are actually allowed
-	 * to install plugins rather than merely edit popups.
-	 *
-	 * @return bool True if user has permission, false otherwise.
-	 */
-	public function rest_manage_pro_permissions() {
-		return current_user_can( $this->container->get_permission( 'install_pro' ) );
-	}
-
-	/**
-	 * REST endpoint: Validate license for upgrade.
-	 *
-	 * @param WP_REST_Request $request REST request object.
-	 * @return \WP_REST_Response|\WP_Error
-	 */
-	public function rest_validate_license( $request ) {
-		$license_service = $this->container->get( 'license' );
-
-		// If license key provided, update it first.
-		$license_key = $request->get_param( 'license_key' );
-		if ( ! empty( $license_key ) ) {
-			$license_service->maybe_update_license_key( $license_key );
-		}
-
-		// Validate license for upgrade.
-		$validation_result = $license_service->validate_for_upgrade();
-
-		return rest_ensure_response( $validation_result );
-	}
-
-	/**
-	 * REST endpoint: Verify webhook connection.
-	 *
-	 * @param WP_REST_Request $request REST request object.
-	 * @return \WP_REST_Response|\WP_Error
-	 */
-	public function rest_verify_connection( $request ) {
-		$connect_service = $this->container->get( 'connect' );
-
-		// Verify the webhook request.
-		$verification_result = $connect_service->verify_webhook_request( $request );
-
-		if ( ! $verification_result['valid'] ) {
-			return new WP_Error(
-				'verification_failed',
-				$verification_result['error'],
-				[ 'status' => 403 ]
-			);
-		}
-
-		return rest_ensure_response( [
-			'success' => true,
-			'message' => 'Connection verified successfully',
-		] );
-	}
-
-	/**
-	 * REST endpoint: Install Pro plugin.
-	 *
-	 * @param WP_REST_Request $request REST request object.
-	 * @return \WP_REST_Response|\WP_Error
-	 */
-	public function rest_install_pro( $request ) {
-		$connect_service = $this->container->get( 'connect' );
-
-		// Verify the webhook request.
-		$verification_result = $connect_service->verify_webhook_request( $request );
-
-		if ( ! $verification_result['valid'] ) {
-			return new WP_Error(
-				'verification_failed',
-				$verification_result['error'],
-				[ 'status' => 403 ]
-			);
-		}
-
-		// Prepare installation arguments.
-		$args = [
-			'file'  => $request->get_param( 'file' ),
-			'type'  => 'plugin',
-			'slug'  => $request->get_param( 'slug' ),
-			'force' => $request->get_param( 'force' ),
-		];
-
-		// Verify webhook args.
-		$connect_service->verify_webhook_args( $args );
-
-		// Set the current screen to avoid undefined notices.
-		set_current_screen( 'settings_page_popup-maker-settings' );
-
-		try {
-			// Install the plugin using the connect service.
-			$connect_service->install_plugin( $args );
-		} catch ( \Exception $e ) {
-			return new WP_Error(
-				'installation_failed',
-				$e->getMessage(),
-				[ 'status' => 500 ]
-			);
-		}
-
-		// If we reach here, installation was successful.
-		return rest_ensure_response( [
-			'success' => true,
-			'message' => 'Plugin installed and activated successfully',
-		] );
-	}
-
-	/**
-	 * REST endpoint: Get connection info.
-	 *
-	 * @param WP_REST_Request $request REST request object.
-	 * @return \WP_REST_Response|\WP_Error
-	 */
-	public function rest_get_connect_info( $request ) {
-		$license_service = $this->container->get( 'license' );
-
-		// Generate connection info.
-		$connect_info = $license_service->generate_connect_info();
-
-		if ( null === $connect_info ) {
-			return new WP_Error(
-				'connection_unavailable',
-				'Connection info not available. License may not be active or Pro may already be installed.',
-				[ 'status' => 400 ]
-			);
-		}
-
-		return rest_ensure_response( $connect_info );
-	}
-
 
 	protected function register_data_version_field( $post_type, $update_permission ) {
 		register_rest_field( $post_type, 'data_version', [
@@ -398,8 +133,14 @@ class RestAPI extends Controller {
 				return $settings;
 			},
 			'update_callback'     => function ( $value, $obj ) {
-				$popup = pum_get_popup( $obj->ID );
-				$popup->update_settings( $value );
+				$popup  = pum_get_popup( $obj->ID );
+				$result = $popup->update_settings( $value );
+
+				// Surface a refused destructive write to the editor instead
+				// of silently reporting success.
+				if ( is_wp_error( $result ) ) {
+					return $result;
+				}
 			},
 			'schema'              => [
 				'type'        => 'object',
@@ -508,6 +249,16 @@ class RestAPI extends Controller {
 				return get_post_status( $obj['id'] );
 			},
 			'update_callback'     => function ( $value, $obj ) {
+				// Trashing is a delete action; the field only checks edit_ctas, so
+				// require delete rights for this object before allowing it.
+				if ( 'trash' === $value && ! current_user_can( 'delete_post', $obj->ID ) ) {
+					return new \WP_Error(
+						'rest_cannot_delete',
+						__( 'You do not have permission to trash this call to action.', 'popup-maker' ),
+						[ 'status' => rest_authorization_required_code() ]
+					);
+				}
+
 				wp_update_post( [
 					'ID'          => $obj->ID,
 					'post_status' => $value,
@@ -565,7 +316,7 @@ class RestAPI extends Controller {
 					'description' => __( 'Stats for this CTA.', 'popup-maker' ),
 					'type'        => 'object',
 					'properties'  => [
-						'conversion' => [
+						'conversions' => [
 							'type'    => 'integer',
 							'minimum' => 0,
 						],
@@ -731,47 +482,5 @@ class RestAPI extends Controller {
 
 		// Return data to the client to parse.
 		return $result;
-	}
-
-	/**
-	 * AJAX handler for license status checking.
-	 *
-	 * Legacy handler for license status polling system.
-	 *
-	 * @return void
-	 */
-	public function ajax_check_license_status() {
-		// Verify nonce for security.
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'popup-maker-settings' ) ) {
-			wp_send_json_error( 'Invalid nonce' );
-		}
-
-		// Check user permissions.
-		if ( ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
-			wp_send_json_error( 'Insufficient permissions' );
-		}
-
-		$license_service = $this->container->get( 'license' );
-
-		// Get license status data.
-		$license_status = $license_service->get_license_status_data();
-		$license_key    = $license_service->get_license_key();
-		$is_active      = $license_service->is_license_active();
-
-		// Check if Pro is installed.
-		$is_pro_installed = $this->container->is_pro_installed();
-		$is_pro_active    = $is_pro_installed && is_plugin_active( 'popup-maker-pro/popup-maker-pro.php' );
-
-		$response_data = [
-			'is_valid'         => $is_active,
-			'license_key'      => $license_key,
-			'status'           => $license_service->get_license_status(),
-			'expires'          => ! empty( $license_status['expires'] ) ? $license_status['expires'] : null,
-			'pro_installed'    => $is_pro_installed,
-			'is_pro_installed' => $is_pro_installed,
-			'is_pro_active'    => $is_pro_active,
-		];
-
-		wp_send_json_success( $response_data );
 	}
 }

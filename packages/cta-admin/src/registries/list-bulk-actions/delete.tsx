@@ -67,7 +67,7 @@ const DeleteBulkAction = (): JSX.Element | null => {
 										// translators: %d: number of items.
 										_n(
 											'%d call to action deleted.',
-											'%d call to actions deleted.',
+											'%d calls to action deleted.',
 											count,
 											'popup-maker'
 										),

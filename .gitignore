@@ -65,7 +65,9 @@ repomix-output.txt
 
 .cursorrules
 
-
+.pnpm-store
 .nx/cache
 .nx/workspace-data
 .env.secrets
+
+plans/

@@ -156,17 +156,15 @@
 		$popup.find( FORM_SELECTORS ).each( function () {
 			const $form = $( this );
 
-			if ( $form.find( 'input[name="pum_form_popup_id"]' ).length ) {
-				return;
+			if ( ! $form.find( 'input[name="pum_form_popup_id"]' ).length ) {
+				$form.append(
+					$( '<input>', {
+						type: 'hidden',
+						name: 'pum_form_popup_id',
+						value: popupId,
+					} )
+				);
 			}
-
-			$form.append(
-				$( '<input>', {
-					type: 'hidden',
-					name: 'pum_form_popup_id',
-					value: popupId,
-				} )
-			);
 
 			// Set up observer for this form.
 			observeForm( this, popupId );

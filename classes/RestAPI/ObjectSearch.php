@@ -112,12 +112,36 @@ class ObjectSearch extends WP_REST_Controller {
 			switch ( $object_type ) {
 				case 'post_type':
 					$post_type = $request->get_param( 'object_key' ) ?: 'post';
-					$results   = $this->search_post_type( $post_type, $request, $included, $excluded );
+
+					// object_key can target any post type; enforce its own edit cap.
+					$post_type_object = get_post_type_object( $post_type );
+
+					if ( ! $post_type_object || ! current_user_can( $post_type_object->cap->edit_posts ) ) {
+						return new WP_Error(
+							'rest_forbidden',
+							__( 'You do not have permission to search this object type.', 'popup-maker' ),
+							[ 'status' => 403 ]
+						);
+					}
+
+					$results = $this->search_post_type( $post_type, $request, $included, $excluded );
 					break;
 
 				case 'taxonomy':
 					$taxonomy = $request->get_param( 'object_key' ) ?: 'category';
-					$results  = $this->search_taxonomy( $taxonomy, $request, $included, $excluded );
+
+					// object_key can target any taxonomy; enforce its own assign cap.
+					$taxonomy_object = get_taxonomy( $taxonomy );
+
+					if ( ! $taxonomy_object || ! current_user_can( $taxonomy_object->cap->assign_terms ) ) {
+						return new WP_Error(
+							'rest_forbidden',
+							__( 'You do not have permission to search this taxonomy.', 'popup-maker' ),
+							[ 'status' => 403 ]
+						);
+					}
+
+					$results = $this->search_taxonomy( $taxonomy, $request, $included, $excluded );
 					break;
 
 				case 'user':

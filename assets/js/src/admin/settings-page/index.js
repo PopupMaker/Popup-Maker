@@ -3,8 +3,6 @@
  ******************************************************************************/
 import './editor.scss';
 import './license-key-enhancements';
-import './license-status-polling';
-import './pro-upgrade-flow';
 
 ( function ( $ ) {
 	'use strict';
@@ -34,9 +32,25 @@ import './pro-upgrade-flow';
 			args = pum_settings_editor.form_args || {},
 			values = pum_settings_editor.current_values || {};
 
+		function updateSaveButtonVisibility() {
+			const $activeMainPanel = $container
+				.children( '.pum-tabs-container' )
+				.first()
+				.children( '.tab-content.active' );
+			const isEmptyGoProPanel =
+				'pum-settings_go-pro' === $activeMainPanel.attr( 'id' ) &&
+				0 ===
+					$activeMainPanel
+						.find( '.pum-field' )
+						.not( '.pum-go-pro-placeholder' ).length;
+
+			$( '#pum-settings-save' ).toggle( ! isEmptyGoProPanel );
+		}
+
 		if ( $container.length ) {
 			$container.find( '.pum-no-js' ).hide();
 			PUM_Admin.forms.render( args, values, $container );
+			updateSaveButtonVisibility();
 
 			// Check hash on page load
 			switchToHashTab();
@@ -58,6 +72,8 @@ import './pro-upgrade-flow';
 									window.location.search
 							);
 						}
+
+						updateSaveButtonVisibility();
 					}, 50 );
 				}
 			);
