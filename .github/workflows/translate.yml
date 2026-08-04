@@ -15,13 +15,13 @@ on:
     workflow_dispatch:
         inputs:
             languages:
-                description: 'Target languages (comma-separated)'
-                required: true
-                default: 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN'
+                description: 'Target languages (empty uses repository default)'
+                required: false
+                default: ''
             max_cost:
                 description: 'Maximum cost in USD'
                 required: false
-                default: '2.00'
+                default: ''
             max_strings_per_job:
                 description: 'Maximum strings per language (empty means unlimited)'
                 required: false
@@ -29,7 +29,7 @@ on:
             model:
                 description: 'OpenAI model'
                 required: false
-                default: 'gpt-5.4-mini'
+                default: ''
             dry_run:
                 description: 'Dry run (no API calls)'
                 required: false
@@ -98,7 +98,7 @@ jobs:
             - name: Run AI Translation
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-                  TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN' }}
+                  TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR' }}
                   MAX_COST: ${{ inputs.max_cost || vars.DEFAULT_TRANSLATION_MAX_COST || '2.00' }}
                   MAX_STRINGS_PER_JOB: ${{ inputs.max_strings_per_job || '' }}
                   MODEL: ${{ inputs.model || vars.DEFAULT_TRANSLATION_MODEL || 'gpt-5.4-mini' }}
@@ -155,7 +155,7 @@ jobs:
               if: steps.changes.outputs.changed == 'true' && inputs.dry_run != true
               env:
                   GH_TOKEN: ${{ github.token }}
-                  INPUT_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN' }}
+                  INPUT_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR' }}
               run: |
                   git config --local user.email "github-actions[bot]@users.noreply.github.com"
                   git config --local user.name "github-actions[bot]"
