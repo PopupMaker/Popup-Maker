@@ -140,7 +140,44 @@ class PUM_Modules_Reviews {
 		 */
 		$destinations = apply_filters( 'pum_reviews_destinations', $destinations, $context );
 
-		return is_array( $destinations ) ? $destinations : [];
+		return self::normalize_review_destinations( $destinations );
+	}
+
+	/**
+	 * Normalize filtered review destinations for rendering and authorization.
+	 *
+	 * @param mixed $destinations Filtered review destinations.
+	 * @return array<string|int,array{label:string,url:string,reason:string,primary:bool}>
+	 */
+	protected static function normalize_review_destinations( $destinations ) {
+		if ( ! is_array( $destinations ) ) {
+			return [];
+		}
+
+		$normalized = [];
+
+		foreach ( $destinations as $key => $destination ) {
+			if ( ! is_array( $destination ) || ! isset( $destination['url'], $destination['label'], $destination['reason'] ) || ! is_scalar( $destination['url'] ) || ! is_scalar( $destination['label'] ) || ! is_scalar( $destination['reason'] ) ) {
+				continue;
+			}
+
+			$url    = esc_url_raw( trim( (string) $destination['url'] ) );
+			$label  = sanitize_text_field( (string) $destination['label'] );
+			$reason = sanitize_key( (string) $destination['reason'] );
+
+			if ( '' === $url || '' === $label || '' === $reason ) {
+				continue;
+			}
+
+			$normalized[ $key ] = [
+				'label'   => $label,
+				'url'     => $url,
+				'reason'  => $reason,
+				'primary' => ! empty( $destination['primary'] ),
+			];
+		}
+
+		return $normalized;
 	}
 
 	/**
@@ -290,7 +327,7 @@ class PUM_Modules_Reviews {
 			return false;
 		}
 
-		self::record_presentation();
+		self::record_presentation( $trigger_group, $trigger_code, $trigger_pri );
 
 		if ( 0 === strpos( $reason, 'shown_' ) ) {
 			$last_impression = get_user_meta( $user_id, '_pum_reviews_last_impression', true );
@@ -366,12 +403,16 @@ class PUM_Modules_Reviews {
 	 * Rendering both the inline alert and notification panel still counts as one
 	 * attempt. Reloading the same trigger also does not inflate the count.
 	 *
+	 * @param string|false    $trigger_group Trigger group key.
+	 * @param string|false    $trigger_code  Trigger code.
+	 * @param int|string|bool $trigger_pri   Trigger priority.
 	 * @return bool Whether this was a new attempt.
 	 */
-	public static function record_presentation() {
+	public static function record_presentation( $trigger_group = false, $trigger_code = false, $trigger_pri = false ) {
 		$user_id = get_current_user_id();
-		$group   = self::get_trigger_group();
-		$code    = self::get_trigger_code();
+		$group   = is_scalar( $trigger_group ) && '' !== (string) $trigger_group ? sanitize_key( (string) $trigger_group ) : self::get_trigger_group();
+		$code    = is_scalar( $trigger_code ) && '' !== (string) $trigger_code ? sanitize_key( (string) $trigger_code ) : self::get_trigger_code();
+		$pri     = false !== $trigger_pri ? (int) $trigger_pri : (int) self::get_current_trigger( 'pri' );
 
 		if ( ! $user_id || ! $group || ! $code ) {
 			return false;
@@ -392,7 +433,7 @@ class PUM_Modules_Reviews {
 				'attempt'          => $attempt,
 				'trigger_group'    => sanitize_key( (string) $group ),
 				'trigger_code'     => sanitize_key( (string) $code ),
-				'trigger_priority' => (int) self::get_current_trigger( 'pri' ),
+				'trigger_priority' => $pri,
 				'timestamp'        => current_time( 'mysql' ),
 			]
 		);
@@ -468,7 +509,7 @@ class PUM_Modules_Reviews {
 			wp_send_json_error();
 		}
 
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! current_user_can( \PopupMaker\plugin()->get_permission( 'edit_popups' ) ) ) {
 			wp_send_json_error();
 		}
 
@@ -781,28 +822,18 @@ class PUM_Modules_Reviews {
 	 * @return string
 	 */
 	public static function render_review_actions( $destinations = null ) {
-		if ( ! is_array( $destinations ) ) {
-			$destinations = self::get_review_destinations();
-		}
+		$destinations = null === $destinations ? self::get_review_destinations() : self::normalize_review_destinations( $destinations );
 
 		ob_start();
 		?>
 		<ul>
 			<?php foreach ( $destinations as $destination ) : ?>
-				<?php
-				if ( ! is_array( $destination ) || ! isset( $destination['url'], $destination['label'] ) || ! is_scalar( $destination['url'] ) || ! is_scalar( $destination['label'] ) || '' === (string) $destination['url'] || '' === (string) $destination['label'] ) {
-					continue;
-				}
-
-				$reason = isset( $destination['reason'] ) && is_scalar( $destination['reason'] ) ? sanitize_key( (string) $destination['reason'] ) : 'am_now_core';
-				$reason = $reason ?: 'am_now_core';
-				?>
 				<li>
-					<a class="pum-dismiss" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( (string) $destination['url'] ); ?>" data-reason="<?php echo esc_attr( $reason ); ?>">
+					<a class="pum-dismiss" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $destination['url'] ); ?>" data-reason="<?php echo esc_attr( $destination['reason'] ); ?>">
 						<?php if ( ! empty( $destination['primary'] ) ) : ?>
-							<strong><?php echo esc_html( (string) $destination['label'] ); ?></strong>
+							<strong><?php echo esc_html( $destination['label'] ); ?></strong>
 						<?php else : ?>
-							<?php echo esc_html( (string) $destination['label'] ); ?>
+							<?php echo esc_html( $destination['label'] ); ?>
 						<?php endif; ?>
 					</a>
 				</li>
@@ -842,18 +873,7 @@ class PUM_Modules_Reviews {
 		$trigger         = self::get_current_trigger();
 		$product_context = self::get_product_context();
 		$destinations    = self::get_review_destinations();
-		$allowed_actions = [ 'maybe_later', 'already_did' ];
-
-		foreach ( $destinations as $destination ) {
-			if ( ! is_array( $destination ) || ! isset( $destination['url'], $destination['label'], $destination['reason'] ) || ! is_scalar( $destination['url'] ) || ! is_scalar( $destination['label'] ) || ! is_scalar( $destination['reason'] ) || '' === (string) $destination['url'] || '' === (string) $destination['label'] ) {
-				continue;
-			}
-
-			$reason = sanitize_key( (string) $destination['reason'] );
-			if ( '' !== $reason ) {
-				$allowed_actions[] = $reason;
-			}
-		}
+		$allowed_actions = array_merge( [ 'maybe_later', 'already_did' ], wp_list_pluck( $destinations, 'reason' ) );
 
 		$html = self::render_review_actions( $destinations );
 

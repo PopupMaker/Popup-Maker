@@ -95,7 +95,7 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$script = ob_get_clean();
 
 		$this->assertStringContainsString( '"api_url":' . wp_json_encode( PUM_Modules_Reviews::$api_url ), $script );
-		$this->assertStringContainsString( 'window.pum_review_uuid', $script );
+		$this->assertStringContainsString( '"uuid":' . wp_json_encode( wp_hash( home_url() . '-' . self::$admin_id ) ), $script );
 	}
 
 	/**
@@ -193,15 +193,44 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Submitted trigger metadata owns the recorded presentation.
+	 */
+	public function test_action_records_presentation_for_submitted_trigger() {
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'maybe_later', 'time_installed', 'one_week', 10 ) );
+
+		$presentation = get_user_meta( self::$admin_id, '_pum_reviews_last_presented', true );
+		$action       = get_user_meta( self::$admin_id, '_pum_reviews_last_action', true );
+
+		$this->assertSame( 'time_installed', $presentation['trigger_group'] );
+		$this->assertSame( 'one_week', $presentation['trigger_code'] );
+		$this->assertSame( 10, $presentation['trigger_priority'] );
+		$this->assertSame( $presentation['trigger_group'], $action['trigger_group'] );
+		$this->assertSame( $presentation['trigger_code'], $action['trigger_code'] );
+		$this->assertSame( 1, PUM_Modules_Reviews::attempt_count() );
+	}
+
+	/**
 	 * Filtered destinations declare their product-specific action reason.
 	 */
 	public function test_review_alert_declares_filtered_destination_reasons() {
 		$add_destination = static function ( $destinations ) {
-			$destinations['pro'] = [
+			$destinations['pro']          = [
 				'label'   => 'Review Popup Maker Pro',
 				'url'     => 'https://example.com/review',
 				'reason'  => 'am_now_pro',
 				'primary' => true,
+			];
+			$destinations['invalid_url']  = [
+				'label'   => 'Invalid URL',
+				'url'     => 'javascript:alert(1)',
+				'reason'  => 'am_now_invalid',
+				'primary' => false,
+			];
+			$destinations['empty_reason'] = [
+				'label'   => 'Missing Reason',
+				'url'     => 'https://example.com/missing-reason',
+				'reason'  => '',
+				'primary' => false,
 			];
 
 			return $destinations;
@@ -213,7 +242,10 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		remove_filter( 'pum_reviews_destinations', $add_destination );
 
 		$this->assertContains( 'am_now_pro', $alert['allowed_actions'] );
+		$this->assertNotContains( 'am_now_invalid', $alert['allowed_actions'] );
 		$this->assertStringContainsString( 'data-reason="am_now_pro"', $alert['html'] );
+		$this->assertStringNotContainsString( 'Invalid URL', $alert['html'] );
+		$this->assertStringNotContainsString( 'Missing Reason', $alert['html'] );
 	}
 
 	/**
