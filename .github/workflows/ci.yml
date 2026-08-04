@@ -42,6 +42,7 @@ jobs:
       css: ${{ steps.changes.outputs.css_any_changed }}
       npm_deps: ${{ steps.changes.outputs.npm_deps_any_changed }}
       php_deps: ${{ steps.changes.outputs.php_deps_any_changed }}
+      translation_workflow: ${{ steps.changes.outputs.translation_workflow_any_changed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -92,6 +93,31 @@ jobs:
             php_deps:
               - 'composer.json'
               - 'composer.lock'
+            translation_workflow:
+              - '.github/workflows/translate.yml'
+              - '.gitattributes'
+              - 'bin/verify-translation-guardrails.js'
+              - 'bin/verify-translation-catalogs.sh'
+              - 'languages/**'
+
+  translation-guardrails:
+    name: Translation Spend Guardrails
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: ${{ github.event_name == 'pull_request' && needs.detect-changes.outputs.translation_workflow == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install Gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Verify translation spend guardrails
+        run: node bin/verify-translation-guardrails.js
+
+      - name: Verify translation catalogs
+        run: bash bin/verify-translation-catalogs.sh
 
   # ============================================================================
   # PHP Code Quality - PHPCS & PHPStan
@@ -233,7 +259,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -370,11 +396,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: pnpm
 
       - name: Install dependencies
         run: |
+          composer config --global --unset github-oauth.github.com || true
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
           pnpm install --frozen-lockfile
 
@@ -399,19 +426,18 @@ jobs:
         run: |
           jq -n --arg plugin "$GITHUB_WORKSPACE/popup-maker" '{
             core: null,
-            testsEnvironment: false,
             port: 8888,
             mappings: {"wp-content/plugins/popup-maker": $plugin}
-          }' > "$RUNNER_TEMP/plugin-check.wp-env.json"
+          }' > .wp-env.override.json
 
       - name: Start WordPress and install Plugin Check
         run: |
-          pnpm exec wp-env start --config "$RUNNER_TEMP/plugin-check.wp-env.json" --update
-          pnpm exec wp-env run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
+          pnpm dlx @wordpress/env@10.39.0 start --update
+          pnpm dlx @wordpress/env@10.39.0 run cli -- wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
 
       - name: Scan assembled plugin
         run: |
-          pnpm exec wp-env run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin check popup-maker \
+          pnpm dlx @wordpress/env@10.39.0 run cli -- wp plugin check popup-maker \
             --exclude-checks=plugin_review_phpcs \
             --ignore-warnings \
             --exclude-directories=vendor-prefixed \
@@ -434,7 +460,7 @@ jobs:
 
       - name: Stop Plugin Check environment
         if: always()
-        run: pnpm exec wp-env stop --config "$RUNNER_TEMP/plugin-check.wp-env.json" || true
+        run: pnpm dlx @wordpress/env@10.39.0 stop || true
 
   # ============================================================================
   # Security Scanning - NPM Dependencies

@@ -1,51 +1,34 @@
 name: AI Translate
 
 on:
-    # Auto-run on develop when translatable files change
-    push:
-        branches: [develop]
-        paths:
-            - '**/*.php'
-            - '**/*.js'
-            - '**/*.jsx'
-            - '**/*.ts'
-            - '**/*.tsx'
-            - 'languages/*.pot'
-    # Manual trigger for full control
+    # Paid translation is intentionally manual-only. Source changes must never
+    # trigger API spend without an explicit dispatch.
     workflow_dispatch:
         inputs:
             languages:
                 description: 'Target languages (empty uses repository default)'
                 required: false
                 default: ''
-            max_cost:
-                description: 'Maximum cost in USD'
-                required: false
-                default: ''
-            max_strings_per_job:
-                description: 'Maximum strings per language (empty means unlimited)'
-                required: false
-                default: ''
-            model:
-                description: 'OpenAI model'
-                required: false
-                default: ''
             dry_run:
                 description: 'Dry run (no API calls)'
                 required: false
                 type: boolean
-                default: false
-            force_translate:
-                description: 'Force re-translate all strings'
+                default: true
+            paid_confirmation:
+                description: 'For a paid run, type TRANSLATE'
                 required: false
-                type: boolean
-                default: false
+                default: ''
 
 env:
     PLUGIN_SLUG: popup-maker
     POTOMATIC_VERSION: '1.3.0'
+    PAID_MODEL: gpt-5.4-mini
+    MAX_PAID_COST: '0.25'
+    MAX_PAID_RUNS_PER_24_HOURS: '1'
+    MAX_STRINGS_PER_LANGUAGE: '250'
 
 permissions:
+    actions: read
     contents: write
     pull-requests: write
 
@@ -55,15 +38,54 @@ concurrency:
 
 jobs:
     translate:
-        # Automatic paid runs remain opt-in; manual dry-runs and translations
-        # are always available through workflow_dispatch.
-        if: github.event_name == 'workflow_dispatch' || vars.ENABLE_AUTO_TRANSLATION == 'true'
         name: AI Translate POT
         runs-on: ubuntu-latest
+        timeout-minutes: 30
 
         steps:
             - name: Checkout
               uses: actions/checkout@v6
+
+            - name: Enforce paid-run guardrails
+              if: inputs.dry_run != true
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  PAID_CONFIRMATION: ${{ inputs.paid_confirmation }}
+              run: |
+                  set -euo pipefail
+
+                  if [[ "$PAID_CONFIRMATION" != "TRANSLATE" ]]; then
+                    echo "::error::Paid translation requires paid_confirmation=TRANSLATE."
+                    exit 1
+                  fi
+
+                  if [[ "$GITHUB_RUN_ATTEMPT" != "1" ]]; then
+                    echo "::error::Paid translation runs cannot be re-run. Dispatch a new reviewed run instead."
+                    exit 1
+                  fi
+
+                  CUTOFF=$(date -u -d '24 hours ago' '+%Y-%m-%dT%H:%M:%SZ')
+                  RECENT_RUNS=$(
+                    gh api \
+                      "repos/$GITHUB_REPOSITORY/actions/workflows/translate.yml/runs?event=workflow_dispatch&per_page=100" \
+                    | jq \
+                        --arg cutoff "$CUTOFF" \
+                        --argjson current "$GITHUB_RUN_ID" \
+                        '[.workflow_runs[] | select(.id != $current and .created_at >= $cutoff)] | length'
+                  )
+
+                  if (( RECENT_RUNS >= MAX_PAID_RUNS_PER_24_HOURS )); then
+                    echo "::error::Paid translation is limited to $MAX_PAID_RUNS_PER_24_HOURS run per rolling 24 hours."
+                    exit 1
+                  fi
+
+                  {
+                    echo "### Paid translation guardrails"
+                    echo "- Hard cost ceiling: \$$MAX_PAID_COST"
+                    echo "- Maximum strings per language: $MAX_STRINGS_PER_LANGUAGE"
+                    echo "- Paid runs in the preceding 24 hours: $RECENT_RUNS"
+                    echo "- Re-runs: prohibited"
+                  } >> "$GITHUB_STEP_SUMMARY"
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v6
@@ -99,11 +121,9 @@ jobs:
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
                   TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR,vi,fa_IR,cs_CZ,pt_PT,hu_HU,es_MX,da_DK,zh_TW,he_IL,th,ro_RO,el,hi_IN' }}
-                  MAX_COST: ${{ inputs.max_cost || vars.DEFAULT_TRANSLATION_MAX_COST || '2.00' }}
-                  INPUT_MAX_STRINGS: ${{ inputs.max_strings_per_job || '' }}
-                  MODEL: ${{ inputs.model || vars.DEFAULT_TRANSLATION_MODEL || 'gpt-5.4-mini' }}
+                  MAX_COST: ${{ env.MAX_PAID_COST }}
+                  MODEL: ${{ env.PAID_MODEL }}
                   DRY_RUN: ${{ inputs.dry_run || 'false' }}
-                  FORCE_TRANSLATE: ${{ inputs.force_translate || 'false' }}
               run: |
                   if [[ "$DRY_RUN" != "true" && -z "$OPENAI_API_KEY" ]]; then
                     echo "::error::OPENAI_API_KEY is required for a paid translation run."
@@ -118,24 +138,17 @@ jobs:
                     --target-languages "$TARGET_LANGUAGES"
                     --max-cost "$MAX_COST"
                     --model "$MODEL"
+                    --max-strings-per-job "$MAX_STRINGS_PER_LANGUAGE"
                   )
 
                   if [[ "$DRY_RUN" == "true" ]]; then
                     ARGS+=( --dry-run )
                   fi
 
-                  if [[ "$FORCE_TRANSLATE" == "true" ]]; then
-                    ARGS+=( --force-translate )
-                  fi
-
-                  if [[ "$INPUT_MAX_STRINGS" =~ ^[1-9][0-9]*$ ]]; then
-                    ARGS+=( --max-strings-per-job "$INPUT_MAX_STRINGS" )
-                  fi
-
                   set +e
-                  # Checkpoint long runs so completed locales are preserved if
-                  # an individual provider request stops responding.
-                  timeout --signal=TERM --kill-after=30s 20m \
+                  # Stop a stalled provider request. No process or workflow may
+                  # automatically dispatch a replacement paid run.
+                  timeout --signal=TERM --kill-after=30s 15m \
                     pnpm dlx "potomatic@$POTOMATIC_VERSION" "${ARGS[@]}"
                   TRANSLATION_EXIT=$?
                   set -e
@@ -157,6 +170,10 @@ jobs:
                     wp i18n make-mo languages/
                     wp i18n make-json languages/ --no-purge
                   fi
+
+            - name: Validate translation catalogs
+              if: inputs.dry_run != true
+              run: bash bin/verify-translation-catalogs.sh
 
             - name: Check for changes
               id: changes
