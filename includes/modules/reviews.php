@@ -46,11 +46,11 @@ class PUM_Modules_Reviews {
 	protected static $selected_trigger_group = false;
 
 	/**
-	 * Whether the selected trigger group has been resolved.
+	 * Whether the selected trigger has been resolved.
 	 *
 	 * @var bool
 	 */
-	protected static $trigger_group_resolved = false;
+	protected static $selected_trigger_resolved = false;
 
 	/**
 	 * Cached selected trigger code for the current request.
@@ -58,13 +58,6 @@ class PUM_Modules_Reviews {
 	 * @var int|string|false
 	 */
 	protected static $selected_trigger_code = false;
-
-	/**
-	 * Whether the selected trigger code has been resolved.
-	 *
-	 * @var bool
-	 */
-	protected static $trigger_code_resolved = false;
 
 	/**
 	 * Whether the review configuration has been printed.
@@ -111,14 +104,14 @@ class PUM_Modules_Reviews {
 			return $defaults;
 		}
 
-		$product = isset( $context['product'] ) ? sanitize_key( (string) $context['product'] ) : $defaults['product'];
+		$product = isset( $context['product'] ) && is_scalar( $context['product'] ) ? sanitize_key( (string) $context['product'] ) : $defaults['product'];
 		if ( '' === $product ) {
 			$product = $defaults['product'];
 		}
 
 		return [
 			'product'  => $product,
-			'name'     => ! empty( $context['name'] ) ? sanitize_text_field( (string) $context['name'] ) : $defaults['name'],
+			'name'     => isset( $context['name'] ) && is_scalar( $context['name'] ) && '' !== (string) $context['name'] ? sanitize_text_field( (string) $context['name'] ) : $defaults['name'],
 			'licensed' => ! empty( $context['licensed'] ),
 		];
 	}
@@ -222,7 +215,7 @@ class PUM_Modules_Reviews {
 			],
 			'context'  => [
 				'product'         => $product_context['product'],
-				'attempt'         => self::attempt_count(),
+				'attempt'         => self::attempt_count() + ( self::needs_impression() ? 1 : 0 ),
 				'needsImpression' => self::needs_impression(),
 			],
 		];
@@ -250,12 +243,11 @@ class PUM_Modules_Reviews {
 	 * @return void
 	 */
 	public static function reset_runtime_cache() {
-		self::$triggers_cache         = null;
-		self::$selected_trigger_group = false;
-		self::$trigger_group_resolved = false;
-		self::$selected_trigger_code  = false;
-		self::$trigger_code_resolved  = false;
-		self::$printed_review_vars    = false;
+		self::$triggers_cache            = null;
+		self::$selected_trigger_group    = false;
+		self::$selected_trigger_code     = false;
+		self::$selected_trigger_resolved = false;
+		self::$printed_review_vars       = false;
 	}
 
 	/**
@@ -297,6 +289,8 @@ class PUM_Modules_Reviews {
 		if ( ! $trigger_group || ! $trigger_code ) {
 			return false;
 		}
+
+		self::record_presentation();
 
 		if ( 0 === strpos( $reason, 'shown_' ) ) {
 			$last_impression = get_user_meta( $user_id, '_pum_reviews_last_impression', true );
@@ -510,25 +504,7 @@ class PUM_Modules_Reviews {
 	 * @return int|string|false
 	 */
 	public static function get_trigger_group() {
-		if ( ! self::$trigger_group_resolved ) {
-			self::$trigger_group_resolved = true;
-			$dismissed_triggers           = self::dismissed_triggers();
-
-			$triggers = self::triggers();
-
-			foreach ( $triggers as $g => $group ) {
-				foreach ( $group['triggers'] as $t => $trigger ) {
-					if ( ! in_array( false, $trigger['conditions'], true ) && ( empty( $dismissed_triggers[ $g ] ) || $dismissed_triggers[ $g ] < $trigger['pri'] ) ) {
-						self::$selected_trigger_group = $g;
-						break;
-					}
-				}
-
-				if ( false !== self::$selected_trigger_group ) {
-					break;
-				}
-			}
-		}
+		self::resolve_selected_trigger();
 
 		return self::$selected_trigger_group;
 	}
@@ -537,25 +513,34 @@ class PUM_Modules_Reviews {
 	 * @return int|string|false
 	 */
 	public static function get_trigger_code() {
-		if ( ! self::$trigger_code_resolved ) {
-			self::$trigger_code_resolved = true;
-			$dismissed_triggers          = self::dismissed_triggers();
+		self::resolve_selected_trigger();
 
-			foreach ( self::triggers() as $g => $group ) {
-				foreach ( $group['triggers'] as $t => $trigger ) {
-					if ( ! in_array( false, $trigger['conditions'], true ) && ( empty( $dismissed_triggers[ $g ] ) || $dismissed_triggers[ $g ] < $trigger['pri'] ) ) {
-						self::$selected_trigger_code = $t;
-						break;
-					}
-				}
+		return self::$selected_trigger_code;
+	}
 
-				if ( false !== self::$selected_trigger_code ) {
-					break;
+	/**
+	 * Resolve and cache the highest-priority eligible trigger.
+	 *
+	 * @return void
+	 */
+	protected static function resolve_selected_trigger() {
+		if ( self::$selected_trigger_resolved ) {
+			return;
+		}
+
+		self::$selected_trigger_resolved = true;
+		$dismissed_triggers              = self::dismissed_triggers();
+
+		foreach ( self::triggers() as $group_code => $group ) {
+			foreach ( $group['triggers'] as $trigger_code => $trigger ) {
+				if ( ! in_array( false, $trigger['conditions'], true ) && ( empty( $dismissed_triggers[ $group_code ] ) || $dismissed_triggers[ $group_code ] < $trigger['pri'] ) ) {
+					self::$selected_trigger_group = $group_code;
+					self::$selected_trigger_code  = $trigger_code;
+
+					return;
 				}
 			}
 		}
-
-		return self::$selected_trigger_code;
 	}
 
 	/**
@@ -792,19 +777,25 @@ class PUM_Modules_Reviews {
 	/**
 	 * Render the shared review request actions.
 	 *
+	 * @param array<string,array{label:string,url:string,reason:string,primary:bool}>|null $destinations Review destinations.
 	 * @return string
 	 */
-	public static function render_review_actions() {
+	public static function render_review_actions( $destinations = null ) {
+		if ( ! is_array( $destinations ) ) {
+			$destinations = self::get_review_destinations();
+		}
+
 		ob_start();
 		?>
 		<ul>
-			<?php foreach ( self::get_review_destinations() as $destination ) : ?>
+			<?php foreach ( $destinations as $destination ) : ?>
 				<?php
-				if ( ! is_array( $destination ) || empty( $destination['url'] ) || empty( $destination['label'] ) ) {
+				if ( ! is_array( $destination ) || ! isset( $destination['url'], $destination['label'] ) || ! is_scalar( $destination['url'] ) || ! is_scalar( $destination['label'] ) || '' === (string) $destination['url'] || '' === (string) $destination['label'] ) {
 					continue;
 				}
 
-				$reason = ! empty( $destination['reason'] ) ? sanitize_key( (string) $destination['reason'] ) : 'am_now_core';
+				$reason = isset( $destination['reason'] ) && is_scalar( $destination['reason'] ) ? sanitize_key( (string) $destination['reason'] ) : 'am_now_core';
+				$reason = $reason ?: 'am_now_core';
 				?>
 				<li>
 					<a class="pum-dismiss" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( (string) $destination['url'] ); ?>" data-reason="<?php echo esc_attr( $reason ); ?>">
@@ -848,23 +839,35 @@ class PUM_Modules_Reviews {
 
 		add_action( 'admin_footer', [ __CLASS__, 'print_review_request_vars' ] );
 
-		self::record_presentation();
-
 		$trigger         = self::get_current_trigger();
 		$product_context = self::get_product_context();
+		$destinations    = self::get_review_destinations();
+		$allowed_actions = [ 'maybe_later', 'already_did' ];
 
-		$html = self::render_review_actions();
+		foreach ( $destinations as $destination ) {
+			if ( ! is_array( $destination ) || ! isset( $destination['url'], $destination['label'], $destination['reason'] ) || ! is_scalar( $destination['url'] ) || ! is_scalar( $destination['label'] ) || ! is_scalar( $destination['reason'] ) || '' === (string) $destination['url'] || '' === (string) $destination['label'] ) {
+				continue;
+			}
+
+			$reason = sanitize_key( (string) $destination['reason'] );
+			if ( '' !== $reason ) {
+				$allowed_actions[] = $reason;
+			}
+		}
+
+		$html = self::render_review_actions( $destinations );
 
 		$alerts[] = [
-			'code'           => 'review_request',
+			'code'            => 'review_request',
 			/* translators: %s: Popup Maker product name. */
-			'title'          => '⭐ ' . sprintf( __( 'Is %s helping you grow?', 'popup-maker' ), $product_context['name'] ),
-			'message'        => '<strong>' . esc_html( $trigger['message'] ) . '</strong>',
-			'html'           => $html,
-			'type'           => 'success',
-			'category'       => 'recommendation',
-			'dismiss_action' => 'maybe_later',
-			'display_inline' => true,
+			'title'           => '⭐ ' . sprintf( __( 'Is %s helping you grow?', 'popup-maker' ), $product_context['name'] ),
+			'message'         => '<strong>' . esc_html( $trigger['message'] ) . '</strong>',
+			'html'            => $html,
+			'type'            => 'success',
+			'category'        => 'recommendation',
+			'dismiss_action'  => 'maybe_later',
+			'allowed_actions' => array_values( array_unique( $allowed_actions ) ),
+			'display_inline'  => true,
 		];
 
 		return $alerts;

@@ -144,6 +144,8 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		);
 		$this->assertSame( '', $controller->resolve_dismiss_action_for_test( [], '' ) );
 		$this->assertSame( '', $controller->resolve_action_expires_for_test( [], 'am_now_core' ) );
+		$this->assertSame( '', $controller->resolve_action_expires_for_test( [ 'allowed_actions' => [ 'am_now_pro' ] ], 'am_now_pro' ) );
+		$this->assertFalse( $controller->resolve_action_expires_for_test( [ 'allowed_actions' => [ [] ] ], 'am_now_pro' ) );
 	}
 
 	/**
@@ -162,26 +164,19 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Distinct triggers count once even when both review surfaces render.
+	 * Alert discovery does not count an attempt before a surface is shown.
 	 */
 	public function test_attempt_metrics_count_distinct_presentations_once() {
-		$this->assertTrue( PUM_Modules_Reviews::record_presentation() );
-		$this->assertFalse( PUM_Modules_Reviews::record_presentation() );
-		$this->assertSame( 1, PUM_Modules_Reviews::attempt_count() );
+		$this->assertCount( 1, PUM_Modules_Reviews::review_alert( [] ) );
+		$this->assertSame( 0, PUM_Modules_Reviews::attempt_count() );
 		$this->assertTrue( PUM_Modules_Reviews::needs_impression() );
 
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core' ) );
+
 		$last = get_user_meta( self::$admin_id, '_pum_reviews_last_presented', true );
+		$this->assertSame( 1, PUM_Modules_Reviews::attempt_count() );
 		$this->assertSame( 1, $last['attempt'] );
 		$this->assertNotEmpty( $last['trigger_code'] );
-
-		$this->assertTrue(
-			PUM_Modules_Reviews::record_action(
-				'shown_core',
-				$last['trigger_group'],
-				$last['trigger_code'],
-				$last['trigger_priority']
-			)
-		);
 		$this->assertFalse( PUM_Modules_Reviews::needs_impression() );
 		$this->assertSame( 1, (int) get_user_meta( self::$admin_id, '_pum_reviews_impression_count', true ) );
 		$this->assertTrue(
@@ -194,6 +189,50 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		);
 		$this->assertSame( 1, (int) get_user_meta( self::$admin_id, '_pum_reviews_impression_count', true ) );
 		$this->assertEmpty( get_user_meta( self::$admin_id, '_pum_reviews_last_dismissed', true ) );
+	}
+
+	/**
+	 * Filtered destinations declare their product-specific action reason.
+	 */
+	public function test_review_alert_declares_filtered_destination_reasons() {
+		$add_destination = static function ( $destinations ) {
+			$destinations['pro'] = [
+				'label'   => 'Review Popup Maker Pro',
+				'url'     => 'https://example.com/review',
+				'reason'  => 'am_now_pro',
+				'primary' => true,
+			];
+
+			return $destinations;
+		};
+		add_filter( 'pum_reviews_destinations', $add_destination );
+
+		$alert = PUM_Modules_Reviews::review_alert( [] )[0];
+
+		remove_filter( 'pum_reviews_destinations', $add_destination );
+
+		$this->assertContains( 'am_now_pro', $alert['allowed_actions'] );
+		$this->assertStringContainsString( 'data-reason="am_now_pro"', $alert['html'] );
+	}
+
+	/**
+	 * Invalid filtered context values fall back without unsafe casts.
+	 */
+	public function test_review_product_context_rejects_non_scalar_values() {
+		$invalid_context = static function ( $context ) {
+			$context['product'] = [];
+			$context['name']    = new stdClass();
+
+			return $context;
+		};
+		add_filter( 'pum_reviews_product_context', $invalid_context );
+
+		$context = PUM_Modules_Reviews::get_product_context();
+
+		remove_filter( 'pum_reviews_product_context', $invalid_context );
+
+		$this->assertSame( 'core', $context['product'] );
+		$this->assertSame( 'Popup Maker', $context['name'] );
 	}
 
 	/**

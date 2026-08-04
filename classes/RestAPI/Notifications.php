@@ -266,6 +266,16 @@ class Notifications extends WP_REST_Controller {
 			}
 		}
 
+		foreach ( (array) ( $alert['allowed_actions'] ?? [] ) as $declared_action ) {
+			if ( ! is_scalar( $declared_action ) ) {
+				continue;
+			}
+
+			if ( sanitize_key( (string) $declared_action ) === $action ) {
+				return '';
+			}
+		}
+
 		// Legacy fallback: admin-bar notices (review_request, etc.) embed
 		// dismiss links in their `html` field with data-reason values
 		// rather than declaring `actions[]`. Accept the known-safe set
