@@ -100,7 +100,6 @@ const recordReviewImpression = ( reason: string ): Promise< void > => {
 		nonce: window.pum_review_nonce,
 		group: window.pum_review_trigger.group,
 		code: window.pum_review_trigger.code,
-		pri: String( window.pum_review_trigger.pri || 0 ),
 		reason,
 	} );
 
@@ -116,9 +115,13 @@ const recordReviewImpression = ( reason: string ): Promise< void > => {
 
 interface Props {
 	notification: Notification;
+	isVisible?: boolean;
 }
 
-export const NotificationItem = ( { notification }: Props ): JSX.Element => {
+export const NotificationItem = ( {
+	notification,
+	isVisible = true,
+}: Props ): JSX.Element => {
 	const { dismiss, dismissLocal } = useDispatch( STORE_NAME );
 	const [ isDismissing, setIsDismissing ] = useState( false );
 	const [ iframeUrl, setIframeUrl ] = useState< string | null >( null );
@@ -159,6 +162,7 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 		const context = window.pum_review_context;
 		if (
 			'review_request' !== notification.code ||
+			! isVisible ||
 			! context?.needsImpression
 		) {
 			return;
@@ -169,7 +173,7 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 		recordReviewImpression( reason )
 			.then( () => trackReviewRequest( notification, reason ) )
 			.catch( () => {} );
-	}, [ notification ] );
+	}, [ isVisible, notification ] );
 
 	const handleDismiss = () => {
 		setIsDismissing( true );
@@ -261,7 +265,9 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 	const bodyRef = useRef< HTMLElement | null >( null );
 	useEffect( () => {
 		const anchors = document.querySelectorAll< HTMLAnchorElement >(
-			`[data-code="${ CSS.escape( notification.code ) }"] .pum-notification-item__body a`
+			`[data-code="${ CSS.escape(
+				notification.code
+			) }"] .pum-notification-item__body a`
 		);
 		anchors.forEach( ( a ) => {
 			const href = a.getAttribute( 'href' ) || '';
@@ -343,15 +349,21 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 			) }
 
 			{ notification.message && (
+				// Anchor events are delegated here; anchors retain native keyboard semantics.
+				// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
 				<div
 					className="pum-notification-item__body"
 					onClick={ handleLegacyClick }
 					// eslint-disable-next-line react/no-danger
-					dangerouslySetInnerHTML={ renderHTML( notification.message ) }
+					dangerouslySetInnerHTML={ renderHTML(
+						notification.message
+					) }
 				/>
 			) }
 
 			{ notification.html && (
+				// Anchor events are delegated here; anchors retain native keyboard semantics.
+				// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
 				<div
 					className="pum-notification-item__body pum-notification-item__body--legacy"
 					onClick={ handleLegacyClick }
@@ -379,9 +391,7 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 								<a
 									key={ key }
 									href={ action.href }
-									target={
-										external ? '_blank' : undefined
-									}
+									target={ external ? '_blank' : undefined }
 									rel={
 										external
 											? 'noopener noreferrer'
@@ -434,9 +444,7 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 						<span className="dashicons dashicons-no-alt" />
 					</button>
 					<iframe
-						title={
-							iframeTitle || __( 'Details', 'popup-maker' )
-						}
+						title={ iframeTitle || __( 'Details', 'popup-maker' ) }
 						src={ iframeUrl }
 						className="pum-notification-item__iframe"
 						sandbox="allow-scripts allow-same-origin allow-popups allow-forms"

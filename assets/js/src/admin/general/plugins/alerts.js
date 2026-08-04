@@ -76,7 +76,6 @@
 				nonce: window.pum_review_nonce,
 				group: trigger.group,
 				code: trigger.code,
-				pri: trigger.pri,
 				reason: reason,
 			},
 		} );
@@ -88,7 +87,9 @@
 	}
 
 	function broadcastReviewDismissal() {
-		document.dispatchEvent( new CustomEvent( 'pumReviewRequestDismissed' ) );
+		document.dispatchEvent(
+			new CustomEvent( 'pumReviewRequestDismissed' )
+		);
 	}
 
 	function checkRemoveAlerts() {
@@ -153,12 +154,10 @@
 			}
 
 			context.needsImpression = false;
-			recordReviewRequest( 'shown_' + ( context.product || 'core' ) ).done(
-				function () {
-					trackReviewRequest(
-						'shown_' + ( context.product || 'core' )
-					);
-				}
-			);
+			recordReviewRequest(
+				'shown_' + ( context.product || 'core' )
+			).done( function () {
+				trackReviewRequest( 'shown_' + ( context.product || 'core' ) );
+			} );
 		} );
 } )( jQuery );

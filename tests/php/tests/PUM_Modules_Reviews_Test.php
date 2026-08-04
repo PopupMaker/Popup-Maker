@@ -153,7 +153,7 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	 * Clicking the review link records intent without claiming completion.
 	 */
 	public function test_review_link_records_intent_without_permanent_dismissal() {
-		$recorded = PUM_Modules_Reviews::record_action( 'am_now_core', 'open_count', '100_opens', 20 );
+		$recorded = PUM_Modules_Reviews::record_action( 'am_now_core', 'open_count', '100_opens' );
 		$action   = get_user_meta( self::$admin_id, '_pum_reviews_last_action', true );
 		$counts   = get_user_meta( self::$admin_id, '_pum_reviews_action_counts', true );
 
@@ -184,8 +184,7 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 			PUM_Modules_Reviews::record_action(
 				'shown_core',
 				$last['trigger_group'],
-				$last['trigger_code'],
-				$last['trigger_priority']
+				$last['trigger_code']
 			)
 		);
 		$this->assertSame( 1, (int) get_user_meta( self::$admin_id, '_pum_reviews_impression_count', true ) );
@@ -193,20 +192,57 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Submitted trigger metadata owns the recorded presentation.
+	 * Submitted triggers must resolve server-side and cannot forge priority.
 	 */
-	public function test_action_records_presentation_for_submitted_trigger() {
-		$this->assertTrue( PUM_Modules_Reviews::record_action( 'maybe_later', 'time_installed', 'one_week', 10 ) );
+	public function test_action_resolves_submitted_trigger_definition() {
+		$this->assertFalse( PUM_Modules_Reviews::record_action( 'maybe_later', [], [] ) );
+		$this->assertFalse( PUM_Modules_Reviews::record_action( 'maybe_later', 'missing_group', 'missing_trigger' ) );
+		$this->assertSame( 0, PUM_Modules_Reviews::attempt_count() );
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'maybe_later', 'time_installed', 'one_week' ) );
 
 		$presentation = get_user_meta( self::$admin_id, '_pum_reviews_last_presented', true );
 		$action       = get_user_meta( self::$admin_id, '_pum_reviews_last_action', true );
+		$dismissed    = PUM_Modules_Reviews::dismissed_triggers();
 
 		$this->assertSame( 'time_installed', $presentation['trigger_group'] );
 		$this->assertSame( 'one_week', $presentation['trigger_code'] );
 		$this->assertSame( 10, $presentation['trigger_priority'] );
+		$this->assertSame( 10, $dismissed['time_installed'] );
 		$this->assertSame( $presentation['trigger_group'], $action['trigger_group'] );
 		$this->assertSame( $presentation['trigger_code'], $action['trigger_code'] );
 		$this->assertSame( 1, PUM_Modules_Reviews::attempt_count() );
+	}
+
+	/**
+	 * Numeric extension trigger keys compare consistently after persistence.
+	 */
+	public function test_numeric_trigger_keys_record_one_impression() {
+		$add_numeric_trigger = static function ( $triggers ) {
+			$triggers[99] = [
+				'triggers' => [
+					123 => [
+						'message'    => 'Numeric trigger',
+						'conditions' => [ true ],
+						'pri'        => 999,
+					],
+				],
+				'pri'      => 999,
+			];
+
+			return $triggers;
+		};
+		add_filter( 'pum_reviews_triggers', $add_numeric_trigger );
+		PUM_Modules_Reviews::reset_runtime_cache();
+
+		$this->assertSame( 99, PUM_Modules_Reviews::get_trigger_group() );
+		$this->assertSame( 123, PUM_Modules_Reviews::get_trigger_code() );
+		$this->assertTrue( PUM_Modules_Reviews::needs_impression() );
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core', 99, 123 ) );
+		$this->assertFalse( PUM_Modules_Reviews::needs_impression() );
+		$this->assertSame( 1, (int) get_user_meta( self::$admin_id, '_pum_reviews_impression_count', true ) );
+
+		remove_filter( 'pum_reviews_triggers', $add_numeric_trigger );
+		PUM_Modules_Reviews::reset_runtime_cache();
 	}
 
 	/**
@@ -232,20 +268,36 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 				'reason'  => '',
 				'primary' => false,
 			];
+			$destinations['relative_url'] = [
+				'label'   => 'Relative URL',
+				'url'     => '/feedback',
+				'reason'  => 'am_now_relative',
+				'primary' => false,
+			];
+			$destinations['mailto_url']   = [
+				'label'   => 'Email Feedback',
+				'url'     => 'mailto:feedback@example.com',
+				'reason'  => 'am_now_mailto',
+				'primary' => false,
+			];
 
 			return $destinations;
 		};
-		add_filter( 'pum_reviews_destinations', $add_destination );
+		add_filter( 'popup_maker/reviews/destinations', $add_destination );
 
 		$alert = PUM_Modules_Reviews::review_alert( [] )[0];
 
-		remove_filter( 'pum_reviews_destinations', $add_destination );
+		remove_filter( 'popup_maker/reviews/destinations', $add_destination );
 
 		$this->assertContains( 'am_now_pro', $alert['allowed_actions'] );
 		$this->assertNotContains( 'am_now_invalid', $alert['allowed_actions'] );
+		$this->assertNotContains( 'am_now_relative', $alert['allowed_actions'] );
+		$this->assertNotContains( 'am_now_mailto', $alert['allowed_actions'] );
 		$this->assertStringContainsString( 'data-reason="am_now_pro"', $alert['html'] );
 		$this->assertStringNotContainsString( 'Invalid URL', $alert['html'] );
 		$this->assertStringNotContainsString( 'Missing Reason', $alert['html'] );
+		$this->assertStringNotContainsString( 'Relative URL', $alert['html'] );
+		$this->assertStringNotContainsString( 'Email Feedback', $alert['html'] );
 	}
 
 	/**
@@ -258,11 +310,11 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 
 			return $context;
 		};
-		add_filter( 'pum_reviews_product_context', $invalid_context );
+		add_filter( 'popup_maker/reviews/product_context', $invalid_context );
 
 		$context = PUM_Modules_Reviews::get_product_context();
 
-		remove_filter( 'pum_reviews_product_context', $invalid_context );
+		remove_filter( 'popup_maker/reviews/product_context', $invalid_context );
 
 		$this->assertSame( 'core', $context['product'] );
 		$this->assertSame( 'Popup Maker', $context['name'] );
@@ -289,11 +341,11 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$set_cap = static function () {
 			return 3;
 		};
-		add_filter( 'pum_reviews_max_attempts', $set_cap );
+		add_filter( 'popup_maker/reviews/max_attempts', $set_cap );
 
 		$this->assertSame( 3, PUM_Modules_Reviews::max_attempts() );
 
-		remove_filter( 'pum_reviews_max_attempts', $set_cap );
+		remove_filter( 'popup_maker/reviews/max_attempts', $set_cap );
 	}
 
 	/**
@@ -339,7 +391,7 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	 * Explicit confirmation remains a permanent review-request dismissal.
 	 */
 	public function test_already_reviewed_confirmation_remains_permanent() {
-		$recorded = PUM_Modules_Reviews::record_action( 'already_did', 'open_count', '100_opens', 20 );
+		$recorded = PUM_Modules_Reviews::record_action( 'already_did', 'open_count', '100_opens' );
 
 		$this->assertTrue( $recorded );
 		$this->assertTrue( PUM_Modules_Reviews::already_did() );
@@ -355,6 +407,24 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$this->assertTrue( PUM_Modules_Reviews::reset_stale_legacy_dismissal() );
 		$this->assertFalse( PUM_Modules_Reviews::already_did() );
 		$this->assertNotEmpty( get_user_meta( self::$admin_id, '_pum_reviews_legacy_dismissal_reset', true ) );
+	}
+
+	/**
+	 * The modern expiration filter can disable legacy dismissal recovery.
+	 */
+	public function test_legacy_dismissal_expiration_filter_can_disable_reset() {
+		$disable_reset = static function () {
+			return '';
+		};
+		update_user_meta( self::$admin_id, '_pum_reviews_already_did', true );
+		update_user_meta( self::$admin_id, '_pum_reviews_last_dismissed', '2020-01-01 00:00:00' );
+		add_filter( 'popup_maker/reviews/legacy_dismissal_expiration', $disable_reset );
+
+		$reset = PUM_Modules_Reviews::reset_stale_legacy_dismissal();
+		remove_filter( 'popup_maker/reviews/legacy_dismissal_expiration', $disable_reset );
+
+		$this->assertFalse( $reset );
+		$this->assertTrue( PUM_Modules_Reviews::already_did() );
 	}
 
 	/**

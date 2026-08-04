@@ -98,7 +98,7 @@ class PUM_Modules_Reviews {
 		 *
 		 * @param array{product:string,name:string,licensed:bool} $context Product context.
 		 */
-		$context = apply_filters( 'pum_reviews_product_context', $defaults );
+		$context = apply_filters( 'popup_maker/reviews/product_context', $defaults );
 
 		if ( ! is_array( $context ) ) {
 			return $defaults;
@@ -138,7 +138,7 @@ class PUM_Modules_Reviews {
 		 * @param array<string,array{label:string,url:string,reason:string,primary:bool}> $destinations Review destinations.
 		 * @param array{product:string,name:string,licensed:bool}                       $context      Product context.
 		 */
-		$destinations = apply_filters( 'pum_reviews_destinations', $destinations, $context );
+		$destinations = apply_filters( 'popup_maker/reviews/destinations', $destinations, $context );
 
 		return self::normalize_review_destinations( $destinations );
 	}
@@ -161,11 +161,12 @@ class PUM_Modules_Reviews {
 				continue;
 			}
 
-			$url    = esc_url_raw( trim( (string) $destination['url'] ) );
+			$url    = esc_url_raw( trim( (string) $destination['url'] ), [ 'http', 'https' ] );
 			$label  = sanitize_text_field( (string) $destination['label'] );
 			$reason = sanitize_key( (string) $destination['reason'] );
+			$scheme = wp_parse_url( $url, PHP_URL_SCHEME );
 
-			if ( '' === $url || '' === $label || '' === $reason ) {
+			if ( '' === $url || ! in_array( $scheme, [ 'http', 'https' ], true ) || '' === $label || '' === $reason ) {
 				continue;
 			}
 
@@ -305,33 +306,53 @@ class PUM_Modules_Reviews {
 	/**
 	 * Record a review request action in the provider-owned state.
 	 *
-	 * @param string          $reason        Action taken by the user.
-	 * @param string|false    $trigger_group Trigger group key.
-	 * @param string|false    $trigger_code  Trigger code.
-	 * @param int|string|bool $trigger_pri   Trigger priority.
+	 * @param string       $reason        Action taken by the user.
+	 * @param string|false $trigger_group Trigger group key.
+	 * @param string|false $trigger_code  Trigger code.
 	 * @return bool
 	 */
-	public static function record_action( $reason = 'maybe_later', $trigger_group = false, $trigger_code = false, $trigger_pri = false ) {
+	public static function record_action( $reason = 'maybe_later', $trigger_group = false, $trigger_code = false ) {
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {
 			return false;
 		}
 
-		$reason        = sanitize_key( is_string( $reason ) ? $reason : 'maybe_later' );
-		$trigger_group = $trigger_group ?: self::get_trigger_group();
-		$trigger_code  = $trigger_code ?: self::get_trigger_code();
-		$trigger_pri   = false !== $trigger_pri ? (int) $trigger_pri : (int) self::get_current_trigger( 'pri' );
-		$timestamp     = current_time( 'mysql' );
+		$reason = sanitize_key( is_string( $reason ) ? $reason : 'maybe_later' );
+
+		if ( false === $trigger_group ) {
+			$trigger_group = sanitize_key( (string) self::get_trigger_group() );
+		} elseif ( is_scalar( $trigger_group ) && '' !== (string) $trigger_group ) {
+			$trigger_group = sanitize_key( (string) $trigger_group );
+		} else {
+			return false;
+		}
+
+		if ( false === $trigger_code ) {
+			$trigger_code = sanitize_key( (string) self::get_trigger_code() );
+		} elseif ( is_scalar( $trigger_code ) && '' !== (string) $trigger_code ) {
+			$trigger_code = sanitize_key( (string) $trigger_code );
+		} else {
+			return false;
+		}
+
+		$timestamp = current_time( 'mysql' );
 
 		if ( ! $trigger_group || ! $trigger_code ) {
 			return false;
 		}
 
+		$trigger = self::triggers( $trigger_group, $trigger_code );
+		if ( ! is_array( $trigger ) || ! isset( $trigger['pri'] ) || ! is_numeric( $trigger['pri'] ) ) {
+			return false;
+		}
+
+		$trigger_pri = (int) $trigger['pri'];
+
 		self::record_presentation( $trigger_group, $trigger_code, $trigger_pri );
 
 		if ( 0 === strpos( $reason, 'shown_' ) ) {
 			$last_impression = get_user_meta( $user_id, '_pum_reviews_last_impression', true );
-			if ( is_array( $last_impression ) && isset( $last_impression['trigger_group'], $last_impression['trigger_code'] ) && $trigger_group === $last_impression['trigger_group'] && $trigger_code === $last_impression['trigger_code'] ) {
+			if ( is_array( $last_impression ) && isset( $last_impression['trigger_group'], $last_impression['trigger_code'] ) && sanitize_key( (string) $last_impression['trigger_group'] ) === $trigger_group && sanitize_key( (string) $last_impression['trigger_code'] ) === $trigger_code ) {
 				return true;
 			}
 
@@ -456,15 +477,15 @@ class PUM_Modules_Reviews {
 	 * @return bool
 	 */
 	public static function needs_impression() {
-		$group = self::get_trigger_group();
-		$code  = self::get_trigger_code();
+		$group = sanitize_key( (string) self::get_trigger_group() );
+		$code  = sanitize_key( (string) self::get_trigger_code() );
 		$last  = get_user_meta( get_current_user_id(), '_pum_reviews_last_impression', true );
 
 		if ( ! $group || ! $code ) {
 			return false;
 		}
 
-		return ! is_array( $last ) || ! isset( $last['trigger_group'], $last['trigger_code'] ) || $group !== $last['trigger_group'] || $code !== $last['trigger_code'];
+		return ! is_array( $last ) || ! isset( $last['trigger_group'], $last['trigger_code'] ) || sanitize_key( (string) $last['trigger_group'] ) !== $group || sanitize_key( (string) $last['trigger_code'] ) !== $code;
 	}
 
 	/**
@@ -482,7 +503,7 @@ class PUM_Modules_Reviews {
 		 *
 		 * @param int $max_attempts Zero for unlimited.
 		 */
-		return max( 0, (int) apply_filters( 'pum_reviews_max_attempts', 0 ) );
+		return max( 0, (int) apply_filters( 'popup_maker/reviews/max_attempts', 0 ) );
 	}
 
 	/**
@@ -523,12 +544,19 @@ class PUM_Modules_Reviews {
 			]
 		);
 
+		$group  = isset( $args['group'] ) && is_scalar( $args['group'] ) ? sanitize_key( wp_unslash( (string) $args['group'] ) ) : '';
+		$code   = isset( $args['code'] ) && is_scalar( $args['code'] ) ? sanitize_key( wp_unslash( (string) $args['code'] ) ) : '';
+		$reason = isset( $args['reason'] ) && is_scalar( $args['reason'] ) ? sanitize_key( wp_unslash( (string) $args['reason'] ) ) : 'maybe_later';
+
+		if ( '' === $group || '' === $code ) {
+			wp_send_json_error();
+		}
+
 		try {
 			$recorded = self::record_action(
-				$args['reason'],
-				sanitize_key( (string) $args['group'] ),
-				sanitize_key( (string) $args['code'] ),
-				(int) $args['pri']
+				$reason,
+				$group,
+				$code
 			);
 
 			if ( ! $recorded ) {
@@ -676,7 +704,7 @@ class PUM_Modules_Reviews {
 		 *
 		 * @param string $expiration Relative date expression.
 		 */
-		$expiration = apply_filters( 'pum_reviews_legacy_dismissal_expiration', '1 year' );
+		$expiration = apply_filters( 'popup_maker/reviews/legacy_dismissal_expiration', '1 year' );
 		if ( ! is_string( $expiration ) || '' === trim( $expiration ) ) {
 			return false;
 		}
