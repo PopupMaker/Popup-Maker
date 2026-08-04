@@ -4,6 +4,9 @@ on:
     push:
         branches:
             - master
+        paths-ignore:
+            - 'readme.txt'
+            - '.wordpress-org/**'
     workflow_dispatch:
         inputs:
             dry_run:

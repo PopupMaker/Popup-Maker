@@ -76,7 +76,7 @@ jobs:
                     --exclude=vendor,vendor-prefixed,node_modules,tests
 
             - name: Install Potomatic
-              run: npm install -g https://github.com/GravityKit/Potomatic.git
+              run: pnpm add --global https://github.com/GravityKit/Potomatic.git
 
             - name: Run AI Translation
               env:
