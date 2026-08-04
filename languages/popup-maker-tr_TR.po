@@ -4419,7 +4419,7 @@ msgid ""
 "another <strong>%2$s–%3$s</strong> left on the table."
 msgstr ""
 "Şu ana kadar <strong>%1$s dönüşüm</strong> yakaladınız. Çıkış niyeti, "
-"vazgeçen ziyaretçilerin genellikle %10–15%%’ini geri kazanır — sizin "
+"vazgeçen ziyaretçilerin genellikle 10–15%%’ini geri kazanır — sizin "
 "trafiğinizde bu, masada bırakılan <strong>ek %2$s–%3$s</strong> demek."
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:829
