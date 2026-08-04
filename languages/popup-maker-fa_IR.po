@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-08-04T08:30:17+00:00\n"
-"PO-Revision-Date: 2026-08-04 09:17+0000\n"
+"PO-Revision-Date: 2026-08-04 10:09+0000\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: popup-maker\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -5167,6 +5167,8 @@ msgid ""
 "Want to disable the close button? Check out <a href=\"%s\" "
 "target=\"_blank\">Popup Maker Pro</a>!"
 msgstr ""
+"می‌خواهید دکمه بستن را غیرفعال کنید؟ <a href=\"%s\" target=\"_blank\">Popup "
+"Maker Pro</a> را ببینید!"
 
 #: classes/Upsell.php:535
 #. translators: %s url to product page.
@@ -5176,6 +5178,9 @@ msgid ""
 "target=\"_blank\" rel=\"noopener\">Popup Maker Pro</a> — user roles, device "
 "detection, URL matching, referrer targeting, and more."
 msgstr ""
+"بیش از ۵۰ شرط پیشرفته هدف‌گیری را با <a href=\"%s\" target=\"_blank\" "
+"rel=\"noopener\">Popup Maker Pro</a> باز کنید — نقش‌های کاربری، تشخیص "
+"دستگاه، تطبیق URL، هدف‌گیری بر اساس ارجاع‌دهنده و موارد دیگر."
 
 #: classes/Upsell.php:560
 #. translators: %s url to product page.
@@ -5184,6 +5189,9 @@ msgid ""
 "Unlock background images, parallax effects, and advanced styling with <a "
 "href=\"%s\" target=\"_blank\" rel=\"noopener\">Popup Maker Pro</a>."
 msgstr ""
+"تصاویر پس‌زمینه، افکت‌های پارالاکس و استایل‌دهی پیشرفته را با <a "
+"href=\"%s\" target=\"_blank\" rel=\"noopener\">Popup Maker Pro</a> فعال "
+"کنید."
 
 #: classes/Upsell.php:609
 msgid "Exit Intent"
