@@ -6,6 +6,9 @@
 	"env": {
 		"development": {
 			"phpmyadminPort": 9000,
+			"mappings": {
+				"wp-content/plugins/popup-maker": "."
+			},
 			"plugins": [
 				"https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"
 			],

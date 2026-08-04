@@ -1135,9 +1135,25 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests maybe_json_attr with encode flag escapes HTML.
 	 */
 	public function test_maybe_json_attr_encoded() {
-		$result = PUM_Utils_Array::maybe_json_attr( [ 'key' => 'val' ], true );
+		$result = PUM_Utils_Array::maybe_json_attr(
+			[
+				'single_quote' => "'",
+				'double_quote' => '"',
+			],
+			true
+		);
 		$this->assertIsString( $result );
-		// Should have escaped characters.
+		$this->assertStringContainsString( '&#039;', $result );
+		$this->assertStringContainsString( '&quot;', $result );
+	}
+
+	/**
+	 * Tests maybe_json_attr handles invalid UTF-8 consistently when encoded.
+	 */
+	public function test_maybe_json_attr_encoded_invalid_utf8() {
+		$result = PUM_Utils_Array::maybe_json_attr( [ 'value' => "\xC3\x28" ], true );
+
+		$this->assertIsString( $result );
 		$this->assertStringContainsString( '&quot;', $result );
 	}
 
