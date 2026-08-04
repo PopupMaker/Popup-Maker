@@ -3588,7 +3588,7 @@ msgstr "%1$sXem chi tiết phiên bản %2$s%3$s."
 #. translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate 4. opening anchor tag, do not translate 5. closing anchor tag, do not translate</a>.
 #, php-format
 msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
-msgstr ""
+msgstr "%1$sXem chi tiết phiên bản %2$s%3$s hoặc %4$scập nhật ngay%5$s."
 
 #: classes/Extension/Updater.php:375
 msgid "Update now."
