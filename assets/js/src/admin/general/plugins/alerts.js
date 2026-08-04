@@ -147,9 +147,16 @@
 			}
 		} )
 		.ready( function () {
-			var context = window.pum_review_context;
+			var context = window.pum_review_context,
+				$reviewAlert = $(
+					'.pum-alert-holder[data-code="review_request"]'
+				);
 
-			if ( ! context || ! context.needsImpression ) {
+			if (
+				! context ||
+				! context.needsImpression ||
+				! $reviewAlert.length
+			) {
 				return;
 			}
 

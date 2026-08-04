@@ -43,9 +43,11 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		delete_user_meta( self::$admin_id, '_pum_reviews_last_review_click' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_attempt_count' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_last_presented' );
+		delete_user_meta( self::$admin_id, '_pum_reviews_presented_triggers' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_action_counts' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_impression_count' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_last_impression' );
+		delete_user_meta( self::$admin_id, '_pum_reviews_impressed_triggers' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_legacy_dismissal_reset' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_generic_dismissal_migrated' );
 		delete_user_meta( self::$admin_id, '_pum_dismissed_alerts' );
@@ -248,6 +250,70 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Extension trigger keys retain valid punctuation and capitalization.
+	 */
+	public function test_filtered_trigger_keys_are_resolved_without_rewriting() {
+		$add_trigger = static function ( $triggers ) {
+			$triggers['Usage.Milestone'] = [
+				'triggers' => [
+					'First.Hit' => [
+						'message'    => 'Filtered trigger',
+						'conditions' => [ true ],
+						'pri'        => 999,
+					],
+				],
+				'pri'      => 999,
+			];
+
+			return $triggers;
+		};
+		add_filter( 'pum_reviews_triggers', $add_trigger );
+		PUM_Modules_Reviews::reset_runtime_cache();
+
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core', 'Usage.Milestone', 'First.Hit' ) );
+
+		$presentation = get_user_meta( self::$admin_id, '_pum_reviews_last_presented', true );
+		$this->assertSame( 'Usage.Milestone', $presentation['trigger_group'] );
+		$this->assertSame( 'First.Hit', $presentation['trigger_code'] );
+		$this->assertFalse( PUM_Modules_Reviews::needs_impression() );
+
+		remove_filter( 'pum_reviews_triggers', $add_trigger );
+		PUM_Modules_Reviews::reset_runtime_cache();
+	}
+
+	/**
+	 * Alternating eligible triggers count and report each identity only once.
+	 */
+	public function test_alternating_triggers_do_not_repeat_attempts_or_impressions() {
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core', 'time_installed', 'one_week' ) );
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core', 'open_count', '100_opens' ) );
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core', 'time_installed', 'one_week' ) );
+
+		$this->assertSame( 2, PUM_Modules_Reviews::attempt_count() );
+		$this->assertSame( 2, (int) get_user_meta( self::$admin_id, '_pum_reviews_impression_count', true ) );
+	}
+
+	/**
+	 * Legacy trigger links remain the default destination for extensions.
+	 */
+	public function test_filtered_trigger_link_remains_destination_fallback() {
+		$add_link = static function ( $triggers ) {
+			$triggers['open_count']['triggers']['100_opens']['link'] = 'https://example.com/product-review';
+
+			return $triggers;
+		};
+		add_filter( 'pum_reviews_triggers', $add_link );
+		PUM_Modules_Reviews::reset_runtime_cache();
+
+		$destinations = PUM_Modules_Reviews::get_review_destinations();
+
+		remove_filter( 'pum_reviews_triggers', $add_link );
+		PUM_Modules_Reviews::reset_runtime_cache();
+
+		$this->assertSame( 'https://example.com/product-review', $destinations['core']['url'] );
+	}
+
+	/**
 	 * Filtered destinations declare their product-specific action reason.
 	 */
 	public function test_review_alert_declares_filtered_destination_reasons() {
@@ -354,6 +420,26 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		add_filter( 'popup_maker/reviews/max_attempts', $set_cap );
 
 		$this->assertSame( 3, PUM_Modules_Reviews::max_attempts() );
+
+		remove_filter( 'popup_maker/reviews/max_attempts', $set_cap );
+	}
+
+	/**
+	 * A trigger stays actionable after its impression consumes the cap.
+	 */
+	public function test_attempt_cap_blocks_only_unseen_triggers() {
+		$set_cap = static function () {
+			return 1;
+		};
+		add_filter( 'popup_maker/reviews/max_attempts', $set_cap );
+
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core', 'open_count', '100_opens' ) );
+		$this->assertFalse( PUM_Modules_Reviews::hide_notices() );
+
+		update_option( 'pum_total_open_count', 500 );
+		PUM_Modules_Reviews::reset_runtime_cache();
+
+		$this->assertTrue( PUM_Modules_Reviews::hide_notices() );
 
 		remove_filter( 'popup_maker/reviews/max_attempts', $set_cap );
 	}

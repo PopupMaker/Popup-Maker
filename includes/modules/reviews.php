@@ -123,10 +123,28 @@ class PUM_Modules_Reviews {
 	 */
 	public static function get_review_destinations() {
 		$context      = self::get_product_context();
+		$trigger      = self::get_current_trigger();
+		$core_url     = self::CORE_REVIEW_URL;
+		$legacy_link  = is_array( $trigger ) && isset( $trigger['link'] ) && is_scalar( $trigger['link'] ) ? (string) $trigger['link'] : '';
+		$legacy_entry = self::normalize_review_destinations(
+			[
+				'core' => [
+					'label'   => __( 'Leave a 5-star review', 'popup-maker' ),
+					'url'     => $legacy_link,
+					'reason'  => 'am_now_core',
+					'primary' => true,
+				],
+			]
+		);
+
+		if ( isset( $legacy_entry['core'] ) ) {
+			$core_url = $legacy_entry['core']['url'];
+		}
+
 		$destinations = [
 			'core' => [
 				'label'   => __( 'Leave a 5-star review', 'popup-maker' ),
-				'url'     => self::CORE_REVIEW_URL,
+				'url'     => $core_url,
 				'reason'  => 'am_now_core',
 				'primary' => true,
 			],
@@ -319,43 +337,27 @@ class PUM_Modules_Reviews {
 
 		$reason = sanitize_key( is_string( $reason ) ? $reason : 'maybe_later' );
 
-		if ( false === $trigger_group ) {
-			$trigger_group = sanitize_key( (string) self::get_trigger_group() );
-		} elseif ( is_scalar( $trigger_group ) && '' !== (string) $trigger_group ) {
-			$trigger_group = sanitize_key( (string) $trigger_group );
-		} else {
+		$trigger_group = false === $trigger_group ? self::get_trigger_group() : $trigger_group;
+		$trigger_code  = false === $trigger_code ? self::get_trigger_code() : $trigger_code;
+		$resolved      = self::resolve_registered_trigger( $trigger_group, $trigger_code );
+
+		if ( false === $resolved ) {
 			return false;
 		}
 
-		if ( false === $trigger_code ) {
-			$trigger_code = sanitize_key( (string) self::get_trigger_code() );
-		} elseif ( is_scalar( $trigger_code ) && '' !== (string) $trigger_code ) {
-			$trigger_code = sanitize_key( (string) $trigger_code );
-		} else {
-			return false;
-		}
-
-		$timestamp = current_time( 'mysql' );
-
-		if ( ! $trigger_group || ! $trigger_code ) {
-			return false;
-		}
-
-		$trigger = self::triggers( $trigger_group, $trigger_code );
-		if ( ! is_array( $trigger ) || ! isset( $trigger['pri'] ) || ! is_numeric( $trigger['pri'] ) ) {
-			return false;
-		}
-
-		$trigger_pri = (int) $trigger['pri'];
+		$trigger_group = $resolved['group'];
+		$trigger_code  = $resolved['code'];
+		$trigger_pri   = (int) $resolved['trigger']['pri'];
+		$timestamp     = current_time( 'mysql' );
 
 		self::record_presentation( $trigger_group, $trigger_code, $trigger_pri );
 
 		if ( 0 === strpos( $reason, 'shown_' ) ) {
-			$last_impression = get_user_meta( $user_id, '_pum_reviews_last_impression', true );
-			if ( is_array( $last_impression ) && isset( $last_impression['trigger_group'], $last_impression['trigger_code'] ) && sanitize_key( (string) $last_impression['trigger_group'] ) === $trigger_group && sanitize_key( (string) $last_impression['trigger_code'] ) === $trigger_code ) {
+			if ( self::trigger_history_contains( '_pum_reviews_impressed_triggers', '_pum_reviews_last_impression', $trigger_group, $trigger_code ) ) {
 				return true;
 			}
 
+			self::add_trigger_to_history( '_pum_reviews_impressed_triggers', '_pum_reviews_last_impression', $trigger_group, $trigger_code );
 			update_user_meta(
 				$user_id,
 				'_pum_reviews_last_impression',
@@ -363,8 +365,8 @@ class PUM_Modules_Reviews {
 					'reason'        => $reason,
 					'product'       => self::get_product_context()['product'],
 					'attempt'       => self::attempt_count(),
-					'trigger_group' => sanitize_key( (string) $trigger_group ),
-					'trigger_code'  => sanitize_key( (string) $trigger_code ),
+					'trigger_group' => $trigger_group,
+					'trigger_code'  => $trigger_code,
 					'timestamp'     => $timestamp,
 				]
 			);
@@ -385,8 +387,8 @@ class PUM_Modules_Reviews {
 				'reason'           => $reason,
 				'product'          => self::get_product_context()['product'],
 				'attempt'          => self::attempt_count(),
-				'trigger_group'    => sanitize_key( (string) $trigger_group ),
-				'trigger_code'     => sanitize_key( (string) $trigger_code ),
+				'trigger_group'    => $trigger_group,
+				'trigger_code'     => $trigger_code,
 				'trigger_priority' => $trigger_pri,
 				'timestamp'        => $timestamp,
 			]
@@ -401,6 +403,125 @@ class PUM_Modules_Reviews {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Resolve submitted trigger keys to their exact registered keys.
+	 *
+	 * Trigger keys are extension-controlled PHP array keys. Comparing their
+	 * string representations accepts browser-submitted numeric keys without
+	 * rewriting valid punctuation or capitalization.
+	 *
+	 * @param mixed $trigger_group Submitted trigger group key.
+	 * @param mixed $trigger_code  Submitted trigger code.
+	 * @return array{group:int|string,code:int|string,trigger:array}|false
+	 */
+	protected static function resolve_registered_trigger( $trigger_group, $trigger_code ) {
+		if ( ! is_string( $trigger_group ) && ! is_int( $trigger_group ) ) {
+			return false;
+		}
+
+		if ( ! is_string( $trigger_code ) && ! is_int( $trigger_code ) ) {
+			return false;
+		}
+
+		if ( '' === (string) $trigger_group || '' === (string) $trigger_code ) {
+			return false;
+		}
+
+		foreach ( self::triggers() as $registered_group => $group ) {
+			if ( (string) $registered_group !== (string) $trigger_group || ! is_array( $group ) || ! isset( $group['triggers'] ) || ! is_array( $group['triggers'] ) ) {
+				continue;
+			}
+
+			foreach ( $group['triggers'] as $registered_code => $trigger ) {
+				if ( (string) $registered_code !== (string) $trigger_code ) {
+					continue;
+				}
+
+				if ( ! is_array( $trigger ) || ! isset( $trigger['pri'] ) || ! is_numeric( $trigger['pri'] ) ) {
+					return false;
+				}
+
+				return [
+					'group'   => $registered_group,
+					'code'    => $registered_code,
+					'trigger' => $trigger,
+				];
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get a trigger history, importing the previous last-only record.
+	 *
+	 * @param string $history_key User-meta key for the complete history.
+	 * @param string $legacy_key  User-meta key for the previous last record.
+	 * @return array<string|int,array<string|int,bool>>
+	 */
+	protected static function trigger_history( $history_key, $legacy_key ) {
+		$user_id = get_current_user_id();
+		$history = get_user_meta( $user_id, $history_key, true );
+		$history = is_array( $history ) ? $history : [];
+		$legacy  = get_user_meta( $user_id, $legacy_key, true );
+
+		if ( is_array( $legacy ) && isset( $legacy['trigger_group'], $legacy['trigger_code'] ) && ( is_string( $legacy['trigger_group'] ) || is_int( $legacy['trigger_group'] ) ) && ( is_string( $legacy['trigger_code'] ) || is_int( $legacy['trigger_code'] ) ) ) {
+			$group = (string) $legacy['trigger_group'];
+			$code  = (string) $legacy['trigger_code'];
+
+			if ( ! isset( $history[ $group ] ) || ! is_array( $history[ $group ] ) ) {
+				$history[ $group ] = [];
+			}
+
+			if ( empty( $history[ $group ][ $code ] ) ) {
+				$history[ $group ][ $code ] = true;
+				update_user_meta( $user_id, $history_key, $history );
+			}
+		}
+
+		return $history;
+	}
+
+	/**
+	 * Check whether a trigger exists in a persisted history.
+	 *
+	 * @param string     $history_key  User-meta key for the complete history.
+	 * @param string     $legacy_key   User-meta key for the previous last record.
+	 * @param int|string $trigger_group Registered trigger group key.
+	 * @param int|string $trigger_code  Registered trigger code.
+	 * @return bool
+	 */
+	protected static function trigger_history_contains( $history_key, $legacy_key, $trigger_group, $trigger_code ) {
+		$history = self::trigger_history( $history_key, $legacy_key );
+		$group   = (string) $trigger_group;
+		$code    = (string) $trigger_code;
+
+		return isset( $history[ $group ] ) && is_array( $history[ $group ] ) && ! empty( $history[ $group ][ $code ] );
+	}
+
+	/**
+	 * Add a trigger to a persisted history.
+	 *
+	 * @param string     $history_key   User-meta key for the complete history.
+	 * @param string     $legacy_key    User-meta key for the previous last record.
+	 * @param int|string $trigger_group Registered trigger group key.
+	 * @param int|string $trigger_code  Registered trigger code.
+	 * @return void
+	 */
+	protected static function add_trigger_to_history( $history_key, $legacy_key, $trigger_group, $trigger_code ) {
+		$user_id = get_current_user_id();
+		$history = self::trigger_history( $history_key, $legacy_key );
+		$group   = (string) $trigger_group;
+		$code    = (string) $trigger_code;
+
+		if ( ! isset( $history[ $group ] ) || ! is_array( $history[ $group ] ) ) {
+			$history[ $group ] = [];
+		}
+
+		$history[ $group ][ $code ] = true;
+		update_user_meta( $user_id, $history_key, $history );
 	}
 
 	/**
@@ -430,21 +551,25 @@ class PUM_Modules_Reviews {
 	 * @return bool Whether this was a new attempt.
 	 */
 	public static function record_presentation( $trigger_group = false, $trigger_code = false, $trigger_pri = false ) {
-		$user_id = get_current_user_id();
-		$group   = is_scalar( $trigger_group ) && '' !== (string) $trigger_group ? sanitize_key( (string) $trigger_group ) : self::get_trigger_group();
-		$code    = is_scalar( $trigger_code ) && '' !== (string) $trigger_code ? sanitize_key( (string) $trigger_code ) : self::get_trigger_code();
-		$pri     = false !== $trigger_pri ? (int) $trigger_pri : (int) self::get_current_trigger( 'pri' );
+		$user_id       = get_current_user_id();
+		$trigger_group = false === $trigger_group ? self::get_trigger_group() : $trigger_group;
+		$trigger_code  = false === $trigger_code ? self::get_trigger_code() : $trigger_code;
+		$resolved      = self::resolve_registered_trigger( $trigger_group, $trigger_code );
 
-		if ( ! $user_id || ! $group || ! $code ) {
+		if ( ! $user_id || false === $resolved ) {
 			return false;
 		}
 
-		$last = get_user_meta( $user_id, '_pum_reviews_last_presented', true );
-		if ( is_array( $last ) && isset( $last['trigger_group'], $last['trigger_code'] ) && $group === $last['trigger_group'] && $code === $last['trigger_code'] ) {
+		$group = $resolved['group'];
+		$code  = $resolved['code'];
+		$pri   = (int) $resolved['trigger']['pri'];
+
+		if ( self::trigger_history_contains( '_pum_reviews_presented_triggers', '_pum_reviews_last_presented', $group, $code ) ) {
 			return false;
 		}
 
 		$attempt = self::attempt_count() + 1;
+		self::add_trigger_to_history( '_pum_reviews_presented_triggers', '_pum_reviews_last_presented', $group, $code );
 		update_user_meta( $user_id, '_pum_reviews_attempt_count', $attempt );
 		update_user_meta(
 			$user_id,
@@ -452,8 +577,8 @@ class PUM_Modules_Reviews {
 			[
 				'product'          => self::get_product_context()['product'],
 				'attempt'          => $attempt,
-				'trigger_group'    => sanitize_key( (string) $group ),
-				'trigger_code'     => sanitize_key( (string) $code ),
+				'trigger_group'    => $group,
+				'trigger_code'     => $code,
 				'trigger_priority' => $pri,
 				'timestamp'        => current_time( 'mysql' ),
 			]
@@ -477,15 +602,26 @@ class PUM_Modules_Reviews {
 	 * @return bool
 	 */
 	public static function needs_impression() {
-		$group = sanitize_key( (string) self::get_trigger_group() );
-		$code  = sanitize_key( (string) self::get_trigger_code() );
-		$last  = get_user_meta( get_current_user_id(), '_pum_reviews_last_impression', true );
+		$group = self::get_trigger_group();
+		$code  = self::get_trigger_code();
 
-		if ( ! $group || ! $code ) {
+		if ( false === $group || false === $code ) {
 			return false;
 		}
 
-		return ! is_array( $last ) || ! isset( $last['trigger_group'], $last['trigger_code'] ) || sanitize_key( (string) $last['trigger_group'] ) !== $group || sanitize_key( (string) $last['trigger_code'] ) !== $code;
+		return ! self::trigger_history_contains( '_pum_reviews_impressed_triggers', '_pum_reviews_last_impression', $group, $code );
+	}
+
+	/**
+	 * Whether the currently selected trigger has already been presented.
+	 *
+	 * @return bool
+	 */
+	protected static function current_trigger_was_presented() {
+		$group = self::get_trigger_group();
+		$code  = self::get_trigger_code();
+
+		return false !== $group && false !== $code && self::trigger_history_contains( '_pum_reviews_presented_triggers', '_pum_reviews_last_presented', $group, $code );
 	}
 
 	/**
@@ -544,8 +680,8 @@ class PUM_Modules_Reviews {
 			]
 		);
 
-		$group  = isset( $args['group'] ) && is_scalar( $args['group'] ) ? sanitize_key( wp_unslash( (string) $args['group'] ) ) : '';
-		$code   = isset( $args['code'] ) && is_scalar( $args['code'] ) ? sanitize_key( wp_unslash( (string) $args['code'] ) ) : '';
+		$group  = isset( $args['group'] ) && is_scalar( $args['group'] ) ? wp_unslash( (string) $args['group'] ) : '';
+		$code   = isset( $args['code'] ) && is_scalar( $args['code'] ) ? wp_unslash( (string) $args['code'] ) : '';
 		$reason = isset( $args['reason'] ) && is_scalar( $args['reason'] ) ? sanitize_key( wp_unslash( (string) $args['reason'] ) ) : 'maybe_later';
 
 		if ( '' === $group || '' === $code ) {
@@ -937,7 +1073,7 @@ class PUM_Modules_Reviews {
 			self::already_did(),
 			self::last_dismissed() && strtotime( self::last_dismissed() . ' +2 weeks' ) > time(),
 			empty( $trigger_code ),
-			$max_attempts > 0 && self::attempt_count() >= $max_attempts,
+			$max_attempts > 0 && self::attempt_count() >= $max_attempts && ! self::current_trigger_was_presented(),
 		];
 
 		return in_array( true, $conditions, true );
