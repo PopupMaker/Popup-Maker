@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-08-04T08:30:17+00:00\n"
-"PO-Revision-Date: 2026-08-04 09:27+0000\n"
+"PO-Revision-Date: 2026-08-04 10:10+0000\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: popup-maker\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -5883,7 +5883,7 @@ msgstr "Ez a bővítmény"
 #. translators: 1. plugin name.
 #, php-format
 msgid " requires Popup Maker! Please %s to continue!"
-msgstr ""
+msgstr "A Popup Maker szükséges hozzá! Kérjük, %s a folytatáshoz!"
 
 #: popup-maker.php:101
 msgid "Popup Maker: Failed to initialize autoloader. The plugin cannot load."
