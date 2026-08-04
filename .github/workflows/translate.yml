@@ -133,7 +133,10 @@ jobs:
                   fi
 
                   set +e
-                  pnpm dlx "potomatic@$POTOMATIC_VERSION" "${ARGS[@]}"
+                  # Checkpoint long runs so completed locales are preserved if
+                  # an individual provider request stops responding.
+                  timeout --signal=TERM --kill-after=30s 20m \
+                    pnpm dlx "potomatic@$POTOMATIC_VERSION" "${ARGS[@]}"
                   TRANSLATION_EXIT=$?
                   set -e
 
