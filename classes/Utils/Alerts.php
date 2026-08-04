@@ -504,12 +504,13 @@ class PUM_Utils_Alerts {
 			add_filter( 'safe_style_css', [ __CLASS__, 'allow_inline_styles' ] );
 
 			foreach ( $alerts as $alert ) {
-				$expires     = 1 === $alert['dismissible'] ? '' : (string) $alert['dismissible'];
-				$dismiss_url = add_query_arg(
+				$expires      = 1 === $alert['dismissible'] ? '' : (string) $alert['dismissible'];
+				$close_action = ! empty( $alert['dismiss_action'] ) ? sanitize_key( (string) $alert['dismiss_action'] ) : 'dismiss';
+				$dismiss_url  = add_query_arg(
 					[
 						'nonce'             => $nonce,
 						'code'              => $alert['code'],
-						'pum_dismiss_alert' => 'dismiss',
+						'pum_dismiss_alert' => $close_action,
 						'expires'           => $expires,
 					]
 				);
@@ -568,7 +569,7 @@ class PUM_Utils_Alerts {
 
 					<?php if ( $alert['dismissible'] ) : ?>
 
-						<a href="<?php echo esc_url( $dismiss_url ); ?>" data-action="dismiss" class="button dismiss pum-dismiss">
+						<a href="<?php echo esc_url( $dismiss_url ); ?>" data-action="<?php echo esc_attr( $close_action ); ?>" class="button dismiss pum-dismiss">
 							<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this item.', 'popup-maker' ); ?></span> <span class="dashicons dashicons-no-alt"></span>
 						</a>
 

@@ -34,6 +34,7 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
+		PUM_Modules_Reviews::reset_runtime_cache();
 		wp_set_current_user( self::$admin_id );
 		delete_user_meta( self::$admin_id, '_pum_reviews_already_did' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_dismissed_triggers' );
@@ -46,6 +47,7 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		delete_user_meta( self::$admin_id, '_pum_reviews_impression_count' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_last_impression' );
 		delete_user_meta( self::$admin_id, '_pum_reviews_legacy_dismissal_reset' );
+		delete_user_meta( self::$admin_id, '_pum_reviews_generic_dismissal_migrated' );
 		delete_user_meta( self::$admin_id, '_pum_dismissed_alerts' );
 		update_option( 'pum_reviews_installed_on', '2020-01-01 00:00:00' );
 		update_option( 'pum_total_open_count', 100 );
@@ -76,16 +78,23 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	 */
 	public function test_review_alert_only_exposes_remote_tracking_when_opted_in() {
 		$alerts = PUM_Modules_Reviews::review_alert( [] );
+		ob_start();
+		PUM_Modules_Reviews::print_review_request_vars();
+		$script = ob_get_clean();
 
 		$this->assertCount( 1, $alerts );
-		$this->assertStringNotContainsString( PUM_Modules_Reviews::$api_url, $alerts[0]['html'] );
-		$this->assertStringNotContainsString( 'window.pum_review_uuid', $alerts[0]['html'] );
+		$this->assertStringNotContainsString( PUM_Modules_Reviews::$api_url, $script );
+		$this->assertStringNotContainsString( wp_hash( home_url() . '-' . self::$admin_id ), $script );
+		$this->assertStringNotContainsString( '<script', $alerts[0]['html'] );
 
 		pum_update_option( 'telemetry', true );
-		$alerts = PUM_Modules_Reviews::review_alert( [] );
+		PUM_Modules_Reviews::reset_runtime_cache();
+		ob_start();
+		PUM_Modules_Reviews::print_review_request_vars();
+		$script = ob_get_clean();
 
-		$this->assertStringContainsString( PUM_Modules_Reviews::$api_url, $alerts[0]['html'] );
-		$this->assertStringContainsString( 'window.pum_review_uuid', $alerts[0]['html'] );
+		$this->assertStringContainsString( PUM_Modules_Reviews::$api_url, $script );
+		$this->assertStringContainsString( 'window.pum_review_uuid', $script );
 	}
 
 	/**
@@ -175,7 +184,28 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		);
 		$this->assertFalse( PUM_Modules_Reviews::needs_impression() );
 		$this->assertSame( 1, (int) get_user_meta( self::$admin_id, '_pum_reviews_impression_count', true ) );
+		$this->assertTrue(
+			PUM_Modules_Reviews::record_action(
+				'shown_core',
+				$last['trigger_group'],
+				$last['trigger_code'],
+				$last['trigger_priority']
+			)
+		);
+		$this->assertSame( 1, (int) get_user_meta( self::$admin_id, '_pum_reviews_impression_count', true ) );
 		$this->assertEmpty( get_user_meta( self::$admin_id, '_pum_reviews_last_dismissed', true ) );
+	}
+
+	/**
+	 * Trigger caches can be reset when test inputs change in one process.
+	 */
+	public function test_review_trigger_runtime_cache_can_be_reset() {
+		$this->assertSame( '100_opens', PUM_Modules_Reviews::get_trigger_code() );
+
+		update_option( 'pum_total_open_count', 500 );
+		PUM_Modules_Reviews::reset_runtime_cache();
+
+		$this->assertSame( '500_opens', PUM_Modules_Reviews::get_trigger_code() );
 	}
 
 	/**
@@ -285,5 +315,10 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$dismissed = get_user_meta( self::$admin_id, '_pum_dismissed_alerts', true );
 		$this->assertArrayNotHasKey( 'review_request', $dismissed );
 		$this->assertTrue( $dismissed['other_alert'] );
+
+		update_user_meta( self::$admin_id, '_pum_dismissed_alerts', [ 'review_request' => true ] );
+		PUM_Modules_Reviews::clear_generic_panel_dismissal();
+
+		$this->assertArrayHasKey( 'review_request', get_user_meta( self::$admin_id, '_pum_dismissed_alerts', true ) );
 	}
 }

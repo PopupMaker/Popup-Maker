@@ -61,6 +61,12 @@
 	}
 
 	function recordReviewRequest( reason ) {
+		var trigger = window.pum_review_trigger;
+
+		if ( ! window.pum_review_nonce || ! trigger ) {
+			return $.Deferred().resolve().promise();
+		}
+
 		return $.ajax( {
 			method: 'POST',
 			dataType: 'json',
@@ -68,9 +74,9 @@
 			data: {
 				action: 'pum_review_action',
 				nonce: window.pum_review_nonce,
-				group: window.pum_review_trigger.group,
-				code: window.pum_review_trigger.code,
-				pri: window.pum_review_trigger.pri,
+				group: trigger.group,
+				code: trigger.code,
+				pri: trigger.pri,
 				reason: reason,
 			},
 		} );

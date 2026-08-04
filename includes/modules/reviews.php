@@ -32,6 +32,48 @@ class PUM_Modules_Reviews {
 	public static $api_url = 'https://api.wppopupmaker.com/wp-json/pmapi/v1/review_action';
 
 	/**
+	 * Cached trigger definitions for the current request.
+	 *
+	 * @var array|null
+	 */
+	protected static $triggers_cache;
+
+	/**
+	 * Cached selected trigger group for the current request.
+	 *
+	 * @var int|string|false
+	 */
+	protected static $selected_trigger_group = false;
+
+	/**
+	 * Whether the selected trigger group has been resolved.
+	 *
+	 * @var bool
+	 */
+	protected static $trigger_group_resolved = false;
+
+	/**
+	 * Cached selected trigger code for the current request.
+	 *
+	 * @var int|string|false
+	 */
+	protected static $selected_trigger_code = false;
+
+	/**
+	 * Whether the selected trigger code has been resolved.
+	 *
+	 * @var bool
+	 */
+	protected static $trigger_code_resolved = false;
+
+	/**
+	 * Whether the review configuration has been printed.
+	 *
+	 * @var bool
+	 */
+	protected static $printed_review_vars = false;
+
+	/**
 	 * Whether review interaction metrics may be sent remotely.
 	 *
 	 * Review dismissal state is always stored locally. Remote interaction
@@ -52,7 +94,7 @@ class PUM_Modules_Reviews {
 	 * @return array{product:string,name:string,licensed:bool}
 	 */
 	public static function get_product_context() {
-		$context = [
+		$defaults = [
 			'product'  => 'core',
 			'name'     => __( 'Popup Maker', 'popup-maker' ),
 			'licensed' => false,
@@ -63,24 +105,20 @@ class PUM_Modules_Reviews {
 		 *
 		 * @param array{product:string,name:string,licensed:bool} $context Product context.
 		 */
-		$context = apply_filters( 'pum_reviews_product_context', $context );
+		$context = apply_filters( 'pum_reviews_product_context', $defaults );
 
 		if ( ! is_array( $context ) ) {
-			return [
-				'product'  => 'core',
-				'name'     => __( 'Popup Maker', 'popup-maker' ),
-				'licensed' => false,
-			];
+			return $defaults;
 		}
 
-		$product = isset( $context['product'] ) ? sanitize_key( (string) $context['product'] ) : 'core';
+		$product = isset( $context['product'] ) ? sanitize_key( (string) $context['product'] ) : $defaults['product'];
 		if ( '' === $product ) {
-			$product = 'core';
+			$product = $defaults['product'];
 		}
 
 		return [
 			'product'  => $product,
-			'name'     => ! empty( $context['name'] ) ? sanitize_text_field( (string) $context['name'] ) : __( 'Popup Maker', 'popup-maker' ),
+			'name'     => ! empty( $context['name'] ) ? sanitize_text_field( (string) $context['name'] ) : $defaults['name'],
 			'licensed' => ! empty( $context['licensed'] ),
 		];
 	}
@@ -128,6 +166,12 @@ class PUM_Modules_Reviews {
 			return;
 		}
 
+		if ( get_user_meta( $user_id, '_pum_reviews_generic_dismissal_migrated', true ) ) {
+			return;
+		}
+
+		update_user_meta( $user_id, '_pum_reviews_generic_dismissal_migrated', current_time( 'mysql' ) );
+
 		$dismissed_alerts = get_user_meta( $user_id, '_pum_dismissed_alerts', true );
 		if ( ! is_array( $dismissed_alerts ) || ! array_key_exists( 'review_request', $dismissed_alerts ) ) {
 			return;
@@ -159,35 +203,59 @@ class PUM_Modules_Reviews {
 	 * Print review request vars for JS consumers.
 	 */
 	public static function print_review_request_vars() {
-		static $printed = false;
-
-		if ( $printed || self::hide_notices() ) {
+		if ( self::$printed_review_vars || self::hide_notices() ) {
 			return;
 		}
 
-		$printed              = true;
-		$track_review_actions = self::should_track_review_actions();
-		$product_context      = self::get_product_context();
+		self::$printed_review_vars = true;
+		$track_review_actions      = self::should_track_review_actions();
+		$product_context           = self::get_product_context();
+		$vars                      = [
+			'nonce'    => wp_create_nonce( 'pum_review_action' ),
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'api_url'  => $track_review_actions ? self::$api_url : '',
+			'uuid'     => $track_review_actions ? wp_hash( home_url() . '-' . get_current_user_id() ) : '',
+			'trigger'  => [
+				'group' => (string) self::get_trigger_group(),
+				'code'  => (string) self::get_trigger_code(),
+				'pri'   => (int) self::get_current_trigger( 'pri' ),
+			],
+			'context'  => [
+				'product'         => $product_context['product'],
+				'attempt'         => self::attempt_count(),
+				'needsImpression' => self::needs_impression(),
+			],
+		];
 		?>
 		<script type="text/javascript">
-			window.pum_review_nonce = '<?php echo esc_html( wp_create_nonce( 'pum_review_action' ) ); ?>';
-			window.pum_review_ajax_url = '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>';
-			<?php if ( $track_review_actions ) : ?>
-			window.pum_review_api_url = '<?php echo esc_attr( self::$api_url ); ?>';
-			window.pum_review_uuid = '<?php echo esc_attr( wp_hash( home_url() . '-' . get_current_user_id() ) ); ?>';
-			<?php endif; ?>
-			window.pum_review_trigger = {
-				group: '<?php echo esc_attr( self::get_trigger_group() ); ?>',
-				code: '<?php echo esc_attr( self::get_trigger_code() ); ?>',
-				pri: '<?php echo esc_attr( self::get_current_trigger( 'pri' ) ); ?>'
-			};
-			window.pum_review_context = {
-				product: '<?php echo esc_attr( $product_context['product'] ); ?>',
-				attempt: <?php echo (int) self::attempt_count(); ?>,
-				needsImpression: <?php echo self::needs_impression() ? 'true' : 'false'; ?>
-			};
+			(function (config) {
+				window.pum_review_nonce = config.nonce;
+				window.pum_review_ajax_url = config.ajax_url;
+				window.pum_review_trigger = config.trigger;
+				window.pum_review_context = config.context;
+
+				if (config.api_url) {
+					window.pum_review_api_url = config.api_url;
+					window.pum_review_uuid = config.uuid;
+				}
+			}(<?php echo wp_json_encode( $vars, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON is encoded for a script context. ?>));
 		</script>
 		<?php
+	}
+
+	/**
+	 * Reset request-local caches.
+	 *
+	 * @internal Used by tests that change trigger inputs in one PHP process.
+	 * @return void
+	 */
+	public static function reset_runtime_cache() {
+		self::$triggers_cache         = null;
+		self::$selected_trigger_group = false;
+		self::$trigger_group_resolved = false;
+		self::$selected_trigger_code  = false;
+		self::$trigger_code_resolved  = false;
+		self::$printed_review_vars    = false;
 	}
 
 	/**
@@ -231,6 +299,11 @@ class PUM_Modules_Reviews {
 		}
 
 		if ( 0 === strpos( $reason, 'shown_' ) ) {
+			$last_impression = get_user_meta( $user_id, '_pum_reviews_last_impression', true );
+			if ( is_array( $last_impression ) && isset( $last_impression['trigger_group'], $last_impression['trigger_code'] ) && $trigger_group === $last_impression['trigger_group'] && $trigger_code === $last_impression['trigger_code'] ) {
+				return true;
+			}
+
 			update_user_meta(
 				$user_id,
 				'_pum_reviews_last_impression',
@@ -401,6 +474,10 @@ class PUM_Modules_Reviews {
 			wp_send_json_error();
 		}
 
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error();
+		}
+
 		$args = wp_parse_args(
 			$_REQUEST,
 			[
@@ -430,57 +507,55 @@ class PUM_Modules_Reviews {
 	}
 
 	/**
-	 * @return int|string
+	 * @return int|string|false
 	 */
 	public static function get_trigger_group() {
-		static $selected;
-
-		if ( ! isset( $selected ) ) {
-			$dismissed_triggers = self::dismissed_triggers();
+		if ( ! self::$trigger_group_resolved ) {
+			self::$trigger_group_resolved = true;
+			$dismissed_triggers           = self::dismissed_triggers();
 
 			$triggers = self::triggers();
 
 			foreach ( $triggers as $g => $group ) {
 				foreach ( $group['triggers'] as $t => $trigger ) {
 					if ( ! in_array( false, $trigger['conditions'], true ) && ( empty( $dismissed_triggers[ $g ] ) || $dismissed_triggers[ $g ] < $trigger['pri'] ) ) {
-						$selected = $g;
+						self::$selected_trigger_group = $g;
 						break;
 					}
 				}
 
-				if ( isset( $selected ) ) {
+				if ( false !== self::$selected_trigger_group ) {
 					break;
 				}
 			}
 		}
 
-		return $selected;
+		return self::$selected_trigger_group;
 	}
 
 	/**
-	 * @return int|string
+	 * @return int|string|false
 	 */
 	public static function get_trigger_code() {
-		static $selected;
-
-		if ( ! isset( $selected ) ) {
-			$dismissed_triggers = self::dismissed_triggers();
+		if ( ! self::$trigger_code_resolved ) {
+			self::$trigger_code_resolved = true;
+			$dismissed_triggers          = self::dismissed_triggers();
 
 			foreach ( self::triggers() as $g => $group ) {
 				foreach ( $group['triggers'] as $t => $trigger ) {
 					if ( ! in_array( false, $trigger['conditions'], true ) && ( empty( $dismissed_triggers[ $g ] ) || $dismissed_triggers[ $g ] < $trigger['pri'] ) ) {
-						$selected = $t;
+						self::$selected_trigger_code = $t;
 						break;
 					}
 				}
 
-				if ( isset( $selected ) ) {
+				if ( false !== self::$selected_trigger_code ) {
 					break;
 				}
 			}
 		}
 
-		return $selected;
+		return self::$selected_trigger_code;
 	}
 
 	/**
@@ -629,9 +704,7 @@ class PUM_Modules_Reviews {
 	 * @return bool|mixed
 	 */
 	public static function triggers( $group = null, $code = null ) {
-		static $triggers;
-
-		if ( ! isset( $triggers ) ) {
+		if ( ! isset( self::$triggers_cache ) ) {
 			$product_context = self::get_product_context();
 			/* translators: 1: Popup Maker product name, 2: amount of time. */
 			$time_message = __( 'You\'ve been using %1$s for %2$s. If it has helped you engage visitors, grow your audience, or generate meaningful conversions, would you take a moment to leave us a 5-star review?', 'popup-maker' );
@@ -695,7 +768,11 @@ class PUM_Modules_Reviews {
 			foreach ( $triggers as $k => $v ) {
 				uasort( $triggers[ $k ]['triggers'], [ __CLASS__, 'rsort_by_priority' ] );
 			}
+
+			self::$triggers_cache = $triggers;
 		}
+
+		$triggers = self::$triggers_cache;
 
 		if ( isset( $group ) ) {
 			if ( ! isset( $triggers[ $group ] ) ) {
@@ -763,11 +840,11 @@ class PUM_Modules_Reviews {
 	 * @return array
 	 */
 	public static function review_alert( $alerts = [] ) {
-		self::clear_generic_panel_dismissal();
-
 		if ( self::hide_notices() ) {
 			return $alerts;
 		}
+
+		self::clear_generic_panel_dismissal();
 
 		add_action( 'admin_footer', [ __CLASS__, 'print_review_request_vars' ] );
 
@@ -776,37 +853,7 @@ class PUM_Modules_Reviews {
 		$trigger         = self::get_current_trigger();
 		$product_context = self::get_product_context();
 
-		$track_review_actions = self::should_track_review_actions();
-		$uuid                 = $track_review_actions ? wp_hash( home_url() . '-' . get_current_user_id() ) : '';
-
-		ob_start();
-
-		?>
-
-		<script type="text/javascript">
-			window.pum_review_nonce = '<?php echo esc_html( wp_create_nonce( 'pum_review_action' ) ); ?>';
-			window.pum_review_ajax_url = '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>';
-			<?php if ( $track_review_actions ) : ?>
-			window.pum_review_api_url = '<?php echo esc_attr( self::$api_url ); ?>';
-			window.pum_review_uuid = '<?php echo esc_attr( $uuid ); ?>';
-			<?php endif; ?>
-			window.pum_review_trigger = {
-				group: '<?php echo esc_attr( self::get_trigger_group() ); ?>',
-				code: '<?php echo esc_attr( self::get_trigger_code() ); ?>',
-				pri: '<?php echo esc_attr( self::get_current_trigger( 'pri' ) ); ?>'
-			};
-			window.pum_review_context = {
-				product: '<?php echo esc_attr( $product_context['product'] ); ?>',
-				attempt: <?php echo (int) self::attempt_count(); ?>,
-				needsImpression: <?php echo self::needs_impression() ? 'true' : 'false'; ?>
-			};
-		</script>
-
-		<?php echo self::render_review_actions(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the renderer. ?>
-
-		<?php
-
-		$html = ob_get_clean();
+		$html = self::render_review_actions();
 
 		$alerts[] = [
 			'code'           => 'review_request',
@@ -834,13 +881,10 @@ class PUM_Modules_Reviews {
 			return;
 		}
 
-		self::record_presentation();
-
-		$group           = self::get_trigger_group();
-		$code            = self::get_trigger_code();
-		$pri             = self::get_current_trigger( 'pri' );
-		$trigger         = self::get_current_trigger();
-		$product_context = self::get_product_context();
+		$group   = self::get_trigger_group();
+		$code    = self::get_trigger_code();
+		$pri     = self::get_current_trigger( 'pri' );
+		$trigger = self::get_current_trigger();
 
 		$track_review_actions = self::should_track_review_actions();
 		$uuid                 = $track_review_actions ? wp_hash( home_url() . '-' . get_current_user_id() ) : '';
@@ -853,33 +897,10 @@ class PUM_Modules_Reviews {
 					group: '<?php echo esc_attr( $group ); ?>',
 					code: '<?php echo esc_attr( $code ); ?>',
 					pri: '<?php echo esc_attr( $pri ); ?>'
-				},
-					reviewContext = {
-						product: '<?php echo esc_attr( $product_context['product'] ); ?>',
-						attempt: <?php echo (int) self::attempt_count(); ?>,
-						needsImpression: <?php echo self::needs_impression() ? 'true' : 'false'; ?>
-					};
+				};
 
-				function track(reason) {
-					<?php if ( $track_review_actions && ! empty( self::$api_url ) ) : ?>
+				function dismiss(reason) {
 					$.ajax({
-						method: "POST",
-						dataType: "json",
-						url: '<?php echo esc_attr( self::$api_url ); ?>',
-						data: {
-							trigger_group: trigger.group,
-							trigger_code: trigger.code,
-							reason: reason,
-							product: reviewContext.product,
-							attempt: reviewContext.attempt,
-							uuid: '<?php echo esc_attr( $uuid ); ?>'
-						}
-					});
-					<?php endif; ?>
-				}
-
-				function record(reason) {
-					return $.ajax({
 						method: "POST",
 						dataType: "json",
 						url: ajaxurl,
@@ -890,21 +911,22 @@ class PUM_Modules_Reviews {
 							code: trigger.code,
 							pri: trigger.pri,
 							reason: reason
+							}
+					});
+
+					<?php if ( $track_review_actions && ! empty( self::$api_url ) ) : ?>
+					$.ajax({
+						method: "POST",
+						dataType: "json",
+						url: '<?php echo esc_attr( self::$api_url ); ?>',
+						data: {
+							trigger_group: trigger.group,
+							trigger_code: trigger.code,
+							reason: reason,
+							uuid: '<?php echo esc_attr( $uuid ); ?>'
 						}
 					});
-				}
-
-				function dismiss(reason) {
-					record(reason);
-					track(reason);
-					document.dispatchEvent(new CustomEvent('pumReviewRequestDismissed'));
-				}
-
-				if (reviewContext.needsImpression) {
-					reviewContext.needsImpression = false;
-					record('shown_' + reviewContext.product).done(function () {
-						track('shown_' + reviewContext.product);
-					});
+					<?php endif; ?>
 				}
 
 				$(document)
