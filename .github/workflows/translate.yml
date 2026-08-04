@@ -98,7 +98,7 @@ jobs:
             - name: Run AI Translation
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-                  TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR' }}
+                  TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR,vi,fa_IR,cs_CZ,pt_PT,hu_HU,es_MX,da_DK,zh_TW,he_IL,th,ro_RO,el,hi_IN' }}
                   MAX_COST: ${{ inputs.max_cost || vars.DEFAULT_TRANSLATION_MAX_COST || '2.00' }}
                   INPUT_MAX_STRINGS: ${{ inputs.max_strings_per_job || '' }}
                   MODEL: ${{ inputs.model || vars.DEFAULT_TRANSLATION_MODEL || 'gpt-5.4-mini' }}
@@ -155,7 +155,7 @@ jobs:
               if: steps.changes.outputs.changed == 'true' && inputs.dry_run != true
               env:
                   GH_TOKEN: ${{ github.token }}
-                  INPUT_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR' }}
+                  INPUT_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR,vi,fa_IR,cs_CZ,pt_PT,hu_HU,es_MX,da_DK,zh_TW,he_IL,th,ro_RO,el,hi_IN' }}
               run: |
                   git config --local user.email "github-actions[bot]@users.noreply.github.com"
                   git config --local user.name "github-actions[bot]"
