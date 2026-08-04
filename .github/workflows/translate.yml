@@ -100,7 +100,7 @@ jobs:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
                   TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR' }}
                   MAX_COST: ${{ inputs.max_cost || vars.DEFAULT_TRANSLATION_MAX_COST || '2.00' }}
-                  MAX_STRINGS_PER_JOB: ${{ inputs.max_strings_per_job || '' }}
+                  INPUT_MAX_STRINGS: ${{ inputs.max_strings_per_job || '' }}
                   MODEL: ${{ inputs.model || vars.DEFAULT_TRANSLATION_MODEL || 'gpt-5.4-mini' }}
                   DRY_RUN: ${{ inputs.dry_run || 'false' }}
                   FORCE_TRANSLATE: ${{ inputs.force_translate || 'false' }}
@@ -128,8 +128,8 @@ jobs:
                     ARGS+=( --force-translate )
                   fi
 
-                  if [[ "$MAX_STRINGS_PER_JOB" =~ ^[1-9][0-9]*$ ]]; then
-                    ARGS+=( --max-strings-per-job "$MAX_STRINGS_PER_JOB" )
+                  if [[ "$INPUT_MAX_STRINGS" =~ ^[1-9][0-9]*$ ]]; then
+                    ARGS+=( --max-strings-per-job "$INPUT_MAX_STRINGS" )
                   fi
 
                   pnpm dlx "potomatic@$POTOMATIC_VERSION" "${ARGS[@]}"
