@@ -38,21 +38,7 @@
 		} );
 	}
 
-	function dismissReviewRequest( reason ) {
-		$.ajax( {
-			method: 'POST',
-			dataType: 'json',
-			url: window.ajaxurl,
-			data: {
-				action: 'pum_review_action',
-				nonce: window.pum_review_nonce,
-				group: window.pum_review_trigger.group,
-				code: window.pum_review_trigger.code,
-				pri: window.pum_review_trigger.pri,
-				reason: reason,
-			},
-		} );
-
+	function trackReviewRequest( reason ) {
 		if ( typeof window.pum_review_api_url !== 'undefined' ) {
 			$.ajax( {
 				method: 'POST',
@@ -62,10 +48,48 @@
 					trigger_group: window.pum_review_trigger.group,
 					trigger_code: window.pum_review_trigger.code,
 					reason: reason,
+					product: window.pum_review_context
+						? window.pum_review_context.product
+						: 'core',
+					attempt: window.pum_review_context
+						? window.pum_review_context.attempt
+						: 0,
 					uuid: window.pum_review_uuid || null,
 				},
 			} );
 		}
+	}
+
+	function recordReviewRequest( reason ) {
+		var trigger = window.pum_review_trigger;
+
+		if ( ! window.pum_review_nonce || ! trigger ) {
+			return $.Deferred().resolve().promise();
+		}
+
+		return $.ajax( {
+			method: 'POST',
+			dataType: 'json',
+			url: window.pum_review_ajax_url || window.ajaxurl,
+			data: {
+				action: 'pum_review_action',
+				nonce: window.pum_review_nonce,
+				group: trigger.group,
+				code: trigger.code,
+				reason: reason,
+			},
+		} );
+	}
+
+	function dismissReviewRequest( reason ) {
+		recordReviewRequest( reason );
+		trackReviewRequest( reason );
+	}
+
+	function broadcastReviewDismissal() {
+		document.dispatchEvent(
+			new CustomEvent( 'pumReviewRequestDismissed' )
+		);
 	}
 
 	function checkRemoveAlerts() {
@@ -94,6 +118,13 @@
 
 	$( document )
 		.on( 'pumDismissAlert', checkRemoveAlerts )
+		.on( 'pumReviewRequestDismissed', function () {
+			$( '.pum-alert-holder[data-code="review_request"]' ).each(
+				function () {
+					removeAlert( $( this ) );
+				}
+			);
+		} )
 		.on( 'click', '.pum-alert-holder .pum-dismiss', function ( event ) {
 			var $this = $( this ),
 				$alert = $this.parents( '.pum-alert-holder' ),
@@ -109,10 +140,31 @@
 
 			if ( ! isReviewRequest ) {
 				dismissAlert( $alert, alertAction );
+				removeAlert( $alert );
 			} else {
 				dismissReviewRequest( reason );
+				broadcastReviewDismissal();
+			}
+		} )
+		.ready( function () {
+			var context = window.pum_review_context,
+				$reviewAlert = $(
+					'.pum-alert-holder[data-code="review_request"]'
+				);
+
+			if (
+				! context ||
+				! context.needsImpression ||
+				! $reviewAlert.length
+			) {
+				return;
 			}
 
-			removeAlert( $alert );
+			context.needsImpression = false;
+			recordReviewRequest(
+				'shown_' + ( context.product || 'core' )
+			).done( function () {
+				trackReviewRequest( 'shown_' + ( context.product || 'core' ) );
+			} );
 		} );
 } )( jQuery );
