@@ -93,6 +93,18 @@ class PUM_Abstract_Model_Post_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Extension properties take precedence over model getters with the same name.
+	 */
+	public function test_extension_property_takes_precedence_over_matching_getter() {
+		$popup          = new PUM_Model_Popup( $this->make_extended_post() );
+		$custom_cookies = [ [ 'name' => 'extension-cookie' ] ];
+
+		$popup->cookies = $custom_cookies;
+
+		$this->assertSame( $custom_cookies, $popup->cookies );
+	}
+
+	/**
 	 * Extension fields cannot overwrite protected model state.
 	 */
 	public function test_extension_property_cannot_overwrite_protected_model_state() {

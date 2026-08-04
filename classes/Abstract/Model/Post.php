@@ -274,11 +274,12 @@ abstract class PUM_Abstract_Model_Post {
 	 * @return mixed|WP_Error
 	 */
 	public function &__get( $key ) {
+		if ( array_key_exists( $key, $this->extra_post_properties ) ) {
+			return $this->extra_post_properties[ $key ];
+		}
 
 		if ( method_exists( $this, 'get_' . $key ) ) {
 			$value = call_user_func( [ $this, 'get_' . $key ] );
-		} elseif ( array_key_exists( $key, $this->extra_post_properties ) ) {
-			return $this->extra_post_properties[ $key ];
 		} else {
 			$value = $this->get_meta( $key );
 

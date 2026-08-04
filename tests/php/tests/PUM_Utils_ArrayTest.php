@@ -1155,6 +1155,7 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 
 		$this->assertIsString( $result );
 		$this->assertStringContainsString( '&quot;', $result );
+		$this->assertStringContainsString( '?(', $result );
 	}
 
 	/**
