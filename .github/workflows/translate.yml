@@ -5,9 +5,11 @@ on:
     push:
         branches: [develop]
         paths:
-            - '**.php'
-            - 'src/**/*.js'
-            - 'src/**/*.ts'
+            - '**/*.php'
+            - '**/*.js'
+            - '**/*.jsx'
+            - '**/*.ts'
+            - '**/*.tsx'
             - 'languages/*.pot'
     # Manual trigger for full control
     workflow_dispatch:
@@ -19,7 +21,15 @@ on:
             max_cost:
                 description: 'Maximum cost in USD'
                 required: false
-                default: '5.00'
+                default: '2.00'
+            max_strings_per_job:
+                description: 'Maximum strings per language (empty means unlimited)'
+                required: false
+                default: ''
+            model:
+                description: 'OpenAI model'
+                required: false
+                default: 'gpt-5.4-mini'
             dry_run:
                 description: 'Dry run (no API calls)'
                 required: false
@@ -33,11 +43,21 @@ on:
 
 env:
     PLUGIN_SLUG: popup-maker
+    POTOMATIC_VERSION: '1.3.0'
+
+permissions:
+    contents: write
+    pull-requests: write
+
+concurrency:
+    group: ai-translate-${{ github.repository }}
+    cancel-in-progress: false
 
 jobs:
     translate:
-        # DISABLED: Enable when Potomatic translation is ready
-        if: false
+        # Automatic paid runs remain opt-in; manual dry-runs and translations
+        # are always available through workflow_dispatch.
+        if: github.event_name == 'workflow_dispatch' || vars.ENABLE_AUTO_TRANSLATION == 'true'
         name: AI Translate POT
         runs-on: ubuntu-latest
 
@@ -75,66 +95,77 @@ jobs:
                     --domain=$PLUGIN_SLUG \
                     --exclude=vendor,vendor-prefixed,node_modules,tests
 
-            - name: Install Potomatic
-              run: pnpm add --global https://github.com/GravityKit/Potomatic.git
-
             - name: Run AI Translation
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-                  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-                  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
                   TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN' }}
                   MAX_COST: ${{ inputs.max_cost || vars.DEFAULT_TRANSLATION_MAX_COST || '2.00' }}
+                  MAX_STRINGS_PER_JOB: ${{ inputs.max_strings_per_job || '' }}
+                  MODEL: ${{ inputs.model || vars.DEFAULT_TRANSLATION_MODEL || 'gpt-5.4-mini' }}
                   DRY_RUN: ${{ inputs.dry_run || 'false' }}
                   FORCE_TRANSLATE: ${{ inputs.force_translate || 'false' }}
               run: |
-                  if [[ -z "$OPENAI_API_KEY" && -z "$GEMINI_API_KEY" && -z "$ANTHROPIC_API_KEY" ]]; then
-                    echo "No AI API key configured. Skipping translation."
-                    echo "Set OPENAI_API_KEY, GEMINI_API_KEY, or ANTHROPIC_API_KEY secret to enable."
-                    exit 0
+                  if [[ "$DRY_RUN" != "true" && -z "$OPENAI_API_KEY" ]]; then
+                    echo "::error::OPENAI_API_KEY is required for a paid translation run."
+                    exit 1
                   fi
 
-                  ARGS="--pot-file-path languages/$PLUGIN_SLUG.pot"
-                  ARGS="$ARGS --output-dir languages/"
-                  ARGS="$ARGS --po-file-prefix $PLUGIN_SLUG-"
-                  ARGS="$ARGS --locale-format wp_locale"
-                  ARGS="$ARGS --target-languages $TARGET_LANGUAGES"
-                  ARGS="$ARGS --max-cost $MAX_COST"
-                  ARGS="$ARGS --use-dictionary"
+                  ARGS=(
+                    --pot-file-path "languages/$PLUGIN_SLUG.pot"
+                    --output-dir languages/
+                    --po-file-prefix "$PLUGIN_SLUG-"
+                    --locale-format wp_locale
+                    --target-languages "$TARGET_LANGUAGES"
+                    --max-cost "$MAX_COST"
+                    --model "$MODEL"
+                  )
 
                   if [[ "$DRY_RUN" == "true" ]]; then
-                    ARGS="$ARGS --dry-run"
+                    ARGS+=( --dry-run )
                   fi
 
                   if [[ "$FORCE_TRANSLATE" == "true" ]]; then
-                    ARGS="$ARGS --force-translate"
+                    ARGS+=( --force-translate )
                   fi
 
-                  echo "Running Potomatic with: $ARGS"
-                  potomatic $ARGS
+                  if [[ "$MAX_STRINGS_PER_JOB" =~ ^[1-9][0-9]*$ ]]; then
+                    ARGS+=( --max-strings-per-job "$MAX_STRINGS_PER_JOB" )
+                  fi
 
-            - name: Generate JSON translations
+                  pnpm dlx "potomatic@$POTOMATIC_VERSION" "${ARGS[@]}"
+
+            - name: Generate runtime translations
+              if: inputs.dry_run != true
               run: |
                   if ls languages/*.po 1> /dev/null 2>&1; then
+                    wp i18n make-mo languages/
                     wp i18n make-json languages/ --no-purge
                   fi
 
             - name: Check for changes
               id: changes
               run: |
-                  if git diff --quiet languages/; then
+                  if [[ -z "$(git status --porcelain -- languages/)" ]]; then
                     echo "changed=false" >> $GITHUB_OUTPUT
                   else
                     echo "changed=true" >> $GITHUB_OUTPUT
                   fi
 
-            - name: Commit translations
-              if: steps.changes.outputs.changed == 'true' && inputs.dry_run != 'true'
+            - name: Open translation pull request
+              if: steps.changes.outputs.changed == 'true' && inputs.dry_run != true
               env:
+                  GH_TOKEN: ${{ github.token }}
                   INPUT_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN' }}
               run: |
                   git config --local user.email "github-actions[bot]@users.noreply.github.com"
                   git config --local user.name "github-actions[bot]"
+                  BRANCH="automation/i18n-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+                  git switch -c "$BRANCH"
                   git add languages/
                   git commit -m "chore(i18n): update translations for $INPUT_LANGUAGES"
-                  git push
+                  git push --set-upstream origin "$BRANCH"
+                  gh pr create \
+                    --base develop \
+                    --head "$BRANCH" \
+                    --title "chore(i18n): update translations" \
+                    --body "AI-generated translation update for: $INPUT_LANGUAGES. Review language quality before merging."
