@@ -26,7 +26,6 @@ class PUM_Abstract_Model_Post_Test extends WP_UnitTestCase {
 		$post    = get_post( $post_id );
 
 		$post->ec_order_status = 'completed';
-		$post->valid           = false;
 
 		return $post;
 	}

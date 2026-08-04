@@ -207,31 +207,12 @@ abstract class PUM_Abstract_Model_Post {
 		$this->extra_post_properties = [];
 
 		foreach ( get_object_vars( $post ) as $key => $value ) {
-			if (
-				( property_exists( 'WP_Post', $key ) && property_exists( $this, $key ) ) ||
-				$this->has_public_property( $key )
-			) {
+			if ( property_exists( $this, $key ) ) {
 				$this->$key = $value;
 			} else {
 				$this->extra_post_properties[ $key ] = $value;
 			}
 		}
-	}
-
-	/**
-	 * Check whether the model declares a public property.
-	 *
-	 * @param string $key Property name.
-	 * @return bool
-	 */
-	protected function has_public_property( $key ) {
-		if ( ! property_exists( $this, $key ) ) {
-			return false;
-		}
-
-		$property = new ReflectionProperty( $this, $key );
-
-		return $property->isPublic() && $property->isDefault();
 	}
 
 	/**
