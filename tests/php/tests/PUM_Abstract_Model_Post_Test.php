@@ -81,6 +81,18 @@ class PUM_Abstract_Model_Post_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Extension property arrays support indirect mutations.
+	 */
+	public function test_extension_property_supports_indirect_array_mutation() {
+		$popup = new PUM_Model_Popup( $this->make_extended_post() );
+
+		$popup->extension_state   = [];
+		$popup->extension_state[] = 'active';
+
+		$this->assertSame( [ 'active' ], $popup->extension_state );
+	}
+
+	/**
 	 * Extension fields cannot overwrite protected model state.
 	 */
 	public function test_extension_property_cannot_overwrite_protected_model_state() {
@@ -92,6 +104,20 @@ class PUM_Abstract_Model_Post_Test extends WP_UnitTestCase {
 
 		$this->assertTrue( $popup->is_valid() );
 		$this->assertFalse( $popup->valid );
+		$this->assertFalse( $popup->to_array()['valid'] );
+	}
+
+	/**
+	 * Extension data hydrates public properties declared by child models.
+	 */
+	public function test_extension_data_hydrates_declared_public_model_property() {
+		$post       = $this->make_extended_post();
+		$post->mock = true;
+
+		$popup = new PUM_Model_Popup( $post );
+
+		$this->assertTrue( $popup->mock );
+		$this->assertFalse( $popup->get_meta( 'extension_meta' ) );
 	}
 
 	/**

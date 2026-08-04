@@ -158,6 +158,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -245,7 +247,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y subversion
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
+        run: |
+          # Strauss 0.22.4 cannot parse some runner-injected OAuth tokens.
+          composer config --global --unset github-oauth.github.com || true
+          composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
@@ -312,7 +317,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y subversion
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
+        run: |
+          # Strauss 0.22.4 cannot parse some runner-injected OAuth tokens.
+          composer config --global --unset github-oauth.github.com || true
+          composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
@@ -346,7 +354,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
 
       - name: Install pnpm dependencies
@@ -478,12 +486,13 @@ jobs:
   test-summary:
     name: Test Summary
     runs-on: ubuntu-latest
-    needs: [detect-changes, test-php-unit, test-php-integration, test-js, test-e2e]
+    needs: [detect-changes, test-php-compatibility, test-php-unit, test-php-integration, test-js, test-e2e]
     if: always()
 
     steps:
       - name: Check test results
         env:
+          PHP_COMPATIBILITY_RESULT: ${{ needs.test-php-compatibility.result }}
           PHP_UNIT_RESULT: ${{ needs.test-php-unit.result }}
           PHP_INTEGRATION_RESULT: ${{ needs.test-php-integration.result }}
           JS_RESULT: ${{ needs.test-js.result }}
@@ -515,13 +524,15 @@ jobs:
             fi
           }
 
+          check_result "PHP Compatibility" "$PHP_COMPATIBILITY_RESULT" "true"
           check_result "PHP Unit Tests" "$PHP_UNIT_RESULT" "$HAS_PHP_UNIT"
           check_result "PHP Integration Tests" "$PHP_INTEGRATION_RESULT" "$HAS_PHP_INTEGRATION"
           check_result "Jest Tests" "$JS_RESULT" "$HAS_JS"
           check_result "E2E Tests" "$E2E_RESULT" "$HAS_E2E"
 
           # Fail if any required test failed
-          if [ "$PHP_UNIT_RESULT" = "failure" ] || \
+          if [ "$PHP_COMPATIBILITY_RESULT" = "failure" ] || \
+             [ "$PHP_UNIT_RESULT" = "failure" ] || \
              [ "$PHP_INTEGRATION_RESULT" = "failure" ] || \
              [ "$JS_RESULT" = "failure" ] || \
              [ "$E2E_RESULT" = "failure" ]; then

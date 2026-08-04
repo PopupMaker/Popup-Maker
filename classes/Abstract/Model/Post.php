@@ -207,12 +207,31 @@ abstract class PUM_Abstract_Model_Post {
 		$this->extra_post_properties = [];
 
 		foreach ( get_object_vars( $post ) as $key => $value ) {
-			if ( property_exists( 'WP_Post', $key ) && property_exists( $this, $key ) ) {
+			if (
+				( property_exists( 'WP_Post', $key ) && property_exists( $this, $key ) ) ||
+				$this->has_public_property( $key )
+			) {
 				$this->$key = $value;
 			} else {
 				$this->extra_post_properties[ $key ] = $value;
 			}
 		}
+	}
+
+	/**
+	 * Check whether the model declares a public property.
+	 *
+	 * @param string $key Property name.
+	 * @return bool
+	 */
+	protected function has_public_property( $key ) {
+		if ( ! property_exists( $this, $key ) ) {
+			return false;
+		}
+
+		$property = new ReflectionProperty( $this, $key );
+
+		return $property->isPublic() && $property->isDefault();
 	}
 
 	/**
@@ -254,28 +273,28 @@ abstract class PUM_Abstract_Model_Post {
 	 *
 	 * @return mixed|WP_Error
 	 */
-	public function __get( $key ) {
+	public function &__get( $key ) {
 
 		if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( [ $this, 'get_' . $key ] );
+			$value = call_user_func( [ $this, 'get_' . $key ] );
 		} elseif ( array_key_exists( $key, $this->extra_post_properties ) ) {
 			return $this->extra_post_properties[ $key ];
 		} else {
-			$meta = $this->get_meta( $key );
+			$value = $this->get_meta( $key );
 
-			if ( $meta ) {
-				return $meta;
+			if ( ! $value ) {
+				$value = new WP_Error(
+					'post-invalid-property',
+					sprintf(
+						/* translators: %s is the property name. */
+						__( 'Can\'t get property %s', 'default' ),
+						$key
+					)
+				);
 			}
-
-			return new WP_Error(
-				'post-invalid-property',
-				sprintf(
-					/* translators: %s is the property name. */
-					__( 'Can\'t get property %s', 'default' ),
-					$key
-				)
-			);
 		}
+
+		return $value;
 	}
 
 	/**
@@ -392,7 +411,7 @@ abstract class PUM_Abstract_Model_Post {
 		$post = get_object_vars( $this );
 		unset( $post['extra_post_properties'] );
 
-		return array_merge( $this->extra_post_properties, $post );
+		return array_merge( $post, $this->extra_post_properties );
 	}
 
 	/**
