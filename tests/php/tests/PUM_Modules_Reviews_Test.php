@@ -83,7 +83,8 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$script = ob_get_clean();
 
 		$this->assertCount( 1, $alerts );
-		$this->assertStringNotContainsString( PUM_Modules_Reviews::$api_url, $script );
+		$this->assertStringContainsString( '"api_url":""', $script );
+		$this->assertStringContainsString( '"uuid":""', $script );
 		$this->assertStringNotContainsString( wp_hash( home_url() . '-' . self::$admin_id ), $script );
 		$this->assertStringNotContainsString( '<script', $alerts[0]['html'] );
 
@@ -93,7 +94,7 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		PUM_Modules_Reviews::print_review_request_vars();
 		$script = ob_get_clean();
 
-		$this->assertStringContainsString( PUM_Modules_Reviews::$api_url, $script );
+		$this->assertStringContainsString( '"api_url":' . wp_json_encode( PUM_Modules_Reviews::$api_url ), $script );
 		$this->assertStringContainsString( 'window.pum_review_uuid', $script );
 	}
 
