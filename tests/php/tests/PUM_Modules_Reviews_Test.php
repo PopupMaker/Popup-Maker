@@ -109,6 +109,8 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$this->assertTrue( PUM_Utils_Alerts::is_panel_eligible( $alert ) );
 		$this->assertTrue( PUM_Utils_Alerts::is_inline_eligible( $alert ) );
 		$this->assertSame( 'maybe_later', $alert['dismiss_action'] );
+		$this->assertSame( 10, has_action( 'admin_footer', [ PUM_Modules_Reviews::class, 'print_review_request_vars' ] ) );
+		$this->assertSame( 10, has_action( 'wp_footer', [ PUM_Modules_Reviews::class, 'print_review_request_vars' ] ) );
 	}
 
 	/**
@@ -280,6 +282,12 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 				'reason'  => 'am_now_mailto',
 				'primary' => false,
 			];
+			$destinations['shown_reason'] = [
+				'label'   => 'Reserved Reason',
+				'url'     => 'https://example.com/reserved',
+				'reason'  => 'shown_pro',
+				'primary' => false,
+			];
 
 			return $destinations;
 		};
@@ -293,11 +301,13 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$this->assertNotContains( 'am_now_invalid', $alert['allowed_actions'] );
 		$this->assertNotContains( 'am_now_relative', $alert['allowed_actions'] );
 		$this->assertNotContains( 'am_now_mailto', $alert['allowed_actions'] );
+		$this->assertNotContains( 'shown_pro', $alert['allowed_actions'] );
 		$this->assertStringContainsString( 'data-reason="am_now_pro"', $alert['html'] );
 		$this->assertStringNotContainsString( 'Invalid URL', $alert['html'] );
 		$this->assertStringNotContainsString( 'Missing Reason', $alert['html'] );
 		$this->assertStringNotContainsString( 'Relative URL', $alert['html'] );
 		$this->assertStringNotContainsString( 'Email Feedback', $alert['html'] );
+		$this->assertStringNotContainsString( 'Reserved Reason', $alert['html'] );
 	}
 
 	/**

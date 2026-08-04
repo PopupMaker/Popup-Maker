@@ -166,7 +166,7 @@ class PUM_Modules_Reviews {
 			$reason = sanitize_key( (string) $destination['reason'] );
 			$scheme = wp_parse_url( $url, PHP_URL_SCHEME );
 
-			if ( '' === $url || ! in_array( $scheme, [ 'http', 'https' ], true ) || '' === $label || '' === $reason ) {
+			if ( '' === $url || ! in_array( $scheme, [ 'http', 'https' ], true ) || '' === $label || '' === $reason || 0 === strpos( $reason, 'shown_' ) ) {
 				continue;
 			}
 
@@ -897,6 +897,7 @@ class PUM_Modules_Reviews {
 		self::clear_generic_panel_dismissal();
 
 		add_action( 'admin_footer', [ __CLASS__, 'print_review_request_vars' ] );
+		add_action( 'wp_footer', [ __CLASS__, 'print_review_request_vars' ] );
 
 		$trigger         = self::get_current_trigger();
 		$product_context = self::get_product_context();
