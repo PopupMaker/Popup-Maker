@@ -153,6 +153,7 @@ class Notifications extends WP_REST_Controller {
 			return new WP_Error( 'pum_unknown_notification', __( 'Unknown notification.', 'popup-maker' ), [ 'status' => 404 ] );
 		}
 
+		$action  = $this->resolve_dismiss_action( $alert, $action );
 		$expires = $this->resolve_action_expires( $alert, $action );
 		if ( false === $expires ) {
 			return new WP_Error( 'pum_invalid_notification_action', __( 'Invalid notification action.', 'popup-maker' ), [ 'status' => 400 ] );
@@ -205,6 +206,25 @@ class Notifications extends WP_REST_Controller {
 	}
 
 	/**
+	 * Resolve a corner close to the provider-declared dismissal action.
+	 *
+	 * Alerts without a declared action retain the existing permanent close
+	 * behavior. Providers such as review requests can map the X to their
+	 * established snooze protocol instead.
+	 *
+	 * @param array<string,mixed> $alert  Alert definition.
+	 * @param string              $action Requested action key.
+	 * @return string
+	 */
+	protected function resolve_dismiss_action( array $alert, $action ) {
+		if ( '' === $action && ! empty( $alert['dismiss_action'] ) ) {
+			return sanitize_key( (string) $alert['dismiss_action'] );
+		}
+
+		return $action;
+	}
+
+	/**
 	 * Whether an alert belongs in the panel (i.e. isn't a blocking one
 	 * rendered inline at the top of the admin pages).
 	 *
@@ -220,9 +240,8 @@ class Notifications extends WP_REST_Controller {
 	 * return the `expires` value the provider declared for that action.
 	 *
 	 * Semantics:
-	 *   - action '' (corner X close): always permanent, never inherits a
-	 *     declared `dismiss` action's expires. Only allowed when the alert
-	 *     is flagged dismissible.
+	 *   - action '' (corner X close without a provider mapping): permanent.
+	 *     Only allowed when the alert is flagged dismissible.
 	 *   - action 'dismiss' or other: must match a declared action on the
 	 *     alert. Inherits that declared action's `expires` (so "Not now"
 	 *     with `expires: '30 days'` becomes a 30-day snooze).
@@ -253,7 +272,7 @@ class Notifications extends WP_REST_Controller {
 		// and forward the reason through to `pum_alert_dismissed` so
 		// provider-side handlers for review_request still run. Unknown
 		// actions still reject.
-		$legacy_reasons = [ 'dismiss', 'maybe_later', 'already_did', 'am_now', 'never' ];
+		$legacy_reasons = [ 'dismiss', 'maybe_later', 'already_did', 'am_now', 'am_now_core', 'never' ];
 		if ( in_array( $action, $legacy_reasons, true ) ) {
 			return '';
 		}

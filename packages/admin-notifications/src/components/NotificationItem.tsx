@@ -32,6 +32,8 @@ const renderHTML = ( html: string ) => ( { __html: html } );
 
 declare global {
 	interface Window {
+		pum_review_ajax_url?: string;
+		pum_review_nonce?: string;
 		pum_review_api_url?: string;
 		pum_review_uuid?: string | null;
 		pum_review_trigger?: {
@@ -39,10 +41,21 @@ declare global {
 			code?: string;
 			pri?: string | number;
 		};
+		pum_review_context?: {
+			product?: string;
+			attempt?: number;
+			needsImpression?: boolean;
+		};
 	}
 }
 
-const saveDismissReviewRequest = (
+const REVIEW_DISMISSED_EVENT = 'pumReviewRequestDismissed';
+
+const broadcastReviewDismissal = (): void => {
+	document.dispatchEvent( new CustomEvent( REVIEW_DISMISSED_EVENT ) );
+};
+
+const trackReviewRequest = (
 	notification: Notification,
 	reason: string
 ): void => {
@@ -57,6 +70,8 @@ const saveDismissReviewRequest = (
 		trigger_group: window.pum_review_trigger?.group || '',
 		trigger_code: window.pum_review_trigger?.code || '',
 		reason: reason && reason !== 'dismiss' ? reason : 'maybe_later',
+		product: window.pum_review_context?.product || 'core',
+		attempt: String( window.pum_review_context?.attempt || 0 ),
 		uuid: window.pum_review_uuid || '',
 	} );
 
@@ -70,12 +85,41 @@ const saveDismissReviewRequest = (
 		.catch( () => {} );
 };
 
+const recordReviewImpression = ( reason: string ): Promise< void > => {
+	if (
+		! window.pum_review_ajax_url ||
+		! window.pum_review_nonce ||
+		! window.pum_review_trigger?.group ||
+		! window.pum_review_trigger?.code
+	) {
+		return Promise.resolve();
+	}
+
+	const body = new window.URLSearchParams( {
+		action: 'pum_review_action',
+		nonce: window.pum_review_nonce,
+		group: window.pum_review_trigger.group,
+		code: window.pum_review_trigger.code,
+		pri: String( window.pum_review_trigger.pri || 0 ),
+		reason,
+	} );
+
+	return window
+		.fetch( window.pum_review_ajax_url, {
+			method: 'POST',
+			body,
+			keepalive: true,
+			credentials: 'same-origin',
+		} )
+		.then( () => undefined );
+};
+
 interface Props {
 	notification: Notification;
 }
 
 export const NotificationItem = ( { notification }: Props ): JSX.Element => {
-	const { dismiss } = useDispatch( STORE_NAME );
+	const { dismiss, dismissLocal } = useDispatch( STORE_NAME );
 	const [ isDismissing, setIsDismissing ] = useState( false );
 	const [ iframeUrl, setIframeUrl ] = useState< string | null >( null );
 	const [ iframeTitle, setIframeTitle ] = useState< string >( '' );
@@ -89,18 +133,61 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 		};
 	}, [] );
 
+	useEffect( () => {
+		if ( 'review_request' !== notification.code ) {
+			return undefined;
+		}
+
+		const removeSharedReviewRequest = (): void => {
+			dismissLocal( notification.code );
+		};
+
+		document.addEventListener(
+			REVIEW_DISMISSED_EVENT,
+			removeSharedReviewRequest
+		);
+
+		return () => {
+			document.removeEventListener(
+				REVIEW_DISMISSED_EVENT,
+				removeSharedReviewRequest
+			);
+		};
+	}, [ dismissLocal, notification.code ] );
+
+	useEffect( () => {
+		const context = window.pum_review_context;
+		if (
+			'review_request' !== notification.code ||
+			! context?.needsImpression
+		) {
+			return;
+		}
+
+		const reason = `shown_${ context.product || 'core' }`;
+		context.needsImpression = false;
+		recordReviewImpression( reason )
+			.then( () => trackReviewRequest( notification, reason ) )
+			.catch( () => {} );
+	}, [ notification ] );
+
 	const handleDismiss = () => {
 		setIsDismissing( true );
+		if ( 'review_request' === notification.code ) {
+			trackReviewRequest( notification, 'maybe_later' );
+		}
 		/*
 		 * Wait for exit animation, then fire the close affordance.
 		 * Passing an empty action string signals "user clicked the corner X"
-		 * so the server can decide permanence on its own (never inherits a
-		 * declared "Not now" snooze TTL).
+		 * so the server can use a provider-declared close action or fall back
+		 * to permanent dismissal.
 		 */
-		pendingDismiss.current = window.setTimeout(
-			() => dismiss( notification.code, '' ),
-			260
-		);
+		pendingDismiss.current = window.setTimeout( () => {
+			dismiss( notification.code, '' );
+			if ( 'review_request' === notification.code ) {
+				broadcastReviewDismissal();
+			}
+		}, 260 );
 	};
 
 	const handleAction = (
@@ -144,13 +231,12 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 		const href = anchor.getAttribute( 'href' ) || '';
 
 		if ( isDismiss ) {
-			// Let "Ok, you deserve it" and similar external-destination
-			// dismiss links navigate (they go to wordpress.org review
-			// page in a new tab) while still recording the dismissal.
+			// Let review and feedback destinations navigate in a new tab while
+			// still recording the shared dismissal state.
 			const reason = anchor.dataset.reason || 'maybe_later';
 
 			if ( 'review_request' === notification.code ) {
-				saveDismissReviewRequest( notification, reason );
+				trackReviewRequest( notification, reason );
 			}
 
 			if ( href && href !== '#' ) {
@@ -159,6 +245,10 @@ export const NotificationItem = ( { notification }: Props ): JSX.Element => {
 			} else {
 				e.preventDefault();
 				dismiss( notification.code, reason );
+			}
+
+			if ( 'review_request' === notification.code ) {
+				broadcastReviewDismissal();
 			}
 		}
 
