@@ -132,7 +132,20 @@ jobs:
                     ARGS+=( --max-strings-per-job "$INPUT_MAX_STRINGS" )
                   fi
 
+                  set +e
                   pnpm dlx "potomatic@$POTOMATIC_VERSION" "${ARGS[@]}"
+                  TRANSLATION_EXIT=$?
+                  set -e
+
+                  if [[ "$TRANSLATION_EXIT" -ne 0 ]]; then
+                    if git status --porcelain --untracked-files=all -- languages/ \
+                      | awk '{ print $2 }' \
+                      | grep -Eq "^languages/${PLUGIN_SLUG}-.*\\.po$"; then
+                      echo "::warning::Potomatic exited with status $TRANSLATION_EXIT after producing partial translations. Preserving them for review."
+                    else
+                      exit "$TRANSLATION_EXIT"
+                    fi
+                  fi
 
             - name: Generate runtime translations
               if: inputs.dry_run != true
