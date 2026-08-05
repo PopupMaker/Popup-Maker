@@ -144,7 +144,7 @@ abstract class Preview extends Controller {
 	 *
 	 * @return int Popup ID, or 0 when the main query is not the preview popup.
 	 */
-	private function get_current_popup_preview_id() {
+	protected function get_current_popup_preview_id() {
 		$post_id = $this->get_authorized_popup_id_from_request();
 
 		if (

@@ -20,6 +20,33 @@ defined( 'ABSPATH' ) || exit;
 class Elementor extends Preview {
 
 	/**
+	 * Initialize Elementor-specific preview hooks.
+	 *
+	 * @return void
+	 */
+	public function init() {
+		parent::init();
+
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_preview_styles' ], 20 );
+	}
+
+	/**
+	 * Remove page-canvas spacing from Elementor's empty section control.
+	 *
+	 * @return void
+	 */
+	public function enqueue_preview_styles() {
+		if ( ! $this->get_current_popup_preview_id() ) {
+			return;
+		}
+
+		wp_add_inline_style(
+			'popup-maker-site',
+			'body.pum-builder-preview.elementor-editor-active #elementor-add-new-section { margin: 0 auto; }'
+		);
+	}
+
+	/**
 	 * Get the popup ID from a matching Elementor preview request.
 	 *
 	 * @return int Popup ID, or 0 when the request is not a valid match.
