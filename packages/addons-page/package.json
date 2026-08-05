@@ -32,7 +32,7 @@
 		"@popup-maker/i18n": "workspace:*",
 		"@popup-maker/layout": "workspace:*",
 		"@wordpress/api-fetch": "^7.29.0",
-		"@wordpress/components": "^30.2.0",
+		"@wordpress/components": "^38.0.0",
 		"@wordpress/dom-ready": "^4.29.0",
 		"@wordpress/i18n": "^6.2.0",
 		"@wordpress/icons": "^10.29.0",

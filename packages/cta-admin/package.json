@@ -38,7 +38,7 @@
 		"@popup-maker/registry": "workspace:*",
 		"@popup-maker/use-query-params": "workspace:*",
 		"@popup-maker/utils": "workspace:*",
-		"@wordpress/components": "^30.2.0",
+		"@wordpress/components": "^38.0.0",
 		"@wordpress/data": "^10.29.0",
 		"@wordpress/dom-ready": "^4.29.0",
 		"@wordpress/element": "^6.29.0",
