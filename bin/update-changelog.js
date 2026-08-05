@@ -63,7 +63,9 @@ if ( isVerbose ) {
 
 // Use the original formatting for files (preserve structure)
 const formattedFileChanges = unreleasedChangesText;
-const formattedUserChanges = stripDeveloperSections( unreleasedChangesText );
+const formattedUserChanges =
+	stripDeveloperSections( unreleasedChangesText ) ||
+	'-   No user-facing changes.';
 
 // Update CHANGELOG.md with new version using string manipulation
 const beforeUnreleased = changelogContent.substring( 0, unreleasedStart );

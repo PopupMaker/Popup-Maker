@@ -141,6 +141,10 @@ function formatForGitHubRelease( content, version ) {
 
 	let formatted = stripDeveloperSections( content );
 
+	if ( ! formatted ) {
+		return `## ${ version }\n\nNo user-facing changes.`;
+	}
+
 	// Ensure proper formatting for GitHub markdown
 	formatted = formatted
 		.replace( /^\s*[-*]\s+/gm, '- ' ) // Normalize bullet points

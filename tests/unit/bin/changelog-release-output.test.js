@@ -60,6 +60,31 @@ describe( 'user-facing changelog release output', () => {
 		expect( output ).not.toContain( 'Added PHP runtime coverage.' );
 	} );
 
+	test( 'returns a user-facing placeholder when only developer notes exist', () => {
+		fs.writeFileSync(
+			path.join( temporaryRoot, 'CHANGELOG.md' ),
+			`# Popup Maker Changelog
+
+## Unreleased
+
+**Developers**
+
+-   Added PHP runtime coverage.
+
+## v1.0.0 - 2026-01-01
+`
+		);
+
+		const output = execFileSync(
+			process.execPath,
+			[ extractScript, '--unreleased' ],
+			{ cwd: temporaryRoot, encoding: 'utf8' }
+		);
+
+		expect( output ).toContain( 'No user-facing changes.' );
+		expect( output ).not.toContain( 'Added PHP runtime coverage.' );
+	} );
+
 	test( 'retains developer notes in CHANGELOG.md but omits them from readme.txt', () => {
 		fs.writeFileSync(
 			path.join( temporaryRoot, 'readme.txt' ),
@@ -93,6 +118,48 @@ For the latest updates and release information: https://example.com/changelog
 		expect( updatedReadme ).toContain( 'Improved PHP compatibility.' );
 		expect( updatedReadme ).toContain( 'Fixed popup rendering.' );
 		expect( updatedReadme ).not.toContain( 'Developers' );
+		expect( updatedReadme ).not.toContain( 'Added PHP runtime coverage.' );
+	} );
+
+	test( 'adds a readme placeholder when only developer notes exist', () => {
+		fs.writeFileSync(
+			path.join( temporaryRoot, 'CHANGELOG.md' ),
+			`# Popup Maker Changelog
+
+## Unreleased
+
+**Developers**
+
+-   Added PHP runtime coverage.
+
+## v1.0.0 - 2026-01-01
+`
+		);
+		fs.writeFileSync(
+			path.join( temporaryRoot, 'readme.txt' ),
+			`=== Popup Maker ===
+
+== Changelog ==
+
+For the latest updates and release information: https://example.com/changelog
+
+= v1.0.0 - 2026-01-01 =
+
+**Fixes**
+
+-   Fixed an older issue.`
+		);
+
+		execFileSync( process.execPath, [ updateScript, '1.1.0' ], {
+			cwd: temporaryRoot,
+		} );
+
+		const updatedReadme = fs.readFileSync(
+			path.join( temporaryRoot, 'readme.txt' ),
+			'utf8'
+		);
+
+		expect( updatedReadme ).toContain( 'No user-facing changes.' );
 		expect( updatedReadme ).not.toContain( 'Added PHP runtime coverage.' );
 	} );
 } );
