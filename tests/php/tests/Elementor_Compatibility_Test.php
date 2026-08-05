@@ -66,7 +66,57 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 
 		$this->assertSame( $popup_id, $query_vars['p'] );
 		$this->assertSame( 'popup', $query_vars['post_type'] );
-		$this->assertFalse( apply_filters( 'pum_popup_is_loadable', true, $popup_id ) );
+		$this->assertTrue( apply_filters( 'pum_popup_is_loadable', false, $popup_id ) );
+		$this->assertFalse( apply_filters( 'pum_popup_is_loadable', true, $popup_id + 1 ) );
+	}
+
+	/**
+	 * An authorized preview uses the shared popup builder canvas.
+	 *
+	 * @return void
+	 */
+	public function test_authorized_elementor_preview_uses_builder_canvas_template() {
+		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		$popup_id = $this->factory->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'draft',
+			]
+		);
+
+		wp_set_current_user( $admin_id );
+		$_GET = [
+			'elementor-preview' => (string) $popup_id,
+			'p'                 => (string) $popup_id,
+			'post_type'         => 'popup',
+		];
+
+		$original_query  = $GLOBALS['wp_query'];
+		$popups          = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' );
+		$footer_priority = has_action( 'wp_footer', [ $popups, 'render_popups' ] );
+
+		$GLOBALS['wp_query'] = new WP_Query(
+			[
+				'p'           => $popup_id,
+				'post_type'   => 'popup',
+				'post_status' => 'any',
+			]
+		);
+
+		try {
+			$this->assertTrue( apply_filters( 'popup_maker/is_builder_preview', false ) );
+			$this->assertSame(
+				Popup_Maker::$DIR . 'templates/single-popup.php',
+				apply_filters( 'template_include', 'theme-single.php' )
+			);
+			$this->assertFalse( has_action( 'wp_footer', [ $popups, 'render_popups' ] ) );
+		} finally {
+			$GLOBALS['wp_query'] = $original_query;
+
+			if ( false !== $footer_priority && false === has_action( 'wp_footer', [ $popups, 'render_popups' ] ) ) {
+				add_action( 'wp_footer', [ $popups, 'render_popups' ], $footer_priority );
+			}
+		}
 	}
 
 	/**

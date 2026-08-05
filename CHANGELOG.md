@@ -2,7 +2,7 @@
 
 ## Unreleased
 
--   Fixed the Elementor editor preview returning a 404 when editing Popup Maker popups directly and prevented popup overlays from covering the editing canvas. Popups remain non-public and are queryable only in an authorized Elementor preview request.
+-   Fixed the Elementor editor preview returning a 404 when editing Popup Maker popups directly. The editor now uses an isolated canvas that shows the popup theme, container, and close button around the live builder content. Popups remain non-public and are queryable only in an authorized builder preview request.
 
 ## v1.24.0 - 2026-08-03
 
