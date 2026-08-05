@@ -5,24 +5,60 @@
 	const formProvider = 'elementor';
 	const $ = window.jQuery;
 
-	// Elementor Forms success event.
-	$( document ).on(
-		'submit_success',
-		'.elementor-form',
-		function ( event, response ) {
-			const $form = $( this )[ 0 ];
+	const refreshWidgets = ( popup ) => {
+		const elementorRoot = popup.querySelector( '.elementor' );
 
-			// Get element_id from the widget container.
-			// Elementor form widgets are inside a .elementor-element-{id} container.
-			const $widget = $( this ).closest( '[data-id]' );
-			const elementId = $widget.length
-				? $widget.attr( 'data-id' )
-				: 'unknown';
-
-			window.PUM.integrations.formSubmission( $form, {
-				formProvider,
-				formId: elementId,
-			} );
+		if ( ! elementorRoot ) {
+			return;
 		}
-	);
+
+		if (
+			window.elementorV2 &&
+			window.elementorV2.alpinejs &&
+			typeof window.elementorV2.alpinejs.refreshTree === 'function'
+		) {
+			window.elementorV2.alpinejs.refreshTree( elementorRoot );
+		}
+
+		if (
+			window.elementorFrontend &&
+			window.elementorFrontend.elementsHandler &&
+			typeof window.elementorFrontend.elementsHandler.runReadyTrigger ===
+				'function'
+		) {
+			window.elementorFrontend.elementsHandler.runReadyTrigger(
+				$( elementorRoot )
+			);
+		}
+	};
+
+	// Elementor Forms success event.
+	$( document ).on( 'submit_success', '.elementor-form', function () {
+		const $form = $( this )[ 0 ];
+
+		// Get element_id from the widget container.
+		// Elementor form widgets are inside a .elementor-element-{id} container.
+		const $widget = $( this ).closest( '[data-id]' );
+		const elementId = $widget.length
+			? $widget.attr( 'data-id' )
+			: 'unknown';
+
+		window.PUM.integrations.formSubmission( $form, {
+			formProvider,
+			formId: elementId,
+		} );
+	} );
+
+	// Reinitialize Elementor widgets after their popup becomes visible.
+	$( document ).on( 'pumAfterOpen', '.pum', function () {
+		refreshWidgets( this );
+	} );
+
+	// The isolated builder canvas is already visible and does not open through
+	// Popup Maker's normal lifecycle.
+	$( function () {
+		$( '.pum-builder-preview-popup' ).each( function () {
+			refreshWidgets( this );
+		} );
+	} );
 }
