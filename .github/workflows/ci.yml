@@ -186,10 +186,7 @@ jobs:
 
       - name: Install composer dependencies
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          # Strauss 0.22.4 cannot parse some runner-injected OAuth tokens.
-          composer config --global --unset github-oauth.github.com || true
-          composer install --no-interaction --optimize-autoloader --ignore-platform-reqs
+        run: composer install --no-interaction --optimize-autoloader --ignore-platform-reqs
 
       - name: Run PHPCS on changed files
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -408,8 +405,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Strauss 0.22.4 cannot parse some runner-injected OAuth tokens.
-          composer config --global --unset github-oauth.github.com || true
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
           pnpm install --frozen-lockfile
 

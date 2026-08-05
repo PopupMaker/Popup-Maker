@@ -1,33 +1,21 @@
 {
-	"plugins": [ "." ],
-	"themes": [ "./test/emptytheme" ],
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
+	"plugins": [
+		".",
+		"https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"
+	],
+	"themes": [ "./tests/emptytheme" ],
+	"testsEnvironment": false,
 	"port": 8880,
-	"testsPort": 8890,
-	"env": {
-		"development": {
-			"phpmyadminPort": 9000,
-			"mappings": {
-				"wp-content/plugins/popup-maker": "."
-			},
-			"plugins": [
-				"https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"
-			],
-			"config": {
-				"WP_DEBUG": true,
-				"WP_DEBUG_LOG": true,
-				"WP_DEBUG_DISPLAY": false,
-				"SCRIPT_DEBUG": true,
-				"WP_ENVIRONMENT_TYPE": "development"
-			}
-		},
-		"tests": {
-			"plugins": [
-				"https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip"
-			],
-			"mappings": {
-				"wp-content/plugins/popup-maker": ".",
-				"wp-content/mu-plugins": "./test/e2e/mu-plugins"
-			}
-		}
+	"phpmyadminPort": 9000,
+	"mappings": {
+		"wp-content/mu-plugins": "./tests/mu-plugins"
+	},
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"WP_DEBUG_DISPLAY": false,
+		"SCRIPT_DEBUG": true,
+		"WP_ENVIRONMENT_TYPE": "development"
 	}
 }

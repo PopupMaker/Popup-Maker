@@ -50,8 +50,8 @@
 		"lint:changed": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml --file-list=.changed-files.txt",
 		"generate-stubs": "./bin/generate-stubs.sh",
 		"install-strauss": [
-			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.22.4/strauss.phar",
-			"echo 'bced6c576608ab67247c4c06d24e40fcdfd6ed3104347d3a4b8c451cacbe4c1f  strauss.phar' | shasum -a 256 -c -"
+			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.28.1/strauss.phar",
+			"echo 'f4d944bd1fbdadbe8f404d339f51fce10215cb543b8e199a015ecfabf4663517  strauss.phar' | shasum -a 256 -c -"
 		],
 		"clean-vendor-prefix-folder": [
 			"rm -rf vendor-prefixed/**/*"
@@ -91,6 +91,7 @@
 			"namespace_prefix": "PopupMaker\\Vendor\\",
 			"classmap_prefix": "PopupMaker_",
 			"constant_prefix": "POPUPMAKER_",
+			"include_root_autoload": true,
 			"packages": [
 				"code-atlantic/prerequisite-checks",
 				"code-atlantic/wp-autoloader",
