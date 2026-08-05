@@ -39,8 +39,8 @@ const requirePreparationPattern = ( pattern, message ) => {
 };
 
 requirePattern(
-	/^\s{4}schedule:\s*\n\s*- cron: ['"]17 7 \* \* \*['"]/m,
-	'Translation must aggregate changes in one nightly run.'
+	/^\s{4}push:[\s\S]*?branches:\s*\[develop\]/m,
+	'Translation must run immediately after changes reach develop.'
 );
 requirePattern(
 	/^\s{4}workflow_dispatch:/m,
@@ -120,8 +120,8 @@ if (
 }
 
 forbidPattern(
-	/^\s{4}push:/m,
-	'Every develop push must not independently trigger paid translation.'
+	/^\s{4}schedule:/m,
+	'Translation must not be delayed behind a scheduled run.'
 );
 forbidPattern(
 	/force_translate|force-translate/,
