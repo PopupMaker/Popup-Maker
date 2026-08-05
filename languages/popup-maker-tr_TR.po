@@ -4,112 +4,100 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
+"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
+"PO-Revision-Date: 2026-08-05 03:29+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: tr-TR\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-04T08:30:17+00:00\n"
-"PO-Revision-Date: 2026-08-04 08:57+0000\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: popup-maker\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: tr-TR\n"
 
-#: includes/integrations/ninja-forms/Actions/ClosePopup.php:56
-msgid "0"
-msgstr "0"
-
-#: popup-maker.php
-#: classes/Admin/BlockEditor.php:147
-#: classes/Admin/Settings.php:770
-#: classes/Admin/Templates.php:311
-#: classes/Controllers/PostTypes.php:185
-#: classes/Cookies.php:103
-#: classes/Extension/Activator.php:176
-#: classes/Extension/Activator.php:188
-#: classes/Extension/Activator.php:201
-#: classes/Privacy.php:36
-#: classes/Services/License.php:915
-#: classes/Site/Assets.php:284
-#: classes/Triggers.php:226
-#: classes/Utils/Alerts.php:482
-#: includes/admin/class-pum-admin-upgrades.php:224
-#: includes/integrations/class-pum-gravity-forms.php:89
-#: dist/packages/admin-notifications.js:2
-#: dist/packages/cta-admin.js:5
-#: dist/packages/layout.js:1
 #. Plugin Name of the plugin
 #. Author of the plugin
+#: popup-maker.php classes/Admin/BlockEditor.php:147
+#: classes/Admin/Settings.php:770 classes/Admin/Templates.php:311
+#: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
+#: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
+#: classes/Extension/Activator.php:201 classes/Privacy.php:36
+#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Triggers.php:226 classes/Utils/Alerts.php:497
+#: includes/admin/class-pum-admin-upgrades.php:224
+#: includes/integrations/class-pum-gravity-forms.php:89
+#: includes/modules/reviews.php:92 dist/packages/admin-notifications.js:2
+#: dist/packages/cta-admin.js:5 dist/packages/layout.js:1
 msgid "Popup Maker"
 msgstr "Popup Maker"
 
-#: popup-maker.php
 #. Plugin URI of the plugin
-msgid ""
-"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&"
-"utm_medium=plugin-uri"
-msgstr ""
-"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&"
-"utm_medium=plugin-uri"
-
 #: popup-maker.php
-#. Description of the plugin
 msgid ""
-"Easily create & style popups with any content. Theme editor to quickly "
-"style your popups. Add forms, social media boxes, videos & more."
+"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-"
+"header&utm_medium=plugin-uri"
+msgstr ""
+"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-"
+"header&utm_medium=plugin-uri"
+
+#. Description of the plugin
+#: popup-maker.php
+msgid ""
+"Easily create & style popups with any content. Theme editor to quickly style "
+"your popups. Add forms, social media boxes, videos & more."
 msgstr ""
 "Herhangi bir içerikle kolayca açılır pencereler oluşturun ve stillendirin. "
 "Açılır pencerelerinizi hızlıca stillendirmek için tema düzenleyicisi. "
 "Formlar, sosyal medya kutuları, videolar ve daha fazlasını ekleyin."
 
-#: popup-maker.php
 #. Author URI of the plugin
+#: popup-maker.php
 msgid ""
-"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&"
-"utm_medium=author-uri"
+"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-"
+"header&utm_medium=author-uri"
 msgstr ""
-"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&"
-"utm_medium=author-uri"
+"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-"
+"header&utm_medium=author-uri"
 
-#: classes/Abstract/Batch/Process.php:124
 #. translators: 1: Number of items processed.
+#: classes/Abstract/Batch/Process.php:124
 #, php-format
 msgid "%s item was successfully processed."
 msgid_plural "%s items were successfully processed."
 msgstr[0] "%s öğe başarıyla işlendi."
 msgstr[1] "%s öğe başarıyla işlendi."
 
-#: classes/Abstract/Repository/Posts.php:149
 #. translators: %1$s is the post type name, %2$d is the ID.
+#: classes/Abstract/Repository/Posts.php:149
 #, php-format
 msgid "No %1$s found with id %2$d."
 msgstr "%1$s, %2$d kimliğiyle bulunamadı."
 
-#: classes/Abstract/Repository/Posts.php:177
 #. translators: %1$s is the post type name, %2$s is the field name, %3$s is the value.
+#: classes/Abstract/Repository/Posts.php:177
 #, php-format
 msgid "No %1$s found with %2$s %3$s."
 msgstr "%1$s, %2$s %3$s ile bulunamadı."
 
-#: classes/Abstract/Upgrade/Posts.php:208
 #. translators: 1: Number of items updated. 2: Singular or plural label.
+#: classes/Abstract/Upgrade/Posts.php:208
 #, php-format
 msgid "Updating %1$d %2$s."
 msgid_plural "Updating %1$d %2$s."
 msgstr[0] "%1$d %2$s güncelleniyor."
 msgstr[1] "%1$d %2$s güncelleniyor."
 
-#: classes/Abstract/Upgrade/Posts.php:219
 #. translators: 1: Number of items updated. 2: Singular or plural label.
+#: classes/Abstract/Upgrade/Posts.php:219
 #, php-format
 msgid "%1$s %2$s was updated successfully."
 msgid_plural "%1$s %2$s were updated successfully."
 msgstr[0] "%1$s %2$s başarıyla güncellendi."
 msgstr[1] "%1$s %2$s başarıyla güncellendi."
 
-#: classes/Abstract/Upgrade/Settings.php:61
 #. translators: 1: Version number.
+#: classes/Abstract/Upgrade/Settings.php:61
 #, php-format
 msgid "Updating settings for v%s compatibility."
 msgstr "v%s uyumluluğu için ayarlar güncelleniyor."
@@ -118,15 +106,12 @@ msgstr "v%s uyumluluğu için ayarlar güncelleniyor."
 msgid "Settings updated successfully."
 msgstr "Ayarlar başarıyla güncellendi."
 
-#: classes/Admin/Ajax.php:294
-#: classes/Utils/Upgrades.php:514
+#: classes/Admin/Ajax.php:294 classes/Utils/Upgrades.php:514
 msgid "A batch process ID must be present to continue."
 msgstr "Devam etmek için bir toplu işlem kimliği bulunmalıdır."
 
-#: classes/Admin/Ajax.php:303
-#: classes/Admin/Ajax.php:313
-#: classes/Utils/Upgrades.php:523
-#: classes/Utils/Upgrades.php:533
+#: classes/Admin/Ajax.php:303 classes/Admin/Ajax.php:313
+#: classes/Utils/Upgrades.php:523 classes/Utils/Upgrades.php:533
 msgid ""
 "You do not have permission to initiate this request. Contact an "
 "administrator for more information."
@@ -134,48 +119,40 @@ msgstr ""
 "Bu isteği başlatma izniniz yok. Daha fazla bilgi için bir yöneticiyle "
 "iletişime geçin."
 
-#: classes/Admin/Ajax.php:326
-#: classes/Utils/Upgrades.php:556
 #. translators: %s is the batch ID.
 #. translators: 1: Batch process ID.
+#: classes/Admin/Ajax.php:326 classes/Utils/Upgrades.php:556
 #, php-format
 msgid "%s is an invalid batch process ID."
 msgstr "%s geçersiz bir toplu işlem kimliğidir."
 
-#: classes/Admin/Ajax.php:341
-#: classes/Utils/Upgrades.php:669
 #. translators: %s is the batch ID.
 #. translators: 1: Batch process ID.
+#: classes/Admin/Ajax.php:341 classes/Utils/Upgrades.php:669
 #, php-format
 msgid "An invalid file path is registered for the %1$s batch process handler."
 msgstr "%1$s toplu işlem işleyicisi için geçersiz bir dosya yolu kaydedilmiş."
 
-#: classes/Admin/Ajax.php:355
-#: classes/Utils/Upgrades.php:681
 #. translators: %1$s is the batch ID, %2$s is the batch handler class.
 #. translators: 1: Class name, 2: Batch process ID.
+#: classes/Admin/Ajax.php:355 classes/Utils/Upgrades.php:681
 #, php-format
-msgid "%1$s is an invalid handler for the %2$s batch process. Please try again."
+msgid ""
+"%1$s is an invalid handler for the %2$s batch process. Please try again."
 msgstr ""
-"%1$s, %2$s toplu işlemi için geçersiz bir işleyicidir. Lütfen tekrar "
-"deneyin."
+"%1$s, %2$s toplu işlemi için geçersiz bir işleyicidir. Lütfen tekrar deneyin."
 
-#: classes/Admin/Assets.php:78
-#: dist/packages/block-library.js:1
+#: classes/Admin/Assets.php:78 dist/packages/block-library.js:1
 msgid "Preview"
 msgstr "Önizleme"
 
-#: classes/Admin/Assets.php:79
-#: classes/Admin/Helpers.php:368
-#: classes/Admin/Templates.php:988
-#: classes/Admin/Templates.php:1190
+#: classes/Admin/Assets.php:79 classes/Admin/Helpers.php:368
+#: classes/Admin/Templates.php:988 classes/Admin/Templates.php:1190
 msgid "Add"
 msgstr "Ekle"
 
-#: classes/Admin/Assets.php:80
-#: classes/Admin/Settings.php:1010
-#: classes/Admin/Tools.php:91
-#: classes/Admin/Tools.php:214
+#: classes/Admin/Assets.php:80 classes/Admin/Settings.php:1010
+#: classes/Admin/Tools.php:91 classes/Admin/Tools.php:214
 #: includes/integrations/class-pum-gravity-forms.php:215
 #: dist/packages/block-library.js:1
 msgid "Save"
@@ -185,17 +162,13 @@ msgstr "Kaydet"
 msgid "Update"
 msgstr "Güncelle"
 
-#: classes/Admin/Assets.php:82
-#: classes/Admin/Shortcode/UI.php:115
+#: classes/Admin/Assets.php:82 classes/Admin/Shortcode/UI.php:115
 msgid "Insert"
 msgstr "Ekle"
 
-#: classes/Admin/Assets.php:83
-#: classes/Admin/Helpers.php:366
-#: classes/Admin/Shortcode/UI.php:116
-#: dist/packages/admin-bar.js:1
-#: dist/packages/components.js:7
-#: dist/packages/cta-editor.js:1
+#: classes/Admin/Assets.php:83 classes/Admin/Helpers.php:366
+#: classes/Admin/Shortcode/UI.php:116 dist/packages/admin-bar.js:1
+#: dist/packages/components.js:7 dist/packages/cta-editor.js:1
 msgid "Cancel"
 msgstr "İptal"
 
@@ -207,14 +180,10 @@ msgstr "Bu tetikleyiciyi silmek istediğinizden emin misiniz?"
 msgid "Are you sure you want to delete this cookie?"
 msgstr "Bu çerezi silmek istediğinizden emin misiniz?"
 
-#: classes/Admin/Assets.php:86
-#: classes/Admin/Popups.php:797
-#: classes/Admin/Popups.php:854
-#: classes/Admin/Settings.php:394
-#: classes/Admin/Themes.php:437
-#: classes/Shortcode/Subscribe.php:137
-#: classes/Shortcode/Subscribe.php:148
-#: classes/Shortcode/Subscribe.php:304
+#: classes/Admin/Assets.php:86 classes/Admin/Popups.php:797
+#: classes/Admin/Popups.php:854 classes/Admin/Settings.php:394
+#: classes/Admin/Themes.php:437 classes/Shortcode/Subscribe.php:137
+#: classes/Shortcode/Subscribe.php:148 classes/Shortcode/Subscribe.php:304
 #: includes/legacy/input-options.php:86
 msgid "None"
 msgstr "Yok"
@@ -223,13 +192,11 @@ msgstr "Yok"
 msgid "Are you sure you want to reset the open count?"
 msgstr "Açılma sayısını sıfırlamak istediğinizden emin misiniz?"
 
-#: classes/Admin/Assets.php:88
-#: classes/Admin/Shortcode/UI.php:117
+#: classes/Admin/Assets.php:88 classes/Admin/Shortcode/UI.php:117
 msgid "Popup Maker Shortcodes"
 msgstr "Popup Maker Kısa Kodları"
 
-#: classes/Admin/Assets.php:89
-#: classes/Admin/Shortcode/UI.php:118
+#: classes/Admin/Assets.php:89 classes/Admin/Shortcode/UI.php:118
 msgid "There was an error in generating the preview"
 msgstr "Önizleme oluşturulurken bir hata oluştu"
 
@@ -245,13 +212,10 @@ msgstr ""
 "Üzgünüz, tarayıcınız bu tür dosya yüklemeyle uyumlu değil. Lütfen "
 "tarayıcınızı güncelleyin."
 
-#: classes/Admin/Extend.php:78
-#: classes/Admin/Notices.php:67
-#: classes/Admin/Onboarding.php:68
-#: classes/AssetCache.php:700
+#: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
+#: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121
-#: classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
 msgid "Learn more"
 msgstr "Daha fazla bilgi edinin"
 
@@ -275,43 +239,31 @@ msgstr "Pro planlarını görüntüle"
 msgid "You do not have permission to manage Popup Maker add-ons."
 msgstr "Popup Maker eklentilerini yönetme izniniz yok."
 
-#: classes/Admin/Extend.php:179
-#: classes/Admin/Pages.php:81
+#: classes/Admin/Extend.php:179 classes/Admin/Pages.php:81
 msgid "Popup Maker Add-ons"
 msgstr "Popup Maker Eklentileri"
 
-#: classes/Admin/Extend.php:185
-#: dist/packages/addons-page.js:4
+#: classes/Admin/Extend.php:185 dist/packages/addons-page.js:4
 msgid "Loading add-ons…"
 msgstr "Eklentiler yükleniyor…"
 
-#: classes/Admin/Helpers.php:209
-#: classes/Admin/Popups.php:814
-#: classes/Admin/Popups.php:1034
-#: classes/Shortcode/Popup.php:253
-#: classes/Utils/Fields.php:136
-#: includes/legacy/class-popmake-fields.php:186
+#: classes/Admin/Helpers.php:209 classes/Admin/Popups.php:814
+#: classes/Admin/Popups.php:1034 classes/Shortcode/Popup.php:253
+#: classes/Utils/Fields.php:136 includes/legacy/class-popmake-fields.php:186
 msgid "ms"
 msgstr "ms"
 
-#: classes/Admin/Helpers.php:387
-#: classes/Admin/Popups.php:565
-#: classes/Admin/Popups.php:1021
-#: classes/Admin/Templates.php:778
-#: classes/Admin/Themes.php:186
-#: classes/Admin/Themes.php:379
-#: classes/Shortcode/Popup.php:61
-#: classes/Shortcode/Popup.php:85
-#: templates/popup.php:59
-#: dist/packages/admin-bar.js:1
+#: classes/Admin/Helpers.php:387 classes/Admin/Popups.php:565
+#: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
+#: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
+#: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
+#: templates/popup.php:59 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
-#: dist/packages/admin-notifications.js:2
-#: dist/packages/cta-editor.js:1
+#: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
 msgstr "Kapat"
 
-#: classes/Admin/Notices.php:75
-#: classes/Admin/Onboarding.php:74
+#: classes/Admin/Notices.php:75 classes/Admin/Onboarding.php:74
 #: classes/Admin/Settings.php:1028
 #: classes/Services/Notifications/FeatureAnnouncements.php:290
 #: classes/Services/Notifications/WhatsNew.php:224
@@ -336,8 +288,7 @@ msgstr ""
 msgid ""
 "%1$sPopup Maker will soon require PHP Version %2$s.%3$s \n"
 "\n"
-"You're using Version %4$s. Please ask your host to upgrade your server's "
-"PHP."
+"You're using Version %4$s. Please ask your host to upgrade your server's PHP."
 msgstr ""
 "%1$sPopup Maker yakında PHP Sürümü %2$s gerektirecek.%3$s \n"
 "\n"
@@ -361,14 +312,14 @@ msgstr ""
 msgid "Turn off these occasional tips"
 msgstr "Bu ara ipuçlarını kapatın"
 
-#: classes/Admin/Onboarding.php:203
-#: classes/Admin/Popups.php:267
+#: classes/Admin/Onboarding.php:203 classes/Admin/Popups.php:267
 #: classes/Shortcode/Subscribe.php:437
 msgid "Popup Name"
 msgstr "Açılır pencere adı"
 
 #: classes/Admin/Onboarding.php:204
-msgid "Name your popup so you can find it later. Site visitors will not see this."
+msgid ""
+"Name your popup so you can find it later. Site visitors will not see this."
 msgstr ""
 "Daha sonra bulabilmeniz için açılır pencerenize bir ad verin. Site "
 "ziyaretçileri bunu görmeyecek."
@@ -415,12 +366,9 @@ msgstr ""
 "Açılır pencerenin ekranda nerede görüneceğini ve nasıl görüneceğini seçmek "
 "için görünüm ayarlarını kullanın."
 
-#: classes/Admin/Onboarding.php:273
-#: classes/Admin/Popups.php:262
-#: classes/Admin/Popups.php:696
-#: classes/Controllers/PostTypes.php:271
-#: classes/Controllers/PostTypes.php:277
-#: classes/Controllers/PostTypes.php:597
+#: classes/Admin/Onboarding.php:273 classes/Admin/Popups.php:262
+#: classes/Admin/Popups.php:696 classes/Controllers/PostTypes.php:271
+#: classes/Controllers/PostTypes.php:277 classes/Controllers/PostTypes.php:597
 #: classes/Shortcode/Popup.php:114
 msgid "Popup Theme"
 msgstr "Açılır pencere teması"
@@ -459,8 +407,8 @@ msgstr "Açılır Pencere Metriklerini İnceleyin"
 
 #: classes/Admin/Onboarding.php:330
 msgid ""
-"Popup Maker will automatically track opens and conversions so you can "
-"easily see which popups convert the best."
+"Popup Maker will automatically track opens and conversions so you can easily "
+"see which popups convert the best."
 msgstr ""
 "Popup Maker, açılmaları ve dönüşümleri otomatik olarak izler; böylece hangi "
 "açılır pencerelerin en iyi dönüşümü sağladığını kolayca görebilirsiniz."
@@ -474,62 +422,48 @@ msgid ""
 "You can show or hide columns from the table on this page using the Screen "
 "Options. Popup Heading and Published Date are hidden by default."
 msgstr ""
-"Bu sayfadaki tablodan sütunları Ekran Seçenekleri'ni kullanarak "
-"gösterebilir veya gizleyebilirsiniz. Açılır Pencere Başlığı ve Yayın Tarihi "
-"varsayılan olarak gizlidir."
+"Bu sayfadaki tablodan sütunları Ekran Seçenekleri'ni kullanarak gösterebilir "
+"veya gizleyebilirsiniz. Açılır Pencere Başlığı ve Yayın Tarihi varsayılan "
+"olarak gizlidir."
 
-#: classes/Admin/Pages.php:71
-#: classes/Admin/Pages.php:186
-#: classes/Admin/Pages.php:253
-#: classes/Admin/Subscribers.php:33
+#: classes/Admin/Pages.php:71 classes/Admin/Pages.php:186
+#: classes/Admin/Pages.php:253 classes/Admin/Subscribers.php:33
 msgid "Subscribers"
 msgstr "Aboneler"
 
-#: classes/Admin/Pages.php:76
-#: classes/Admin/Pages.php:262
-#: classes/Admin/Templates.php:866
-#: classes/Admin/Templates.php:1139
+#: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
+#: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65
-#: classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: classes/Admin/Pages.php:82
-#: classes/Admin/Pages.php:187
-#: classes/Controllers/Admin.php:73
-#: dist/packages/addons-page.js:5
+#: classes/Admin/Pages.php:82 classes/Admin/Pages.php:187
+#: classes/Controllers/Admin.php:73 dist/packages/addons-page.js:5
 msgid "Extend"
 msgstr "Genişlet"
 
-#: classes/Admin/Pages.php:88
-#: classes/Admin/Pages.php:267
+#: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
 msgid "Help & Support"
 msgstr "Yardım & Destek"
 
-#: classes/Admin/Pages.php:93
-#: classes/Admin/Pages.php:263
+#: classes/Admin/Pages.php:93 classes/Admin/Pages.php:263
 #: classes/Controllers/Admin/Toolbar.php:231
 msgid "Tools"
 msgstr "Araçlar"
 
-#: classes/Admin/Pages.php:137
-#: classes/Admin/Pages.php:249
-#: classes/Controllers/PostTypes.php:272
-#: classes/Controllers/PostTypes.php:279
+#: classes/Admin/Pages.php:137 classes/Admin/Pages.php:249
+#: classes/Controllers/PostTypes.php:272 classes/Controllers/PostTypes.php:279
 msgid "Popup Themes"
 msgstr "Açılır Pencere Temaları"
 
-#: classes/Admin/Pages.php:188
-#: classes/Admin/Pages.php:260
-#: classes/Admin/Settings.php:1135
-#: classes/Admin/Settings.php:1176
+#: classes/Admin/Pages.php:188 classes/Admin/Pages.php:260
+#: classes/Admin/Settings.php:1135 classes/Admin/Settings.php:1176
 #: classes/Upsell.php:1115
 msgid "Go Pro"
 msgstr "Pro'ya Geç"
 
-#: classes/Admin/Pages.php:189
-#: classes/Admin/Pages.php:261
+#: classes/Admin/Pages.php:189 classes/Admin/Pages.php:261
 #: classes/Upsell.php:1131
 msgid "Go Pro+"
 msgstr "Pro+’ya Geç"
@@ -550,25 +484,20 @@ msgstr "Yeni Açılır Pencere Ekle"
 msgid "All Themes"
 msgstr "Tüm Temalar"
 
-#: classes/Admin/Pages.php:250
-#: classes/Controllers/Admin.php:61
+#: classes/Admin/Pages.php:250 classes/Controllers/Admin.php:61
 #: classes/Controllers/Admin/CallToActions.php:43
 #: classes/Controllers/Admin/CallToActions.php:44
-#: classes/Controllers/PostTypes.php:346
-#: classes/Controllers/PostTypes.php:353
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-admin.js:5
+#: classes/Controllers/PostTypes.php:346 classes/Controllers/PostTypes.php:353
+#: dist/packages/cta-admin.js:4 dist/packages/cta-admin.js:5
 msgid "Calls to Action"
 msgstr "Eylem Çağrıları"
 
-#: classes/Admin/Pages.php:251
-#: classes/Admin/Popups.php:1385
+#: classes/Admin/Pages.php:251 classes/Admin/Popups.php:1385
 #: classes/Conditions.php:112
 msgid "Categories"
 msgstr "Kategoriler"
 
-#: classes/Admin/Pages.php:252
-#: classes/Admin/Popups.php:1381
+#: classes/Admin/Pages.php:252 classes/Admin/Popups.php:1381
 #: classes/Conditions.php:113
 msgid "Tags"
 msgstr "Etiketler"
@@ -585,48 +514,43 @@ msgstr "Hesap"
 msgid "Contact Us"
 msgstr "Bize Ulaşın"
 
-#: classes/Admin/Popups.php:103
-#: dist/packages/cta-admin.js:5
+#: classes/Admin/Popups.php:103 dist/packages/cta-admin.js:5
 msgid "Enable"
 msgstr "Etkinleştir"
 
-#: classes/Admin/Popups.php:104
-#: dist/packages/cta-admin.js:8
+#: classes/Admin/Popups.php:104 dist/packages/cta-admin.js:8
 msgid "Disable"
 msgstr "Devre Dışı Bırak"
 
-#: classes/Admin/Popups.php:190
 #. translators: %d: Number of popups enabled.
+#: classes/Admin/Popups.php:190
 #, php-format
 msgid "%d popup enabled."
 msgid_plural "%d popups enabled."
 msgstr[0] "%d açılır pencere etkinleştirildi."
 msgstr[1] "%d açılır pencere etkinleştirildi."
 
-#: classes/Admin/Popups.php:201
 #. translators: %d: Number of popups disabled.
+#: classes/Admin/Popups.php:201
 #, php-format
 msgid "%d popup disabled."
 msgid_plural "%d popups disabled."
 msgstr[0] "%d açılır pencere devre dışı bırakıldı."
 msgstr[1] "%d açılır pencere devre dışı bırakıldı."
 
-#: classes/Admin/Popups.php:217
 #. translators: %d: Number of popups skipped.
+#: classes/Admin/Popups.php:217
 #, php-format
 msgid "%d popup skipped (not published)."
 msgid_plural "%d popups skipped (not published)."
 msgstr[0] "%d açılır pencere atlandı (yayınlanmamış)."
 msgstr[1] "%d açılır pencere atlandı (yayınlanmamış)."
 
-#: classes/Admin/Popups.php:262
-#: classes/Admin/Subscribers/Table.php:106
-#: classes/Controllers/PostTypes.php:177
-#: classes/Controllers/PostTypes.php:183
+#: classes/Admin/Popups.php:262 classes/Admin/Subscribers/Table.php:106
+#: classes/Controllers/PostTypes.php:177 classes/Controllers/PostTypes.php:183
 #: classes/Controllers/PostTypes.php:596
 #: classes/Integration/Builder/BeaverBuilder.php:98
-#: classes/Shortcode/Popup.php:34
-#: classes/Shortcode/Popup.php:414
+#: classes/Shortcode/Popup.php:34 classes/Shortcode/Popup.php:414
 #: classes/Shortcode/Subscribe.php:98
 #: includes/integrations/class-pum-cf7.php:175
 #: includes/integrations/class-pum-gravity-forms.php:200
@@ -634,10 +558,8 @@ msgstr[1] "%d açılır pencere atlandı (yayınlanmamış)."
 msgid "Popup"
 msgstr "Açılır Pencere"
 
-#: classes/Admin/Popups.php:297
-#: classes/Admin/Popups.php:299
-#: classes/Shortcode/Popup.php:103
-#: dist/packages/block-editor.js:2
+#: classes/Admin/Popups.php:297 classes/Admin/Popups.php:299
+#: classes/Shortcode/Popup.php:103 dist/packages/block-editor.js:2
 msgid "Popup Title"
 msgstr "Açılır Pencere Başlığı"
 
@@ -658,69 +580,52 @@ msgid ""
 "Enter a name to help you remember what this popup is about. Only you will "
 "see this."
 msgstr ""
-"Bu açılır pencerenin ne hakkında olduğunu hatırlamanıza yardımcı olması "
-"için bir ad girin. Bunu yalnızca siz göreceksiniz."
+"Bu açılır pencerenin ne hakkında olduğunu hatırlamanıza yardımcı olması için "
+"bir ad girin. Bunu yalnızca siz göreceksiniz."
 
-#: classes/Admin/Popups.php:334
-#: includes/integrations/class-pum-cf7.php:124
+#: classes/Admin/Popups.php:334 includes/integrations/class-pum-cf7.php:124
 #: includes/integrations/class-pum-cf7.php:139
 #: includes/integrations/class-pum-gravity-forms.php:159
 msgid "Popup Settings"
 msgstr "Açılır Pencere Ayarları"
 
-#: classes/Admin/Popups.php:335
-#: classes/Privacy.php:116
+#: classes/Admin/Popups.php:335 classes/Privacy.php:116
 msgid "Analytics"
 msgstr "Analitik"
 
-#: classes/Admin/Popups.php:413
-#: classes/Admin/Settings.php:971
-#: classes/Admin/Themes.php:151
 #. translators: 1. URL to view troubleshooting guide. 2. Closing HTML tag.
 #. translators: 1. URL to troubleshooting guide. 2. Closing tag.
+#: classes/Admin/Popups.php:413 classes/Admin/Settings.php:971
+#: classes/Admin/Themes.php:151
 #, php-format
 msgid ""
 "If you are seeing this, the page is still loading or there are Javascript "
 "errors on this page. %1$sView troubleshooting guide%2$s"
 msgstr ""
-"Bunu görüyorsanız, sayfa hâlâ yükleniyor olabilir veya bu sayfada "
-"JavaScript hataları vardır. %1$sSorun giderme kılavuzunu görüntüleyin%2$s"
+"Bunu görüyorsanız, sayfa hâlâ yükleniyor olabilir veya bu sayfada JavaScript "
+"hataları vardır. %1$sSorun giderme kılavuzunu görüntüleyin%2$s"
 
-#: classes/Admin/Popups.php:563
-#: classes/Admin/Settings.php:1129
-#: classes/Admin/Settings.php:1156
-#: classes/Admin/Settings.php:1159
-#: classes/Admin/Settings.php:1168
-#: classes/Admin/Themes.php:374
-#: classes/Admin/Themes.php:395
-#: classes/Admin/Themes.php:414
-#: classes/Conditions.php:109
-#: classes/Conditions.php:535
-#: classes/Conditions.php:549
-#: classes/Conditions.php:555
-#: classes/Cookies.php:213
-#: classes/Shortcode.php:152
-#: classes/Shortcode.php:166
-#: classes/Shortcode.php:181
-#: classes/Shortcode/Popup.php:57
-#: classes/Shortcode/Popup.php:73
-#: classes/Shortcode/Subscribe.php:63
-#: classes/Shortcode/Subscribe.php:85
-#: classes/Shortcode/Subscribe.php:88
-#: classes/Triggers.php:367
-#: includes/legacy/class-popmake-fields.php:63
+#: classes/Admin/Popups.php:563 classes/Admin/Settings.php:1129
+#: classes/Admin/Settings.php:1156 classes/Admin/Settings.php:1159
+#: classes/Admin/Settings.php:1168 classes/Admin/Themes.php:374
+#: classes/Admin/Themes.php:395 classes/Admin/Themes.php:414
+#: classes/Conditions.php:109 classes/Conditions.php:535
+#: classes/Conditions.php:549 classes/Conditions.php:555
+#: classes/Cookies.php:213 classes/Shortcode.php:152 classes/Shortcode.php:166
+#: classes/Shortcode.php:181 classes/Shortcode/Popup.php:57
+#: classes/Shortcode/Popup.php:73 classes/Shortcode/Subscribe.php:63
+#: classes/Shortcode/Subscribe.php:85 classes/Shortcode/Subscribe.php:88
+#: classes/Triggers.php:367 includes/legacy/class-popmake-fields.php:63
 #: dist/packages/cta-editor.js:1
 msgid "General"
 msgstr "Genel"
 
-#: classes/Admin/Popups.php:564
-#: classes/Shortcode/Popup.php:58
+#: classes/Admin/Popups.php:564 classes/Shortcode/Popup.php:58
 #: classes/Shortcode/Popup.php:76
 msgid "Display"
 msgstr "Görünüm"
 
-#: classes/Admin/Popups.php:566
-#: classes/Admin/Templates.php:852
+#: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
 #: classes/Site/Assets.php:300
 msgid "Triggers"
 msgstr "Tetikleyiciler"
@@ -729,12 +634,9 @@ msgstr "Tetikleyiciler"
 msgid "Targeting"
 msgstr "Hedefleme"
 
-#: classes/Admin/Popups.php:568
-#: classes/Admin/Popups.php:598
-#: classes/Admin/Popups.php:606
-#: classes/Admin/Themes.php:380
-#: classes/Admin/Themes.php:424
-#: classes/Cookies.php:214
+#: classes/Admin/Popups.php:568 classes/Admin/Popups.php:598
+#: classes/Admin/Popups.php:606 classes/Admin/Themes.php:380
+#: classes/Admin/Themes.php:424 classes/Cookies.php:214
 #: classes/Triggers.php:369
 msgid "Advanced"
 msgstr "Gelişmiş"
@@ -747,8 +649,7 @@ msgstr "Genel Ayarlar"
 msgid "Triggers & Cookies"
 msgstr "Tetikleyiciler & Çerezler"
 
-#: classes/Admin/Popups.php:589
-#: classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
 msgid "Conditions"
 msgstr "Koşullar"
 
@@ -756,23 +657,18 @@ msgstr "Koşullar"
 msgid "Display Presets"
 msgstr "Görüntüleme Ön Ayarları"
 
-#: classes/Admin/Popups.php:593
-#: classes/Shortcode.php:154
-#: classes/Shortcode.php:168
-#: classes/Shortcode.php:187
+#: classes/Admin/Popups.php:593 classes/Shortcode.php:154
+#: classes/Shortcode.php:168 classes/Shortcode.php:187
 #: classes/Shortcode/Subscribe.php:91
 msgid "Appearance"
 msgstr "Görünüm"
 
-#: classes/Admin/Popups.php:594
-#: classes/Admin/Popups.php:705
-#: classes/Admin/Themes.php:415
-#: classes/Shortcode/Popup.php:131
+#: classes/Admin/Popups.php:594 classes/Admin/Popups.php:705
+#: classes/Admin/Themes.php:415 classes/Shortcode/Popup.php:131
 msgid "Size"
 msgstr "Boyut"
 
-#: classes/Admin/Popups.php:595
-#: classes/Shortcode/Popup.php:60
+#: classes/Admin/Popups.php:595 classes/Shortcode/Popup.php:60
 #: classes/Shortcode/Popup.php:82
 msgid "Animation"
 msgstr "Animasyon"
@@ -781,10 +677,8 @@ msgstr "Animasyon"
 msgid "Sounds"
 msgstr "Sesler"
 
-#: classes/Admin/Popups.php:597
-#: classes/Admin/Themes.php:416
-#: classes/Shortcode/Popup.php:59
-#: classes/Shortcode/Popup.php:79
+#: classes/Admin/Popups.php:597 classes/Admin/Themes.php:416
+#: classes/Shortcode/Popup.php:59 classes/Shortcode/Popup.php:79
 msgid "Position"
 msgstr "Konum"
 
@@ -792,9 +686,7 @@ msgstr "Konum"
 msgid "Button"
 msgstr "Düğme"
 
-#: classes/Admin/Popups.php:602
-#: classes/Cookies.php:92
-#: classes/Triggers.php:216
+#: classes/Admin/Popups.php:602 classes/Cookies.php:92 classes/Triggers.php:216
 msgid "Form Submission"
 msgstr "Form Gönderimi"
 
@@ -830,13 +722,11 @@ msgstr "Sol Alt Bildirimi"
 msgid "Choose a theme for this popup."
 msgstr "Bu açılır pencere için bir tema seçin."
 
-#: classes/Admin/Popups.php:697
-#: classes/Admin/Settings.php:352
+#: classes/Admin/Popups.php:697 classes/Admin/Settings.php:352
 msgid "Customize This Theme"
 msgstr "Bu Temayı Özelleştir"
 
-#: classes/Admin/Popups.php:706
-#: classes/Shortcode/Popup.php:132
+#: classes/Admin/Popups.php:706 classes/Shortcode/Popup.php:132
 msgid "Select the size of the popup."
 msgstr "Açılır pencerenin boyutunu seçin."
 
@@ -844,43 +734,35 @@ msgstr "Açılır pencerenin boyutunu seçin."
 msgid "Responsive Sizes"
 msgstr "Duyarlı Boyutlar"
 
-#: classes/Admin/Popups.php:712
-#: includes/legacy/input-options.php:64
+#: classes/Admin/Popups.php:712 includes/legacy/input-options.php:64
 msgid "Nano - 10%"
 msgstr "Nano - 10%"
 
-#: classes/Admin/Popups.php:713
-#: includes/legacy/input-options.php:65
+#: classes/Admin/Popups.php:713 includes/legacy/input-options.php:65
 msgid "Micro - 20%"
 msgstr "Mikro - 20%"
 
-#: classes/Admin/Popups.php:714
-#: includes/legacy/input-options.php:66
+#: classes/Admin/Popups.php:714 includes/legacy/input-options.php:66
 msgid "Tiny - 30%"
 msgstr "Minik - 30%"
 
-#: classes/Admin/Popups.php:715
-#: includes/legacy/input-options.php:67
+#: classes/Admin/Popups.php:715 includes/legacy/input-options.php:67
 msgid "Small - 40%"
 msgstr "Küçük - 40%"
 
-#: classes/Admin/Popups.php:716
-#: includes/legacy/input-options.php:68
+#: classes/Admin/Popups.php:716 includes/legacy/input-options.php:68
 msgid "Medium - 60%"
 msgstr "Orta - 60%"
 
-#: classes/Admin/Popups.php:717
-#: includes/legacy/input-options.php:69
+#: classes/Admin/Popups.php:717 includes/legacy/input-options.php:69
 msgid "Normal - 70%"
 msgstr "Normal - 70%"
 
-#: classes/Admin/Popups.php:718
-#: includes/legacy/input-options.php:70
+#: classes/Admin/Popups.php:718 includes/legacy/input-options.php:70
 msgid "Large - 80%"
 msgstr "Büyük - 80%"
 
-#: classes/Admin/Popups.php:719
-#: includes/legacy/input-options.php:71
+#: classes/Admin/Popups.php:719 includes/legacy/input-options.php:71
 msgid "X Large - 95%"
 msgstr "Çok Büyük - 95%"
 
@@ -888,13 +770,11 @@ msgstr "Çok Büyük - 95%"
 msgid "Other Sizes"
 msgstr "Diğer Boyutlar"
 
-#: classes/Admin/Popups.php:722
-#: includes/legacy/input-options.php:73
+#: classes/Admin/Popups.php:722 includes/legacy/input-options.php:73
 msgid "Auto"
 msgstr "Otomatik"
 
-#: classes/Admin/Popups.php:723
-#: classes/Shortcode/PopupTrigger.php:97
+#: classes/Admin/Popups.php:723 classes/Shortcode/PopupTrigger.php:97
 #: includes/legacy/input-options.php:74
 msgid "Custom"
 msgstr "Özel"
@@ -915,8 +795,7 @@ msgstr "Maksimum Genişlik"
 msgid "Set a maximum width for the popup."
 msgstr "Açılır pencere için maksimum bir genişlik belirleyin."
 
-#: classes/Admin/Popups.php:748
-#: classes/Admin/Themes.php:970
+#: classes/Admin/Popups.php:748 classes/Admin/Themes.php:970
 #: classes/Shortcode/Popup.php:139
 msgid "Width"
 msgstr "Genişlik"
@@ -933,8 +812,7 @@ msgstr "Otomatik Ayarlanmış Yükseklik"
 msgid "Checking this option will set height to fit the content."
 msgstr "Bu seçeneği işaretlemek, yüksekliği içeriğe sığacak şekilde ayarlar."
 
-#: classes/Admin/Popups.php:767
-#: classes/Admin/Themes.php:960
+#: classes/Admin/Popups.php:767 classes/Admin/Themes.php:960
 #: classes/Shortcode/Popup.php:150
 msgid "Height"
 msgstr "Yükseklik"
@@ -951,171 +829,124 @@ msgstr "Kaydırılabilir İçerik"
 msgid "Checking this option will add a scroll bar to your content."
 msgstr "Bu seçeneği işaretlemek, içeriğinize bir kaydırma çubuğu ekler."
 
-#: classes/Admin/Popups.php:791
-#: classes/Shortcode/Popup.php:237
+#: classes/Admin/Popups.php:791 classes/Shortcode/Popup.php:237
 msgid "Animation Type"
 msgstr "Animasyon Türü"
 
-#: classes/Admin/Popups.php:792
-#: classes/Shortcode/Popup.php:238
+#: classes/Admin/Popups.php:792 classes/Shortcode/Popup.php:238
 msgid "Select an animation type for your popup."
 msgstr "Açılır pencereniz için bir animasyon türü seçin."
 
-#: classes/Admin/Popups.php:798
-#: includes/legacy/input-options.php:87
+#: classes/Admin/Popups.php:798 includes/legacy/input-options.php:87
 msgid "Slide"
 msgstr "Kaydırma"
 
-#: classes/Admin/Popups.php:799
-#: includes/legacy/input-options.php:88
+#: classes/Admin/Popups.php:799 includes/legacy/input-options.php:88
 msgid "Fade"
 msgstr "Solma"
 
-#: classes/Admin/Popups.php:800
-#: includes/legacy/input-options.php:89
+#: classes/Admin/Popups.php:800 includes/legacy/input-options.php:89
 msgid "Fade and Slide"
 msgstr "Solma ve Kaydırma"
 
-#: classes/Admin/Popups.php:806
-#: classes/Shortcode/Popup.php:245
+#: classes/Admin/Popups.php:806 classes/Shortcode/Popup.php:245
 msgid "Animation Speed"
 msgstr "Animasyon Hızı"
 
-#: classes/Admin/Popups.php:807
-#: classes/Shortcode/Popup.php:246
+#: classes/Admin/Popups.php:807 classes/Shortcode/Popup.php:246
 msgid "Set the animation speed for the popup."
 msgstr "Açılır pencere için animasyon hızını ayarlayın."
 
-#: classes/Admin/Popups.php:821
-#: classes/Shortcode/Popup.php:256
+#: classes/Admin/Popups.php:821 classes/Shortcode/Popup.php:256
 msgid "Animation Origin"
 msgstr "Animasyon Başlangıcı"
 
-#: classes/Admin/Popups.php:822
-#: classes/Shortcode/Popup.php:257
+#: classes/Admin/Popups.php:822 classes/Shortcode/Popup.php:257
 msgid "Choose where the animation will begin."
 msgstr "Animasyonun nerede başlayacağını seçin."
 
-#: classes/Admin/Popups.php:826
-#: classes/Admin/Popups.php:894
-#: classes/Admin/Popups.php:898
-#: classes/Admin/Themes.php:894
-#: classes/Shortcode/Popup.php:173
-#: classes/Shortcode/Popup.php:177
+#: classes/Admin/Popups.php:826 classes/Admin/Popups.php:894
+#: classes/Admin/Popups.php:898 classes/Admin/Themes.php:894
+#: classes/Shortcode/Popup.php:173 classes/Shortcode/Popup.php:177
 #: includes/legacy/input-options.php:103
 msgid "Top"
 msgstr "Üst"
 
-#: classes/Admin/Popups.php:827
-#: classes/Admin/Popups.php:930
-#: classes/Admin/Popups.php:934
-#: classes/Admin/Themes.php:764
-#: classes/Admin/Themes.php:921
-#: classes/Shortcode/CallToAction.php:143
-#: classes/Shortcode/Popup.php:203
-#: classes/Shortcode/Popup.php:207
-#: classes/Shortcode/Subscribe.php:292
-#: includes/legacy/input-options.php:50
+#: classes/Admin/Popups.php:827 classes/Admin/Popups.php:930
+#: classes/Admin/Popups.php:934 classes/Admin/Themes.php:764
+#: classes/Admin/Themes.php:921 classes/Shortcode/CallToAction.php:143
+#: classes/Shortcode/Popup.php:203 classes/Shortcode/Popup.php:207
+#: classes/Shortcode/Subscribe.php:292 includes/legacy/input-options.php:50
 #: includes/legacy/input-options.php:104
 msgid "Left"
 msgstr "Sol"
 
-#: classes/Admin/Popups.php:828
-#: classes/Admin/Popups.php:912
-#: classes/Admin/Popups.php:916
-#: classes/Admin/Themes.php:908
-#: classes/Shortcode/Popup.php:188
-#: classes/Shortcode/Popup.php:192
+#: classes/Admin/Popups.php:828 classes/Admin/Popups.php:912
+#: classes/Admin/Popups.php:916 classes/Admin/Themes.php:908
+#: classes/Shortcode/Popup.php:188 classes/Shortcode/Popup.php:192
 #: includes/legacy/input-options.php:105
 msgid "Bottom"
 msgstr "Alt"
 
-#: classes/Admin/Popups.php:829
-#: classes/Admin/Popups.php:948
-#: classes/Admin/Popups.php:952
-#: classes/Admin/Themes.php:766
-#: classes/Admin/Themes.php:934
-#: classes/Shortcode/CallToAction.php:145
-#: classes/Shortcode/Popup.php:218
-#: classes/Shortcode/Popup.php:222
-#: classes/Shortcode/Subscribe.php:294
-#: includes/legacy/input-options.php:52
+#: classes/Admin/Popups.php:829 classes/Admin/Popups.php:948
+#: classes/Admin/Popups.php:952 classes/Admin/Themes.php:766
+#: classes/Admin/Themes.php:934 classes/Shortcode/CallToAction.php:145
+#: classes/Shortcode/Popup.php:218 classes/Shortcode/Popup.php:222
+#: classes/Shortcode/Subscribe.php:294 includes/legacy/input-options.php:52
 #: includes/legacy/input-options.php:106
 msgid "Right"
 msgstr "Sağ"
 
-#: classes/Admin/Popups.php:830
-#: classes/Admin/Popups.php:882
-#: classes/Admin/Themes.php:883
-#: includes/legacy/input-options.php:107
-#: includes/legacy/input-options.php:127
-#: includes/legacy/input-options.php:147
+#: classes/Admin/Popups.php:830 classes/Admin/Popups.php:882
+#: classes/Admin/Themes.php:883 includes/legacy/input-options.php:107
+#: includes/legacy/input-options.php:127 includes/legacy/input-options.php:147
 msgid "Top Left"
 msgstr "Sol Üst"
 
-#: classes/Admin/Popups.php:831
-#: classes/Admin/Popups.php:883
-#: classes/Admin/Themes.php:884
-#: includes/legacy/input-options.php:108
+#: classes/Admin/Popups.php:831 classes/Admin/Popups.php:883
+#: classes/Admin/Themes.php:884 includes/legacy/input-options.php:108
 #: includes/legacy/input-options.php:128
 msgid "Top Center"
 msgstr "Üst Orta"
 
-#: classes/Admin/Popups.php:832
-#: classes/Admin/Popups.php:884
-#: classes/Admin/Themes.php:885
-#: includes/legacy/input-options.php:109
-#: includes/legacy/input-options.php:129
-#: includes/legacy/input-options.php:148
+#: classes/Admin/Popups.php:832 classes/Admin/Popups.php:884
+#: classes/Admin/Themes.php:885 includes/legacy/input-options.php:109
+#: includes/legacy/input-options.php:129 includes/legacy/input-options.php:148
 msgid "Top Right"
 msgstr "Sağ Üst"
 
-#: classes/Admin/Popups.php:833
-#: classes/Admin/Popups.php:885
-#: classes/Admin/Themes.php:886
-#: includes/legacy/input-options.php:110
+#: classes/Admin/Popups.php:833 classes/Admin/Popups.php:885
+#: classes/Admin/Themes.php:886 includes/legacy/input-options.php:110
 #: includes/legacy/input-options.php:130
 msgid "Middle Left"
 msgstr "Orta Sol"
 
-#: classes/Admin/Popups.php:834
-#: classes/Admin/Popups.php:886
-#: includes/legacy/input-options.php:111
-#: includes/legacy/input-options.php:131
+#: classes/Admin/Popups.php:834 classes/Admin/Popups.php:886
+#: includes/legacy/input-options.php:111 includes/legacy/input-options.php:131
 msgid "Middle Center"
 msgstr "Orta Orta"
 
-#: classes/Admin/Popups.php:835
-#: classes/Admin/Popups.php:887
-#: classes/Admin/Themes.php:887
-#: includes/legacy/input-options.php:112
+#: classes/Admin/Popups.php:835 classes/Admin/Popups.php:887
+#: classes/Admin/Themes.php:887 includes/legacy/input-options.php:112
 #: includes/legacy/input-options.php:132
 msgid "Middle Right"
 msgstr "Orta Sağ"
 
-#: classes/Admin/Popups.php:836
-#: classes/Admin/Popups.php:888
-#: classes/Admin/Themes.php:888
-#: includes/legacy/input-options.php:113
-#: includes/legacy/input-options.php:133
-#: includes/legacy/input-options.php:149
+#: classes/Admin/Popups.php:836 classes/Admin/Popups.php:888
+#: classes/Admin/Themes.php:888 includes/legacy/input-options.php:113
+#: includes/legacy/input-options.php:133 includes/legacy/input-options.php:149
 msgid "Bottom Left"
 msgstr "Alt Sol"
 
-#: classes/Admin/Popups.php:837
-#: classes/Admin/Popups.php:889
-#: classes/Admin/Themes.php:889
-#: includes/legacy/input-options.php:114
+#: classes/Admin/Popups.php:837 classes/Admin/Popups.php:889
+#: classes/Admin/Themes.php:889 includes/legacy/input-options.php:114
 #: includes/legacy/input-options.php:134
 msgid "Bottom Center"
 msgstr "Alt Orta"
 
-#: classes/Admin/Popups.php:838
-#: classes/Admin/Popups.php:890
-#: classes/Admin/Themes.php:890
-#: includes/legacy/input-options.php:115
-#: includes/legacy/input-options.php:135
-#: includes/legacy/input-options.php:150
+#: classes/Admin/Popups.php:838 classes/Admin/Popups.php:890
+#: classes/Admin/Themes.php:890 includes/legacy/input-options.php:115
+#: includes/legacy/input-options.php:135 includes/legacy/input-options.php:150
 msgid "Bottom Right"
 msgstr "Sağ Alt"
 
@@ -1159,23 +990,31 @@ msgstr "Özel Ses URL'si"
 msgid "Enter URL to sound file."
 msgstr "Ses dosyasının URL'sini girin."
 
-#: classes/Admin/Popups.php:876
-#: classes/Admin/Themes.php:878
+#: classes/Admin/Popups.php:876 classes/Admin/Themes.php:878
 #: classes/Shortcode/Popup.php:165
 msgid "Location"
 msgstr "Konum"
 
-#: classes/Admin/Popups.php:877
-#: classes/Shortcode/Popup.php:166
+#: classes/Admin/Popups.php:877 classes/Shortcode/Popup.php:166
 msgid "Choose where the popup will be displayed."
 msgstr "Açılır pencerenin nerede gösterileceğini seçin."
+
+#. translators: 1. Screen Edge: top, bottom.
+#: classes/Admin/Popups.php:897 classes/Admin/Popups.php:915
+#: classes/Admin/Popups.php:933 classes/Admin/Popups.php:951
+#: classes/Shortcode/Popup.php:176 classes/Shortcode/Popup.php:191
+#: classes/Shortcode/Popup.php:206 classes/Shortcode/Popup.php:221
+#, php-format
+msgctxt "Screen Edge: top, bottom"
+msgid "Distance from the %s edge of the screen."
+msgstr "Ekranın %s kenarından uzaklık."
 
 #: classes/Admin/Popups.php:966
 msgid "Position from Trigger"
 msgstr "Tetikleyiciden Konum"
 
-#: classes/Admin/Popups.php:969
 #. translators: 1. URL to documentation. 2. Closing HTML tag.
+#: classes/Admin/Popups.php:969
 #, php-format
 msgid "This will position the popup in relation to the %1$sClick Trigger%2$s."
 msgstr ""
@@ -1188,15 +1027,14 @@ msgstr "Sabit Konumlandırma"
 
 #: classes/Admin/Popups.php:979
 msgid "Checking this sets the positioning of the popup to fixed."
-msgstr "Bunu işaretlemek, açılır pencerenin konumlandırmasını sabit olarak ayarlar."
+msgstr ""
+"Bunu işaretlemek, açılır pencerenin konumlandırmasını sabit olarak ayarlar."
 
-#: classes/Admin/Popups.php:986
-#: classes/Shortcode/Popup.php:124
+#: classes/Admin/Popups.php:986 classes/Shortcode/Popup.php:124
 msgid "Disable Overlay"
 msgstr "Bindirmeyi Devre Dışı Bırak"
 
-#: classes/Admin/Popups.php:987
-#: classes/Shortcode/Popup.php:125
+#: classes/Admin/Popups.php:987 classes/Shortcode/Popup.php:125
 msgid "Checking this will disable and hide the overlay for this popup."
 msgstr ""
 "Bunu işaretlemek, bu açılır pencere için bindirmeyi devre dışı bırakır ve "
@@ -1215,7 +1053,8 @@ msgid "Disable Repositioning"
 msgstr "Yeniden Konumlandırmayı Devre Dışı Bırak"
 
 #: classes/Admin/Popups.php:999
-msgid "This will disable automatic repositioning of the popup on window resizing."
+msgid ""
+"This will disable automatic repositioning of the popup on window resizing."
 msgstr ""
 "Bu, pencere yeniden boyutlandırıldığında açılır pencerenin otomatik yeniden "
 "konumlandırılmasını devre dışı bırakır."
@@ -1234,8 +1073,8 @@ msgstr "Kapatma Metni"
 
 #: classes/Admin/Popups.php:1022
 msgid ""
-"Override the default close text. To use a Font Awesome icon instead of "
-"text, enter the CSS classes such as \"fas fa-camera\"."
+"Override the default close text. To use a Font Awesome icon instead of text, "
+"enter the CSS classes such as \"fas fa-camera\"."
 msgstr ""
 "Varsayılan kapatma metnini geçersiz kılar. Metin yerine bir Font Awesome "
 "simgesi kullanmak için, \"fas fa-camera\" gibi CSS sınıflarını girin."
@@ -1258,11 +1097,8 @@ msgstr ""
 "Entegre form eklentisi gönderimlerinden sonra açılır pencereyi otomatik "
 "olarak kapatır."
 
-#: classes/Admin/Popups.php:1046
-#: classes/Shortcode/Subscribe.php:421
-#: classes/Triggers.php:199
-#: classes/Triggers.php:204
-#: classes/Triggers.php:236
+#: classes/Admin/Popups.php:1046 classes/Shortcode/Subscribe.php:421
+#: classes/Triggers.php:199 classes/Triggers.php:204 classes/Triggers.php:236
 #: includes/integrations/class-pum-cf7.php:153
 #: includes/integrations/class-pum-gravity-forms.php:178
 #: includes/integrations/ninja-forms/Actions/ClosePopup.php:53
@@ -1270,18 +1106,17 @@ msgid "Delay"
 msgstr "Gecikme"
 
 #: classes/Admin/Popups.php:1047
-msgid "The delay before the popup will close after submission (in milliseconds)."
+msgid ""
+"The delay before the popup will close after submission (in milliseconds)."
 msgstr ""
 "Gönderimden sonra açılır pencerenin kapanmadan önceki gecikme süresi "
 "(milisaniye cinsinden)."
 
-#: classes/Admin/Popups.php:1060
-#: classes/Shortcode/Popup.php:268
+#: classes/Admin/Popups.php:1060 classes/Shortcode/Popup.php:268
 msgid "Click Overlay to Close"
 msgstr "Kapatmak için Katmana Tıkla"
 
-#: classes/Admin/Popups.php:1061
-#: classes/Shortcode/Popup.php:269
+#: classes/Admin/Popups.php:1061 classes/Shortcode/Popup.php:269
 msgid "Checking this will cause popup to close when user clicks on overlay."
 msgstr ""
 "Bunu işaretlemek, kullanıcı katmana tıkladığında açılır pencerenin "
@@ -1308,7 +1143,8 @@ msgstr ""
 "kapanmasına neden olur."
 
 #: classes/Admin/Popups.php:1085
-msgid "Disable automatic re-triggering of popup after non-ajax form submission."
+msgid ""
+"Disable automatic re-triggering of popup after non-ajax form submission."
 msgstr ""
 "AJAX olmayan form gönderiminden sonra açılır pencerenin otomatik olarak "
 "yeniden tetiklenmesini devre dışı bırakın."
@@ -1320,8 +1156,8 @@ msgstr "Erişilebilirlik özelliklerini devre dışı bırakın."
 #: classes/Admin/Popups.php:1091
 msgid ""
 "This includes trapping the tab key & focus inside popup while open, force "
-"focus the first element when popup open, and refocus last click trigger "
-"when closed."
+"focus the first element when popup open, and refocus last click trigger when "
+"closed."
 msgstr ""
 "Bu, açıkken sekme tuşunu ve odağı açılır pencere içinde hapseder, açılır "
 "pencere açıldığında odağı ilk öğeye zorlar ve kapatıldığında son tıklanan "
@@ -1331,10 +1167,8 @@ msgstr ""
 msgid "Opens"
 msgstr "Açılma"
 
-#: classes/Admin/Popups.php:1262
-#: classes/Admin/Popups.php:1372
-#: classes/Controllers/WP/Dashboard.php:99
-#: dist/packages/cta-admin.js:4
+#: classes/Admin/Popups.php:1262 classes/Admin/Popups.php:1372
+#: classes/Controllers/WP/Dashboard.php:99 dist/packages/cta-admin.js:4
 msgid "Conversions"
 msgstr "Dönüşümler"
 
@@ -1366,33 +1200,25 @@ msgstr "Toplam Açılmalar"
 msgid "Lifetime Conversions"
 msgstr "Toplam Dönüşümler"
 
-#: classes/Admin/Popups.php:1367
-#: classes/Admin/Templates.php:1138
-#: classes/Privacy.php:239
-#: classes/Shortcode/Subscribe.php:195
-#: classes/Shortcode/Subscribe.php:249
-#: dist/packages/components.js:16
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-editor.js:1
+#: classes/Admin/Popups.php:1367 classes/Admin/Templates.php:1138
+#: classes/Privacy.php:239 classes/Shortcode/Subscribe.php:195
+#: classes/Shortcode/Subscribe.php:249 dist/packages/components.js:16
+#: dist/packages/cta-admin.js:4 dist/packages/cta-editor.js:1
 msgid "Name"
 msgstr "Ad"
 
-#: classes/Admin/Popups.php:1368
-#: classes/Shortcode/Subscribe.php:322
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-admin.js:23
+#: classes/Admin/Popups.php:1368 classes/Shortcode/Subscribe.php:322
+#: dist/packages/cta-admin.js:4 dist/packages/cta-admin.js:23
 #: dist/packages/cta-editor.js:1
 msgid "Enabled"
 msgstr "Etkin"
 
-#: classes/Admin/Popups.php:1369
-#: classes/Admin/Themes.php:377
+#: classes/Admin/Popups.php:1369 classes/Admin/Themes.php:377
 #: dist/packages/block-editor.js:2
 msgid "Title"
 msgstr "Başlık"
 
-#: classes/Admin/Popups.php:1370
-#: classes/Shortcode/PopupClose.php:95
+#: classes/Admin/Popups.php:1370 classes/Shortcode/PopupClose.php:95
 #: classes/Shortcode/PopupTrigger.php:123
 #: classes/Shortcode/PopupTrigger.php:124
 msgid "CSS Class"
@@ -1406,8 +1232,7 @@ msgstr "Görüntülemeler"
 msgid "impressions"
 msgstr "gösterimler"
 
-#: classes/Admin/Popups.php:1474
-#: classes/Admin/Subscribers/Table.php:314
+#: classes/Admin/Popups.php:1474 classes/Admin/Subscribers/Table.php:314
 msgid "N/A"
 msgstr "Yok"
 
@@ -1423,8 +1248,7 @@ msgstr "Tüm kategorileri göster"
 msgid "Show all tags"
 msgstr "Tüm etiketleri göster"
 
-#: classes/Admin/Settings.php:79
-#: classes/Admin/Tools.php:70
+#: classes/Admin/Settings.php:79 classes/Admin/Tools.php:70
 msgid "Dismiss this notice."
 msgstr "Bu bildirimi kapat."
 
@@ -1448,8 +1272,7 @@ msgstr "Lisans etkinleştirme başarısız oldu."
 msgid "License deactivated successfully!"
 msgstr "Lisans başarıyla devre dışı bırakıldı!"
 
-#: classes/Admin/Settings.php:168
-#: classes/RestAPI/License.php:174
+#: classes/Admin/Settings.php:168 classes/RestAPI/License.php:174
 msgid "License deactivation failed."
 msgstr "Lisans devre dışı bırakma başarısız oldu."
 
@@ -1485,8 +1308,7 @@ msgstr "Google Fonts API Anahtarı *isteğe bağlı"
 
 #: classes/Admin/Settings.php:365
 msgid ""
-"Enter your own Google Fonts API key to always get the latest fonts "
-"available."
+"Enter your own Google Fonts API key to always get the latest fonts available."
 msgstr ""
 "Her zaman mevcut en güncel yazı tiplerini almak için kendi Google Fonts API "
 "anahtarınızı girin."
@@ -1495,8 +1317,8 @@ msgstr ""
 msgid "Allow usage tracking?"
 msgstr "Kullanım takibini etkinleştirelim mi?"
 
-#: classes/Admin/Settings.php:372
 #. translators: 1 & 2 are opening and closing HTML of the link around "Learn more"
+#: classes/Admin/Settings.php:372
 #, php-format
 msgid ""
 "Allow data sharing so that we can receive a little information on how it is "
@@ -1524,8 +1346,7 @@ msgstr "Başarı Mesajı"
 msgid "Message to show user when successfuly subscribed."
 msgstr "Başarıyla abone olunduğunda kullanıcıya gösterilecek mesaj."
 
-#: classes/Admin/Settings.php:402
-#: includes/functions/newsletter.php:60
+#: classes/Admin/Settings.php:402 includes/functions/newsletter.php:60
 msgid "You have been subscribed!"
 msgstr "Abone oldunuz!"
 
@@ -1537,8 +1358,7 @@ msgstr "Boş E-posta Mesajı"
 msgid "Message to show user when no email is entered."
 msgstr "Hiç e-posta girilmediğinde kullanıcıya gösterilecek mesaj."
 
-#: classes/Admin/Settings.php:408
-#: includes/functions/newsletter.php:64
+#: classes/Admin/Settings.php:408 includes/functions/newsletter.php:64
 msgid "Please enter a valid email."
 msgstr "Lütfen geçerli bir e-posta adresi girin."
 
@@ -1550,8 +1370,7 @@ msgstr "Geçersiz E-posta Mesajı"
 msgid "Message to show user when an invalid email is entered."
 msgstr "Geçersiz bir e-posta girildiğinde kullanıcıya gösterilecek mesaj."
 
-#: classes/Admin/Settings.php:414
-#: includes/functions/newsletter.php:65
+#: classes/Admin/Settings.php:414 includes/functions/newsletter.php:65
 #: includes/functions/newsletter.php:66
 msgid "Email provided is not a valid email address."
 msgstr "Girilen e-posta geçerli bir e-posta adresi değil."
@@ -1564,8 +1383,7 @@ msgstr "Hata Mesajı"
 msgid "Message to show user when an error has occurred."
 msgstr "Bir hata oluştuğunda kullanıcıya gösterilecek mesaj."
 
-#: classes/Admin/Settings.php:420
-#: includes/functions/newsletter.php:62
+#: classes/Admin/Settings.php:420 includes/functions/newsletter.php:62
 msgid "Error occurred when subscribing. Please try again."
 msgstr "Abone olurken bir hata oluştu. Lütfen tekrar deneyin."
 
@@ -1573,13 +1391,11 @@ msgstr "Abone olurken bir hata oluştu. Lütfen tekrar deneyin."
 msgid "Already Subscribed Message"
 msgstr "Zaten Abone Olundu Mesajı"
 
-#: classes/Admin/Settings.php:424
-#: classes/Admin/Settings.php:430
+#: classes/Admin/Settings.php:424 classes/Admin/Settings.php:430
 msgid "Message to show user who is already subscribed."
 msgstr "Zaten abone olan kullanıcıya gösterilecek mesaj."
 
-#: classes/Admin/Settings.php:426
-#: includes/functions/newsletter.php:63
+#: classes/Admin/Settings.php:426 includes/functions/newsletter.php:63
 msgid "You are already a subscriber."
 msgstr "Zaten abonesiniz."
 
@@ -1606,8 +1422,7 @@ msgstr "URL izleme parametreleri devre dışı bırakılsın mı?"
 #: classes/Admin/Settings.php:458
 msgid ""
 "Stops adding tracking parameters (pid) to links inside popups. Link clicks "
-"will be tracked via browser beacons instead (less reliable but "
-"non-invasive)."
+"will be tracked via browser beacons instead (less reliable but non-invasive)."
 msgstr ""
 "Açılır pencerelerin içindeki bağlantılara izleme parametreleri (pid) "
 "eklemeyi durdurur. Bağlantı tıklamaları bunun yerine tarayıcı beacon'ları "
@@ -1629,34 +1444,25 @@ msgstr ""
 msgid "Always enable consent field on subscription forms."
 msgstr "Abonelik formlarında onay alanını her zaman etkinleştir."
 
-#: classes/Admin/Settings.php:470
-#: classes/Admin/Settings.php:512
-#: classes/Admin/Settings.php:521
-#: classes/Admin/Themes.php:697
-#: classes/Admin/Themes.php:1158
-#: classes/Shortcode/CallToAction.php:113
-#: classes/Shortcode/Subscribe.php:326
-#: classes/Shortcode/Subscribe.php:379
+#: classes/Admin/Settings.php:470 classes/Admin/Settings.php:512
+#: classes/Admin/Settings.php:521 classes/Admin/Themes.php:697
+#: classes/Admin/Themes.php:1158 classes/Shortcode/CallToAction.php:113
+#: classes/Shortcode/Subscribe.php:326 classes/Shortcode/Subscribe.php:379
 msgid "Yes"
 msgstr "Evet"
 
-#: classes/Admin/Settings.php:471
-#: classes/Admin/Settings.php:530
-#: classes/Admin/Themes.php:696
-#: classes/Admin/Themes.php:1157
-#: classes/Shortcode/CallToAction.php:112
-#: classes/Shortcode/Subscribe.php:327
+#: classes/Admin/Settings.php:471 classes/Admin/Settings.php:530
+#: classes/Admin/Themes.php:696 classes/Admin/Themes.php:1157
+#: classes/Shortcode/CallToAction.php:112 classes/Shortcode/Subscribe.php:327
 #: classes/Shortcode/Subscribe.php:391
 msgid "No"
 msgstr "Hayır"
 
-#: classes/Admin/Settings.php:476
-#: classes/Privacy.php:286
+#: classes/Admin/Settings.php:476 classes/Privacy.php:286
 msgid "Consent Text"
 msgstr "Onay Metni"
 
-#: classes/Admin/Settings.php:478
-#: classes/Shortcode/Subscribe.php:336
+#: classes/Admin/Settings.php:478 classes/Shortcode/Subscribe.php:336
 msgid "Notify me about related content and special offers."
 msgstr "İlgili içerikler ve özel teklifler hakkında bana bildirim gönderin."
 
@@ -1665,61 +1471,52 @@ msgid "Consent Field Type"
 msgstr "Onay Alanı Türü"
 
 #: classes/Admin/Settings.php:485
-msgid "Radio forces the user to make a choice, often resulting in more opt-ins."
+msgid ""
+"Radio forces the user to make a choice, often resulting in more opt-ins."
 msgstr ""
-"Radyo, kullanıcının bir seçim yapmasını zorunlu kılar; bu da genellikle "
-"daha fazla kayıtla sonuçlanır."
+"Radyo, kullanıcının bir seçim yapmasını zorunlu kılar; bu da genellikle daha "
+"fazla kayıtla sonuçlanır."
 
-#: classes/Admin/Settings.php:488
-#: classes/Shortcode/Subscribe.php:353
+#: classes/Admin/Settings.php:488 classes/Shortcode/Subscribe.php:353
 msgid "Radio"
 msgstr "Radyo"
 
-#: classes/Admin/Settings.php:489
-#: classes/Shortcode/Subscribe.php:354
+#: classes/Admin/Settings.php:489 classes/Shortcode/Subscribe.php:354
 msgid "Checkbox"
 msgstr "Onay kutusu"
 
-#: classes/Admin/Settings.php:497
-#: classes/Privacy.php:283
+#: classes/Admin/Settings.php:497 classes/Privacy.php:283
 #: classes/Shortcode/Subscribe.php:341
 msgid "Consent Required"
 msgstr "Onay Gerekli"
 
-#: classes/Admin/Settings.php:506
-#: classes/Shortcode/Subscribe.php:361
+#: classes/Admin/Settings.php:506 classes/Shortcode/Subscribe.php:361
 msgid "Consent Radio Layout"
 msgstr "Onay Radyo Düzeni"
 
-#: classes/Admin/Settings.php:509
-#: classes/Shortcode/Subscribe.php:282
+#: classes/Admin/Settings.php:509 classes/Shortcode/Subscribe.php:282
 #: classes/Shortcode/Subscribe.php:364
 msgid "Inline"
 msgstr "Satır içi"
 
-#: classes/Admin/Settings.php:510
-#: classes/Shortcode/Subscribe.php:365
+#: classes/Admin/Settings.php:510 classes/Shortcode/Subscribe.php:365
 msgid "Stacked"
 msgstr "Yığın halinde"
 
-#: classes/Admin/Settings.php:519
-#: classes/Shortcode/Subscribe.php:377
+#: classes/Admin/Settings.php:519 classes/Shortcode/Subscribe.php:377
 msgid "Consent Yes Label"
 msgstr "Onay Evet Etiketi"
 
-#: classes/Admin/Settings.php:528
-#: classes/Shortcode/Subscribe.php:389
+#: classes/Admin/Settings.php:528 classes/Shortcode/Subscribe.php:389
 msgid "Consent No Label"
 msgstr "Onay Hayır Etiketi"
 
-#: classes/Admin/Settings.php:537
-#: classes/Shortcode/Subscribe.php:401
+#: classes/Admin/Settings.php:537 classes/Shortcode/Subscribe.php:401
 msgid "Consent Usage Text"
 msgstr "Onay Kullanım Metni"
 
-#: classes/Admin/Settings.php:540
-#: classes/Shortcode/Subscribe.php:404
 #. translators: 1. opening tag, 2. closing tag.
+#: classes/Admin/Settings.php:540 classes/Shortcode/Subscribe.php:404
 #, php-format
 msgid ""
 "You can use %1$s%2$s to insert a link to your privacy policy. To customize "
@@ -1728,14 +1525,13 @@ msgstr ""
 "Gizlilik politikanıza bir bağlantı eklemek için %1$s%2$s kullanabilirsiniz. "
 "Bağlantı metnini özelleştirmek için %1$s:Bağlantı Metni%2$s kullanın"
 
-#: classes/Admin/Settings.php:545
-#: classes/Shortcode/Subscribe.php:409
+#: classes/Admin/Settings.php:545 classes/Shortcode/Subscribe.php:409
 msgid ""
 "If you opt in above, we use this information to send related content, "
 "discounts, and other special offers."
 msgstr ""
-"Yukarıda onay verirseniz, bu bilgileri ilgili içerikler, indirimler ve "
-"diğer özel teklifler göndermek için kullanırız."
+"Yukarıda onay verirseniz, bu bilgileri ilgili içerikler, indirimler ve diğer "
+"özel teklifler göndermek için kullanırız."
 
 #: classes/Admin/Settings.php:557
 msgid "Try to bypass ad blockers."
@@ -1777,12 +1573,11 @@ msgstr ""
 "Açılır pencereler bir kaplama ile gösterildiğinde gövdeye eklenen sağ iç "
 "boşluğu ayarlayın."
 
-#: classes/Admin/Settings.php:588
 #. translators: 1 & 2 are opening and closing HTML of the link around "Learn more"
+#: classes/Admin/Settings.php:588
 #, php-format
 msgid ""
-"Use this if your popups \"jump\" or \"shift\" when opened. %1$sLearn "
-"more%2$s"
+"Use this if your popups \"jump\" or \"shift\" when opened. %1$sLearn more%2$s"
 msgstr ""
 "Açıldığında açılır pencereleriniz \"sıçrıyorsa\" veya \"kayıyorsa\" bunu "
 "kullanın. %1$sDaha fazla bilgi%2$s"
@@ -1835,9 +1630,9 @@ msgstr "Varlık önbelleğe almayı devre dışı bırakın."
 
 #: classes/Admin/Settings.php:625
 msgid ""
-"By default Popup Maker caches a single JS & CSS file in your Uploads "
-"folder. These files include core, extension & user customized styles & "
-"scripts in a single set of files."
+"By default Popup Maker caches a single JS & CSS file in your Uploads folder. "
+"These files include core, extension & user customized styles & scripts in a "
+"single set of files."
 msgstr ""
 "Varsayılan olarak Popup Maker, Yüklemeler klasörünüzde tek bir JS ve CSS "
 "dosyası önbelleğe alır. Bu dosyalar, çekirdek, uzantı ve kullanıcı "
@@ -1849,7 +1644,8 @@ msgid "Disable the Popup Maker shortcode button"
 msgstr "Popup Maker kısa kod düğmesini devre dışı bırak"
 
 #: classes/Admin/Settings.php:633
-msgid "Disable Popup Maker occasionally showing random tips to improve your popups."
+msgid ""
+"Disable Popup Maker occasionally showing random tips to improve your popups."
 msgstr ""
 "Popup Maker'ın zaman zaman açılır pencerelerinizi geliştirmek için rastgele "
 "ipuçları göstermesini devre dışı bırakın."
@@ -1904,8 +1700,8 @@ msgid ""
 "Check this if you have copied the popup theme styles to your own stylesheet "
 "or are using custom styles."
 msgstr ""
-"Popup tema stillerini kendi stil sayfanıza kopyaladıysanız veya özel "
-"stiller kullanıyorsanız bunu işaretleyin."
+"Popup tema stillerini kendi stil sayfanıza kopyaladıysanız veya özel stiller "
+"kullanıyorsanız bunu işaretleyin."
 
 #: classes/Admin/Settings.php:724
 msgid "Show Popup Maker CSS"
@@ -1925,14 +1721,10 @@ msgstr "Temel Stiller"
 msgid "Generated Popup & Popup Theme Styles"
 msgstr "Oluşturulan Popup ve Popup Tema Stilleri"
 
-#: classes/Admin/Settings.php:771
-#: classes/Admin/Settings.php:1135
-#: classes/Admin/Settings.php:1176
-#: classes/Admin/Templates.php:318
-#: classes/Admin/Templates.php:336
-#: classes/Admin/Templates.php:343
-#: classes/Admin/Templates.php:542
-#: dist/packages/addons-page.js:3
+#: classes/Admin/Settings.php:771 classes/Admin/Settings.php:1135
+#: classes/Admin/Settings.php:1176 classes/Admin/Templates.php:318
+#: classes/Admin/Templates.php:336 classes/Admin/Templates.php:343
+#: classes/Admin/Templates.php:542 dist/packages/addons-page.js:3
 #: dist/packages/addons-page.js:4
 msgid "Pro"
 msgstr "Pro"
@@ -1997,16 +1789,11 @@ msgstr "WooCommerce"
 msgid "EDD"
 msgstr "EDD"
 
-#: classes/Admin/Settings.php:869
-#: classes/Admin/Settings.php:901
-#: classes/Admin/Templates.php:316
-#: classes/Admin/Templates.php:334
-#: classes/Admin/Templates.php:341
-#: classes/Admin/Templates.php:540
-#: classes/Admin/Templates.php:627
-#: classes/Admin/Templates.php:634
-#: dist/packages/addons-page.js:3
-#: dist/packages/addons-page.js:4
+#: classes/Admin/Settings.php:869 classes/Admin/Settings.php:901
+#: classes/Admin/Templates.php:316 classes/Admin/Templates.php:334
+#: classes/Admin/Templates.php:341 classes/Admin/Templates.php:540
+#: classes/Admin/Templates.php:627 classes/Admin/Templates.php:634
+#: dist/packages/addons-page.js:3 dist/packages/addons-page.js:4
 msgid "Pro+"
 msgstr "Pro+"
 
@@ -2026,8 +1813,7 @@ msgstr ""
 msgid "Track My Popup Revenue"
 msgstr "Açılır Pencere Gelirimi İzle"
 
-#: classes/Admin/Settings.php:884
-#: classes/Admin/Settings.php:916
+#: classes/Admin/Settings.php:884 classes/Admin/Settings.php:916
 msgid "Pro+ — $249/yr"
 msgstr "Pro+ — $249/yıl"
 
@@ -2067,19 +1853,16 @@ msgstr "Abonelikler"
 msgid "Extensions"
 msgstr "Uzantılar"
 
-#: classes/Admin/Settings.php:1132
-#: classes/Admin/Settings.php:1165
+#: classes/Admin/Settings.php:1132 classes/Admin/Settings.php:1165
 msgid "Licenses"
 msgstr "Lisanslar"
 
-#: classes/Admin/Settings.php:1133
-#: classes/Shortcode/Subscribe.php:65
+#: classes/Admin/Settings.php:1133 classes/Shortcode/Subscribe.php:65
 #: classes/Shortcode/Subscribe.php:95
 msgid "Privacy"
 msgstr "Gizlilik"
 
-#: classes/Admin/Settings.php:1134
-#: classes/Admin/Settings.php:1172
+#: classes/Admin/Settings.php:1134 classes/Admin/Settings.php:1172
 msgid "Misc"
 msgstr "Diğer"
 
@@ -2095,9 +1878,8 @@ msgstr "Abonelik Formları"
 msgid "Assets"
 msgstr "Varlıklar"
 
-#: classes/Admin/Settings.php:1245
-#: classes/Services/License.php:1158
 #. translators: %s is the error message
+#: classes/Admin/Settings.php:1245 classes/Services/License.php:1158
 #, php-format
 msgid "Error loading license status: %s"
 msgstr "Lisans durumu yüklenirken hata oluştu: %s"
@@ -2114,45 +1896,40 @@ msgstr "Bul"
 msgid "Subscribers Per Page"
 msgstr "Sayfa Başına Abone"
 
-#: classes/Admin/Subscribers/Table.php:102
-#: classes/Privacy.php:233
-#: classes/Shortcode/Subscribe.php:217
-#: classes/Shortcode/Subscribe.php:221
-#: classes/Shortcode/Subscribe.php:269
-#: classes/Shortcode/Subscribe.php:270
+#: classes/Admin/Subscribers/Table.php:102 classes/Privacy.php:233
+#: classes/Shortcode/Subscribe.php:217 classes/Shortcode/Subscribe.php:221
+#: classes/Shortcode/Subscribe.php:269 classes/Shortcode/Subscribe.php:270
 msgid "Email"
 msgstr "E-posta"
 
-#: classes/Admin/Subscribers/Table.php:103
-#: classes/Shortcode/Subscribe.php:190
+#: classes/Admin/Subscribers/Table.php:103 classes/Shortcode/Subscribe.php:190
 #: classes/Shortcode/Subscribe.php:245
 msgid "Full Name"
 msgstr "Ad Soyad"
 
-#: classes/Admin/Subscribers/Table.php:104
-#: classes/Privacy.php:245
-#: classes/Shortcode/Subscribe.php:199
-#: classes/Shortcode/Subscribe.php:204
-#: classes/Shortcode/Subscribe.php:253
-#: classes/Shortcode/Subscribe.php:257
+#: classes/Admin/Subscribers/Table.php:104 classes/Privacy.php:245
+#: classes/Shortcode/Subscribe.php:199 classes/Shortcode/Subscribe.php:204
+#: classes/Shortcode/Subscribe.php:253 classes/Shortcode/Subscribe.php:257
 msgid "First Name"
 msgstr "Ad"
 
-#: classes/Admin/Subscribers/Table.php:105
-#: classes/Privacy.php:251
-#: classes/Shortcode/Subscribe.php:208
-#: classes/Shortcode/Subscribe.php:213
-#: classes/Shortcode/Subscribe.php:261
-#: classes/Shortcode/Subscribe.php:265
+#: classes/Admin/Subscribers/Table.php:105 classes/Privacy.php:251
+#: classes/Shortcode/Subscribe.php:208 classes/Shortcode/Subscribe.php:213
+#: classes/Shortcode/Subscribe.php:261 classes/Shortcode/Subscribe.php:265
 msgid "Last Name"
 msgstr "Soyad"
+
+#: classes/Admin/Subscribers/Table.php:108
+msgctxt "column name"
+msgid "Subscribed On"
+msgstr "Abone Olunduğu Tarih"
 
 #: classes/Admin/Subscribers/Table.php:151
 msgid "No subscribers available."
 msgstr "Kullanılabilir abone yok."
 
-#: classes/Admin/Subscribers/Table.php:186
 #. translators: %s is the name of the subscriber.
+#: classes/Admin/Subscribers/Table.php:186
 #, php-format
 msgid "Select %s"
 msgstr "Abone olarak %s seçin"
@@ -2161,16 +1938,13 @@ msgstr "Abone olarak %s seçin"
 msgid "User ID"
 msgstr "Kullanıcı Kimliği"
 
-#: classes/Admin/Subscribers/Table.php:312
-#: classes/Privacy.php:227
+#: classes/Admin/Subscribers/Table.php:312 classes/Privacy.php:227
 #: dist/packages/cta-admin.js:23
 msgid "ID"
 msgstr "Kimlik"
 
-#: classes/Admin/Subscribers/Table.php:332
-#: classes/Admin/Templates.php:413
-#: classes/Admin/Templates.php:418
-#: classes/Admin/Templates.php:423
+#: classes/Admin/Subscribers/Table.php:332 classes/Admin/Templates.php:413
+#: classes/Admin/Templates.php:418 classes/Admin/Templates.php:423
 #: dist/packages/cta-editor.js:1
 msgid "Delete"
 msgstr "Sil"
@@ -2192,8 +1966,7 @@ msgstr[1] "silinemedi."
 msgid "Invalid Nonce"
 msgstr "Geçersiz Nonce"
 
-#: classes/Admin/Subscribers/Table.php:427
-#: classes/Extension/Updater.php:609
+#: classes/Admin/Subscribers/Table.php:427 classes/Extension/Updater.php:609
 #: includes/admin/class-pum-admin-upgrades.php:247
 #: includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32
 #: includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43
@@ -2204,7 +1977,8 @@ msgid "Error"
 msgstr "Hata"
 
 #: classes/Admin/Support.php:52
-msgid "<b>Secure HTTPS contact page</b>, running via iframe from external domain"
+msgid ""
+"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
 msgstr ""
 "<b>Güvenli HTTPS iletişim sayfası</b>, harici alan adından iframe üzerinden "
 "çalışıyor"
@@ -2221,8 +1995,7 @@ msgstr "Bu uzantı Pro+ lisansınız kapsamında. Ayrı bir etkinleştirme gerek
 
 #: classes/Admin/Templates.php:213
 msgid ""
-"This extension is covered by your Pro license. No separate activation "
-"needed!"
+"This extension is covered by your Pro license. No separate activation needed!"
 msgstr ""
 "Bu uzantı Pro lisansınız kapsamında yer alır. Ayrı bir etkinleştirme "
 "gerekmez!"
@@ -2237,12 +2010,9 @@ msgstr ""
 "Lisans anahtarı güvenlik için gizlenmiştir. Değişiklik yapmak için devre "
 "dışı bırakın."
 
-#: classes/Admin/Templates.php:235
-#: classes/Admin/Templates.php:411
-#: classes/Admin/Templates.php:426
-#: classes/Admin/Templates.php:513
-#: classes/Admin/Templates.php:523
-#: dist/packages/addons-page.js:1
+#: classes/Admin/Templates.php:235 classes/Admin/Templates.php:411
+#: classes/Admin/Templates.php:426 classes/Admin/Templates.php:513
+#: classes/Admin/Templates.php:523 dist/packages/addons-page.js:1
 #: dist/packages/addons-page.js:4
 msgid "Active"
 msgstr "Etkin"
@@ -2251,8 +2021,7 @@ msgstr "Etkin"
 msgid "Deactivate License"
 msgstr "Lisansı Devre Dışı Bırak"
 
-#: classes/Admin/Templates.php:238
-#: classes/Admin/Templates.php:421
+#: classes/Admin/Templates.php:238 classes/Admin/Templates.php:421
 #: dist/packages/addons-page.js:1
 msgid "Inactive"
 msgstr "Etkin Değil"
@@ -2273,8 +2042,7 @@ msgstr "Premium E-ticaret Sürümü"
 msgid "Activated"
 msgstr "Etkinleştirildi"
 
-#: classes/Admin/Templates.php:345
-#: classes/Admin/Templates.php:416
+#: classes/Admin/Templates.php:345 classes/Admin/Templates.php:416
 #: classes/Admin/Templates.php:513
 msgid "Deactivated"
 msgstr "Devre Dışı Bırakıldı"
@@ -2291,18 +2059,15 @@ msgstr "Geçersiz"
 msgid "Enter your Popup Maker Pro License Key"
 msgstr "Popup Maker Pro Lisans Anahtarınızı girin"
 
-#: classes/Admin/Templates.php:374
-#: classes/Admin/Templates.php:452
+#: classes/Admin/Templates.php:374 classes/Admin/Templates.php:452
 msgid "Your Pro+ license key is active."
 msgstr "Pro+ lisans anahtarınız etkin."
 
-#: classes/Admin/Templates.php:376
-#: classes/Admin/Templates.php:462
+#: classes/Admin/Templates.php:376 classes/Admin/Templates.php:462
 msgid "Your Pro license key is active."
 msgstr "Pro lisans anahtarınız etkin."
 
-#: classes/Admin/Templates.php:379
-#: classes/Admin/Templates.php:471
+#: classes/Admin/Templates.php:379 classes/Admin/Templates.php:471
 msgid "Your Pro license is valid but deactivated on this site."
 msgstr "Pro lisansınız geçerli, ancak bu sitede devre dışı bırakılmış."
 
@@ -2315,10 +2080,11 @@ msgstr ""
 "özelliklerin keyfini çıkarmaya devam edin!"
 
 #: classes/Admin/Templates.php:383
-msgid "You are currently using Popup Maker Free — no license key required. Enjoy!"
+msgid ""
+"You are currently using Popup Maker Free — no license key required. Enjoy!"
 msgstr ""
-"Şu anda Popup Maker Free kullanıyorsunuz — lisans anahtarı gerekmez. "
-"Keyfini çıkarın!"
+"Şu anda Popup Maker Free kullanıyorsunuz — lisans anahtarı gerekmez. Keyfini "
+"çıkarın!"
 
 #: classes/Admin/Templates.php:394
 msgid "Enter your license key below to activate"
@@ -2340,20 +2106,16 @@ msgstr "!"
 msgid "Paste or enter your license key here."
 msgstr "Lisans anahtarınızı buraya yapıştırın veya girin."
 
-#: classes/Admin/Templates.php:408
-#: classes/Admin/Templates.php:417
-#: classes/Admin/Templates.php:422
-#: dist/packages/addons-page.js:3
+#: classes/Admin/Templates.php:408 classes/Admin/Templates.php:417
+#: classes/Admin/Templates.php:422 dist/packages/addons-page.js:3
 msgid "Activate"
 msgstr "Etkinleştir"
 
-#: classes/Admin/Templates.php:412
-#: dist/packages/addons-page.js:3
+#: classes/Admin/Templates.php:412 dist/packages/addons-page.js:3
 msgid "Deactivate"
 msgstr "Devre dışı bırak"
 
-#: classes/Admin/Templates.php:413
-#: classes/Admin/Templates.php:418
+#: classes/Admin/Templates.php:413 classes/Admin/Templates.php:418
 #: classes/Admin/Templates.php:423
 msgid ""
 "Are you sure you want to delete this license key? This action cannot be "
@@ -2368,8 +2130,7 @@ msgstr "(Otomatik etkinleştirildi)"
 
 #: classes/Admin/Templates.php:441
 msgid ""
-"Enter your license key to activate. If you do not have a license key, you "
-"can"
+"Enter your license key to activate. If you do not have a license key, you can"
 msgstr ""
 "Etkinleştirmek için lisans anahtarınızı girin. Eğer bir lisans anahtarınız "
 "yoksa,"
@@ -2378,14 +2139,12 @@ msgstr ""
 msgid "purchase one here"
 msgstr "buradan bir tane satın alabilirsiniz"
 
-#: classes/Admin/Templates.php:453
-#: classes/Admin/Templates.php:463
+#: classes/Admin/Templates.php:453 classes/Admin/Templates.php:463
 #: classes/Admin/Templates.php:486
 msgid "Thank you for supporting Popup Maker!"
 msgstr "Popup Maker'ı desteklediğiniz için teşekkür ederiz!"
 
-#: classes/Admin/Templates.php:455
-#: classes/Admin/Templates.php:465
+#: classes/Admin/Templates.php:455 classes/Admin/Templates.php:465
 #: classes/Admin/Templates.php:488
 msgid "Manage add-ons"
 msgstr "Eklentileri yönet"
@@ -2526,8 +2285,7 @@ msgstr "Paraya Çevirin & Her Dönüşümü İzleyin"
 msgid "Revenue Attribution & Analytics"
 msgstr "Gelir Atıfı ve Analitik"
 
-#: classes/Admin/Templates.php:613
-#: classes/Admin/Templates.php:620
+#: classes/Admin/Templates.php:613 classes/Admin/Templates.php:620
 msgid "Enhanced with Pro+"
 msgstr "Pro+ ile Geliştirilmiş"
 
@@ -2549,16 +2307,14 @@ msgid ""
 "effectiveness in real-time and make data-driven optimization decisions "
 "instantly."
 msgstr ""
-" Ayrıntılı dönüşüm metrikleriyle canlı performans takibi. Pop-up "
-"etkinliğini gerçek zamanlı izleyin ve veri odaklı optimizasyon kararlarını "
-"anında verin."
+" Ayrıntılı dönüşüm metrikleriyle canlı performans takibi. Pop-up etkinliğini "
+"gerçek zamanlı izleyin ve veri odaklı optimizasyon kararlarını anında verin."
 
 #: classes/Admin/Templates.php:627
 msgid "WooCommerce Integration"
 msgstr "WooCommerce Entegrasyonu"
 
-#: classes/Admin/Templates.php:627
-#: classes/Admin/Templates.php:634
+#: classes/Admin/Templates.php:627 classes/Admin/Templates.php:634
 msgid "Exclusive"
 msgstr "Özel"
 
@@ -2577,12 +2333,11 @@ msgstr "Easy Digital Downloads Entegrasyonu"
 #: classes/Admin/Templates.php:635
 msgid ""
 " Perfect for software and digital product sales with license management. "
-"Seamlessly integrate checkout flows and boost digital sales conversion "
-"rates."
+"Seamlessly integrate checkout flows and boost digital sales conversion rates."
 msgstr ""
 " Lisans yönetimiyle yazılım ve dijital ürün satışları için mükemmeldir. "
-"Ödeme akışlarını sorunsuzca entegre edin ve dijital satış dönüşüm "
-"oranlarını artırın."
+"Ödeme akışlarını sorunsuzca entegre edin ve dijital satış dönüşüm oranlarını "
+"artırın."
 
 #: classes/Admin/Templates.php:686
 msgid "Category"
@@ -2601,8 +2356,7 @@ msgstr "Etiket"
 msgid "Value"
 msgstr "Değer"
 
-#: classes/Admin/Templates.php:730
-#: classes/Admin/Templates.php:735
+#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
 #: classes/Controllers/Admin/WP/PluginsPage.php:106
 #: dist/packages/cta-editor.js:1
 msgid "Documentation"
@@ -2612,10 +2366,9 @@ msgstr "Dokümantasyon"
 msgid "Add New Trigger"
 msgstr "Yeni Tetikleyici Ekle"
 
-#: classes/Admin/Templates.php:851
-#: classes/Admin/Templates.php:1016
-#: classes/Admin/Templates.php:1124
 #. translators: 1. contextual help link text.
+#: classes/Admin/Templates.php:851 classes/Admin/Templates.php:1016
+#: classes/Admin/Templates.php:1124
 #, php-format
 msgid "Learn more about %s"
 msgstr " %s hakkında daha fazla bilgi edinin"
@@ -2624,25 +2377,21 @@ msgstr " %s hakkında daha fazla bilgi edinin"
 msgid "Triggers cause a popup to open."
 msgstr "Tetikleyiciler bir açılır pencerenin açılmasına neden olur."
 
-#: classes/Admin/Templates.php:864
-#: dist/packages/cta-admin.js:4
+#: classes/Admin/Templates.php:864 dist/packages/cta-admin.js:4
 #: dist/packages/cta-admin.js:23
 msgid "Type"
 msgstr "Tür"
 
-#: classes/Admin/Templates.php:865
-#: classes/Triggers.php:368
+#: classes/Admin/Templates.php:865 classes/Triggers.php:368
 msgid "Cookie"
 msgstr "Çerez"
 
-#: classes/Admin/Templates.php:867
-#: classes/Admin/Templates.php:1140
+#: classes/Admin/Templates.php:867 classes/Admin/Templates.php:1140
 #: classes/Shortcode/Subscribe.php:66
 msgid "Actions"
 msgstr "Eylemler"
 
-#: classes/Admin/Templates.php:896
-#: classes/Admin/Templates.php:905
+#: classes/Admin/Templates.php:896 classes/Admin/Templates.php:905
 msgid "Edit this trigger"
 msgstr "Bu tetikleyiciyi düzenle"
 
@@ -2711,11 +2460,10 @@ msgstr ""
 #: classes/Admin/Templates.php:1028
 msgid "Target the popup to a specific segment by adding conditions below."
 msgstr ""
-"Aşağıdaki koşulları ekleyerek açılır pencereyi belirli bir bölüme "
-"hedefleyin."
+"Aşağıdaki koşulları ekleyerek açılır pencereyi belirli bir bölüme hedefleyin."
 
-#: classes/Admin/Templates.php:1033
 #. translators: 1. button text. 2. warning icon.
+#: classes/Admin/Templates.php:1033
 #, php-format
 msgid ""
 "Click the %1$s button for any condition to check the opposite of the chosen "
@@ -2726,26 +2474,33 @@ msgstr ""
 
 #: classes/Admin/Templates.php:1053
 msgid ""
-"Choose a condition to target your popup to specific content or various "
-"other segments."
+"Choose a condition to target your popup to specific content or various other "
+"segments."
 msgstr ""
 "Açılır pencerenizi belirli içeriklere veya çeşitli diğer bölümlere "
 "hedeflemek için bir koşul seçin."
 
-#: classes/Admin/Templates.php:1055
-#: classes/Admin/Templates.php:1087
+#: classes/Admin/Templates.php:1055 classes/Admin/Templates.php:1087
 msgid "Enable the Not Operand"
 msgstr "Not Operatörünü Etkinleştir"
 
-#: classes/Admin/Templates.php:1058
-#: classes/Admin/Templates.php:1091
+#: classes/Admin/Templates.php:1058 classes/Admin/Templates.php:1091
 msgid "Choose a condition"
 msgstr "Bir koşul seçin"
 
 #: classes/Admin/Templates.php:1074
-#: classes/Admin/Templates.php:1085
+msgctxt "aria-label for add new OR condition button"
+msgid "Add another OR condition"
+msgstr "Başka bir OR koşulu ekle"
+
+#: classes/Admin/Templates.php:1074 classes/Admin/Templates.php:1085
 msgid "or"
 msgstr "veya"
+
+#: classes/Admin/Templates.php:1078
+msgctxt "aria-label for add new AND condition button"
+msgid "Add another AND condition group"
+msgstr "Başka bir AND koşul grubu ekle"
 
 #: classes/Admin/Templates.php:1078
 msgid "and"
@@ -2755,13 +2510,11 @@ msgstr "ve"
 msgid "Remove Condition"
 msgstr "Koşulu Kaldır"
 
-#: classes/Admin/Templates.php:1117
-#: classes/Triggers.php:345
+#: classes/Admin/Templates.php:1117 classes/Triggers.php:345
 msgid "Add New Cookie"
 msgstr "Yeni Çerez Ekle"
 
-#: classes/Admin/Templates.php:1125
-#: classes/Privacy.php:67
+#: classes/Admin/Templates.php:1125 classes/Privacy.php:67
 #: classes/Site/Assets.php:301
 msgid "Cookies"
 msgstr "Çerezler"
@@ -2774,8 +2527,7 @@ msgstr "Çerezler, bir açılır pencerenin tekrar gösterilmesini kontrol eder.
 msgid "Event"
 msgstr "Olay"
 
-#: classes/Admin/Templates.php:1169
-#: classes/Admin/Templates.php:1178
+#: classes/Admin/Templates.php:1169 classes/Admin/Templates.php:1178
 msgid "Edit this cookie"
 msgstr "Bu çerezi düzenle"
 
@@ -2812,8 +2564,8 @@ msgid ""
 "If you move this theme preview to the bottom of your sidebar here it will "
 "follow you down the page?"
 msgstr ""
-"Bu tema önizlemesini kenar çubuğunuzun altına taşırsanız, sayfa boyunca "
-"sizi takip eder mi?"
+"Bu tema önizlemesini kenar çubuğunuzun altına taşırsanız, sayfa boyunca sizi "
+"takip eder mi?"
 
 #: classes/Admin/Themes.php:194
 msgid ""
@@ -2831,40 +2583,33 @@ msgstr "Biliyor muydunuz:"
 msgid "Overlay"
 msgstr "Kaplama"
 
-#: classes/Admin/Themes.php:376
-#: classes/Admin/Themes.php:401
+#: classes/Admin/Themes.php:376 classes/Admin/Themes.php:401
 msgid "Container"
 msgstr "Kapsayıcı"
 
-#: classes/Admin/Themes.php:378
-#: classes/Shortcode/Popup.php:43
+#: classes/Admin/Themes.php:378 classes/Shortcode/Popup.php:43
 #: classes/Shortcode/PopupClose.php:41
 msgid "Content"
 msgstr "İçerik"
 
-#: classes/Admin/Themes.php:398
-#: classes/Admin/Themes.php:402
+#: classes/Admin/Themes.php:398 classes/Admin/Themes.php:402
 #: classes/Admin/Themes.php:417
 msgid "Background"
 msgstr "Arka Plan"
 
-#: classes/Admin/Themes.php:403
-#: classes/Admin/Themes.php:418
+#: classes/Admin/Themes.php:403 classes/Admin/Themes.php:418
 msgid "Border"
 msgstr "Kenarlık"
 
-#: classes/Admin/Themes.php:404
-#: classes/Admin/Themes.php:419
+#: classes/Admin/Themes.php:404 classes/Admin/Themes.php:419
 msgid "Drop Shadow"
 msgstr "Düşen Gölge"
 
-#: classes/Admin/Themes.php:407
-#: classes/Admin/Themes.php:420
+#: classes/Admin/Themes.php:407 classes/Admin/Themes.php:420
 msgid "Font"
 msgstr "Yazı Tipi"
 
-#: classes/Admin/Themes.php:408
-#: classes/Admin/Themes.php:421
+#: classes/Admin/Themes.php:408 classes/Admin/Themes.php:421
 msgid "Text Shadow"
 msgstr "Metin Gölgesi"
 
@@ -2892,8 +2637,7 @@ msgstr "Çift"
 msgid "Groove"
 msgstr "Oluklu"
 
-#: classes/Admin/Themes.php:443
-#: classes/Admin/Themes.php:691
+#: classes/Admin/Themes.php:443 classes/Admin/Themes.php:691
 #: classes/Admin/Themes.php:1152
 msgid "Inset (inner shadow)"
 msgstr "İçe Çökük (iç gölge)"
@@ -2914,10 +2658,8 @@ msgstr "Temalarınızı Kullanın"
 msgid "System Fonts"
 msgstr "Sistem Yazı Tipleri"
 
-#: classes/Admin/Themes.php:500
-#: classes/Admin/Themes.php:754
-#: classes/Admin/Themes.php:853
-#: classes/Admin/Themes.php:1057
+#: classes/Admin/Themes.php:500 classes/Admin/Themes.php:754
+#: classes/Admin/Themes.php:853 classes/Admin/Themes.php:1057
 #: includes/legacy/input-options.php:37
 msgid "Normal"
 msgstr "Normal"
@@ -2926,118 +2668,88 @@ msgstr "Normal"
 msgid "Bold"
 msgstr "Kalın"
 
-#: classes/Admin/Themes.php:538
-#: classes/Admin/Themes.php:584
-#: classes/Admin/Themes.php:610
-#: classes/Admin/Themes.php:634
-#: classes/Admin/Themes.php:708
-#: classes/Admin/Themes.php:773
-#: classes/Admin/Themes.php:827
-#: classes/Admin/Themes.php:992
-#: classes/Admin/Themes.php:1011
-#: classes/Admin/Themes.php:1071
-#: classes/Admin/Themes.php:1095
-#: classes/Admin/Themes.php:1164
+#: classes/Admin/Themes.php:538 classes/Admin/Themes.php:584
+#: classes/Admin/Themes.php:610 classes/Admin/Themes.php:634
+#: classes/Admin/Themes.php:708 classes/Admin/Themes.php:773
+#: classes/Admin/Themes.php:827 classes/Admin/Themes.php:992
+#: classes/Admin/Themes.php:1011 classes/Admin/Themes.php:1071
+#: classes/Admin/Themes.php:1095 classes/Admin/Themes.php:1164
 msgid "Color"
 msgstr "Renk"
 
-#: classes/Admin/Themes.php:544
-#: classes/Admin/Themes.php:590
-#: classes/Admin/Themes.php:640
-#: classes/Admin/Themes.php:779
-#: classes/Admin/Themes.php:998
-#: classes/Admin/Themes.php:1101
+#: classes/Admin/Themes.php:544 classes/Admin/Themes.php:590
+#: classes/Admin/Themes.php:640 classes/Admin/Themes.php:779
+#: classes/Admin/Themes.php:998 classes/Admin/Themes.php:1101
 #: classes/Admin/Themes.php:1170
 msgid "Opacity"
 msgstr "Saydamlık"
 
-#: classes/Admin/Themes.php:562
-#: classes/Admin/Themes.php:950
+#: classes/Admin/Themes.php:562 classes/Admin/Themes.php:950
 msgid "Padding"
 msgstr "Dolgu"
 
-#: classes/Admin/Themes.php:572
-#: classes/Admin/Themes.php:980
+#: classes/Admin/Themes.php:572 classes/Admin/Themes.php:980
 msgid "Border Radius"
 msgstr "Kenarlık Yuvarlaklığı"
 
-#: classes/Admin/Themes.php:603
-#: classes/Admin/Themes.php:749
-#: classes/Admin/Themes.php:848
-#: classes/Admin/Themes.php:1052
+#: classes/Admin/Themes.php:603 classes/Admin/Themes.php:749
+#: classes/Admin/Themes.php:848 classes/Admin/Themes.php:1052
 #: classes/Admin/Themes.php:1064
 msgid "Style"
 msgstr "Stil"
 
-#: classes/Admin/Themes.php:619
-#: classes/Admin/Themes.php:1080
+#: classes/Admin/Themes.php:619 classes/Admin/Themes.php:1080
 msgid "Thickness"
 msgstr "Kalınlık"
 
-#: classes/Admin/Themes.php:651
-#: classes/Admin/Themes.php:790
-#: classes/Admin/Themes.php:1112
-#: classes/Admin/Themes.php:1181
+#: classes/Admin/Themes.php:651 classes/Admin/Themes.php:790
+#: classes/Admin/Themes.php:1112 classes/Admin/Themes.php:1181
 msgid "Horizontal Position"
 msgstr "Yatay Konum"
 
-#: classes/Admin/Themes.php:661
-#: classes/Admin/Themes.php:800
-#: classes/Admin/Themes.php:1122
-#: classes/Admin/Themes.php:1191
+#: classes/Admin/Themes.php:661 classes/Admin/Themes.php:800
+#: classes/Admin/Themes.php:1122 classes/Admin/Themes.php:1191
 msgid "Vertical Position"
 msgstr "Dikey Konum"
 
-#: classes/Admin/Themes.php:671
-#: classes/Admin/Themes.php:810
-#: classes/Admin/Themes.php:1132
-#: classes/Admin/Themes.php:1201
+#: classes/Admin/Themes.php:671 classes/Admin/Themes.php:810
+#: classes/Admin/Themes.php:1132 classes/Admin/Themes.php:1201
 msgid "Blur Radius"
 msgstr "Bulanıklık Yarıçapı"
 
-#: classes/Admin/Themes.php:681
-#: classes/Admin/Themes.php:1142
+#: classes/Admin/Themes.php:681 classes/Admin/Themes.php:1142
 msgid "Spread"
 msgstr "Yayılma"
 
-#: classes/Admin/Themes.php:714
-#: classes/Admin/Themes.php:1017
+#: classes/Admin/Themes.php:714 classes/Admin/Themes.php:1017
 msgid "Font Size"
 msgstr "Yazı Tipi Boyutu"
 
-#: classes/Admin/Themes.php:724
-#: classes/Admin/Themes.php:1027
+#: classes/Admin/Themes.php:724 classes/Admin/Themes.php:1027
 msgid "Line Height"
 msgstr "Satır Yüksekliği"
 
-#: classes/Admin/Themes.php:734
-#: classes/Admin/Themes.php:833
+#: classes/Admin/Themes.php:734 classes/Admin/Themes.php:833
 #: classes/Admin/Themes.php:1037
 msgid "Font Family"
 msgstr "Yazı Tipi Ailesi"
 
-#: classes/Admin/Themes.php:742
-#: classes/Admin/Themes.php:841
+#: classes/Admin/Themes.php:742 classes/Admin/Themes.php:841
 #: classes/Admin/Themes.php:1045
 msgid "Font Weight"
 msgstr "Yazı Tipi Kalınlığı"
 
-#: classes/Admin/Themes.php:755
-#: classes/Admin/Themes.php:854
-#: classes/Admin/Themes.php:1058
-#: includes/legacy/input-options.php:38
+#: classes/Admin/Themes.php:755 classes/Admin/Themes.php:854
+#: classes/Admin/Themes.php:1058 includes/legacy/input-options.php:38
 msgid "Italic"
 msgstr "İtalik"
 
-#: classes/Admin/Themes.php:759
-#: classes/Shortcode/CallToAction.php:141
+#: classes/Admin/Themes.php:759 classes/Shortcode/CallToAction.php:141
 msgid "Alignment"
 msgstr "Hizalama"
 
-#: classes/Admin/Themes.php:765
-#: classes/Shortcode/CallToAction.php:144
-#: classes/Shortcode/Subscribe.php:293
-#: includes/legacy/input-options.php:51
+#: classes/Admin/Themes.php:765 classes/Shortcode/CallToAction.php:144
+#: classes/Shortcode/Subscribe.php:293 includes/legacy/input-options.php:51
 msgid "Center"
 msgstr "Ortala"
 
@@ -3054,11 +2766,10 @@ msgid ""
 "To use a Font Awesome icon instead of text, enter the CSS classes such as "
 "\"fas fa-camera\"."
 msgstr ""
-"Metin yerine bir Font Awesome simgesi kullanmak için, \"fas fa-camera\" "
-"gibi CSS sınıflarını girin."
+"Metin yerine bir Font Awesome simgesi kullanmak için, \"fas fa-camera\" gibi "
+"CSS sınıflarını girin."
 
-#: classes/Admin/Themes.php:867
-#: classes/Admin/Themes.php:868
+#: classes/Admin/Themes.php:867 classes/Admin/Themes.php:868
 #: includes/functions/themes/deprecated.php:134
 msgid "CLOSE"
 msgstr "KAPAT"
@@ -3102,14 +2813,13 @@ msgid ""
 "not install automatically, you will still have the opportunity to ignore "
 "update notifications."
 msgstr ""
-"Aşağıdaki onay kutularından herhangi birini işaretlemek, ön sürüm "
-"güncelleme bildirimlerini almayı kabul ettiğiniz anlamına gelir. "
-"İstediğiniz zaman vazgeçebilirsiniz. Ön sürüm güncellemeleri otomatik "
-"olarak kurulmaz; güncelleme bildirimlerini yok sayma seçeneğiniz yine de "
-"olacaktır."
+"Aşağıdaki onay kutularından herhangi birini işaretlemek, ön sürüm güncelleme "
+"bildirimlerini almayı kabul ettiğiniz anlamına gelir. İstediğiniz zaman "
+"vazgeçebilirsiniz. Ön sürüm güncellemeleri otomatik olarak kurulmaz; "
+"güncelleme bildirimlerini yok sayma seçeneğiniz yine de olacaktır."
 
-#: classes/Admin/Tools.php:202
 #. translators: 1. Product name.
+#: classes/Admin/Tools.php:202
 #, php-format
 msgid "Get updates for pre-release versions of %s"
 msgstr "Ön sürüm sürümleri için %s güncellemelerini alın"
@@ -3146,10 +2856,10 @@ msgstr "Geçerli yöntemi koru"
 #: classes/AssetCache.php:707
 msgid ""
 "Popup Maker detected an issue with your file system's ability and is unable "
-"to create & save cached assets for your popup styling and settings. This "
-"may lead to suboptimal performance. Please check your filesystem and "
-"contact your hosting provide to ensure Popup Maker can create and write to "
-"cache files."
+"to create & save cached assets for your popup styling and settings. This may "
+"lead to suboptimal performance. Please check your filesystem and contact "
+"your hosting provide to ensure Popup Maker can create and write to cache "
+"files."
 msgstr ""
 "Popup Maker, dosya sisteminizin bu işlemi gerçekleştirme yeteneğinde bir "
 "sorun tespit etti ve açılır pencere stiliniz ve ayarlarınız için önbelleğe "
@@ -3158,8 +2868,8 @@ msgstr ""
 "Popup Maker'ın önbellek dosyalarına oluşturup yazabildiğinden emin olmak "
 "için barındırma sağlayıcınızla iletişime geçin."
 
-#: classes/Base/CallToAction.php:135
 #. translators: %s: Field label
+#: classes/Base/CallToAction.php:135
 #, php-format
 msgid "%s is required"
 msgstr "%s gereklidir"
@@ -3196,8 +2906,7 @@ msgstr "URL gerekli"
 msgid "Pages"
 msgstr "Sayfalar"
 
-#: classes/Conditions.php:111
-#: classes/Conditions.php:542
+#: classes/Conditions.php:111 classes/Conditions.php:542
 msgid "Posts"
 msgstr "Yazılar"
 
@@ -3205,11 +2914,125 @@ msgstr "Yazılar"
 msgid "Format"
 msgstr "Biçim"
 
-#: classes/Conditions.php:362
-#: classes/Shortcode/Subscribe.php:137
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:236
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: All"
+msgid "%s Archive"
+msgstr "%s Arşivi"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:248
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: All"
+msgid "All %s"
+msgstr "Tüm %s"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:258
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: Selected"
+msgid "%s: Selected"
+msgstr "%s: Seçili"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:265 classes/Conditions.php:310
+#: classes/Conditions.php:333
+#, php-format
+msgctxt "condition: post type plural label ie. Select Posts"
+msgid "Select %s."
+msgstr "%s seçin."
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:282
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: ID"
+msgstr "%s: Kimlik"
+
+#. translators: 1. Post type singular label.
+#: classes/Conditions.php:289
+#, php-format
+msgctxt "condition: post type singular label ie. Posts IDs"
+msgid "%s IDs: 128, 129"
+msgstr "%s Kimlikleri: 128, 129"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:303
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: Child Of"
+msgstr "%s: Alt Ögesi"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:326
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: Ancestor Of"
+msgstr "%s: Üst Ögesi"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:353
+#, php-format
+msgctxt "condition: post type plural label ie. Pages: With Template"
+msgid "%s: With Template"
+msgstr "%s: Şablonlu"
+
+#: classes/Conditions.php:362 classes/Shortcode/Subscribe.php:137
 #: classes/Shortcode/Subscribe.php:305
 msgid "Default"
 msgstr "Varsayılan"
+
+#. translators: 1. Post type plural label, 2. Taxonomy singular label.
+#: classes/Conditions.php:411
+#, php-format
+msgctxt ""
+"condition: post type plural and taxonomy singular label ie. Posts: With "
+"Category"
+msgid "%1$s: With %2$s"
+msgstr "%1$s: %2$s ile"
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:419
+#, php-format
+msgctxt "condition: post type plural label ie. Select categories"
+msgid "Select %s."
+msgstr "%s seçin."
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:464
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Categories: All"
+msgid "%s: All"
+msgstr "%s: Tümü"
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:474
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Categories: Selected"
+msgid "%s: Selected"
+msgstr "%s: Seçili"
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:481
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Select Categories"
+msgid "Select %s."
+msgstr "%s seçin."
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:497
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Categories: Selected"
+msgid "%s: IDs"
+msgstr "%s: Kimlikler"
+
+#. translators: 1. Taxonomy singular label.
+#: classes/Conditions.php:504
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Category IDs"
+msgid "%s IDs: 128, 129"
+msgstr "%s ID'leri: 128, 129"
 
 #: classes/Conditions.php:536
 msgid "Home Page"
@@ -3246,8 +3069,7 @@ msgstr "Destek Erişimi Ver"
 #: includes/integrations/class-pum-cf7.php:167
 #: includes/integrations/class-pum-gravity-forms.php:192
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:45
-#: dist/packages/block-editor.js:1
-#: dist/packages/block-editor.js:2
+#: dist/packages/block-editor.js:1 dist/packages/block-editor.js:2
 msgid "Open Popup"
 msgstr "Açılır Pencereyi Aç"
 
@@ -3280,15 +3102,14 @@ msgid "Get Selector"
 msgstr "Seçiciyi Al"
 
 #: classes/Controllers/Admin/ToolbarNotifications.php:281
-#: classes/Utils/Alerts.php:482
-#: dist/packages/admin-notifications.js:2
+#: classes/Utils/Alerts.php:497 dist/packages/admin-notifications.js:2
 msgid "Notifications"
 msgstr "Bildirimler"
 
+#. translators: %d: notification count.
 #: classes/Controllers/Admin/ToolbarNotifications.php:305
 #: dist/packages/admin-notifications.js:3
-#. translators: %d: notification count.
-#, php-format,js-format
+#, php-format
 msgid "%d Popup Maker notification"
 msgid_plural "%d Popup Maker notifications"
 msgstr[0] "%d Popup Maker bildirimi"
@@ -3309,11 +3130,31 @@ msgstr "Çevir"
 
 #: classes/Controllers/Assets.php:74
 msgid ""
-"Click Start Selection, then click a page element (text, button, image, "
-"etc.) to get its CSS selector."
+"Click Start Selection, then click a page element (text, button, image, etc.) "
+"to get its CSS selector."
 msgstr ""
 "Başlat Seçimi'ne tıklayın, ardından CSS seçicisini almak için bir sayfa "
 "öğesine (metin, düğme, resim vb.) tıklayın."
+
+#: classes/Controllers/Assets.php:75
+msgctxt "JS alert for CSS get selector tool"
+msgid "Selector"
+msgstr "Seçici"
+
+#: classes/Controllers/Assets.php:76
+msgctxt "JS alert for CSS get selector tool"
+msgid "Close"
+msgstr "Kapat"
+
+#: classes/Controllers/Assets.php:77
+msgctxt "JS alert for CSS get selector tool"
+msgid "Copy"
+msgstr "Kopyala"
+
+#: classes/Controllers/Assets.php:78
+msgctxt "JS alert for CSS get selector tool"
+msgid "Copied to clipboard"
+msgstr "Panoya kopyalandı"
 
 #: classes/Controllers/Compatibility/Builder/Divi.php:177
 msgid ""
@@ -3327,12 +3168,94 @@ msgstr ""
 msgid "Popups"
 msgstr "Açılır Pencereler"
 
-#: classes/Controllers/PostTypes.php:345
-#: classes/Controllers/PostTypes.php:351
-#: classes/Controllers/PostTypes.php:595
-#: dist/packages/block-library.js:1
+#: classes/Controllers/PostTypes.php:345 classes/Controllers/PostTypes.php:351
+#: classes/Controllers/PostTypes.php:595 dist/packages/block-library.js:1
 msgid "Call to Action"
 msgstr "Eylem Çağrısı"
+
+#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
+#: classes/Controllers/PostTypes.php:501 classes/Controllers/PostTypes.php:503
+#, php-format
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "Add New %1$s"
+msgstr "Yeni %1$s Ekle"
+
+#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
+#: classes/Controllers/PostTypes.php:505
+#, php-format
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "Edit %1$s"
+msgstr "%1$s Düzenle"
+
+#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
+#: classes/Controllers/PostTypes.php:507
+#, php-format
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "New %1$s"
+msgstr "Yeni %1$s"
+
+#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
+#: classes/Controllers/PostTypes.php:509
+#, php-format
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "All %2$s"
+msgstr "Tüm %2$s"
+
+#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
+#: classes/Controllers/PostTypes.php:511
+#, php-format
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "View %1$s"
+msgstr "%1$s Görüntüle"
+
+#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
+#: classes/Controllers/PostTypes.php:513
+#, php-format
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "Search %2$s"
+msgstr "%2$s ara"
+
+#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
+#: classes/Controllers/PostTypes.php:515
+#, php-format
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "No %2$s found"
+msgstr "Hiç %2$s bulunamadı"
+
+#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
+#: classes/Controllers/PostTypes.php:517
+#, php-format
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "No %2$s found in Trash"
+msgstr "Çöpte %2$s bulunamadı"
+
+#. translators: %1$s: Post Type Singular: Popup, Theme
+#: classes/Controllers/PostTypes.php:580 classes/Controllers/PostTypes.php:582
+#, php-format
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s updated."
+msgstr "%1$s güncellendi."
+
+#. translators: %1$s: Post Type Singular: Popup, Theme
+#: classes/Controllers/PostTypes.php:584
+#, php-format
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s published."
+msgstr "%1$s yayımlandı."
+
+#. translators: %1$s: Post Type Singular: Popup, Theme
+#: classes/Controllers/PostTypes.php:586
+#, php-format
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s saved."
+msgstr "%1$s kaydedildi."
+
+#. translators: %1$s: Post Type Singular: Popup, Theme
+#: classes/Controllers/PostTypes.php:588
+#, php-format
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s submitted."
+msgstr "%1$s gönderildi."
 
 #: classes/Controllers/RestAPI.php:114
 msgid "The popup title displayed inside the popup."
@@ -3402,19 +3325,16 @@ msgstr "Açılır Pencere Açılırken"
 msgid "On Popup Conversion"
 msgstr "Açılır Pencere Dönüşümünde"
 
-#: classes/Cookies.php:99
-#: classes/Shortcode/Subscribe.php:64
+#: classes/Cookies.php:99 classes/Shortcode/Subscribe.php:64
 #: classes/Triggers.php:222
 msgid "Form"
 msgstr "Form"
 
-#: classes/Cookies.php:102
-#: classes/Triggers.php:225
+#: classes/Cookies.php:102 classes/Triggers.php:225
 msgid "Any Supported Form*"
 msgstr "Desteklenen Herhangi Bir Form*"
 
-#: classes/Cookies.php:104
-#: classes/Shortcode/Subscribe.php:41
+#: classes/Cookies.php:104 classes/Shortcode/Subscribe.php:41
 #: classes/Triggers.php:227
 msgid "Subscription Form"
 msgstr "Abonelik Formu"
@@ -3431,8 +3351,7 @@ msgstr "Abonelik Formu: Başarılı"
 msgid "Subscription Form: Already Subscribed"
 msgstr "Abonelik Formu: Zaten Abone Olunmuş"
 
-#: classes/Cookies.php:128
-#: includes/legacy/input-options.php:165
+#: classes/Cookies.php:128 includes/legacy/input-options.php:165
 msgid "Manual"
 msgstr "Manuel"
 
@@ -3444,35 +3363,28 @@ msgstr "Çerez Ayarları"
 msgid "Sessions"
 msgstr "Oturumlar"
 
-#: classes/Cookies.php:232
-#: classes/Privacy.php:79
-#: classes/Shortcode/PopupCookie.php:48
-#: classes/Triggers.php:337
+#: classes/Cookies.php:232 classes/Privacy.php:79
+#: classes/Shortcode/PopupCookie.php:48 classes/Triggers.php:337
 msgid "Cookie Name"
 msgstr "Çerez Adı"
 
-#: classes/Cookies.php:233
-#: classes/Shortcode/PopupCookie.php:49
+#: classes/Cookies.php:233 classes/Shortcode/PopupCookie.php:49
 msgid "Cookie Name ex. popmaker-123"
 msgstr "Çerez Adı örn. popmaker-123"
 
-#: classes/Cookies.php:234
-#: classes/Shortcode/PopupCookie.php:50
+#: classes/Cookies.php:234 classes/Shortcode/PopupCookie.php:50
 msgid "The name that will be used when checking for or saving this cookie."
 msgstr "Bu çerez denetlenirken veya kaydedilirken kullanılacak ad."
 
-#: classes/Cookies.php:239
-#: classes/Shortcode/PopupCookie.php:54
+#: classes/Cookies.php:239 classes/Shortcode/PopupCookie.php:54
 msgid "Cookie Time"
 msgstr "Çerez Süresi"
 
-#: classes/Cookies.php:240
-#: classes/Shortcode/PopupCookie.php:55
+#: classes/Cookies.php:240 classes/Shortcode/PopupCookie.php:55
 msgid "364 days 23 hours 59 minutes 59 seconds"
 msgstr "364 gün 23 saat 59 dakika 59 saniye"
 
-#: classes/Cookies.php:241
-#: classes/Shortcode/PopupCookie.php:56
+#: classes/Cookies.php:241 classes/Shortcode/PopupCookie.php:56
 msgid "Enter a plain english time before cookie expires."
 msgstr "Çerez süresi dolmadan önce düz İngilizce bir süre girin."
 
@@ -3484,8 +3396,8 @@ msgstr "Oturum Çerezi Kullanılsın mı?"
 msgid "Session cookies expire when the user closes their browser."
 msgstr "Oturum çerezleri, kullanıcı tarayıcısını kapattığında sona erer."
 
-#: classes/Cookies.php:251
 #. translators: %1$s: bold start, %2$s: bold end.
+#: classes/Cookies.php:251
 #, php-format
 msgid ""
 "%1$sNote%2$s: Modern browsers that reopen your last browser session's tabs "
@@ -3494,13 +3406,11 @@ msgstr ""
 "%1$sNot%2$s: Son tarayıcı oturumunuzun sekmelerini yeniden açan modern "
 "tarayıcılar, oturum çerezlerini düzgün şekilde temizlemez"
 
-#: classes/Cookies.php:260
-#: classes/Shortcode/PopupCookie.php:60
+#: classes/Cookies.php:260 classes/Shortcode/PopupCookie.php:60
 msgid "Sitewide Cookie"
 msgstr "Site genelinde çerez"
 
-#: classes/Cookies.php:261
-#: classes/Shortcode/PopupCookie.php:61
+#: classes/Cookies.php:261 classes/Shortcode/PopupCookie.php:61
 msgid ""
 "This will prevent the popup from triggering on all pages until the cookie "
 "expires."
@@ -3516,53 +3426,47 @@ msgstr "Çerez Anahtarı"
 msgid "Changing this will cause all existing cookies to be invalid."
 msgstr "Bunu değiştirmek, mevcut tüm çerezleri geçersiz kılacaktır."
 
-#: classes/Extension/Activator.php:171
-#: classes/Utils/Prerequisites.php:323
+#: classes/Extension/Activator.php:171 classes/Utils/Prerequisites.php:323
 #: includes/pum-sdk/class-pum-extension-activation.php:115
 msgid "activate it"
 msgstr "etkinleştirin"
 
-#: classes/Extension/Activator.php:174
-#: classes/Extension/Activator.php:199
-#: classes/Utils/Prerequisites.php:327
-#: classes/Utils/Prerequisites.php:350
 #. translators: 1. Plugin name, 2. Required plugin name, 3. `activate it` link.
 #. translators: 1. Plugin name, 2. Required plugin name, 3. `install it` link.
 #. translators: 1. Plugin Name, 2. Required Plugin Name, 4. `activate it` link.
 #. translators: 1. Plugin Name, 2. Required Plugin Name, 3. `install it` link.
+#: classes/Extension/Activator.php:174 classes/Extension/Activator.php:199
+#: classes/Utils/Prerequisites.php:327 classes/Utils/Prerequisites.php:350
 #, php-format
 msgid "The plugin \"%1$s\" requires %2$s! Please %3$s to continue!"
 msgstr "“%1$s” eklentisi %2$s gerektiriyor! Devam etmek için lütfen %3$s!"
 
-#: classes/Extension/Activator.php:183
-#: classes/Utils/Prerequisites.php:334
+#: classes/Extension/Activator.php:183 classes/Utils/Prerequisites.php:334
 msgid "update it"
 msgstr "güncelleyin"
 
-#: classes/Extension/Activator.php:186
-#: classes/Utils/Prerequisites.php:338
 #. translators: 1. Plugin name, 2. Required plugin name, 3. Version number, 4. `update it` link.
 #. translators: 1. Plugin Name, 2. Required Plugin Name, 3. Version number, 4. `update it` link.
+#: classes/Extension/Activator.php:186 classes/Utils/Prerequisites.php:338
 #, php-format
-msgid "The plugin \"%1$s\" requires %2$s v%3$s or higher! Please %4$s to continue!"
+msgid ""
+"The plugin \"%1$s\" requires %2$s v%3$s or higher! Please %4$s to continue!"
 msgstr ""
 "“%1$s” eklentisi %2$s v%3$s veya üzerini gerektiriyor! Devam etmek için "
 "lütfen %4$s!"
 
-#: classes/Extension/Activator.php:196
-#: classes/Utils/Prerequisites.php:346
+#: classes/Extension/Activator.php:196 classes/Utils/Prerequisites.php:346
 #: includes/pum-sdk/class-pum-extension-activation.php:118
 msgid "install it"
 msgstr "yükleyin"
 
-#: classes/Extension/License.php:300
-#: classes/Services/License.php:760
+#: classes/Extension/License.php:300 classes/Services/License.php:760
 #: classes/Services/License.php:924
 msgid "An error occurred, please try again."
 msgstr "Bir hata oluştu, lütfen tekrar deneyin."
 
-#: classes/Extension/License.php:514
 #. translators: 1. opening link text, 2. closing link text
+#: classes/Extension/License.php:514
 #, php-format
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
@@ -3572,8 +3476,8 @@ msgstr ""
 "Güncellemeleri almak için eklenti lisans anahtarlarınızı buraya girin. "
 "Lisans anahtarınızın süresi dolduysa, lütfen %1$slisansınızı yenileyin%2$s."
 
-#: classes/Extension/License.php:746
 #. translators: 1. Extension name, 2. opening link text, 3. closing link text
+#: classes/Extension/License.php:746
 #, php-format
 msgid ""
 "%1$s is missing a license key. You will not receive updates until a valid "
@@ -3582,8 +3486,8 @@ msgstr ""
 "%1$s için bir lisans anahtarı eksik. %2$sLisanslar sayfası%3$s üzerinde "
 "geçerli bir anahtar girilene kadar güncelleme alamayacaksınız."
 
-#: classes/Extension/License.php:760
 #. translators: 1. Extension name, 2. opening link text, 3. closing link text
+#: classes/Extension/License.php:760
 #, php-format
 msgid ""
 "%1$s has an invalid or expired license key. Please visit the %2$sLicenses "
@@ -3592,8 +3496,8 @@ msgstr ""
 "%1$s için geçersiz veya süresi dolmuş bir lisans anahtarı var. Bunu "
 "düzeltmek için lütfen %2$sLisanslar sayfasını%3$s ziyaret edin."
 
-#: classes/Extension/License.php:805
 #. translators: 1. opening link text, 2. closing link text
+#: classes/Extension/License.php:805
 #, php-format
 msgid ""
 "You have invalid or expired license keys for Popup Maker. Please go to the "
@@ -3606,8 +3510,8 @@ msgstr ""
 msgid "Enter valid license key for automatic updates."
 msgstr "Otomatik güncellemeler için geçerli lisans anahtarını girin."
 
-#: classes/Extension/Updater.php:344
 #. translators: the plugin name.
+#: classes/Extension/Updater.php:344
 #, php-format
 msgid "There is a new version of %1$s available."
 msgstr "%1$s için yeni bir sürüm mevcut."
@@ -3616,14 +3520,14 @@ msgstr "%1$s için yeni bir sürüm mevcut."
 msgid "Contact your network administrator to install the update."
 msgstr "Güncellemeyi yüklemek için ağ yöneticinizle iletişime geçin."
 
-#: classes/Extension/Updater.php:355
 #. translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate.
+#: classes/Extension/Updater.php:355
 #, php-format
 msgid "%1$sView version %2$s details%3$s."
 msgstr "%1$sSürüm %2$s ayrıntılarını görüntüle%3$s."
 
-#: classes/Extension/Updater.php:364
 #. translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate 4. opening anchor tag, do not translate 5. closing anchor tag, do not translate</a>.
+#: classes/Extension/Updater.php:364
 #, php-format
 msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
 msgstr "%1$sSürüm %2$s ayrıntılarını görüntüle%3$s veya %4$sgüncelleyin%5$s."
@@ -3649,8 +3553,8 @@ msgstr "— Yok —"
 msgid "(no title)"
 msgstr "(başlık yok)"
 
-#: classes/Integration/Builder/BeaverBuilder.php:180
 #. translators: 1: popup title, 2: popup ID.
+#: classes/Integration/Builder/BeaverBuilder.php:180
 #, php-format
 msgid "%1$s (ID: %2$d)"
 msgstr "%1$s (ID: %2$d)"
@@ -3726,22 +3630,23 @@ msgstr "Hook"
 msgid "Time"
 msgstr "Zaman"
 
-#: classes/Integrations.php:485
 #. translators: 1. Integration label.
+#: classes/Integrations.php:485
 #, php-format
 msgid "Any %s Form"
 msgstr "Herhangi bir %s Formu"
 
-#: classes/Licensing.php:120
 #. translators: 1. Expiration date, 2. Opening HTML link tag, 3. Closing HTML tag.
+#: classes/Licensing.php:120
 #, php-format
-msgid "Your license key expired on %1$s. Please %2$srenew your license key%3$s."
+msgid ""
+"Your license key expired on %1$s. Please %2$srenew your license key%3$s."
 msgstr ""
-"Lisans anahtarınızın süresi %1$s tarihinde doldu. Lütfen lisans "
-"anahtarınızı yenilemek için %2$sburaya gidin%3$s."
+"Lisans anahtarınızın süresi %1$s tarihinde doldu. Lütfen lisans anahtarınızı "
+"yenilemek için %2$sburaya gidin%3$s."
 
-#: classes/Licensing.php:130
 #. translators: 1. Opening HTML link tag, 2. Closing HTML tag.
+#: classes/Licensing.php:130
 #, php-format
 msgid ""
 "Your license key has been disabled. Please %1$scontact support%2$s for more "
@@ -3750,32 +3655,32 @@ msgstr ""
 "Lisans anahtarınız devre dışı bırakıldı. Daha fazla bilgi için lütfen "
 "%1$sdestek ekibimizle iletişime geçin%2$s."
 
-#: classes/Licensing.php:138
 #. translators: 1. Opening HTML link tag, 2. Closing HTML tag.
+#: classes/Licensing.php:138
 #, php-format
 msgid "Invalid license. Please %1$svisit your account page%2$s and verify it."
-msgstr "Geçersiz lisans. Lütfen %1$shesap sayfanızı ziyaret edin%2$s ve doğrulayın."
+msgstr ""
+"Geçersiz lisans. Lütfen %1$shesap sayfanızı ziyaret edin%2$s ve doğrulayın."
 
-#: classes/Licensing.php:147
 #. translators: 1. Plugin name. 2. Opening HTML link tag, 3. Closing HTML tag.
+#: classes/Licensing.php:147
 #, php-format
 msgid ""
-"Your %1$s is not active for this URL. Please %2$svisit your account "
-"page%3$s to manage your license key URLs."
+"Your %1$s is not active for this URL. Please %2$svisit your account page%3$s "
+"to manage your license key URLs."
 msgstr ""
-"%1$s URL için etkin değil. Lisans anahtarı URL'lerinizi yönetmek için "
-"lütfen %2$shesap sayfanızı ziyaret edin%3$s."
+"%1$s URL için etkin değil. Lisans anahtarı URL'lerinizi yönetmek için lütfen "
+"%2$shesap sayfanızı ziyaret edin%3$s."
 
-#: classes/Licensing.php:156
-#: classes/Services/License.php:914
 #. translators: 1. Plugin name.
 #. translators: the plugin name
+#: classes/Licensing.php:156 classes/Services/License.php:914
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr "Bu, %s için geçersiz bir lisans anahtarı gibi görünüyor."
 
-#: classes/Licensing.php:163
 #. translators: 1. Opening HTML link tag, 2. Closing HTML tag.
+#: classes/Licensing.php:163
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. %1$sView possible "
@@ -3796,8 +3701,8 @@ msgstr ""
 msgid "unknown_error"
 msgstr "bilinmeyen_hata"
 
-#: classes/Licensing.php:175
 #. translators: 1. Error message, 2. Opening HTML link tag, 3. Closing HTML tag.
+#: classes/Licensing.php:175
 #, php-format
 msgid ""
 "There was an error with this license key: %1$s. Please %2$scontact our "
@@ -3810,8 +3715,8 @@ msgstr ""
 msgid "License key never expires."
 msgstr "Lisans anahtarının süresi asla dolmaz."
 
-#: classes/Licensing.php:194
 #. translators: 1. Expiration date, 2. Opening HTML link tag, 3. Closing HTML tag.
+#: classes/Licensing.php:194
 #, php-format
 msgid ""
 "Your license key expires soon! It expires on %1$s. %2$sRenew your license "
@@ -3820,20 +3725,21 @@ msgstr ""
 "Lisans anahtarınızın süresi yakında dolacak! Son kullanma tarihi %1$s. "
 "%2$sLisans anahtarınızı yenileyin%3$s."
 
-#: classes/Licensing.php:202
 #. translators: 1. Expiration date.
+#: classes/Licensing.php:202
 #, php-format
 msgid "Your license key expires on %s."
 msgstr "Lisans anahtarınızın süresi %s tarihinde doluyor."
 
-#: classes/Licensing.php:212
 #. translators: 1. Plugin name.
+#: classes/Licensing.php:212
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
 msgstr "Güncellemeleri almak için lütfen geçerli %s lisans anahtarınızı girin."
 
 #: classes/ListTable.php:965
-msgid "function PUM_ListTable::get_columns() must be over-ridden in a sub-class."
+msgid ""
+"function PUM_ListTable::get_columns() must be over-ridden in a sub-class."
 msgstr "PUM_ListTable::get_columns() bir alt sınıfta yeniden tanımlanmalıdır."
 
 #: classes/Model/Popup.php:307
@@ -3870,7 +3776,8 @@ msgstr ""
 msgid ""
 "You should include the information below in the correct sections of you "
 "privacy policy."
-msgstr "Aşağıdaki bilgileri gizlilik politikanızın ilgili bölümlerine eklemelisiniz."
+msgstr ""
+"Aşağıdaki bilgileri gizlilik politikanızın ilgili bölümlerine eklemelisiniz."
 
 #: classes/Privacy.php:54
 msgid "Disclaimer:"
@@ -3948,8 +3855,8 @@ msgstr ""
 
 #: classes/Privacy.php:65
 msgid ""
-"You can opt our or unsubscribe at any time in the future by clicking link "
-"in the bottom of any email."
+"You can opt our or unsubscribe at any time in the future by clicking link in "
+"the bottom of any email."
 msgstr ""
 "Gelecekte istediğiniz zaman, herhangi bir e-postanın alt kısmındaki "
 "bağlantıya tıklayarak abonelikten çıkabilir veya aboneliğinizi iptal "
@@ -3957,8 +3864,8 @@ msgstr ""
 
 #: classes/Privacy.php:68
 msgid ""
-"Popup Maker uses cookies for most popups. The primary function is to "
-"prevent your users from being annoyed by seeing the same popup repeatedly."
+"Popup Maker uses cookies for most popups. The primary function is to prevent "
+"your users from being annoyed by seeing the same popup repeatedly."
 msgstr ""
 "Popup Maker, çoğu açılır pencere için çerezler kullanır. Temel işlevi, "
 "kullanıcılarınızın aynı açılır pencereyi tekrar tekrar görerek rahatsız "
@@ -3966,8 +3873,8 @@ msgstr ""
 
 #: classes/Privacy.php:69
 msgid ""
-"This may result in cookies being saved for an extended period of time. "
-"These are non-tracking cookies used only by our popups."
+"This may result in cookies being saved for an extended period of time. These "
+"are non-tracking cookies used only by our popups."
 msgstr ""
 "Bu, çerezlerin uzun bir süre boyunca kaydedilmesine neden olabilir. Bunlar, "
 "yalnızca açılır pencerelerimiz tarafından kullanılan izleme içermeyen "
@@ -3979,8 +3886,8 @@ msgid ""
 "settings. These are here for you to disclose if you are so required."
 msgstr ""
 "Aşağıda, açılır pencere ayarlarınızda şu anda kayıtlı olan tüm çerezlerin "
-"bir listesi yer almaktadır. Bunlar, gerekli olması halinde ifşa etmeniz "
-"için burada bulunmaktadır."
+"bir listesi yer almaktadır. Bunlar, gerekli olması halinde ifşa etmeniz için "
+"burada bulunmaktadır."
 
 #: classes/Privacy.php:80
 msgid "Usage"
@@ -4020,8 +3927,8 @@ msgid ""
 "Data will be exported or removed upon users request via the existing "
 "Exporter or Eraser."
 msgstr ""
-"Veriler, kullanıcıların mevcut Dışa Aktarıcı veya Silici aracılığıyla "
-"talebi üzerine dışa aktarılır ya da kaldırılır."
+"Veriler, kullanıcıların mevcut Dışa Aktarıcı veya Silici aracılığıyla talebi "
+"üzerine dışa aktarılır ya da kaldırılır."
 
 #: classes/Privacy.php:121
 msgid ""
@@ -4036,7 +3943,8 @@ msgid "Where we send your data"
 msgstr "Verilerinizi nereye gönderiyoruz"
 
 #: classes/Privacy.php:124
-msgid "Popup Maker does not send any user data outside of your site by default."
+msgid ""
+"Popup Maker does not send any user data outside of your site by default."
 msgstr ""
 "Popup Maker, varsayılan olarak hiçbir kullanıcı verisini sitenizin dışına "
 "göndermez."
@@ -4051,8 +3959,7 @@ msgstr ""
 "gönderecek şekilde genişlettiyseniz, kullanıcı bilgileri bu harici "
 "hizmetlere aktarılabilir. Bu hizmetler yurt dışında bulunabilir."
 
-#: classes/Privacy.php:150
-#: classes/Privacy.php:168
+#: classes/Privacy.php:150 classes/Privacy.php:168
 msgid "Popup Maker Subscribe Form"
 msgstr "Popup Maker Abonelik Formu"
 
@@ -4070,8 +3977,8 @@ msgstr "Abonelik Tarihi"
 
 #: classes/Privacy.php:391
 msgid ""
-"Subscription information was not removed. A database error may have "
-"occurred during deletion."
+"Subscription information was not removed. A database error may have occurred "
+"during deletion."
 msgstr ""
 "Abonelik bilgileri kaldırılmadı. Silme sırasında bir veritabanı hatası "
 "oluşmuş olabilir."
@@ -4113,11 +4020,11 @@ msgstr "Uyarı kodu eksik."
 msgid "Unknown notification."
 msgstr "Bilinmeyen bildirim."
 
-#: classes/RestAPI/Notifications.php:158
+#: classes/RestAPI/Notifications.php:159
 msgid "Invalid notification action."
 msgstr "Geçersiz bildirim işlemi."
 
-#: classes/RestAPI/Notifications.php:164
+#: classes/RestAPI/Notifications.php:165
 msgid "Could not record dismissal."
 msgstr "Kapatma kaydedilemedi."
 
@@ -4151,11 +4058,11 @@ msgstr "Arama terimi"
 
 #: classes/RestAPI/ObjectSearch.php:384
 msgid ""
-"IDs to include in results (integers for standard objects, strings for "
-"custom entities)"
+"IDs to include in results (integers for standard objects, strings for custom "
+"entities)"
 msgstr ""
-"Sonuçlara dahil edilecek kimlikler (standart nesneler için tam sayılar, "
-"özel varlıklar için dizeler)"
+"Sonuçlara dahil edilecek kimlikler (standart nesneler için tam sayılar, özel "
+"varlıklar için dizeler)"
 
 #: classes/RestAPI/ObjectSearch.php:392
 msgid ""
@@ -4181,8 +4088,8 @@ msgstr "İstenen eklenti Popup Maker kataloğunda yok."
 msgid "The requested add-on is not installed."
 msgstr "İstenen eklenti yüklü değil."
 
-#: classes/Services/License.php:892
 #. translators: the license key expiration date
+#: classes/Services/License.php:892
 #, php-format
 msgid "Your license key expired on %s."
 msgstr "Lisans anahtarınız %s tarihinde süresi doldu."
@@ -4203,12 +4110,12 @@ msgstr "Lisansınız bu URL için etkin değil."
 msgid "Your license key has reached its activation limit."
 msgstr "Lisans anahtarınız etkinleştirme sınırına ulaştı."
 
-#: classes/Services/License.php:1136
 #. translators: the date and time of the auto-activation disconnect
+#: classes/Services/License.php:1136
 #, php-format
 msgid ""
-"Auto-activation was disconnected on %s. The POPUP_MAKER_PRO_LICENSE "
-"constant was removed from your configuration."
+"Auto-activation was disconnected on %s. The POPUP_MAKER_PRO_LICENSE constant "
+"was removed from your configuration."
 msgstr ""
 "Otomatik etkinleştirme %s tarihinde bağlantısı kesildi. "
 "POPUP_MAKER_PRO_LICENSE sabiti yapılandırmanızdan kaldırıldı."
@@ -4224,8 +4131,8 @@ msgid ""
 "WordPress."
 msgstr ""
 "WordPress’ten çıkış yapmış olsanız bile, ön uçtan açılır pencereleri test "
-"etmek ve sorun gidermek için ücretsiz <strong>Popup Maker Debug "
-"Tools</strong> Chrome uzantısını kullanın."
+"etmek ve sorun gidermek için ücretsiz <strong>Popup Maker Debug Tools</"
+"strong> Chrome uzantısını kullanın."
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:278
 msgid "free debugging tool"
@@ -4246,9 +4153,8 @@ msgid ""
 "campaign attribution, filters, and deeper conversion insights."
 msgstr ""
 "Gerçek eğilimleri fark edecek kadar dönüşüm etkinliğiniz var. <strong>Popup "
-"Maker Pro’daki Gelişmiş Analitik</strong>, görsel raporlar, URL "
-"performansı, kampanya atıfı, filtreler ve daha derin dönüşüm içgörüleri "
-"ekler."
+"Maker Pro’daki Gelişmiş Analitik</strong>, görsel raporlar, URL performansı, "
+"kampanya atıfı, filtreler ve daha derin dönüşüm içgörüleri ekler."
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:305
 msgid "based on your conversion activity"
@@ -4274,9 +4180,9 @@ msgstr "Popup Maker’ı yapay zekâ asistanınızla yönetin"
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:332
 msgid ""
-"Your site already has the WordPress MCP foundation. <strong>Popup Maker "
-"Pro</strong> connects it to AI tools so authorized users can inspect "
-"analytics and manage popups, themes, and CTAs through natural conversation."
+"Your site already has the WordPress MCP foundation. <strong>Popup Maker Pro</"
+"strong> connects it to AI tools so authorized users can inspect analytics "
+"and manage popups, themes, and CTAs through natural conversation."
 msgstr ""
 "Sitenizde zaten WordPress MCP temeli var. <strong>Popup Maker Pro</strong>, "
 "yetkili kullanıcıların analizleri incelemesini ve açılır pencereleri, "
@@ -4297,14 +4203,14 @@ msgstr "Hangi açılır pencerenin gerçekten kazandığını öğrenin"
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:360
 msgid ""
-"You manage multiple live popups. <strong>Split Testing in Popup Maker "
-"Pro</strong> lets you divide traffic between variants and measure opens, "
+"You manage multiple live popups. <strong>Split Testing in Popup Maker Pro</"
+"strong> lets you divide traffic between variants and measure opens, "
 "conversions, purchases, and revenue—including true holdout tests."
 msgstr ""
 "Birden fazla canlı pop-up’ı yönetiyorsunuz. <strong>Popup Maker Pro’daki "
-"Bölünmüş Test</strong>, trafiği varyantlar arasında bölmenize ve "
-"açılmaları, dönüşümleri, satın almaları ve geliri ölçmenize olanak tanır — "
-"gerçek holdout testleri dahil."
+"Bölünmüş Test</strong>, trafiği varyantlar arasında bölmenize ve açılmaları, "
+"dönüşümleri, satın almaları ve geliri ölçmenize olanak tanır — gerçek "
+"holdout testleri dahil."
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:361
 msgid "new in Pro 1.2"
@@ -4320,9 +4226,9 @@ msgstr "CTA’larınıza temiz, akılda kalıcı URL’ler verin"
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:388
 msgid ""
-"Your CTAs already track clicks. <strong>Vanity URLs in Popup Maker "
-"Pro</strong> replace long tracking links with branded paths such as "
-"<code>/go/summer-sale</code> that are easier to share and recognize."
+"Your CTAs already track clicks. <strong>Vanity URLs in Popup Maker Pro</"
+"strong> replace long tracking links with branded paths such as <code>/go/"
+"summer-sale</code> that are easier to share and recognize."
 msgstr ""
 "CTA’larınız zaten tıklamaları izliyor. <strong>Popup Maker Pro’daki Vanity "
 "URL’ler</strong>, uzun izleme bağlantılarını <code>/go/summer-sale</code> "
@@ -4342,12 +4248,11 @@ msgstr "Yeni Call-to-Action sistemini deneyin"
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:416
 msgid ""
-"Turn links and buttons in your popups into <strong>trackable CTAs</strong> "
-"— see which calls-to-action actually get clicked."
+"Turn links and buttons in your popups into <strong>trackable CTAs</strong> — "
+"see which calls-to-action actually get clicked."
 msgstr ""
-"Pop-up’larınızdaki bağlantıları ve düğmeleri <strong>izlenebilir "
-"CTA’lara</strong> dönüştürün — hangi çağrıların gerçekten tıklandığını "
-"görün."
+"Pop-up’larınızdaki bağlantıları ve düğmeleri <strong>izlenebilir CTA’lara</"
+"strong> dönüştürün — hangi çağrıların gerçekten tıklandığını görün."
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:417
 msgid "new in PM"
@@ -4376,8 +4281,8 @@ msgstr "Reklam engelleyici atlamayı açın"
 #: classes/Services/Notifications/FeatureAnnouncements.php:472
 msgid ""
 "Ad blockers can hide your popups from a real chunk of traffic. Popup Maker "
-"has a <strong>built-in bypass</strong> that renames our assets and routes "
-"so they look less like something to block — takes a minute to enable."
+"has a <strong>built-in bypass</strong> that renames our assets and routes so "
+"they look less like something to block — takes a minute to enable."
 msgstr ""
 "Reklam engelleyiciler, pop-up’larınızı trafiğin önemli bir kısmından "
 "gizleyebilir. Popup Maker’da, varlıklarımızın ve yönlendirmelerimizin adını "
@@ -4410,8 +4315,8 @@ msgstr "Planlamanın nasıl çalıştığını görün"
 msgid "Add to Chrome"
 msgstr "Chrome’a ekle"
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:812
 #. translators: 1: total captured conversions, 2: estimated low lift, 3: estimated high lift
+#: classes/Services/Notifications/FeatureAnnouncements.php:812
 #, php-format
 msgid ""
 "You've captured <strong>%1$s conversions</strong> so far. Exit-intent "
@@ -4422,30 +4327,30 @@ msgstr ""
 "vazgeçen ziyaretçilerin genellikle 10–15%%’ini geri kazanır — sizin "
 "trafiğinizde bu, masada bırakılan <strong>ek %2$s–%3$s</strong> demek."
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:829
 #. translators: %s: number of stale popups
+#: classes/Services/Notifications/FeatureAnnouncements.php:829
 #, php-format
 msgid "<strong>%s popup</strong> hasn't been touched in months"
 msgid_plural "<strong>%s popups</strong> haven't been touched in months"
 msgstr[0] "<strong>%s açılır pencere</strong> aylardır dokunulmadı"
 msgstr[1] "<strong>%s açılır pencereye</strong> aylardır dokunulmadı"
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:840
 #. translators: %s: number of disabled popups
+#: classes/Services/Notifications/FeatureAnnouncements.php:840
 #, php-format
 msgid "<strong>%s popup</strong> is currently disabled"
 msgid_plural "<strong>%s popups</strong> are currently disabled"
 msgstr[0] "<strong>%s açılır pencere</strong> şu anda devre dışı"
 msgstr[1] "<strong>%s açılır pencere</strong> şu anda devre dışı"
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:852
 #. translators: 1: disabled popup phrase, 2: stale popup phrase
+#: classes/Services/Notifications/FeatureAnnouncements.php:852
 #, php-format
 msgid "%1$s and %2$s."
 msgstr "%1$s ve %2$s."
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:864
 #. translators: 1: total popup count, 2: context sentence describing what fired
+#: classes/Services/Notifications/FeatureAnnouncements.php:864
 #, php-format
 msgid ""
 "You manage <strong>%1$s popups</strong>, and %2$s Scheduling in Pro turns "
@@ -4457,20 +4362,20 @@ msgstr ""
 "saatleri gibi durumlarda otomatik olarak açıp kapatır — böylece bir düğmeyi "
 "çevirmeyi asla unutmazsınız."
 
-#: classes/Services/Notifications/WhatsNew.php:138
 #. translators: %s: version number they last dismissed notes for.
+#: classes/Services/Notifications/WhatsNew.php:138
 #, php-format
 msgid "since v%s"
 msgstr "v%s’den beri"
 
-#: classes/Services/Notifications/WhatsNew.php:141
 #. translators: %s: new version.
+#: classes/Services/Notifications/WhatsNew.php:141
 #, php-format
 msgid "v%s"
 msgstr "v%s"
 
-#: classes/Services/Notifications/WhatsNew.php:147
 #. translators: 1: new version, 2: last-seen version
+#: classes/Services/Notifications/WhatsNew.php:147
 #, php-format
 msgid ""
 "Popup Maker <strong>v%1$s</strong> is here — plus everything added since "
@@ -4479,14 +4384,14 @@ msgstr ""
 "Popup Maker <strong>v%1$s</strong> burada — ayrıca v%2$s’den beri eklenen "
 "her şey."
 
-#: classes/Services/Notifications/WhatsNew.php:153
 #. translators: %s: new version.
+#: classes/Services/Notifications/WhatsNew.php:153
 #, php-format
 msgid "Popup Maker <strong>v%s</strong> is here."
 msgstr "Popup Maker <strong>v%s</strong> burada."
 
-#: classes/Services/Notifications/WhatsNew.php:166
 #. translators: %s: version number.
+#: classes/Services/Notifications/WhatsNew.php:166
 #, php-format
 msgid "What's new in Popup Maker %s"
 msgstr "Popup Maker %s’deki yenilikler"
@@ -4496,8 +4401,8 @@ msgstr "Popup Maker %s’deki yenilikler"
 msgid "View changelog"
 msgstr "Değişiklik günlüğünü görüntüle"
 
-#: classes/Services/Notifications/WhatsNew.php:440
 #. translators: %d: additional changes not shown.
+#: classes/Services/Notifications/WhatsNew.php:440
 #, php-format
 msgid "…and %d more change."
 msgid_plural "…and %d more changes."
@@ -4512,21 +4417,18 @@ msgstr "Yükseltmeler başlatılıyor..."
 msgid "Upgrades complete."
 msgstr "Yükseltmeler tamamlandı."
 
-#: classes/Services/UpgradeStream.php:210
 #. translators: %s: task name.
+#: classes/Services/UpgradeStream.php:210
 #, php-format
 msgid "Completed: %s"
 msgstr "Tamamlandı: %s"
 
-#: classes/Shortcode.php:153
-#: classes/Shortcode.php:167
-#: classes/Shortcode.php:184
-#: dist/packages/cta-editor.js:1
+#: classes/Shortcode.php:153 classes/Shortcode.php:167
+#: classes/Shortcode.php:184 dist/packages/cta-editor.js:1
 msgid "Options"
 msgstr "Seçenekler"
 
-#: classes/Shortcode.php:155
-#: classes/Shortcode.php:169
+#: classes/Shortcode.php:155 classes/Shortcode.php:169
 #: classes/Shortcode.php:190
 msgid "Extra"
 msgstr "Ek"
@@ -4561,8 +4463,7 @@ msgstr "Bir stil seçin."
 msgid "Text Only"
 msgstr "Yalnızca Metin"
 
-#: classes/Shortcode/CallToAction.php:146
-#: classes/Shortcode/Subscribe.php:149
+#: classes/Shortcode/CallToAction.php:146 classes/Shortcode/Subscribe.php:149
 msgid "Full"
 msgstr "Tam"
 
@@ -4578,8 +4479,7 @@ msgstr ""
 "Bunun yerine satır içi bir açılır pencere ekleyin. Destek içeriği için "
 "kullanılan basit açılır pencereler için idealdir."
 
-#: classes/Shortcode/Popup.php:44
-#: classes/Shortcode/PopupClose.php:42
+#: classes/Shortcode/Popup.php:44 classes/Shortcode/PopupClose.php:42
 #: classes/Shortcode/PopupTrigger.php:59
 msgid "Can contain other shortcodes, images, text or html content."
 msgstr "Diğer kısa kodları, görselleri, metni veya HTML içeriğini içerebilir."
@@ -4630,10 +4530,10 @@ msgstr "Açılır Pencere Kapatma Düğmesi"
 
 #: classes/Shortcode/PopupClose.php:36
 msgid "Make text or html a close trigger for your popup."
-msgstr "Metni veya HTML’yi açılır pencereniz için bir kapatma tetikleyicisi yapın."
+msgstr ""
+"Metni veya HTML’yi açılır pencereniz için bir kapatma tetikleyicisi yapın."
 
-#: classes/Shortcode/PopupClose.php:55
-#: classes/Shortcode/PopupTrigger.php:114
+#: classes/Shortcode/PopupClose.php:55 classes/Shortcode/PopupTrigger.php:114
 msgid "HTML Tag"
 msgstr "HTML Etiketi"
 
@@ -4647,8 +4547,8 @@ msgstr "href değeri"
 
 #: classes/Shortcode/PopupClose.php:73
 msgid ""
-"Enter the href value for your link. Leave blank if you do not want this "
-"link to take the visitor to a different page."
+"Enter the href value for your link. Leave blank if you do not want this link "
+"to take the visitor to a different page."
 msgstr ""
 "Bağlantınız için href değerini girin. Bu bağlantının ziyaretçiyi farklı bir "
 "sayfaya götürmesini istemiyorsanız boş bırakın."
@@ -4661,13 +4561,11 @@ msgstr "Öğe için hedef"
 msgid "Enter the target value for your link. Can be left blank."
 msgstr "Bağlantınız için hedef değerini girin. Boş bırakılabilir."
 
-#: classes/Shortcode/PopupClose.php:98
-#: classes/Shortcode/PopupTrigger.php:126
+#: classes/Shortcode/PopupClose.php:98 classes/Shortcode/PopupTrigger.php:126
 msgid "Add additional classes for styling."
 msgstr "Stil vermek için ek sınıflar ekleyin."
 
-#: classes/Shortcode/PopupClose.php:103
-#: classes/Shortcode/PopupTrigger.php:135
+#: classes/Shortcode/PopupClose.php:103 classes/Shortcode/PopupTrigger.php:135
 #: classes/Triggers.php:190
 msgid "Do not prevent the default click functionality."
 msgstr "Varsayılan tıklama işlevini engellemeyin."
@@ -4682,8 +4580,7 @@ msgstr ""
 "dışı bırakmamızı engeller. Bir dosyaya verilen bağlantının hem bir açılır "
 "pencereyi kapatıp hem de dosyayı indirmeye devam etmesi için kullanılabilir."
 
-#: classes/Shortcode/PopupCookie.php:32
-#: classes/Shortcode/PopupCookie.php:106
+#: classes/Shortcode/PopupCookie.php:32 classes/Shortcode/PopupCookie.php:106
 msgid "Popup Cookie"
 msgstr "Açılır Pencere Çerezi"
 
@@ -4701,14 +4598,13 @@ msgstr "Yalnızca ekranda görünürken"
 
 #: classes/Shortcode/PopupCookie.php:67
 msgid ""
-"This will prevent the cookie from getting set until the user scrolls it "
-"into viewport."
+"This will prevent the cookie from getting set until the user scrolls it into "
+"viewport."
 msgstr ""
 "Bu, kullanıcı öğeyi görünüm alanına kaydırana kadar çerezin ayarlanmasını "
 "engeller."
 
-#: classes/Shortcode/PopupTrigger.php:43
-#: dist/packages/block-editor.js:2
+#: classes/Shortcode/PopupTrigger.php:43 dist/packages/block-editor.js:2
 msgid "Popup Trigger"
 msgstr "Açılır Pencere Tetikleyicisi"
 
@@ -4746,17 +4642,15 @@ msgstr ""
 "Tetikleyiciyi oluşturmak ve metninizi sarmalamak için kullanılan HTML "
 "etiketi."
 
-#: classes/Shortcode/PopupTrigger.php:136
-#: classes/Triggers.php:191
+#: classes/Shortcode/PopupTrigger.php:136 classes/Triggers.php:191
 msgid ""
 "This prevents us from disabling the browsers default action when a trigger "
-"is clicked. It can be used to allow a link to a file to both trigger a "
-"popup and still download the file."
+"is clicked. It can be used to allow a link to a file to both trigger a popup "
+"and still download the file."
 msgstr ""
-"Bu, bir tetikleyici tıklandığında tarayıcının varsayılan eylemini devre "
-"dışı bırakmamızı engeller. Bir dosyaya giden bağlantının hem bir açılır "
-"pencereyi tetiklemesi hem de dosyayı indirmeye devam etmesi için "
-"kullanılabilir."
+"Bu, bir tetikleyici tıklandığında tarayıcının varsayılan eylemini devre dışı "
+"bırakmamızı engeller. Bir dosyaya giden bağlantının hem bir açılır pencereyi "
+"tetiklemesi hem de dosyayı indirmeye devam etmesi için kullanılabilir."
 
 #: classes/Shortcode/Subscribe.php:48
 msgid "A customizable newsletter subscription form."
@@ -4766,8 +4660,7 @@ msgstr "Özelleştirilebilir bir bülten abonelik formu."
 msgid "Fields"
 msgstr "Alanlar"
 
-#: classes/Shortcode/Subscribe.php:93
-#: classes/Shortcode/Subscribe.php:184
+#: classes/Shortcode/Subscribe.php:93 classes/Shortcode/Subscribe.php:184
 msgid "Labels"
 msgstr "Etiketler"
 
@@ -4775,8 +4668,7 @@ msgstr "Etiketler"
 msgid "Placeholders"
 msgstr "Yer Tutucular"
 
-#: classes/Shortcode/Subscribe.php:99
-#: classes/Shortcode/Subscribe.php:450
+#: classes/Shortcode/Subscribe.php:99 classes/Shortcode/Subscribe.php:450
 msgid "Redirect"
 msgstr "Yönlendirme"
 
@@ -4881,9 +4773,8 @@ msgid ""
 "Note: Requiring consent may not be compliant with GDPR for all situations. "
 "Be sure to do your research or check with legal council."
 msgstr ""
-"Not: Onay istemek, tüm durumlarda GDPR ile uyumlu olmayabilir. "
-"Araştırmanızı yaptığınızdan veya hukuk danışmanına danıştığınızdan emin "
-"olun."
+"Not: Onay istemek, tüm durumlarda GDPR ile uyumlu olmayabilir. Araştırmanızı "
+"yaptığınızdan veya hukuk danışmanına danıştığınızdan emin olun."
 
 #: classes/Shortcode/Subscribe.php:349
 msgid "Field Type"
@@ -4932,8 +4823,8 @@ msgstr "Hata Ayıklama Modu Etkin"
 msgid "Debug started at:"
 msgstr "Hata ayıklama başlatıldı:"
 
-#: classes/Site/Assets.php:288
 #. translators: 1. URL to documentation.
+#: classes/Site/Assets.php:288
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr ""
@@ -4996,8 +4887,8 @@ msgstr "Mobilde Devre Dışı:"
 msgid "Tablet Disabled:"
 msgstr "Tablette Devre Dışı:"
 
-#: classes/Site/Assets.php:310
 #. translators: 1. Event name.
+#: classes/Site/Assets.php:310
 #, php-format
 msgid "Event: %s"
 msgstr "Etkinlik: %s"
@@ -5012,8 +4903,8 @@ msgid ""
 "stats. No visitor data or popup content is ever collected."
 msgstr ""
 "Anonim kullanım istatistiklerini paylaşarak en çok önem taşıyan özelliklere "
-"öncelik vermemize yardımcı olun. Hiçbir ziyaretçi verisi veya açılır "
-"pencere içeriği asla toplanmaz."
+"öncelik vermemize yardımcı olun. Hiçbir ziyaretçi verisi veya açılır pencere "
+"içeriği asla toplanmaz."
 
 #: classes/Telemetry.php:276
 msgid "Allow"
@@ -5022,6 +4913,13 @@ msgstr "İzin ver"
 #: classes/Telemetry.php:282
 msgid "Do not allow"
 msgstr "İzin verme"
+
+#. translators: 1. Trigger name.
+#: classes/Triggers.php:94
+#, php-format
+msgctxt "trigger settings modal title"
+msgid "%s Trigger Settings"
+msgstr "%s Tetikleyici Ayarları"
 
 #: classes/Triggers.php:171
 msgid "Click Open"
@@ -5037,15 +4935,13 @@ msgstr "Ek Seçiciler"
 
 #: classes/Triggers.php:178
 msgid ""
-"Adding the class \"popmake-<span "
-"id=\"pum-default-click-trigger-class\">{popup-ID}</span>\" to an element "
-"will trigger it to be opened once clicked. Additionally you can add "
-"additional CSS selectors below."
+"Adding the class \"popmake-<span id=\"pum-default-click-trigger-"
+"class\">{popup-ID}</span>\" to an element will trigger it to be opened once "
+"clicked. Additionally you can add additional CSS selectors below."
 msgstr ""
-"Bir öğeye \"popmake-<span "
-"id=\"pum-default-click-trigger-class\">{popup-ID}</span>\" sınıfını "
-"eklemek, üzerine tıklandığında açılmasını tetikler. Ayrıca aşağıya ek CSS "
-"seçicileri ekleyebilirsiniz."
+"Bir öğeye \"popmake-<span id=\"pum-default-click-trigger-class\">{popup-ID}</"
+"span>\" sınıfını eklemek, üzerine tıklandığında açılmasını tetikler. Ayrıca "
+"aşağıya ek CSS seçicileri ekleyebilirsiniz."
 
 #: classes/Triggers.php:181
 msgid "Extra CSS Selectors"
@@ -5071,8 +4967,7 @@ msgstr "Zaman Gecikmesi / Otomatik Açma"
 msgid "Time Delay Settings"
 msgstr "Zaman Gecikmesi Ayarları"
 
-#: classes/Triggers.php:205
-#: classes/Triggers.php:237
+#: classes/Triggers.php:205 classes/Triggers.php:237
 msgid "The delay before the popup will open in milliseconds."
 msgstr "Açılır pencerenin açılmasından önceki gecikme milisaniye cinsindendir."
 
@@ -5080,8 +4975,8 @@ msgstr "Açılır pencerenin açılmasından önceki gecikme milisaniye cinsinde
 msgid "Choose which cookies will disable this trigger"
 msgstr "Bu tetikleyiciyi devre dışı bırakacak çerezleri seçin"
 
-#: classes/Upsell.php:232
 #. translators: 1: Opening link tag, 2: Closing link tag.
+#: classes/Upsell.php:232
 #, php-format
 msgid ""
 "🎉 Congrats on your first form submission! %1$sUpgrade to Pro%2$s for exit "
@@ -5090,8 +4985,8 @@ msgstr ""
 "🎉 İlk form gönderiminiz için tebrikler! Çıkış niyeti tetikleyicileri, "
 "dönüşüm analitiği ve gelişmiş hedefleme için %1$sPro’ya yükseltin%2$s."
 
-#: classes/Upsell.php:238
 #. translators: 1: Opening link tag, 2: Closing link tag.
+#: classes/Upsell.php:238
 #, php-format
 msgid ""
 "📊 Form conversion tracking is now live! Your first submission has been "
@@ -5100,8 +4995,8 @@ msgstr ""
 "📊 Form dönüşüm takibi artık aktif! İlk gönderiminiz kaydedildi. %1$sPro "
 "analitiğiyle nelerin dönüşüm sağladığını görün%2$s."
 
-#: classes/Upsell.php:252
 #. translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:252
 #, php-format
 msgid ""
 "🚀 Amazing! You've had %1$s popup views! %2$sSee which ones convert best "
@@ -5110,8 +5005,8 @@ msgstr ""
 "🚀 Harika! %1$s açılır pencere görüntülemeniz oldu! %2$sPro analitiğiyle "
 "hangilerinin en iyi dönüşüm sağladığını görün%3$s."
 
-#: classes/Upsell.php:267
 #. translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:267
 #, php-format
 msgid ""
 "📊 You've had %1$s popup views! %2$sSee which ones convert best with Pro "
@@ -5120,8 +5015,8 @@ msgstr ""
 "📊 %1$s açılır pencere görüntülemeniz oldu! %2$sPro analitiğiyle "
 "hangilerinin en iyi dönüşüm sağladığını görün%3$s."
 
-#: classes/Upsell.php:283
 #. translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:283
 #, php-format
 msgid ""
 "📈 You've had %1$s popup views! %2$sSee which ones convert best with Pro "
@@ -5130,8 +5025,8 @@ msgstr ""
 "📈 %1$s açılır pencere görüntülemeniz oldu! %2$sPro analitiğiyle "
 "hangilerinin en iyi dönüşüm sağladığını görün%3$s."
 
-#: classes/Upsell.php:324
 #. translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:324
 #, php-format
 msgid ""
 "%1$s detected — recover abandoned carts, trigger discount popups, and track "
@@ -5141,8 +5036,8 @@ msgstr ""
 "pencereleri tetikleyin ve %2$sPro+ E-ticaret Açılır Pencereleri%3$s ile her "
 "açılır pencere başına geliri izleyin."
 
-#: classes/Upsell.php:337
 #. translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:337
 #, php-format
 msgid ""
 "Track exactly which popups drive %1$s sales with %2$sPro+ Ecommerce "
@@ -5150,11 +5045,11 @@ msgid ""
 "analytics."
 msgstr ""
 "Tam olarak hangi açılır pencerelerin %1$s satış sağladığını %2$sPro+ "
-"Ecommerce Popups%3$s ile takip edin — gelir atıfı, satın alma hedeflemesi "
-"ve dönüşüm analitiği."
+"Ecommerce Popups%3$s ile takip edin — gelir atıfı, satın alma hedeflemesi ve "
+"dönüşüm analitiği."
 
-#: classes/Upsell.php:350
 #. translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:350
 #, php-format
 msgid ""
 "Show personalized offers to %1$s customers based on cart contents and "
@@ -5163,8 +5058,8 @@ msgstr ""
 "%1$s müşterilere sepet içeriğine ve satın alma geçmişine göre %2$sPro+ "
 "Ecommerce Popups%3$s ile kişiselleştirilmiş teklifler gösterin."
 
-#: classes/Upsell.php:367
 #. translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:367
 #, php-format
 msgid ""
 "%1$s detected — boost course enrollment, target students by progress, and "
@@ -5174,29 +5069,29 @@ msgstr ""
 "hedefleyin ve %2$sPro+ LMS Popups%3$s ile her açılır pencere başına "
 "kayıtları izleyin."
 
-#: classes/Upsell.php:380
 #. translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:380
 #, php-format
 msgid ""
 "Show the right offer at the right time — target %1$s students by enrollment "
 "status, course progress, and membership with %2$sPro+ LMS Popups%3$s."
 msgstr ""
-"Doğru teklifi doğru zamanda gösterin — %1$s öğrencileri kayıt durumuna, "
-"kurs ilerlemesine ve üyeliğe göre %2$sPro+ LMS Popups%3$s ile hedefleyin."
+"Doğru teklifi doğru zamanda gösterin — %1$s öğrencileri kayıt durumuna, kurs "
+"ilerlemesine ve üyeliğe göre %2$sPro+ LMS Popups%3$s ile hedefleyin."
 
-#: classes/Upsell.php:397
 #. translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:397
 #, php-format
 msgid ""
 "%1$s detected — auto-tag subscribers, trigger email sequences from popups, "
 "and sync leads with %2$sPopup Maker Pro%3$s."
 msgstr ""
-"%1$s algılandı — abonelere otomatik etiket ekleyin, açılır pencerelerden "
-"e-posta dizilerini tetikleyin ve potansiyel müşterileri %2$sPopup Maker "
+"%1$s algılandı — abonelere otomatik etiket ekleyin, açılır pencerelerden e-"
+"posta dizilerini tetikleyin ve potansiyel müşterileri %2$sPopup Maker "
 "Pro%3$s ile senkronize edin."
 
-#: classes/Upsell.php:410
 #. translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:410
 #, php-format
 msgid ""
 "Connect popups to %1$s workflows — automatically add contacts, apply tags, "
@@ -5206,8 +5101,8 @@ msgstr ""
 "sağladığında kişileri otomatik olarak ekleyin, etiketler uygulayın ve "
 "otomasyonları %2$sPopup Maker Pro%3$s ile başlatın."
 
-#: classes/Upsell.php:428
 #. translators: 1: Opening link tag, 2: Closing link tag.
+#: classes/Upsell.php:428
 #, php-format
 msgid ""
 "Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, "
@@ -5216,8 +5111,8 @@ msgstr ""
 "%1$sPopup Maker Pro+%2$s ile bir üst seviyeye geçin - e-ticaret otomasyonu, "
 "gelir atıfı ve gelişmiş hedeflemeyi açın."
 
-#: classes/Upsell.php:442
 #. translators: 1: Opening link tag, 2: Closing link tag.
+#: classes/Upsell.php:442
 #, php-format
 msgid ""
 "Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced "
@@ -5226,8 +5121,8 @@ msgstr ""
 "%1$sPopup Maker Pro & Pro+%2$s ile gelişmiş özelliklerin kilidini açın - "
 "Gelişmiş hedefleme, gelir takibi, canlı analizler ve daha fazlası."
 
-#: classes/Upsell.php:502
 #. translators: 1: List of platforms, 2: Last platform.
+#: classes/Upsell.php:502
 #, php-format
 msgid "%1$s and %2$s"
 msgstr "%1$s ve %2$s"
@@ -5236,8 +5131,8 @@ msgstr "%1$s ve %2$s"
 msgid ", "
 msgstr ", "
 
-#: classes/Upsell.php:517
 #. translators: %s url to product page.
+#: classes/Upsell.php:517
 #, php-format
 msgid ""
 "Want to disable the close button? Check out <a href=\"%s\" "
@@ -5246,8 +5141,8 @@ msgstr ""
 "Kapat düğmesini devre dışı bırakmak mı istiyorsunuz? <a href=\"%s\" "
 "target=\"_blank\">Popup Maker Pro</a>'ya göz atın!"
 
-#: classes/Upsell.php:535
 #. translators: %s url to product page.
+#: classes/Upsell.php:535
 #, php-format
 msgid ""
 "Unlock 50+ advanced targeting conditions with <a href=\"%s\" "
@@ -5255,12 +5150,11 @@ msgid ""
 "detection, URL matching, referrer targeting, and more."
 msgstr ""
 "<a href=\"%s\" target=\"_blank\" rel=\"noopener\">Popup Maker Pro</a> ile "
-"50'den fazla gelişmiş hedefleme koşulunun kilidini açın — kullanıcı "
-"rolleri, cihaz algılama, URL eşleştirme, yönlendiren hedefleme ve daha "
-"fazlası."
+"50'den fazla gelişmiş hedefleme koşulunun kilidini açın — kullanıcı rolleri, "
+"cihaz algılama, URL eşleştirme, yönlendiren hedefleme ve daha fazlası."
 
-#: classes/Upsell.php:560
 #. translators: %s url to product page.
+#: classes/Upsell.php:560
 #, php-format
 msgid ""
 "Unlock background images, parallax effects, and advanced styling with <a "
@@ -5286,8 +5180,7 @@ msgstr "Sitede Geçirilen Süre"
 msgid "Item Added to Cart"
 msgstr "Ürünün Sepete Eklendiği An"
 
-#: classes/Upsell.php:701
-#: classes/Upsell.php:715
+#: classes/Upsell.php:701 classes/Upsell.php:715
 msgid "User Targeting (Pro)"
 msgstr "Kullanıcı Hedefleme (Pro)"
 
@@ -5299,9 +5192,7 @@ msgstr "Kullanıcı Giriş Yapmış"
 msgid "User Has Role"
 msgstr "Kullanıcının Rolü Var"
 
-#: classes/Upsell.php:731
-#: classes/Upsell.php:746
-#: classes/Upsell.php:761
+#: classes/Upsell.php:731 classes/Upsell.php:746 classes/Upsell.php:761
 #: classes/Upsell.php:777
 msgid "Behavior Targeting (Pro)"
 msgstr "Davranış Hedefleme (Pro)"
@@ -5322,9 +5213,7 @@ msgstr "URL Şunu İçerir"
 msgid "Is Filling Out a Form"
 msgstr "Form Dolduruyor"
 
-#: classes/Upsell.php:800
-#: classes/Upsell.php:814
-#: classes/Upsell.php:828
+#: classes/Upsell.php:800 classes/Upsell.php:814 classes/Upsell.php:828
 #: classes/Upsell.php:842
 msgid "Ecommerce (Pro+)"
 msgstr "E-ticaret (Pro+)"
@@ -5345,8 +5234,7 @@ msgstr "Müşteri Satın Aldı"
 msgid "Customer Lifetime Spend"
 msgstr "Müşterinin Ömür Boyu Harcaması"
 
-#: classes/Upsell.php:859
-#: classes/Upsell.php:874
+#: classes/Upsell.php:859 classes/Upsell.php:874
 msgid "LMS (Pro+)"
 msgstr "LMS (Pro+)"
 
@@ -5358,8 +5246,8 @@ msgstr "Öğrenci Kurs Kaydı"
 msgid "LMS Cart Total"
 msgstr "LMS Sepet Toplamı"
 
-#: classes/Upsell.php:998
 #. translators: %s url to product page.
+#: classes/Upsell.php:998
 #, php-format
 msgid ""
 "Track trends over time with <a href=\"%s\" target=\"_blank\" "
@@ -5370,8 +5258,8 @@ msgstr ""
 "rel=\"noopener\">Pro Analytics</a> ile takip edin — grafikler, huniler ve "
 "gelir atıfı."
 
-#: classes/Utils/Alerts.php:212
 #. translators: %s: native language name.
+#: classes/Utils/Alerts.php:227
 #, php-format
 msgid ""
 "This plugin is also available in %1$s. <a href=\"%2$s\" "
@@ -5380,9 +5268,8 @@ msgstr ""
 "Bu eklenti %1$s dilinde de mevcuttur. <a href=\"%2$s\" "
 "target=\"_blank\">Çevirinin geliştirilmesine yardımcı olun!</a>"
 
-#: classes/Utils/Alerts.php:228
-#: classes/Utils/Alerts.php:255
 #. translators: 1: native language name, 2: other native language names, comma separated
+#: classes/Utils/Alerts.php:243 classes/Utils/Alerts.php:270
 #, php-format
 msgid ""
 "This plugin is also available in %1$s (also: %2$s). <a href=\"%3$s\" "
@@ -5391,10 +5278,9 @@ msgstr ""
 "Bu eklenti %1$s dilinde de mevcuttur (ayrıca: %2$s). <a href=\"%3$s\" "
 "target=\"_blank\">Çevirinin geliştirilmesine yardımcı olun!</a>"
 
-#: classes/Utils/Alerts.php:240
-#: classes/Utils/Alerts.php:267
 #. translators: 1: native language name, 2: URL to translate.wordpress.org
 #. translators: 1. Native language name, 2. URL to translation.
+#: classes/Utils/Alerts.php:255 classes/Utils/Alerts.php:282
 #, php-format
 msgid ""
 "This plugin is not translated into %1$s yet. <a href=\"%2$s\" "
@@ -5403,8 +5289,8 @@ msgstr ""
 "Bu eklenti henüz %1$s diline çevrilmedi. <a href=\"%2$s\" "
 "target=\"_blank\">Çevrilmesine yardımcı olun!</a>"
 
-#: classes/Utils/Alerts.php:274
 #. translators: %s: native language name.
+#: classes/Utils/Alerts.php:289
 #, php-format
 msgid ""
 "This plugin's translation for %1$s is out of date. <a href=\"%2$s\" "
@@ -5413,15 +5299,15 @@ msgstr ""
 "Bu eklentinin %1$s çevirisi güncel değil. <a href=\"%2$s\" "
 "target=\"_blank\">Çevirinin geliştirilmesine yardımcı olun!</a>"
 
-#: classes/Utils/Alerts.php:283
+#: classes/Utils/Alerts.php:298
 msgid "Help translate Popup Maker"
 msgstr "Popup Maker'ı çevirmeye yardımcı olun"
 
-#: classes/Utils/Alerts.php:485
+#: classes/Utils/Alerts.php:500
 msgid "Check out the following notifications from Popup Maker."
 msgstr "Popup Maker'dan aşağıdaki bildirimlere göz atın."
 
-#: classes/Utils/Alerts.php:557
+#: classes/Utils/Alerts.php:573
 msgid "Dismiss this item."
 msgstr "Bu öğeyi kapat."
 
@@ -5429,38 +5315,38 @@ msgstr "Bu öğeyi kapat."
 msgid "Once Weekly"
 msgstr "Haftada bir"
 
-#: classes/Utils/Format.php:80
 #. translators: 1: Number of seconds.
+#: classes/Utils/Format.php:80
 #, php-format
 msgid "%ss"
 msgstr "%ss"
 
-#: classes/Utils/Format.php:90
 #. translators: 1: Number of minutes.
+#: classes/Utils/Format.php:90
 #, php-format
 msgid "%smin"
 msgstr "%sdk"
 
-#: classes/Utils/Format.php:100
 #. translators: 1: Number of hours.
+#: classes/Utils/Format.php:100
 #, php-format
 msgid "%shr"
 msgstr "%ssa"
 
-#: classes/Utils/Format.php:110
 #. translators: 1: Number of days.
+#: classes/Utils/Format.php:110
 #, php-format
 msgid "%sd"
 msgstr "%sg"
 
-#: classes/Utils/Format.php:120
 #. translators: 1: Number of weeks.
+#: classes/Utils/Format.php:120
 #, php-format
 msgid "%sw"
 msgstr "%sha"
 
-#: classes/Utils/Prerequisites.php:297
 #. translators: 1. PHP Version
+#: classes/Utils/Prerequisites.php:297
 #, php-format
 msgid "This plugin requires <b>PHP %s</b> or higher in order to run."
 msgstr ""
@@ -5479,7 +5365,8 @@ msgstr ""
 msgid ""
 "Popup Maker needs to complete a the update of your settings that was "
 "previously started."
-msgstr "Popup Maker, daha önce başlatılmış olan ayar güncellemesini tamamlamalıdır."
+msgstr ""
+"Popup Maker, daha önce başlatılmış olan ayar güncellemesini tamamlamalıdır."
 
 #: classes/Utils/Upgrades.php:329
 msgid "Finish Upgrades"
@@ -5495,7 +5382,8 @@ msgstr "Bu işlem bazen birkaç dakika sürebilir, başlamaya hazır mısınız?
 
 #: classes/Utils/Upgrades.php:336
 msgid "The button below will process these changes automatically for you."
-msgstr "Aşağıdaki düğme bu değişiklikleri sizin için otomatik olarak işleyecektir."
+msgstr ""
+"Aşağıdaki düğme bu değişiklikleri sizin için otomatik olarak işleyecektir."
 
 #: classes/Utils/Upgrades.php:705
 msgid "Upgrades"
@@ -5510,16 +5398,16 @@ msgstr "Şu anda gerekli bir yükseltme yok."
 msgid "Popup Maker Upgrades"
 msgstr "Popup Maker Yükseltmeleri"
 
-#: includes/admin/class-pum-admin-upgrades.php:218
 #. translators: %s: URL to upgrade page.
+#: includes/admin/class-pum-admin-upgrades.php:218
 #, php-format
 msgid ""
 "Popup Maker needs to complete a database upgrade that was previously "
 "started, click <a href=\"%s\">here</a> to resume the upgrade."
 msgstr ""
 "Popup Maker, daha önce başlatılmış bir veritabanı yükseltmesini "
-"tamamlamalıdır; yükseltmeye devam etmek için buraya <a "
-"href=\"%s\">tıklayın</a>."
+"tamamlamalıdır; yükseltmeye devam etmek için buraya <a href=\"%s\">tıklayın</"
+"a>."
 
 #: includes/admin/class-pum-admin-upgrades.php:225
 msgid "Important"
@@ -5529,11 +5417,12 @@ msgstr "Önemli"
 msgid "Database upgrades required."
 msgstr "Veritabanı yükseltmeleri gerekli."
 
-#: includes/admin/class-pum-admin-upgrades.php:229
 #. translators: %1$s: URL to upgrade page. %2$s: closing HTML tag.
+#: includes/admin/class-pum-admin-upgrades.php:229
 #, php-format
 msgid "Please click %1$shere%2$s to complete these changes now."
-msgstr "Bu değişiklikleri şimdi tamamlamak için lütfen %1$sburaya%2$s tıklayın."
+msgstr ""
+"Bu değişiklikleri şimdi tamamlamak için lütfen %1$sburaya%2$s tıklayın."
 
 #: includes/admin/class-pum-admin-upgrades.php:247
 #: includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32
@@ -5584,8 +5473,8 @@ msgstr "Açılır pencere analizlerini başlatın."
 msgid "Clean up old data and verify data integrity."
 msgstr "Eski verileri temizleyin ve veri bütünlüğünü doğrulayın."
 
-#: includes/admin/upgrades/class-pum-admin-upgrade-routine.php:63
 #. translators: 1: Step number, 2: Approximate number of steps.
+#: includes/admin/upgrades/class-pum-admin-upgrade-routine.php:63
 #, php-format
 msgid "Step %1$d of approximately %2$d running"
 msgstr "Adım %1$d, yaklaşık %2$d adımın çalışıyor"
@@ -5690,8 +5579,7 @@ msgstr ""
 #: includes/integrations/class-pum-ninja-forms.php:91
 msgid "Ninja Form Success (deprecated. Use Form Submission instead.)"
 msgstr ""
-"Ninja Form Başarılı (kullanım dışı. Bunun yerine Form Gönderimi'ni "
-"kullanın.)"
+"Ninja Form Başarılı (kullanım dışı. Bunun yerine Form Gönderimi'ni kullanın.)"
 
 #: includes/integrations/class-pum-woocommerce-integration.php:41
 msgid "Any WooCommerce Page"
@@ -5721,6 +5609,10 @@ msgstr "Uç Nokta mı"
 msgid "Selected Endpoints"
 msgstr "Seçili Uç Noktalar"
 
+#: includes/integrations/ninja-forms/Actions/ClosePopup.php:56
+msgid "0"
+msgstr "0"
+
 #: includes/legacy/input-options.php:63
 msgid "Responsive Sizes&#10549;"
 msgstr "Duyarlı Boyutlar&#10549;"
@@ -5737,10 +5629,8 @@ msgstr "Büyüt"
 msgid "Grow and Slide"
 msgstr "Büyüt ve Kaydır"
 
-#: includes/legacy/input-options.php:162
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-admin.js:23
-#: dist/packages/cta-editor.js:1
+#: includes/legacy/input-options.php:162 dist/packages/cta-admin.js:4
+#: dist/packages/cta-admin.js:23 dist/packages/cta-editor.js:1
 msgid "Disabled"
 msgstr "Devre Dışı"
 
@@ -5756,6 +5646,17 @@ msgstr "Kapanırken"
 msgid "Disable Popups Menu Editor"
 msgstr "Açılır Pencere Menüsü Düzenleyicisini Devre Dışı Bırak"
 
+#. translators: %1$s: opening and closing link HTML tags, %2$s: link text.
+#: includes/modules/menus.php:50
+#, php-format
+msgctxt "%s represent opening and closing link html"
+msgid ""
+"Use this if there is a conflict with your theme or another plugin in the nav "
+"menu editor. %1$sLearn more%2$s"
+msgstr ""
+"Bu, tema veya başka bir eklentiyle gezinme menüsü düzenleyicisinde çakışma "
+"varsa kullanın. %1$sDaha fazla bilgi edinin%2$s"
+
 #: includes/modules/menus.php:191
 msgid "Trigger a Popup"
 msgstr "Bir Açılır Pencere Tetikle"
@@ -5764,63 +5665,63 @@ msgstr "Bir Açılır Pencere Tetikle"
 msgid "Choose a popup to trigger when this item is clicked."
 msgstr "Bu ögeye tıklandığında tetiklenecek bir açılır pencere seçin."
 
-#: includes/modules/reviews.php:285
-#. translators: %s: number of days.
+#: includes/modules/reviews.php:132 includes/modules/reviews.php:146
+msgid "Leave a 5-star review"
+msgstr "5 yıldızlı bir değerlendirme bırakın"
+
+#. translators: 1: Popup Maker product name, 2: amount of time.
+#: includes/modules/reviews.php:900
 #, php-format
 msgid ""
-"Hi there! You've been using Popup Maker on your site for %s - I hope it's "
-"been helpful. If you're enjoying my plugin, would you mind rating it "
-"5-stars to help spread the word?"
+"You've been using %1$s for %2$s. If it has helped you engage visitors, grow "
+"your audience, or generate meaningful conversions, would you take a moment "
+"to leave us a 5-star review?"
 msgstr ""
-"Merhaba! Sitenizde %s süredir Popup Maker kullanıyorsunuz - umarım faydalı "
-"olmuştur. Eklentimi beğeniyorsanız, duyulmasına yardımcı olmak için 5 "
-"yıldızla değerlendirir misiniz?"
+"%1$s'i %2$s süredir kullanıyorsunuz. Ziyaretçilerle etkileşim kurmanıza, "
+"kitlenizi büyütmenize veya anlamlı dönüşümler elde etmenize yardımcı "
+"olduysa, bize 5 yıldızlı bir değerlendirme bırakmak için biraz zaman ayırır "
+"mısınız?"
 
-#: includes/modules/reviews.php:290
+#: includes/modules/reviews.php:905
 msgid "1 week"
 msgstr "1 hafta"
 
-#: includes/modules/reviews.php:298
+#: includes/modules/reviews.php:912
 msgid "1 month"
 msgstr "1 ay"
 
-#: includes/modules/reviews.php:306
+#: includes/modules/reviews.php:919
 msgid "3 months"
 msgstr "3 ay"
 
-#: includes/modules/reviews.php:325
-#. translators: %s: number of popup views.
+#. translators: 1: Popup Maker product name, 2: number of popup views.
+#: includes/modules/reviews.php:937
 #, php-format
 msgid ""
-"Hi there! You've recently hit %s popup views on your site – that’s "
-"awesome!! If you'd like to celebrate this milestone, rate Popup Maker "
-"5-stars to help spread the word!"
+"%1$s has now delivered %2$s popup views on your site. If those popups have "
+"helped you achieve meaningful results, would you take a moment to leave us a "
+"5-star review?"
 msgstr ""
-"Merhaba! Sitenizde yakın zamanda %s açılır pencere görüntülemesine "
-"ulaştınız – bu harika!! Bu dönüm noktasını kutlamak isterseniz, duyulmasına "
-"yardımcı olmak için Popup Maker'ı 5 yıldızla değerlendirin!"
+"%1$s artık sitenizde %2$s açılır pencere gösterimi sağladı. Bu açılır "
+"pencereler anlamlı sonuçlar elde etmenize yardımcı olduysa, bize 5 yıldızlı "
+"bir değerlendirme bırakmak için biraz zaman ayırır mısınız?"
 
-#: includes/modules/reviews.php:401
-#: includes/modules/reviews.php:541
-msgid "Ok, you deserve it"
-msgstr "Tamam, bunu hak ettin"
+#: includes/modules/reviews.php:1007
+msgid "Remind me later"
+msgstr "Bana daha sonra hatırlat"
 
-#: includes/modules/reviews.php:405
-#: includes/modules/reviews.php:546
-msgid "Nope, maybe later"
-msgstr "Yok, belki sonra"
+#: includes/modules/reviews.php:1012
+msgid "I’ve already left a review"
+msgstr "Zaten bir değerlendirme bıraktım"
 
-#: includes/modules/reviews.php:410
-#: includes/modules/reviews.php:551
-msgid "I already did"
-msgstr "Ben zaten yaptım"
+#. translators: %s: Popup Maker product name.
+#: includes/modules/reviews.php:1048
+#, php-format
+msgid "Is %s helping you grow?"
+msgstr "%s büyümenize yardımcı oluyor mu?"
 
-#: includes/modules/reviews.php:421
-msgid "Love Popup Maker? Leave a 5-star review!"
-msgstr "Popup Maker'ı seviyor musunuz? 5 yıldızlı bir değerlendirme bırakın!"
-
-#: includes/namespaced/condition-helpers.php:34
 #. translators: %s: Post type.
+#: includes/namespaced/condition-helpers.php:34
 #, php-format
 msgid "Select %s(s) (optional)"
 msgstr "%s(ler)i seçin (isteğe bağlı)"
@@ -5864,15 +5765,14 @@ msgstr "Yüzen Çubuk - Yumuşak Mavi"
 #: includes/pum-install-functions.php:191
 msgid "Content Only - For use with page builders or block editor"
 msgstr ""
-"Yalnızca içerik - Sayfa oluşturucular veya blok düzenleyici ile kullanım "
-"için"
+"Yalnızca içerik - Sayfa oluşturucular veya blok düzenleyici ile kullanım için"
 
 #: includes/pum-sdk/class-pum-extension-activation.php:82
 msgid "This plugin"
 msgstr "Bu eklenti"
 
-#: includes/pum-sdk/class-pum-extension-activation.php:124
 #. translators: 1. plugin name.
+#: includes/pum-sdk/class-pum-extension-activation.php:124
 #, php-format
 msgid " requires Popup Maker! Please %s to continue!"
 msgstr "Popup Maker gerektirir! Devam etmek için lütfen %s!"
@@ -5881,13 +5781,11 @@ msgstr "Popup Maker gerektirir! Devam etmek için lütfen %s!"
 msgid "Popup Maker: Failed to initialize autoloader. The plugin cannot load."
 msgstr "Popup Maker: Otomatik yükleyici başlatılamadı. Eklenti yüklenemiyor."
 
-#: dist/packages/addons-page.js:1
-#: dist/packages/addons-page.js:3
+#: dist/packages/addons-page.js:1 dist/packages/addons-page.js:3
 msgid "Working…"
 msgstr "Çalışıyor…"
 
-#: dist/packages/addons-page.js:1
-#: dist/packages/addons-page.js:3
+#: dist/packages/addons-page.js:1 dist/packages/addons-page.js:3
 msgid "Network Active"
 msgstr "Ağda Etkin"
 
@@ -5899,8 +5797,7 @@ msgstr "Pro+ gerekli"
 msgid "Pro required"
 msgstr "Pro gerekli"
 
-#: dist/packages/addons-page.js:1
-#: dist/packages/addons-page.js:3
+#: dist/packages/addons-page.js:1 dist/packages/addons-page.js:3
 msgid "Unavailable"
 msgstr "Kullanılamıyor"
 
@@ -5909,24 +5806,20 @@ msgid "The add-on triggered a fatal error and the change was not applied."
 msgstr "Eklenti kritik bir hata oluşturdu ve değişiklik uygulanmadı."
 
 #: dist/packages/addons-page.js:1
-#, js-format
 msgid "%s deactivated."
 msgstr "%s devre dışı bırakıldı."
 
 #: dist/packages/addons-page.js:1
-#, js-format
 msgid "%s activated."
 msgstr "%s etkinleştirildi."
 
-#: dist/packages/addons-page.js:2
 #. translators: %s: add-on name.
-#, js-format
+#: dist/packages/addons-page.js:2
 msgid "%s couldn’t be deactivated"
 msgstr "%s devre dışı bırakılamadı"
 
-#: dist/packages/addons-page.js:3
 #. translators: %s: add-on name.
-#, js-format
+#: dist/packages/addons-page.js:3
 msgid "%s couldn’t be activated"
 msgstr "%s etkinleştirilemedi"
 
@@ -5950,9 +5843,8 @@ msgstr "Pro+ alın"
 msgid "Get Pro"
 msgstr "Pro alın"
 
-#: dist/packages/addons-page.js:4
 #. translators: %s: add-on name.
-#, js-format
+#: dist/packages/addons-page.js:4
 msgid "View details for %s"
 msgstr "%s için ayrıntıları görüntüle"
 
@@ -5960,8 +5852,7 @@ msgstr "%s için ayrıntıları görüntüle"
 msgid "Available with Pro+"
 msgstr "Pro+ ile kullanılabilir"
 
-#: dist/packages/addons-page.js:4
-#: dist/packages/admin-notifications.js:2
+#: dist/packages/addons-page.js:4 dist/packages/admin-notifications.js:2
 #: dist/packages/cta-admin.js:23
 msgid "All"
 msgstr "Tümü"
@@ -5990,9 +5881,8 @@ msgstr "Eklenti işlemi başarısız oldu."
 msgid "No add-ons are currently available."
 msgstr "Şu anda kullanılabilir eklenti yok."
 
-#: dist/packages/addons-page.js:5
 #. translators: %s: search query.
-#, js-format
+#: dist/packages/addons-page.js:5
 msgid "No add-ons match “%s”."
 msgstr "“%s” ile eşleşen eklenti yok."
 
@@ -6008,17 +5898,18 @@ msgstr "Pro+ Eklentileri"
 msgid "Add-ons"
 msgstr "Eklentiler"
 
-#: dist/packages/addons-page.js:6
 #. translators: %d: number of add-ons.
-#, js-format
+#: dist/packages/addons-page.js:6
 msgid "%d add-on"
 msgid_plural "%d add-ons"
 msgstr[0] "%d eklenti"
 msgstr[1] "%d eklenti"
 
 #: dist/packages/addons-page.js:6
-msgid "Explore Popup Maker add-ons and manage extensions installed on this site."
-msgstr "Popup Maker eklentilerini keşfedin ve bu siteye kurulu uzantıları yönetin."
+msgid ""
+"Explore Popup Maker add-ons and manage extensions installed on this site."
+msgstr ""
+"Popup Maker eklentilerini keşfedin ve bu siteye kurulu uzantıları yönetin."
 
 #: dist/packages/admin-bar.js:1
 msgid "After clicking ok, click the element you want a selector for."
@@ -6089,9 +5980,8 @@ msgstr "Dikkat"
 msgid "Details"
 msgstr "Ayrıntılar"
 
-#: dist/packages/admin-notifications.js:2
 #. translators: %d: number of unread notifications.
-#, js-format
+#: dist/packages/admin-notifications.js:2
 msgid "%d unread notification"
 msgid_plural "%d unread notifications"
 msgstr[0] "%d okunmamış bildirim"
@@ -6161,9 +6051,8 @@ msgstr "Hangi açılır pencere açılmalı?"
 msgid "Apply"
 msgstr "Uygula"
 
-#: dist/packages/block-editor.js:2
 #. translators: %s: popup title.
-#, js-format
+#: dist/packages/block-editor.js:2
 msgid "Open \"%s\" popup"
 msgstr "\"%s\" açılır penceresini aç"
 
@@ -6171,10 +6060,8 @@ msgstr "\"%s\" açılır penceresini aç"
 msgid "Popup Trigger Preview"
 msgstr "Açılır Pencere Tetikleyici Önizlemesi"
 
-#: dist/packages/block-editor.js:2
-#: dist/packages/block-library.js:1
-#: dist/packages/components.js:16
-#: dist/packages/cta-admin.js:23
+#: dist/packages/block-editor.js:2 dist/packages/block-library.js:1
+#: dist/packages/components.js:16 dist/packages/cta-admin.js:23
 msgid "Edit"
 msgstr "Düzenle"
 
@@ -6222,8 +6109,7 @@ msgstr "Yeni eylem çağrısı"
 msgid "Call to action not found."
 msgstr "Eylem çağrısı bulunamadı."
 
-#: dist/packages/block-library.js:1
-#: dist/packages/cta-admin.js:5
+#: dist/packages/block-library.js:1 dist/packages/cta-admin.js:5
 #: dist/packages/cta-editor.js:1
 msgid "Add Call to Action"
 msgstr "Eylem Çağrısı Ekle"
@@ -6248,8 +6134,7 @@ msgstr "Kaldır"
 msgid "Preview Call To Action"
 msgstr "Eylem Çağrısını Önizle"
 
-#: dist/packages/block-library.js:1
-#: dist/packages/cta-editor.js:1
+#: dist/packages/block-library.js:1 dist/packages/cta-editor.js:1
 msgid "Edit Call to Action"
 msgstr "Eylem Çağrısını Düzenle"
 
@@ -6285,8 +6170,7 @@ msgstr "Bize ulaşın"
 msgid "Enter a value"
 msgstr "Bir değer girin"
 
-#: dist/packages/components.js:1
-#: dist/packages/fields.js:14
+#: dist/packages/components.js:1 dist/packages/fields.js:14
 msgid "Search"
 msgstr "Ara"
 
@@ -6298,28 +6182,20 @@ msgstr "Öneri yok"
 msgid "Remove token"
 msgstr "Belirteci kaldır"
 
-#: dist/packages/components.js:4
-#: dist/packages/components.js:13
-#: dist/packages/fields.js:4
-#: dist/packages/fields.js:11
 #. translators: %s: entity type.
-#, js-format
+#: dist/packages/components.js:4 dist/packages/components.js:13
+#: dist/packages/fields.js:4 dist/packages/fields.js:11
 msgid "%s(s)"
 msgstr "%s(ler)"
 
-#: dist/packages/components.js:7
-#: dist/packages/components.js:16
-#: dist/packages/fields.js:7
-#: dist/packages/fields.js:14
 #. translators: %s: entity type.
-#, js-format
+#: dist/packages/components.js:7 dist/packages/components.js:16
+#: dist/packages/fields.js:7 dist/packages/fields.js:14
 msgid "Select %s(s)"
 msgstr "%s(ler)i seçin"
 
-#: dist/packages/components.js:7
-#: dist/packages/components.js:16
-#: dist/packages/fields.js:7
-#: dist/packages/fields.js:14
+#: dist/packages/components.js:7 dist/packages/components.js:16
+#: dist/packages/fields.js:7 dist/packages/fields.js:14
 msgid "Searching…"
 msgstr "Aranıyor…"
 
@@ -6330,6 +6206,18 @@ msgstr "İşlemi Onayla"
 #: dist/packages/components.js:7
 msgid "Confirm"
 msgstr "Onayla"
+
+#. translators: 1. Device type.
+#: dist/packages/components.js:8 dist/packages/components.js:10
+msgctxt "Device toggle option"
+msgid "Show on %1$s"
+msgstr "%1$s üzerinde göster"
+
+#. translators: 1. Device type.
+#: dist/packages/components.js:9
+msgctxt "Device toggle option"
+msgid "Hide on %1$s"
+msgstr "%1$s üzerinde gizle"
 
 #: dist/packages/components.js:16
 msgid "Click here to edit this text."
@@ -6375,49 +6263,39 @@ msgstr "Bu bağlantıyı eklemek için ENTER tuşuna basın"
 msgid "Please provide a name for this call to action."
 msgstr "Lütfen bu harekete geçirici mesaj için bir ad belirtin."
 
-#: dist/packages/core-data.js:1
-#: dist/packages/core-data.js:4
-#: dist/packages/core-data.js:7
-#: dist/packages/core-data.js:13
+#: dist/packages/core-data.js:1 dist/packages/core-data.js:4
+#: dist/packages/core-data.js:7 dist/packages/core-data.js:13
 msgid "Call to action not found"
 msgstr "Harekete geçirici mesaj bulunamadı"
 
-#: dist/packages/core-data.js:4
-#: dist/packages/core-data.js:13
 #. translators: %s: call to action title.
-#, js-format
+#: dist/packages/core-data.js:4 dist/packages/core-data.js:13
 msgid "Call to action \"%s\" saved successfully."
 msgstr "Harekete geçirici mesaj \"%s\" başarıyla kaydedildi."
 
-#: dist/packages/core-data.js:4
-#: dist/packages/core-data.js:7
+#: dist/packages/core-data.js:4 dist/packages/core-data.js:7
 msgid "An error occurred, call to action was not saved."
 msgstr "Bir hata oluştu, harekete geçirici mesaj kaydedilemedi."
 
-#: dist/packages/core-data.js:7
 #. translators: %s: call to action title.
-#, js-format
+#: dist/packages/core-data.js:7
 msgid "Call to action \"%s\" updated successfully."
 msgstr "Harekete geçirici mesaj \"%s\" başarıyla güncellendi."
 
-#: dist/packages/core-data.js:10
 #. translators: %s: call to action title.
-#, js-format
+#: dist/packages/core-data.js:10
 msgid "Call to action \"%s\" deleted successfully."
 msgstr "Harekete geçirici mesaj \"%s\" başarıyla silindi."
 
-#: dist/packages/core-data.js:10
-#: dist/packages/core-data.js:22
+#: dist/packages/core-data.js:10 dist/packages/core-data.js:22
 msgid "Failed to delete entity"
 msgstr "Öğe silinemedi"
 
-#: dist/packages/core-data.js:10
-#: dist/packages/core-data.js:22
+#: dist/packages/core-data.js:10 dist/packages/core-data.js:22
 msgid "No edits to save"
 msgstr "Kaydedilecek düzenleme yok"
 
-#: dist/packages/core-data.js:13
-#: dist/packages/core-data.js:25
+#: dist/packages/core-data.js:13 dist/packages/core-data.js:25
 msgid "No editor values to save"
 msgstr "Kaydedilecek düzenleyici değeri yok"
 
@@ -6438,40 +6316,33 @@ msgid "Please provide a name for this popup."
 msgstr "Lütfen bu açılır pencere için bir ad belirtin."
 
 #: dist/packages/core-data.js:13
-msgid "Please provide at least one condition for this popup before enabling it."
+msgid ""
+"Please provide at least one condition for this popup before enabling it."
 msgstr ""
-"Lütfen etkinleştirmeden önce bu açılır pencere için en az bir koşul "
-"belirtin."
+"Lütfen etkinleştirmeden önce bu açılır pencere için en az bir koşul belirtin."
 
-#: dist/packages/core-data.js:13
-#: dist/packages/core-data.js:16
-#: dist/packages/core-data.js:19
-#: dist/packages/core-data.js:22
+#: dist/packages/core-data.js:13 dist/packages/core-data.js:16
+#: dist/packages/core-data.js:19 dist/packages/core-data.js:22
 #: dist/packages/core-data.js:25
 msgid "Popup not found"
 msgstr "Popup bulunamadı"
 
-#: dist/packages/core-data.js:16
-#: dist/packages/core-data.js:25
 #. translators: %s: popup title.
-#, js-format
+#: dist/packages/core-data.js:16 dist/packages/core-data.js:25
 msgid "Popup \"%s\" saved successfully."
 msgstr "\"%s\" popup'ı başarıyla kaydedildi."
 
-#: dist/packages/core-data.js:16
-#: dist/packages/core-data.js:19
+#: dist/packages/core-data.js:16 dist/packages/core-data.js:19
 msgid "An error occurred, popup was not saved."
 msgstr "Bir hata oluştu, popup kaydedilemedi."
 
-#: dist/packages/core-data.js:19
 #. translators: %s: popup title.
-#, js-format
+#: dist/packages/core-data.js:19
 msgid "Popup \"%s\" updated successfully."
 msgstr "\"%s\" popup'ı başarıyla güncellendi."
 
-#: dist/packages/core-data.js:22
 #. translators: %s: popup title.
-#, js-format
+#: dist/packages/core-data.js:22
 msgid "Popup \"%s\" deleted successfully."
 msgstr "\"%s\" popup'ı başarıyla silindi."
 
@@ -6487,9 +6358,8 @@ msgstr "Bir hata oluştu, ayarlar yüklenemedi."
 msgid "No results returned"
 msgstr "Sonuç döndürülmedi"
 
-#: dist/packages/cta-admin.js:4
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:4
 msgid "%d item selected"
 msgid_plural "%d items selected"
 msgstr[0] "%d öğe seçildi"
@@ -6519,13 +6389,11 @@ msgstr "Filtreler"
 msgid "Enable or disable the call to action"
 msgstr "Eylem çağrısını etkinleştir veya devre dışı bırak"
 
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-editor.js:1
+#: dist/packages/cta-admin.js:4 dist/packages/cta-editor.js:1
 msgid "Description"
 msgstr "Açıklama"
 
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-admin.js:23
+#: dist/packages/cta-admin.js:4 dist/packages/cta-admin.js:23
 msgid "Status"
 msgstr "Durum"
 
@@ -6533,9 +6401,8 @@ msgstr "Durum"
 msgid "In Trash"
 msgstr "Çöpte"
 
-#: dist/packages/cta-admin.js:5
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:5
 msgid "%d item"
 msgid_plural "%d items"
 msgstr[0] "%d öğe"
@@ -6553,55 +6420,47 @@ msgstr "Çağrı Eylemlerini yönetme izniniz yok."
 msgid "Popup Maker - Calls to Action"
 msgstr "Popup Maker - Çağrı Eylemleri"
 
-#: dist/packages/cta-admin.js:8
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:8
 msgid "%d call to action enabled."
 msgid_plural "%d calls to action enabled."
 msgstr[0] "%d çağrı eylemi etkin."
 msgstr[1] "%d çağrı eylemi etkin."
 
-#: dist/packages/cta-admin.js:11
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:11
 msgid "%d call to action disabled."
 msgid_plural "%d calls to action disabled."
 msgstr[0] "%d çağrı eylemi devre dışı."
 msgstr[1] "%d çağrı eylemi devre dışı."
 
-#: dist/packages/cta-admin.js:11
-#: dist/packages/cta-admin.js:23
+#: dist/packages/cta-admin.js:11 dist/packages/cta-admin.js:23
 msgid "Trash"
 msgstr "Çöp Kutusu"
 
-#: dist/packages/cta-admin.js:14
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:14
 msgid "Are you sure you want to trash %d items?"
 msgstr "%d öğeyi çöpe taşımak istediğinize emin misiniz?"
 
-#: dist/packages/cta-admin.js:17
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:17
 msgid "%d call to action moved to trash."
 msgid_plural "%d calls to action moved to trash."
 msgstr[0] "%d çağrı eylemi çöp kutusuna taşındı."
 msgstr[1] "%d çağrı eylemi çöp kutusuna taşındı."
 
-#: dist/packages/cta-admin.js:17
-#: dist/packages/cta-admin.js:23
+#: dist/packages/cta-admin.js:17 dist/packages/cta-admin.js:23
 msgid "Delete Permanently"
 msgstr "Kalıcı Olarak Sil"
 
-#: dist/packages/cta-admin.js:20
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:20
 msgid "Are you sure you want to premanently delete %d items?"
 msgstr "%d öğeyi kalıcı olarak silmek istediğinize emin misiniz?"
 
-#: dist/packages/cta-admin.js:23
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:23
 msgid "%d call to action deleted."
 msgid_plural "%d calls to action deleted."
 msgstr[0] "%d çağrı eylemi silindi."
@@ -6616,8 +6475,8 @@ msgid ""
 "Popup Maker Pro gives you the power to import & export your calls to action "
 "to a JSON file in seconds."
 msgstr ""
-"Popup Maker Pro, çağrı eylemlerinizi saniyeler içinde bir JSON dosyasına "
-"içe ve dışa aktarmanızı sağlar."
+"Popup Maker Pro, çağrı eylemlerinizi saniyeler içinde bir JSON dosyasına içe "
+"ve dışa aktarmanızı sağlar."
 
 #: dist/packages/cta-admin.js:23
 msgid "Learn more or upgrade today"
@@ -6670,8 +6529,7 @@ msgstr "Çöpten çıkar"
 #: dist/packages/cta-admin.js:23
 msgid "Are you sure you want to premanently delete this call to action?"
 msgstr ""
-"Bu harekete geçirici mesajı kalıcı olarak silmek istediğinizden emin "
-"misiniz?"
+"Bu harekete geçirici mesajı kalıcı olarak silmek istediğinizden emin misiniz?"
 
 #: dist/packages/cta-editor.js:1
 msgid "Undo"
@@ -6737,9 +6595,8 @@ msgstr "Harekete Geçirici Mesajı Kaydet"
 msgid "Editor requires a valid id"
 msgstr "Düzenleyici geçerli bir kimlik gerektirir"
 
-#: dist/packages/fields.js:8
 #. translators: %s: field type that was not found.
-#, js-format
+#: dist/packages/fields.js:8
 msgid "Field type `%s` not found"
 msgstr "`%s` alan türü bulunamadı"
 
@@ -6747,311 +6604,15 @@ msgstr "`%s` alan türü bulunamadı"
 msgid "Support"
 msgstr "Destek"
 
-#: classes/Admin/Popups.php:897
-#: classes/Admin/Popups.php:915
-#: classes/Admin/Popups.php:933
-#: classes/Admin/Popups.php:951
-#: classes/Shortcode/Popup.php:176
-#: classes/Shortcode/Popup.php:191
-#: classes/Shortcode/Popup.php:206
-#: classes/Shortcode/Popup.php:221
-#. translators: 1. Screen Edge: top, bottom.
-#, php-format
-msgctxt "Screen Edge: top, bottom"
-msgid "Distance from the %s edge of the screen."
-msgstr "Ekranın %s kenarından uzaklık."
-
-#: classes/Admin/Subscribers/Table.php:108
-msgctxt "column name"
-msgid "Subscribed On"
-msgstr "Abone Olunduğu Tarih"
-
-#: classes/Admin/Templates.php:1074
-msgctxt "aria-label for add new OR condition button"
-msgid "Add another OR condition"
-msgstr "Başka bir OR koşulu ekle"
-
-#: classes/Admin/Templates.php:1078
-msgctxt "aria-label for add new AND condition button"
-msgid "Add another AND condition group"
-msgstr "Başka bir AND koşul grubu ekle"
-
-#: classes/Conditions.php:236
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: All"
-msgid "%s Archive"
-msgstr "%s Arşivi"
-
-#: classes/Conditions.php:248
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: All"
-msgid "All %s"
-msgstr "Tüm %s"
-
-#: classes/Conditions.php:258
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: Selected"
-msgid "%s: Selected"
-msgstr "%s: Seçili"
-
-#: classes/Conditions.php:265
-#: classes/Conditions.php:310
-#: classes/Conditions.php:333
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Select Posts"
-msgid "Select %s."
-msgstr "%s seçin."
-
-#: classes/Conditions.php:282
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: ID"
-msgid "%s: ID"
-msgstr "%s: Kimlik"
-
-#: classes/Conditions.php:303
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: ID"
-msgid "%s: Child Of"
-msgstr "%s: Alt Ögesi"
-
-#: classes/Conditions.php:326
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: ID"
-msgid "%s: Ancestor Of"
-msgstr "%s: Üst Ögesi"
-
-#: classes/Conditions.php:289
-#. translators: 1. Post type singular label.
-#, php-format
-msgctxt "condition: post type singular label ie. Posts IDs"
-msgid "%s IDs: 128, 129"
-msgstr "%s Kimlikleri: 128, 129"
-
-#: classes/Conditions.php:353
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Pages: With Template"
-msgid "%s: With Template"
-msgstr "%s: Şablonlu"
-
-#: classes/Conditions.php:411
-#. translators: 1. Post type plural label, 2. Taxonomy singular label.
-#, php-format
-msgctxt ""
-"condition: post type plural and taxonomy singular label ie. Posts: With "
-"Category"
-msgid "%1$s: With %2$s"
-msgstr "%1$s: %2$s ile"
-
-#: classes/Conditions.php:419
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Select categories"
-msgid "Select %s."
-msgstr "%s seçin."
-
-#: classes/Conditions.php:464
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Categories: All"
-msgid "%s: All"
-msgstr "%s: Tümü"
-
-#: classes/Conditions.php:474
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Categories: Selected"
-msgid "%s: Selected"
-msgstr "%s: Seçili"
-
-#: classes/Conditions.php:497
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Categories: Selected"
-msgid "%s: IDs"
-msgstr "%s: Kimlikler"
-
-#: classes/Conditions.php:481
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Select Categories"
-msgid "Select %s."
-msgstr "%s seçin."
-
-#: classes/Conditions.php:504
-#. translators: 1. Taxonomy singular label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Category IDs"
-msgid "%s IDs: 128, 129"
-msgstr "%s ID'leri: 128, 129"
-
-#: classes/Controllers/Assets.php:75
-msgctxt "JS alert for CSS get selector tool"
-msgid "Selector"
-msgstr "Seçici"
-
-#: classes/Controllers/Assets.php:76
-msgctxt "JS alert for CSS get selector tool"
-msgid "Close"
-msgstr "Kapat"
-
-#: classes/Controllers/Assets.php:77
-msgctxt "JS alert for CSS get selector tool"
-msgid "Copy"
-msgstr "Kopyala"
-
-#: classes/Controllers/Assets.php:78
-msgctxt "JS alert for CSS get selector tool"
-msgid "Copied to clipboard"
-msgstr "Panoya kopyalandı"
-
-#: classes/Controllers/PostTypes.php:501
-#: classes/Controllers/PostTypes.php:503
-#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
-#, php-format
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "Add New %1$s"
-msgstr "Yeni %1$s Ekle"
-
-#: classes/Controllers/PostTypes.php:505
-#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
-#, php-format
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "Edit %1$s"
-msgstr "%1$s Düzenle"
-
-#: classes/Controllers/PostTypes.php:507
-#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
-#, php-format
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "New %1$s"
-msgstr "Yeni %1$s"
-
-#: classes/Controllers/PostTypes.php:511
-#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
-#, php-format
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "View %1$s"
-msgstr "%1$s Görüntüle"
-
-#: classes/Controllers/PostTypes.php:509
-#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
-#, php-format
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "All %2$s"
-msgstr "Tüm %2$s"
-
-#: classes/Controllers/PostTypes.php:513
-#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
-#, php-format
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "Search %2$s"
-msgstr "%2$s ara"
-
-#: classes/Controllers/PostTypes.php:515
-#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
-#, php-format
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "No %2$s found"
-msgstr "Hiç %2$s bulunamadı"
-
-#: classes/Controllers/PostTypes.php:517
-#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
-#, php-format
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "No %2$s found in Trash"
-msgstr "Çöpte %2$s bulunamadı"
-
-#: classes/Controllers/PostTypes.php:580
-#: classes/Controllers/PostTypes.php:582
-#. translators: %1$s: Post Type Singular: Popup, Theme
-#, php-format
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s updated."
-msgstr "%1$s güncellendi."
-
-#: classes/Controllers/PostTypes.php:584
-#. translators: %1$s: Post Type Singular: Popup, Theme
-#, php-format
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s published."
-msgstr "%1$s yayımlandı."
-
-#: classes/Controllers/PostTypes.php:586
-#. translators: %1$s: Post Type Singular: Popup, Theme
-#, php-format
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s saved."
-msgstr "%1$s kaydedildi."
-
-#: classes/Controllers/PostTypes.php:588
-#. translators: %1$s: Post Type Singular: Popup, Theme
-#, php-format
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s submitted."
-msgstr "%1$s gönderildi."
-
-#: classes/Triggers.php:94
-#. translators: 1. Trigger name.
-#, php-format
-msgctxt "trigger settings modal title"
-msgid "%s Trigger Settings"
-msgstr "%s Tetikleyici Ayarları"
-
-#: includes/modules/menus.php:50
-#. translators: %1$s: opening and closing link HTML tags, %2$s: link text.
-#, php-format
-msgctxt "%s represent opening and closing link html"
-msgid ""
-"Use this if there is a conflict with your theme or another plugin in the "
-"nav menu editor. %1$sLearn more%2$s"
-msgstr ""
-"Bu, tema veya başka bir eklentiyle gezinme menüsü düzenleyicisinde çakışma "
-"varsa kullanın. %1$sDaha fazla bilgi edinin%2$s"
-
-#: dist/packages/components.js:8
-#: dist/packages/components.js:10
-#. translators: 1. Device type.
-#, js-format
-msgctxt "Device toggle option"
-msgid "Show on %1$s"
-msgstr "%1$s üzerinde göster"
-
-#: dist/packages/components.js:9
-#. translators: 1. Device type.
-#, js-format
-msgctxt "Device toggle option"
-msgid "Hide on %1$s"
-msgstr "%1$s üzerinde gizle"
-
 #: packages/block-library/src/lib/cta-button/block.json
 msgctxt "block title"
 msgid "Call to Action Button"
 msgstr "Eylem Çağrısı Düğmesi"
 
-#: packages/block-library/src/lib/cta-buttons/block.json
-msgctxt "block title"
-msgid "Call to Action Buttons"
-msgstr "Eylem Çağrısı Düğmeleri"
-
 #: packages/block-library/src/lib/cta-button/block.json
 msgctxt "block description"
 msgid "Prompt visitors to take action with a button-style link."
 msgstr "Ziyaretçileri düğme tarzı bir bağlantıyla işlem yapmaya teşvik edin."
-
-#: packages/block-library/src/lib/cta-buttons/block.json
-msgctxt "block description"
-msgid "Prompt visitors to take action with a group of button-style links."
-msgstr ""
-"Ziyaretçileri düğme tarzı bağlantılardan oluşan bir grupla işlem yapmaya "
-"teşvik edin."
 
 #: packages/block-library/src/lib/cta-button/block.json
 #: packages/block-library/src/lib/cta-buttons/block.json
@@ -7092,3 +6653,15 @@ msgstr "Dolgu"
 msgctxt "block style label"
 msgid "Outline"
 msgstr "Anahat"
+
+#: packages/block-library/src/lib/cta-buttons/block.json
+msgctxt "block title"
+msgid "Call to Action Buttons"
+msgstr "Eylem Çağrısı Düğmeleri"
+
+#: packages/block-library/src/lib/cta-buttons/block.json
+msgctxt "block description"
+msgid "Prompt visitors to take action with a group of button-style links."
+msgstr ""
+"Ziyaretçileri düğme tarzı bağlantılardan oluşan bir grupla işlem yapmaya "
+"teşvik edin."
