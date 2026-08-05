@@ -91,6 +91,14 @@ requirePattern(
 	'Automatic translation must honor a persistent blocker issue.'
 );
 requirePattern(
+	/gh pr list --repo "\$GITHUB_REPOSITORY"/,
+	'The checkout-free safety gate must explicitly target its repository.'
+);
+requirePattern(
+	/gh issue list --repo "\$GITHUB_REPOSITORY"/,
+	'The checkout-free blocker gate must explicitly target its repository.'
+);
+requirePattern(
 	/steps\.preflight\.outputs\.within_limits != 'true'/,
 	'Catalog size limits must be enforced before any provider call.'
 );
