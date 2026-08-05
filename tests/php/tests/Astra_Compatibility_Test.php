@@ -47,6 +47,13 @@ class Astra_Compatibility_Test extends WP_UnitTestCase {
 
 		$this->controller = new Astra( new stdClass() );
 		$this->controller->init();
+
+		add_shortcode(
+			'astra_custom_layout',
+			function () {
+				return 'Astra Custom Layout';
+			}
+		);
 	}
 
 	/**
@@ -61,6 +68,8 @@ class Astra_Compatibility_Test extends WP_UnitTestCase {
 		if ( $this->content_filter ) {
 			remove_filter( 'pum_popup_content', $this->content_filter, 11 );
 		}
+
+		remove_shortcode( 'astra_custom_layout' );
 
 		foreach ( $this->global_state as $global_name => $value ) {
 			$GLOBALS[ $global_name ] = $value;
@@ -81,7 +90,7 @@ class Astra_Compatibility_Test extends WP_UnitTestCase {
 
 		$content = apply_filters( 'pum_popup_content', '[astra_custom_layout id="123"]', 456 );
 
-		$this->assertStringContainsString( 'astra_custom_layout', $content );
+		$this->assertStringContainsString( 'Astra Custom Layout', $content );
 		$this->assertSame( $query, $GLOBALS['wp_query'] );
 		$this->assertSame( $query, $GLOBALS['wp_the_query'] );
 		$this->assertSame( $original_posts, $query->posts );
