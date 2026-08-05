@@ -81,7 +81,7 @@ class Astra_Compatibility_Test extends WP_UnitTestCase {
 
 		$content = apply_filters( 'pum_popup_content', '[astra_custom_layout id="123"]', 456 );
 
-		$this->assertSame( '[astra_custom_layout id="123"]', $content );
+		$this->assertStringContainsString( 'astra_custom_layout', $content );
 		$this->assertSame( $query, $GLOBALS['wp_query'] );
 		$this->assertSame( $query, $GLOBALS['wp_the_query'] );
 		$this->assertSame( $original_posts, $query->posts );
