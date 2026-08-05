@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Improvements**
+
+-   Improved PHP 8.3 and 8.4 compatibility by safely handling extension-added post and metadata fields without deprecated dynamic properties, with expanded automated compatibility coverage through PHP 8.4.
+
 ## v1.24.0 - 2026-08-03
 
 **Security**
