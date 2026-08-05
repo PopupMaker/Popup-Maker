@@ -409,7 +409,7 @@ jobs:
 
       - name: Upload runtime diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: php85-runtime-diagnostics
           path: |
@@ -555,7 +555,7 @@ jobs:
         run: npx playwright test --config=tests/e2e/playwright.config.ts --project=chromium
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
