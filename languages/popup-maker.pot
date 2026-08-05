@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-04T10:09:35+00:00\n"
+"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: popup-maker\n"
@@ -29,9 +29,10 @@ msgstr ""
 #: classes/Services/License.php:915
 #: classes/Site/Assets.php:284
 #: classes/Triggers.php:226
-#: classes/Utils/Alerts.php:482
+#: classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
+#: includes/modules/reviews.php:92
 #: dist/packages/admin-notifications.js:2
 #: dist/packages/cta-admin.js:5
 #: dist/packages/layout.js:1
@@ -3108,7 +3109,7 @@ msgid "Get Selector"
 msgstr ""
 
 #: classes/Controllers/Admin/ToolbarNotifications.php:281
-#: classes/Utils/Alerts.php:482
+#: classes/Utils/Alerts.php:497
 #: dist/packages/admin-notifications.js:2
 msgid "Notifications"
 msgstr ""
@@ -3874,11 +3875,11 @@ msgstr ""
 msgid "Unknown notification."
 msgstr ""
 
-#: classes/RestAPI/Notifications.php:158
+#: classes/RestAPI/Notifications.php:159
 msgid "Invalid notification action."
 msgstr ""
 
-#: classes/RestAPI/Notifications.php:164
+#: classes/RestAPI/Notifications.php:165
 msgid "Could not record dismissal."
 msgstr ""
 
@@ -4911,41 +4912,41 @@ msgid "Track trends over time with <a href=\"%s\" target=\"_blank\" rel=\"noopen
 msgstr ""
 
 #. translators: %s: native language name.
-#: classes/Utils/Alerts.php:212
+#: classes/Utils/Alerts.php:227
 #, php-format
 msgid "This plugin is also available in %1$s. <a href=\"%2$s\" target=\"_blank\">Help improve the translation!</a>"
 msgstr ""
 
 #. translators: 1: native language name, 2: other native language names, comma separated
-#: classes/Utils/Alerts.php:228
-#: classes/Utils/Alerts.php:255
+#: classes/Utils/Alerts.php:243
+#: classes/Utils/Alerts.php:270
 #, php-format
 msgid "This plugin is also available in %1$s (also: %2$s). <a href=\"%3$s\" target=\"_blank\">Help improve the translation!</a>"
 msgstr ""
 
 #. translators: 1: native language name, 2: URL to translate.wordpress.org
 #. translators: 1. Native language name, 2. URL to translation.
-#: classes/Utils/Alerts.php:240
-#: classes/Utils/Alerts.php:267
+#: classes/Utils/Alerts.php:255
+#: classes/Utils/Alerts.php:282
 #, php-format
 msgid "This plugin is not translated into %1$s yet. <a href=\"%2$s\" target=\"_blank\">Help translate it!</a>"
 msgstr ""
 
 #. translators: %s: native language name.
-#: classes/Utils/Alerts.php:274
+#: classes/Utils/Alerts.php:289
 #, php-format
 msgid "This plugin's translation for %1$s is out of date. <a href=\"%2$s\" target=\"_blank\">Help improve the translation!</a>"
 msgstr ""
 
-#: classes/Utils/Alerts.php:283
+#: classes/Utils/Alerts.php:298
 msgid "Help translate Popup Maker"
 msgstr ""
 
-#: classes/Utils/Alerts.php:485
+#: classes/Utils/Alerts.php:500
 msgid "Check out the following notifications from Popup Maker."
 msgstr ""
 
-#: classes/Utils/Alerts.php:557
+#: classes/Utils/Alerts.php:573
 msgid "Dismiss this item."
 msgstr ""
 
@@ -5274,47 +5275,47 @@ msgstr ""
 msgid "Choose a popup to trigger when this item is clicked."
 msgstr ""
 
-#. translators: %s: number of days.
-#: includes/modules/reviews.php:285
-#, php-format
-msgid "Hi there! You've been using Popup Maker on your site for %s - I hope it's been helpful. If you're enjoying my plugin, would you mind rating it 5-stars to help spread the word?"
+#: includes/modules/reviews.php:132
+#: includes/modules/reviews.php:146
+msgid "Leave a 5-star review"
 msgstr ""
 
-#: includes/modules/reviews.php:290
+#. translators: 1: Popup Maker product name, 2: amount of time.
+#: includes/modules/reviews.php:900
+#, php-format
+msgid "You've been using %1$s for %2$s. If it has helped you engage visitors, grow your audience, or generate meaningful conversions, would you take a moment to leave us a 5-star review?"
+msgstr ""
+
+#: includes/modules/reviews.php:905
 msgid "1 week"
 msgstr ""
 
-#: includes/modules/reviews.php:298
+#: includes/modules/reviews.php:912
 msgid "1 month"
 msgstr ""
 
-#: includes/modules/reviews.php:306
+#: includes/modules/reviews.php:919
 msgid "3 months"
 msgstr ""
 
-#. translators: %s: number of popup views.
-#: includes/modules/reviews.php:325
+#. translators: 1: Popup Maker product name, 2: number of popup views.
+#: includes/modules/reviews.php:937
 #, php-format
-msgid "Hi there! You've recently hit %s popup views on your site – that’s awesome!! If you'd like to celebrate this milestone, rate Popup Maker 5-stars to help spread the word!"
+msgid "%1$s has now delivered %2$s popup views on your site. If those popups have helped you achieve meaningful results, would you take a moment to leave us a 5-star review?"
 msgstr ""
 
-#: includes/modules/reviews.php:401
-#: includes/modules/reviews.php:541
-msgid "Ok, you deserve it"
+#: includes/modules/reviews.php:1007
+msgid "Remind me later"
 msgstr ""
 
-#: includes/modules/reviews.php:405
-#: includes/modules/reviews.php:546
-msgid "Nope, maybe later"
+#: includes/modules/reviews.php:1012
+msgid "I’ve already left a review"
 msgstr ""
 
-#: includes/modules/reviews.php:410
-#: includes/modules/reviews.php:551
-msgid "I already did"
-msgstr ""
-
-#: includes/modules/reviews.php:421
-msgid "Love Popup Maker? Leave a 5-star review!"
+#. translators: %s: Popup Maker product name.
+#: includes/modules/reviews.php:1048
+#, php-format
+msgid "Is %s helping you grow?"
 msgstr ""
 
 #. translators: %s: Post type.
