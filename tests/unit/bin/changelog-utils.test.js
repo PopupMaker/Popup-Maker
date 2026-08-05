@@ -23,18 +23,31 @@ describe( 'changelog utilities', () => {
 - Fixed popup rendering.` );
 	} );
 
-	test( 'removes a trailing developer section', () => {
+	test( 'removes nested headings from a developer section', () => {
 		const changelog = `**Fixes**
 
 - Fixed popup rendering.
 
 ### Developers
 
-- Added regression coverage.`;
+#### Runtime coverage
+
+- Added regression coverage.
+
+### Security
+
+- Hardened popup rendering.`;
 
 		expect( stripDeveloperSections( changelog ) ).toBe( `**Fixes**
 
-- Fixed popup rendering.` );
+- Fixed popup rendering.
+
+### Security
+
+- Hardened popup rendering.` );
+		expect( stripDeveloperSections( changelog ) ).not.toContain(
+			'Runtime coverage'
+		);
 	} );
 
 	test( 'leaves changelog content without developer sections unchanged', () => {
