@@ -47,7 +47,7 @@
 		"@wordpress/hooks": "^4.29.0",
 		"@wordpress/html-entities": "^4.29.0",
 		"@wordpress/i18n": "^6.17.0",
-		"@wordpress/icons": "^10.32.0",
+		"@wordpress/icons": "^15.3.0",
 		"@wordpress/keycodes": "^4.29.0",
 		"@wordpress/plugins": "^7.43.0",
 		"@wordpress/rich-text": "^7.29.0",
