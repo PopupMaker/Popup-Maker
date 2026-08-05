@@ -23,6 +23,7 @@ jobs:
       php: ${{ steps.changes.outputs.php_any_changed }}
       php_tests: ${{ steps.changes.outputs.php_tests_any_changed }}
       js: ${{ steps.changes.outputs.js_any_changed }}
+      styles: ${{ steps.changes.outputs.styles_any_changed }}
       js_tests: ${{ steps.changes.outputs.js_tests_any_changed }}
       e2e: ${{ steps.changes.outputs.e2e_any_changed }}
       npm_deps: ${{ steps.changes.outputs.npm_deps_any_changed }}
@@ -58,6 +59,10 @@ jobs:
               - 'packages/*/src/**/*.{js,ts,tsx,jsx}'
               - 'assets/js/src/**/*.{js,ts,tsx,jsx}'
               - 'src/**/*.{js,ts,tsx,jsx}'
+            styles:
+              - 'packages/*/src/**/*.{css,scss}'
+              - 'assets/js/src/**/*.{css,scss}'
+              - 'src/**/*.{css,scss}'
             js_tests:
               - 'tests/unit/**'
               - 'jest.config.js'
@@ -134,6 +139,7 @@ jobs:
           echo "PHP source: ${{ steps.changes.outputs.php_any_changed }}"
           echo "PHP tests: ${{ steps.changes.outputs.php_tests_any_changed }}"
           echo "JS source: ${{ steps.changes.outputs.js_any_changed }}"
+          echo "Styles source: ${{ steps.changes.outputs.styles_any_changed }}"
           echo "JS tests: ${{ steps.changes.outputs.js_tests_any_changed }}"
           echo "E2E tests: ${{ steps.changes.outputs.e2e_any_changed }}"
           echo "NPM deps: ${{ steps.changes.outputs.npm_deps_any_changed }}"
@@ -335,9 +341,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     needs: detect-changes
+    permissions:
+      contents: read
     if: |
       needs.detect-changes.outputs.php == 'true' ||
       needs.detect-changes.outputs.php_tests == 'true' ||
+      needs.detect-changes.outputs.js == 'true' ||
+      needs.detect-changes.outputs.styles == 'true' ||
       needs.detect-changes.outputs.php_deps == 'true' ||
       needs.detect-changes.outputs.npm_deps == 'true' ||
       needs.detect-changes.outputs.ci == 'true'
@@ -345,6 +355,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
