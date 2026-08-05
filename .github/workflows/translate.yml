@@ -1,3 +1,7 @@
+# SHARED_TRANSLATION_INFRASTRUCTURE
+# This workflow is temporarily duplicated across Popup Maker and Code Atlantic repositories.
+# Propagate every behavioral change to all consumers until reusable shared actions replace it.
+
 name: AI Translate
 run-name: AI Translate (${{ github.event_name == 'push' && 'automatic' || inputs.dry_run && 'dry run' || 'paid manual' }})
 

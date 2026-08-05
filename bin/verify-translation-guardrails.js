@@ -41,6 +41,11 @@ const requirePattern = ( pattern, message ) => {
 	}
 };
 
+requirePattern(
+	/SHARED_TRANSLATION_INFRASTRUCTURE[\s\S]*?Propagate every behavioral change to all consumers/,
+	'Shared translation infrastructure must retain its propagation notice.'
+);
+
 const forbidPattern = ( pattern, message ) => {
 	if ( pattern.test( workflow ) ) {
 		failures.push( message );
