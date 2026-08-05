@@ -6,6 +6,10 @@
 
 -   Improved PHP 8.3 and 8.4 compatibility by safely handling extension-added post and metadata fields without deprecated dynamic properties, with expanded automated compatibility coverage through PHP 8.4.
 
+**Fixes**
+
+-   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
+
 ## v1.24.0 - 2026-08-03
 
 **Security**
