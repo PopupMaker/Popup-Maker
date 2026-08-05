@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -143,7 +143,7 @@ jobs:
           ignore-warnings: true
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.PLUGIN_SLUG }}-${{ steps.info.outputs.version }}
           path: ${{ steps.package.outputs.name }}
@@ -203,7 +203,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Get release asset API URL
         id: get_asset
