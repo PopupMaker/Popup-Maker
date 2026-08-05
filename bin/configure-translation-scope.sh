@@ -69,7 +69,11 @@ if [[ -n "$(trim "$REQUESTED_TARGETS_CSV")" ]]; then
 			exit 1
 		fi
 
-		if ! canonical_index_for_target "$target" >/dev/null; then
+		if index=$(canonical_index_for_target "$target"); then
+			target=${CANONICAL_TARGETS[$index]}
+		elif index=$(canonical_index_for_catalog "$target"); then
+			target=${CANONICAL_TARGETS[$index]}
+		else
 			echo "Unsupported translation language: $target" >&2
 			exit 1
 		fi
