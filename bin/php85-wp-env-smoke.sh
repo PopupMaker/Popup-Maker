@@ -30,13 +30,30 @@ if [[ -z "$popup_id" ]]; then
 	exit 1
 fi
 
-frontend_status="$(curl --silent --show-error --output "$smoke_tmp_dir/frontend.html" --write-out '%{http_code}' "$base_url/")"
-[[ "200" == "$frontend_status" ]]
-grep -q "popmake-${popup_id}" "$smoke_tmp_dir/frontend.html"
+frontend_ready=false
+for attempt in 1 2 3 4 5; do
+	frontend_status="$(curl --silent --show-error --output "$smoke_tmp_dir/frontend.html" --write-out '%{http_code}' "$base_url/")"
+	if [[ "200" == "$frontend_status" ]] && grep -q "popmake-${popup_id}" "$smoke_tmp_dir/frontend.html"; then
+		frontend_ready=true
+		break
+	fi
+	sleep 1
+done
+
+if [[ "true" != "$frontend_ready" ]]; then
+	echo "Frontend popup markup was not available after ${attempt} attempts (HTTP ${frontend_status})." >&2
+	exit 1
+fi
 
 rest_status="$(curl --silent --show-error --output "$smoke_tmp_dir/rest.json" --write-out '%{http_code}' "$base_url/wp-json/")"
-[[ "200" == "$rest_status" ]]
-jq -e '.namespaces | index("pum/v1")' "$smoke_tmp_dir/rest.json" >/dev/null
+if [[ "200" != "$rest_status" ]]; then
+	echo "REST index returned HTTP ${rest_status}." >&2
+	exit 1
+fi
+if ! jq -e '.namespaces | index("pum/v1")' "$smoke_tmp_dir/rest.json" >/dev/null; then
+	echo 'Popup Maker REST namespace was not registered.' >&2
+	exit 1
+fi
 
 ajax_status="$(curl --silent --show-error --output "$smoke_tmp_dir/ajax.json" --write-out '%{http_code}' \
 	--data-urlencode 'action=pum_analytics' \
@@ -44,11 +61,17 @@ ajax_status="$(curl --silent --show-error --output "$smoke_tmp_dir/ajax.json" --
 	--data-urlencode 'event=open' \
 	--data-urlencode 'method=json' \
 	"$base_url/wp-admin/admin-ajax.php")"
-[[ "200" == "$ajax_status" ]]
+if [[ "200" != "$ajax_status" ]]; then
+	echo "AJAX analytics endpoint returned HTTP ${ajax_status}." >&2
+	exit 1
+fi
 
 cron_status="$(curl --silent --show-error --output "$smoke_tmp_dir/cron.txt" --write-out '%{http_code}' \
 	"$base_url/wp-cron.php?doing_wp_cron=php85-smoke")"
-[[ "200" == "$cron_status" ]]
+if [[ "200" != "$cron_status" ]]; then
+	echo "Cron endpoint returned HTTP ${cron_status}." >&2
+	exit 1
+fi
 
 curl --silent --show-error --location \
 	--cookie-jar "$smoke_tmp_dir/cookies.txt" \
@@ -59,13 +82,23 @@ curl --silent --show-error --location \
 	--output "$smoke_tmp_dir/login.html" \
 	"$base_url/wp-login.php"
 
-admin_status="$(curl --silent --show-error --location \
-	--cookie "$smoke_tmp_dir/cookies.txt" \
-	--output "$smoke_tmp_dir/admin.html" \
-	--write-out '%{http_code}' \
-	"$base_url/wp-admin/edit.php?post_type=popup")"
-[[ "200" == "$admin_status" ]]
-grep -q 'PHP 8.5 Runtime Smoke Popup Updated' "$smoke_tmp_dir/admin.html"
+admin_ready=false
+for attempt in 1 2 3; do
+	admin_status="$(curl --silent --show-error --location \
+		--cookie "$smoke_tmp_dir/cookies.txt" \
+		--output "$smoke_tmp_dir/admin.html" \
+		--write-out '%{http_code}' \
+		"$base_url/wp-admin/edit.php?post_type=popup")"
+	if [[ "200" == "$admin_status" ]] && grep -q 'PHP 8.5 Runtime Smoke Popup Updated' "$smoke_tmp_dir/admin.html"; then
+		admin_ready=true
+		break
+	fi
+done
+
+if [[ "true" != "$admin_ready" ]]; then
+	echo "Authenticated popup administration did not show the smoke popup after ${attempt} attempts (HTTP ${admin_status})." >&2
+	exit 1
+fi
 
 debug_log="$(wp_env_run sh -lc 'test ! -f /var/www/html/wp-content/debug.log || cat /var/www/html/wp-content/debug.log')"
 printf '%s\n' "$debug_log"
