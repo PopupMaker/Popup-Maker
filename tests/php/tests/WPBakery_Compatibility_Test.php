@@ -13,6 +13,16 @@ use PopupMaker\Controllers\Compatibility\Builder\WPBakery;
 class WPBakery_Compatibility_Test extends WP_UnitTestCase {
 
 	/**
+	 * Close Mockery after each test.
+	 *
+	 * @return void
+	 */
+	public function tear_down() {
+		\Mockery::close();
+		parent::tear_down();
+	}
+
+	/**
 	 * Test that the compatibility controller and its filter are registered.
 	 *
 	 * @return void
@@ -89,13 +99,12 @@ class WPBakery_Compatibility_Test extends WP_UnitTestCase {
 	 * @return WPBakery
 	 */
 	private function get_controller( $wpbakery_available, $post_types ) {
-		$controller = $this->getMockBuilder( WPBakery::class )
-			->setConstructorArgs( [ new stdClass() ] )
-			->onlyMethods( [ 'is_wpbakery_active', 'get_wpbakery_editor_post_types' ] )
-			->getMock();
+		$controller = \Mockery::mock( WPBakery::class, [ new stdClass() ] )
+			->makePartial()
+			->shouldAllowMockingProtectedMethods();
 
-		$controller->method( 'is_wpbakery_active' )->willReturn( $wpbakery_available );
-		$controller->method( 'get_wpbakery_editor_post_types' )->willReturn( $post_types );
+		$controller->shouldReceive( 'is_wpbakery_active' )->andReturn( $wpbakery_available );
+		$controller->shouldReceive( 'get_wpbakery_editor_post_types' )->andReturn( $post_types );
 
 		return $controller;
 	}
