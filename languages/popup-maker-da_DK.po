@@ -4,112 +4,100 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
+"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
+"PO-Revision-Date: 2026-08-05 03:29+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: da-DK\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-04T08:30:17+00:00\n"
-"PO-Revision-Date: 2026-08-04 09:32+0000\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: popup-maker\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: da-DK\n"
 
-#: includes/integrations/ninja-forms/Actions/ClosePopup.php:56
-msgid "0"
-msgstr "0"
-
-#: popup-maker.php
-#: classes/Admin/BlockEditor.php:147
-#: classes/Admin/Settings.php:770
-#: classes/Admin/Templates.php:311
-#: classes/Controllers/PostTypes.php:185
-#: classes/Cookies.php:103
-#: classes/Extension/Activator.php:176
-#: classes/Extension/Activator.php:188
-#: classes/Extension/Activator.php:201
-#: classes/Privacy.php:36
-#: classes/Services/License.php:915
-#: classes/Site/Assets.php:284
-#: classes/Triggers.php:226
-#: classes/Utils/Alerts.php:482
-#: includes/admin/class-pum-admin-upgrades.php:224
-#: includes/integrations/class-pum-gravity-forms.php:89
-#: dist/packages/admin-notifications.js:2
-#: dist/packages/cta-admin.js:5
-#: dist/packages/layout.js:1
 #. Plugin Name of the plugin
 #. Author of the plugin
+#: popup-maker.php classes/Admin/BlockEditor.php:147
+#: classes/Admin/Settings.php:770 classes/Admin/Templates.php:311
+#: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
+#: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
+#: classes/Extension/Activator.php:201 classes/Privacy.php:36
+#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Triggers.php:226 classes/Utils/Alerts.php:497
+#: includes/admin/class-pum-admin-upgrades.php:224
+#: includes/integrations/class-pum-gravity-forms.php:89
+#: includes/modules/reviews.php:92 dist/packages/admin-notifications.js:2
+#: dist/packages/cta-admin.js:5 dist/packages/layout.js:1
 msgid "Popup Maker"
 msgstr "Popup Maker"
 
-#: popup-maker.php
 #. Plugin URI of the plugin
-msgid ""
-"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&"
-"utm_medium=plugin-uri"
-msgstr ""
-"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&"
-"utm_medium=plugin-uri"
-
 #: popup-maker.php
-#. Description of the plugin
 msgid ""
-"Easily create & style popups with any content. Theme editor to quickly "
-"style your popups. Add forms, social media boxes, videos & more."
+"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-"
+"header&utm_medium=plugin-uri"
+msgstr ""
+"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-"
+"header&utm_medium=plugin-uri"
+
+#. Description of the plugin
+#: popup-maker.php
+msgid ""
+"Easily create & style popups with any content. Theme editor to quickly style "
+"your popups. Add forms, social media boxes, videos & more."
 msgstr ""
 "Opret og stil nemt popups med hvilket som helst indhold. Temaeditor til "
-"hurtigt at style dine popups. Tilføj formularer, sociale mediebokse, "
-"videoer og mere."
+"hurtigt at style dine popups. Tilføj formularer, sociale mediebokse, videoer "
+"og mere."
 
-#: popup-maker.php
 #. Author URI of the plugin
+#: popup-maker.php
 msgid ""
-"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&"
-"utm_medium=author-uri"
+"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-"
+"header&utm_medium=author-uri"
 msgstr ""
-"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-header&"
-"utm_medium=author-uri"
+"https://wppopupmaker.com/?utm_campaign=plugin-info&utm_source=plugin-"
+"header&utm_medium=author-uri"
 
-#: classes/Abstract/Batch/Process.php:124
 #. translators: 1: Number of items processed.
+#: classes/Abstract/Batch/Process.php:124
 #, php-format
 msgid "%s item was successfully processed."
 msgid_plural "%s items were successfully processed."
 msgstr[0] "%s element blev behandlet успешно."
 msgstr[1] "%s elementer blev behandlet успешно."
 
-#: classes/Abstract/Repository/Posts.php:149
 #. translators: %1$s is the post type name, %2$d is the ID.
+#: classes/Abstract/Repository/Posts.php:149
 #, php-format
 msgid "No %1$s found with id %2$d."
 msgstr "Ingen %1$s fundet med id %2$d."
 
-#: classes/Abstract/Repository/Posts.php:177
 #. translators: %1$s is the post type name, %2$s is the field name, %3$s is the value.
+#: classes/Abstract/Repository/Posts.php:177
 #, php-format
 msgid "No %1$s found with %2$s %3$s."
 msgstr "Ingen %1$s fundet med %2$s %3$s."
 
-#: classes/Abstract/Upgrade/Posts.php:208
 #. translators: 1: Number of items updated. 2: Singular or plural label.
+#: classes/Abstract/Upgrade/Posts.php:208
 #, php-format
 msgid "Updating %1$d %2$s."
 msgid_plural "Updating %1$d %2$s."
 msgstr[0] "Opdaterer %1$d %2$s."
 msgstr[1] "Opdaterer %1$d %2$s."
 
-#: classes/Abstract/Upgrade/Posts.php:219
 #. translators: 1: Number of items updated. 2: Singular or plural label.
+#: classes/Abstract/Upgrade/Posts.php:219
 #, php-format
 msgid "%1$s %2$s was updated successfully."
 msgid_plural "%1$s %2$s were updated successfully."
 msgstr[0] "%1$s %2$s blev opdateret успешно."
 msgstr[1] "%1$s %2$s blev opdateret успешно."
 
-#: classes/Abstract/Upgrade/Settings.php:61
 #. translators: 1: Version number.
+#: classes/Abstract/Upgrade/Settings.php:61
 #, php-format
 msgid "Updating settings for v%s compatibility."
 msgstr "Opdaterer indstillinger for v%s-kompatibilitet."
@@ -118,15 +106,12 @@ msgstr "Opdaterer indstillinger for v%s-kompatibilitet."
 msgid "Settings updated successfully."
 msgstr "Indstillingerne blev opdateret."
 
-#: classes/Admin/Ajax.php:294
-#: classes/Utils/Upgrades.php:514
+#: classes/Admin/Ajax.php:294 classes/Utils/Upgrades.php:514
 msgid "A batch process ID must be present to continue."
 msgstr "Der skal være et batchproces-id for at fortsætte."
 
-#: classes/Admin/Ajax.php:303
-#: classes/Admin/Ajax.php:313
-#: classes/Utils/Upgrades.php:523
-#: classes/Utils/Upgrades.php:533
+#: classes/Admin/Ajax.php:303 classes/Admin/Ajax.php:313
+#: classes/Utils/Upgrades.php:523 classes/Utils/Upgrades.php:533
 msgid ""
 "You do not have permission to initiate this request. Contact an "
 "administrator for more information."
@@ -134,46 +119,39 @@ msgstr ""
 "Du har ikke tilladelse til at starte denne anmodning. Kontakt en "
 "administrator for mere information."
 
-#: classes/Admin/Ajax.php:326
-#: classes/Utils/Upgrades.php:556
 #. translators: %s is the batch ID.
 #. translators: 1: Batch process ID.
+#: classes/Admin/Ajax.php:326 classes/Utils/Upgrades.php:556
 #, php-format
 msgid "%s is an invalid batch process ID."
 msgstr "%s er et ugyldigt batchproces-id."
 
-#: classes/Admin/Ajax.php:341
-#: classes/Utils/Upgrades.php:669
 #. translators: %s is the batch ID.
 #. translators: 1: Batch process ID.
+#: classes/Admin/Ajax.php:341 classes/Utils/Upgrades.php:669
 #, php-format
 msgid "An invalid file path is registered for the %1$s batch process handler."
 msgstr "Der er registreret en ugyldig filsti for %1$s-batchproceshåndteringen."
 
-#: classes/Admin/Ajax.php:355
-#: classes/Utils/Upgrades.php:681
 #. translators: %1$s is the batch ID, %2$s is the batch handler class.
 #. translators: 1: Class name, 2: Batch process ID.
+#: classes/Admin/Ajax.php:355 classes/Utils/Upgrades.php:681
 #, php-format
-msgid "%1$s is an invalid handler for the %2$s batch process. Please try again."
+msgid ""
+"%1$s is an invalid handler for the %2$s batch process. Please try again."
 msgstr "%1$s er en ugyldig håndterer for %2$s-batchprocessen. Prøv igen."
 
-#: classes/Admin/Assets.php:78
-#: dist/packages/block-library.js:1
+#: classes/Admin/Assets.php:78 dist/packages/block-library.js:1
 msgid "Preview"
 msgstr "Forhåndsvisning"
 
-#: classes/Admin/Assets.php:79
-#: classes/Admin/Helpers.php:368
-#: classes/Admin/Templates.php:988
-#: classes/Admin/Templates.php:1190
+#: classes/Admin/Assets.php:79 classes/Admin/Helpers.php:368
+#: classes/Admin/Templates.php:988 classes/Admin/Templates.php:1190
 msgid "Add"
 msgstr "Tilføj"
 
-#: classes/Admin/Assets.php:80
-#: classes/Admin/Settings.php:1010
-#: classes/Admin/Tools.php:91
-#: classes/Admin/Tools.php:214
+#: classes/Admin/Assets.php:80 classes/Admin/Settings.php:1010
+#: classes/Admin/Tools.php:91 classes/Admin/Tools.php:214
 #: includes/integrations/class-pum-gravity-forms.php:215
 #: dist/packages/block-library.js:1
 msgid "Save"
@@ -183,17 +161,13 @@ msgstr "Gem"
 msgid "Update"
 msgstr "Opdater"
 
-#: classes/Admin/Assets.php:82
-#: classes/Admin/Shortcode/UI.php:115
+#: classes/Admin/Assets.php:82 classes/Admin/Shortcode/UI.php:115
 msgid "Insert"
 msgstr "Indsæt"
 
-#: classes/Admin/Assets.php:83
-#: classes/Admin/Helpers.php:366
-#: classes/Admin/Shortcode/UI.php:116
-#: dist/packages/admin-bar.js:1
-#: dist/packages/components.js:7
-#: dist/packages/cta-editor.js:1
+#: classes/Admin/Assets.php:83 classes/Admin/Helpers.php:366
+#: classes/Admin/Shortcode/UI.php:116 dist/packages/admin-bar.js:1
+#: dist/packages/components.js:7 dist/packages/cta-editor.js:1
 msgid "Cancel"
 msgstr "Annuller"
 
@@ -205,14 +179,10 @@ msgstr "Er du sikker på, at du vil slette denne trigger?"
 msgid "Are you sure you want to delete this cookie?"
 msgstr "Er du sikker på, at du vil slette denne cookie?"
 
-#: classes/Admin/Assets.php:86
-#: classes/Admin/Popups.php:797
-#: classes/Admin/Popups.php:854
-#: classes/Admin/Settings.php:394
-#: classes/Admin/Themes.php:437
-#: classes/Shortcode/Subscribe.php:137
-#: classes/Shortcode/Subscribe.php:148
-#: classes/Shortcode/Subscribe.php:304
+#: classes/Admin/Assets.php:86 classes/Admin/Popups.php:797
+#: classes/Admin/Popups.php:854 classes/Admin/Settings.php:394
+#: classes/Admin/Themes.php:437 classes/Shortcode/Subscribe.php:137
+#: classes/Shortcode/Subscribe.php:148 classes/Shortcode/Subscribe.php:304
 #: includes/legacy/input-options.php:86
 msgid "None"
 msgstr "Ingen"
@@ -221,13 +191,11 @@ msgstr "Ingen"
 msgid "Are you sure you want to reset the open count?"
 msgstr "Er du sikker på, at du vil nulstille antallet af åbninger?"
 
-#: classes/Admin/Assets.php:88
-#: classes/Admin/Shortcode/UI.php:117
+#: classes/Admin/Assets.php:88 classes/Admin/Shortcode/UI.php:117
 msgid "Popup Maker Shortcodes"
 msgstr "Popup Maker-kortkoder"
 
-#: classes/Admin/Assets.php:89
-#: classes/Admin/Shortcode/UI.php:118
+#: classes/Admin/Assets.php:89 classes/Admin/Shortcode/UI.php:118
 msgid "There was an error in generating the preview"
 msgstr "Der opstod en fejl under genereringen af forhåndsvisningen"
 
@@ -243,13 +211,10 @@ msgstr ""
 "Beklager, men din browser er ikke kompatibel med denne type filoverførsel. "
 "Opgrader venligst din browser."
 
-#: classes/Admin/Extend.php:78
-#: classes/Admin/Notices.php:67
-#: classes/Admin/Onboarding.php:68
-#: classes/AssetCache.php:700
+#: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
+#: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121
-#: classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
 msgid "Learn more"
 msgstr "Få mere at vide"
 
@@ -273,43 +238,31 @@ msgstr "Se Pro-abonnementer"
 msgid "You do not have permission to manage Popup Maker add-ons."
 msgstr "Du har ikke tilladelse til at administrere Popup Maker-tilføjelser."
 
-#: classes/Admin/Extend.php:179
-#: classes/Admin/Pages.php:81
+#: classes/Admin/Extend.php:179 classes/Admin/Pages.php:81
 msgid "Popup Maker Add-ons"
 msgstr "Popup Maker-tilføjelser"
 
-#: classes/Admin/Extend.php:185
-#: dist/packages/addons-page.js:4
+#: classes/Admin/Extend.php:185 dist/packages/addons-page.js:4
 msgid "Loading add-ons…"
 msgstr "Indlæser tilføjelser…"
 
-#: classes/Admin/Helpers.php:209
-#: classes/Admin/Popups.php:814
-#: classes/Admin/Popups.php:1034
-#: classes/Shortcode/Popup.php:253
-#: classes/Utils/Fields.php:136
-#: includes/legacy/class-popmake-fields.php:186
+#: classes/Admin/Helpers.php:209 classes/Admin/Popups.php:814
+#: classes/Admin/Popups.php:1034 classes/Shortcode/Popup.php:253
+#: classes/Utils/Fields.php:136 includes/legacy/class-popmake-fields.php:186
 msgid "ms"
 msgstr "ms"
 
-#: classes/Admin/Helpers.php:387
-#: classes/Admin/Popups.php:565
-#: classes/Admin/Popups.php:1021
-#: classes/Admin/Templates.php:778
-#: classes/Admin/Themes.php:186
-#: classes/Admin/Themes.php:379
-#: classes/Shortcode/Popup.php:61
-#: classes/Shortcode/Popup.php:85
-#: templates/popup.php:59
-#: dist/packages/admin-bar.js:1
+#: classes/Admin/Helpers.php:387 classes/Admin/Popups.php:565
+#: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
+#: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
+#: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
+#: templates/popup.php:59 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
-#: dist/packages/admin-notifications.js:2
-#: dist/packages/cta-editor.js:1
+#: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
 msgstr "Luk"
 
-#: classes/Admin/Notices.php:75
-#: classes/Admin/Onboarding.php:74
+#: classes/Admin/Notices.php:75 classes/Admin/Onboarding.php:74
 #: classes/Admin/Settings.php:1028
 #: classes/Services/Notifications/FeatureAnnouncements.php:290
 #: classes/Services/Notifications/WhatsNew.php:224
@@ -334,8 +287,7 @@ msgstr ""
 msgid ""
 "%1$sPopup Maker will soon require PHP Version %2$s.%3$s \n"
 "\n"
-"You're using Version %4$s. Please ask your host to upgrade your server's "
-"PHP."
+"You're using Version %4$s. Please ask your host to upgrade your server's PHP."
 msgstr ""
 "%1$sPopup Maker vil snart kræve PHP-version %2$s.%3$s \n"
 "\n"
@@ -358,14 +310,14 @@ msgstr ""
 msgid "Turn off these occasional tips"
 msgstr "Slå disse lejlighedsvise tips fra"
 
-#: classes/Admin/Onboarding.php:203
-#: classes/Admin/Popups.php:267
+#: classes/Admin/Onboarding.php:203 classes/Admin/Popups.php:267
 #: classes/Shortcode/Subscribe.php:437
 msgid "Popup Name"
 msgstr "Popuppens navn"
 
 #: classes/Admin/Onboarding.php:204
-msgid "Name your popup so you can find it later. Site visitors will not see this."
+msgid ""
+"Name your popup so you can find it later. Site visitors will not see this."
 msgstr ""
 "Navngiv din popup, så du kan finde den senere. Besøgende på webstedet vil "
 "ikke se dette."
@@ -410,12 +362,9 @@ msgstr ""
 "Brug visningsindstillinger til at vælge, hvor på skærmen popup-vinduet "
 "vises, og hvordan det ser ud."
 
-#: classes/Admin/Onboarding.php:273
-#: classes/Admin/Popups.php:262
-#: classes/Admin/Popups.php:696
-#: classes/Controllers/PostTypes.php:271
-#: classes/Controllers/PostTypes.php:277
-#: classes/Controllers/PostTypes.php:597
+#: classes/Admin/Onboarding.php:273 classes/Admin/Popups.php:262
+#: classes/Admin/Popups.php:696 classes/Controllers/PostTypes.php:271
+#: classes/Controllers/PostTypes.php:277 classes/Controllers/PostTypes.php:597
 #: classes/Shortcode/Popup.php:114
 msgid "Popup Theme"
 msgstr "Popup-tema"
@@ -452,11 +401,11 @@ msgstr "Gennemgå popup-målinger"
 
 #: classes/Admin/Onboarding.php:330
 msgid ""
-"Popup Maker will automatically track opens and conversions so you can "
-"easily see which popups convert the best."
+"Popup Maker will automatically track opens and conversions so you can easily "
+"see which popups convert the best."
 msgstr ""
-"Popup Maker sporer automatisk åbninger og konverteringer, så du nemt kan "
-"se, hvilke popups der konverterer bedst."
+"Popup Maker sporer automatisk åbninger og konverteringer, så du nemt kan se, "
+"hvilke popups der konverterer bedst."
 
 #: classes/Admin/Onboarding.php:343
 msgid "Adjust Columns"
@@ -470,58 +419,44 @@ msgstr ""
 "Du kan vise eller skjule kolonner fra tabellen på denne side ved hjælp af "
 "skærmindstillingerne. Popup-titel og udgivelsesdato er skjult som standard."
 
-#: classes/Admin/Pages.php:71
-#: classes/Admin/Pages.php:186
-#: classes/Admin/Pages.php:253
-#: classes/Admin/Subscribers.php:33
+#: classes/Admin/Pages.php:71 classes/Admin/Pages.php:186
+#: classes/Admin/Pages.php:253 classes/Admin/Subscribers.php:33
 msgid "Subscribers"
 msgstr "Abonnenter"
 
-#: classes/Admin/Pages.php:76
-#: classes/Admin/Pages.php:262
-#: classes/Admin/Templates.php:866
-#: classes/Admin/Templates.php:1139
+#: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
+#: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65
-#: classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
 msgid "Settings"
 msgstr "Indstillinger"
 
-#: classes/Admin/Pages.php:82
-#: classes/Admin/Pages.php:187
-#: classes/Controllers/Admin.php:73
-#: dist/packages/addons-page.js:5
+#: classes/Admin/Pages.php:82 classes/Admin/Pages.php:187
+#: classes/Controllers/Admin.php:73 dist/packages/addons-page.js:5
 msgid "Extend"
 msgstr "Udvid"
 
-#: classes/Admin/Pages.php:88
-#: classes/Admin/Pages.php:267
+#: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
 msgid "Help & Support"
 msgstr "Hjælp & support"
 
-#: classes/Admin/Pages.php:93
-#: classes/Admin/Pages.php:263
+#: classes/Admin/Pages.php:93 classes/Admin/Pages.php:263
 #: classes/Controllers/Admin/Toolbar.php:231
 msgid "Tools"
 msgstr "Værktøjer"
 
-#: classes/Admin/Pages.php:137
-#: classes/Admin/Pages.php:249
-#: classes/Controllers/PostTypes.php:272
-#: classes/Controllers/PostTypes.php:279
+#: classes/Admin/Pages.php:137 classes/Admin/Pages.php:249
+#: classes/Controllers/PostTypes.php:272 classes/Controllers/PostTypes.php:279
 msgid "Popup Themes"
 msgstr "Popup-temaer"
 
-#: classes/Admin/Pages.php:188
-#: classes/Admin/Pages.php:260
-#: classes/Admin/Settings.php:1135
-#: classes/Admin/Settings.php:1176
+#: classes/Admin/Pages.php:188 classes/Admin/Pages.php:260
+#: classes/Admin/Settings.php:1135 classes/Admin/Settings.php:1176
 #: classes/Upsell.php:1115
 msgid "Go Pro"
 msgstr "Opgrader til Pro"
 
-#: classes/Admin/Pages.php:189
-#: classes/Admin/Pages.php:261
+#: classes/Admin/Pages.php:189 classes/Admin/Pages.php:261
 #: classes/Upsell.php:1131
 msgid "Go Pro+"
 msgstr "Opgrader til Pro+"
@@ -542,25 +477,20 @@ msgstr "Tilføj ny popup"
 msgid "All Themes"
 msgstr "Alle temaer"
 
-#: classes/Admin/Pages.php:250
-#: classes/Controllers/Admin.php:61
+#: classes/Admin/Pages.php:250 classes/Controllers/Admin.php:61
 #: classes/Controllers/Admin/CallToActions.php:43
 #: classes/Controllers/Admin/CallToActions.php:44
-#: classes/Controllers/PostTypes.php:346
-#: classes/Controllers/PostTypes.php:353
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-admin.js:5
+#: classes/Controllers/PostTypes.php:346 classes/Controllers/PostTypes.php:353
+#: dist/packages/cta-admin.js:4 dist/packages/cta-admin.js:5
 msgid "Calls to Action"
 msgstr "Call-to-actions"
 
-#: classes/Admin/Pages.php:251
-#: classes/Admin/Popups.php:1385
+#: classes/Admin/Pages.php:251 classes/Admin/Popups.php:1385
 #: classes/Conditions.php:112
 msgid "Categories"
 msgstr "Kategorier"
 
-#: classes/Admin/Pages.php:252
-#: classes/Admin/Popups.php:1381
+#: classes/Admin/Pages.php:252 classes/Admin/Popups.php:1381
 #: classes/Conditions.php:113
 msgid "Tags"
 msgstr "Tags"
@@ -577,48 +507,43 @@ msgstr "Konto"
 msgid "Contact Us"
 msgstr "Kontakt os"
 
-#: classes/Admin/Popups.php:103
-#: dist/packages/cta-admin.js:5
+#: classes/Admin/Popups.php:103 dist/packages/cta-admin.js:5
 msgid "Enable"
 msgstr "Aktivér"
 
-#: classes/Admin/Popups.php:104
-#: dist/packages/cta-admin.js:8
+#: classes/Admin/Popups.php:104 dist/packages/cta-admin.js:8
 msgid "Disable"
 msgstr "Deaktivér"
 
-#: classes/Admin/Popups.php:190
 #. translators: %d: Number of popups enabled.
+#: classes/Admin/Popups.php:190
 #, php-format
 msgid "%d popup enabled."
 msgid_plural "%d popups enabled."
 msgstr[0] "%d popup aktiveret."
 msgstr[1] "%d popups aktiveret."
 
-#: classes/Admin/Popups.php:201
 #. translators: %d: Number of popups disabled.
+#: classes/Admin/Popups.php:201
 #, php-format
 msgid "%d popup disabled."
 msgid_plural "%d popups disabled."
 msgstr[0] "%d popup deaktiveret."
 msgstr[1] "%d popups deaktiveret."
 
-#: classes/Admin/Popups.php:217
 #. translators: %d: Number of popups skipped.
+#: classes/Admin/Popups.php:217
 #, php-format
 msgid "%d popup skipped (not published)."
 msgid_plural "%d popups skipped (not published)."
 msgstr[0] "%d popup sprunget over (ikke udgivet)."
 msgstr[1] "%d popups sprunget over (ikke udgivet)."
 
-#: classes/Admin/Popups.php:262
-#: classes/Admin/Subscribers/Table.php:106
-#: classes/Controllers/PostTypes.php:177
-#: classes/Controllers/PostTypes.php:183
+#: classes/Admin/Popups.php:262 classes/Admin/Subscribers/Table.php:106
+#: classes/Controllers/PostTypes.php:177 classes/Controllers/PostTypes.php:183
 #: classes/Controllers/PostTypes.php:596
 #: classes/Integration/Builder/BeaverBuilder.php:98
-#: classes/Shortcode/Popup.php:34
-#: classes/Shortcode/Popup.php:414
+#: classes/Shortcode/Popup.php:34 classes/Shortcode/Popup.php:414
 #: classes/Shortcode/Subscribe.php:98
 #: includes/integrations/class-pum-cf7.php:175
 #: includes/integrations/class-pum-gravity-forms.php:200
@@ -626,10 +551,8 @@ msgstr[1] "%d popups sprunget over (ikke udgivet)."
 msgid "Popup"
 msgstr "Popup"
 
-#: classes/Admin/Popups.php:297
-#: classes/Admin/Popups.php:299
-#: classes/Shortcode/Popup.php:103
-#: dist/packages/block-editor.js:2
+#: classes/Admin/Popups.php:297 classes/Admin/Popups.php:299
+#: classes/Shortcode/Popup.php:103 dist/packages/block-editor.js:2
 msgid "Popup Title"
 msgstr "Popup-titel"
 
@@ -653,23 +576,20 @@ msgstr ""
 "Angiv et navn, så du bedre kan huske, hvad denne popup handler om. Kun du "
 "vil kunne se det."
 
-#: classes/Admin/Popups.php:334
-#: includes/integrations/class-pum-cf7.php:124
+#: classes/Admin/Popups.php:334 includes/integrations/class-pum-cf7.php:124
 #: includes/integrations/class-pum-cf7.php:139
 #: includes/integrations/class-pum-gravity-forms.php:159
 msgid "Popup Settings"
 msgstr "Popup-indstillinger"
 
-#: classes/Admin/Popups.php:335
-#: classes/Privacy.php:116
+#: classes/Admin/Popups.php:335 classes/Privacy.php:116
 msgid "Analytics"
 msgstr "Analyse"
 
-#: classes/Admin/Popups.php:413
-#: classes/Admin/Settings.php:971
-#: classes/Admin/Themes.php:151
 #. translators: 1. URL to view troubleshooting guide. 2. Closing HTML tag.
 #. translators: 1. URL to troubleshooting guide. 2. Closing tag.
+#: classes/Admin/Popups.php:413 classes/Admin/Settings.php:971
+#: classes/Admin/Themes.php:151
 #, php-format
 msgid ""
 "If you are seeing this, the page is still loading or there are Javascript "
@@ -678,41 +598,27 @@ msgstr ""
 "Hvis du ser dette, indlæses siden stadig, eller der er JavaScript-fejl på "
 "denne side. %1$sSe fejlfindingsvejledningen%2$s"
 
-#: classes/Admin/Popups.php:563
-#: classes/Admin/Settings.php:1129
-#: classes/Admin/Settings.php:1156
-#: classes/Admin/Settings.php:1159
-#: classes/Admin/Settings.php:1168
-#: classes/Admin/Themes.php:374
-#: classes/Admin/Themes.php:395
-#: classes/Admin/Themes.php:414
-#: classes/Conditions.php:109
-#: classes/Conditions.php:535
-#: classes/Conditions.php:549
-#: classes/Conditions.php:555
-#: classes/Cookies.php:213
-#: classes/Shortcode.php:152
-#: classes/Shortcode.php:166
-#: classes/Shortcode.php:181
-#: classes/Shortcode/Popup.php:57
-#: classes/Shortcode/Popup.php:73
-#: classes/Shortcode/Subscribe.php:63
-#: classes/Shortcode/Subscribe.php:85
-#: classes/Shortcode/Subscribe.php:88
-#: classes/Triggers.php:367
-#: includes/legacy/class-popmake-fields.php:63
+#: classes/Admin/Popups.php:563 classes/Admin/Settings.php:1129
+#: classes/Admin/Settings.php:1156 classes/Admin/Settings.php:1159
+#: classes/Admin/Settings.php:1168 classes/Admin/Themes.php:374
+#: classes/Admin/Themes.php:395 classes/Admin/Themes.php:414
+#: classes/Conditions.php:109 classes/Conditions.php:535
+#: classes/Conditions.php:549 classes/Conditions.php:555
+#: classes/Cookies.php:213 classes/Shortcode.php:152 classes/Shortcode.php:166
+#: classes/Shortcode.php:181 classes/Shortcode/Popup.php:57
+#: classes/Shortcode/Popup.php:73 classes/Shortcode/Subscribe.php:63
+#: classes/Shortcode/Subscribe.php:85 classes/Shortcode/Subscribe.php:88
+#: classes/Triggers.php:367 includes/legacy/class-popmake-fields.php:63
 #: dist/packages/cta-editor.js:1
 msgid "General"
 msgstr "Generelt"
 
-#: classes/Admin/Popups.php:564
-#: classes/Shortcode/Popup.php:58
+#: classes/Admin/Popups.php:564 classes/Shortcode/Popup.php:58
 #: classes/Shortcode/Popup.php:76
 msgid "Display"
 msgstr "Visning"
 
-#: classes/Admin/Popups.php:566
-#: classes/Admin/Templates.php:852
+#: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
 #: classes/Site/Assets.php:300
 msgid "Triggers"
 msgstr "Udløsere"
@@ -721,12 +627,9 @@ msgstr "Udløsere"
 msgid "Targeting"
 msgstr "Målretning"
 
-#: classes/Admin/Popups.php:568
-#: classes/Admin/Popups.php:598
-#: classes/Admin/Popups.php:606
-#: classes/Admin/Themes.php:380
-#: classes/Admin/Themes.php:424
-#: classes/Cookies.php:214
+#: classes/Admin/Popups.php:568 classes/Admin/Popups.php:598
+#: classes/Admin/Popups.php:606 classes/Admin/Themes.php:380
+#: classes/Admin/Themes.php:424 classes/Cookies.php:214
 #: classes/Triggers.php:369
 msgid "Advanced"
 msgstr "Avanceret"
@@ -739,8 +642,7 @@ msgstr "Generelle indstillinger"
 msgid "Triggers & Cookies"
 msgstr "Udløsere & cookies"
 
-#: classes/Admin/Popups.php:589
-#: classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
 msgid "Conditions"
 msgstr "Betingelser"
 
@@ -748,23 +650,18 @@ msgstr "Betingelser"
 msgid "Display Presets"
 msgstr "Visningsforudindstillinger"
 
-#: classes/Admin/Popups.php:593
-#: classes/Shortcode.php:154
-#: classes/Shortcode.php:168
-#: classes/Shortcode.php:187
+#: classes/Admin/Popups.php:593 classes/Shortcode.php:154
+#: classes/Shortcode.php:168 classes/Shortcode.php:187
 #: classes/Shortcode/Subscribe.php:91
 msgid "Appearance"
 msgstr "Udseende"
 
-#: classes/Admin/Popups.php:594
-#: classes/Admin/Popups.php:705
-#: classes/Admin/Themes.php:415
-#: classes/Shortcode/Popup.php:131
+#: classes/Admin/Popups.php:594 classes/Admin/Popups.php:705
+#: classes/Admin/Themes.php:415 classes/Shortcode/Popup.php:131
 msgid "Size"
 msgstr "Størrelse"
 
-#: classes/Admin/Popups.php:595
-#: classes/Shortcode/Popup.php:60
+#: classes/Admin/Popups.php:595 classes/Shortcode/Popup.php:60
 #: classes/Shortcode/Popup.php:82
 msgid "Animation"
 msgstr "Animation"
@@ -773,10 +670,8 @@ msgstr "Animation"
 msgid "Sounds"
 msgstr "Lyde"
 
-#: classes/Admin/Popups.php:597
-#: classes/Admin/Themes.php:416
-#: classes/Shortcode/Popup.php:59
-#: classes/Shortcode/Popup.php:79
+#: classes/Admin/Popups.php:597 classes/Admin/Themes.php:416
+#: classes/Shortcode/Popup.php:59 classes/Shortcode/Popup.php:79
 msgid "Position"
 msgstr "Placering"
 
@@ -784,9 +679,7 @@ msgstr "Placering"
 msgid "Button"
 msgstr "Knap"
 
-#: classes/Admin/Popups.php:602
-#: classes/Cookies.php:92
-#: classes/Triggers.php:216
+#: classes/Admin/Popups.php:602 classes/Cookies.php:92 classes/Triggers.php:216
 msgid "Form Submission"
 msgstr "Formularindsendelse"
 
@@ -822,13 +715,11 @@ msgstr "Venstre nederste notifikation"
 msgid "Choose a theme for this popup."
 msgstr "Vælg et tema til denne popup."
 
-#: classes/Admin/Popups.php:697
-#: classes/Admin/Settings.php:352
+#: classes/Admin/Popups.php:697 classes/Admin/Settings.php:352
 msgid "Customize This Theme"
 msgstr "Tilpas dette tema"
 
-#: classes/Admin/Popups.php:706
-#: classes/Shortcode/Popup.php:132
+#: classes/Admin/Popups.php:706 classes/Shortcode/Popup.php:132
 msgid "Select the size of the popup."
 msgstr "Vælg størrelsen på popup-vinduet."
 
@@ -836,43 +727,35 @@ msgstr "Vælg størrelsen på popup-vinduet."
 msgid "Responsive Sizes"
 msgstr "Responsive størrelser"
 
-#: classes/Admin/Popups.php:712
-#: includes/legacy/input-options.php:64
+#: classes/Admin/Popups.php:712 includes/legacy/input-options.php:64
 msgid "Nano - 10%"
 msgstr "Nano - 10%"
 
-#: classes/Admin/Popups.php:713
-#: includes/legacy/input-options.php:65
+#: classes/Admin/Popups.php:713 includes/legacy/input-options.php:65
 msgid "Micro - 20%"
 msgstr "Micro - 20%"
 
-#: classes/Admin/Popups.php:714
-#: includes/legacy/input-options.php:66
+#: classes/Admin/Popups.php:714 includes/legacy/input-options.php:66
 msgid "Tiny - 30%"
 msgstr "Lille - 30%"
 
-#: classes/Admin/Popups.php:715
-#: includes/legacy/input-options.php:67
+#: classes/Admin/Popups.php:715 includes/legacy/input-options.php:67
 msgid "Small - 40%"
 msgstr "Små - 40%"
 
-#: classes/Admin/Popups.php:716
-#: includes/legacy/input-options.php:68
+#: classes/Admin/Popups.php:716 includes/legacy/input-options.php:68
 msgid "Medium - 60%"
 msgstr "Mellem - 60%"
 
-#: classes/Admin/Popups.php:717
-#: includes/legacy/input-options.php:69
+#: classes/Admin/Popups.php:717 includes/legacy/input-options.php:69
 msgid "Normal - 70%"
 msgstr "Normal - 70%"
 
-#: classes/Admin/Popups.php:718
-#: includes/legacy/input-options.php:70
+#: classes/Admin/Popups.php:718 includes/legacy/input-options.php:70
 msgid "Large - 80%"
 msgstr "Stor - 80%"
 
-#: classes/Admin/Popups.php:719
-#: includes/legacy/input-options.php:71
+#: classes/Admin/Popups.php:719 includes/legacy/input-options.php:71
 msgid "X Large - 95%"
 msgstr "X stor - 95%"
 
@@ -880,13 +763,11 @@ msgstr "X stor - 95%"
 msgid "Other Sizes"
 msgstr "Andre størrelser"
 
-#: classes/Admin/Popups.php:722
-#: includes/legacy/input-options.php:73
+#: classes/Admin/Popups.php:722 includes/legacy/input-options.php:73
 msgid "Auto"
 msgstr "Auto"
 
-#: classes/Admin/Popups.php:723
-#: classes/Shortcode/PopupTrigger.php:97
+#: classes/Admin/Popups.php:723 classes/Shortcode/PopupTrigger.php:97
 #: includes/legacy/input-options.php:74
 msgid "Custom"
 msgstr "Brugerdefineret"
@@ -907,8 +788,7 @@ msgstr "Maks. bredde"
 msgid "Set a maximum width for the popup."
 msgstr "Angiv en maksimal bredde for popup-vinduet."
 
-#: classes/Admin/Popups.php:748
-#: classes/Admin/Themes.php:970
+#: classes/Admin/Popups.php:748 classes/Admin/Themes.php:970
 #: classes/Shortcode/Popup.php:139
 msgid "Width"
 msgstr "Bredde"
@@ -925,8 +805,7 @@ msgstr "Højde justeret automatisk"
 msgid "Checking this option will set height to fit the content."
 msgstr "Hvis du markerer denne indstilling, tilpasses højden efter indholdet."
 
-#: classes/Admin/Popups.php:767
-#: classes/Admin/Themes.php:960
+#: classes/Admin/Popups.php:767 classes/Admin/Themes.php:960
 #: classes/Shortcode/Popup.php:150
 msgid "Height"
 msgstr "Højde"
@@ -941,173 +820,127 @@ msgstr "Rullebart indhold"
 
 #: classes/Admin/Popups.php:779
 msgid "Checking this option will add a scroll bar to your content."
-msgstr "Hvis du markerer denne indstilling, tilføjes en rullebjælke til dit indhold."
+msgstr ""
+"Hvis du markerer denne indstilling, tilføjes en rullebjælke til dit indhold."
 
-#: classes/Admin/Popups.php:791
-#: classes/Shortcode/Popup.php:237
+#: classes/Admin/Popups.php:791 classes/Shortcode/Popup.php:237
 msgid "Animation Type"
 msgstr "Animationstype"
 
-#: classes/Admin/Popups.php:792
-#: classes/Shortcode/Popup.php:238
+#: classes/Admin/Popups.php:792 classes/Shortcode/Popup.php:238
 msgid "Select an animation type for your popup."
 msgstr "Vælg en animationstype til din pop op."
 
-#: classes/Admin/Popups.php:798
-#: includes/legacy/input-options.php:87
+#: classes/Admin/Popups.php:798 includes/legacy/input-options.php:87
 msgid "Slide"
 msgstr "Skub"
 
-#: classes/Admin/Popups.php:799
-#: includes/legacy/input-options.php:88
+#: classes/Admin/Popups.php:799 includes/legacy/input-options.php:88
 msgid "Fade"
 msgstr "Ton ud"
 
-#: classes/Admin/Popups.php:800
-#: includes/legacy/input-options.php:89
+#: classes/Admin/Popups.php:800 includes/legacy/input-options.php:89
 msgid "Fade and Slide"
 msgstr "Ton ud og skub"
 
-#: classes/Admin/Popups.php:806
-#: classes/Shortcode/Popup.php:245
+#: classes/Admin/Popups.php:806 classes/Shortcode/Popup.php:245
 msgid "Animation Speed"
 msgstr "Animationshastighed"
 
-#: classes/Admin/Popups.php:807
-#: classes/Shortcode/Popup.php:246
+#: classes/Admin/Popups.php:807 classes/Shortcode/Popup.php:246
 msgid "Set the animation speed for the popup."
 msgstr "Angiv animationshastigheden for pop op-vinduet."
 
-#: classes/Admin/Popups.php:821
-#: classes/Shortcode/Popup.php:256
+#: classes/Admin/Popups.php:821 classes/Shortcode/Popup.php:256
 msgid "Animation Origin"
 msgstr "Animationsoprindelse"
 
-#: classes/Admin/Popups.php:822
-#: classes/Shortcode/Popup.php:257
+#: classes/Admin/Popups.php:822 classes/Shortcode/Popup.php:257
 msgid "Choose where the animation will begin."
 msgstr "Vælg, hvor animationen skal begynde."
 
-#: classes/Admin/Popups.php:826
-#: classes/Admin/Popups.php:894
-#: classes/Admin/Popups.php:898
-#: classes/Admin/Themes.php:894
-#: classes/Shortcode/Popup.php:173
-#: classes/Shortcode/Popup.php:177
+#: classes/Admin/Popups.php:826 classes/Admin/Popups.php:894
+#: classes/Admin/Popups.php:898 classes/Admin/Themes.php:894
+#: classes/Shortcode/Popup.php:173 classes/Shortcode/Popup.php:177
 #: includes/legacy/input-options.php:103
 msgid "Top"
 msgstr "Top"
 
-#: classes/Admin/Popups.php:827
-#: classes/Admin/Popups.php:930
-#: classes/Admin/Popups.php:934
-#: classes/Admin/Themes.php:764
-#: classes/Admin/Themes.php:921
-#: classes/Shortcode/CallToAction.php:143
-#: classes/Shortcode/Popup.php:203
-#: classes/Shortcode/Popup.php:207
-#: classes/Shortcode/Subscribe.php:292
-#: includes/legacy/input-options.php:50
+#: classes/Admin/Popups.php:827 classes/Admin/Popups.php:930
+#: classes/Admin/Popups.php:934 classes/Admin/Themes.php:764
+#: classes/Admin/Themes.php:921 classes/Shortcode/CallToAction.php:143
+#: classes/Shortcode/Popup.php:203 classes/Shortcode/Popup.php:207
+#: classes/Shortcode/Subscribe.php:292 includes/legacy/input-options.php:50
 #: includes/legacy/input-options.php:104
 msgid "Left"
 msgstr "Venstre"
 
-#: classes/Admin/Popups.php:828
-#: classes/Admin/Popups.php:912
-#: classes/Admin/Popups.php:916
-#: classes/Admin/Themes.php:908
-#: classes/Shortcode/Popup.php:188
-#: classes/Shortcode/Popup.php:192
+#: classes/Admin/Popups.php:828 classes/Admin/Popups.php:912
+#: classes/Admin/Popups.php:916 classes/Admin/Themes.php:908
+#: classes/Shortcode/Popup.php:188 classes/Shortcode/Popup.php:192
 #: includes/legacy/input-options.php:105
 msgid "Bottom"
 msgstr "Bund"
 
-#: classes/Admin/Popups.php:829
-#: classes/Admin/Popups.php:948
-#: classes/Admin/Popups.php:952
-#: classes/Admin/Themes.php:766
-#: classes/Admin/Themes.php:934
-#: classes/Shortcode/CallToAction.php:145
-#: classes/Shortcode/Popup.php:218
-#: classes/Shortcode/Popup.php:222
-#: classes/Shortcode/Subscribe.php:294
-#: includes/legacy/input-options.php:52
+#: classes/Admin/Popups.php:829 classes/Admin/Popups.php:948
+#: classes/Admin/Popups.php:952 classes/Admin/Themes.php:766
+#: classes/Admin/Themes.php:934 classes/Shortcode/CallToAction.php:145
+#: classes/Shortcode/Popup.php:218 classes/Shortcode/Popup.php:222
+#: classes/Shortcode/Subscribe.php:294 includes/legacy/input-options.php:52
 #: includes/legacy/input-options.php:106
 msgid "Right"
 msgstr "Højre"
 
-#: classes/Admin/Popups.php:830
-#: classes/Admin/Popups.php:882
-#: classes/Admin/Themes.php:883
-#: includes/legacy/input-options.php:107
-#: includes/legacy/input-options.php:127
-#: includes/legacy/input-options.php:147
+#: classes/Admin/Popups.php:830 classes/Admin/Popups.php:882
+#: classes/Admin/Themes.php:883 includes/legacy/input-options.php:107
+#: includes/legacy/input-options.php:127 includes/legacy/input-options.php:147
 msgid "Top Left"
 msgstr "Øverst til venstre"
 
-#: classes/Admin/Popups.php:831
-#: classes/Admin/Popups.php:883
-#: classes/Admin/Themes.php:884
-#: includes/legacy/input-options.php:108
+#: classes/Admin/Popups.php:831 classes/Admin/Popups.php:883
+#: classes/Admin/Themes.php:884 includes/legacy/input-options.php:108
 #: includes/legacy/input-options.php:128
 msgid "Top Center"
 msgstr "Øverst i midten"
 
-#: classes/Admin/Popups.php:832
-#: classes/Admin/Popups.php:884
-#: classes/Admin/Themes.php:885
-#: includes/legacy/input-options.php:109
-#: includes/legacy/input-options.php:129
-#: includes/legacy/input-options.php:148
+#: classes/Admin/Popups.php:832 classes/Admin/Popups.php:884
+#: classes/Admin/Themes.php:885 includes/legacy/input-options.php:109
+#: includes/legacy/input-options.php:129 includes/legacy/input-options.php:148
 msgid "Top Right"
 msgstr "Øverst til højre"
 
-#: classes/Admin/Popups.php:833
-#: classes/Admin/Popups.php:885
-#: classes/Admin/Themes.php:886
-#: includes/legacy/input-options.php:110
+#: classes/Admin/Popups.php:833 classes/Admin/Popups.php:885
+#: classes/Admin/Themes.php:886 includes/legacy/input-options.php:110
 #: includes/legacy/input-options.php:130
 msgid "Middle Left"
 msgstr "Midt til venstre"
 
-#: classes/Admin/Popups.php:834
-#: classes/Admin/Popups.php:886
-#: includes/legacy/input-options.php:111
-#: includes/legacy/input-options.php:131
+#: classes/Admin/Popups.php:834 classes/Admin/Popups.php:886
+#: includes/legacy/input-options.php:111 includes/legacy/input-options.php:131
 msgid "Middle Center"
 msgstr "Midt i midten"
 
-#: classes/Admin/Popups.php:835
-#: classes/Admin/Popups.php:887
-#: classes/Admin/Themes.php:887
-#: includes/legacy/input-options.php:112
+#: classes/Admin/Popups.php:835 classes/Admin/Popups.php:887
+#: classes/Admin/Themes.php:887 includes/legacy/input-options.php:112
 #: includes/legacy/input-options.php:132
 msgid "Middle Right"
 msgstr "Midt til højre"
 
-#: classes/Admin/Popups.php:836
-#: classes/Admin/Popups.php:888
-#: classes/Admin/Themes.php:888
-#: includes/legacy/input-options.php:113
-#: includes/legacy/input-options.php:133
-#: includes/legacy/input-options.php:149
+#: classes/Admin/Popups.php:836 classes/Admin/Popups.php:888
+#: classes/Admin/Themes.php:888 includes/legacy/input-options.php:113
+#: includes/legacy/input-options.php:133 includes/legacy/input-options.php:149
 msgid "Bottom Left"
 msgstr "Nederst til venstre"
 
-#: classes/Admin/Popups.php:837
-#: classes/Admin/Popups.php:889
-#: classes/Admin/Themes.php:889
-#: includes/legacy/input-options.php:114
+#: classes/Admin/Popups.php:837 classes/Admin/Popups.php:889
+#: classes/Admin/Themes.php:889 includes/legacy/input-options.php:114
 #: includes/legacy/input-options.php:134
 msgid "Bottom Center"
 msgstr "Nederst i midten"
 
-#: classes/Admin/Popups.php:838
-#: classes/Admin/Popups.php:890
-#: classes/Admin/Themes.php:890
-#: includes/legacy/input-options.php:115
-#: includes/legacy/input-options.php:135
-#: includes/legacy/input-options.php:150
+#: classes/Admin/Popups.php:838 classes/Admin/Popups.php:890
+#: classes/Admin/Themes.php:890 includes/legacy/input-options.php:115
+#: includes/legacy/input-options.php:135 includes/legacy/input-options.php:150
 msgid "Bottom Right"
 msgstr "Nederst til højre"
 
@@ -1151,23 +984,31 @@ msgstr "URL til brugerdefineret lyd"
 msgid "Enter URL to sound file."
 msgstr "Indtast URL til lydfilen."
 
-#: classes/Admin/Popups.php:876
-#: classes/Admin/Themes.php:878
+#: classes/Admin/Popups.php:876 classes/Admin/Themes.php:878
 #: classes/Shortcode/Popup.php:165
 msgid "Location"
 msgstr "Placering"
 
-#: classes/Admin/Popups.php:877
-#: classes/Shortcode/Popup.php:166
+#: classes/Admin/Popups.php:877 classes/Shortcode/Popup.php:166
 msgid "Choose where the popup will be displayed."
 msgstr "Vælg, hvor popuppen skal vises."
+
+#. translators: 1. Screen Edge: top, bottom.
+#: classes/Admin/Popups.php:897 classes/Admin/Popups.php:915
+#: classes/Admin/Popups.php:933 classes/Admin/Popups.php:951
+#: classes/Shortcode/Popup.php:176 classes/Shortcode/Popup.php:191
+#: classes/Shortcode/Popup.php:206 classes/Shortcode/Popup.php:221
+#, php-format
+msgctxt "Screen Edge: top, bottom"
+msgid "Distance from the %s edge of the screen."
+msgstr "Afstanden fra skærmens %s-kant."
 
 #: classes/Admin/Popups.php:966
 msgid "Position from Trigger"
 msgstr "Position i forhold til udløseren"
 
-#: classes/Admin/Popups.php:969
 #. translators: 1. URL to documentation. 2. Closing HTML tag.
+#: classes/Admin/Popups.php:969
 #, php-format
 msgid "This will position the popup in relation to the %1$sClick Trigger%2$s."
 msgstr "Dette vil placere popuppen i forhold til %1$sKlik-udløser%2$s."
@@ -1180,13 +1021,11 @@ msgstr "Fast placering"
 msgid "Checking this sets the positioning of the popup to fixed."
 msgstr "Hvis dette markeres, sættes popuppens placering til fast."
 
-#: classes/Admin/Popups.php:986
-#: classes/Shortcode/Popup.php:124
+#: classes/Admin/Popups.php:986 classes/Shortcode/Popup.php:124
 msgid "Disable Overlay"
 msgstr "Deaktiver overlay"
 
-#: classes/Admin/Popups.php:987
-#: classes/Shortcode/Popup.php:125
+#: classes/Admin/Popups.php:987 classes/Shortcode/Popup.php:125
 msgid "Checking this will disable and hide the overlay for this popup."
 msgstr "Hvis dette markeres, deaktiveres og skjules overlayet for denne popup."
 
@@ -1203,10 +1042,11 @@ msgid "Disable Repositioning"
 msgstr "Deaktiver omplacering"
 
 #: classes/Admin/Popups.php:999
-msgid "This will disable automatic repositioning of the popup on window resizing."
+msgid ""
+"This will disable automatic repositioning of the popup on window resizing."
 msgstr ""
-"Dette deaktiverer automatisk omplacering af popuppen ved ændring af "
-"vinduets størrelse."
+"Dette deaktiverer automatisk omplacering af popuppen ved ændring af vinduets "
+"størrelse."
 
 #: classes/Admin/Popups.php:1004
 msgid "Popup Z-Index"
@@ -1222,8 +1062,8 @@ msgstr "Lukketekst"
 
 #: classes/Admin/Popups.php:1022
 msgid ""
-"Override the default close text. To use a Font Awesome icon instead of "
-"text, enter the CSS classes such as \"fas fa-camera\"."
+"Override the default close text. To use a Font Awesome icon instead of text, "
+"enter the CSS classes such as \"fas fa-camera\"."
 msgstr ""
 "Tilsidesæt standard-lukketeksten. Hvis du vil bruge et Font Awesome-ikon i "
 "stedet for tekst, skal du indtaste CSS-klasser som \"fas fa-camera\"."
@@ -1242,13 +1082,11 @@ msgstr "Luk ved formularindsendelse"
 
 #: classes/Admin/Popups.php:1041
 msgid "Close the popup automatically after integrated form plugin submissions."
-msgstr "Luk popuppen automatisk efter indsendelser fra integrerede formularplugins."
+msgstr ""
+"Luk popuppen automatisk efter indsendelser fra integrerede formularplugins."
 
-#: classes/Admin/Popups.php:1046
-#: classes/Shortcode/Subscribe.php:421
-#: classes/Triggers.php:199
-#: classes/Triggers.php:204
-#: classes/Triggers.php:236
+#: classes/Admin/Popups.php:1046 classes/Shortcode/Subscribe.php:421
+#: classes/Triggers.php:199 classes/Triggers.php:204 classes/Triggers.php:236
 #: includes/integrations/class-pum-cf7.php:153
 #: includes/integrations/class-pum-gravity-forms.php:178
 #: includes/integrations/ninja-forms/Actions/ClosePopup.php:53
@@ -1256,20 +1094,19 @@ msgid "Delay"
 msgstr "Forsinkelse"
 
 #: classes/Admin/Popups.php:1047
-msgid "The delay before the popup will close after submission (in milliseconds)."
-msgstr "Forsinkelsen før popup-vinduet lukkes efter indsendelse (i millisekunder)."
+msgid ""
+"The delay before the popup will close after submission (in milliseconds)."
+msgstr ""
+"Forsinkelsen før popup-vinduet lukkes efter indsendelse (i millisekunder)."
 
-#: classes/Admin/Popups.php:1060
-#: classes/Shortcode/Popup.php:268
+#: classes/Admin/Popups.php:1060 classes/Shortcode/Popup.php:268
 msgid "Click Overlay to Close"
 msgstr "Klik på overlay for at lukke"
 
-#: classes/Admin/Popups.php:1061
-#: classes/Shortcode/Popup.php:269
+#: classes/Admin/Popups.php:1061 classes/Shortcode/Popup.php:269
 msgid "Checking this will cause popup to close when user clicks on overlay."
 msgstr ""
-"Hvis dette markeres, lukkes popup-vinduet, når brugeren klikker på "
-"overlayet."
+"Hvis dette markeres, lukkes popup-vinduet, når brugeren klikker på overlayet."
 
 #: classes/Admin/Popups.php:1066
 msgid "Press ESC to Close"
@@ -1278,8 +1115,8 @@ msgstr "Tryk på ESC for at lukke"
 #: classes/Admin/Popups.php:1067
 msgid "Checking this will cause popup to close when user presses ESC key."
 msgstr ""
-"Hvis dette markeres, lukkes popup-vinduet, når brugeren trykker på "
-"ESC-tasten."
+"Hvis dette markeres, lukkes popup-vinduet, når brugeren trykker på ESC-"
+"tasten."
 
 #: classes/Admin/Popups.php:1072
 msgid "Press F4 to Close"
@@ -1288,14 +1125,14 @@ msgstr "Tryk på F4 for at lukke"
 #: classes/Admin/Popups.php:1073
 msgid "Checking this will cause popup to close when user presses F4 key."
 msgstr ""
-"Hvis dette markeres, lukkes popup-vinduet, når brugeren trykker på "
-"F4-tasten."
+"Hvis dette markeres, lukkes popup-vinduet, når brugeren trykker på F4-tasten."
 
 #: classes/Admin/Popups.php:1085
-msgid "Disable automatic re-triggering of popup after non-ajax form submission."
+msgid ""
+"Disable automatic re-triggering of popup after non-ajax form submission."
 msgstr ""
-"Deaktivér automatisk genudløsning af popup-vinduet efter "
-"formularindsendelse uden AJAX."
+"Deaktivér automatisk genudløsning af popup-vinduet efter formularindsendelse "
+"uden AJAX."
 
 #: classes/Admin/Popups.php:1090
 msgid "Disable accessibility features."
@@ -1304,8 +1141,8 @@ msgstr "Deaktivér tilgængelighedsfunktioner."
 #: classes/Admin/Popups.php:1091
 msgid ""
 "This includes trapping the tab key & focus inside popup while open, force "
-"focus the first element when popup open, and refocus last click trigger "
-"when closed."
+"focus the first element when popup open, and refocus last click trigger when "
+"closed."
 msgstr ""
 "Dette omfatter at fastholde tabulatortasten & fokus inde i popup-vinduet, "
 "mens det er åbent, tvinge fokus til det første element, når popup-vinduet "
@@ -1316,10 +1153,8 @@ msgstr ""
 msgid "Opens"
 msgstr "Åbninger"
 
-#: classes/Admin/Popups.php:1262
-#: classes/Admin/Popups.php:1372
-#: classes/Controllers/WP/Dashboard.php:99
-#: dist/packages/cta-admin.js:4
+#: classes/Admin/Popups.php:1262 classes/Admin/Popups.php:1372
+#: classes/Controllers/WP/Dashboard.php:99 dist/packages/cta-admin.js:4
 msgid "Conversions"
 msgstr "Konverteringer"
 
@@ -1351,33 +1186,25 @@ msgstr "Åbninger i alt"
 msgid "Lifetime Conversions"
 msgstr "Konverteringer i alt"
 
-#: classes/Admin/Popups.php:1367
-#: classes/Admin/Templates.php:1138
-#: classes/Privacy.php:239
-#: classes/Shortcode/Subscribe.php:195
-#: classes/Shortcode/Subscribe.php:249
-#: dist/packages/components.js:16
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-editor.js:1
+#: classes/Admin/Popups.php:1367 classes/Admin/Templates.php:1138
+#: classes/Privacy.php:239 classes/Shortcode/Subscribe.php:195
+#: classes/Shortcode/Subscribe.php:249 dist/packages/components.js:16
+#: dist/packages/cta-admin.js:4 dist/packages/cta-editor.js:1
 msgid "Name"
 msgstr "Navn"
 
-#: classes/Admin/Popups.php:1368
-#: classes/Shortcode/Subscribe.php:322
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-admin.js:23
+#: classes/Admin/Popups.php:1368 classes/Shortcode/Subscribe.php:322
+#: dist/packages/cta-admin.js:4 dist/packages/cta-admin.js:23
 #: dist/packages/cta-editor.js:1
 msgid "Enabled"
 msgstr "Aktiveret"
 
-#: classes/Admin/Popups.php:1369
-#: classes/Admin/Themes.php:377
+#: classes/Admin/Popups.php:1369 classes/Admin/Themes.php:377
 #: dist/packages/block-editor.js:2
 msgid "Title"
 msgstr "Titel"
 
-#: classes/Admin/Popups.php:1370
-#: classes/Shortcode/PopupClose.php:95
+#: classes/Admin/Popups.php:1370 classes/Shortcode/PopupClose.php:95
 #: classes/Shortcode/PopupTrigger.php:123
 #: classes/Shortcode/PopupTrigger.php:124
 msgid "CSS Class"
@@ -1391,8 +1218,7 @@ msgstr "Visninger"
 msgid "impressions"
 msgstr "visninger"
 
-#: classes/Admin/Popups.php:1474
-#: classes/Admin/Subscribers/Table.php:314
+#: classes/Admin/Popups.php:1474 classes/Admin/Subscribers/Table.php:314
 msgid "N/A"
 msgstr "Ikke relevant"
 
@@ -1408,8 +1234,7 @@ msgstr "Vis alle kategorier"
 msgid "Show all tags"
 msgstr "Vis alle tags"
 
-#: classes/Admin/Settings.php:79
-#: classes/Admin/Tools.php:70
+#: classes/Admin/Settings.php:79 classes/Admin/Tools.php:70
 msgid "Dismiss this notice."
 msgstr "Afvis denne meddelelse."
 
@@ -1433,8 +1258,7 @@ msgstr "Licensaktivering mislykkedes."
 msgid "License deactivated successfully!"
 msgstr "Licensen blev deaktiveret med succes!"
 
-#: classes/Admin/Settings.php:168
-#: classes/RestAPI/License.php:174
+#: classes/Admin/Settings.php:168 classes/RestAPI/License.php:174
 msgid "License deactivation failed."
 msgstr "Licensdeaktivering mislykkedes."
 
@@ -1460,7 +1284,8 @@ msgstr "Brug den klassiske editor til popups"
 
 #: classes/Admin/Settings.php:359
 msgid "Disable the block editor and use the classic editor for editing popups."
-msgstr "Deaktiver blokeditoren, og brug den klassiske editor til at redigere popups."
+msgstr ""
+"Deaktiver blokeditoren, og brug den klassiske editor til at redigere popups."
 
 #: classes/Admin/Settings.php:364
 msgid "Google Fonts API Key *optional"
@@ -1468,18 +1293,17 @@ msgstr "Google Fonts API-nøgle *valgfri"
 
 #: classes/Admin/Settings.php:365
 msgid ""
-"Enter your own Google Fonts API key to always get the latest fonts "
-"available."
+"Enter your own Google Fonts API key to always get the latest fonts available."
 msgstr ""
-"Indtast din egen Google Fonts API-nøgle for altid at få adgang til de "
-"nyeste tilgængelige skrifttyper."
+"Indtast din egen Google Fonts API-nøgle for altid at få adgang til de nyeste "
+"tilgængelige skrifttyper."
 
 #: classes/Admin/Settings.php:369
 msgid "Allow usage tracking?"
 msgstr "Tillad brugssporing?"
 
-#: classes/Admin/Settings.php:372
 #. translators: 1 & 2 are opening and closing HTML of the link around "Learn more"
+#: classes/Admin/Settings.php:372
 #, php-format
 msgid ""
 "Allow data sharing so that we can receive a little information on how it is "
@@ -1506,8 +1330,7 @@ msgstr "Succesmeddelelse"
 msgid "Message to show user when successfuly subscribed."
 msgstr "Meddelelse, der vises for brugeren, når abonnementet er gennemført."
 
-#: classes/Admin/Settings.php:402
-#: includes/functions/newsletter.php:60
+#: classes/Admin/Settings.php:402 includes/functions/newsletter.php:60
 msgid "You have been subscribed!"
 msgstr "Du er blevet tilmeldt!"
 
@@ -1517,10 +1340,10 @@ msgstr "Meddelelse ved tom e-mail"
 
 #: classes/Admin/Settings.php:406
 msgid "Message to show user when no email is entered."
-msgstr "Meddelelse, der vises for brugeren, når der ikke er indtastet en e-mail."
+msgstr ""
+"Meddelelse, der vises for brugeren, når der ikke er indtastet en e-mail."
 
-#: classes/Admin/Settings.php:408
-#: includes/functions/newsletter.php:64
+#: classes/Admin/Settings.php:408 includes/functions/newsletter.php:64
 msgid "Please enter a valid email."
 msgstr "Indtast en gyldig e-mail."
 
@@ -1530,10 +1353,10 @@ msgstr "Meddelelse ved ugyldig e-mail"
 
 #: classes/Admin/Settings.php:412
 msgid "Message to show user when an invalid email is entered."
-msgstr "Meddelelse, der vises for brugeren, når der er indtastet en ugyldig e-mail."
+msgstr ""
+"Meddelelse, der vises for brugeren, når der er indtastet en ugyldig e-mail."
 
-#: classes/Admin/Settings.php:414
-#: includes/functions/newsletter.php:65
+#: classes/Admin/Settings.php:414 includes/functions/newsletter.php:65
 #: includes/functions/newsletter.php:66
 msgid "Email provided is not a valid email address."
 msgstr "Den angivne e-mailadresse er ikke en gyldig e-mailadresse."
@@ -1546,8 +1369,7 @@ msgstr "Fejlmeddelelse"
 msgid "Message to show user when an error has occurred."
 msgstr "Meddelelse, der vises for brugeren, når der er opstået en fejl."
 
-#: classes/Admin/Settings.php:420
-#: includes/functions/newsletter.php:62
+#: classes/Admin/Settings.php:420 includes/functions/newsletter.php:62
 msgid "Error occurred when subscribing. Please try again."
 msgstr "Der opstod en fejl under tilmelding. Prøv igen."
 
@@ -1555,13 +1377,11 @@ msgstr "Der opstod en fejl under tilmelding. Prøv igen."
 msgid "Already Subscribed Message"
 msgstr "Meddelelse om allerede tilmeldt"
 
-#: classes/Admin/Settings.php:424
-#: classes/Admin/Settings.php:430
+#: classes/Admin/Settings.php:424 classes/Admin/Settings.php:430
 msgid "Message to show user who is already subscribed."
 msgstr "Meddelelse, der vises for en bruger, som allerede er tilmeldt."
 
-#: classes/Admin/Settings.php:426
-#: includes/functions/newsletter.php:63
+#: classes/Admin/Settings.php:426 includes/functions/newsletter.php:63
 msgid "You are already a subscriber."
 msgstr "Du er allerede abonnent."
 
@@ -1588,11 +1408,10 @@ msgstr "Deaktiver URL-sporingsparametre?"
 #: classes/Admin/Settings.php:458
 msgid ""
 "Stops adding tracking parameters (pid) to links inside popups. Link clicks "
-"will be tracked via browser beacons instead (less reliable but "
-"non-invasive)."
+"will be tracked via browser beacons instead (less reliable but non-invasive)."
 msgstr ""
-"Stopper med at tilføje sporingsparametre (pid) til links inde i pop "
-"op-vinduer. Linkklik vil i stedet blive sporet via browserbeacons (mindre "
+"Stopper med at tilføje sporingsparametre (pid) til links inde i pop op-"
+"vinduer. Linkklik vil i stedet blive sporet via browserbeacons (mindre "
 "pålideligt, men mindre indgribende)."
 
 #: classes/Admin/Settings.php:464
@@ -1604,41 +1423,32 @@ msgid ""
 "These settings only pertain to usage of the Popup Maker built in "
 "subscription form shortcode, not 3rd party form plugins."
 msgstr ""
-"Disse indstillinger vedrører kun brugen af Popup Makers indbyggede "
-"shortcode til abonnementsformularer, ikke tredjeparts formularplugins."
+"Disse indstillinger vedrører kun brugen af Popup Makers indbyggede shortcode "
+"til abonnementsformularer, ikke tredjeparts formularplugins."
 
 #: classes/Admin/Settings.php:467
 msgid "Always enable consent field on subscription forms."
 msgstr "Aktivér altid samtykkefelt på abonnementsformularer."
 
-#: classes/Admin/Settings.php:470
-#: classes/Admin/Settings.php:512
-#: classes/Admin/Settings.php:521
-#: classes/Admin/Themes.php:697
-#: classes/Admin/Themes.php:1158
-#: classes/Shortcode/CallToAction.php:113
-#: classes/Shortcode/Subscribe.php:326
-#: classes/Shortcode/Subscribe.php:379
+#: classes/Admin/Settings.php:470 classes/Admin/Settings.php:512
+#: classes/Admin/Settings.php:521 classes/Admin/Themes.php:697
+#: classes/Admin/Themes.php:1158 classes/Shortcode/CallToAction.php:113
+#: classes/Shortcode/Subscribe.php:326 classes/Shortcode/Subscribe.php:379
 msgid "Yes"
 msgstr "Ja"
 
-#: classes/Admin/Settings.php:471
-#: classes/Admin/Settings.php:530
-#: classes/Admin/Themes.php:696
-#: classes/Admin/Themes.php:1157
-#: classes/Shortcode/CallToAction.php:112
-#: classes/Shortcode/Subscribe.php:327
+#: classes/Admin/Settings.php:471 classes/Admin/Settings.php:530
+#: classes/Admin/Themes.php:696 classes/Admin/Themes.php:1157
+#: classes/Shortcode/CallToAction.php:112 classes/Shortcode/Subscribe.php:327
 #: classes/Shortcode/Subscribe.php:391
 msgid "No"
 msgstr "Nej"
 
-#: classes/Admin/Settings.php:476
-#: classes/Privacy.php:286
+#: classes/Admin/Settings.php:476 classes/Privacy.php:286
 msgid "Consent Text"
 msgstr "Samtykketekst"
 
-#: classes/Admin/Settings.php:478
-#: classes/Shortcode/Subscribe.php:336
+#: classes/Admin/Settings.php:478 classes/Shortcode/Subscribe.php:336
 msgid "Notify me about related content and special offers."
 msgstr "Giv mig besked om relateret indhold og særlige tilbud."
 
@@ -1647,71 +1457,61 @@ msgid "Consent Field Type"
 msgstr "Type af samtykkefelt"
 
 #: classes/Admin/Settings.php:485
-msgid "Radio forces the user to make a choice, often resulting in more opt-ins."
+msgid ""
+"Radio forces the user to make a choice, often resulting in more opt-ins."
 msgstr ""
-"Radioknapper tvinger brugeren til at træffe et valg, hvilket ofte "
-"resulterer i flere tilmeldinger."
+"Radioknapper tvinger brugeren til at træffe et valg, hvilket ofte resulterer "
+"i flere tilmeldinger."
 
-#: classes/Admin/Settings.php:488
-#: classes/Shortcode/Subscribe.php:353
+#: classes/Admin/Settings.php:488 classes/Shortcode/Subscribe.php:353
 msgid "Radio"
 msgstr "Radioknapper"
 
-#: classes/Admin/Settings.php:489
-#: classes/Shortcode/Subscribe.php:354
+#: classes/Admin/Settings.php:489 classes/Shortcode/Subscribe.php:354
 msgid "Checkbox"
 msgstr "Afkrydsningsfelt"
 
-#: classes/Admin/Settings.php:497
-#: classes/Privacy.php:283
+#: classes/Admin/Settings.php:497 classes/Privacy.php:283
 #: classes/Shortcode/Subscribe.php:341
 msgid "Consent Required"
 msgstr "Samtykke påkrævet"
 
-#: classes/Admin/Settings.php:506
-#: classes/Shortcode/Subscribe.php:361
+#: classes/Admin/Settings.php:506 classes/Shortcode/Subscribe.php:361
 msgid "Consent Radio Layout"
 msgstr "Layout for samtykke-radioknapper"
 
-#: classes/Admin/Settings.php:509
-#: classes/Shortcode/Subscribe.php:282
+#: classes/Admin/Settings.php:509 classes/Shortcode/Subscribe.php:282
 #: classes/Shortcode/Subscribe.php:364
 msgid "Inline"
 msgstr "Inlinje"
 
-#: classes/Admin/Settings.php:510
-#: classes/Shortcode/Subscribe.php:365
+#: classes/Admin/Settings.php:510 classes/Shortcode/Subscribe.php:365
 msgid "Stacked"
 msgstr "Stablet"
 
-#: classes/Admin/Settings.php:519
-#: classes/Shortcode/Subscribe.php:377
+#: classes/Admin/Settings.php:519 classes/Shortcode/Subscribe.php:377
 msgid "Consent Yes Label"
 msgstr "Etiket for ja til samtykke"
 
-#: classes/Admin/Settings.php:528
-#: classes/Shortcode/Subscribe.php:389
+#: classes/Admin/Settings.php:528 classes/Shortcode/Subscribe.php:389
 msgid "Consent No Label"
 msgstr "Etiket for nej til samtykke"
 
-#: classes/Admin/Settings.php:537
-#: classes/Shortcode/Subscribe.php:401
+#: classes/Admin/Settings.php:537 classes/Shortcode/Subscribe.php:401
 msgid "Consent Usage Text"
 msgstr "Tekst til samtykkeanvendelse"
 
-#: classes/Admin/Settings.php:540
-#: classes/Shortcode/Subscribe.php:404
 #. translators: 1. opening tag, 2. closing tag.
+#: classes/Admin/Settings.php:540 classes/Shortcode/Subscribe.php:404
 #, php-format
 msgid ""
 "You can use %1$s%2$s to insert a link to your privacy policy. To customize "
 "the link text use %1$s:Link Text%2$s"
 msgstr ""
-"Du kan bruge %1$s%2$s til at indsætte et link til din privatlivspolitik. "
-"For at tilpasse linkteksten skal du bruge %1$s:Linktekst%2$s"
+"Du kan bruge %1$s%2$s til at indsætte et link til din privatlivspolitik. For "
+"at tilpasse linkteksten skal du bruge %1$s:Linktekst%2$s"
 
-#: classes/Admin/Settings.php:545
-#: classes/Shortcode/Subscribe.php:409
+#: classes/Admin/Settings.php:545 classes/Shortcode/Subscribe.php:409
 msgid ""
 "If you opt in above, we use this information to send related content, "
 "discounts, and other special offers."
@@ -1759,15 +1559,14 @@ msgstr ""
 "Juster den højre indvendige margen, der tilføjes til body, når popups vises "
 "med et overlay."
 
-#: classes/Admin/Settings.php:588
 #. translators: 1 & 2 are opening and closing HTML of the link around "Learn more"
+#: classes/Admin/Settings.php:588
 #, php-format
 msgid ""
-"Use this if your popups \"jump\" or \"shift\" when opened. %1$sLearn "
-"more%2$s"
+"Use this if your popups \"jump\" or \"shift\" when opened. %1$sLearn more%2$s"
 msgstr ""
-"Brug dette, hvis dine popups “hopper” eller “skifter”, når de åbnes. "
-"%1$sLæs mere%2$s"
+"Brug dette, hvis dine popups “hopper” eller “skifter”, når de åbnes. %1$sLæs "
+"mere%2$s"
 
 #: classes/Admin/Settings.php:596
 msgid "Body Padding Override"
@@ -1817,20 +1616,21 @@ msgstr "Deaktiver caching af aktiver."
 
 #: classes/Admin/Settings.php:625
 msgid ""
-"By default Popup Maker caches a single JS & CSS file in your Uploads "
-"folder. These files include core, extension & user customized styles & "
-"scripts in a single set of files."
+"By default Popup Maker caches a single JS & CSS file in your Uploads folder. "
+"These files include core, extension & user customized styles & scripts in a "
+"single set of files."
 msgstr ""
-"Som standard cacher Popup Maker en enkelt JS- & CSS-fil i din "
-"Uploads-mappe. Disse filer indeholder kerne-, udvidelses- & "
-"brugertilpassede styles & scripts i ét samlet sæt filer."
+"Som standard cacher Popup Maker en enkelt JS- & CSS-fil i din Uploads-mappe. "
+"Disse filer indeholder kerne-, udvidelses- & brugertilpassede styles & "
+"scripts i ét samlet sæt filer."
 
 #: classes/Admin/Settings.php:629
 msgid "Disable the Popup Maker shortcode button"
 msgstr "Deaktiver Popup Maker-shortcode-knappen"
 
 #: classes/Admin/Settings.php:633
-msgid "Disable Popup Maker occasionally showing random tips to improve your popups."
+msgid ""
+"Disable Popup Maker occasionally showing random tips to improve your popups."
 msgstr ""
 "Deaktiver, at Popup Maker lejlighedsvis viser tilfældige tips til at "
 "forbedre dine popups."
@@ -1860,8 +1660,8 @@ msgid ""
 " This stops Popup Maker from loading Google Fonts, useful if the fonts you "
 "chose are already loaded with your theme."
 msgstr ""
-" Dette forhindrer Popup Maker i at indlæse Google Fonts, hvilket er "
-"nyttigt, hvis de skrifttyper, du har valgt, allerede indlæses af dit tema."
+" Dette forhindrer Popup Maker i at indlæse Google Fonts, hvilket er nyttigt, "
+"hvis de skrifttyper, du har valgt, allerede indlæses af dit tema."
 
 #: classes/Admin/Settings.php:654
 msgid "Don't load Popup Maker core stylesheet."
@@ -1893,7 +1693,8 @@ msgstr "Vis Popup Maker CSS"
 
 #: classes/Admin/Settings.php:725
 msgid "Use this to quickly copy Popup Maker's CSS to your own stylesheet."
-msgstr "Brug dette til hurtigt at kopiere Popup Makers CSS til dit eget stylesheet."
+msgstr ""
+"Brug dette til hurtigt at kopiere Popup Makers CSS til dit eget stylesheet."
 
 #: classes/Admin/Settings.php:728
 msgid "Core Styles"
@@ -1903,14 +1704,10 @@ msgstr "Kerne-styles"
 msgid "Generated Popup & Popup Theme Styles"
 msgstr "Genererede popup- og popup-tema-styles"
 
-#: classes/Admin/Settings.php:771
-#: classes/Admin/Settings.php:1135
-#: classes/Admin/Settings.php:1176
-#: classes/Admin/Templates.php:318
-#: classes/Admin/Templates.php:336
-#: classes/Admin/Templates.php:343
-#: classes/Admin/Templates.php:542
-#: dist/packages/addons-page.js:3
+#: classes/Admin/Settings.php:771 classes/Admin/Settings.php:1135
+#: classes/Admin/Settings.php:1176 classes/Admin/Templates.php:318
+#: classes/Admin/Templates.php:336 classes/Admin/Templates.php:343
+#: classes/Admin/Templates.php:542 dist/packages/addons-page.js:3
 #: dist/packages/addons-page.js:4
 msgid "Pro"
 msgstr "Pro"
@@ -1975,16 +1772,11 @@ msgstr "WooCommerce"
 msgid "EDD"
 msgstr "EDD"
 
-#: classes/Admin/Settings.php:869
-#: classes/Admin/Settings.php:901
-#: classes/Admin/Templates.php:316
-#: classes/Admin/Templates.php:334
-#: classes/Admin/Templates.php:341
-#: classes/Admin/Templates.php:540
-#: classes/Admin/Templates.php:627
-#: classes/Admin/Templates.php:634
-#: dist/packages/addons-page.js:3
-#: dist/packages/addons-page.js:4
+#: classes/Admin/Settings.php:869 classes/Admin/Settings.php:901
+#: classes/Admin/Templates.php:316 classes/Admin/Templates.php:334
+#: classes/Admin/Templates.php:341 classes/Admin/Templates.php:540
+#: classes/Admin/Templates.php:627 classes/Admin/Templates.php:634
+#: dist/packages/addons-page.js:3 dist/packages/addons-page.js:4
 msgid "Pro+"
 msgstr "Pro+"
 
@@ -2004,8 +1796,7 @@ msgstr ""
 msgid "Track My Popup Revenue"
 msgstr "Spor min popup-indtægt"
 
-#: classes/Admin/Settings.php:884
-#: classes/Admin/Settings.php:916
+#: classes/Admin/Settings.php:884 classes/Admin/Settings.php:916
 msgid "Pro+ — $249/yr"
 msgstr "Pro+ — $249/år"
 
@@ -2045,19 +1836,16 @@ msgstr "Abonnementer"
 msgid "Extensions"
 msgstr "Udvidelser"
 
-#: classes/Admin/Settings.php:1132
-#: classes/Admin/Settings.php:1165
+#: classes/Admin/Settings.php:1132 classes/Admin/Settings.php:1165
 msgid "Licenses"
 msgstr "Licenser"
 
-#: classes/Admin/Settings.php:1133
-#: classes/Shortcode/Subscribe.php:65
+#: classes/Admin/Settings.php:1133 classes/Shortcode/Subscribe.php:65
 #: classes/Shortcode/Subscribe.php:95
 msgid "Privacy"
 msgstr "Privatliv"
 
-#: classes/Admin/Settings.php:1134
-#: classes/Admin/Settings.php:1172
+#: classes/Admin/Settings.php:1134 classes/Admin/Settings.php:1172
 msgid "Misc"
 msgstr "Diverse"
 
@@ -2073,9 +1861,8 @@ msgstr "Abonnementsformularer"
 msgid "Assets"
 msgstr "Aktiver"
 
-#: classes/Admin/Settings.php:1245
-#: classes/Services/License.php:1158
 #. translators: %s is the error message
+#: classes/Admin/Settings.php:1245 classes/Services/License.php:1158
 #, php-format
 msgid "Error loading license status: %s"
 msgstr "Fejl ved indlæsning af licensstatus: %s"
@@ -2092,45 +1879,40 @@ msgstr "Find"
 msgid "Subscribers Per Page"
 msgstr "Abonnenter pr. side"
 
-#: classes/Admin/Subscribers/Table.php:102
-#: classes/Privacy.php:233
-#: classes/Shortcode/Subscribe.php:217
-#: classes/Shortcode/Subscribe.php:221
-#: classes/Shortcode/Subscribe.php:269
-#: classes/Shortcode/Subscribe.php:270
+#: classes/Admin/Subscribers/Table.php:102 classes/Privacy.php:233
+#: classes/Shortcode/Subscribe.php:217 classes/Shortcode/Subscribe.php:221
+#: classes/Shortcode/Subscribe.php:269 classes/Shortcode/Subscribe.php:270
 msgid "Email"
 msgstr "E-mail"
 
-#: classes/Admin/Subscribers/Table.php:103
-#: classes/Shortcode/Subscribe.php:190
+#: classes/Admin/Subscribers/Table.php:103 classes/Shortcode/Subscribe.php:190
 #: classes/Shortcode/Subscribe.php:245
 msgid "Full Name"
 msgstr "Fulde navn"
 
-#: classes/Admin/Subscribers/Table.php:104
-#: classes/Privacy.php:245
-#: classes/Shortcode/Subscribe.php:199
-#: classes/Shortcode/Subscribe.php:204
-#: classes/Shortcode/Subscribe.php:253
-#: classes/Shortcode/Subscribe.php:257
+#: classes/Admin/Subscribers/Table.php:104 classes/Privacy.php:245
+#: classes/Shortcode/Subscribe.php:199 classes/Shortcode/Subscribe.php:204
+#: classes/Shortcode/Subscribe.php:253 classes/Shortcode/Subscribe.php:257
 msgid "First Name"
 msgstr "Fornavn"
 
-#: classes/Admin/Subscribers/Table.php:105
-#: classes/Privacy.php:251
-#: classes/Shortcode/Subscribe.php:208
-#: classes/Shortcode/Subscribe.php:213
-#: classes/Shortcode/Subscribe.php:261
-#: classes/Shortcode/Subscribe.php:265
+#: classes/Admin/Subscribers/Table.php:105 classes/Privacy.php:251
+#: classes/Shortcode/Subscribe.php:208 classes/Shortcode/Subscribe.php:213
+#: classes/Shortcode/Subscribe.php:261 classes/Shortcode/Subscribe.php:265
 msgid "Last Name"
 msgstr "Efternavn"
+
+#: classes/Admin/Subscribers/Table.php:108
+msgctxt "column name"
+msgid "Subscribed On"
+msgstr "Tilmeldt den"
 
 #: classes/Admin/Subscribers/Table.php:151
 msgid "No subscribers available."
 msgstr "Ingen abonnenter tilgængelige."
 
-#: classes/Admin/Subscribers/Table.php:186
 #. translators: %s is the name of the subscriber.
+#: classes/Admin/Subscribers/Table.php:186
 #, php-format
 msgid "Select %s"
 msgstr "Vælg %s"
@@ -2139,16 +1921,13 @@ msgstr "Vælg %s"
 msgid "User ID"
 msgstr "Bruger-ID"
 
-#: classes/Admin/Subscribers/Table.php:312
-#: classes/Privacy.php:227
+#: classes/Admin/Subscribers/Table.php:312 classes/Privacy.php:227
 #: dist/packages/cta-admin.js:23
 msgid "ID"
 msgstr "ID"
 
-#: classes/Admin/Subscribers/Table.php:332
-#: classes/Admin/Templates.php:413
-#: classes/Admin/Templates.php:418
-#: classes/Admin/Templates.php:423
+#: classes/Admin/Subscribers/Table.php:332 classes/Admin/Templates.php:413
+#: classes/Admin/Templates.php:418 classes/Admin/Templates.php:423
 #: dist/packages/cta-editor.js:1
 msgid "Delete"
 msgstr "Slet"
@@ -2170,8 +1949,7 @@ msgstr[1] "sletning mislykkedes."
 msgid "Invalid Nonce"
 msgstr "Ugyldig nonce"
 
-#: classes/Admin/Subscribers/Table.php:427
-#: classes/Extension/Updater.php:609
+#: classes/Admin/Subscribers/Table.php:427 classes/Extension/Updater.php:609
 #: includes/admin/class-pum-admin-upgrades.php:247
 #: includes/admin/upgrades/class-pum-admin-upgrade-routine-2.php:32
 #: includes/admin/upgrades/class-pum-admin-upgrade-routine-3.php:43
@@ -2182,7 +1960,8 @@ msgid "Error"
 msgstr "Fejl"
 
 #: classes/Admin/Support.php:52
-msgid "<b>Secure HTTPS contact page</b>, running via iframe from external domain"
+msgid ""
+"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
 msgstr "<b>Sikker HTTPS-kontaktside</b>, kører via iframe fra ekstern domæne"
 
 #: classes/Admin/Templates.php:52
@@ -2199,8 +1978,7 @@ msgstr ""
 
 #: classes/Admin/Templates.php:213
 msgid ""
-"This extension is covered by your Pro license. No separate activation "
-"needed!"
+"This extension is covered by your Pro license. No separate activation needed!"
 msgstr ""
 "Denne udvidelse er dækket af din Pro-licens. Ingen separat aktivering "
 "nødvendig!"
@@ -2215,12 +1993,9 @@ msgstr ""
 "Licensnøglen er skjult af sikkerhedsmæssige årsager. Deaktiver for at "
 "foretage ændringer."
 
-#: classes/Admin/Templates.php:235
-#: classes/Admin/Templates.php:411
-#: classes/Admin/Templates.php:426
-#: classes/Admin/Templates.php:513
-#: classes/Admin/Templates.php:523
-#: dist/packages/addons-page.js:1
+#: classes/Admin/Templates.php:235 classes/Admin/Templates.php:411
+#: classes/Admin/Templates.php:426 classes/Admin/Templates.php:513
+#: classes/Admin/Templates.php:523 dist/packages/addons-page.js:1
 #: dist/packages/addons-page.js:4
 msgid "Active"
 msgstr "Aktiv"
@@ -2229,8 +2004,7 @@ msgstr "Aktiv"
 msgid "Deactivate License"
 msgstr "Deaktiver licens"
 
-#: classes/Admin/Templates.php:238
-#: classes/Admin/Templates.php:421
+#: classes/Admin/Templates.php:238 classes/Admin/Templates.php:421
 #: dist/packages/addons-page.js:1
 msgid "Inactive"
 msgstr "Inaktiv"
@@ -2251,8 +2025,7 @@ msgstr "Premium Ecommerce-udgave"
 msgid "Activated"
 msgstr "Aktiveret"
 
-#: classes/Admin/Templates.php:345
-#: classes/Admin/Templates.php:416
+#: classes/Admin/Templates.php:345 classes/Admin/Templates.php:416
 #: classes/Admin/Templates.php:513
 msgid "Deactivated"
 msgstr "Deaktiveret"
@@ -2269,18 +2042,15 @@ msgstr "Ugyldig"
 msgid "Enter your Popup Maker Pro License Key"
 msgstr "Indtast din Popup Maker Pro-licensnøgle"
 
-#: classes/Admin/Templates.php:374
-#: classes/Admin/Templates.php:452
+#: classes/Admin/Templates.php:374 classes/Admin/Templates.php:452
 msgid "Your Pro+ license key is active."
 msgstr "Din Pro+-licensnøgle er aktiv."
 
-#: classes/Admin/Templates.php:376
-#: classes/Admin/Templates.php:462
+#: classes/Admin/Templates.php:376 classes/Admin/Templates.php:462
 msgid "Your Pro license key is active."
 msgstr "Din Pro-licensnøgle er aktiv."
 
-#: classes/Admin/Templates.php:379
-#: classes/Admin/Templates.php:471
+#: classes/Admin/Templates.php:379 classes/Admin/Templates.php:471
 msgid "Your Pro license is valid but deactivated on this site."
 msgstr "Din Pro-licens er gyldig, men deaktiveret på dette websted."
 
@@ -2293,7 +2063,8 @@ msgstr ""
 "forbedrede funktioner!"
 
 #: classes/Admin/Templates.php:383
-msgid "You are currently using Popup Maker Free — no license key required. Enjoy!"
+msgid ""
+"You are currently using Popup Maker Free — no license key required. Enjoy!"
 msgstr ""
 "Du bruger i øjeblikket Popup Maker Free — ingen licensnøgle kræves. God "
 "fornøjelse!"
@@ -2318,27 +2089,23 @@ msgstr "!"
 msgid "Paste or enter your license key here."
 msgstr "Indsæt eller indtast din licensnøgle her."
 
-#: classes/Admin/Templates.php:408
-#: classes/Admin/Templates.php:417
-#: classes/Admin/Templates.php:422
-#: dist/packages/addons-page.js:3
+#: classes/Admin/Templates.php:408 classes/Admin/Templates.php:417
+#: classes/Admin/Templates.php:422 dist/packages/addons-page.js:3
 msgid "Activate"
 msgstr "Aktivér"
 
-#: classes/Admin/Templates.php:412
-#: dist/packages/addons-page.js:3
+#: classes/Admin/Templates.php:412 dist/packages/addons-page.js:3
 msgid "Deactivate"
 msgstr "Deaktivér"
 
-#: classes/Admin/Templates.php:413
-#: classes/Admin/Templates.php:418
+#: classes/Admin/Templates.php:413 classes/Admin/Templates.php:418
 #: classes/Admin/Templates.php:423
 msgid ""
 "Are you sure you want to delete this license key? This action cannot be "
 "undone."
 msgstr ""
-"Er du sikker på, at du vil slette denne licensnøgle? Denne handling kan "
-"ikke fortrydes."
+"Er du sikker på, at du vil slette denne licensnøgle? Denne handling kan ikke "
+"fortrydes."
 
 #: classes/Admin/Templates.php:427
 msgid "(Auto-activated)"
@@ -2346,8 +2113,7 @@ msgstr "(Automatisk aktiveret)"
 
 #: classes/Admin/Templates.php:441
 msgid ""
-"Enter your license key to activate. If you do not have a license key, you "
-"can"
+"Enter your license key to activate. If you do not have a license key, you can"
 msgstr ""
 "Indtast din licensnøgle for at aktivere. Hvis du ikke har en licensnøgle, "
 "kan du"
@@ -2356,14 +2122,12 @@ msgstr ""
 msgid "purchase one here"
 msgstr "købe en her"
 
-#: classes/Admin/Templates.php:453
-#: classes/Admin/Templates.php:463
+#: classes/Admin/Templates.php:453 classes/Admin/Templates.php:463
 #: classes/Admin/Templates.php:486
 msgid "Thank you for supporting Popup Maker!"
 msgstr "Tak fordi du støtter Popup Maker!"
 
-#: classes/Admin/Templates.php:455
-#: classes/Admin/Templates.php:465
+#: classes/Admin/Templates.php:455 classes/Admin/Templates.php:465
 #: classes/Admin/Templates.php:488
 msgid "Manage add-ons"
 msgstr "Administrer tilføjelser"
@@ -2504,8 +2268,7 @@ msgstr "Monetisér & spor hver konvertering"
 msgid "Revenue Attribution & Analytics"
 msgstr "Omsætningsattribuering & analyse"
 
-#: classes/Admin/Templates.php:613
-#: classes/Admin/Templates.php:620
+#: classes/Admin/Templates.php:613 classes/Admin/Templates.php:620
 msgid "Enhanced with Pro+"
 msgstr "Forbedret med Pro+"
 
@@ -2535,8 +2298,7 @@ msgstr ""
 msgid "WooCommerce Integration"
 msgstr "WooCommerce-integration"
 
-#: classes/Admin/Templates.php:627
-#: classes/Admin/Templates.php:634
+#: classes/Admin/Templates.php:627 classes/Admin/Templates.php:634
 msgid "Exclusive"
 msgstr "Eksklusiv"
 
@@ -2545,8 +2307,8 @@ msgid ""
 " Add products to cart, apply discounts, and recover abandoned carts with "
 "complete revenue attribution. Proven to increase sales by 15-40%."
 msgstr ""
-" Tilføj produkter til kurven, anvend rabatter, og genvind forladte kurve "
-"med fuld omsætningsattribuering. Dokumenteret til at øge salget med 15-40%."
+" Tilføj produkter til kurven, anvend rabatter, og genvind forladte kurve med "
+"fuld omsætningsattribuering. Dokumenteret til at øge salget med 15-40%."
 
 #: classes/Admin/Templates.php:634
 msgid "Easy Digital Downloads Integration"
@@ -2555,8 +2317,7 @@ msgstr "Integration med Easy Digital Downloads"
 #: classes/Admin/Templates.php:635
 msgid ""
 " Perfect for software and digital product sales with license management. "
-"Seamlessly integrate checkout flows and boost digital sales conversion "
-"rates."
+"Seamlessly integrate checkout flows and boost digital sales conversion rates."
 msgstr ""
 " Perfekt til salg af software og digitale produkter med licenshåndtering. "
 "Integrér checkout-forløb problemfrit, og øg konverteringsraterne for "
@@ -2579,8 +2340,7 @@ msgstr "Etiket"
 msgid "Value"
 msgstr "Værdi"
 
-#: classes/Admin/Templates.php:730
-#: classes/Admin/Templates.php:735
+#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
 #: classes/Controllers/Admin/WP/PluginsPage.php:106
 #: dist/packages/cta-editor.js:1
 msgid "Documentation"
@@ -2590,10 +2350,9 @@ msgstr "Dokumentation"
 msgid "Add New Trigger"
 msgstr "Tilføj ny trigger"
 
-#: classes/Admin/Templates.php:851
-#: classes/Admin/Templates.php:1016
-#: classes/Admin/Templates.php:1124
 #. translators: 1. contextual help link text.
+#: classes/Admin/Templates.php:851 classes/Admin/Templates.php:1016
+#: classes/Admin/Templates.php:1124
 #, php-format
 msgid "Learn more about %s"
 msgstr "Lær mere om %s"
@@ -2602,25 +2361,21 @@ msgstr "Lær mere om %s"
 msgid "Triggers cause a popup to open."
 msgstr "Triggere får en popup til at åbne."
 
-#: classes/Admin/Templates.php:864
-#: dist/packages/cta-admin.js:4
+#: classes/Admin/Templates.php:864 dist/packages/cta-admin.js:4
 #: dist/packages/cta-admin.js:23
 msgid "Type"
 msgstr "Type"
 
-#: classes/Admin/Templates.php:865
-#: classes/Triggers.php:368
+#: classes/Admin/Templates.php:865 classes/Triggers.php:368
 msgid "Cookie"
 msgstr "Cookie"
 
-#: classes/Admin/Templates.php:867
-#: classes/Admin/Templates.php:1140
+#: classes/Admin/Templates.php:867 classes/Admin/Templates.php:1140
 #: classes/Shortcode/Subscribe.php:66
 msgid "Actions"
 msgstr "Handlinger"
 
-#: classes/Admin/Templates.php:896
-#: classes/Admin/Templates.php:905
+#: classes/Admin/Templates.php:896 classes/Admin/Templates.php:905
 msgid "Edit this trigger"
 msgstr "Rediger denne trigger"
 
@@ -2669,8 +2424,8 @@ msgid ""
 "Conditions allow you to show your popup to a targeted segment of your sites "
 "users."
 msgstr ""
-"Betingelser giver dig mulighed for at vise din popup til en målrettet "
-"gruppe af brugere på dine sider."
+"Betingelser giver dig mulighed for at vise din popup til en målrettet gruppe "
+"af brugere på dine sider."
 
 #: classes/Admin/Templates.php:1017
 msgid "Targeting Conditions"
@@ -2686,10 +2441,11 @@ msgstr ""
 
 #: classes/Admin/Templates.php:1028
 msgid "Target the popup to a specific segment by adding conditions below."
-msgstr "Ret popupen mod en specifik gruppe ved at tilføje betingelser nedenfor."
+msgstr ""
+"Ret popupen mod en specifik gruppe ved at tilføje betingelser nedenfor."
 
-#: classes/Admin/Templates.php:1033
 #. translators: 1. button text. 2. warning icon.
+#: classes/Admin/Templates.php:1033
 #, php-format
 msgid ""
 "Click the %1$s button for any condition to check the opposite of the chosen "
@@ -2701,26 +2457,33 @@ msgstr ""
 
 #: classes/Admin/Templates.php:1053
 msgid ""
-"Choose a condition to target your popup to specific content or various "
-"other segments."
+"Choose a condition to target your popup to specific content or various other "
+"segments."
 msgstr ""
 "Vælg en betingelse for at målrette din popup mod specifikt indhold eller "
 "forskellige andre grupper."
 
-#: classes/Admin/Templates.php:1055
-#: classes/Admin/Templates.php:1087
+#: classes/Admin/Templates.php:1055 classes/Admin/Templates.php:1087
 msgid "Enable the Not Operand"
 msgstr "Aktivér Not-operatoren"
 
-#: classes/Admin/Templates.php:1058
-#: classes/Admin/Templates.php:1091
+#: classes/Admin/Templates.php:1058 classes/Admin/Templates.php:1091
 msgid "Choose a condition"
 msgstr "Vælg en betingelse"
 
 #: classes/Admin/Templates.php:1074
-#: classes/Admin/Templates.php:1085
+msgctxt "aria-label for add new OR condition button"
+msgid "Add another OR condition"
+msgstr "Tilføj endnu en ELLER-betingelse"
+
+#: classes/Admin/Templates.php:1074 classes/Admin/Templates.php:1085
 msgid "or"
 msgstr "eller"
+
+#: classes/Admin/Templates.php:1078
+msgctxt "aria-label for add new AND condition button"
+msgid "Add another AND condition group"
+msgstr "Tilføj endnu en OG-betingelsesgruppe"
 
 #: classes/Admin/Templates.php:1078
 msgid "and"
@@ -2730,13 +2493,11 @@ msgstr "og"
 msgid "Remove Condition"
 msgstr "Fjern betingelse"
 
-#: classes/Admin/Templates.php:1117
-#: classes/Triggers.php:345
+#: classes/Admin/Templates.php:1117 classes/Triggers.php:345
 msgid "Add New Cookie"
 msgstr "Tilføj ny cookie"
 
-#: classes/Admin/Templates.php:1125
-#: classes/Privacy.php:67
+#: classes/Admin/Templates.php:1125 classes/Privacy.php:67
 #: classes/Site/Assets.php:301
 msgid "Cookies"
 msgstr "Cookies"
@@ -2749,8 +2510,7 @@ msgstr "Cookies styrer gentagen visning af en popup."
 msgid "Event"
 msgstr "Hændelse"
 
-#: classes/Admin/Templates.php:1169
-#: classes/Admin/Templates.php:1178
+#: classes/Admin/Templates.php:1169 classes/Admin/Templates.php:1178
 msgid "Edit this cookie"
 msgstr "Rediger denne cookie"
 
@@ -2787,8 +2547,8 @@ msgid ""
 "If you move this theme preview to the bottom of your sidebar here it will "
 "follow you down the page?"
 msgstr ""
-"Hvis du flytter denne tema-preview til bunden af din sidebjælke her, vil "
-"den følge dig ned ad siden?"
+"Hvis du flytter denne tema-preview til bunden af din sidebjælke her, vil den "
+"følge dig ned ad siden?"
 
 #: classes/Admin/Themes.php:194
 msgid ""
@@ -2806,40 +2566,33 @@ msgstr "Vidste du:"
 msgid "Overlay"
 msgstr "Overlay"
 
-#: classes/Admin/Themes.php:376
-#: classes/Admin/Themes.php:401
+#: classes/Admin/Themes.php:376 classes/Admin/Themes.php:401
 msgid "Container"
 msgstr "Container"
 
-#: classes/Admin/Themes.php:378
-#: classes/Shortcode/Popup.php:43
+#: classes/Admin/Themes.php:378 classes/Shortcode/Popup.php:43
 #: classes/Shortcode/PopupClose.php:41
 msgid "Content"
 msgstr "Indhold"
 
-#: classes/Admin/Themes.php:398
-#: classes/Admin/Themes.php:402
+#: classes/Admin/Themes.php:398 classes/Admin/Themes.php:402
 #: classes/Admin/Themes.php:417
 msgid "Background"
 msgstr "Baggrund"
 
-#: classes/Admin/Themes.php:403
-#: classes/Admin/Themes.php:418
+#: classes/Admin/Themes.php:403 classes/Admin/Themes.php:418
 msgid "Border"
 msgstr "Kant"
 
-#: classes/Admin/Themes.php:404
-#: classes/Admin/Themes.php:419
+#: classes/Admin/Themes.php:404 classes/Admin/Themes.php:419
 msgid "Drop Shadow"
 msgstr "Skygge"
 
-#: classes/Admin/Themes.php:407
-#: classes/Admin/Themes.php:420
+#: classes/Admin/Themes.php:407 classes/Admin/Themes.php:420
 msgid "Font"
 msgstr "Skrifttype"
 
-#: classes/Admin/Themes.php:408
-#: classes/Admin/Themes.php:421
+#: classes/Admin/Themes.php:408 classes/Admin/Themes.php:421
 msgid "Text Shadow"
 msgstr "Tekstskygge"
 
@@ -2867,8 +2620,7 @@ msgstr "Dobbelt"
 msgid "Groove"
 msgstr "Rillet"
 
-#: classes/Admin/Themes.php:443
-#: classes/Admin/Themes.php:691
+#: classes/Admin/Themes.php:443 classes/Admin/Themes.php:691
 #: classes/Admin/Themes.php:1152
 msgid "Inset (inner shadow)"
 msgstr "Indsat (indre skygge)"
@@ -2889,10 +2641,8 @@ msgstr "Brug dine temaer"
 msgid "System Fonts"
 msgstr "Systemskrifttyper"
 
-#: classes/Admin/Themes.php:500
-#: classes/Admin/Themes.php:754
-#: classes/Admin/Themes.php:853
-#: classes/Admin/Themes.php:1057
+#: classes/Admin/Themes.php:500 classes/Admin/Themes.php:754
+#: classes/Admin/Themes.php:853 classes/Admin/Themes.php:1057
 #: includes/legacy/input-options.php:37
 msgid "Normal"
 msgstr "Normal"
@@ -2901,118 +2651,88 @@ msgstr "Normal"
 msgid "Bold"
 msgstr "Fed"
 
-#: classes/Admin/Themes.php:538
-#: classes/Admin/Themes.php:584
-#: classes/Admin/Themes.php:610
-#: classes/Admin/Themes.php:634
-#: classes/Admin/Themes.php:708
-#: classes/Admin/Themes.php:773
-#: classes/Admin/Themes.php:827
-#: classes/Admin/Themes.php:992
-#: classes/Admin/Themes.php:1011
-#: classes/Admin/Themes.php:1071
-#: classes/Admin/Themes.php:1095
-#: classes/Admin/Themes.php:1164
+#: classes/Admin/Themes.php:538 classes/Admin/Themes.php:584
+#: classes/Admin/Themes.php:610 classes/Admin/Themes.php:634
+#: classes/Admin/Themes.php:708 classes/Admin/Themes.php:773
+#: classes/Admin/Themes.php:827 classes/Admin/Themes.php:992
+#: classes/Admin/Themes.php:1011 classes/Admin/Themes.php:1071
+#: classes/Admin/Themes.php:1095 classes/Admin/Themes.php:1164
 msgid "Color"
 msgstr "Farve"
 
-#: classes/Admin/Themes.php:544
-#: classes/Admin/Themes.php:590
-#: classes/Admin/Themes.php:640
-#: classes/Admin/Themes.php:779
-#: classes/Admin/Themes.php:998
-#: classes/Admin/Themes.php:1101
+#: classes/Admin/Themes.php:544 classes/Admin/Themes.php:590
+#: classes/Admin/Themes.php:640 classes/Admin/Themes.php:779
+#: classes/Admin/Themes.php:998 classes/Admin/Themes.php:1101
 #: classes/Admin/Themes.php:1170
 msgid "Opacity"
 msgstr "Opacitet"
 
-#: classes/Admin/Themes.php:562
-#: classes/Admin/Themes.php:950
+#: classes/Admin/Themes.php:562 classes/Admin/Themes.php:950
 msgid "Padding"
 msgstr "Indre afstand"
 
-#: classes/Admin/Themes.php:572
-#: classes/Admin/Themes.php:980
+#: classes/Admin/Themes.php:572 classes/Admin/Themes.php:980
 msgid "Border Radius"
 msgstr "Kantens radius"
 
-#: classes/Admin/Themes.php:603
-#: classes/Admin/Themes.php:749
-#: classes/Admin/Themes.php:848
-#: classes/Admin/Themes.php:1052
+#: classes/Admin/Themes.php:603 classes/Admin/Themes.php:749
+#: classes/Admin/Themes.php:848 classes/Admin/Themes.php:1052
 #: classes/Admin/Themes.php:1064
 msgid "Style"
 msgstr "Stil"
 
-#: classes/Admin/Themes.php:619
-#: classes/Admin/Themes.php:1080
+#: classes/Admin/Themes.php:619 classes/Admin/Themes.php:1080
 msgid "Thickness"
 msgstr "Tykkelse"
 
-#: classes/Admin/Themes.php:651
-#: classes/Admin/Themes.php:790
-#: classes/Admin/Themes.php:1112
-#: classes/Admin/Themes.php:1181
+#: classes/Admin/Themes.php:651 classes/Admin/Themes.php:790
+#: classes/Admin/Themes.php:1112 classes/Admin/Themes.php:1181
 msgid "Horizontal Position"
 msgstr "Vandret position"
 
-#: classes/Admin/Themes.php:661
-#: classes/Admin/Themes.php:800
-#: classes/Admin/Themes.php:1122
-#: classes/Admin/Themes.php:1191
+#: classes/Admin/Themes.php:661 classes/Admin/Themes.php:800
+#: classes/Admin/Themes.php:1122 classes/Admin/Themes.php:1191
 msgid "Vertical Position"
 msgstr "Lodret position"
 
-#: classes/Admin/Themes.php:671
-#: classes/Admin/Themes.php:810
-#: classes/Admin/Themes.php:1132
-#: classes/Admin/Themes.php:1201
+#: classes/Admin/Themes.php:671 classes/Admin/Themes.php:810
+#: classes/Admin/Themes.php:1132 classes/Admin/Themes.php:1201
 msgid "Blur Radius"
 msgstr "Sløringsradius"
 
-#: classes/Admin/Themes.php:681
-#: classes/Admin/Themes.php:1142
+#: classes/Admin/Themes.php:681 classes/Admin/Themes.php:1142
 msgid "Spread"
 msgstr "Udbredelse"
 
-#: classes/Admin/Themes.php:714
-#: classes/Admin/Themes.php:1017
+#: classes/Admin/Themes.php:714 classes/Admin/Themes.php:1017
 msgid "Font Size"
 msgstr "Skriftstørrelse"
 
-#: classes/Admin/Themes.php:724
-#: classes/Admin/Themes.php:1027
+#: classes/Admin/Themes.php:724 classes/Admin/Themes.php:1027
 msgid "Line Height"
 msgstr "Linjehøjde"
 
-#: classes/Admin/Themes.php:734
-#: classes/Admin/Themes.php:833
+#: classes/Admin/Themes.php:734 classes/Admin/Themes.php:833
 #: classes/Admin/Themes.php:1037
 msgid "Font Family"
 msgstr "Skrifttypefamilie"
 
-#: classes/Admin/Themes.php:742
-#: classes/Admin/Themes.php:841
+#: classes/Admin/Themes.php:742 classes/Admin/Themes.php:841
 #: classes/Admin/Themes.php:1045
 msgid "Font Weight"
 msgstr "Skrifttykkelse"
 
-#: classes/Admin/Themes.php:755
-#: classes/Admin/Themes.php:854
-#: classes/Admin/Themes.php:1058
-#: includes/legacy/input-options.php:38
+#: classes/Admin/Themes.php:755 classes/Admin/Themes.php:854
+#: classes/Admin/Themes.php:1058 includes/legacy/input-options.php:38
 msgid "Italic"
 msgstr "Kursiv"
 
-#: classes/Admin/Themes.php:759
-#: classes/Shortcode/CallToAction.php:141
+#: classes/Admin/Themes.php:759 classes/Shortcode/CallToAction.php:141
 msgid "Alignment"
 msgstr "Justering"
 
-#: classes/Admin/Themes.php:765
-#: classes/Shortcode/CallToAction.php:144
-#: classes/Shortcode/Subscribe.php:293
-#: includes/legacy/input-options.php:51
+#: classes/Admin/Themes.php:765 classes/Shortcode/CallToAction.php:144
+#: classes/Shortcode/Subscribe.php:293 includes/legacy/input-options.php:51
 msgid "Center"
 msgstr "Centrer"
 
@@ -3029,11 +2749,10 @@ msgid ""
 "To use a Font Awesome icon instead of text, enter the CSS classes such as "
 "\"fas fa-camera\"."
 msgstr ""
-"For at bruge et Font Awesome-ikon i stedet for tekst skal du angive "
-"CSS-klasser som \"fas fa-camera\"."
+"For at bruge et Font Awesome-ikon i stedet for tekst skal du angive CSS-"
+"klasser som \"fas fa-camera\"."
 
-#: classes/Admin/Themes.php:867
-#: classes/Admin/Themes.php:868
+#: classes/Admin/Themes.php:867 classes/Admin/Themes.php:868
 #: includes/functions/themes/deprecated.php:134
 msgid "CLOSE"
 msgstr "LUK"
@@ -3078,13 +2797,12 @@ msgid ""
 "update notifications."
 msgstr ""
 "Hvis du markerer en af afkrydsningsfelterne nedenfor, tilmelder du dig "
-"modtagelse af notifikationer om forududgivne opdateringer. Du kan til "
-"enhver tid framelde dig. Forududgivne opdateringer installeres ikke "
-"automatisk, og du vil stadig have mulighed for at ignorere "
-"opdateringsnotifikationer."
+"modtagelse af notifikationer om forududgivne opdateringer. Du kan til enhver "
+"tid framelde dig. Forududgivne opdateringer installeres ikke automatisk, og "
+"du vil stadig have mulighed for at ignorere opdateringsnotifikationer."
 
-#: classes/Admin/Tools.php:202
 #. translators: 1. Product name.
+#: classes/Admin/Tools.php:202
 #, php-format
 msgid "Get updates for pre-release versions of %s"
 msgstr "Få opdateringer til forududgivne versioner af %s"
@@ -3121,10 +2839,10 @@ msgstr "Behold den aktuelle metode"
 #: classes/AssetCache.php:707
 msgid ""
 "Popup Maker detected an issue with your file system's ability and is unable "
-"to create & save cached assets for your popup styling and settings. This "
-"may lead to suboptimal performance. Please check your filesystem and "
-"contact your hosting provide to ensure Popup Maker can create and write to "
-"cache files."
+"to create & save cached assets for your popup styling and settings. This may "
+"lead to suboptimal performance. Please check your filesystem and contact "
+"your hosting provide to ensure Popup Maker can create and write to cache "
+"files."
 msgstr ""
 "Popup Maker har registreret et problem med dit filsystems evne og kan ikke "
 "oprette & gemme cachelagrede aktiver til din popups styling og "
@@ -3132,8 +2850,8 @@ msgstr ""
 "dit filsystem, og kontakt din hostingudbyder for at sikre, at Popup Maker "
 "kan oprette og skrive til cachefiler."
 
-#: classes/Base/CallToAction.php:135
 #. translators: %s: Field label
+#: classes/Base/CallToAction.php:135
 #, php-format
 msgid "%s is required"
 msgstr "%s er påkrævet"
@@ -3170,8 +2888,7 @@ msgstr "URL er påkrævet"
 msgid "Pages"
 msgstr "Sider"
 
-#: classes/Conditions.php:111
-#: classes/Conditions.php:542
+#: classes/Conditions.php:111 classes/Conditions.php:542
 msgid "Posts"
 msgstr "Indlæg"
 
@@ -3179,11 +2896,125 @@ msgstr "Indlæg"
 msgid "Format"
 msgstr "Format"
 
-#: classes/Conditions.php:362
-#: classes/Shortcode/Subscribe.php:137
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:236
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: All"
+msgid "%s Archive"
+msgstr "%s-arkiv"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:248
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: All"
+msgid "All %s"
+msgstr "Alle %s"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:258
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: Selected"
+msgid "%s: Selected"
+msgstr "%s: Valgt"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:265 classes/Conditions.php:310
+#: classes/Conditions.php:333
+#, php-format
+msgctxt "condition: post type plural label ie. Select Posts"
+msgid "Select %s."
+msgstr "Vælg %s."
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:282
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: ID"
+msgstr "%s: ID"
+
+#. translators: 1. Post type singular label.
+#: classes/Conditions.php:289
+#, php-format
+msgctxt "condition: post type singular label ie. Posts IDs"
+msgid "%s IDs: 128, 129"
+msgstr "%s-ID'er: 128, 129"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:303
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: Child Of"
+msgstr "%s: Underordnet af"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:326
+#, php-format
+msgctxt "condition: post type plural label ie. Posts: ID"
+msgid "%s: Ancestor Of"
+msgstr "%s: Overordnet af"
+
+#. translators: 1. Post type plural label.
+#: classes/Conditions.php:353
+#, php-format
+msgctxt "condition: post type plural label ie. Pages: With Template"
+msgid "%s: With Template"
+msgstr "%s: Med skabelon"
+
+#: classes/Conditions.php:362 classes/Shortcode/Subscribe.php:137
 #: classes/Shortcode/Subscribe.php:305
 msgid "Default"
 msgstr "Standard"
+
+#. translators: 1. Post type plural label, 2. Taxonomy singular label.
+#: classes/Conditions.php:411
+#, php-format
+msgctxt ""
+"condition: post type plural and taxonomy singular label ie. Posts: With "
+"Category"
+msgid "%1$s: With %2$s"
+msgstr "%1$s: Med %2$s"
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:419
+#, php-format
+msgctxt "condition: post type plural label ie. Select categories"
+msgid "Select %s."
+msgstr "Vælg %s."
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:464
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Categories: All"
+msgid "%s: All"
+msgstr "%s: Alle"
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:474
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Categories: Selected"
+msgid "%s: Selected"
+msgstr "%s: Valgt"
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:481
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Select Categories"
+msgid "Select %s."
+msgstr "Vælg %s."
+
+#. translators: 1. Taxonomy plural label.
+#: classes/Conditions.php:497
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Categories: Selected"
+msgid "%s: IDs"
+msgstr "%s: ID'er"
+
+#. translators: 1. Taxonomy singular label.
+#: classes/Conditions.php:504
+#, php-format
+msgctxt "condition: taxonomy plural label ie. Category IDs"
+msgid "%s IDs: 128, 129"
+msgstr "%s ID'er: 128, 129"
 
 #: classes/Conditions.php:536
 msgid "Home Page"
@@ -3220,8 +3051,7 @@ msgstr "Giv supportadgang"
 #: includes/integrations/class-pum-cf7.php:167
 #: includes/integrations/class-pum-gravity-forms.php:192
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:45
-#: dist/packages/block-editor.js:1
-#: dist/packages/block-editor.js:2
+#: dist/packages/block-editor.js:1 dist/packages/block-editor.js:2
 msgid "Open Popup"
 msgstr "Åbn pop op-vindue"
 
@@ -3254,15 +3084,14 @@ msgid "Get Selector"
 msgstr "Hent selector"
 
 #: classes/Controllers/Admin/ToolbarNotifications.php:281
-#: classes/Utils/Alerts.php:482
-#: dist/packages/admin-notifications.js:2
+#: classes/Utils/Alerts.php:497 dist/packages/admin-notifications.js:2
 msgid "Notifications"
 msgstr "Notifikationer"
 
+#. translators: %d: notification count.
 #: classes/Controllers/Admin/ToolbarNotifications.php:305
 #: dist/packages/admin-notifications.js:3
-#. translators: %d: notification count.
-#, php-format,js-format
+#, php-format
 msgid "%d Popup Maker notification"
 msgid_plural "%d Popup Maker notifications"
 msgstr[0] "%d Popup Maker-notifikation"
@@ -3283,11 +3112,31 @@ msgstr "Oversæt"
 
 #: classes/Controllers/Assets.php:74
 msgid ""
-"Click Start Selection, then click a page element (text, button, image, "
-"etc.) to get its CSS selector."
+"Click Start Selection, then click a page element (text, button, image, etc.) "
+"to get its CSS selector."
 msgstr ""
-"Klik på Start valg, og klik derefter på et sideelement (tekst, knap, "
-"billede osv.) for at få dets CSS-selector."
+"Klik på Start valg, og klik derefter på et sideelement (tekst, knap, billede "
+"osv.) for at få dets CSS-selector."
+
+#: classes/Controllers/Assets.php:75
+msgctxt "JS alert for CSS get selector tool"
+msgid "Selector"
+msgstr "Vælger"
+
+#: classes/Controllers/Assets.php:76
+msgctxt "JS alert for CSS get selector tool"
+msgid "Close"
+msgstr "Luk"
+
+#: classes/Controllers/Assets.php:77
+msgctxt "JS alert for CSS get selector tool"
+msgid "Copy"
+msgstr "Kopiér"
+
+#: classes/Controllers/Assets.php:78
+msgctxt "JS alert for CSS get selector tool"
+msgid "Copied to clipboard"
+msgstr "Kopieret til udklipsholderen"
 
 #: classes/Controllers/Compatibility/Builder/Divi.php:177
 msgid ""
@@ -3301,12 +3150,94 @@ msgstr ""
 msgid "Popups"
 msgstr "Popups"
 
-#: classes/Controllers/PostTypes.php:345
-#: classes/Controllers/PostTypes.php:351
-#: classes/Controllers/PostTypes.php:595
-#: dist/packages/block-library.js:1
+#: classes/Controllers/PostTypes.php:345 classes/Controllers/PostTypes.php:351
+#: classes/Controllers/PostTypes.php:595 dist/packages/block-library.js:1
 msgid "Call to Action"
 msgstr "Call to Action"
+
+#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
+#: classes/Controllers/PostTypes.php:501 classes/Controllers/PostTypes.php:503
+#, php-format
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "Add New %1$s"
+msgstr "Tilføj ny %1$s"
+
+#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
+#: classes/Controllers/PostTypes.php:505
+#, php-format
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "Edit %1$s"
+msgstr "Redigér %1$s"
+
+#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
+#: classes/Controllers/PostTypes.php:507
+#, php-format
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "New %1$s"
+msgstr "Ny %1$s"
+
+#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
+#: classes/Controllers/PostTypes.php:509
+#, php-format
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "All %2$s"
+msgstr "Alle %2$s"
+
+#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
+#: classes/Controllers/PostTypes.php:511
+#, php-format
+msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
+msgid "View %1$s"
+msgstr "Vis %1$s"
+
+#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
+#: classes/Controllers/PostTypes.php:513
+#, php-format
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "Search %2$s"
+msgstr "Søg i %2$s"
+
+#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
+#: classes/Controllers/PostTypes.php:515
+#, php-format
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "No %2$s found"
+msgstr "Ingen %2$s fundet"
+
+#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
+#: classes/Controllers/PostTypes.php:517
+#, php-format
+msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
+msgid "No %2$s found in Trash"
+msgstr "Ingen %2$s fundet i papirkurven"
+
+#. translators: %1$s: Post Type Singular: Popup, Theme
+#: classes/Controllers/PostTypes.php:580 classes/Controllers/PostTypes.php:582
+#, php-format
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s updated."
+msgstr "%1$s opdateret."
+
+#. translators: %1$s: Post Type Singular: Popup, Theme
+#: classes/Controllers/PostTypes.php:584
+#, php-format
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s published."
+msgstr "%1$s udgivet."
+
+#. translators: %1$s: Post Type Singular: Popup, Theme
+#: classes/Controllers/PostTypes.php:586
+#, php-format
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s saved."
+msgstr "%1$s gemt."
+
+#. translators: %1$s: Post Type Singular: Popup, Theme
+#: classes/Controllers/PostTypes.php:588
+#, php-format
+msgctxt "Post Type Singular: Popup, Theme"
+msgid "%1$s submitted."
+msgstr "%1$s indsendt."
 
 #: classes/Controllers/RestAPI.php:114
 msgid "The popup title displayed inside the popup."
@@ -3376,19 +3307,16 @@ msgstr "Ved popup-åbning"
 msgid "On Popup Conversion"
 msgstr "Ved popup-konvertering"
 
-#: classes/Cookies.php:99
-#: classes/Shortcode/Subscribe.php:64
+#: classes/Cookies.php:99 classes/Shortcode/Subscribe.php:64
 #: classes/Triggers.php:222
 msgid "Form"
 msgstr "Formular"
 
-#: classes/Cookies.php:102
-#: classes/Triggers.php:225
+#: classes/Cookies.php:102 classes/Triggers.php:225
 msgid "Any Supported Form*"
 msgstr "Enhver understøttet formular*"
 
-#: classes/Cookies.php:104
-#: classes/Shortcode/Subscribe.php:41
+#: classes/Cookies.php:104 classes/Shortcode/Subscribe.php:41
 #: classes/Triggers.php:227
 msgid "Subscription Form"
 msgstr "Tilmeldingsformular"
@@ -3405,8 +3333,7 @@ msgstr "Tilmeldingsformular: Succesfuld"
 msgid "Subscription Form: Already Subscribed"
 msgstr "Tilmeldingsformular: Allerede tilmeldt"
 
-#: classes/Cookies.php:128
-#: includes/legacy/input-options.php:165
+#: classes/Cookies.php:128 includes/legacy/input-options.php:165
 msgid "Manual"
 msgstr "Manuel"
 
@@ -3418,35 +3345,29 @@ msgstr "Cookie-indstillinger"
 msgid "Sessions"
 msgstr "Sessioner"
 
-#: classes/Cookies.php:232
-#: classes/Privacy.php:79
-#: classes/Shortcode/PopupCookie.php:48
-#: classes/Triggers.php:337
+#: classes/Cookies.php:232 classes/Privacy.php:79
+#: classes/Shortcode/PopupCookie.php:48 classes/Triggers.php:337
 msgid "Cookie Name"
 msgstr "Cookie-navn"
 
-#: classes/Cookies.php:233
-#: classes/Shortcode/PopupCookie.php:49
+#: classes/Cookies.php:233 classes/Shortcode/PopupCookie.php:49
 msgid "Cookie Name ex. popmaker-123"
 msgstr "Cookie-navn f.eks. popmaker-123"
 
-#: classes/Cookies.php:234
-#: classes/Shortcode/PopupCookie.php:50
+#: classes/Cookies.php:234 classes/Shortcode/PopupCookie.php:50
 msgid "The name that will be used when checking for or saving this cookie."
-msgstr "Det navn, der vil blive brugt ved kontrol af eller gemning af denne cookie."
+msgstr ""
+"Det navn, der vil blive brugt ved kontrol af eller gemning af denne cookie."
 
-#: classes/Cookies.php:239
-#: classes/Shortcode/PopupCookie.php:54
+#: classes/Cookies.php:239 classes/Shortcode/PopupCookie.php:54
 msgid "Cookie Time"
 msgstr "Cookie-tid"
 
-#: classes/Cookies.php:240
-#: classes/Shortcode/PopupCookie.php:55
+#: classes/Cookies.php:240 classes/Shortcode/PopupCookie.php:55
 msgid "364 days 23 hours 59 minutes 59 seconds"
 msgstr "364 dage 23 timer 59 minutter 59 sekunder"
 
-#: classes/Cookies.php:241
-#: classes/Shortcode/PopupCookie.php:56
+#: classes/Cookies.php:241 classes/Shortcode/PopupCookie.php:56
 msgid "Enter a plain english time before cookie expires."
 msgstr "Indtast en almindelig engelsk tid, før cookien udløber."
 
@@ -3458,8 +3379,8 @@ msgstr "Bruge sessionscookie?"
 msgid "Session cookies expire when the user closes their browser."
 msgstr "Sessionscookies udløber, når brugeren lukker sin browser."
 
-#: classes/Cookies.php:251
 #. translators: %1$s: bold start, %2$s: bold end.
+#: classes/Cookies.php:251
 #, php-format
 msgid ""
 "%1$sNote%2$s: Modern browsers that reopen your last browser session's tabs "
@@ -3468,13 +3389,11 @@ msgstr ""
 "%1$sBemærk%2$s: Moderne browsere, der genåbner fanerne fra din seneste "
 "browsersession, rydder ikke sessionscookies korrekt"
 
-#: classes/Cookies.php:260
-#: classes/Shortcode/PopupCookie.php:60
+#: classes/Cookies.php:260 classes/Shortcode/PopupCookie.php:60
 msgid "Sitewide Cookie"
 msgstr "Cookie på hele webstedet"
 
-#: classes/Cookies.php:261
-#: classes/Shortcode/PopupCookie.php:61
+#: classes/Cookies.php:261 classes/Shortcode/PopupCookie.php:61
 msgid ""
 "This will prevent the popup from triggering on all pages until the cookie "
 "expires."
@@ -3490,75 +3409,70 @@ msgstr "Cookie-nøgle"
 msgid "Changing this will cause all existing cookies to be invalid."
 msgstr "Hvis dette ændres, bliver alle eksisterende cookies ugyldige."
 
-#: classes/Extension/Activator.php:171
-#: classes/Utils/Prerequisites.php:323
+#: classes/Extension/Activator.php:171 classes/Utils/Prerequisites.php:323
 #: includes/pum-sdk/class-pum-extension-activation.php:115
 msgid "activate it"
 msgstr "aktivér den"
 
-#: classes/Extension/Activator.php:174
-#: classes/Extension/Activator.php:199
-#: classes/Utils/Prerequisites.php:327
-#: classes/Utils/Prerequisites.php:350
 #. translators: 1. Plugin name, 2. Required plugin name, 3. `activate it` link.
 #. translators: 1. Plugin name, 2. Required plugin name, 3. `install it` link.
 #. translators: 1. Plugin Name, 2. Required Plugin Name, 4. `activate it` link.
 #. translators: 1. Plugin Name, 2. Required Plugin Name, 3. `install it` link.
+#: classes/Extension/Activator.php:174 classes/Extension/Activator.php:199
+#: classes/Utils/Prerequisites.php:327 classes/Utils/Prerequisites.php:350
 #, php-format
 msgid "The plugin \"%1$s\" requires %2$s! Please %3$s to continue!"
-msgstr "Plugin'et \"%1$s\" kræver %2$s! Aktivér venligst %3$s for at fortsætte!"
+msgstr ""
+"Plugin'et \"%1$s\" kræver %2$s! Aktivér venligst %3$s for at fortsætte!"
 
-#: classes/Extension/Activator.php:183
-#: classes/Utils/Prerequisites.php:334
+#: classes/Extension/Activator.php:183 classes/Utils/Prerequisites.php:334
 msgid "update it"
 msgstr "opdatér den"
 
-#: classes/Extension/Activator.php:186
-#: classes/Utils/Prerequisites.php:338
 #. translators: 1. Plugin name, 2. Required plugin name, 3. Version number, 4. `update it` link.
 #. translators: 1. Plugin Name, 2. Required Plugin Name, 3. Version number, 4. `update it` link.
+#: classes/Extension/Activator.php:186 classes/Utils/Prerequisites.php:338
 #, php-format
-msgid "The plugin \"%1$s\" requires %2$s v%3$s or higher! Please %4$s to continue!"
+msgid ""
+"The plugin \"%1$s\" requires %2$s v%3$s or higher! Please %4$s to continue!"
 msgstr ""
-"Plugin'et \"%1$s\" kræver %2$s v%3$s eller højere! Opdatér venligst %4$s "
-"for at fortsætte!"
+"Plugin'et \"%1$s\" kræver %2$s v%3$s eller højere! Opdatér venligst %4$s for "
+"at fortsætte!"
 
-#: classes/Extension/Activator.php:196
-#: classes/Utils/Prerequisites.php:346
+#: classes/Extension/Activator.php:196 classes/Utils/Prerequisites.php:346
 #: includes/pum-sdk/class-pum-extension-activation.php:118
 msgid "install it"
 msgstr "installér den"
 
-#: classes/Extension/License.php:300
-#: classes/Services/License.php:760
+#: classes/Extension/License.php:300 classes/Services/License.php:760
 #: classes/Services/License.php:924
 msgid "An error occurred, please try again."
 msgstr "Der opstod en fejl, prøv venligst igen."
 
-#: classes/Extension/License.php:514
 #. translators: 1. opening link text, 2. closing link text
+#: classes/Extension/License.php:514
 #, php-format
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
 "extensions. If your license key has expired, please %1$srenew your "
 "license%2$s."
 msgstr ""
-"Indtast dine licensnøgler til udvidelser her for at modtage opdateringer "
-"til købte udvidelser. Hvis din licensnøgle er udløbet, bedes du %1$sforny "
-"din licens%2$s."
+"Indtast dine licensnøgler til udvidelser her for at modtage opdateringer til "
+"købte udvidelser. Hvis din licensnøgle er udløbet, bedes du %1$sforny din "
+"licens%2$s."
 
-#: classes/Extension/License.php:746
 #. translators: 1. Extension name, 2. opening link text, 3. closing link text
+#: classes/Extension/License.php:746
 #, php-format
 msgid ""
 "%1$s is missing a license key. You will not receive updates until a valid "
 "key is entered on the %2$sLicenses page%3$s."
 msgstr ""
-"%1$s mangler en licensnøgle. Du vil ikke modtage opdateringer, før en "
-"gyldig nøgle er indtastet på siden %2$sLicenser%3$s."
+"%1$s mangler en licensnøgle. Du vil ikke modtage opdateringer, før en gyldig "
+"nøgle er indtastet på siden %2$sLicenser%3$s."
 
-#: classes/Extension/License.php:760
 #. translators: 1. Extension name, 2. opening link text, 3. closing link text
+#: classes/Extension/License.php:760
 #, php-format
 msgid ""
 "%1$s has an invalid or expired license key. Please visit the %2$sLicenses "
@@ -3567,8 +3481,8 @@ msgstr ""
 "%1$s har en ugyldig eller udløbet licensnøgle. Besøg venligst siden "
 "%2$sLicenser%3$s for at rette dette."
 
-#: classes/Extension/License.php:805
 #. translators: 1. opening link text, 2. closing link text
+#: classes/Extension/License.php:805
 #, php-format
 msgid ""
 "You have invalid or expired license keys for Popup Maker. Please go to the "
@@ -3581,8 +3495,8 @@ msgstr ""
 msgid "Enter valid license key for automatic updates."
 msgstr "Indtast en gyldig licensnøgle for automatiske opdateringer."
 
-#: classes/Extension/Updater.php:344
 #. translators: the plugin name.
+#: classes/Extension/Updater.php:344
 #, php-format
 msgid "There is a new version of %1$s available."
 msgstr "Der er en ny version af %1$s tilgængelig."
@@ -3591,14 +3505,14 @@ msgstr "Der er en ny version af %1$s tilgængelig."
 msgid "Contact your network administrator to install the update."
 msgstr "Kontakt din netværksadministrator for at installere opdateringen."
 
-#: classes/Extension/Updater.php:355
 #. translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate.
+#: classes/Extension/Updater.php:355
 #, php-format
 msgid "%1$sView version %2$s details%3$s."
 msgstr "%1$sSe detaljer om version %2$s%3$s."
 
-#: classes/Extension/Updater.php:364
 #. translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate 4. opening anchor tag, do not translate 5. closing anchor tag, do not translate</a>.
+#: classes/Extension/Updater.php:364
 #, php-format
 msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
 msgstr "%1$sSe detaljer om version %2$s%3$s eller %4$sopdater nu%5$s."
@@ -3624,8 +3538,8 @@ msgstr "— Ingen —"
 msgid "(no title)"
 msgstr "(intet titel)"
 
-#: classes/Integration/Builder/BeaverBuilder.php:180
 #. translators: 1: popup title, 2: popup ID.
+#: classes/Integration/Builder/BeaverBuilder.php:180
 #, php-format
 msgid "%1$s (ID: %2$d)"
 msgstr "%1$s (ID: %2$d)"
@@ -3701,20 +3615,21 @@ msgstr "Hook"
 msgid "Time"
 msgstr "Tid"
 
-#: classes/Integrations.php:485
 #. translators: 1. Integration label.
+#: classes/Integrations.php:485
 #, php-format
 msgid "Any %s Form"
 msgstr "Enhver %s-form"
 
-#: classes/Licensing.php:120
 #. translators: 1. Expiration date, 2. Opening HTML link tag, 3. Closing HTML tag.
+#: classes/Licensing.php:120
 #, php-format
-msgid "Your license key expired on %1$s. Please %2$srenew your license key%3$s."
+msgid ""
+"Your license key expired on %1$s. Please %2$srenew your license key%3$s."
 msgstr "Din licensnøgle udløb den %1$s. %2$sForny din licensnøgle%3$s."
 
-#: classes/Licensing.php:130
 #. translators: 1. Opening HTML link tag, 2. Closing HTML tag.
+#: classes/Licensing.php:130
 #, php-format
 msgid ""
 "Your license key has been disabled. Please %1$scontact support%2$s for more "
@@ -3723,32 +3638,31 @@ msgstr ""
 "Din licensnøgle er blevet deaktiveret. %1$sKontakt support%2$s for mere "
 "information."
 
-#: classes/Licensing.php:138
 #. translators: 1. Opening HTML link tag, 2. Closing HTML tag.
+#: classes/Licensing.php:138
 #, php-format
 msgid "Invalid license. Please %1$svisit your account page%2$s and verify it."
 msgstr "Ugyldig licens. %1$sGå til din kontoside%2$s og verificér den."
 
-#: classes/Licensing.php:147
 #. translators: 1. Plugin name. 2. Opening HTML link tag, 3. Closing HTML tag.
+#: classes/Licensing.php:147
 #, php-format
 msgid ""
-"Your %1$s is not active for this URL. Please %2$svisit your account "
-"page%3$s to manage your license key URLs."
+"Your %1$s is not active for this URL. Please %2$svisit your account page%3$s "
+"to manage your license key URLs."
 msgstr ""
 "Din %1$s er ikke aktiv for denne URL. %2$sGå til din kontoside%3$s for at "
 "administrere dine licensnøgle-URL'er."
 
-#: classes/Licensing.php:156
-#: classes/Services/License.php:914
 #. translators: 1. Plugin name.
 #. translators: the plugin name
+#: classes/Licensing.php:156 classes/Services/License.php:914
 #, php-format
 msgid "This appears to be an invalid license key for %s."
 msgstr "Dette ser ud til at være en ugyldig licensnøgle til %s."
 
-#: classes/Licensing.php:163
 #. translators: 1. Opening HTML link tag, 2. Closing HTML tag.
+#: classes/Licensing.php:163
 #, php-format
 msgid ""
 "Your license key has reached its activation limit. %1$sView possible "
@@ -3769,8 +3683,8 @@ msgstr ""
 msgid "unknown_error"
 msgstr "unknown_error"
 
-#: classes/Licensing.php:175
 #. translators: 1. Error message, 2. Opening HTML link tag, 3. Closing HTML tag.
+#: classes/Licensing.php:175
 #, php-format
 msgid ""
 "There was an error with this license key: %1$s. Please %2$scontact our "
@@ -3783,8 +3697,8 @@ msgstr ""
 msgid "License key never expires."
 msgstr "Licensnøglen udløber aldrig."
 
-#: classes/Licensing.php:194
 #. translators: 1. Expiration date, 2. Opening HTML link tag, 3. Closing HTML tag.
+#: classes/Licensing.php:194
 #, php-format
 msgid ""
 "Your license key expires soon! It expires on %1$s. %2$sRenew your license "
@@ -3793,20 +3707,22 @@ msgstr ""
 "Din licensnøgle udløber snart! Den udløber den %1$s. %2$sForny din "
 "licensnøgle%3$s."
 
-#: classes/Licensing.php:202
 #. translators: 1. Expiration date.
+#: classes/Licensing.php:202
 #, php-format
 msgid "Your license key expires on %s."
 msgstr "Din licensnøgle udløber den %s."
 
-#: classes/Licensing.php:212
 #. translators: 1. Plugin name.
+#: classes/Licensing.php:212
 #, php-format
 msgid "To receive updates, please enter your valid %s license key."
-msgstr "For at modtage opdateringer skal du indtaste din gyldige %s-licensnøgle."
+msgstr ""
+"For at modtage opdateringer skal du indtaste din gyldige %s-licensnøgle."
 
 #: classes/ListTable.php:965
-msgid "function PUM_ListTable::get_columns() must be over-ridden in a sub-class."
+msgid ""
+"function PUM_ListTable::get_columns() must be over-ridden in a sub-class."
 msgstr ""
 "funktionen PUM_ListTable::get_columns() skal være tilsidesat i en "
 "underklasse."
@@ -3893,8 +3809,8 @@ msgid ""
 "subsection to note what personal data is captured when someone submits a "
 "subscription form, and how long you keep it."
 msgstr ""
-"Hvis du har brugt dem i dine popups til at indsamle e-mailabonnenter, kan "
-"du bruge dette underafsnit til at angive, hvilke personoplysninger der "
+"Hvis du har brugt dem i dine popups til at indsamle e-mailabonnenter, kan du "
+"bruge dette underafsnit til at angive, hvilke personoplysninger der "
 "indsamles, når nogen sender en tilmeldingsformular, og hvor længe du "
 "opbevarer dem."
 
@@ -3903,8 +3819,8 @@ msgid ""
 "For example, you may note that you keep form submissions for ongoing "
 "marketing purposes."
 msgstr ""
-"For eksempel kan du angive, at du opbevarer formularindsendelser til "
-"løbende markedsføringsformål."
+"For eksempel kan du angive, at du opbevarer formularindsendelser til løbende "
+"markedsføringsformål."
 
 #: classes/Privacy.php:64
 msgid ""
@@ -3912,8 +3828,7 @@ msgid ""
 "to save your name, email address and other relevant information."
 msgstr ""
 "Hvis du sender en tilmeldingsformular på vores websted, giver du samtykke "
-"til, at vi gemmer dit navn, din e-mailadresse og andre relevante "
-"oplysninger."
+"til, at vi gemmer dit navn, din e-mailadresse og andre relevante oplysninger."
 
 #: classes/Privacy.php:65
 msgid ""
@@ -3925,16 +3840,16 @@ msgstr ""
 
 #: classes/Privacy.php:65
 msgid ""
-"You can opt our or unsubscribe at any time in the future by clicking link "
-"in the bottom of any email."
+"You can opt our or unsubscribe at any time in the future by clicking link in "
+"the bottom of any email."
 msgstr ""
 "Du kan til enhver tid framelde dig eller afmelde dig i fremtiden ved at "
 "klikke på linket nederst i en hvilken som helst e-mail."
 
 #: classes/Privacy.php:68
 msgid ""
-"Popup Maker uses cookies for most popups. The primary function is to "
-"prevent your users from being annoyed by seeing the same popup repeatedly."
+"Popup Maker uses cookies for most popups. The primary function is to prevent "
+"your users from being annoyed by seeing the same popup repeatedly."
 msgstr ""
 "Popup Maker bruger cookies til de fleste popups. Den primære funktion er at "
 "forhindre, at dine brugere bliver irriterede ved at se den samme popup igen "
@@ -3942,11 +3857,11 @@ msgstr ""
 
 #: classes/Privacy.php:69
 msgid ""
-"This may result in cookies being saved for an extended period of time. "
-"These are non-tracking cookies used only by our popups."
+"This may result in cookies being saved for an extended period of time. These "
+"are non-tracking cookies used only by our popups."
 msgstr ""
-"Dette kan medføre, at cookies gemmes i en længere periode. Disse er "
-"ikke-sporende cookies, som kun bruges af vores popups."
+"Dette kan medføre, at cookies gemmes i en længere periode. Disse er ikke-"
+"sporende cookies, som kun bruges af vores popups."
 
 #: classes/Privacy.php:75
 msgid ""
@@ -4000,16 +3915,16 @@ msgid ""
 "If syncing data to a 3rd party service (for example Mailchimp), data is "
 "retained there until unsubscribed or deleted."
 msgstr ""
-"Hvis data synkroniseres til en tredjepartstjeneste (for eksempel "
-"Mailchimp), opbevares data dér, indtil abonnementet opsiges, eller data "
-"slettes."
+"Hvis data synkroniseres til en tredjepartstjeneste (for eksempel Mailchimp), "
+"opbevares data dér, indtil abonnementet opsiges, eller data slettes."
 
 #: classes/Privacy.php:123
 msgid "Where we send your data"
 msgstr "Hvor vi sender dine data hen"
 
 #: classes/Privacy.php:124
-msgid "Popup Maker does not send any user data outside of your site by default."
+msgid ""
+"Popup Maker does not send any user data outside of your site by default."
 msgstr "Popup Maker sender som standard ingen brugerdata uden for dit websted."
 
 #: classes/Privacy.php:125
@@ -4022,8 +3937,7 @@ msgstr ""
 "tredjepartstjeneste som Mailchimp, kan brugeroplysninger blive videregivet "
 "til disse eksterne tjenester. Disse tjenester kan være placeret i udlandet."
 
-#: classes/Privacy.php:150
-#: classes/Privacy.php:168
+#: classes/Privacy.php:150 classes/Privacy.php:168
 msgid "Popup Maker Subscribe Form"
 msgstr "Popup Maker abonnementsformular"
 
@@ -4041,8 +3955,8 @@ msgstr "Tilmeldingsdato"
 
 #: classes/Privacy.php:391
 msgid ""
-"Subscription information was not removed. A database error may have "
-"occurred during deletion."
+"Subscription information was not removed. A database error may have occurred "
+"during deletion."
 msgstr ""
 "Abonnementsoplysningerne blev ikke fjernet. Der kan være opstået en "
 "databasefejl under sletningen."
@@ -4081,11 +3995,11 @@ msgstr "Mangler advarselskode."
 msgid "Unknown notification."
 msgstr "Ukendt notifikation."
 
-#: classes/RestAPI/Notifications.php:158
+#: classes/RestAPI/Notifications.php:159
 msgid "Invalid notification action."
 msgstr "Ugyldig notifikationshandling."
 
-#: classes/RestAPI/Notifications.php:164
+#: classes/RestAPI/Notifications.php:165
 msgid "Could not record dismissal."
 msgstr "Kunne ikke registrere afvisning."
 
@@ -4107,7 +4021,8 @@ msgstr "Du har ikke tilladelse til at søge i brugere."
 
 #: classes/RestAPI/ObjectSearch.php:368
 msgid "Type of object to search (post_type, taxonomy, user, custom_entity)"
-msgstr "Objekttype, der skal søges i (post_type, taxonomy, user, custom_entity)"
+msgstr ""
+"Objekttype, der skal søges i (post_type, taxonomy, user, custom_entity)"
 
 #: classes/RestAPI/ObjectSearch.php:374
 msgid "Specific object key (post type name, taxonomy name, user role)"
@@ -4119,8 +4034,8 @@ msgstr "Søgeterm"
 
 #: classes/RestAPI/ObjectSearch.php:384
 msgid ""
-"IDs to include in results (integers for standard objects, strings for "
-"custom entities)"
+"IDs to include in results (integers for standard objects, strings for custom "
+"entities)"
 msgstr ""
 "ID'er, der skal medtages i resultaterne (heltal for standardobjekter, "
 "strenge for brugerdefinerede entiteter)"
@@ -4140,8 +4055,7 @@ msgstr "Sidenummer til paginering"
 #: classes/Services/AddonLifecycle.php:75
 msgid "This add-on is network active and must be managed in Network Admin."
 msgstr ""
-"Dette add-on er netværksaktivt og skal administreres i "
-"Netværksadministrator."
+"Dette add-on er netværksaktivt og skal administreres i Netværksadministrator."
 
 #: classes/Services/AddonLifecycle.php:100
 msgid "The requested add-on is not in the Popup Maker catalog."
@@ -4151,8 +4065,8 @@ msgstr "Det ønskede add-on findes ikke i Popup Maker-kataloget."
 msgid "The requested add-on is not installed."
 msgstr "Det ønskede add-on er ikke installeret."
 
-#: classes/Services/License.php:892
 #. translators: the license key expiration date
+#: classes/Services/License.php:892
 #, php-format
 msgid "Your license key expired on %s."
 msgstr "Din licensnøgle udløb den %s."
@@ -4173,12 +4087,12 @@ msgstr "Din licens er ikke aktiv for denne URL."
 msgid "Your license key has reached its activation limit."
 msgstr "Din licensnøgle har nået sin aktiveringsgrænse."
 
-#: classes/Services/License.php:1136
 #. translators: the date and time of the auto-activation disconnect
+#: classes/Services/License.php:1136
 #, php-format
 msgid ""
-"Auto-activation was disconnected on %s. The POPUP_MAKER_PRO_LICENSE "
-"constant was removed from your configuration."
+"Auto-activation was disconnected on %s. The POPUP_MAKER_PRO_LICENSE constant "
+"was removed from your configuration."
 msgstr ""
 "Automatisk aktivering blev afbrudt den %s. Konstanten "
 "POPUP_MAKER_PRO_LICENSE blev fjernet fra din konfiguration."
@@ -4244,12 +4158,12 @@ msgstr "Administrer Popup Maker med din AI-assistent"
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:332
 msgid ""
-"Your site already has the WordPress MCP foundation. <strong>Popup Maker "
-"Pro</strong> connects it to AI tools so authorized users can inspect "
-"analytics and manage popups, themes, and CTAs through natural conversation."
+"Your site already has the WordPress MCP foundation. <strong>Popup Maker Pro</"
+"strong> connects it to AI tools so authorized users can inspect analytics "
+"and manage popups, themes, and CTAs through natural conversation."
 msgstr ""
-"Din side har allerede WordPress MCP-fundamentet. <strong>Popup Maker "
-"Pro</strong> forbinder det med AI-værktøjer, så autoriserede brugere kan "
+"Din side har allerede WordPress MCP-fundamentet. <strong>Popup Maker Pro</"
+"strong> forbinder det med AI-værktøjer, så autoriserede brugere kan "
 "inspicere analyser og administrere popups, temaer og CTA'er gennem naturlig "
 "samtale."
 
@@ -4267,14 +4181,13 @@ msgstr "Find ud af, hvilken popup der faktisk vinder"
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:360
 msgid ""
-"You manage multiple live popups. <strong>Split Testing in Popup Maker "
-"Pro</strong> lets you divide traffic between variants and measure opens, "
+"You manage multiple live popups. <strong>Split Testing in Popup Maker Pro</"
+"strong> lets you divide traffic between variants and measure opens, "
 "conversions, purchases, and revenue—including true holdout tests."
 msgstr ""
-"Du administrerer flere aktive popups. <strong>Split-test i Popup Maker "
-"Pro</strong> giver dig mulighed for at fordele trafikken mellem varianter "
-"og måle åbninger, konverteringer, køb og omsætning — inklusive ægte "
-"holdout-tests."
+"Du administrerer flere aktive popups. <strong>Split-test i Popup Maker Pro</"
+"strong> giver dig mulighed for at fordele trafikken mellem varianter og måle "
+"åbninger, konverteringer, køb og omsætning — inklusive ægte holdout-tests."
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:361
 msgid "new in Pro 1.2"
@@ -4290,13 +4203,13 @@ msgstr "Giv dine CTA'er rene, mindeværdige URL'er"
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:388
 msgid ""
-"Your CTAs already track clicks. <strong>Vanity URLs in Popup Maker "
-"Pro</strong> replace long tracking links with branded paths such as "
-"<code>/go/summer-sale</code> that are easier to share and recognize."
+"Your CTAs already track clicks. <strong>Vanity URLs in Popup Maker Pro</"
+"strong> replace long tracking links with branded paths such as <code>/go/"
+"summer-sale</code> that are easier to share and recognize."
 msgstr ""
-"Dine CTA'er sporer allerede klik. <strong>Vanity-URL'er i Popup Maker "
-"Pro</strong> erstatter lange sporingslinks med brandede stier som "
-"<code>/go/summer-sale</code>, der er lettere at dele og genkende."
+"Dine CTA'er sporer allerede klik. <strong>Vanity-URL'er i Popup Maker Pro</"
+"strong> erstatter lange sporingslinks med brandede stier som <code>/go/"
+"summer-sale</code>, der er lettere at dele og genkende."
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:389
 msgid "built for your CTAs"
@@ -4312,8 +4225,8 @@ msgstr "Prøv det nye call-to-action-system"
 
 #: classes/Services/Notifications/FeatureAnnouncements.php:416
 msgid ""
-"Turn links and buttons in your popups into <strong>trackable CTAs</strong> "
-"— see which calls-to-action actually get clicked."
+"Turn links and buttons in your popups into <strong>trackable CTAs</strong> — "
+"see which calls-to-action actually get clicked."
 msgstr ""
 "Gør links og knapper i dine popups til <strong>sporbare CTA'er</strong> — "
 "se, hvilke call-to-actions der faktisk bliver klikket på."
@@ -4345,8 +4258,8 @@ msgstr "Slå omgåelse af adblockere til"
 #: classes/Services/Notifications/FeatureAnnouncements.php:472
 msgid ""
 "Ad blockers can hide your popups from a real chunk of traffic. Popup Maker "
-"has a <strong>built-in bypass</strong> that renames our assets and routes "
-"so they look less like something to block — takes a minute to enable."
+"has a <strong>built-in bypass</strong> that renames our assets and routes so "
+"they look less like something to block — takes a minute to enable."
 msgstr ""
 "Adblockere kan skjule dine popups for en stor del af trafikken. Popup Maker "
 "har en <strong>indbygget omgåelse</strong>, der omdøber vores aktiver og "
@@ -4378,8 +4291,8 @@ msgstr "Se, hvordan planlægning fungerer"
 msgid "Add to Chrome"
 msgstr "Tilføj til Chrome"
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:812
 #. translators: 1: total captured conversions, 2: estimated low lift, 3: estimated high lift
+#: classes/Services/Notifications/FeatureAnnouncements.php:812
 #, php-format
 msgid ""
 "You've captured <strong>%1$s conversions</strong> so far. Exit-intent "
@@ -4391,30 +4304,30 @@ msgstr ""
 "trafikniveau er det yderligere <strong>%2$s–%3$s</strong>, der ligger på "
 "bordet."
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:829
 #. translators: %s: number of stale popups
+#: classes/Services/Notifications/FeatureAnnouncements.php:829
 #, php-format
 msgid "<strong>%s popup</strong> hasn't been touched in months"
 msgid_plural "<strong>%s popups</strong> haven't been touched in months"
 msgstr[0] "<strong>%s popup</strong> er ikke blevet rørt i flere måneder"
 msgstr[1] "<strong>%s popups</strong> er ikke blevet rørt i flere måneder"
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:840
 #. translators: %s: number of disabled popups
+#: classes/Services/Notifications/FeatureAnnouncements.php:840
 #, php-format
 msgid "<strong>%s popup</strong> is currently disabled"
 msgid_plural "<strong>%s popups</strong> are currently disabled"
 msgstr[0] "<strong>%s popup</strong> er i øjeblikket deaktiveret"
 msgstr[1] "<strong>%s popups</strong> er i øjeblikket deaktiveret"
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:852
 #. translators: 1: disabled popup phrase, 2: stale popup phrase
+#: classes/Services/Notifications/FeatureAnnouncements.php:852
 #, php-format
 msgid "%1$s and %2$s."
 msgstr "%1$s og %2$s."
 
-#: classes/Services/Notifications/FeatureAnnouncements.php:864
 #. translators: 1: total popup count, 2: context sentence describing what fired
+#: classes/Services/Notifications/FeatureAnnouncements.php:864
 #, php-format
 msgid ""
 "You manage <strong>%1$s popups</strong>, and %2$s Scheduling in Pro turns "
@@ -4425,20 +4338,20 @@ msgstr ""
 "tænder og slukker automatisk for dine popups — sæsonudsalg, lanceringer, "
 "åbningstider — så du aldrig glemmer at slå kontakten om."
 
-#: classes/Services/Notifications/WhatsNew.php:138
 #. translators: %s: version number they last dismissed notes for.
+#: classes/Services/Notifications/WhatsNew.php:138
 #, php-format
 msgid "since v%s"
 msgstr "siden v%s"
 
-#: classes/Services/Notifications/WhatsNew.php:141
 #. translators: %s: new version.
+#: classes/Services/Notifications/WhatsNew.php:141
 #, php-format
 msgid "v%s"
 msgstr "v%s"
 
-#: classes/Services/Notifications/WhatsNew.php:147
 #. translators: 1: new version, 2: last-seen version
+#: classes/Services/Notifications/WhatsNew.php:147
 #, php-format
 msgid ""
 "Popup Maker <strong>v%1$s</strong> is here — plus everything added since "
@@ -4447,14 +4360,14 @@ msgstr ""
 "Popup Maker <strong>v%1$s</strong> er her — plus alt, der er tilføjet siden "
 "v%2$s."
 
-#: classes/Services/Notifications/WhatsNew.php:153
 #. translators: %s: new version.
+#: classes/Services/Notifications/WhatsNew.php:153
 #, php-format
 msgid "Popup Maker <strong>v%s</strong> is here."
 msgstr "Popup Maker <strong>v%s</strong> er her."
 
-#: classes/Services/Notifications/WhatsNew.php:166
 #. translators: %s: version number.
+#: classes/Services/Notifications/WhatsNew.php:166
 #, php-format
 msgid "What's new in Popup Maker %s"
 msgstr "Hvad er nyt i Popup Maker %s"
@@ -4464,8 +4377,8 @@ msgstr "Hvad er nyt i Popup Maker %s"
 msgid "View changelog"
 msgstr "Se ændringslog"
 
-#: classes/Services/Notifications/WhatsNew.php:440
 #. translators: %d: additional changes not shown.
+#: classes/Services/Notifications/WhatsNew.php:440
 #, php-format
 msgid "…and %d more change."
 msgid_plural "…and %d more changes."
@@ -4480,21 +4393,18 @@ msgstr "Starter opgraderinger..."
 msgid "Upgrades complete."
 msgstr "Opgraderinger fuldført."
 
-#: classes/Services/UpgradeStream.php:210
 #. translators: %s: task name.
+#: classes/Services/UpgradeStream.php:210
 #, php-format
 msgid "Completed: %s"
 msgstr "Fuldført: %s"
 
-#: classes/Shortcode.php:153
-#: classes/Shortcode.php:167
-#: classes/Shortcode.php:184
-#: dist/packages/cta-editor.js:1
+#: classes/Shortcode.php:153 classes/Shortcode.php:167
+#: classes/Shortcode.php:184 dist/packages/cta-editor.js:1
 msgid "Options"
 msgstr "Indstillinger"
 
-#: classes/Shortcode.php:155
-#: classes/Shortcode.php:169
+#: classes/Shortcode.php:155 classes/Shortcode.php:169
 #: classes/Shortcode.php:190
 msgid "Extra"
 msgstr "Ekstra"
@@ -4506,8 +4416,8 @@ msgstr "CTA-knap"
 #: classes/Shortcode/CallToAction.php:60
 msgid "Insert a call to action to let users convert to a specific action."
 msgstr ""
-"Indsæt en opfordring til handling, så brugerne kan konvertere til en "
-"bestemt handling."
+"Indsæt en opfordring til handling, så brugerne kan konvertere til en bestemt "
+"handling."
 
 #: classes/Shortcode/CallToAction.php:95
 msgid "Which type of CTA would you like to use?"
@@ -4529,8 +4439,7 @@ msgstr "Vælg en stil."
 msgid "Text Only"
 msgstr "Kun tekst"
 
-#: classes/Shortcode/CallToAction.php:146
-#: classes/Shortcode/Subscribe.php:149
+#: classes/Shortcode/CallToAction.php:146 classes/Shortcode/Subscribe.php:149
 msgid "Full"
 msgstr "Fuld"
 
@@ -4546,8 +4455,7 @@ msgstr ""
 "Indsæt i stedet en popup inline. God til enkle popups, der bruges til "
 "understøttende indhold."
 
-#: classes/Shortcode/Popup.php:44
-#: classes/Shortcode/PopupClose.php:42
+#: classes/Shortcode/Popup.php:44 classes/Shortcode/PopupClose.php:42
 #: classes/Shortcode/PopupTrigger.php:59
 msgid "Can contain other shortcodes, images, text or html content."
 msgstr "Kan indeholde andre shortcodes, billeder, tekst eller HTML-indhold."
@@ -4596,8 +4504,7 @@ msgstr "Popup-lukknap"
 msgid "Make text or html a close trigger for your popup."
 msgstr "Gør tekst eller HTML til en lukkeudløser for din popup."
 
-#: classes/Shortcode/PopupClose.php:55
-#: classes/Shortcode/PopupTrigger.php:114
+#: classes/Shortcode/PopupClose.php:55 classes/Shortcode/PopupTrigger.php:114
 msgid "HTML Tag"
 msgstr "HTML-tag"
 
@@ -4611,8 +4518,8 @@ msgstr "Værdi for href"
 
 #: classes/Shortcode/PopupClose.php:73
 msgid ""
-"Enter the href value for your link. Leave blank if you do not want this "
-"link to take the visitor to a different page."
+"Enter the href value for your link. Leave blank if you do not want this link "
+"to take the visitor to a different page."
 msgstr ""
 "Angiv href-værdien for dit link. Lad feltet stå tomt, hvis du ikke "
 "ցանկանում, at dette link skal føre besøgende til en anden side."
@@ -4625,13 +4532,11 @@ msgstr "Mål for elementet"
 msgid "Enter the target value for your link. Can be left blank."
 msgstr "Angiv target-værdien for dit link. Kan efterlades tom."
 
-#: classes/Shortcode/PopupClose.php:98
-#: classes/Shortcode/PopupTrigger.php:126
+#: classes/Shortcode/PopupClose.php:98 classes/Shortcode/PopupTrigger.php:126
 msgid "Add additional classes for styling."
 msgstr "Tilføj ekstra klasser til styling."
 
-#: classes/Shortcode/PopupClose.php:103
-#: classes/Shortcode/PopupTrigger.php:135
+#: classes/Shortcode/PopupClose.php:103 classes/Shortcode/PopupTrigger.php:135
 #: classes/Triggers.php:190
 msgid "Do not prevent the default click functionality."
 msgstr "Undlad at forhindre standardklikfunktionen."
@@ -4643,11 +4548,10 @@ msgid ""
 "popup and still download the file."
 msgstr ""
 "Dette forhindrer os i at deaktivere browserens standardhandling, når der "
-"klikkes på en lukke-knap. Det kan bruges til at lade et link til en fil "
-"både lukke en popup og stadig downloade filen."
+"klikkes på en lukke-knap. Det kan bruges til at lade et link til en fil både "
+"lukke en popup og stadig downloade filen."
 
-#: classes/Shortcode/PopupCookie.php:32
-#: classes/Shortcode/PopupCookie.php:106
+#: classes/Shortcode/PopupCookie.php:32 classes/Shortcode/PopupCookie.php:106
 msgid "Popup Cookie"
 msgstr "Popup-cookie"
 
@@ -4665,14 +4569,13 @@ msgstr "Kun når synlig på skærmen"
 
 #: classes/Shortcode/PopupCookie.php:67
 msgid ""
-"This will prevent the cookie from getting set until the user scrolls it "
-"into viewport."
+"This will prevent the cookie from getting set until the user scrolls it into "
+"viewport."
 msgstr ""
 "Dette forhindrer cookien i at blive sat, indtil brugeren ruller det ind i "
 "visningsområdet."
 
-#: classes/Shortcode/PopupTrigger.php:43
-#: dist/packages/block-editor.js:2
+#: classes/Shortcode/PopupTrigger.php:43 dist/packages/block-editor.js:2
 msgid "Popup Trigger"
 msgstr "Popup-udløser"
 
@@ -4706,14 +4609,14 @@ msgstr "HTML-tags: knap, span osv."
 
 #: classes/Shortcode/PopupTrigger.php:116
 msgid "The HTML tag used to generate the trigger and wrap your text."
-msgstr "Det HTML-tag, der bruges til at generere udløseren og omslutte din tekst."
+msgstr ""
+"Det HTML-tag, der bruges til at generere udløseren og omslutte din tekst."
 
-#: classes/Shortcode/PopupTrigger.php:136
-#: classes/Triggers.php:191
+#: classes/Shortcode/PopupTrigger.php:136 classes/Triggers.php:191
 msgid ""
 "This prevents us from disabling the browsers default action when a trigger "
-"is clicked. It can be used to allow a link to a file to both trigger a "
-"popup and still download the file."
+"is clicked. It can be used to allow a link to a file to both trigger a popup "
+"and still download the file."
 msgstr ""
 "Dette forhindrer os i at deaktivere browserens standardhandling, når en "
 "udløser klikkes. Det kan bruges til at lade et link til en fil både udløse "
@@ -4727,8 +4630,7 @@ msgstr "En tilpasselig formular til abonnement på nyhedsbrev."
 msgid "Fields"
 msgstr "Felter"
 
-#: classes/Shortcode/Subscribe.php:93
-#: classes/Shortcode/Subscribe.php:184
+#: classes/Shortcode/Subscribe.php:93 classes/Shortcode/Subscribe.php:184
 msgid "Labels"
 msgstr "Etiketter"
 
@@ -4736,8 +4638,7 @@ msgstr "Etiketter"
 msgid "Placeholders"
 msgstr "Pladsholdere"
 
-#: classes/Shortcode/Subscribe.php:99
-#: classes/Shortcode/Subscribe.php:450
+#: classes/Shortcode/Subscribe.php:99 classes/Shortcode/Subscribe.php:450
 msgid "Redirect"
 msgstr "Omdirigering"
 
@@ -4830,9 +4731,9 @@ msgid ""
 "When enabled, the successful completion will result in normal success "
 "actions, but if they do not opt-in no records will be made."
 msgstr ""
-"Når dette er aktiveret, vil den vellykkede gennemførelse resultere i "
-"normale succeshandlinger, men hvis de ikke tilvælger det, vil der ikke "
-"blive oprettet nogen poster."
+"Når dette er aktiveret, vil den vellykkede gennemførelse resultere i normale "
+"succeshandlinger, men hvis de ikke tilvælger det, vil der ikke blive "
+"oprettet nogen poster."
 
 #: classes/Shortcode/Subscribe.php:334
 msgid "Consent Field Label"
@@ -4843,9 +4744,8 @@ msgid ""
 "Note: Requiring consent may not be compliant with GDPR for all situations. "
 "Be sure to do your research or check with legal council."
 msgstr ""
-"Bemærk: Krav om samtykke er muligvis ikke i overensstemmelse med GDPR i "
-"alle situationer. Sørg for at undersøge det eller kontakte juridisk "
-"rådgivning."
+"Bemærk: Krav om samtykke er muligvis ikke i overensstemmelse med GDPR i alle "
+"situationer. Sørg for at undersøge det eller kontakte juridisk rådgivning."
 
 #: classes/Shortcode/Subscribe.php:349
 msgid "Field Type"
@@ -4877,8 +4777,8 @@ msgid ""
 "Leave blank to refresh, or enter a url that users will be taken to after "
 "success."
 msgstr ""
-"Lad feltet være tomt for at opdatere, eller indtast en URL, som brugerne "
-"vil blive sendt til efter succes."
+"Lad feltet være tomt for at opdatere, eller indtast en URL, som brugerne vil "
+"blive sendt til efter succes."
 
 #: classes/Shortcode/Subscribe.php:784
 msgid "Subscription Form Placeholder"
@@ -4892,8 +4792,8 @@ msgstr "Fejlfindingsmodus aktiveret"
 msgid "Debug started at:"
 msgstr "Fejlfindingsstartet kl.:"
 
-#: classes/Site/Assets.php:288
 #. translators: 1. URL to documentation.
+#: classes/Site/Assets.php:288
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr "For mere information om, hvordan du bruger disse oplysninger, besøg %s"
@@ -4954,8 +4854,8 @@ msgstr "Mobil deaktiveret:"
 msgid "Tablet Disabled:"
 msgstr "Tablet deaktiveret:"
 
-#: classes/Site/Assets.php:310
 #. translators: 1. Event name.
+#: classes/Site/Assets.php:310
 #, php-format
 msgid "Event: %s"
 msgstr "Begivenhed: %s"
@@ -4981,6 +4881,13 @@ msgstr "Tillad"
 msgid "Do not allow"
 msgstr "Tillad ikke"
 
+#. translators: 1. Trigger name.
+#: classes/Triggers.php:94
+#, php-format
+msgctxt "trigger settings modal title"
+msgid "%s Trigger Settings"
+msgstr "%s udløserindstillinger"
+
 #: classes/Triggers.php:171
 msgid "Click Open"
 msgstr "Klik på Åbn"
@@ -4995,15 +4902,13 @@ msgstr "Ekstra selektorer"
 
 #: classes/Triggers.php:178
 msgid ""
-"Adding the class \"popmake-<span "
-"id=\"pum-default-click-trigger-class\">{popup-ID}</span>\" to an element "
-"will trigger it to be opened once clicked. Additionally you can add "
-"additional CSS selectors below."
+"Adding the class \"popmake-<span id=\"pum-default-click-trigger-"
+"class\">{popup-ID}</span>\" to an element will trigger it to be opened once "
+"clicked. Additionally you can add additional CSS selectors below."
 msgstr ""
-"Ved at tilføje klassen \"popmake-<span "
-"id=\"pum-default-click-trigger-class\">{popup-ID}</span>\" til et element, "
-"udløses åbning, når der klikkes på det. Derudover kan du tilføje ekstra "
-"CSS-selektorer nedenfor."
+"Ved at tilføje klassen \"popmake-<span id=\"pum-default-click-trigger-"
+"class\">{popup-ID}</span>\" til et element, udløses åbning, når der klikkes "
+"på det. Derudover kan du tilføje ekstra CSS-selektorer nedenfor."
 
 #: classes/Triggers.php:181
 msgid "Extra CSS Selectors"
@@ -5029,8 +4934,7 @@ msgstr "Tidsforsinkelse / Automatisk åbning"
 msgid "Time Delay Settings"
 msgstr "Indstillinger for tidsforsinkelse"
 
-#: classes/Triggers.php:205
-#: classes/Triggers.php:237
+#: classes/Triggers.php:205 classes/Triggers.php:237
 msgid "The delay before the popup will open in milliseconds."
 msgstr "Forsinkelsen før popup-vinduet åbnes, i millisekunder."
 
@@ -5038,18 +4942,18 @@ msgstr "Forsinkelsen før popup-vinduet åbnes, i millisekunder."
 msgid "Choose which cookies will disable this trigger"
 msgstr "Vælg hvilke cookies der skal deaktivere denne trigger"
 
-#: classes/Upsell.php:232
 #. translators: 1: Opening link tag, 2: Closing link tag.
+#: classes/Upsell.php:232
 #, php-format
 msgid ""
 "🎉 Congrats on your first form submission! %1$sUpgrade to Pro%2$s for exit "
 "intent triggers, conversion analytics, and advanced targeting."
 msgstr ""
-"🎉 Tillykke med din første formularindsendelse! %1$sOpgrader til Pro%2$s "
-"for exit intent-triggers, konverteringsanalyse og avanceret målretning."
+"🎉 Tillykke med din første formularindsendelse! %1$sOpgrader til Pro%2$s for "
+"exit intent-triggers, konverteringsanalyse og avanceret målretning."
 
-#: classes/Upsell.php:238
 #. translators: 1: Opening link tag, 2: Closing link tag.
+#: classes/Upsell.php:238
 #, php-format
 msgid ""
 "📊 Form conversion tracking is now live! Your first submission has been "
@@ -5058,8 +4962,8 @@ msgstr ""
 "📊 Formular-konverteringssporing er nu aktiv! Din første indsendelse er "
 "blevet registreret. %1$sSe, hvad der konverterer med Pro-analyse%2$s."
 
-#: classes/Upsell.php:252
 #. translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:252
 #, php-format
 msgid ""
 "🚀 Amazing! You've had %1$s popup views! %2$sSee which ones convert best "
@@ -5068,8 +4972,8 @@ msgstr ""
 "🚀 Fantastisk! Du har haft %1$s popup-visninger! %2$sSe, hvilke der "
 "konverterer bedst med Pro-analyse%3$s."
 
-#: classes/Upsell.php:267
 #. translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:267
 #, php-format
 msgid ""
 "📊 You've had %1$s popup views! %2$sSee which ones convert best with Pro "
@@ -5078,8 +4982,8 @@ msgstr ""
 "📊 Du har haft %1$s popup-visninger! %2$sSe, hvilke der konverterer bedst "
 "med Pro-analyse%3$s."
 
-#: classes/Upsell.php:283
 #. translators: 1: Number of popup views, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:283
 #, php-format
 msgid ""
 "📈 You've had %1$s popup views! %2$sSee which ones convert best with Pro "
@@ -5088,8 +4992,8 @@ msgstr ""
 "📈 Du har haft %1$s popup-visninger! %2$sSe, hvilke der konverterer bedst "
 "med Pro-analyse%3$s."
 
-#: classes/Upsell.php:324
 #. translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:324
 #, php-format
 msgid ""
 "%1$s detected — recover abandoned carts, trigger discount popups, and track "
@@ -5098,8 +5002,8 @@ msgstr ""
 "%1$s registreret — gendan forladte indkøbskurve, udløs rabat-popups og spor "
 "omsætning pr. popup med %2$sPro+ Ecommerce Popups%3$s."
 
-#: classes/Upsell.php:337
 #. translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:337
 #, php-format
 msgid ""
 "Track exactly which popups drive %1$s sales with %2$sPro+ Ecommerce "
@@ -5109,8 +5013,8 @@ msgstr ""
 "Spor præcist, hvilke popups der driver %1$s salg med %2$sPro+ Ecommerce "
 "Popups%3$s — omsætningsattribuering, købsmålretning og konverteringsanalyse."
 
-#: classes/Upsell.php:350
 #. translators: 1: Detected ecommerce platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:350
 #, php-format
 msgid ""
 "Show personalized offers to %1$s customers based on cart contents and "
@@ -5119,8 +5023,8 @@ msgstr ""
 "Vis personlige tilbud til %1$s kunder baseret på indholdet i kurven og "
 "købshistorik med %2$sPro+ Ecommerce Popups%3$s."
 
-#: classes/Upsell.php:367
 #. translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:367
 #, php-format
 msgid ""
 "%1$s detected — boost course enrollment, target students by progress, and "
@@ -5129,8 +5033,8 @@ msgstr ""
 "%1$s registreret — øg kursustilmeldinger, målret studerende efter "
 "progression, og spor tilmeldinger pr. popup med %2$sPro+ LMS Popups%3$s."
 
-#: classes/Upsell.php:380
 #. translators: 1: Detected LMS platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:380
 #, php-format
 msgid ""
 "Show the right offer at the right time — target %1$s students by enrollment "
@@ -5140,8 +5044,8 @@ msgstr ""
 "efter tilmeldingsstatus, kursusprogression og medlemskab med %2$sPro+ LMS "
 "Popups%3$s."
 
-#: classes/Upsell.php:397
 #. translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:397
 #, php-format
 msgid ""
 "%1$s detected — auto-tag subscribers, trigger email sequences from popups, "
@@ -5150,8 +5054,8 @@ msgstr ""
 "%1$s registreret — tag abonnenter automatisk, udløs e-mailsekvenser fra "
 "popups, og synkronisér leads med %2$sPopup Maker Pro%3$s."
 
-#: classes/Upsell.php:410
 #. translators: 1: Detected CRM platforms, 2: Opening link tag, 3: Closing link tag.
+#: classes/Upsell.php:410
 #, php-format
 msgid ""
 "Connect popups to %1$s workflows — automatically add contacts, apply tags, "
@@ -5161,8 +5065,8 @@ msgstr ""
 "tags, og start automatiseringer, når besøgende konverterer med %2$sPopup "
 "Maker Pro%3$s."
 
-#: classes/Upsell.php:428
 #. translators: 1: Opening link tag, 2: Closing link tag.
+#: classes/Upsell.php:428
 #, php-format
 msgid ""
 "Level up with %1$sPopup Maker Pro+%2$s - unlock ecommerce automation, "
@@ -5171,8 +5075,8 @@ msgstr ""
 "Opgrader med %1$sPopup Maker Pro+%2$s - lås op for e-handelsautomatisering, "
 "omsætningsattribuering og forbedret målretning."
 
-#: classes/Upsell.php:442
 #. translators: 1: Opening link tag, 2: Closing link tag.
+#: classes/Upsell.php:442
 #, php-format
 msgid ""
 "Unlock advanced features with %1$sPopup Maker Pro & Pro+%2$s - Enhanced "
@@ -5181,8 +5085,8 @@ msgstr ""
 "Lås op for avancerede funktioner med %1$sPopup Maker Pro & Pro+%2$s - "
 "forbedret målretning, omsætningssporing, live-analyse og meget mere."
 
-#: classes/Upsell.php:502
 #. translators: 1: List of platforms, 2: Last platform.
+#: classes/Upsell.php:502
 #, php-format
 msgid "%1$s and %2$s"
 msgstr "%1$s og %2$s"
@@ -5191,8 +5095,8 @@ msgstr "%1$s og %2$s"
 msgid ", "
 msgstr ", "
 
-#: classes/Upsell.php:517
 #. translators: %s url to product page.
+#: classes/Upsell.php:517
 #, php-format
 msgid ""
 "Want to disable the close button? Check out <a href=\"%s\" "
@@ -5201,8 +5105,8 @@ msgstr ""
 "Vil du deaktivere luk-knappen? Se <a href=\"%s\" target=\"_blank\">Popup "
 "Maker Pro</a>!"
 
-#: classes/Upsell.php:535
 #. translators: %s url to product page.
+#: classes/Upsell.php:535
 #, php-format
 msgid ""
 "Unlock 50+ advanced targeting conditions with <a href=\"%s\" "
@@ -5213,8 +5117,8 @@ msgstr ""
 "target=\"_blank\" rel=\"noopener\">Popup Maker Pro</a> — brugerroller, "
 "enhedsregistrering, URL-matchning, henvisningsmålretning og meget mere."
 
-#: classes/Upsell.php:560
 #. translators: %s url to product page.
+#: classes/Upsell.php:560
 #, php-format
 msgid ""
 "Unlock background images, parallax effects, and advanced styling with <a "
@@ -5239,8 +5143,7 @@ msgstr "Tid på siden"
 msgid "Item Added to Cart"
 msgstr "Vare tilføjet til kurv"
 
-#: classes/Upsell.php:701
-#: classes/Upsell.php:715
+#: classes/Upsell.php:701 classes/Upsell.php:715
 msgid "User Targeting (Pro)"
 msgstr "Brugermålretning (Pro)"
 
@@ -5252,9 +5155,7 @@ msgstr "Brugeren er logget ind"
 msgid "User Has Role"
 msgstr "Brugeren har rolle"
 
-#: classes/Upsell.php:731
-#: classes/Upsell.php:746
-#: classes/Upsell.php:761
+#: classes/Upsell.php:731 classes/Upsell.php:746 classes/Upsell.php:761
 #: classes/Upsell.php:777
 msgid "Behavior Targeting (Pro)"
 msgstr "Adfærdsmålretning (Pro)"
@@ -5275,9 +5176,7 @@ msgstr "URL indeholder"
 msgid "Is Filling Out a Form"
 msgstr "Er ved at udfylde en formular"
 
-#: classes/Upsell.php:800
-#: classes/Upsell.php:814
-#: classes/Upsell.php:828
+#: classes/Upsell.php:800 classes/Upsell.php:814 classes/Upsell.php:828
 #: classes/Upsell.php:842
 msgid "Ecommerce (Pro+)"
 msgstr "E-handel (Pro+)"
@@ -5298,8 +5197,7 @@ msgstr "Kunde har købt"
 msgid "Customer Lifetime Spend"
 msgstr "Kundens samlede forbrug"
 
-#: classes/Upsell.php:859
-#: classes/Upsell.php:874
+#: classes/Upsell.php:859 classes/Upsell.php:874
 msgid "LMS (Pro+)"
 msgstr "LMS (Pro+)"
 
@@ -5311,8 +5209,8 @@ msgstr "Tilmelding til kursus"
 msgid "LMS Cart Total"
 msgstr "LMS kurvtotal"
 
-#: classes/Upsell.php:998
 #. translators: %s url to product page.
+#: classes/Upsell.php:998
 #, php-format
 msgid ""
 "Track trends over time with <a href=\"%s\" target=\"_blank\" "
@@ -5323,8 +5221,8 @@ msgstr ""
 "rel=\"noopener\">Pro Analytics</a> — diagrammer, tragte og "
 "omsætningsattribuering."
 
-#: classes/Utils/Alerts.php:212
 #. translators: %s: native language name.
+#: classes/Utils/Alerts.php:227
 #, php-format
 msgid ""
 "This plugin is also available in %1$s. <a href=\"%2$s\" "
@@ -5333,9 +5231,8 @@ msgstr ""
 "Dette plugin er også tilgængeligt på %1$s. <a href=\"%2$s\" "
 "target=\"_blank\">Hjælp med at forbedre oversættelsen!</a>"
 
-#: classes/Utils/Alerts.php:228
-#: classes/Utils/Alerts.php:255
 #. translators: 1: native language name, 2: other native language names, comma separated
+#: classes/Utils/Alerts.php:243 classes/Utils/Alerts.php:270
 #, php-format
 msgid ""
 "This plugin is also available in %1$s (also: %2$s). <a href=\"%3$s\" "
@@ -5344,10 +5241,9 @@ msgstr ""
 "Dette plugin er også tilgængeligt på %1$s (også: %2$s). <a href=\"%3$s\" "
 "target=\"_blank\">Hjælp med at forbedre oversættelsen!</a>"
 
-#: classes/Utils/Alerts.php:240
-#: classes/Utils/Alerts.php:267
 #. translators: 1: native language name, 2: URL to translate.wordpress.org
 #. translators: 1. Native language name, 2. URL to translation.
+#: classes/Utils/Alerts.php:255 classes/Utils/Alerts.php:282
 #, php-format
 msgid ""
 "This plugin is not translated into %1$s yet. <a href=\"%2$s\" "
@@ -5356,8 +5252,8 @@ msgstr ""
 "Dette plugin er endnu ikke oversat til %1$s. <a href=\"%2$s\" "
 "target=\"_blank\">Hjælp med at oversætte det!</a>"
 
-#: classes/Utils/Alerts.php:274
 #. translators: %s: native language name.
+#: classes/Utils/Alerts.php:289
 #, php-format
 msgid ""
 "This plugin's translation for %1$s is out of date. <a href=\"%2$s\" "
@@ -5366,15 +5262,15 @@ msgstr ""
 "Dette plugins oversættelse til %1$s er forældet. <a href=\"%2$s\" "
 "target=\"_blank\">Hjælp med at forbedre oversættelsen!</a>"
 
-#: classes/Utils/Alerts.php:283
+#: classes/Utils/Alerts.php:298
 msgid "Help translate Popup Maker"
 msgstr "Hjælp med at oversætte Popup Maker"
 
-#: classes/Utils/Alerts.php:485
+#: classes/Utils/Alerts.php:500
 msgid "Check out the following notifications from Popup Maker."
 msgstr "Tjek følgende notifikationer fra Popup Maker."
 
-#: classes/Utils/Alerts.php:557
+#: classes/Utils/Alerts.php:573
 msgid "Dismiss this item."
 msgstr "Afvis dette element."
 
@@ -5382,38 +5278,38 @@ msgstr "Afvis dette element."
 msgid "Once Weekly"
 msgstr "Én gang om ugen"
 
-#: classes/Utils/Format.php:80
 #. translators: 1: Number of seconds.
+#: classes/Utils/Format.php:80
 #, php-format
 msgid "%ss"
 msgstr "%ss"
 
-#: classes/Utils/Format.php:90
 #. translators: 1: Number of minutes.
+#: classes/Utils/Format.php:90
 #, php-format
 msgid "%smin"
 msgstr "%smin"
 
-#: classes/Utils/Format.php:100
 #. translators: 1: Number of hours.
+#: classes/Utils/Format.php:100
 #, php-format
 msgid "%shr"
 msgstr "%shr"
 
-#: classes/Utils/Format.php:110
 #. translators: 1: Number of days.
+#: classes/Utils/Format.php:110
 #, php-format
 msgid "%sd"
 msgstr "%sd"
 
-#: classes/Utils/Format.php:120
 #. translators: 1: Number of weeks.
+#: classes/Utils/Format.php:120
 #, php-format
 msgid "%sw"
 msgstr "%sw"
 
-#: classes/Utils/Prerequisites.php:297
 #. translators: 1. PHP Version
+#: classes/Utils/Prerequisites.php:297
 #, php-format
 msgid "This plugin requires <b>PHP %s</b> or higher in order to run."
 msgstr "Dette plugin kræver <b>PHP %s</b> eller nyere for at kunne køre."
@@ -5423,8 +5319,8 @@ msgid ""
 "The latest version of Popup Maker requires changes to the Popup Maker "
 "settings saved on your site."
 msgstr ""
-"Den nyeste version af Popup Maker kræver ændringer i Popup "
-"Maker-indstillingerne, som er gemt på dit websted."
+"Den nyeste version af Popup Maker kræver ændringer i Popup Maker-"
+"indstillingerne, som er gemt på dit websted."
 
 #: classes/Utils/Upgrades.php:305
 msgid ""
@@ -5463,8 +5359,8 @@ msgstr "Ingen opgraderinger er i øjeblikket nødvendige."
 msgid "Popup Maker Upgrades"
 msgstr "Popup Maker-opgraderinger"
 
-#: includes/admin/class-pum-admin-upgrades.php:218
 #. translators: %s: URL to upgrade page.
+#: includes/admin/class-pum-admin-upgrades.php:218
 #, php-format
 msgid ""
 "Popup Maker needs to complete a database upgrade that was previously "
@@ -5481,8 +5377,8 @@ msgstr "Vigtigt"
 msgid "Database upgrades required."
 msgstr "Databaseopgraderinger er påkrævet."
 
-#: includes/admin/class-pum-admin-upgrades.php:229
 #. translators: %1$s: URL to upgrade page. %2$s: closing HTML tag.
+#: includes/admin/class-pum-admin-upgrades.php:229
 #, php-format
 msgid "Please click %1$shere%2$s to complete these changes now."
 msgstr "Klik venligst %1$shere%2$s for at fuldføre disse ændringer nu."
@@ -5537,8 +5433,8 @@ msgstr "Initialiser popup-analyse."
 msgid "Clean up old data and verify data integrity."
 msgstr "Ryd op i gamle data og verificer dataintegriteten."
 
-#: includes/admin/upgrades/class-pum-admin-upgrade-routine.php:63
 #. translators: 1: Step number, 2: Approximate number of steps.
+#: includes/admin/upgrades/class-pum-admin-upgrade-routine.php:63
 #, php-format
 msgid "Step %1$d of approximately %2$d running"
 msgstr "Trin %1$d af cirka %2$d kører"
@@ -5668,6 +5564,10 @@ msgstr "Er endpoint"
 msgid "Selected Endpoints"
 msgstr "Valgte endpoints"
 
+#: includes/integrations/ninja-forms/Actions/ClosePopup.php:56
+msgid "0"
+msgstr "0"
+
 #: includes/legacy/input-options.php:63
 msgid "Responsive Sizes&#10549;"
 msgstr "Responsive størrelser&#10549;"
@@ -5684,10 +5584,8 @@ msgstr "Udvid"
 msgid "Grow and Slide"
 msgstr "Udvid og skub"
 
-#: includes/legacy/input-options.php:162
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-admin.js:23
-#: dist/packages/cta-editor.js:1
+#: includes/legacy/input-options.php:162 dist/packages/cta-admin.js:4
+#: dist/packages/cta-admin.js:23 dist/packages/cta-editor.js:1
 msgid "Disabled"
 msgstr "Deaktiveret"
 
@@ -5703,6 +5601,17 @@ msgstr "Ved lukning"
 msgid "Disable Popups Menu Editor"
 msgstr "Deaktiver popup-menueditor"
 
+#. translators: %1$s: opening and closing link HTML tags, %2$s: link text.
+#: includes/modules/menus.php:50
+#, php-format
+msgctxt "%s represent opening and closing link html"
+msgid ""
+"Use this if there is a conflict with your theme or another plugin in the nav "
+"menu editor. %1$sLearn more%2$s"
+msgstr ""
+"Brug dette, hvis der er en konflikt med dit tema eller et andet plugin i "
+"menueditoren for navigation. %1$sLæs mere%2$s"
+
 #: includes/modules/menus.php:191
 msgid "Trigger a Popup"
 msgstr "Udløs en popup"
@@ -5711,63 +5620,62 @@ msgstr "Udløs en popup"
 msgid "Choose a popup to trigger when this item is clicked."
 msgstr "Vælg en popup, der skal udløses, når dette element klikkes."
 
-#: includes/modules/reviews.php:285
-#. translators: %s: number of days.
+#: includes/modules/reviews.php:132 includes/modules/reviews.php:146
+msgid "Leave a 5-star review"
+msgstr "Skriv en 5-stjernet anmeldelse"
+
+#. translators: 1: Popup Maker product name, 2: amount of time.
+#: includes/modules/reviews.php:900
 #, php-format
 msgid ""
-"Hi there! You've been using Popup Maker on your site for %s - I hope it's "
-"been helpful. If you're enjoying my plugin, would you mind rating it "
-"5-stars to help spread the word?"
+"You've been using %1$s for %2$s. If it has helped you engage visitors, grow "
+"your audience, or generate meaningful conversions, would you take a moment "
+"to leave us a 5-star review?"
 msgstr ""
-"Hej! Du har brugt Popup Maker på dit websted i %s - jeg håber, det har "
-"været nyttigt. Hvis du nyder mit plugin, vil du så ikke bedømme det med 5 "
-"stjerner for at hjælpe med at sprede budskabet?"
+"Du har brugt %1$s i %2$s. Hvis det har hjulpet dig med at engagere "
+"besøgende, vokse dit publikum eller skabe meningsfulde konverteringer, vil "
+"du så tage et øjeblik til at skrive en 5-stjernet anmeldelse til os?"
 
-#: includes/modules/reviews.php:290
+#: includes/modules/reviews.php:905
 msgid "1 week"
 msgstr "1 uge"
 
-#: includes/modules/reviews.php:298
+#: includes/modules/reviews.php:912
 msgid "1 month"
 msgstr "1 måned"
 
-#: includes/modules/reviews.php:306
+#: includes/modules/reviews.php:919
 msgid "3 months"
 msgstr "3 måneder"
 
-#: includes/modules/reviews.php:325
-#. translators: %s: number of popup views.
+#. translators: 1: Popup Maker product name, 2: number of popup views.
+#: includes/modules/reviews.php:937
 #, php-format
 msgid ""
-"Hi there! You've recently hit %s popup views on your site – that’s "
-"awesome!! If you'd like to celebrate this milestone, rate Popup Maker "
-"5-stars to help spread the word!"
+"%1$s has now delivered %2$s popup views on your site. If those popups have "
+"helped you achieve meaningful results, would you take a moment to leave us a "
+"5-star review?"
 msgstr ""
-"Hej! Du har for nylig nået %s popup-visninger på dit websted – det er "
-"fantastisk!! Hvis du vil fejre denne milepæl, så giv Popup Maker 5 stjerner "
-"for at hjælpe med at sprede budskabet!"
+"%1$s har nu leveret %2$s popup-visninger på dit websted. Hvis disse popups "
+"har hjulpet dig med at opnå meningsfulde resultater, vil du så tage et "
+"øjeblik til at skrive en 5-stjernet anmeldelse til os?"
 
-#: includes/modules/reviews.php:401
-#: includes/modules/reviews.php:541
-msgid "Ok, you deserve it"
-msgstr "Ok, det fortjener du"
+#: includes/modules/reviews.php:1007
+msgid "Remind me later"
+msgstr "Mind mig om det senere"
 
-#: includes/modules/reviews.php:405
-#: includes/modules/reviews.php:546
-msgid "Nope, maybe later"
-msgstr "Næh, måske senere"
+#: includes/modules/reviews.php:1012
+msgid "I’ve already left a review"
+msgstr "Jeg har allerede skrevet en anmeldelse"
 
-#: includes/modules/reviews.php:410
-#: includes/modules/reviews.php:551
-msgid "I already did"
-msgstr "Det har jeg allerede gjort"
+#. translators: %s: Popup Maker product name.
+#: includes/modules/reviews.php:1048
+#, php-format
+msgid "Is %s helping you grow?"
+msgstr "Hjælper %s dig med at vokse?"
 
-#: includes/modules/reviews.php:421
-msgid "Love Popup Maker? Leave a 5-star review!"
-msgstr "Elsker du Popup Maker? Skriv en 5-stjernet anmeldelse!"
-
-#: includes/namespaced/condition-helpers.php:34
 #. translators: %s: Post type.
+#: includes/namespaced/condition-helpers.php:34
 #, php-format
 msgid "Select %s(s) (optional)"
 msgstr "Vælg %s(er) (valgfrit)"
@@ -5816,8 +5724,8 @@ msgstr "Kun indhold - til brug med sidebyggere eller blokeditor"
 msgid "This plugin"
 msgstr "Dette plugin"
 
-#: includes/pum-sdk/class-pum-extension-activation.php:124
 #. translators: 1. plugin name.
+#: includes/pum-sdk/class-pum-extension-activation.php:124
 #, php-format
 msgid " requires Popup Maker! Please %s to continue!"
 msgstr " kræver Popup Maker! Gå venligst til %s for at fortsætte!"
@@ -5828,13 +5736,11 @@ msgstr ""
 "Popup Maker: Kunne ikke initialisere autoloaderen. Pluginet kan ikke "
 "indlæses."
 
-#: dist/packages/addons-page.js:1
-#: dist/packages/addons-page.js:3
+#: dist/packages/addons-page.js:1 dist/packages/addons-page.js:3
 msgid "Working…"
 msgstr "Arbejder…"
 
-#: dist/packages/addons-page.js:1
-#: dist/packages/addons-page.js:3
+#: dist/packages/addons-page.js:1 dist/packages/addons-page.js:3
 msgid "Network Active"
 msgstr "Netværksaktiv"
 
@@ -5846,8 +5752,7 @@ msgstr "Pro+ kræves"
 msgid "Pro required"
 msgstr "Pro kræves"
 
-#: dist/packages/addons-page.js:1
-#: dist/packages/addons-page.js:3
+#: dist/packages/addons-page.js:1 dist/packages/addons-page.js:3
 msgid "Unavailable"
 msgstr "Ikke tilgængelig"
 
@@ -5856,24 +5761,20 @@ msgid "The add-on triggered a fatal error and the change was not applied."
 msgstr "Tilføjelsen udløste en fatal fejl, og ændringen blev ikke anvendt."
 
 #: dist/packages/addons-page.js:1
-#, js-format
 msgid "%s deactivated."
 msgstr "%s deaktiveret."
 
 #: dist/packages/addons-page.js:1
-#, js-format
 msgid "%s activated."
 msgstr "%s aktiveret."
 
-#: dist/packages/addons-page.js:2
 #. translators: %s: add-on name.
-#, js-format
+#: dist/packages/addons-page.js:2
 msgid "%s couldn’t be deactivated"
 msgstr "%s kunne ikke deaktiveres"
 
-#: dist/packages/addons-page.js:3
 #. translators: %s: add-on name.
-#, js-format
+#: dist/packages/addons-page.js:3
 msgid "%s couldn’t be activated"
 msgstr "%s kunne ikke aktiveres"
 
@@ -5897,9 +5798,8 @@ msgstr "Få Pro+"
 msgid "Get Pro"
 msgstr "Få Pro"
 
-#: dist/packages/addons-page.js:4
 #. translators: %s: add-on name.
-#, js-format
+#: dist/packages/addons-page.js:4
 msgid "View details for %s"
 msgstr "Se detaljer for %s"
 
@@ -5907,8 +5807,7 @@ msgstr "Se detaljer for %s"
 msgid "Available with Pro+"
 msgstr "Tilgængelig med Pro+"
 
-#: dist/packages/addons-page.js:4
-#: dist/packages/admin-notifications.js:2
+#: dist/packages/addons-page.js:4 dist/packages/admin-notifications.js:2
 #: dist/packages/cta-admin.js:23
 msgid "All"
 msgstr "Alle"
@@ -5937,9 +5836,8 @@ msgstr "Tilføjelseshandlingen mislykkedes."
 msgid "No add-ons are currently available."
 msgstr "Der er i øjeblikket ingen tilgængelige tilføjelser."
 
-#: dist/packages/addons-page.js:5
 #. translators: %s: search query.
-#, js-format
+#: dist/packages/addons-page.js:5
 msgid "No add-ons match “%s”."
 msgstr "Ingen tilføjelser matcher “%s”."
 
@@ -5955,16 +5853,16 @@ msgstr "Pro+ tilføjelser"
 msgid "Add-ons"
 msgstr "Tilføjelser"
 
-#: dist/packages/addons-page.js:6
 #. translators: %d: number of add-ons.
-#, js-format
+#: dist/packages/addons-page.js:6
 msgid "%d add-on"
 msgid_plural "%d add-ons"
 msgstr[0] "%d tilføjelse"
 msgstr[1] "%d tilføjelser"
 
 #: dist/packages/addons-page.js:6
-msgid "Explore Popup Maker add-ons and manage extensions installed on this site."
+msgid ""
+"Explore Popup Maker add-ons and manage extensions installed on this site."
 msgstr ""
 "Udforsk Popup Maker-tilføjelser og administrer udvidelser installeret på "
 "dette websted."
@@ -6040,9 +5938,8 @@ msgstr "Vær opmærksom"
 msgid "Details"
 msgstr "Detaljer"
 
-#: dist/packages/admin-notifications.js:2
 #. translators: %d: number of unread notifications.
-#, js-format
+#: dist/packages/admin-notifications.js:2
 msgid "%d unread notification"
 msgid_plural "%d unread notifications"
 msgstr[0] "%d ulæst notifikation"
@@ -6082,7 +5979,8 @@ msgstr "Popup-kontroller"
 
 #: dist/packages/block-editor.js:1
 msgid "These settings allow you to control popups with this block."
-msgstr "Disse indstillinger giver dig mulighed for at styre popups med denne blok."
+msgstr ""
+"Disse indstillinger giver dig mulighed for at styre popups med denne blok."
 
 #: dist/packages/block-editor.js:1
 msgid "This method does not work well with all block types."
@@ -6112,9 +6010,8 @@ msgstr "Hvilken popup skal åbnes?"
 msgid "Apply"
 msgstr "Anvend"
 
-#: dist/packages/block-editor.js:2
 #. translators: %s: popup title.
-#, js-format
+#: dist/packages/block-editor.js:2
 msgid "Open \"%s\" popup"
 msgstr "Åbn popuppen \"%s\""
 
@@ -6122,10 +6019,8 @@ msgstr "Åbn popuppen \"%s\""
 msgid "Popup Trigger Preview"
 msgstr "Forhåndsvisning af popup-udløser"
 
-#: dist/packages/block-editor.js:2
-#: dist/packages/block-library.js:1
-#: dist/packages/components.js:16
-#: dist/packages/cta-admin.js:23
+#: dist/packages/block-editor.js:2 dist/packages/block-library.js:1
+#: dist/packages/components.js:16 dist/packages/cta-admin.js:23
 msgid "Edit"
 msgstr "Rediger"
 
@@ -6173,8 +6068,7 @@ msgstr "Ny opfordring til handling"
 msgid "Call to action not found."
 msgstr "Opfordring til handling blev ikke fundet."
 
-#: dist/packages/block-library.js:1
-#: dist/packages/cta-admin.js:5
+#: dist/packages/block-library.js:1 dist/packages/cta-admin.js:5
 #: dist/packages/cta-editor.js:1
 msgid "Add Call to Action"
 msgstr "Tilføj opfordring til handling"
@@ -6199,8 +6093,7 @@ msgstr "Fjern"
 msgid "Preview Call To Action"
 msgstr "Forhåndsvis opfordring til handling"
 
-#: dist/packages/block-library.js:1
-#: dist/packages/cta-editor.js:1
+#: dist/packages/block-library.js:1 dist/packages/cta-editor.js:1
 msgid "Edit Call to Action"
 msgstr "Rediger opfordring til handling"
 
@@ -6236,8 +6129,7 @@ msgstr "Kontakt os"
 msgid "Enter a value"
 msgstr "Indtast en værdi"
 
-#: dist/packages/components.js:1
-#: dist/packages/fields.js:14
+#: dist/packages/components.js:1 dist/packages/fields.js:14
 msgid "Search"
 msgstr "Søg"
 
@@ -6249,28 +6141,20 @@ msgstr "Ingen forslag"
 msgid "Remove token"
 msgstr "Fjern token"
 
-#: dist/packages/components.js:4
-#: dist/packages/components.js:13
-#: dist/packages/fields.js:4
-#: dist/packages/fields.js:11
 #. translators: %s: entity type.
-#, js-format
+#: dist/packages/components.js:4 dist/packages/components.js:13
+#: dist/packages/fields.js:4 dist/packages/fields.js:11
 msgid "%s(s)"
 msgstr "%s(er)"
 
-#: dist/packages/components.js:7
-#: dist/packages/components.js:16
-#: dist/packages/fields.js:7
-#: dist/packages/fields.js:14
 #. translators: %s: entity type.
-#, js-format
+#: dist/packages/components.js:7 dist/packages/components.js:16
+#: dist/packages/fields.js:7 dist/packages/fields.js:14
 msgid "Select %s(s)"
 msgstr "Vælg %s(er)"
 
-#: dist/packages/components.js:7
-#: dist/packages/components.js:16
-#: dist/packages/fields.js:7
-#: dist/packages/fields.js:14
+#: dist/packages/components.js:7 dist/packages/components.js:16
+#: dist/packages/fields.js:7 dist/packages/fields.js:14
 msgid "Searching…"
 msgstr "Søger…"
 
@@ -6281,6 +6165,18 @@ msgstr "Bekræft handling"
 #: dist/packages/components.js:7
 msgid "Confirm"
 msgstr "Bekræft"
+
+#. translators: 1. Device type.
+#: dist/packages/components.js:8 dist/packages/components.js:10
+msgctxt "Device toggle option"
+msgid "Show on %1$s"
+msgstr "Vis på %1$s"
+
+#. translators: 1. Device type.
+#: dist/packages/components.js:9
+msgctxt "Device toggle option"
+msgid "Hide on %1$s"
+msgstr "Skjul på %1$s"
 
 #: dist/packages/components.js:16
 msgid "Click here to edit this text."
@@ -6326,49 +6222,39 @@ msgstr "Tryk på ENTER for at tilføje dette link"
 msgid "Please provide a name for this call to action."
 msgstr "Angiv venligst et navn til denne opfordring til handling."
 
-#: dist/packages/core-data.js:1
-#: dist/packages/core-data.js:4
-#: dist/packages/core-data.js:7
-#: dist/packages/core-data.js:13
+#: dist/packages/core-data.js:1 dist/packages/core-data.js:4
+#: dist/packages/core-data.js:7 dist/packages/core-data.js:13
 msgid "Call to action not found"
 msgstr "Opfordring til handling ikke fundet"
 
-#: dist/packages/core-data.js:4
-#: dist/packages/core-data.js:13
 #. translators: %s: call to action title.
-#, js-format
+#: dist/packages/core-data.js:4 dist/packages/core-data.js:13
 msgid "Call to action \"%s\" saved successfully."
 msgstr "Opfordring til handling \"%s\" blev gemt সফলly."
 
-#: dist/packages/core-data.js:4
-#: dist/packages/core-data.js:7
+#: dist/packages/core-data.js:4 dist/packages/core-data.js:7
 msgid "An error occurred, call to action was not saved."
 msgstr "Der opstod en fejl, opfordringen til handling blev ikke gemt."
 
-#: dist/packages/core-data.js:7
 #. translators: %s: call to action title.
-#, js-format
+#: dist/packages/core-data.js:7
 msgid "Call to action \"%s\" updated successfully."
 msgstr "Opfordring til handling \"%s\" blev opdateret."
 
-#: dist/packages/core-data.js:10
 #. translators: %s: call to action title.
-#, js-format
+#: dist/packages/core-data.js:10
 msgid "Call to action \"%s\" deleted successfully."
 msgstr "Opfordring til handling \"%s\" blev slettet."
 
-#: dist/packages/core-data.js:10
-#: dist/packages/core-data.js:22
+#: dist/packages/core-data.js:10 dist/packages/core-data.js:22
 msgid "Failed to delete entity"
 msgstr "Kunne ikke slette entitet"
 
-#: dist/packages/core-data.js:10
-#: dist/packages/core-data.js:22
+#: dist/packages/core-data.js:10 dist/packages/core-data.js:22
 msgid "No edits to save"
 msgstr "Ingen ændringer at gemme"
 
-#: dist/packages/core-data.js:13
-#: dist/packages/core-data.js:25
+#: dist/packages/core-data.js:13 dist/packages/core-data.js:25
 msgid "No editor values to save"
 msgstr "Ingen redigeringsværdier at gemme"
 
@@ -6389,38 +6275,33 @@ msgid "Please provide a name for this popup."
 msgstr "Angiv venligst et navn til denne popup."
 
 #: dist/packages/core-data.js:13
-msgid "Please provide at least one condition for this popup before enabling it."
-msgstr "Angiv venligst mindst én betingelse for denne popup, før du aktiverer den."
+msgid ""
+"Please provide at least one condition for this popup before enabling it."
+msgstr ""
+"Angiv venligst mindst én betingelse for denne popup, før du aktiverer den."
 
-#: dist/packages/core-data.js:13
-#: dist/packages/core-data.js:16
-#: dist/packages/core-data.js:19
-#: dist/packages/core-data.js:22
+#: dist/packages/core-data.js:13 dist/packages/core-data.js:16
+#: dist/packages/core-data.js:19 dist/packages/core-data.js:22
 #: dist/packages/core-data.js:25
 msgid "Popup not found"
 msgstr "Popup ikke fundet"
 
-#: dist/packages/core-data.js:16
-#: dist/packages/core-data.js:25
 #. translators: %s: popup title.
-#, js-format
+#: dist/packages/core-data.js:16 dist/packages/core-data.js:25
 msgid "Popup \"%s\" saved successfully."
 msgstr "Popup \"%s\" blev gemt med succes."
 
-#: dist/packages/core-data.js:16
-#: dist/packages/core-data.js:19
+#: dist/packages/core-data.js:16 dist/packages/core-data.js:19
 msgid "An error occurred, popup was not saved."
 msgstr "Der opstod en fejl, popup blev ikke gemt."
 
-#: dist/packages/core-data.js:19
 #. translators: %s: popup title.
-#, js-format
+#: dist/packages/core-data.js:19
 msgid "Popup \"%s\" updated successfully."
 msgstr "Popup \"%s\" blev opdateret med succes."
 
-#: dist/packages/core-data.js:22
 #. translators: %s: popup title.
-#, js-format
+#: dist/packages/core-data.js:22
 msgid "Popup \"%s\" deleted successfully."
 msgstr "Popup \"%s\" blev slettet med succes."
 
@@ -6436,9 +6317,8 @@ msgstr "Der opstod en fejl, indstillingerne blev ikke indlæst."
 msgid "No results returned"
 msgstr "Ingen resultater fundet"
 
-#: dist/packages/cta-admin.js:4
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:4
 msgid "%d item selected"
 msgid_plural "%d items selected"
 msgstr[0] "%d element valgt"
@@ -6468,13 +6348,11 @@ msgstr "Filtre"
 msgid "Enable or disable the call to action"
 msgstr "Aktivér eller deaktiver call to action"
 
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-editor.js:1
+#: dist/packages/cta-admin.js:4 dist/packages/cta-editor.js:1
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: dist/packages/cta-admin.js:4
-#: dist/packages/cta-admin.js:23
+#: dist/packages/cta-admin.js:4 dist/packages/cta-admin.js:23
 msgid "Status"
 msgstr "Status"
 
@@ -6482,9 +6360,8 @@ msgstr "Status"
 msgid "In Trash"
 msgstr "I papirkurven"
 
-#: dist/packages/cta-admin.js:5
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:5
 msgid "%d item"
 msgid_plural "%d items"
 msgstr[0] "%d element"
@@ -6502,55 +6379,47 @@ msgstr "Du har ikke tilladelse til at administrere Call to Action."
 msgid "Popup Maker - Calls to Action"
 msgstr "Popup Maker - Call to Action"
 
-#: dist/packages/cta-admin.js:8
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:8
 msgid "%d call to action enabled."
 msgid_plural "%d calls to action enabled."
 msgstr[0] "%d Call to Action aktiveret."
 msgstr[1] "%d Call to Action aktiveret."
 
-#: dist/packages/cta-admin.js:11
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:11
 msgid "%d call to action disabled."
 msgid_plural "%d calls to action disabled."
 msgstr[0] "%d Call to Action deaktiveret."
 msgstr[1] "%d Call to Action deaktiveret."
 
-#: dist/packages/cta-admin.js:11
-#: dist/packages/cta-admin.js:23
+#: dist/packages/cta-admin.js:11 dist/packages/cta-admin.js:23
 msgid "Trash"
 msgstr "Papirkurv"
 
-#: dist/packages/cta-admin.js:14
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:14
 msgid "Are you sure you want to trash %d items?"
 msgstr "Er du sikker på, at du vil flytte %d elementer til papirkurven?"
 
-#: dist/packages/cta-admin.js:17
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:17
 msgid "%d call to action moved to trash."
 msgid_plural "%d calls to action moved to trash."
 msgstr[0] "%d Call to Action flyttet til papirkurven."
 msgstr[1] "%d Call to Action flyttet til papirkurven."
 
-#: dist/packages/cta-admin.js:17
-#: dist/packages/cta-admin.js:23
+#: dist/packages/cta-admin.js:17 dist/packages/cta-admin.js:23
 msgid "Delete Permanently"
 msgstr "Slet permanent"
 
-#: dist/packages/cta-admin.js:20
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:20
 msgid "Are you sure you want to premanently delete %d items?"
 msgstr "Er du sikker på, at du vil slette %d elementer permanent?"
 
-#: dist/packages/cta-admin.js:23
 #. translators: %d: number of items.
-#, js-format
+#: dist/packages/cta-admin.js:23
 msgid "%d call to action deleted."
 msgid_plural "%d calls to action deleted."
 msgstr[0] "%d Call to Action slettet."
@@ -6684,9 +6553,8 @@ msgstr "Gem call to action"
 msgid "Editor requires a valid id"
 msgstr "Editoren kræver et gyldigt id"
 
-#: dist/packages/fields.js:8
 #. translators: %s: field type that was not found.
-#, js-format
+#: dist/packages/fields.js:8
 msgid "Field type `%s` not found"
 msgstr "Felttypen `%s` blev ikke fundet"
 
@@ -6694,309 +6562,15 @@ msgstr "Felttypen `%s` blev ikke fundet"
 msgid "Support"
 msgstr "Support"
 
-#: classes/Admin/Popups.php:897
-#: classes/Admin/Popups.php:915
-#: classes/Admin/Popups.php:933
-#: classes/Admin/Popups.php:951
-#: classes/Shortcode/Popup.php:176
-#: classes/Shortcode/Popup.php:191
-#: classes/Shortcode/Popup.php:206
-#: classes/Shortcode/Popup.php:221
-#. translators: 1. Screen Edge: top, bottom.
-#, php-format
-msgctxt "Screen Edge: top, bottom"
-msgid "Distance from the %s edge of the screen."
-msgstr "Afstanden fra skærmens %s-kant."
-
-#: classes/Admin/Subscribers/Table.php:108
-msgctxt "column name"
-msgid "Subscribed On"
-msgstr "Tilmeldt den"
-
-#: classes/Admin/Templates.php:1074
-msgctxt "aria-label for add new OR condition button"
-msgid "Add another OR condition"
-msgstr "Tilføj endnu en ELLER-betingelse"
-
-#: classes/Admin/Templates.php:1078
-msgctxt "aria-label for add new AND condition button"
-msgid "Add another AND condition group"
-msgstr "Tilføj endnu en OG-betingelsesgruppe"
-
-#: classes/Conditions.php:236
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: All"
-msgid "%s Archive"
-msgstr "%s-arkiv"
-
-#: classes/Conditions.php:248
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: All"
-msgid "All %s"
-msgstr "Alle %s"
-
-#: classes/Conditions.php:258
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: Selected"
-msgid "%s: Selected"
-msgstr "%s: Valgt"
-
-#: classes/Conditions.php:265
-#: classes/Conditions.php:310
-#: classes/Conditions.php:333
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Select Posts"
-msgid "Select %s."
-msgstr "Vælg %s."
-
-#: classes/Conditions.php:282
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: ID"
-msgid "%s: ID"
-msgstr "%s: ID"
-
-#: classes/Conditions.php:303
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: ID"
-msgid "%s: Child Of"
-msgstr "%s: Underordnet af"
-
-#: classes/Conditions.php:326
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Posts: ID"
-msgid "%s: Ancestor Of"
-msgstr "%s: Overordnet af"
-
-#: classes/Conditions.php:289
-#. translators: 1. Post type singular label.
-#, php-format
-msgctxt "condition: post type singular label ie. Posts IDs"
-msgid "%s IDs: 128, 129"
-msgstr "%s-ID'er: 128, 129"
-
-#: classes/Conditions.php:353
-#. translators: 1. Post type plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Pages: With Template"
-msgid "%s: With Template"
-msgstr "%s: Med skabelon"
-
-#: classes/Conditions.php:411
-#. translators: 1. Post type plural label, 2. Taxonomy singular label.
-#, php-format
-msgctxt ""
-"condition: post type plural and taxonomy singular label ie. Posts: With "
-"Category"
-msgid "%1$s: With %2$s"
-msgstr "%1$s: Med %2$s"
-
-#: classes/Conditions.php:419
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: post type plural label ie. Select categories"
-msgid "Select %s."
-msgstr "Vælg %s."
-
-#: classes/Conditions.php:464
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Categories: All"
-msgid "%s: All"
-msgstr "%s: Alle"
-
-#: classes/Conditions.php:474
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Categories: Selected"
-msgid "%s: Selected"
-msgstr "%s: Valgt"
-
-#: classes/Conditions.php:497
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Categories: Selected"
-msgid "%s: IDs"
-msgstr "%s: ID'er"
-
-#: classes/Conditions.php:481
-#. translators: 1. Taxonomy plural label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Select Categories"
-msgid "Select %s."
-msgstr "Vælg %s."
-
-#: classes/Conditions.php:504
-#. translators: 1. Taxonomy singular label.
-#, php-format
-msgctxt "condition: taxonomy plural label ie. Category IDs"
-msgid "%s IDs: 128, 129"
-msgstr "%s ID'er: 128, 129"
-
-#: classes/Controllers/Assets.php:75
-msgctxt "JS alert for CSS get selector tool"
-msgid "Selector"
-msgstr "Vælger"
-
-#: classes/Controllers/Assets.php:76
-msgctxt "JS alert for CSS get selector tool"
-msgid "Close"
-msgstr "Luk"
-
-#: classes/Controllers/Assets.php:77
-msgctxt "JS alert for CSS get selector tool"
-msgid "Copy"
-msgstr "Kopiér"
-
-#: classes/Controllers/Assets.php:78
-msgctxt "JS alert for CSS get selector tool"
-msgid "Copied to clipboard"
-msgstr "Kopieret til udklipsholderen"
-
-#: classes/Controllers/PostTypes.php:501
-#: classes/Controllers/PostTypes.php:503
-#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
-#, php-format
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "Add New %1$s"
-msgstr "Tilføj ny %1$s"
-
-#: classes/Controllers/PostTypes.php:505
-#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
-#, php-format
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "Edit %1$s"
-msgstr "Redigér %1$s"
-
-#: classes/Controllers/PostTypes.php:507
-#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
-#, php-format
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "New %1$s"
-msgstr "Ny %1$s"
-
-#: classes/Controllers/PostTypes.php:511
-#. translators: %1$s: Post Type Singular: "Popup", "Popup Theme"
-#, php-format
-msgctxt "Post Type Singular: \"Popup\", \"Popup Theme\""
-msgid "View %1$s"
-msgstr "Vis %1$s"
-
-#: classes/Controllers/PostTypes.php:509
-#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
-#, php-format
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "All %2$s"
-msgstr "Alle %2$s"
-
-#: classes/Controllers/PostTypes.php:513
-#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
-#, php-format
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "Search %2$s"
-msgstr "Søg i %2$s"
-
-#: classes/Controllers/PostTypes.php:515
-#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
-#, php-format
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "No %2$s found"
-msgstr "Ingen %2$s fundet"
-
-#: classes/Controllers/PostTypes.php:517
-#. translators: %2$s: Post Type Plural: "Popups", "Popup Themes"
-#, php-format
-msgctxt "Post Type Plural: \"Popups\", \"Popup Themes\""
-msgid "No %2$s found in Trash"
-msgstr "Ingen %2$s fundet i papirkurven"
-
-#: classes/Controllers/PostTypes.php:580
-#: classes/Controllers/PostTypes.php:582
-#. translators: %1$s: Post Type Singular: Popup, Theme
-#, php-format
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s updated."
-msgstr "%1$s opdateret."
-
-#: classes/Controllers/PostTypes.php:584
-#. translators: %1$s: Post Type Singular: Popup, Theme
-#, php-format
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s published."
-msgstr "%1$s udgivet."
-
-#: classes/Controllers/PostTypes.php:586
-#. translators: %1$s: Post Type Singular: Popup, Theme
-#, php-format
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s saved."
-msgstr "%1$s gemt."
-
-#: classes/Controllers/PostTypes.php:588
-#. translators: %1$s: Post Type Singular: Popup, Theme
-#, php-format
-msgctxt "Post Type Singular: Popup, Theme"
-msgid "%1$s submitted."
-msgstr "%1$s indsendt."
-
-#: classes/Triggers.php:94
-#. translators: 1. Trigger name.
-#, php-format
-msgctxt "trigger settings modal title"
-msgid "%s Trigger Settings"
-msgstr "%s udløserindstillinger"
-
-#: includes/modules/menus.php:50
-#. translators: %1$s: opening and closing link HTML tags, %2$s: link text.
-#, php-format
-msgctxt "%s represent opening and closing link html"
-msgid ""
-"Use this if there is a conflict with your theme or another plugin in the "
-"nav menu editor. %1$sLearn more%2$s"
-msgstr ""
-"Brug dette, hvis der er en konflikt med dit tema eller et andet plugin i "
-"menueditoren for navigation. %1$sLæs mere%2$s"
-
-#: dist/packages/components.js:8
-#: dist/packages/components.js:10
-#. translators: 1. Device type.
-#, js-format
-msgctxt "Device toggle option"
-msgid "Show on %1$s"
-msgstr "Vis på %1$s"
-
-#: dist/packages/components.js:9
-#. translators: 1. Device type.
-#, js-format
-msgctxt "Device toggle option"
-msgid "Hide on %1$s"
-msgstr "Skjul på %1$s"
-
 #: packages/block-library/src/lib/cta-button/block.json
 msgctxt "block title"
 msgid "Call to Action Button"
 msgstr "Call-to-action-knap"
 
-#: packages/block-library/src/lib/cta-buttons/block.json
-msgctxt "block title"
-msgid "Call to Action Buttons"
-msgstr "Call-to-action-knapper"
-
 #: packages/block-library/src/lib/cta-button/block.json
 msgctxt "block description"
 msgid "Prompt visitors to take action with a button-style link."
 msgstr "Opfordr besøgende til at handle med et link i knapstil."
-
-#: packages/block-library/src/lib/cta-buttons/block.json
-msgctxt "block description"
-msgid "Prompt visitors to take action with a group of button-style links."
-msgstr "Opfordr besøgende til at handle med en gruppe af links i knapstil."
 
 #: packages/block-library/src/lib/cta-button/block.json
 #: packages/block-library/src/lib/cta-buttons/block.json
@@ -7037,3 +6611,13 @@ msgstr "Fyld"
 msgctxt "block style label"
 msgid "Outline"
 msgstr "Omrids"
+
+#: packages/block-library/src/lib/cta-buttons/block.json
+msgctxt "block title"
+msgid "Call to Action Buttons"
+msgstr "Call-to-action-knapper"
+
+#: packages/block-library/src/lib/cta-buttons/block.json
+msgctxt "block description"
+msgid "Prompt visitors to take action with a group of button-style links."
+msgstr "Opfordr besøgende til at handle med en gruppe af links i knapstil."
