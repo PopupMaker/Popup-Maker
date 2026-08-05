@@ -109,6 +109,10 @@ requirePattern(
 	'Manual catalog priming must retain the 200-string per-language ceiling.'
 );
 requirePattern(
+	/MAX_PRIME_STRINGS_PER_JOB:\s*['"]200['"]/,
+	'Manual catalog priming must allow its complete approved per-language batch.'
+);
+requirePattern(
 	/MAX_TOTAL_MISSING:\s*['"]2100['"]/,
 	'Automatic translation must retain the 2,100-unit aggregate ceiling.'
 );
@@ -159,6 +163,10 @@ requirePattern(
 requirePattern(
 	/configure-translation-scope\.sh[\s\S]*?steps\.scope\.outputs\.target_languages[\s\S]*?steps\.scope\.outputs\.expected_catalog_locales/,
 	'Manual catalog priming must validate and reuse its selected locale scope.'
+);
+requirePattern(
+	/--max-strings-per-job\s+"\$\{\{ steps\.scope\.outputs\.max_strings_per_job \}\}"/,
+	'The provider string limit must use the reviewed automatic or prime scope.'
 );
 requirePattern(
 	/display_title == "AI Translate \(paid manual\)"/,

@@ -45,6 +45,7 @@ env:
     MAX_PRIME_MISSING_PER_LANGUAGE: '200'
     MAX_TOTAL_MISSING: '2100'
     MAX_STRINGS_PER_JOB: '75'
+    MAX_PRIME_STRINGS_PER_JOB: '200'
     AUTOMATION_BRANCH: automation/i18n-develop
     BLOCKER_LABEL: translation-automation-blocked
 
@@ -221,9 +222,11 @@ jobs:
                   if [[ -n "$REQUESTED_LANGUAGES" ]]; then
                     echo "max_missing_per_language=$MAX_PRIME_MISSING_PER_LANGUAGE" >> "$GITHUB_OUTPUT"
                     echo "max_paid_cost=$MAX_PRIME_PAID_COST" >> "$GITHUB_OUTPUT"
+                    echo "max_strings_per_job=$MAX_PRIME_STRINGS_PER_JOB" >> "$GITHUB_OUTPUT"
                   else
                     echo "max_missing_per_language=$MAX_MISSING_PER_LANGUAGE" >> "$GITHUB_OUTPUT"
                     echo "max_paid_cost=$MAX_PAID_COST" >> "$GITHUB_OUTPUT"
+                    echo "max_strings_per_job=$MAX_STRINGS_PER_JOB" >> "$GITHUB_OUTPUT"
                   fi
 
             - name: Merge POT and measure missing translations
@@ -296,7 +299,7 @@ jobs:
                     --target-languages "${{ steps.scope.outputs.target_languages }}"
                     --max-cost "${{ steps.scope.outputs.max_paid_cost }}"
                     --model "$PAID_MODEL"
-                    --max-strings-per-job "$MAX_STRINGS_PER_JOB"
+                    --max-strings-per-job "${{ steps.scope.outputs.max_strings_per_job }}"
                   )
 
                   if [[ "$DRY_RUN" == "true" ]]; then
