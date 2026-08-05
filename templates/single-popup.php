@@ -44,28 +44,20 @@ $previous_popup = \PopupMaker\get_current_popup();
 		}
 
 		body.pum-builder-preview > .pum-builder-preview-popup {
-			display: flex !important;
-			align-items: flex-start;
-			justify-content: center;
-			position: relative !important;
-			inset: auto !important;
-			min-height: 100vh;
-			width: 100% !important;
-			padding: 100px 2.5vw 3em;
+			display: block !important;
 			opacity: 1 !important;
 			visibility: visible !important;
-			overflow: visible;
 		}
 
 		body.pum-builder-preview .pum-container {
 			display: block !important;
-			position: relative !important;
-			top: auto !important;
-			left: auto !important;
-			margin-left: 0 !important;
-			margin-bottom: 0;
 			opacity: 1 !important;
 			visibility: visible !important;
+		}
+
+		body.pum-builder-preview .pum-close[aria-disabled="true"] {
+			display: block !important;
+			pointer-events: none !important;
 		}
 	</style>
 </head>
@@ -106,7 +98,7 @@ $previous_popup = \PopupMaker\get_current_popup();
 					<?php do_action( 'popmake_popup_after_inner' ); // Backward compatibility. ?>
 
 					<?php if ( pum_show_close_button() ) : ?>
-						<button type="button" class="<?php pum_popup_classes( null, 'close' ); ?>" aria-label="<?php esc_attr_e( 'Close', 'popup-maker' ); ?>">
+						<button type="button" class="<?php pum_popup_classes( null, 'close' ); ?>" aria-label="<?php esc_attr_e( 'Close', 'popup-maker' ); ?>" aria-disabled="true" tabindex="-1">
 							<?php pum_popup_close_text(); ?>
 						</button>
 					<?php endif; ?>
@@ -119,5 +111,40 @@ $previous_popup = \PopupMaker\get_current_popup();
 	\PopupMaker\set_current_popup( $previous_popup );
 	wp_footer();
 	?>
+	<script id="pum-builder-preview-script">
+		( function ( $, PUM ) {
+			'use strict';
+
+			var popupId = <?php echo absint( $popup_id ); ?>,
+				$popup = PUM.getPopup( popupId ),
+				resizeObserver;
+
+			function repositionPopup() {
+				$popup.popmake( 'reposition' );
+				$popup.find( '.pum-close' ).attr( {
+					'aria-disabled': 'true',
+					tabindex: '-1'
+				} );
+			}
+
+			$popup.on( 'pumBeforeClose.pumBuilderPreview', function () {
+				$popup.addClass( 'preventClose' );
+			} );
+			$popup.on( 'pumAfterOpen.pumBuilderPreview', repositionPopup );
+
+			if ( PUM.initialized ) {
+				repositionPopup();
+			} else {
+				$( document ).one( 'pumInitialized.pumBuilderPreview', repositionPopup );
+			}
+
+			$( window ).on( 'resize.pumBuilderPreview', repositionPopup );
+
+			if ( 'ResizeObserver' in window ) {
+				resizeObserver = new ResizeObserver( repositionPopup );
+				resizeObserver.observe( $popup.find( '.pum-container' )[ 0 ] );
+			}
+		} )( jQuery, window.PUM );
+	</script>
 </body>
 </html>
