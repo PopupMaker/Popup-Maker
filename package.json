@@ -18,7 +18,7 @@
 		"url": "https://github.com/PopupMaker/Popup-Maker/issues"
 	},
 	"engines": {
-		"node": "^18.0.0 || >=20.10.0"
+		"node": "^22.18.0 || >=24.11.0"
 	},
 	"packageManager": "pnpm@10.32.0",
 	"files": [
@@ -83,6 +83,7 @@
 		"@testing-library/user-event": "^14.6.1",
 		"@types/testing-library__jest-dom": "^6.0.0",
 		"@wordpress/e2e-test-utils-playwright": "^1.29.0",
+		"@wordpress/env": "11.12.0",
 		"@wordpress/scripts": "^31.6.0",
 		"copy-webpack-plugin": "^12.0.2",
 		"glob": "^11.0.2",

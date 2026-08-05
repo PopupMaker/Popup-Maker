@@ -122,8 +122,6 @@ jobs:
             - name: Install dependencies
               if: steps.download.outputs.found != 'true'
               run: |
-                  # Strauss 0.22.4 cannot parse the runner-injected OAuth token.
-                  composer config --global --unset github-oauth.github.com || true
                   composer install --no-dev --optimize-autoloader --no-interaction --no-progress
                   pnpm install --frozen-lockfile
 
