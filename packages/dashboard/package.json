@@ -27,7 +27,7 @@
 	},
 	"dependencies": {
 		"@wordpress/element": "^6.29.0",
-		"@wordpress/hooks": "^4.29.0"
+		"@wordpress/hooks": "^4.52.0"
 	},
 	"scripts": {
 		"build:tsc": "tsc",
