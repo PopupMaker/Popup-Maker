@@ -1,9 +1,17 @@
 name: AI Translate
 
 on:
-    # Nightly aggregation covers pull-request merges and direct pushes to develop.
-    schedule:
-        - cron: '17 7 * * *'
+    # Translate immediately after translatable code lands on develop.
+    push:
+        branches: [develop]
+        paths:
+            - '**/*.php'
+            - '**/*.js'
+            - '**/*.jsx'
+            - '**/*.ts'
+            - '**/*.tsx'
+            - '**/block.json'
+            - 'languages/**'
     workflow_dispatch:
         inputs:
             dry_run:
@@ -65,20 +73,12 @@ jobs:
                     exit 1
                   fi
 
-                  if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
-                    if ! gh api "repos/$GITHUB_REPOSITORY/branches/$TRANSLATION_BASE_BRANCH" >/dev/null 2>&1; then
-                      echo "No $TRANSLATION_BASE_BRANCH branch exists; skipping automatic translation."
-                      echo "should_run=false" >> "$GITHUB_OUTPUT"
-                      exit 0
-                    fi
-                  fi
-
-                  if [[ "$GITHUB_EVENT_NAME" == "schedule" || "$DRY_RUN" != "true" ]]; then
+                  if [[ "$GITHUB_EVENT_NAME" == "push" || "$DRY_RUN" != "true" ]]; then
                     OPEN_PR_COUNT=$(gh pr list --state open --head "$AUTOMATION_BRANCH" --json number --jq 'length')
                     BLOCKER_COUNT=$(gh issue list --state open --label "$BLOCKER_LABEL" --json number --jq 'length')
 
                     if (( OPEN_PR_COUNT > 0 || BLOCKER_COUNT > 0 )); then
-                      if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
+                      if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
                         echo "An existing translation PR or blocker issue requires review; skipping automatic translation."
                         echo "should_run=false" >> "$GITHUB_OUTPUT"
                         exit 0
@@ -113,7 +113,7 @@ jobs:
 
                   {
                     echo "### Translation guardrails"
-                    echo "- Automatic cadence: once nightly against $TRANSLATION_BASE_BRANCH"
+                    echo "- Automatic cadence: immediately after translatable changes reach $TRANSLATION_BASE_BRANCH"
                     echo "- Hard estimated cost ceiling: \$$MAX_PAID_COST"
                     echo "- Maximum missing strings per language: $MAX_MISSING_PER_LANGUAGE"
                     echo "- Maximum missing translation units: $MAX_TOTAL_MISSING"
@@ -181,7 +181,7 @@ jobs:
               run: |
                   set -euo pipefail
 
-                  if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
+                  if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
                     gh label create "$BLOCKER_LABEL" \
                       --color B60205 \
                       --description "Automatic translations are paused pending review" \
@@ -189,7 +189,7 @@ jobs:
                     gh issue create \
                       --title "Translation automation paused: catalog delta exceeds limits" \
                       --label "$BLOCKER_LABEL" \
-                      --body "The nightly translation run found ${{ steps.preflight.outputs.total_missing }} missing units, with up to ${{ steps.preflight.outputs.max_missing }} in one language across ${{ steps.preflight.outputs.catalog_count }} catalogs. The automatic limits are $MAX_TOTAL_MISSING total, $MAX_MISSING_PER_LANGUAGE per language, and $EXPECTED_LANGUAGE_COUNT catalogs. Review the source delta and close this issue to resume automation."
+                      --body "The automatic develop translation run found ${{ steps.preflight.outputs.total_missing }} missing units, with up to ${{ steps.preflight.outputs.max_missing }} in one language across ${{ steps.preflight.outputs.catalog_count }} catalogs. The automatic limits are $MAX_TOTAL_MISSING total, $MAX_MISSING_PER_LANGUAGE per language, and $EXPECTED_LANGUAGE_COUNT catalogs. Review the source delta and close this issue to resume automation."
                   fi
 
                   echo "::error::Translation catalog delta exceeds the automatic safety limits."
@@ -222,7 +222,7 @@ jobs:
                       gh issue create \
                         --title "Translation automation paused after a paid run" \
                         --label "$BLOCKER_LABEL" \
-                        --body "$reason Close this issue only after the failure is understood; the next nightly run will then resume."
+                        --body "$reason Close this issue only after the failure is understood; the next develop change will then resume automation."
                     fi
                   }
 
@@ -256,7 +256,7 @@ jobs:
 
             - name: Measure paid translation progress
               id: postflight
-              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true)
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true)
               run: |
                   bash bin/prepare-translation-catalogs.sh \
                     languages \
@@ -265,7 +265,7 @@ jobs:
                     "$EXPECTED_LANGUAGE_COUNT"
 
             - name: Enforce paid translation completion
-              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true) && steps.postflight.outputs.total_missing != '0'
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true) && steps.postflight.outputs.total_missing != '0'
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
@@ -286,17 +286,17 @@ jobs:
                   exit 1
 
             - name: Generate runtime translations
-              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true)
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true)
               run: |
                   wp i18n make-mo languages/
                   wp i18n make-json languages/ --no-purge
 
             - name: Validate translation catalogs
-              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true)
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true)
               run: bash bin/verify-translation-catalogs.sh
 
             - name: Open consolidated translation pull request
-              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true)
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true)
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
@@ -318,7 +318,7 @@ jobs:
                     --base "$TRANSLATION_BASE_BRANCH" \
                     --head "$AUTOMATION_BRANCH" \
                     --title "chore(i18n): update translations from develop" \
-                    --body "Nightly consolidated translation update for the latest develop branch. Review language quality before merging."
+                    --body "Automatic translation update for the latest develop branch. Review language quality before merging."
 
             - name: Preserve failed translation catalogs
               if: failure()
