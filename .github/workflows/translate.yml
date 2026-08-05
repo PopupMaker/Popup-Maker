@@ -28,6 +28,7 @@ env:
     PLUGIN_SLUG: popup-maker
     TRANSLATION_BASE_BRANCH: develop
     TARGET_LANGUAGES: es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR,vi,fa_IR,cs_CZ,pt_PT,hu_HU,es_MX,da_DK,zh_TW,he_IL,th,ro_RO,el,hi_IN
+    EXPECTED_CATALOG_LOCALES: es_ES,pt_BR,fr_FR,de_DE,ja_JP,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar_AR,sv_SE,ko_KR,vi_VN,fa_IR,cs_CZ,pt_PT,hu_HU,es_MX,da_DK,zh_TW,he_IL,th_TH,ro_RO,el_GR,hi_IN
     EXPECTED_LANGUAGE_COUNT: '28'
     POTOMATIC_VERSION: '1.3.0'
     PAID_MODEL: gpt-5.4-mini
@@ -172,7 +173,8 @@ jobs:
                     languages \
                     "$MAX_MISSING_PER_LANGUAGE" \
                     "$MAX_TOTAL_MISSING" \
-                    "$EXPECTED_LANGUAGE_COUNT"
+                    "$EXPECTED_LANGUAGE_COUNT" \
+                    "$EXPECTED_CATALOG_LOCALES"
 
             - name: Enforce translation-size ceiling
               if: steps.preflight.outputs.within_limits != 'true'
@@ -189,7 +191,7 @@ jobs:
                     gh issue create \
                       --title "Translation automation paused: catalog delta exceeds limits" \
                       --label "$BLOCKER_LABEL" \
-                      --body "The automatic develop translation run found ${{ steps.preflight.outputs.total_missing }} missing units, with up to ${{ steps.preflight.outputs.max_missing }} in one language across ${{ steps.preflight.outputs.catalog_count }} catalogs. The automatic limits are $MAX_TOTAL_MISSING total, $MAX_MISSING_PER_LANGUAGE per language, and $EXPECTED_LANGUAGE_COUNT catalogs. Review the source delta and close this issue to resume automation."
+                      --body "The automatic develop translation run found ${{ steps.preflight.outputs.total_missing }} missing units, with up to ${{ steps.preflight.outputs.max_missing }} in one language. It found ${{ steps.preflight.outputs.catalog_count }} expected catalogs, ${{ steps.preflight.outputs.missing_catalogs }} missing catalogs, and ${{ steps.preflight.outputs.unexpected_catalogs }} unexpected catalogs. The automatic limits are $MAX_TOTAL_MISSING total, $MAX_MISSING_PER_LANGUAGE per language, and the exact configured set of $EXPECTED_LANGUAGE_COUNT locales. Review the source delta and close this issue to resume automation."
                   fi
 
                   echo "::error::Translation catalog delta exceeds the automatic safety limits."
@@ -262,10 +264,11 @@ jobs:
                     languages \
                     "$MAX_MISSING_PER_LANGUAGE" \
                     "$MAX_TOTAL_MISSING" \
-                    "$EXPECTED_LANGUAGE_COUNT"
+                    "$EXPECTED_LANGUAGE_COUNT" \
+                    "$EXPECTED_CATALOG_LOCALES"
 
             - name: Enforce paid translation completion
-              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true) && steps.postflight.outputs.total_missing != '0'
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true) && (steps.postflight.outputs.total_missing != '0' || steps.postflight.outputs.within_limits != 'true')
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
@@ -293,7 +296,7 @@ jobs:
 
             - name: Validate translation catalogs
               if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true)
-              run: bash bin/verify-translation-catalogs.sh
+              run: bash bin/verify-translation-catalogs.sh languages "$EXPECTED_LANGUAGE_COUNT" "$EXPECTED_CATALOG_LOCALES"
 
             - name: Open consolidated translation pull request
               if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true)

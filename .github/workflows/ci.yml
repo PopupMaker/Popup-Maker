@@ -99,6 +99,7 @@ jobs:
               - 'bin/verify-translation-guardrails.js'
               - 'bin/verify-translation-catalogs.sh'
               - 'bin/prepare-translation-catalogs.sh'
+              - 'bin/test-translation-preflight.sh'
               - 'languages/**'
 
   translation-guardrails:
@@ -120,8 +121,24 @@ jobs:
       - name: Verify translation preparation script
         run: bash -n bin/prepare-translation-catalogs.sh
 
+      - name: Test translation preflight accounting
+        run: bash bin/test-translation-preflight.sh
+
       - name: Verify translation catalogs
-        run: bash bin/verify-translation-catalogs.sh
+        run: |
+          if [[ -d languages ]]; then
+            PO_COUNT=$(find languages -maxdepth 1 -name '*.po' -print | wc -l | tr -d ' ')
+          else
+            PO_COUNT=0
+          fi
+          if [[ "$PO_COUNT" -eq 28 ]]; then
+            bash bin/verify-translation-catalogs.sh \
+              languages \
+              28 \
+              'es_ES,pt_BR,fr_FR,de_DE,ja_JP,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar_AR,sv_SE,ko_KR,vi_VN,fa_IR,cs_CZ,pt_PT,hu_HU,es_MX,da_DK,zh_TW,he_IL,th_TH,ro_RO,el_GR,hi_IN'
+          else
+            echo "Catalog set is not fully primed yet ($PO_COUNT/28); exact-set validation will run after translation."
+          fi
 
   # ============================================================================
   # PHP Code Quality - PHPCS & PHPStan

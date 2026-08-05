@@ -19,6 +19,14 @@ const attributes = fs.readFileSync(
 	'utf8'
 );
 const failures = [];
+const baseBranchMatch = workflow.match(
+	/^\s{4}TRANSLATION_BASE_BRANCH:\s*([^\s#]+)\s*$/m
+);
+const baseBranch = baseBranchMatch ? baseBranchMatch[ 1 ] : '';
+const escapedBaseBranch = baseBranch.replace(
+	/[.*+?^$()|[\]\\]/g,
+	'\\$&'
+);
 
 const requirePattern = ( pattern, message ) => {
 	if ( ! pattern.test( workflow ) ) {
@@ -38,10 +46,17 @@ const requirePreparationPattern = ( pattern, message ) => {
 	}
 };
 
-requirePattern(
-	/^\s{4}push:[\s\S]*?branches:\s*\[develop\]/m,
-	'Translation must run immediately after changes reach develop.'
-);
+if ( ! baseBranch ) {
+	failures.push( 'Translation must declare its canonical base branch.' );
+} else {
+	requirePattern(
+		new RegExp(
+			`^\\s{4}push:[\\s\\S]*?branches:\\s*\\[\\s*${ escapedBaseBranch }\\s*\\]`,
+			'm'
+		),
+		`Translation must run immediately after changes reach ${ baseBranch }.`
+	);
+}
 requirePattern(
 	/^\s{4}workflow_dispatch:/m,
 	'Translation must retain a reviewed manual dispatch.'
@@ -49,10 +64,6 @@ requirePattern(
 requirePattern(
 	/dry_run:[\s\S]*?default:\s*true/,
 	'Manual translation dispatches must default to dry-run mode.'
-);
-requirePattern(
-	/TRANSLATION_BASE_BRANCH:\s*develop/,
-	'Automatic translation must always read the latest develop branch.'
 );
 requirePattern(
 	/ref:\s*\$\{\{ env\.TRANSLATION_BASE_BRANCH \}\}/,
@@ -83,7 +94,7 @@ requirePattern(
 	'Workflow attempts must not be re-runnable.'
 );
 requirePattern(
-	/automation\/i18n-develop/,
+	/AUTOMATION_BRANCH:\s*automation\/i18n-[A-Za-z0-9._-]+/,
 	'Automatic translation must use one consolidated pull-request branch.'
 );
 requirePattern(
@@ -103,8 +114,12 @@ requirePattern(
 	'Catalog size limits must be enforced before any provider call.'
 );
 requirePattern(
-	/steps\.postflight\.outputs\.total_missing/,
+	/steps\.postflight\.outputs\.total_missing[\s\S]*?steps\.postflight\.outputs\.within_limits/,
 	'Paid runs must verify that every missing translation was completed.'
+);
+requirePattern(
+	/EXPECTED_CATALOG_LOCALES:[\s\S]*?prepare-translation-catalogs\.sh[\s\S]*?"\$EXPECTED_CATALOG_LOCALES"/,
+	'Catalog preflight must validate the exact configured locale set.'
 );
 
 requirePreparationPattern(
@@ -116,7 +131,15 @@ requirePreparationPattern(
 	'Catalog preparation must enforce per-language and aggregate limits.'
 );
 requirePreparationPattern(
-	/needs_translation=\$NEEDS_TRANSLATION[\s\S]*?within_limits=\$WITHIN_LIMITS/,
+	/MISSING_CATALOGS[\s\S]*?SOURCE_STRING_COUNT[\s\S]*?TOTAL_MISSING/,
+	'Missing catalogs must be costed as a full source catalog before translation.'
+);
+requirePreparationPattern(
+	/UNEXPECTED_CATALOGS/,
+	'Unexpected locale catalogs must be rejected.'
+);
+requirePreparationPattern(
+	/missing_catalogs=\$MISSING_CATALOGS[\s\S]*?unexpected_catalogs=\$UNEXPECTED_CATALOGS[\s\S]*?needs_translation=\$NEEDS_TRANSLATION[\s\S]*?within_limits=\$WITHIN_LIMITS/,
 	'Catalog preparation must expose the measured translation state.'
 );
 
