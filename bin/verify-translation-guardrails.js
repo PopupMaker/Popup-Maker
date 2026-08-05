@@ -23,14 +23,17 @@ const baseBranchMatch = workflow.match(
 	/^\s{4}TRANSLATION_BASE_BRANCH:\s*([^\s#]+)\s*$/m
 );
 const baseBranch = baseBranchMatch ? baseBranchMatch[ 1 ] : '';
-const escapedBaseBranch = baseBranch.replace(
-	/[.*+?^$()|[\]\\]/g,
-	'\\$&'
-);
+const escapedBaseBranch = baseBranch.replace( /[.*+?^$()|[\]\\]/g, '\\$&' );
 const potCommandIndex = workflow.indexOf( 'wp i18n make-pot' );
-const potDomainIndex = workflow.indexOf( '--domain=$PLUGIN_SLUG', potCommandIndex );
+const potDomainIndex = workflow.indexOf(
+	'--domain=$PLUGIN_SLUG',
+	potCommandIndex
+);
 const potExcludeIndex = workflow.indexOf( '--exclude=', potDomainIndex );
-const scopeStepIndex = workflow.indexOf( 'Configure translation scope', potExcludeIndex );
+const scopeStepIndex = workflow.indexOf(
+	'Configure translation scope',
+	potExcludeIndex
+);
 
 const requirePattern = ( pattern, message ) => {
 	if ( ! pattern.test( workflow ) ) {
