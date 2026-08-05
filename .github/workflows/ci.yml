@@ -182,7 +182,10 @@ jobs:
 
       - name: Install composer dependencies
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: composer install --no-interaction --optimize-autoloader --ignore-platform-reqs
+        run: |
+          # Strauss 0.22.4 cannot parse some runner-injected OAuth tokens.
+          composer config --global --unset github-oauth.github.com || true
+          composer install --no-interaction --optimize-autoloader --ignore-platform-reqs
 
       - name: Run PHPCS on changed files
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -401,6 +404,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          # Strauss 0.22.4 cannot parse some runner-injected OAuth tokens.
           composer config --global --unset github-oauth.github.com || true
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
           pnpm install --frozen-lockfile
@@ -428,16 +432,19 @@ jobs:
             core: null,
             port: 8888,
             mappings: {"wp-content/plugins/popup-maker": $plugin}
-          }' > .wp-env.override.json
+          }' > "$GITHUB_WORKSPACE/.wp-env.plugin-check.json"
+
+      - name: Install wp-env
+        run: pnpm add --global @wordpress/env@11.12.0
 
       - name: Start WordPress and install Plugin Check
         run: |
-          pnpm dlx @wordpress/env@10.39.0 start --update
-          pnpm dlx @wordpress/env@10.39.0 run cli -- wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
+          wp-env start --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" --update
+          wp-env run cli --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
 
       - name: Scan assembled plugin
         run: |
-          pnpm dlx @wordpress/env@10.39.0 run cli -- wp plugin check popup-maker \
+          wp-env run cli --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" wp plugin check popup-maker \
             --exclude-checks=plugin_review_phpcs \
             --ignore-warnings \
             --exclude-directories=vendor-prefixed \
@@ -460,7 +467,7 @@ jobs:
 
       - name: Stop Plugin Check environment
         if: always()
-        run: pnpm dlx @wordpress/env@10.39.0 stop || true
+        run: wp-env stop --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" || true
 
   # ============================================================================
   # Security Scanning - NPM Dependencies
