@@ -24,6 +24,7 @@ function pum_php85_assert( $condition, $message ) {
 
 pum_php85_assert( PHP_VERSION_ID >= 80500, 'The runtime is not PHP 8.5 or newer.' );
 pum_php85_assert( class_exists( 'Popup_Maker' ), 'Popup Maker did not load.' );
+pum_php85_assert( function_exists( 'pum' ), 'Popup Maker functions did not load.' );
 
 $admin = get_user_by( 'login', 'admin' );
 pum_php85_assert( false !== $admin, 'The wp-env administrator account was not found.' );
@@ -61,9 +62,8 @@ $popup = pum()->popups->create_item(
 		],
 	]
 );
-$popup_id = $popup->ID;
-
 pum_php85_assert( pum_is_popup( $popup ), 'Popup model creation failed.' );
+$popup_id = $popup->ID;
 pum_php85_assert( 'PHP 8.5 Runtime Smoke Popup' === $popup->post_title, 'Declared post properties are not readable.' );
 pum_php85_assert( $popup->has_trigger( 'auto_open' ), 'Popup triggers were not loaded.' );
 pum_php85_assert( 1 === count( $popup->get_cookies() ), 'Popup cookies were not loaded.' );
@@ -75,6 +75,7 @@ $updated = pum()->popups->update_item(
 		'title' => 'PHP 8.5 Runtime Smoke Popup Updated',
 	]
 );
+pum_php85_assert( pum_is_popup( $updated ), 'Popup update did not return a popup model.' );
 pum_php85_assert( 'PHP 8.5 Runtime Smoke Popup Updated' === $updated->post_title, 'Popup update failed.' );
 
 $frontend = \PopupMaker\plugin()->get_controller( 'Frontend\\Popups' );

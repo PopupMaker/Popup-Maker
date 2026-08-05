@@ -50,7 +50,7 @@
 		"lint:changed": "vendor/bin/phpcs --standard=.phpcs.xml.dist --report-full --report-checkstyle=./phpcs-report.xml --file-list=.changed-files.txt",
 		"generate-stubs": "./bin/generate-stubs.sh",
 		"install-strauss": [
-			"test -f strauss.phar || curl -o strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/download/0.28.1/strauss.phar",
+			"echo 'f4d944bd1fbdadbe8f404d339f51fce10215cb543b8e199a015ecfabf4663517  strauss.phar' | shasum -a 256 -c - >/dev/null 2>&1 || curl --fail --location --output strauss.phar https://github.com/BrianHenryIE/strauss/releases/download/0.28.1/strauss.phar",
 			"echo 'f4d944bd1fbdadbe8f404d339f51fce10215cb543b8e199a015ecfabf4663517  strauss.phar' | shasum -a 256 -c -"
 		],
 		"clean-vendor-prefix-folder": [
