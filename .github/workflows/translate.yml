@@ -85,12 +85,14 @@ jobs:
                   fi
 
                   if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
-                    CATALOG_COUNT=$(
+                    if ! CATALOG_COUNT=$(
                       gh api \
                         "repos/$GITHUB_REPOSITORY/contents/languages?ref=$TRANSLATION_BASE_BRANCH" \
                         --jq '[.[] | select(.type == "file" and (.name | endswith(".po")))] | length' \
-                        2>/dev/null || printf '0\n'
-                    )
+                        2>/dev/null
+                    ); then
+                      CATALOG_COUNT=0
+                    fi
 
                     if [[ ! "$CATALOG_COUNT" =~ ^[0-9]+$ ]]; then
                       echo "::error::Could not determine the current translation catalog count."

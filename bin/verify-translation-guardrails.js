@@ -172,6 +172,10 @@ requirePattern(
 	/display_title == "AI Translate \(paid manual\)"/,
 	'Manual rate limiting must count paid dispatches only.'
 );
+requirePattern(
+	/if ! CATALOG_COUNT=\$\([\s\S]*?CATALOG_COUNT=0[\s\S]*?fi/,
+	'Missing language directories must safely count as an unprimed catalog set.'
+);
 
 requirePreparationPattern(
 	/msgmerge[\s\S]*?--update[\s\S]*?--no-fuzzy-matching/,
