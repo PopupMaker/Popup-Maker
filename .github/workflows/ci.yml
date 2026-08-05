@@ -98,6 +98,7 @@ jobs:
               - '.gitattributes'
               - 'bin/verify-translation-guardrails.js'
               - 'bin/verify-translation-catalogs.sh'
+              - 'bin/prepare-translation-catalogs.sh'
               - 'languages/**'
 
   translation-guardrails:
@@ -115,6 +116,9 @@ jobs:
 
       - name: Verify translation spend guardrails
         run: node bin/verify-translation-guardrails.js
+
+      - name: Verify translation preparation script
+        run: bash -n bin/prepare-translation-catalogs.sh
 
       - name: Verify translation catalogs
         run: bash bin/verify-translation-catalogs.sh
