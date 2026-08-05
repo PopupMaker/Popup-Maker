@@ -1,52 +1,141 @@
 name: AI Translate
 
 on:
-    # Auto-run on develop when translatable files change
-    push:
-        branches: [develop]
-        paths:
-            - '**.php'
-            - 'src/**/*.js'
-            - 'src/**/*.ts'
-            - 'languages/*.pot'
-    # Manual trigger for full control
+    # Nightly aggregation covers pull-request merges and direct pushes to develop.
+    schedule:
+        - cron: '17 7 * * *'
     workflow_dispatch:
         inputs:
-            languages:
-                description: 'Target languages (comma-separated)'
-                required: true
-                default: 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN'
-            max_cost:
-                description: 'Maximum cost in USD'
-                required: false
-                default: '5.00'
             dry_run:
                 description: 'Dry run (no API calls)'
                 required: false
                 type: boolean
-                default: false
-            force_translate:
-                description: 'Force re-translate all strings'
+                default: true
+            paid_confirmation:
+                description: 'For a paid manual run, type TRANSLATE'
                 required: false
-                type: boolean
-                default: false
+                default: ''
 
 env:
     PLUGIN_SLUG: popup-maker
+    TRANSLATION_BASE_BRANCH: develop
+    TARGET_LANGUAGES: es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar,sv_SE,ko_KR,vi,fa_IR,cs_CZ,pt_PT,hu_HU,es_MX,da_DK,zh_TW,he_IL,th,ro_RO,el,hi_IN
+    EXPECTED_LANGUAGE_COUNT: '28'
+    POTOMATIC_VERSION: '1.3.0'
+    PAID_MODEL: gpt-5.4-mini
+    MAX_PAID_COST: '1.25'
+    MAX_MANUAL_PAID_RUNS_PER_24_HOURS: '1'
+    MAX_MISSING_PER_LANGUAGE: '75'
+    MAX_TOTAL_MISSING: '2100'
+    MAX_STRINGS_PER_JOB: '75'
+    AUTOMATION_BRANCH: automation/i18n-develop
+    BLOCKER_LABEL: translation-automation-blocked
+
+permissions:
+    actions: read
+    contents: write
+    issues: write
+    pull-requests: write
+
+concurrency:
+    group: ai-translate-${{ github.repository }}
+    cancel-in-progress: false
 
 jobs:
-    translate:
-        # DISABLED: Enable when Potomatic translation is ready
-        if: false
-        name: AI Translate POT
+    gate:
+        name: Translation safety gate
         runs-on: ubuntu-latest
+        outputs:
+            should_run: ${{ steps.guard.outputs.should_run }}
 
         steps:
-            - name: Checkout
+            - name: Enforce automatic and manual guardrails
+              id: guard
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  DRY_RUN: ${{ inputs.dry_run || 'false' }}
+                  PAID_CONFIRMATION: ${{ inputs.paid_confirmation }}
+              run: |
+                  set -euo pipefail
+
+                  echo "should_run=true" >> "$GITHUB_OUTPUT"
+
+                  if [[ "$GITHUB_RUN_ATTEMPT" != "1" ]]; then
+                    echo "::error::Translation workflow runs cannot be re-run. Start a new reviewed dispatch instead."
+                    exit 1
+                  fi
+
+                  if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
+                    if ! gh api "repos/$GITHUB_REPOSITORY/branches/$TRANSLATION_BASE_BRANCH" >/dev/null 2>&1; then
+                      echo "No $TRANSLATION_BASE_BRANCH branch exists; skipping automatic translation."
+                      echo "should_run=false" >> "$GITHUB_OUTPUT"
+                      exit 0
+                    fi
+                  fi
+
+                  if [[ "$GITHUB_EVENT_NAME" == "schedule" || "$DRY_RUN" != "true" ]]; then
+                    OPEN_PR_COUNT=$(gh pr list --state open --head "$AUTOMATION_BRANCH" --json number --jq 'length')
+                    BLOCKER_COUNT=$(gh issue list --state open --label "$BLOCKER_LABEL" --json number --jq 'length')
+
+                    if (( OPEN_PR_COUNT > 0 || BLOCKER_COUNT > 0 )); then
+                      if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
+                        echo "An existing translation PR or blocker issue requires review; skipping automatic translation."
+                        echo "should_run=false" >> "$GITHUB_OUTPUT"
+                        exit 0
+                      fi
+
+                      echo "::error::Review the existing translation PR or blocker issue before starting another paid run."
+                      exit 1
+                    fi
+                  fi
+
+                  if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && "$DRY_RUN" != "true" ]]; then
+                    if [[ "$PAID_CONFIRMATION" != "TRANSLATE" ]]; then
+                      echo "::error::Paid translation requires paid_confirmation=TRANSLATE."
+                      exit 1
+                    fi
+
+                    CUTOFF=$(date -u -d '24 hours ago' '+%Y-%m-%dT%H:%M:%SZ')
+                    RECENT_RUNS=$(
+                      gh api \
+                        "repos/$GITHUB_REPOSITORY/actions/workflows/translate.yml/runs?event=workflow_dispatch&per_page=100" \
+                      | jq \
+                          --arg cutoff "$CUTOFF" \
+                          --argjson current "$GITHUB_RUN_ID" \
+                          '[.workflow_runs[] | select(.id != $current and .created_at >= $cutoff)] | length'
+                    )
+
+                    if (( RECENT_RUNS >= MAX_MANUAL_PAID_RUNS_PER_24_HOURS )); then
+                      echo "::error::Paid manual translation is limited to $MAX_MANUAL_PAID_RUNS_PER_24_HOURS run per rolling 24 hours."
+                      exit 1
+                    fi
+                  fi
+
+                  {
+                    echo "### Translation guardrails"
+                    echo "- Automatic cadence: once nightly against $TRANSLATION_BASE_BRANCH"
+                    echo "- Hard estimated cost ceiling: \$$MAX_PAID_COST"
+                    echo "- Maximum missing strings per language: $MAX_MISSING_PER_LANGUAGE"
+                    echo "- Maximum missing translation units: $MAX_TOTAL_MISSING"
+                    echo "- Re-runs: prohibited"
+                  } >> "$GITHUB_STEP_SUMMARY"
+
+    translate:
+        name: AI Translate POT
+        needs: gate
+        if: needs.gate.outputs.should_run == 'true'
+        runs-on: ubuntu-latest
+        timeout-minutes: 45
+
+        steps:
+            - name: Checkout latest develop
               uses: actions/checkout@v6
+              with:
+                  ref: ${{ env.TRANSLATION_BASE_BRANCH }}
+                  fetch-depth: 0
 
             - name: Setup pnpm
-              uses: pnpm/action-setup@v4
+              uses: pnpm/action-setup@v6
 
             - name: Setup Node.js
               uses: actions/setup-node@v6
@@ -60,81 +149,181 @@ jobs:
                   php-version: '8.1'
                   tools: wp-cli
 
+            - name: Install gettext
+              run: sudo apt-get update && sudo apt-get install -y gettext
+
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
             - name: Build assets
               run: pnpm run build
 
-            - name: Create languages directory
-              run: mkdir -p languages
-
             - name: Generate POT file
               run: |
+                  mkdir -p languages
                   wp i18n make-pot . languages/$PLUGIN_SLUG.pot \
                     --domain=$PLUGIN_SLUG \
                     --exclude=vendor,vendor-prefixed,node_modules,tests
 
-            - name: Install Potomatic
-              run: npm install -g https://github.com/GravityKit/Potomatic.git
+            - name: Merge POT and measure missing translations
+              id: preflight
+              run: |
+                  bash bin/prepare-translation-catalogs.sh \
+                    languages \
+                    "$MAX_MISSING_PER_LANGUAGE" \
+                    "$MAX_TOTAL_MISSING" \
+                    "$EXPECTED_LANGUAGE_COUNT"
 
-            - name: Run AI Translation
+            - name: Enforce translation-size ceiling
+              if: steps.preflight.outputs.within_limits != 'true'
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  set -euo pipefail
+
+                  if [[ "$GITHUB_EVENT_NAME" == "schedule" ]]; then
+                    gh label create "$BLOCKER_LABEL" \
+                      --color B60205 \
+                      --description "Automatic translations are paused pending review" \
+                      --force
+                    gh issue create \
+                      --title "Translation automation paused: catalog delta exceeds limits" \
+                      --label "$BLOCKER_LABEL" \
+                      --body "The nightly translation run found ${{ steps.preflight.outputs.total_missing }} missing units, with up to ${{ steps.preflight.outputs.max_missing }} in one language across ${{ steps.preflight.outputs.catalog_count }} catalogs. The automatic limits are $MAX_TOTAL_MISSING total, $MAX_MISSING_PER_LANGUAGE per language, and $EXPECTED_LANGUAGE_COUNT catalogs. Review the source delta and close this issue to resume automation."
+                  fi
+
+                  echo "::error::Translation catalog delta exceeds the automatic safety limits."
+                  exit 1
+
+            - name: Run AI translation
+              if: steps.preflight.outputs.needs_translation == 'true'
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-                  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-                  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-                  TARGET_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN' }}
-                  MAX_COST: ${{ inputs.max_cost || vars.DEFAULT_TRANSLATION_MAX_COST || '2.00' }}
-                  DRY_RUN: ${{ inputs.dry_run || 'false' }}
-                  FORCE_TRANSLATE: ${{ inputs.force_translate || 'false' }}
+                  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+                  GH_TOKEN: ${{ github.token }}
               run: |
-                  if [[ -z "$OPENAI_API_KEY" && -z "$GEMINI_API_KEY" && -z "$ANTHROPIC_API_KEY" ]]; then
-                    echo "No AI API key configured. Skipping translation."
-                    echo "Set OPENAI_API_KEY, GEMINI_API_KEY, or ANTHROPIC_API_KEY secret to enable."
+                  set -euo pipefail
+
+                  if [[ "$DRY_RUN" != "true" && -z "$OPENAI_API_KEY" ]]; then
+                    echo "::error::OPENAI_API_KEY is required for a paid translation run."
+                    exit 1
+                  fi
+
+                  block_automation() {
+                    local reason="$1"
+                    gh label create "$BLOCKER_LABEL" \
+                      --color B60205 \
+                      --description "Automatic translations are paused pending review" \
+                      --force
+                    existing_issue=$(gh issue list --state open --label "$BLOCKER_LABEL" --json number --jq '.[0].number // empty')
+                    if [[ -n "$existing_issue" ]]; then
+                      gh issue comment "$existing_issue" --body "$reason"
+                    else
+                      gh issue create \
+                        --title "Translation automation paused after a paid run" \
+                        --label "$BLOCKER_LABEL" \
+                        --body "$reason Close this issue only after the failure is understood; the next nightly run will then resume."
+                    fi
+                  }
+
+                  ARGS=(
+                    --pot-file-path "languages/$PLUGIN_SLUG.pot"
+                    --output-dir languages/
+                    --po-file-prefix "$PLUGIN_SLUG-"
+                    --locale-format wp_locale
+                    --target-languages "$TARGET_LANGUAGES"
+                    --max-cost "$MAX_PAID_COST"
+                    --model "$PAID_MODEL"
+                    --max-strings-per-job "$MAX_STRINGS_PER_JOB"
+                  )
+
+                  if [[ "$DRY_RUN" == "true" ]]; then
+                    ARGS+=( --dry-run )
+                  fi
+
+                  set +e
+                  timeout --signal=TERM --kill-after=30s 25m \
+                    pnpm dlx "potomatic@$POTOMATIC_VERSION" "${ARGS[@]}"
+                  TRANSLATION_EXIT=$?
+                  set -e
+
+                  if [[ "$TRANSLATION_EXIT" -ne 0 ]]; then
+                    if [[ "$DRY_RUN" != "true" ]]; then
+                      block_automation "Potomatic exited with status $TRANSLATION_EXIT during run $GITHUB_RUN_ID. Partial catalogs are attached to the failed workflow run."
+                    fi
+                    exit "$TRANSLATION_EXIT"
+                  fi
+
+            - name: Measure paid translation progress
+              id: postflight
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true)
+              run: |
+                  bash bin/prepare-translation-catalogs.sh \
+                    languages \
+                    "$MAX_MISSING_PER_LANGUAGE" \
+                    "$MAX_TOTAL_MISSING" \
+                    "$EXPECTED_LANGUAGE_COUNT"
+
+            - name: Enforce paid translation completion
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true) && steps.postflight.outputs.total_missing != '0'
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  set -euo pipefail
+
+                  AFTER_TOTAL="${{ steps.postflight.outputs.total_missing }}"
+                  BEFORE_TOTAL="${{ steps.preflight.outputs.total_missing }}"
+
+                  gh label create "$BLOCKER_LABEL" \
+                    --color B60205 \
+                    --description "Automatic translations are paused pending review" \
+                    --force
+                  gh issue create \
+                    --title "Translation automation paused: paid run was incomplete" \
+                    --label "$BLOCKER_LABEL" \
+                    --body "Run $GITHUB_RUN_ID reduced the missing translation count from $BEFORE_TOTAL to $AFTER_TOTAL but did not complete all catalogs. Partial catalogs are attached to the failed workflow run. Close this issue only after the failure is understood."
+                  echo "::error::Paid translation left $AFTER_TOTAL missing units."
+                  exit 1
+
+            - name: Generate runtime translations
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true)
+              run: |
+                  wp i18n make-mo languages/
+                  wp i18n make-json languages/ --no-purge
+
+            - name: Validate translation catalogs
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true)
+              run: bash bin/verify-translation-catalogs.sh
+
+            - name: Open consolidated translation pull request
+              if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'schedule' || inputs.dry_run != true)
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  set -euo pipefail
+
+                  if [[ -z "$(git status --porcelain -- languages/)" ]]; then
+                    echo "No catalog changes remain after translation."
                     exit 0
                   fi
 
-                  ARGS="--pot-file-path languages/$PLUGIN_SLUG.pot"
-                  ARGS="$ARGS --output-dir languages/"
-                  ARGS="$ARGS --po-file-prefix $PLUGIN_SLUG-"
-                  ARGS="$ARGS --locale-format wp_locale"
-                  ARGS="$ARGS --target-languages $TARGET_LANGUAGES"
-                  ARGS="$ARGS --max-cost $MAX_COST"
-                  ARGS="$ARGS --use-dictionary"
-
-                  if [[ "$DRY_RUN" == "true" ]]; then
-                    ARGS="$ARGS --dry-run"
-                  fi
-
-                  if [[ "$FORCE_TRANSLATE" == "true" ]]; then
-                    ARGS="$ARGS --force-translate"
-                  fi
-
-                  echo "Running Potomatic with: $ARGS"
-                  potomatic $ARGS
-
-            - name: Generate JSON translations
-              run: |
-                  if ls languages/*.po 1> /dev/null 2>&1; then
-                    wp i18n make-json languages/ --no-purge
-                  fi
-
-            - name: Check for changes
-              id: changes
-              run: |
-                  if git diff --quiet languages/; then
-                    echo "changed=false" >> $GITHUB_OUTPUT
-                  else
-                    echo "changed=true" >> $GITHUB_OUTPUT
-                  fi
-
-            - name: Commit translations
-              if: steps.changes.outputs.changed == 'true' && inputs.dry_run != 'true'
-              env:
-                  INPUT_LANGUAGES: ${{ inputs.languages || vars.DEFAULT_TRANSLATION_LANGUAGES || 'es_ES,pt_BR,fr_FR,de_DE,ja,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,zh_TW,ar,ko_KR,hi_IN' }}
-              run: |
                   git config --local user.email "github-actions[bot]@users.noreply.github.com"
                   git config --local user.name "github-actions[bot]"
+                  git fetch origin "$AUTOMATION_BRANCH:refs/remotes/origin/$AUTOMATION_BRANCH" || true
+                  git switch -C "$AUTOMATION_BRANCH"
                   git add languages/
-                  git commit -m "chore(i18n): update translations for $INPUT_LANGUAGES"
-                  git push
+                  git commit -m "chore(i18n): update translations from develop"
+                  git push --force-with-lease="$AUTOMATION_BRANCH" --set-upstream origin "$AUTOMATION_BRANCH"
+                  gh pr create \
+                    --base "$TRANSLATION_BASE_BRANCH" \
+                    --head "$AUTOMATION_BRANCH" \
+                    --title "chore(i18n): update translations from develop" \
+                    --body "Nightly consolidated translation update for the latest develop branch. Review language quality before merging."
+
+            - name: Preserve failed translation catalogs
+              if: failure()
+              uses: actions/upload-artifact@v7
+              with:
+                  name: failed-translation-catalogs-${{ github.run_id }}
+                  path: languages/
+                  retention-days: 7
