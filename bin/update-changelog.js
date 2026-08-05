@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const fs = require( 'fs' );
 const { stripDeveloperSections } = require( './changelog-utils' );
 
@@ -18,7 +20,7 @@ const isVerbose =
 const changelogFilePath = 'CHANGELOG.md';
 const readmeFilePath = 'readme.txt';
 
-let changelogContent = fs.readFileSync( changelogFilePath, 'utf8' );
+const changelogContent = fs.readFileSync( changelogFilePath, 'utf8' );
 
 // Extract unreleased changes using string manipulation for reliability
 const unreleasedStart = changelogContent.indexOf( '## Unreleased' );
@@ -111,3 +113,5 @@ fs.writeFileSync( readmeFilePath, newChangelog.trim(), 'utf8' );
 console.log(
 	`Changelog updated successfully with ${ changeCount } change(s).`
 );
+
+/* eslint-enable no-console */
