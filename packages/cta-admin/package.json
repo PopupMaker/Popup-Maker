@@ -41,7 +41,7 @@
 		"@wordpress/components": "^30.2.0",
 		"@wordpress/data": "^10.29.0",
 		"@wordpress/dom-ready": "^4.29.0",
-		"@wordpress/element": "^6.29.0",
+		"@wordpress/element": "^8.4.0",
 		"@wordpress/hooks": "^4.29.0",
 		"@wordpress/html-entities": "^4.29.0",
 		"@wordpress/icons": "^10.29.0",

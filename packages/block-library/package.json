@@ -40,7 +40,7 @@
 		"@wordpress/dom-ready": "^4.29.0",
 		"@wordpress/edit-post": "^8.29.0",
 		"@wordpress/editor": "^14.29.0",
-		"@wordpress/element": "^6.29.0",
+		"@wordpress/element": "^8.4.0",
 		"@wordpress/hooks": "^4.29.0",
 		"@wordpress/html-entities": "^4.29.0",
 		"@wordpress/icons": "^10.29.0",
