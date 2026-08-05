@@ -9,6 +9,7 @@
 **Fixes**
 
 -   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
+-   Prevented Astra Custom Layouts rendered inside popups from corrupting the pending WordPress main loop.
 
 ## v1.24.0 - 2026-08-03
 
