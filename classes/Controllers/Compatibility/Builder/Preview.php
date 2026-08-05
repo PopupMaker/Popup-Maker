@@ -15,11 +15,19 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Provides a secure, isolated popup canvas for front-end page builders.
  *
- * Builder-specific controllers only need to identify the popup ID represented
- * by the current request. This base controller handles authorization, query
- * restoration, assets, template selection, and suppression of other popups.
+ * Builder-specific controllers identify the popup represented by the current
+ * request and supply any builder-owned asset finalizer. This base controller
+ * handles authorization, query restoration, batch boundaries, template
+ * selection, and suppression of other popups.
  */
 abstract class Preview extends Controller {
+
+	/**
+	 * Whether this builder has assets waiting to be finalized.
+	 *
+	 * @var bool
+	 */
+	private $builder_assets_pending = false;
 
 	/**
 	 * Initialize shared builder preview hooks.
@@ -29,6 +37,8 @@ abstract class Preview extends Controller {
 	public function init() {
 		add_filter( 'request', [ $this, 'allow_popup_preview_request' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'preload_popup_preview' ], 11 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'flush_pending_builder_assets' ], 12 );
+		add_action( 'wp_footer', [ $this, 'flush_pending_builder_assets' ], 0 );
 		add_filter( 'template_include', [ $this, 'use_popup_preview_template' ], 9999 );
 		add_filter( 'pum_popup_is_loadable', [ $this, 'limit_popups_in_preview' ], 9999, 2 );
 		add_filter( 'popup_maker/is_builder_preview', [ $this, 'is_builder_preview' ] );
@@ -141,6 +151,39 @@ abstract class Preview extends Controller {
 	 */
 	public function is_builder_preview( $is_preview ) {
 		return $is_preview || (bool) $this->get_current_popup_preview_id();
+	}
+
+	/**
+	 * Mark this builder's collected assets for the next batch finalization.
+	 *
+	 * @return void
+	 */
+	protected function mark_builder_assets_pending() {
+		$this->builder_assets_pending = true;
+	}
+
+	/**
+	 * Finalize one batch of builder assets when work is pending.
+	 *
+	 * @return void
+	 */
+	public function flush_pending_builder_assets() {
+		if ( ! $this->builder_assets_pending ) {
+			return;
+		}
+
+		if ( $this->finalize_builder_assets() ) {
+			$this->builder_assets_pending = false;
+		}
+	}
+
+	/**
+	 * Finalize assets registered by the builder adapter.
+	 *
+	 * @return bool Whether the pending batch was finalized.
+	 */
+	protected function finalize_builder_assets() {
+		return true;
 	}
 
 	/**

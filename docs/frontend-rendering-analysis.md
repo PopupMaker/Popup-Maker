@@ -1,5 +1,11 @@
 # Popup Maker Frontend Rendering Analysis
 
+> This is a historical analysis of the v1.21.0 regression. The authoritative
+> integration contract is now documented in
+> [`page-builder-integration.md`](page-builder-integration.md). Current code uses
+> `wp_enqueue_scripts:11`, after builder initialization, as the proven preload
+> boundary.
+
 ## Executive Summary
 
 Critical timing change identified: Popup preloading moved from `wp_enqueue_scripts:11` to `wp_head:0`, causing Beaver Builder CSS conflicts when popups contain BB templates.
@@ -22,10 +28,13 @@ NEW: wp_head:0 → Popup shortcodes process → BB NOT initialized → CSS leaks
 4. BB shortcodes in popups execute without proper CSS context
 5. Result: BB styles leak into main page instead of being isolated
 
-### Working Solution
-Both of these work (any lower priority breaks BB):
+### Historical Working Threshold
+Historical testing found both of these avoided the original breakage:
 - `add_action( 'wp_head', [ $this, 'preload_popups' ], 1 );`
 - `add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 10 );`
+
+The production integration uses `wp_enqueue_scripts:11` so builder callbacks at
+priority 10 always finish first, regardless of plugin registration order.
 
 ## Complete Frontend Process Comparison
 
@@ -122,7 +131,7 @@ Both of these work (any lower priority breaks BB):
 ```php
 // Move popup preloading back to safe timing
 // FROM: add_action( 'wp_head', [ $this, 'preload_popups' ], 0 );
-// TO:   add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 10 );
+// TO:   add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 11 );
 ```
 
 ### Conditional Loading

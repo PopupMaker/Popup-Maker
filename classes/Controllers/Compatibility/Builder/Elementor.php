@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class Elementor extends Preview {
 
 	/**
-	 * Whether rendered Elementor popups have styles waiting to be finalized.
-	 *
-	 * @var bool
-	 */
-	private $frontend_styles_pending = false;
-
-	/**
 	 * Initialize Elementor-specific preview hooks.
 	 *
 	 * @return void
@@ -34,8 +27,6 @@ class Elementor extends Preview {
 	public function init() {
 		parent::init();
 
-		add_action( 'wp_enqueue_scripts', [ $this, 'finalize_frontend_styles' ], 12 );
-		add_action( 'wp_footer', [ $this, 'finalize_frontend_styles' ], 0 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_preview_styles' ], 20 );
 		add_filter( 'elementor/document/urls/wp_preview', [ $this, 'filter_wp_preview_url' ], 10, 2 );
 		add_filter( 'pum_popup_content', [ $this, 'render_popup_content' ], 1000, 2 );
@@ -116,7 +107,7 @@ class Elementor extends Preview {
 		}
 
 		do_action( 'elementor/post/render', $popup_id );
-		$this->frontend_styles_pending = true;
+		$this->mark_builder_assets_pending();
 
 		if (
 			$popup_id === $this->get_current_popup_preview_id() &&
@@ -138,21 +129,20 @@ class Elementor extends Preview {
 	 * The priority-12 pass handles normal popup preloading. The footer pass
 	 * batches popups discovered while rendering the main page content.
 	 *
-	 * @return void
+	 * @return bool Whether the pending styles were finalized.
 	 */
-	public function finalize_frontend_styles() {
+	protected function finalize_builder_assets() {
 		if (
-			! $this->frontend_styles_pending ||
 			! did_action( 'elementor/loaded' ) ||
 			! class_exists( '\\Elementor\\Plugin' )
 		) {
-			return;
+			return false;
 		}
 
 		$elementor = \Elementor\Plugin::$instance;
 
 		if ( ! isset( $elementor->frontend ) ) {
-			return;
+			return false;
 		}
 
 		$styles_finalized = did_action( 'elementor/frontend/after_enqueue_post_styles' );
@@ -170,7 +160,7 @@ class Elementor extends Preview {
 			do_action( 'elementor/frontend/after_enqueue_post_styles' );
 		}
 
-		$this->frontend_styles_pending = false;
+		return true;
 	}
 
 	/**
