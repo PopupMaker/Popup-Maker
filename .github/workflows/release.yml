@@ -99,10 +99,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # Strauss 0.22.4 embeds an older Composer token validator that rejects
-          # GitHub Actions' generated token format. All release dependencies are
-          # public, so remove only the runner-injected Composer OAuth entry.
-          composer config --global --unset github-oauth.github.com || true
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
           pnpm install --frozen-lockfile
 

@@ -4,7 +4,7 @@
 
 **Improvements**
 
--   Improved PHP 8.3 and 8.4 compatibility by safely handling extension-added post and metadata fields without deprecated dynamic properties, with expanded automated compatibility coverage through PHP 8.4.
+-   Improved PHP 8.3, 8.4, and 8.5 compatibility by safely handling extension-added post and metadata fields without deprecated dynamic properties, with expanded automated and release-package runtime coverage through PHP 8.5.
 
 **Fixes**
 

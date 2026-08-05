@@ -23,6 +23,7 @@ jobs:
       php: ${{ steps.changes.outputs.php_any_changed }}
       php_tests: ${{ steps.changes.outputs.php_tests_any_changed }}
       js: ${{ steps.changes.outputs.js_any_changed }}
+      styles: ${{ steps.changes.outputs.styles_any_changed }}
       js_tests: ${{ steps.changes.outputs.js_tests_any_changed }}
       e2e: ${{ steps.changes.outputs.e2e_any_changed }}
       npm_deps: ${{ steps.changes.outputs.npm_deps_any_changed }}
@@ -58,6 +59,10 @@ jobs:
               - 'packages/*/src/**/*.{js,ts,tsx,jsx}'
               - 'assets/js/src/**/*.{js,ts,tsx,jsx}'
               - 'src/**/*.{js,ts,tsx,jsx}'
+            styles:
+              - 'packages/*/src/**/*.{css,scss}'
+              - 'assets/js/src/**/*.{css,scss}'
+              - 'src/**/*.{css,scss}'
             js_tests:
               - 'tests/unit/**'
               - 'jest.config.js'
@@ -76,6 +81,9 @@ jobs:
             ci:
               - '.github/workflows/tests.yml'
               - '.phpcs.xml.dist'
+              - '.wp-env*.json'
+              - 'bin/php85-wp-env-smoke.sh'
+              - 'tests/php85-runtime/**'
 
       - name: Check for test directories
         id: check-tests
@@ -131,6 +139,7 @@ jobs:
           echo "PHP source: ${{ steps.changes.outputs.php_any_changed }}"
           echo "PHP tests: ${{ steps.changes.outputs.php_tests_any_changed }}"
           echo "JS source: ${{ steps.changes.outputs.js_any_changed }}"
+          echo "Styles source: ${{ steps.changes.outputs.styles_any_changed }}"
           echo "JS tests: ${{ steps.changes.outputs.js_tests_any_changed }}"
           echo "E2E tests: ${{ steps.changes.outputs.e2e_any_changed }}"
           echo "NPM deps: ${{ steps.changes.outputs.npm_deps_any_changed }}"
@@ -144,10 +153,10 @@ jobs:
           echo "E2E Tests: ${{ steps.check-tests.outputs.has_e2e_tests }}"
 
   # ============================================================
-  # PHP Compatibility - Isolated prerelease scanner for PHP 8.4
+  # PHP Compatibility - Isolated prerelease scanner for PHP 8.5
   # ============================================================
   test-php-compatibility:
-    name: PHP Compatibility (7.4-8.4)
+    name: PHP Compatibility (7.4-8.5)
     runs-on: ubuntu-latest
     needs: detect-changes
     if: |
@@ -164,7 +173,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4"
+          php-version: "8.5"
           tools: composer:v2
           coverage: none
 
@@ -183,7 +192,7 @@ jobs:
         run: |
           "${RUNNER_TEMP}/phpcompatibility/vendor/bin/phpcs" \
             --standard=PHPCompatibilityWP \
-            --runtime-set testVersion 7.4-8.4 \
+            --runtime-set testVersion 7.4-8.5 \
             --extensions=php \
             --ignore='vendor/*,node_modules/*,tests/*,bin/*,build/*' \
             .
@@ -218,7 +227,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ["7.4", "8.1", "8.2", "8.3", "8.4"]
+        php: ["7.4", "8.1", "8.2", "8.3", "8.4", "8.5"]
 
     steps:
       - name: Checkout
@@ -247,10 +256,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y subversion
 
       - name: Install Composer dependencies
-        run: |
-          # Strauss 0.22.4 cannot parse some runner-injected OAuth tokens.
-          composer config --global --unset github-oauth.github.com || true
-          composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
@@ -288,7 +294,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ["7.4", "8.2", "8.4"]
+        php: ["7.4", "8.2", "8.4", "8.5"]
 
     steps:
       - name: Checkout
@@ -317,10 +323,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y subversion
 
       - name: Install Composer dependencies
-        run: |
-          # Strauss 0.22.4 cannot parse some runner-injected OAuth tokens.
-          composer config --global --unset github-oauth.github.com || true
-          composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
@@ -329,6 +332,94 @@ jobs:
 
       - name: Run Integration Tests
         run: composer run tests
+
+  # ============================================================
+  # PHP 8.5 wp-env Runtime - Source PHPUnit + production artifact smoke
+  # ============================================================
+  test-php85-runtime:
+    name: PHP 8.5 wp-env Runtime and Artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: detect-changes
+    permissions:
+      contents: read
+    if: |
+      needs.detect-changes.outputs.php == 'true' ||
+      needs.detect-changes.outputs.php_tests == 'true' ||
+      needs.detect-changes.outputs.js == 'true' ||
+      needs.detect-changes.outputs.styles == 'true' ||
+      needs.detect-changes.outputs.php_deps == 'true' ||
+      needs.detect-changes.outputs.npm_deps == 'true' ||
+      needs.detect-changes.outputs.ci == 'true'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          composer install --prefer-dist --no-progress
+
+      - name: Run full PHPUnit suite in wp-env
+        run: |
+          pnpm exec wp-env start --config=.wp-env.php85.json --update
+          pnpm exec wp-env run cli --config=.wp-env.php85.json --env-cwd=wp-content/plugins/popup-maker composer run tests
+
+      - name: Stop source wp-env
+        if: always()
+        run: pnpm exec wp-env stop --config=.wp-env.php85.json || true
+
+      - name: Build and inspect production artifact
+        run: |
+          set -o pipefail
+          pnpm run release --zip-name popup-maker-php85.zip --verbose 2>&1 | tee "${RUNNER_TEMP}/php85-build.log"
+          if grep -E '(^|[[:space:]])(Deprecated|Warning):' "${RUNNER_TEMP}/php85-build.log"; then
+            echo "PHP diagnostics were emitted while assembling the production artifact."
+            exit 1
+          fi
+          pnpm run verify:release-artifact popup-maker-php85.zip
+          mkdir -p artifacts/php85
+          unzip -q popup-maker-php85.zip -d artifacts/php85
+          find artifacts/php85/popup-maker -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Start artifact wp-env
+        run: pnpm exec wp-env start --config=.wp-env.php85-artifact.json --update
+
+      - name: Exercise artifact runtime paths
+        run: ./bin/php85-wp-env-smoke.sh .wp-env.php85-artifact.json http://127.0.0.1:8895
+
+      - name: Upload runtime diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: php85-runtime-diagnostics
+          path: |
+            artifacts/php85/
+            popup-maker-php85.zip
+          retention-days: 7
+
+      - name: Stop artifact wp-env
+        if: always()
+        run: pnpm exec wp-env stop --config=.wp-env.php85-artifact.json || true
 
   # ============================================================
   # Jest Tests - JavaScript/TypeScript unit tests
@@ -395,7 +486,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
 
       - name: Setup PHP
@@ -443,11 +534,8 @@ jobs:
             npm run build
           fi
 
-      - name: Install wp-env
-        run: npm install -g @wordpress/env
-
       - name: Start wp-env
-        run: wp-env start
+        run: pnpm exec wp-env start
 
       - name: Wait for WordPress
         run: |
@@ -478,7 +566,7 @@ jobs:
 
       - name: Stop wp-env
         if: always()
-        run: wp-env stop
+        run: pnpm exec wp-env stop
 
   # ============================================================
   # Test Summary - Reports overall test status
@@ -486,7 +574,7 @@ jobs:
   test-summary:
     name: Test Summary
     runs-on: ubuntu-latest
-    needs: [detect-changes, test-php-compatibility, test-php-unit, test-php-integration, test-js, test-e2e]
+    needs: [detect-changes, test-php-compatibility, test-php-unit, test-php-integration, test-php85-runtime, test-js, test-e2e]
     if: always()
 
     steps:
@@ -495,6 +583,7 @@ jobs:
           PHP_COMPATIBILITY_RESULT: ${{ needs.test-php-compatibility.result }}
           PHP_UNIT_RESULT: ${{ needs.test-php-unit.result }}
           PHP_INTEGRATION_RESULT: ${{ needs.test-php-integration.result }}
+          PHP85_RUNTIME_RESULT: ${{ needs.test-php85-runtime.result }}
           JS_RESULT: ${{ needs.test-js.result }}
           E2E_RESULT: ${{ needs.test-e2e.result }}
           HAS_PHP_UNIT: ${{ needs.detect-changes.outputs.has_php_unit_tests }}
@@ -527,6 +616,7 @@ jobs:
           check_result "PHP Compatibility" "$PHP_COMPATIBILITY_RESULT" "true"
           check_result "PHP Unit Tests" "$PHP_UNIT_RESULT" "$HAS_PHP_UNIT"
           check_result "PHP Integration Tests" "$PHP_INTEGRATION_RESULT" "$HAS_PHP_INTEGRATION"
+          check_result "PHP 8.5 wp-env Runtime" "$PHP85_RUNTIME_RESULT" "true"
           check_result "Jest Tests" "$JS_RESULT" "$HAS_JS"
           check_result "E2E Tests" "$E2E_RESULT" "$HAS_E2E"
 
@@ -534,6 +624,7 @@ jobs:
           if [ "$PHP_COMPATIBILITY_RESULT" = "failure" ] || \
              [ "$PHP_UNIT_RESULT" = "failure" ] || \
              [ "$PHP_INTEGRATION_RESULT" = "failure" ] || \
+             [ "$PHP85_RUNTIME_RESULT" = "failure" ] || \
              [ "$JS_RESULT" = "failure" ] || \
              [ "$E2E_RESULT" = "failure" ]; then
             echo ""
