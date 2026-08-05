@@ -74,8 +74,8 @@ jobs:
                   fi
 
                   if [[ "$GITHUB_EVENT_NAME" == "push" || "$DRY_RUN" != "true" ]]; then
-                    OPEN_PR_COUNT=$(gh pr list --state open --head "$AUTOMATION_BRANCH" --json number --jq 'length')
-                    BLOCKER_COUNT=$(gh issue list --state open --label "$BLOCKER_LABEL" --json number --jq 'length')
+                    OPEN_PR_COUNT=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --head "$AUTOMATION_BRANCH" --json number --jq 'length')
+                    BLOCKER_COUNT=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --label "$BLOCKER_LABEL" --json number --jq 'length')
 
                     if (( OPEN_PR_COUNT > 0 || BLOCKER_COUNT > 0 )); then
                       if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
