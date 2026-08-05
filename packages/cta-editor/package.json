@@ -50,7 +50,7 @@
 		"@jest/globals": "^29.7.0",
 		"@popup-maker/types": "workspace:*",
 		"@testing-library/react": "^16.2.0",
-		"@types/node": "^22.19.17"
+		"@types/node": "^26.1.2"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
