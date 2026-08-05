@@ -34,7 +34,7 @@
 
 	// Elementor Forms success event.
 	$( document ).on( 'submit_success', '.elementor-form', function () {
-		const $form = $( this )[ 0 ];
+		const $form = $( this );
 
 		// Get element_id from the widget container.
 		// Elementor form widgets are inside a .elementor-element-{id} container.

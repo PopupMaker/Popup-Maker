@@ -200,6 +200,32 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * An invalid standalone nonce must not expose a popup query.
+	 *
+	 * @return void
+	 */
+	public function test_invalid_standalone_nonce_does_not_restore_popup_post_type() {
+		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		$popup_id = $this->factory->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'draft',
+			]
+		);
+
+		wp_set_current_user( $admin_id );
+		$_GET = [
+			'pum-builder-preview' => 'elementor',
+			'p'                   => (string) $popup_id,
+			'_wpnonce'            => wp_create_nonce( 'pum_builder_preview_elementor_' . ( $popup_id + 1 ) ),
+		];
+
+		$query_vars = apply_filters( 'request', [ 'p' => (string) $popup_id ] );
+
+		$this->assertArrayNotHasKey( 'post_type', $query_vars );
+	}
+
+	/**
 	 * A mismatched preview ID must not expose a popup query.
 	 *
 	 * @return void

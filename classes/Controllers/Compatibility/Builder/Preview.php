@@ -9,8 +9,6 @@
 namespace PopupMaker\Controllers\Compatibility\Builder;
 
 use PopupMaker\Plugin\Controller;
-use Popup_Maker;
-use function PopupMaker\plugin;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -30,7 +28,7 @@ abstract class Preview extends Controller {
 	 */
 	public function init() {
 		add_filter( 'request', [ $this, 'allow_popup_preview_request' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'preload_popup_preview' ], 10 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'preload_popup_preview' ], 11 );
 		add_filter( 'template_include', [ $this, 'use_popup_preview_template' ], 9999 );
 		add_filter( 'pum_popup_is_loadable', [ $this, 'limit_popups_in_preview' ], 9999, 2 );
 		add_filter( 'popup_maker/is_builder_preview', [ $this, 'is_builder_preview' ] );
@@ -79,10 +77,11 @@ abstract class Preview extends Controller {
 			return;
 		}
 
-		$popup = pum_get_popup( $post_id );
+		$popup  = $this->container->get( 'popups' )->get_by_id( $post_id );
+		$popups = $this->container->get_controller( 'Frontend\Popups' );
 
-		if ( pum_is_popup( $popup ) ) {
-			plugin()->get_controller( 'Frontend\Popups' )->preload_popup( $popup );
+		if ( pum_is_popup( $popup ) && $popups instanceof \PopupMaker\Controllers\Frontend\Popups ) {
+			$popups->preload_popup( $popup );
 		}
 	}
 
@@ -98,13 +97,18 @@ abstract class Preview extends Controller {
 			return $template;
 		}
 
-		$popup_template = Popup_Maker::$DIR . 'templates/single-popup.php';
+		$popup_template = $this->container->get_path( 'templates/single-popup.php' );
 
 		if ( ! file_exists( $popup_template ) ) {
 			return $template;
 		}
 
-		$popups = plugin()->get_controller( 'Frontend\Popups' );
+		$popups = $this->container->get_controller( 'Frontend\Popups' );
+
+		if ( ! $popups instanceof \PopupMaker\Controllers\Frontend\Popups ) {
+			return $template;
+		}
+
 		remove_action( 'wp_footer', [ $popups, 'render_popups' ] );
 
 		return $popup_template;

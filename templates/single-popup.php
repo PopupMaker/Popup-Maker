@@ -8,8 +8,8 @@
 
 $is_builder_preview = (bool) apply_filters( 'popup_maker/is_builder_preview', false );
 
-// Preserve the legacy Bricks template behavior until it adopts the shared
-// builder preview controller.
+// Preserve the legacy Bricks template behavior.
+// Keep it until Bricks adopts the shared builder preview controller.
 if ( ! $is_builder_preview ) {
 	get_header();
 	get_footer();
@@ -76,6 +76,8 @@ $previous_popup = \PopupMaker\get_current_popup();
 				aria-modal="false"
 				<?php if ( $has_title ) : ?>
 					aria-labelledby="pum_popup_title_<?php pum_popup_ID(); ?>"
+				<?php else : ?>
+					aria-label="<?php esc_attr_e( 'Popup preview', 'popup-maker' ); ?>"
 				<?php endif; ?>
 				class="<?php pum_popup_classes(); ?> pum-builder-preview-popup"
 				<?php pum_popup_data_attr(); ?>
