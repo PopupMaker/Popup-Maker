@@ -110,7 +110,7 @@ jobs:
 
             - name: Setup pnpm
               if: steps.download.outputs.found != 'true'
-              uses: pnpm/action-setup@v4
+              uses: pnpm/action-setup@v5
 
             - name: Setup Node.js
               if: steps.download.outputs.found != 'true'
