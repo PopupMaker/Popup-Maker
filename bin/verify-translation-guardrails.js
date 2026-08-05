@@ -27,6 +27,10 @@ const escapedBaseBranch = baseBranch.replace(
 	/[.*+?^$()|[\]\\]/g,
 	'\\$&'
 );
+const potCommandIndex = workflow.indexOf( 'wp i18n make-pot' );
+const potDomainIndex = workflow.indexOf( '--domain=$PLUGIN_SLUG', potCommandIndex );
+const potExcludeIndex = workflow.indexOf( '--exclude=', potDomainIndex );
+const scopeStepIndex = workflow.indexOf( 'Configure translation scope', potExcludeIndex );
 
 const requirePattern = ( pattern, message ) => {
 	if ( ! pattern.test( workflow ) ) {
@@ -45,6 +49,17 @@ const requirePreparationPattern = ( pattern, message ) => {
 		failures.push( message );
 	}
 };
+
+if (
+	potCommandIndex < 0 ||
+	potDomainIndex < potCommandIndex ||
+	potExcludeIndex < potDomainIndex ||
+	scopeStepIndex < potExcludeIndex
+) {
+	failures.push(
+		'The complete POT generation command must precede translation scope configuration.'
+	);
+}
 
 if ( ! baseBranch ) {
 	failures.push( 'Translation must declare its canonical base branch.' );
