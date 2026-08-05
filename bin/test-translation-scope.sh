@@ -17,7 +17,7 @@ grep -Fxq "expected_catalog_locales=$CATALOGS" <<< "$full_output"
 grep -Fxq 'expected_language_count=28' <<< "$full_output"
 
 touch "$TMP_DIR/languages/example-ja_JP.po"
-partial_output=$(bash "$SCOPE_SCRIPT" "$TMP_DIR/languages" example "$TARGETS" "$CATALOGS" ' ar, vi ')
+partial_output=$(bash "$SCOPE_SCRIPT" "$TMP_DIR/languages" example "$TARGETS" "$CATALOGS" ' ar_AR, vi ')
 grep -Fxq 'target_languages=ja,ar,vi' <<< "$partial_output"
 grep -Fxq 'expected_catalog_locales=ja_JP,ar_AR,vi_VN' <<< "$partial_output"
 grep -Fxq 'expected_language_count=3' <<< "$partial_output"
