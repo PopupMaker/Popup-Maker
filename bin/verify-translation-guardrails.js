@@ -66,6 +66,10 @@ requirePattern(
 	'Manual translation dispatches must default to dry-run mode.'
 );
 requirePattern(
+	/languages:[\s\S]*?Languages to prime, comma-separated/,
+	'Manual translation dispatches must support an explicit language subset.'
+);
+requirePattern(
 	/ref:\s*\$\{\{ env\.TRANSLATION_BASE_BRANCH \}\}/,
 	'Translation checkout must explicitly target the canonical branch.'
 );
@@ -74,8 +78,20 @@ requirePattern(
 	'Paid translation must retain the hard $1.25 estimated ceiling.'
 );
 requirePattern(
+	/MAX_PRIME_PAID_COST:\s*['"]0\.60['"]/,
+	'Manual catalog priming must retain the hard $0.60 estimated ceiling.'
+);
+requirePattern(
+	/MAX_PRIME_PAID_RUNS_PER_24_HOURS:\s*['"]2['"]/,
+	'Manual catalog priming must remain limited to two paid runs per day.'
+);
+requirePattern(
 	/MAX_MISSING_PER_LANGUAGE:\s*['"]75['"]/,
 	'Automatic translation must retain the 75-string per-language ceiling.'
+);
+requirePattern(
+	/MAX_PRIME_MISSING_PER_LANGUAGE:\s*['"]200['"]/,
+	'Manual catalog priming must retain the 200-string per-language ceiling.'
 );
 requirePattern(
 	/MAX_TOTAL_MISSING:\s*['"]2100['"]/,
@@ -122,8 +138,16 @@ requirePattern(
 	'Paid runs must verify that every missing translation was completed.'
 );
 requirePattern(
-	/EXPECTED_CATALOG_LOCALES:[\s\S]*?prepare-translation-catalogs\.sh[\s\S]*?"\$EXPECTED_CATALOG_LOCALES"/,
+	/EXPECTED_CATALOG_LOCALES:[\s\S]*?configure-translation-scope\.sh[\s\S]*?"\$EXPECTED_CATALOG_LOCALES"[\s\S]*?prepare-translation-catalogs\.sh[\s\S]*?steps\.scope\.outputs\.expected_catalog_locales/,
 	'Catalog preflight must validate the exact configured locale set.'
+);
+requirePattern(
+	/configure-translation-scope\.sh[\s\S]*?steps\.scope\.outputs\.target_languages[\s\S]*?steps\.scope\.outputs\.expected_catalog_locales/,
+	'Manual catalog priming must validate and reuse its selected locale scope.'
+);
+requirePattern(
+	/display_title == "AI Translate \(paid manual\)"/,
+	'Manual rate limiting must count paid dispatches only.'
 );
 
 requirePreparationPattern(

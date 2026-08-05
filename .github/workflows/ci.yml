@@ -97,9 +97,11 @@ jobs:
               - '.github/workflows/translate.yml'
               - '.gitattributes'
               - 'bin/verify-translation-guardrails.js'
+              - 'bin/configure-translation-scope.sh'
               - 'bin/verify-translation-catalogs.sh'
               - 'bin/prepare-translation-catalogs.sh'
               - 'bin/test-translation-preflight.sh'
+              - 'bin/test-translation-scope.sh'
               - 'languages/**'
 
   translation-guardrails:
@@ -121,8 +123,14 @@ jobs:
       - name: Verify translation preparation script
         run: bash -n bin/prepare-translation-catalogs.sh
 
+      - name: Verify translation scope script
+        run: bash -n bin/configure-translation-scope.sh
+
       - name: Test translation preflight accounting
         run: bash bin/test-translation-preflight.sh
+
+      - name: Test translation scope selection
+        run: bash bin/test-translation-scope.sh
 
       - name: Verify translation catalogs
         run: |

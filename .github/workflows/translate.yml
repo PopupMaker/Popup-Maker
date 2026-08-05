@@ -1,4 +1,5 @@
 name: AI Translate
+run-name: AI Translate (${{ github.event_name == 'push' && 'automatic' || inputs.dry_run && 'dry run' || 'paid manual' }})
 
 on:
     # Translate immediately after translatable code lands on develop.
@@ -14,6 +15,10 @@ on:
             - 'languages/**'
     workflow_dispatch:
         inputs:
+            languages:
+                description: 'Languages to prime, comma-separated (empty uses all configured languages)'
+                required: false
+                default: ''
             dry_run:
                 description: 'Dry run (no API calls)'
                 required: false
@@ -33,8 +38,11 @@ env:
     POTOMATIC_VERSION: '1.3.0'
     PAID_MODEL: gpt-5.4-mini
     MAX_PAID_COST: '1.25'
+    MAX_PRIME_PAID_COST: '0.60'
     MAX_MANUAL_PAID_RUNS_PER_24_HOURS: '1'
+    MAX_PRIME_PAID_RUNS_PER_24_HOURS: '2'
     MAX_MISSING_PER_LANGUAGE: '75'
+    MAX_PRIME_MISSING_PER_LANGUAGE: '200'
     MAX_TOTAL_MISSING: '2100'
     MAX_STRINGS_PER_JOB: '75'
     AUTOMATION_BRANCH: automation/i18n-develop
@@ -64,6 +72,7 @@ jobs:
                   GH_TOKEN: ${{ github.token }}
                   DRY_RUN: ${{ inputs.dry_run || 'false' }}
                   PAID_CONFIRMATION: ${{ inputs.paid_confirmation }}
+                  PRIME_LANGUAGES: ${{ inputs.languages }}
               run: |
                   set -euo pipefail
 
@@ -122,17 +131,21 @@ jobs:
                     fi
 
                     CUTOFF=$(date -u -d '24 hours ago' '+%Y-%m-%dT%H:%M:%SZ')
+                    RUN_LIMIT=$MAX_MANUAL_PAID_RUNS_PER_24_HOURS
+                    if [[ -n "$PRIME_LANGUAGES" ]]; then
+                      RUN_LIMIT=$MAX_PRIME_PAID_RUNS_PER_24_HOURS
+                    fi
                     RECENT_RUNS=$(
                       gh api \
                         "repos/$GITHUB_REPOSITORY/actions/workflows/translate.yml/runs?event=workflow_dispatch&per_page=100" \
                       | jq \
                           --arg cutoff "$CUTOFF" \
                           --argjson current "$GITHUB_RUN_ID" \
-                          '[.workflow_runs[] | select(.id != $current and .created_at >= $cutoff)] | length'
+                          '[.workflow_runs[] | select(.id != $current and .created_at >= $cutoff and .display_title == "AI Translate (paid manual)")] | length'
                     )
 
-                    if (( RECENT_RUNS >= MAX_MANUAL_PAID_RUNS_PER_24_HOURS )); then
-                      echo "::error::Paid manual translation is limited to $MAX_MANUAL_PAID_RUNS_PER_24_HOURS run per rolling 24 hours."
+                    if (( RECENT_RUNS >= RUN_LIMIT )); then
+                      echo "::error::Paid manual translation is limited to $RUN_LIMIT run(s) per rolling 24 hours for this mode."
                       exit 1
                     fi
                   fi
@@ -143,6 +156,7 @@ jobs:
                     echo "- Hard estimated cost ceiling: \$$MAX_PAID_COST"
                     echo "- Maximum missing strings per language: $MAX_MISSING_PER_LANGUAGE"
                     echo "- Maximum missing translation units: $MAX_TOTAL_MISSING"
+                    echo "- Manual prime ceiling: \$$MAX_PRIME_PAID_COST and $MAX_PRIME_MISSING_PER_LANGUAGE strings per language"
                     echo "- Re-runs: prohibited"
                   } >> "$GITHUB_STEP_SUMMARY"
 
@@ -191,15 +205,36 @@ jobs:
                     --domain=$PLUGIN_SLUG \
                     --exclude=vendor,vendor-prefixed,node_modules,tests
 
+            - name: Configure translation scope
+              id: scope
+              env:
+                  REQUESTED_LANGUAGES: ${{ inputs.languages }}
+              run: |
+                  bash bin/configure-translation-scope.sh \
+                    languages \
+                    "$PLUGIN_SLUG" \
+                    "$TARGET_LANGUAGES" \
+                    "$EXPECTED_CATALOG_LOCALES" \
+                    "$REQUESTED_LANGUAGES" \
+                    >> "$GITHUB_OUTPUT"
+
+                  if [[ -n "$REQUESTED_LANGUAGES" ]]; then
+                    echo "max_missing_per_language=$MAX_PRIME_MISSING_PER_LANGUAGE" >> "$GITHUB_OUTPUT"
+                    echo "max_paid_cost=$MAX_PRIME_PAID_COST" >> "$GITHUB_OUTPUT"
+                  else
+                    echo "max_missing_per_language=$MAX_MISSING_PER_LANGUAGE" >> "$GITHUB_OUTPUT"
+                    echo "max_paid_cost=$MAX_PAID_COST" >> "$GITHUB_OUTPUT"
+                  fi
+
             - name: Merge POT and measure missing translations
               id: preflight
               run: |
                   bash bin/prepare-translation-catalogs.sh \
                     languages \
-                    "$MAX_MISSING_PER_LANGUAGE" \
+                    "${{ steps.scope.outputs.max_missing_per_language }}" \
                     "$MAX_TOTAL_MISSING" \
-                    "$EXPECTED_LANGUAGE_COUNT" \
-                    "$EXPECTED_CATALOG_LOCALES"
+                    "${{ steps.scope.outputs.expected_language_count }}" \
+                    "${{ steps.scope.outputs.expected_catalog_locales }}"
 
             - name: Enforce translation-size ceiling
               if: steps.preflight.outputs.within_limits != 'true'
@@ -258,8 +293,8 @@ jobs:
                     --output-dir languages/
                     --po-file-prefix "$PLUGIN_SLUG-"
                     --locale-format wp_locale
-                    --target-languages "$TARGET_LANGUAGES"
-                    --max-cost "$MAX_PAID_COST"
+                    --target-languages "${{ steps.scope.outputs.target_languages }}"
+                    --max-cost "${{ steps.scope.outputs.max_paid_cost }}"
                     --model "$PAID_MODEL"
                     --max-strings-per-job "$MAX_STRINGS_PER_JOB"
                   )
@@ -287,10 +322,10 @@ jobs:
               run: |
                   bash bin/prepare-translation-catalogs.sh \
                     languages \
-                    "$MAX_MISSING_PER_LANGUAGE" \
+                    "${{ steps.scope.outputs.max_missing_per_language }}" \
                     "$MAX_TOTAL_MISSING" \
-                    "$EXPECTED_LANGUAGE_COUNT" \
-                    "$EXPECTED_CATALOG_LOCALES"
+                    "${{ steps.scope.outputs.expected_language_count }}" \
+                    "${{ steps.scope.outputs.expected_catalog_locales }}"
 
             - name: Enforce paid translation completion
               if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true) && (steps.postflight.outputs.total_missing != '0' || steps.postflight.outputs.within_limits != 'true')
@@ -321,7 +356,7 @@ jobs:
 
             - name: Validate translation catalogs
               if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true)
-              run: bash bin/verify-translation-catalogs.sh languages "$EXPECTED_LANGUAGE_COUNT" "$EXPECTED_CATALOG_LOCALES"
+              run: bash bin/verify-translation-catalogs.sh languages "${{ steps.scope.outputs.expected_language_count }}" "${{ steps.scope.outputs.expected_catalog_locales }}"
 
             - name: Open consolidated translation pull request
               if: steps.preflight.outputs.needs_translation == 'true' && (github.event_name == 'push' || inputs.dry_run != true)
