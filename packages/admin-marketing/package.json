@@ -31,7 +31,7 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
-		"@types/jquery": "^3.5.32"
+		"@types/jquery": "^4.0.1"
 	},
 	"peerDependencies": {
 		"jquery": "^3.5.32"
