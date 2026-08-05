@@ -1,4 +1,5 @@
 const fs = require( 'fs' );
+const { stripDeveloperSections } = require( './changelog-utils' );
 
 // Read the current version number from package.json
 const newVersion = process.argv[ 2 ];
@@ -60,6 +61,7 @@ if ( isVerbose ) {
 
 // Use the original formatting for files (preserve structure)
 const formattedFileChanges = unreleasedChangesText;
+const formattedUserChanges = stripDeveloperSections( unreleasedChangesText );
 
 // Update CHANGELOG.md with new version using string manipulation
 const beforeUnreleased = changelogContent.substring( 0, unreleasedStart );
@@ -90,7 +92,7 @@ const usesVPrefix = firstVersionEntry.includes( '= v' );
 const versionPrefix = usesVPrefix ? 'v' : '';
 
 // Create the new version entry
-const newVersionEntry = `= ${ versionPrefix }${ newVersion } - ${ releaseDate } =\n\n${ formattedFileChanges }\n\n`;
+const newVersionEntry = `= ${ versionPrefix }${ newVersion } - ${ releaseDate } =\n\n${ formattedUserChanges }\n\n`;
 
 // Insert the new version entry before the first existing version
 const newChangelog = readmeContent.replace(

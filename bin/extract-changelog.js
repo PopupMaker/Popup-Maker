@@ -13,6 +13,7 @@
 
 const fs = require( 'fs' );
 const path = require( 'path' );
+const { stripDeveloperSections } = require( './changelog-utils' );
 
 // Parse command line arguments
 const args = process.argv.slice( 2 );
@@ -80,7 +81,7 @@ function extractVersionContent( content, version ) {
 function extractUnreleasedContent( content ) {
 	// Handles both LF and CRLF line endings
 	const unreleasedPattern =
-		/^## Unreleased\s*([\s\S]*?)(?=\r?\n## |\r?\n?$)/m;
+		/^## Unreleased[^\S\r\n]*\r?\n([\s\S]*?)(?=\r?\n## |$(?![\s\S]))/m;
 	const match = content.match( unreleasedPattern );
 
 	if ( ! match || ! match[ 1 ].trim() ) {
@@ -111,7 +112,7 @@ function extractLatestVersion( content ) {
 
 	// Find first semver version in the search content
 	const versionPattern =
-		/^## (?:v)?(\d+\.\d+\.\d+)(?:\s*-\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\s*\r?\n([\s\S]*?)(?=\r?\n## |\r?\n?$)/m;
+		/^## (?:v)?(\d+\.\d+\.\d+)(?:\s*-\s*[0-9]{4}-[0-9]{2}-[0-9]{2})?\s*\r?\n([\s\S]*?)(?=\r?\n## |$(?![\s\S]))/m;
 	const matches = searchContent.match( versionPattern );
 
 	if ( ! matches ) {
@@ -138,7 +139,7 @@ function formatForGitHubRelease( content, version ) {
 		return `## ${ version }\n\nNo changelog content available.`;
 	}
 
-	let formatted = content;
+	let formatted = stripDeveloperSections( content );
 
 	// Ensure proper formatting for GitHub markdown
 	formatted = formatted

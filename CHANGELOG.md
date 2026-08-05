@@ -4,12 +4,16 @@
 
 **Improvements**
 
--   Improved PHP 8.3, 8.4, and 8.5 compatibility by safely handling extension-added post and metadata fields without deprecated dynamic properties, with expanded automated and release-package runtime coverage through PHP 8.5.
+-   Improved compatibility with PHP 8.3, 8.4, and 8.5.
 
 **Fixes**
 
 -   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
 -   Prevented Astra Custom Layouts rendered inside popups from corrupting the pending WordPress main loop.
+
+**Developers**
+
+-   Updated extension-added post and metadata field handling to avoid deprecated dynamic properties, and expanded automated and release-package runtime coverage through PHP 8.5.
 
 ## v1.24.0 - 2026-08-03
 
