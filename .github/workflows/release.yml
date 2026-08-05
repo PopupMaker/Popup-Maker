@@ -164,7 +164,7 @@ jobs:
 
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ${{ env.PLUGIN_SLUG }}-${{ needs.build.outputs.version }}
 
@@ -256,7 +256,7 @@ jobs:
 
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ${{ env.PLUGIN_SLUG }}-${{ needs.build.outputs.version }}
 
