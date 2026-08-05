@@ -816,8 +816,8 @@ importers:
         specifier: 8.6.14
         version: 8.6.14(storybook@8.6.17(wp-prettier@3.0.3))
       '@storybook/addon-links':
-        specifier: 8.6.14
-        version: 8.6.14(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))
+        specifier: 10.5.5
+        version: 10.5.5(@types/react@18.3.31)(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))
       '@storybook/addon-onboarding':
         specifier: 8.6.14
         version: 8.6.14(storybook@8.6.17(wp-prettier@3.0.3))
@@ -3658,12 +3658,15 @@ packages:
     peerDependencies:
       storybook: ^8.6.14
 
-  '@storybook/addon-links@8.6.14':
-    resolution: {integrity: sha512-DRlXHIyZzOruAZkxmXfVgTF+4d6K27pFcH4cUsm3KT1AXuZbr23lb5iZHpUZoG6lmU85Sru4xCEgewSTXBIe1w==}
+  '@storybook/addon-links@10.5.5':
+    resolution: {integrity: sha512-rqb8EYosKG7eZ6XmFiQ5HwpZIke11QYS0OhuK+1oBLHVfMrlbEgDDLo/wtbiUKKAzj8D1hlwgC6mzSyyW4oQTw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-      storybook: ^8.6.14
+      '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      storybook: ^10.5.5
     peerDependenciesMeta:
+      '@types/react':
+        optional: true
       react:
         optional: true
 
@@ -15921,12 +15924,12 @@ snapshots:
       storybook: 8.6.17(wp-prettier@3.0.3)
       ts-dedent: 2.2.0
 
-  '@storybook/addon-links@8.6.14(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))':
+  '@storybook/addon-links@10.5.5(@types/react@18.3.31)(react@18.3.1)(storybook@8.6.17(wp-prettier@3.0.3))':
     dependencies:
       '@storybook/global': 5.0.0
       storybook: 8.6.17(wp-prettier@3.0.3)
-      ts-dedent: 2.2.0
     optionalDependencies:
+      '@types/react': 18.3.31
       react: 18.3.1
 
   '@storybook/addon-measure@8.6.14(storybook@8.6.17(wp-prettier@3.0.3))':
