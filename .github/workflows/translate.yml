@@ -176,7 +176,7 @@ jobs:
 
         steps:
             - name: Checkout latest develop
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
               with:
                   ref: ${{ env.TRANSLATION_BASE_BRANCH }}
                   fetch-depth: 0
