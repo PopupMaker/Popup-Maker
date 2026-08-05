@@ -85,3 +85,5 @@ readme.txt export-ignore
 /tasks/ export-ignore
 /assets/js/src/ export-ignore
 /assets/sass/ export-ignore
+
+*.mo binary
