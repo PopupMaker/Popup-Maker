@@ -74,6 +74,31 @@ jobs:
                     exit 1
                   fi
 
+                  if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+                    CATALOG_COUNT=$(
+                      gh api \
+                        "repos/$GITHUB_REPOSITORY/contents/languages?ref=$TRANSLATION_BASE_BRANCH" \
+                        --jq '[.[] | select(.type == "file" and (.name | endswith(".po")))] | length' \
+                        2>/dev/null || printf '0\n'
+                    )
+
+                    if [[ ! "$CATALOG_COUNT" =~ ^[0-9]+$ ]]; then
+                      echo "::error::Could not determine the current translation catalog count."
+                      exit 1
+                    fi
+
+                    if (( CATALOG_COUNT != EXPECTED_LANGUAGE_COUNT )); then
+                      echo "The initial $EXPECTED_LANGUAGE_COUNT-language catalog set requires a reviewed manual paid dispatch; skipping automatic translation."
+                      echo "should_run=false" >> "$GITHUB_OUTPUT"
+                      {
+                        echo "### Translation bootstrap deferred"
+                        echo "- Current catalogs: $CATALOG_COUNT/$EXPECTED_LANGUAGE_COUNT"
+                        echo "- Start the first paid run manually with the required confirmation."
+                      } >> "$GITHUB_STEP_SUMMARY"
+                      exit 0
+                    fi
+                  fi
+
                   if [[ "$GITHUB_EVENT_NAME" == "push" || "$DRY_RUN" != "true" ]]; then
                     OPEN_PR_COUNT=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --head "$AUTOMATION_BRANCH" --json number --jq 'length')
                     BLOCKER_COUNT=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --label "$BLOCKER_LABEL" --json number --jq 'length')

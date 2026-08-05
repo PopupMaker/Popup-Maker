@@ -94,6 +94,10 @@ requirePattern(
 	'Workflow attempts must not be re-runnable.'
 );
 requirePattern(
+	/GITHUB_EVENT_NAME" == "push"[\s\S]*?CATALOG_COUNT[\s\S]*?EXPECTED_LANGUAGE_COUNT[\s\S]*?reviewed manual paid dispatch[\s\S]*?should_run=false/,
+	'First-time catalog generation must require a reviewed manual paid dispatch.'
+);
+requirePattern(
 	/AUTOMATION_BRANCH:\s*automation\/i18n-[A-Za-z0-9._-]+/,
 	'Automatic translation must use one consolidated pull-request branch.'
 );
