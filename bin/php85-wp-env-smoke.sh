@@ -32,7 +32,9 @@ fi
 
 frontend_ready=false
 for attempt in 1 2 3 4 5; do
-	frontend_status="$(curl --silent --show-error --output "$smoke_tmp_dir/frontend.html" --write-out '%{http_code}' "$base_url/")"
+	if ! frontend_status="$(curl --silent --show-error --output "$smoke_tmp_dir/frontend.html" --write-out '%{http_code}' "$base_url/")"; then
+		frontend_status="${frontend_status:-000}"
+	fi
 	if [[ "200" == "$frontend_status" ]] && grep -q "popmake-${popup_id}" "$smoke_tmp_dir/frontend.html"; then
 		frontend_ready=true
 		break
@@ -84,11 +86,13 @@ curl --silent --show-error --location \
 
 admin_ready=false
 for attempt in 1 2 3; do
-	admin_status="$(curl --silent --show-error --location \
+	if ! admin_status="$(curl --silent --show-error --location \
 		--cookie "$smoke_tmp_dir/cookies.txt" \
 		--output "$smoke_tmp_dir/admin.html" \
 		--write-out '%{http_code}' \
-		"$base_url/wp-admin/edit.php?post_type=popup")"
+		"$base_url/wp-admin/edit.php?post_type=popup")"; then
+		admin_status="${admin_status:-000}"
+	fi
 	if [[ "200" == "$admin_status" ]] && grep -q 'PHP 8.5 Runtime Smoke Popup Updated' "$smoke_tmp_dir/admin.html"; then
 		admin_ready=true
 		break
