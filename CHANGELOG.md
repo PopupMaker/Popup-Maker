@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed the Popup Maker admin toolbar controls not opening or closing popups, checking conditions, or resetting cookies—a regression introduced in 1.24.0.
+
 ## v1.24.0 - 2026-08-03
 
 **Security**
