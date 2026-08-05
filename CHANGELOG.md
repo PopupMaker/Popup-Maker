@@ -8,6 +8,7 @@
 
 **Fixes**
 
+-   Restored WPBakery Page Builder editing for popups when the block editor is enabled in Popup Maker.
 -   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
 -   Prevented Astra Custom Layouts rendered inside popups from corrupting the pending WordPress main loop.
 
