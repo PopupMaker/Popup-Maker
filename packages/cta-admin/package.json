@@ -49,13 +49,12 @@
 		"react-router-dom": "7.1.1"
 	},
 	"devDependencies": {
-		"@jest/globals": "^29.7.0",
+		"@jest/globals": "^30.4.1",
 		"@popup-maker/types": "workspace:*",
-		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/jest-dom": "^7.0.0",
 		"@testing-library/react": "^16.2.0",
-		"@testing-library/user-event": "^14.6.1",
-		"@types/react-router-dom": "^5.3.3",
-		"@types/testing-library__jest-dom": "^6.0.0"
+		"@testing-library/user-event": "^14.6.3",
+		"@types/react-router-dom": "^5.3.3"
 	},
 	"scripts": {
 		"prepack": "pnpm run build:tsc && pnpm run build:types",
