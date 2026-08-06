@@ -125,10 +125,6 @@ const config = {
 					from: './node_modules/mobile-detect/mobile-detect.min.js',
 					to: path.join( distPath, 'vendor', 'mobile-detect.min.js' ),
 				},
-				{
-					from: './node_modules/iframe-resizer/js/iframeResizer.min.js',
-					to: path.join( distPath, 'vendor', 'iframeResizer.min.js' ),
-				},
 			],
 		} ),
 		// new UnminifiedWebpackPlugin(),

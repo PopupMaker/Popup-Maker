@@ -59,7 +59,6 @@
 		"@popup-maker/registry": "workspace:*",
 		"@popup-maker/use-query-params": "workspace:*",
 		"@popup-maker/utils": "workspace:*",
-		"iframe-resizer": "^4.2.10",
 		"mobile-detect": "^1.4.5"
 	},
 	"devDependencies": {

@@ -100,8 +100,6 @@ class PUM_Admin_Assets {
 		wp_register_script( 'pum-admin-theme-editor', self::$js_url . 'admin-theme-editor.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-settings-page', self::$js_url . 'admin-settings-page.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
 		wp_register_script( 'pum-admin-shortcode-ui', self::$js_url . 'admin-shortcode-ui.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
-		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', [ 'jquery' ], '4.3.1', false );
-
 		// @deprecated handle. Currently loads empty file and admin-general as dependency.
 		wp_register_script( 'popup-maker-admin', self::$js_url . 'admin-deprecated.js', [ 'pum-admin-general' ], Popup_Maker::$VER, true );
 		wp_localize_script( 'pum-admin-general', 'pum_admin', $admin_vars );
@@ -125,10 +123,6 @@ class PUM_Admin_Assets {
 
 		if ( pum_is_settings_page() ) {
 			wp_enqueue_script( 'pum-admin-settings-page' );
-		}
-
-		if ( pum_is_support_page() ) {
-			wp_enqueue_script( 'iframe-resizer' );
 		}
 	}
 
