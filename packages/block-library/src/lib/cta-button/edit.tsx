@@ -67,7 +67,7 @@ import { displayShortcut, isKeyboardEvent, ENTER } from '@wordpress/keycodes';
 import {
 	linkOff,
 	megaphone,
-	edit,
+	pencil,
 	chevronDown,
 	check,
 	chevronUp,
@@ -784,7 +784,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 											{ __( 'Preview', 'popup-maker' ) }
 										</Button>
 										<Button
-											icon={ edit }
+											icon={ pencil }
 											variant="tertiary"
 											style={ {
 												borderRadius: '6px',
