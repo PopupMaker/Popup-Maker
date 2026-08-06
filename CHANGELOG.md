@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+**Features**
+
 -   Added complete Elementor support for Popup Maker popups, including direct editing and previews, correctly styled frontend rendering, and interactive widgets.
 
 ## v1.24.0 - 2026-08-03
