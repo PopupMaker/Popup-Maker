@@ -1,6 +1,9 @@
 const eslintConfig = {
 	root: true,
-	extends: [ 'plugin:@code-atlantic/eslint-plugin/recommended' ],
+	extends: [
+		'plugin:@code-atlantic/eslint-plugin/recommended',
+		'plugin:storybook/recommended',
+	],
 	globals: {
 		wp: 'readonly',
 		wpApiSettings: 'readonly',
