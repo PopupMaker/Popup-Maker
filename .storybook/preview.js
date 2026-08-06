@@ -1,7 +1,7 @@
-/** @type { import('@storybook/react').Preview } */
+/** @type { import('@storybook/react-webpack5').Preview } */
 
 const preview = {
-	tags: [ 'autodocs', 'autodocs', 'autodocs' ],
+	tags: [ 'autodocs' ],
 };
 
 export default preview;

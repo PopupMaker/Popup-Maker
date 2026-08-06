@@ -8,6 +8,10 @@ export interface SkeletonValueProps {
 
 /**
  * Inline shimmer placeholder for dynamic numeric or text values.
+ * @param root0
+ * @param root0.width
+ * @param root0.height
+ * @param root0.className
  */
 export const SkeletonValue: React.FC< SkeletonValueProps > = ( {
 	width = '3em',
