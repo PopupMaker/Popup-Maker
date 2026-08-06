@@ -1,12 +1,12 @@
 <?php
 /**
- * Shared page-builder preview tests.
+ * Shared page-builder asset batching tests.
  *
  * @package Popup_Maker
  */
 
 /**
- * Test the shared page-builder preview lifecycle.
+ * Test the shared page-builder asset batching concern.
  */
 class Page_Builder_Preview_Test extends WP_UnitTestCase {
 
@@ -53,10 +53,12 @@ class Page_Builder_Preview_Test extends WP_UnitTestCase {
 	/**
 	 * Create a builder preview test double.
 	 *
-	 * @return \PopupMaker\Controllers\Compatibility\Builder\Preview
+	 * @return \PopupMaker\Plugin\Controller
 	 */
 	private function get_preview_double() {
-		return new class( \PopupMaker\plugin() ) extends \PopupMaker\Controllers\Compatibility\Builder\Preview {
+		return new class( \PopupMaker\plugin() ) extends \PopupMaker\Plugin\Controller {
+
+			use \PopupMaker\Controllers\Compatibility\Builder\Concerns\AssetBatching;
 
 			/**
 			 * Number of finalization attempts.
@@ -71,6 +73,14 @@ class Page_Builder_Preview_Test extends WP_UnitTestCase {
 			 * @var bool
 			 */
 			public $finalization_succeeds = true;
+
+			/**
+			 * This test double does not register WordPress hooks.
+			 *
+			 * @return void
+			 */
+			public function init() {
+			}
 
 			/**
 			 * Mark builder assets as pending.
@@ -90,15 +100,6 @@ class Page_Builder_Preview_Test extends WP_UnitTestCase {
 				++$this->finalization_count;
 
 				return $this->finalization_succeeds;
-			}
-
-			/**
-			 * This test double does not represent a request.
-			 *
-			 * @return int
-			 */
-			protected function get_popup_id_from_request() {
-				return 0;
 			}
 		};
 	}

@@ -8,6 +8,10 @@
 
 namespace PopupMaker\Controllers\Compatibility\Builder;
 
+use PopupMaker\Controllers\Compatibility\Builder\Concerns\AssetBatching;
+use PopupMaker\Controllers\Compatibility\Builder\Concerns\BuilderPreview;
+use PopupMaker\Plugin\Controller;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -17,7 +21,10 @@ defined( 'ABSPATH' ) || exit;
  * document through a front-end request, so restore the popup post type only for
  * the matching popup and an authenticated user who can edit it.
  */
-class Elementor extends Preview {
+class Elementor extends Controller {
+
+	use AssetBatching;
+	use BuilderPreview;
 
 	/**
 	 * Initialize Elementor-specific preview hooks.
@@ -25,7 +32,8 @@ class Elementor extends Preview {
 	 * @return void
 	 */
 	public function init() {
-		parent::init();
+		$this->register_builder_preview();
+		$this->register_builder_asset_batching();
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_preview_styles' ], 20 );
 		add_filter( 'elementor/document/urls/wp_preview', [ $this, 'filter_wp_preview_url' ], 10, 2 );

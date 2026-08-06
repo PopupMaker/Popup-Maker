@@ -24,7 +24,8 @@ The current implementation is split across these files:
 | Responsibility | Location | Ownership |
 | --- | --- | --- |
 | Preview authorization, isolated query, popup preload, and template selection | `classes/Controllers/Previews.php` | Shared |
-| Builder request registration, preview URL helpers, and asset batch boundaries | `classes/Controllers/Compatibility/Builder/Preview.php` | Shared |
+| Builder request registration and preview URL helpers | `classes/Controllers/Compatibility/Builder/Concerns/BuilderPreview.php` | Shared concern |
+| Builder asset batch boundaries | `classes/Controllers/Compatibility/Builder/Concerns/AssetBatching.php` | Shared concern |
 | Deprecated static preview API | `classes/Previews.php` | Backward compatibility |
 | Bare popup preview document and Popup Maker chrome | `templates/single-popup.php` | Shared |
 | Builder detection, document rendering, standalone preview URL, style finalization | `classes/Controllers/Compatibility/Builder/Elementor.php` | Elementor |
@@ -242,15 +243,21 @@ migrated to the shared `Previews` controller lifecycle.
 
 ## Builder adapter template
 
-The smallest PHP adapter extends `Preview` and implements builder request
-recognition. Add frontend rendering and override `finalize_builder_assets()`
-only if the builder does not already process `pum_popup_content` and its assets
-correctly.
+The smallest PHP adapter extends Popup Maker's normal `Controller` and composes
+only the concerns it needs. Add `BuilderPreview` for editor request handling,
+and add `AssetBatching` only when the builder needs explicit asset finalization.
 
 ```php
 namespace PopupMaker\Controllers\Compatibility\Builder;
 
-class ExampleBuilder extends Preview {
+use PopupMaker\Controllers\Compatibility\Builder\Concerns\AssetBatching;
+use PopupMaker\Controllers\Compatibility\Builder\Concerns\BuilderPreview;
+use PopupMaker\Plugin\Controller;
+
+class ExampleBuilder extends Controller {
+
+	use AssetBatching;
+	use BuilderPreview;
 
 	/**
 	 * Initialize builder-specific hooks.
@@ -258,7 +265,8 @@ class ExampleBuilder extends Preview {
 	 * @return void
 	 */
 	public function init() {
-		parent::init();
+		$this->register_builder_preview();
+		$this->register_builder_asset_batching();
 
 		add_filter( 'pum_popup_content', [ $this, 'render_popup_content' ], 1000, 2 );
 	}
@@ -422,13 +430,15 @@ must cover this case without requiring a builder page.
 
 1. Capture the builder's editor iframe request and standalone Preview behavior.
 2. Confirm whether the builder supports non-public post types directly.
-3. Add a small adapter extending `Preview`.
-4. Implement strict request matching in `get_popup_id_from_request()`.
+3. Add a small adapter extending Popup Maker's normal `Controller`.
+4. Compose `BuilderPreview` when the builder needs custom editor routing, then
+   implement strict request matching in `get_popup_id_from_request()`.
 5. Reuse the shared standalone URL helpers when needed.
 6. Determine whether the builder already filters popup content.
 7. If not, render only documents positively identified as builder documents.
 8. Identify how document rendering registers generated CSS and widget assets.
-9. Batch the builder's finalizer after priority-11 popup preload.
+9. Compose `AssetBatching` when needed and finalize after priority-11 popup
+   preload.
 10. Add a footer batch only for content discovered after the head phase.
 11. Use the builder's normal script lifecycle whenever possible.
 12. Add a scoped widget refresh on `pumAfterOpen` when required.
@@ -438,9 +448,9 @@ must cover this case without requiring a builder page.
 
 ## Shared utilities and future extraction
 
-The shared `Preview` controller and template cover routing, security, query
-restoration, isolated rendering, popup chrome, and the two-phase asset batching
-state machine. Its contract is:
+The `Previews` controller and shared template cover routing, security, query
+restoration, isolated rendering, and popup chrome. Optional builder concerns
+then add only the primitives an adapter needs. The `AssetBatching` contract is:
 
 ```text
 mark_pending()       Called whenever a builder document registers assets.

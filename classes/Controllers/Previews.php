@@ -253,6 +253,12 @@ class Previews extends Controller {
 	 * @return mixed
 	 */
 	public function data_attr( $data_attr, $popup_id ) {
+		if ( absint( $popup_id ) === $this->get_builder_preview() ) {
+			$data_attr['triggers'] = [];
+
+			return $data_attr;
+		}
+
 		if ( ! $this->is_previewing_popup( $popup_id ) ) {
 			return $data_attr;
 		}
@@ -275,6 +281,12 @@ class Previews extends Controller {
 	 * @return array
 	 */
 	public function get_public_settings( $settings, $popup ) {
+		if ( absint( $popup->ID ) === $this->get_builder_preview() ) {
+			$settings['triggers'] = [];
+
+			return $settings;
+		}
+
 		if ( ! $this->is_previewing_popup( $popup->ID ) ) {
 			return $settings;
 		}

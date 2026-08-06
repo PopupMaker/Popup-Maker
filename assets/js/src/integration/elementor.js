@@ -26,9 +26,14 @@
 			typeof window.elementorFrontend.elementsHandler.runReadyTrigger ===
 				'function'
 		) {
-			window.elementorFrontend.elementsHandler.runReadyTrigger(
-				$( elementorRoot )
-			);
+			$( elementorRoot )
+				.find( '[data-element_type]' )
+				.addBack( '[data-element_type]' )
+				.each( function () {
+					window.elementorFrontend.elementsHandler.runReadyTrigger(
+						this
+					);
+				} );
 		}
 	};
 

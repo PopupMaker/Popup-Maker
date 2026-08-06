@@ -95,4 +95,37 @@ class Previews_Test extends WP_UnitTestCase {
 
 		$this->assertFalse( $previews->get_popup_preview() );
 	}
+
+	/**
+	 * Builder previews do not register the popup's live triggers.
+	 *
+	 * @return void
+	 */
+	public function test_builder_preview_strips_live_triggers() {
+		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		$popup_id = $this->factory->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'draft',
+			]
+		);
+
+		wp_set_current_user( $admin_id );
+		$_GET = [
+			'elementor-preview' => (string) $popup_id,
+			'p'                 => (string) $popup_id,
+			'post_type'         => 'popup',
+		];
+
+		$triggers  = [ [ 'type' => 'auto_open' ] ];
+		$data_attr = apply_filters( 'pum_popup_data_attr', [ 'triggers' => $triggers ], $popup_id );
+		$settings  = apply_filters(
+			'pum_popup_get_public_settings',
+			[ 'triggers' => $triggers ],
+			pum_get_popup( $popup_id )
+		);
+
+		$this->assertSame( [], $data_attr['triggers'] );
+		$this->assertSame( [], $settings['triggers'] );
+	}
 }

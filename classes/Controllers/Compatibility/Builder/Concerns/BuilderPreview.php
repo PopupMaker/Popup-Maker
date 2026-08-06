@@ -1,41 +1,27 @@
 <?php
 /**
- * Page builder preview adapter base.
+ * Page builder preview concern.
  *
  * @package   PopupMaker
  * @copyright Copyright (c) 2026, Code Atlantic LLC
  */
 
-namespace PopupMaker\Controllers\Compatibility\Builder;
-
-use PopupMaker\Plugin\Controller;
+namespace PopupMaker\Controllers\Compatibility\Builder\Concerns;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Shares builder request registration, preview URLs, and asset batching.
- *
- * The main Previews controller owns authorization, query restoration, popup
- * loading, and template selection for every editor.
+ * Adds builder request registration and signed standalone preview URLs.
  */
-abstract class Preview extends Controller {
+trait BuilderPreview {
 
 	/**
-	 * Whether this builder has assets waiting to be finalized.
-	 *
-	 * @var bool
-	 */
-	private $builder_assets_pending = false;
-
-	/**
-	 * Initialize shared builder adapter hooks.
+	 * Register builder preview request handling.
 	 *
 	 * @return void
 	 */
-	public function init() {
+	protected function register_builder_preview() {
 		add_filter( 'popup_maker/builder_preview_id', [ $this, 'filter_builder_preview_id' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'flush_pending_builder_assets' ], 12 );
-		add_action( 'wp_footer', [ $this, 'flush_pending_builder_assets' ], 0 );
 	}
 
 	/**
@@ -49,39 +35,6 @@ abstract class Preview extends Controller {
 		$popup_id = absint( $popup_id );
 
 		return $popup_id ?: absint( $this->get_popup_id_from_request() );
-	}
-
-	/**
-	 * Mark this builder's collected assets for the next batch finalization.
-	 *
-	 * @return void
-	 */
-	protected function mark_builder_assets_pending() {
-		$this->builder_assets_pending = true;
-	}
-
-	/**
-	 * Finalize one batch of builder assets when work is pending.
-	 *
-	 * @return void
-	 */
-	public function flush_pending_builder_assets() {
-		if ( ! $this->builder_assets_pending ) {
-			return;
-		}
-
-		if ( $this->finalize_builder_assets() ) {
-			$this->builder_assets_pending = false;
-		}
-	}
-
-	/**
-	 * Finalize assets registered by the builder adapter.
-	 *
-	 * @return bool Whether the pending batch was finalized.
-	 */
-	protected function finalize_builder_assets() {
-		return true;
 	}
 
 	/**

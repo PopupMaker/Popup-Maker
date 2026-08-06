@@ -94,7 +94,7 @@ $previous_popup = \PopupMaker\get_current_popup();
 
 					<?php do_action( 'pum_popup_before_content' ); ?>
 					<div class="<?php pum_popup_classes( null, 'content' ); ?>" <?php pum_popup_content_tabindex_attr(); ?>>
-						<?php the_content(); ?>
+						<?php pum_popup_content(); ?>
 					</div>
 					<?php do_action( 'pum_popup_after_content' ); ?>
 					<?php do_action( 'popmake_popup_after_inner' ); // Backward compatibility. ?>
