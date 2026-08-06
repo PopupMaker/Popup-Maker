@@ -38,23 +38,22 @@
 		"@popup-maker/registry": "workspace:*",
 		"@popup-maker/use-query-params": "workspace:*",
 		"@popup-maker/utils": "workspace:*",
-		"@wordpress/components": "^30.2.0",
-		"@wordpress/data": "^10.29.0",
-		"@wordpress/dom-ready": "^4.29.0",
-		"@wordpress/element": "^6.29.0",
-		"@wordpress/hooks": "^4.29.0",
-		"@wordpress/html-entities": "^4.29.0",
-		"@wordpress/icons": "^10.29.0",
+		"@wordpress/components": "^38.0.0",
+		"@wordpress/data": "^10.52.0",
+		"@wordpress/dom-ready": "^4.52.0",
+		"@wordpress/element": "^8.4.0",
+		"@wordpress/hooks": "^4.52.0",
+		"@wordpress/html-entities": "^4.52.0",
+		"@wordpress/icons": "^15.3.0",
 		"clsx": "^2.1.1",
 		"react-router-dom": "7.18.2"
 	},
 	"devDependencies": {
-		"@jest/globals": "^29.7.0",
+		"@jest/globals": "^30.4.1",
 		"@popup-maker/types": "workspace:*",
-		"@testing-library/jest-dom": "^6.6.3",
+		"@testing-library/jest-dom": "^7.0.0",
 		"@testing-library/react": "^16.2.0",
-		"@testing-library/user-event": "^14.6.1",
-		"@types/testing-library__jest-dom": "^6.0.0"
+		"@testing-library/user-event": "^14.6.3"
 	},
 	"scripts": {
 		"prepack": "pnpm run build:tsc && pnpm run build:types",
