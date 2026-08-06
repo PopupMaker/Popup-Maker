@@ -30,7 +30,6 @@ Then, move on to our [Setting up your local environment](https://github.com/Popu
 -   [SASS](https://sass-lang.com) - The CSS pre-processor we use. We use the SCSS syntax.
 -   [jQuery](https://jquery.com) - A fast, small, and feature-rich JavaScript library
 -   [JSON for JS](https://github.com/douglascrockford/JSON-js) - Creates a JSON property in the global object, if there isn't already one
--   [iFrame Resizer](https://github.com/davidjbradshaw/iframe-resizer) - Force cross domain iframes to size to content
 -   [mobile-detect.js](https://github.com/hgoebl/mobile-detect.js) - Detect the device by comparing patterns against a given User-Agent string
 
 ## Developer Tools
