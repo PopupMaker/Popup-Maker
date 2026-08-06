@@ -34,10 +34,10 @@
 	"sideEffects": true,
 	"dependencies": {
 		"@popup-maker/core-data": "workspace:*",
-		"@wordpress/core-data": "^7.29.0",
-		"@wordpress/data": "^10.29.0",
-		"@wordpress/hooks": "^4.29.0",
-		"@wordpress/notices": "^5.29.0"
+		"@wordpress/core-data": "^7.52.0",
+		"@wordpress/data": "^10.52.0",
+		"@wordpress/hooks": "^4.52.0",
+		"@wordpress/notices": "^5.52.0"
 	},
 	"scripts": {
 		"prepack": "pnpm run build:tsc && pnpm run build:types",

@@ -33,7 +33,7 @@ export declare namespace PopupMaker {
 
 /**
  * Creates a type-safe registry with priority-based sorting
- * @param {PopupMaker.RegistryConfig<T>} config
+ * @param {PopupMaker.RegistryConfig} config
  */
 export function createRegistry< T extends PopupMaker.RegistryItem >(
 	config: PopupMaker.RegistryConfig

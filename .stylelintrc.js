@@ -78,5 +78,31 @@ module.exports = {
 	customSyntax: require.resolve( 'postcss-scss', {
 		paths: [ require.resolve( '@wordpress/scripts/package.json' ) ],
 	} ),
-	rules,
+	rules: {
+		...rules,
+		'at-rule-no-unknown': [
+			true,
+			{
+				ignoreAtRules: [
+					'at-root',
+					'content',
+					'debug',
+					'each',
+					'else',
+					'error',
+					'extend',
+					'for',
+					'forward',
+					'function',
+					'if',
+					'include',
+					'mixin',
+					'return',
+					'use',
+					'warn',
+					'while',
+				],
+			},
+		],
+	},
 };
