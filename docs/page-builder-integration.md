@@ -23,7 +23,9 @@ The current implementation is split across these files:
 
 | Responsibility | Location | Ownership |
 | --- | --- | --- |
-| Secure preview request, isolated query, popup preload, template selection, asset batch boundaries | `classes/Controllers/Compatibility/Builder/Preview.php` | Shared |
+| Preview authorization, isolated query, popup preload, and template selection | `classes/Controllers/Previews.php` | Shared |
+| Builder request registration, preview URL helpers, and asset batch boundaries | `classes/Controllers/Compatibility/Builder/Preview.php` | Shared |
+| Deprecated static preview API | `classes/Previews.php` | Backward compatibility |
 | Bare popup preview document and Popup Maker chrome | `templates/single-popup.php` | Shared |
 | Builder detection, document rendering, standalone preview URL, style finalization | `classes/Controllers/Compatibility/Builder/Elementor.php` | Elementor |
 | Widget refresh after popup visibility changes | `assets/js/src/integration/elementor.js` | Elementor |
@@ -49,7 +51,9 @@ should own every call into a builder's API.
 - Keep the preview close button visible but inert.
 - Reposition the preview after size changes.
 - Suppress the ordinary footer popup loop in an isolated preview.
-- Provide reusable nonce-backed standalone preview URLs.
+- Authorize the popup ID supplied by a builder through
+  `popup_maker/builder_preview_id`.
+- Provide reusable nonce-backed standalone preview URL helpers.
 - Track pending builder assets and flush one batch after head-phase preload or
   one late batch before footer rendering.
 
@@ -90,8 +94,8 @@ Some builders load the edited document through a frontend iframe. Popup posts
 are intentionally not publicly queryable, so WordPress normally strips the
 popup post type and produces a 404.
 
-The builder adapter implements `get_popup_id_from_request()`. The shared
-`Preview` controller then:
+The builder adapter supplies its request through the shared builder adapter
+base. The `Previews` controller then:
 
 1. Validates the target popup.
 2. Requires an authenticated user with `edit_post` capability.
@@ -100,9 +104,9 @@ The builder adapter implements `get_popup_id_from_request()`. The shared
 5. Selects `templates/single-popup.php`.
 
 Builder-native iframe requests may not contain a WordPress nonce. They are only
-acceptable when the builder already requires authentication and the shared
+acceptable when the builder already requires authentication and the preview
 controller still checks the exact popup capability. A Popup Maker-owned route
-must always use the shared nonce-backed URL helpers.
+must always use a nonce-backed URL.
 
 ### Phase 2: standalone editor preview
 
@@ -234,7 +238,7 @@ part of the editor canvas while retaining the same Popup Maker chrome used on
 the frontend.
 
 The template currently preserves the legacy Bricks fallback until Bricks is
-migrated to the shared `Preview` controller.
+migrated to the shared `Previews` controller lifecycle.
 
 ## Builder adapter template
 
