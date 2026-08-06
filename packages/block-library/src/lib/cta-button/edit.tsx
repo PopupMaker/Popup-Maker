@@ -9,7 +9,6 @@ import {
 	InspectorControls,
 	// @ts-ignore - Experimental components
 	AlignmentControl,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	// __experimentalGetElementClassName as getElementClassName,
 	// @ts-expect-error
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
@@ -614,15 +613,15 @@ function ButtonEdit( props: ButtonEditProps ) {
 						isActive
 					/>
 				) }
-				</BlockControls>
-				{ showPopover && (
-					<Popover
-						placement="bottom"
-						onClose={ () => {
-							setIsExplicitlyEditing( false );
-							richTextRef.current?.focus?.();
-						} }
-						anchor={ popoverAnchor }
+			</BlockControls>
+			{ showPopover && (
+				<Popover
+					placement="bottom"
+					onClose={ () => {
+						setIsExplicitlyEditing( false );
+						richTextRef.current?.focus?.();
+					} }
+					anchor={ popoverAnchor }
 					focusOnMount={ isEditingCTA ? 'firstElement' : false }
 					__unstableSlotName="__unstable-block-tools-after"
 					shift
