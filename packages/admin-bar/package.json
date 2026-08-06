@@ -30,7 +30,7 @@
 		}
 	},
 	"dependencies": {
-		"@medv/finder": "^3.2.0",
+		"@medv/finder": "^4.0.2",
 		"@popup-maker/i18n": "workspace:*"
 	},
 	"devDependencies": {
