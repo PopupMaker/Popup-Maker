@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
-"PO-Revision-Date: 2026-08-05 03:29+0000\n"
+"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"PO-Revision-Date: 2026-08-06 02:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ar\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
 #: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
 #: classes/Extension/Activator.php:201 classes/Privacy.php:36
-#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Services/License.php:915 classes/Site/Assets.php:283
 #: classes/Triggers.php:226 classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
@@ -210,11 +210,11 @@ msgstr "الاختصارات البرمجية لـ Popup Maker"
 msgid "There was an error in generating the preview"
 msgstr "حدث خطأ أثناء إنشاء المعاينة"
 
-#: classes/Admin/Assets.php:149
+#: classes/Admin/Assets.php:143
 msgid "Your all set, the upgrades completed successfully!"
 msgstr "لقد انتهيت، اكتملت الترقيات بنجاح!"
 
-#: classes/Admin/Assets.php:150
+#: classes/Admin/Assets.php:144
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
@@ -435,7 +435,7 @@ msgstr "المشتركون"
 #: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
 #: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:298
 msgid "Settings"
 msgstr "الإعدادات"
 
@@ -445,6 +445,7 @@ msgid "Extend"
 msgstr "الامتدادات"
 
 #: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
+#: classes/Admin/Support.php:58
 msgid "Help & Support"
 msgstr "المساعدة والدعم"
 
@@ -637,7 +638,7 @@ msgid "Display"
 msgstr "العرض"
 
 #: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
-#: classes/Site/Assets.php:300
+#: classes/Site/Assets.php:299
 msgid "Triggers"
 msgstr "المشغّلات"
 
@@ -660,7 +661,7 @@ msgstr "الإعدادات العامة"
 msgid "Triggers & Cookies"
 msgstr "المشغّلات وملفات تعريف الارتباط"
 
-#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:302
 msgid "Conditions"
 msgstr "الشروط"
 
@@ -1841,7 +1842,7 @@ msgstr "إعدادات Popup Maker"
 msgid "Subscriptions"
 msgstr "الاشتراكات"
 
-#: classes/Admin/Settings.php:1131
+#: classes/Admin/Settings.php:1131 classes/Admin/Support.php:45
 msgid "Extensions"
 msgstr "الامتدادات"
 
@@ -1976,10 +1977,66 @@ msgstr "رمز nonce غير صالح"
 msgid "Error"
 msgstr "خطأ"
 
+#: classes/Admin/Support.php:27
+msgid "Getting Started"
+msgstr "البدء"
+
+#: classes/Admin/Support.php:28
+msgid "Learn the basics and build your first popup."
+msgstr "تعلّم الأساسيات وأنشئ أول نافذة منبثقة لك."
+
+#: classes/Admin/Support.php:33 classes/Admin/Templates.php:730
+#: classes/Admin/Templates.php:735
+#: classes/Controllers/Admin/WP/PluginsPage.php:106
+#: dist/packages/cta-editor.js:1
+msgid "Documentation"
+msgstr "التوثيق"
+
+#: classes/Admin/Support.php:34
+msgid "Browse setup guides, common questions, and advanced documentation."
+msgstr "تصفّح أدلة الإعداد والأسئلة الشائعة والوثائق المتقدمة."
+
+#: classes/Admin/Support.php:39
+msgid "Community"
+msgstr "المجتمع"
+
+#: classes/Admin/Support.php:40
+msgid "Ask questions and share solutions with other Popup Maker users."
+msgstr "اطرح الأسئلة وشارك الحلول مع مستخدمي Popup Maker الآخرين."
+
+#: classes/Admin/Support.php:46
+msgid "Find documentation for Popup Maker extensions."
+msgstr "اعثر على وثائق إضافات Popup Maker."
+
+#: classes/Admin/Support.php:51
+msgid "Developer Wiki"
+msgstr "ويكي المطورين"
+
 #: classes/Admin/Support.php:52
+msgid "Contribute to or extend Popup Maker."
+msgstr "ساهم في Popup Maker أو وسّعه."
+
+#: classes/Admin/Support.php:60
 msgid ""
-"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
-msgstr "<b>صفحة تواصل آمنة عبر HTTPS</b>، تعمل عبر iframe من نطاق خارجي"
+"Find answers, connect with the community, or contact the Popup Maker support "
+"team."
+msgstr "اعثر على إجابات، وتواصل مع المجتمع، أو اتصل بفريق دعم Popup Maker."
+
+#: classes/Admin/Support.php:77
+msgid "Still need help?"
+msgstr "هل ما زلت بحاجة إلى مساعدة؟"
+
+#: classes/Admin/Support.php:78
+msgid ""
+"Open a support request and include the site URL, Popup Maker version, steps "
+"to reproduce, and any relevant error messages."
+msgstr ""
+"افتح طلب دعم وأدرج عنوان URL للموقع، وإصدار Popup Maker، وخطوات إعادة "
+"الإنتاج، وأي رسائل خطأ ذات صلة."
+
+#: classes/Admin/Support.php:81
+msgid "Contact Support"
+msgstr "اتصل بالدعم"
 
 #: classes/Admin/Templates.php:52
 msgid "Check"
@@ -2342,12 +2399,6 @@ msgstr "التسمية"
 msgid "Value"
 msgstr "القيمة"
 
-#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
-#: classes/Controllers/Admin/WP/PluginsPage.php:106
-#: dist/packages/cta-editor.js:1
-msgid "Documentation"
-msgstr "التوثيق"
-
 #: classes/Admin/Templates.php:844
 msgid "Add New Trigger"
 msgstr "إضافة مُشغِّل جديد"
@@ -2495,7 +2546,7 @@ msgid "Add New Cookie"
 msgstr "إضافة ملف تعريف ارتباط جديد"
 
 #: classes/Admin/Templates.php:1125 classes/Privacy.php:67
-#: classes/Site/Assets.php:301
+#: classes/Site/Assets.php:300
 msgid "Cookies"
 msgstr "ملفات تعريف الارتباط"
 
@@ -4773,78 +4824,78 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr "عنصر نائب لنموذج الاشتراك"
 
-#: classes/Site/Assets.php:284
+#: classes/Site/Assets.php:283
 msgid "Debug Mode Enabled"
 msgstr "تم تفعيل وضع التصحيح"
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:284
 msgid "Debug started at:"
 msgstr "بدأ التصحيح في:"
 
 #. translators: 1. URL to documentation.
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:287
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr "لمزيد من المعلومات حول كيفية استخدام هذه المعلومات، تفضل بزيارة %s"
 
-#: classes/Site/Assets.php:291
+#: classes/Site/Assets.php:290
 msgid "Global Information"
 msgstr "معلومات عامة"
 
-#: classes/Site/Assets.php:292
+#: classes/Site/Assets.php:291
 msgid "Localized variables"
 msgstr "المتغيرات المحلية"
 
-#: classes/Site/Assets.php:293
+#: classes/Site/Assets.php:292
 msgid "Popups Initializing"
 msgstr "جاري تهيئة النوافذ المنبثقة"
 
-#: classes/Site/Assets.php:294
+#: classes/Site/Assets.php:293
 msgid "Popups Initialized"
 msgstr "تمت تهيئة النوافذ المنبثقة"
 
-#: classes/Site/Assets.php:295
+#: classes/Site/Assets.php:294
 msgid "Popup: #"
 msgstr "النافذة المنبثقة: #"
 
-#: classes/Site/Assets.php:296
+#: classes/Site/Assets.php:295
 msgid "Theme ID: "
 msgstr "معرّف النسق: "
 
-#: classes/Site/Assets.php:297
+#: classes/Site/Assets.php:296
 msgid "Method Call:"
 msgstr "استدعاء الدالة:"
 
-#: classes/Site/Assets.php:298
+#: classes/Site/Assets.php:297
 msgid "Method Arguments:"
 msgstr "وسائط الدالة:"
 
-#: classes/Site/Assets.php:302
+#: classes/Site/Assets.php:301
 msgid "Delay:"
 msgstr "التأخير:"
 
-#: classes/Site/Assets.php:304
+#: classes/Site/Assets.php:303
 msgid "Cookie:"
 msgstr "ملف تعريف الارتباط:"
 
-#: classes/Site/Assets.php:305
+#: classes/Site/Assets.php:304
 msgid "Settings:"
 msgstr "الإعدادات:"
 
-#: classes/Site/Assets.php:306
+#: classes/Site/Assets.php:305
 msgid "Selector:"
 msgstr "المحدد:"
 
-#: classes/Site/Assets.php:307
+#: classes/Site/Assets.php:306
 msgid "Mobile Disabled:"
 msgstr "معطل على الهاتف المحمول:"
 
-#: classes/Site/Assets.php:308
+#: classes/Site/Assets.php:307
 msgid "Tablet Disabled:"
 msgstr "معطل على الجهاز اللوحي:"
 
 #. translators: 1. Event name.
-#: classes/Site/Assets.php:310
+#: classes/Site/Assets.php:309
 #, php-format
 msgid "Event: %s"
 msgstr "الحدث: %s"

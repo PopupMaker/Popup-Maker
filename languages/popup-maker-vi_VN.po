@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
-"PO-Revision-Date: 2026-08-05 03:29+0000\n"
+"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"PO-Revision-Date: 2026-08-06 02:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: vi\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
 #: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
 #: classes/Extension/Activator.php:201 classes/Privacy.php:36
-#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Services/License.php:915 classes/Site/Assets.php:283
 #: classes/Triggers.php:226 classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
@@ -200,11 +200,11 @@ msgstr "Mã ngắn Popup Maker"
 msgid "There was an error in generating the preview"
 msgstr "Đã xảy ra lỗi khi tạo bản xem trước"
 
-#: classes/Admin/Assets.php:149
+#: classes/Admin/Assets.php:143
 msgid "Your all set, the upgrades completed successfully!"
 msgstr "Bạn đã sẵn sàng, các bản nâng cấp đã hoàn tất thành công!"
 
-#: classes/Admin/Assets.php:150
+#: classes/Admin/Assets.php:144
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
@@ -427,7 +427,7 @@ msgstr "Người đăng ký"
 #: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
 #: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:298
 msgid "Settings"
 msgstr "Cài đặt"
 
@@ -437,6 +437,7 @@ msgid "Extend"
 msgstr "Mở rộng"
 
 #: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
+#: classes/Admin/Support.php:58
 msgid "Help & Support"
 msgstr "Trợ giúp & Hỗ trợ"
 
@@ -616,7 +617,7 @@ msgid "Display"
 msgstr "Hiển thị"
 
 #: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
-#: classes/Site/Assets.php:300
+#: classes/Site/Assets.php:299
 msgid "Triggers"
 msgstr "Trình kích hoạt"
 
@@ -639,7 +640,7 @@ msgstr "Cài đặt chung"
 msgid "Triggers & Cookies"
 msgstr "Trình kích hoạt & Cookie"
 
-#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:302
 msgid "Conditions"
 msgstr "Điều kiện"
 
@@ -1824,7 +1825,7 @@ msgstr "Cài đặt Popup Maker"
 msgid "Subscriptions"
 msgstr "Đăng ký"
 
-#: classes/Admin/Settings.php:1131
+#: classes/Admin/Settings.php:1131 classes/Admin/Support.php:45
 msgid "Extensions"
 msgstr "Tiện ích mở rộng"
 
@@ -1949,12 +1950,70 @@ msgstr "Nonce không hợp lệ"
 msgid "Error"
 msgstr "Lỗi"
 
-#: classes/Admin/Support.php:52
-msgid ""
-"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
+#: classes/Admin/Support.php:27
+msgid "Getting Started"
+msgstr "Bắt đầu"
+
+#: classes/Admin/Support.php:28
+msgid "Learn the basics and build your first popup."
+msgstr "Tìm hiểu những điều cơ bản và tạo popup đầu tiên của bạn."
+
+#: classes/Admin/Support.php:33 classes/Admin/Templates.php:730
+#: classes/Admin/Templates.php:735
+#: classes/Controllers/Admin/WP/PluginsPage.php:106
+#: dist/packages/cta-editor.js:1
+msgid "Documentation"
+msgstr "Tài liệu"
+
+#: classes/Admin/Support.php:34
+msgid "Browse setup guides, common questions, and advanced documentation."
 msgstr ""
-"<b>Trang liên hệ HTTPS an toàn</b>, đang chạy qua iframe từ tên miền bên "
-"ngoài"
+"Duyệt qua các hướng dẫn thiết lập, câu hỏi thường gặp và tài liệu nâng cao."
+
+#: classes/Admin/Support.php:39
+msgid "Community"
+msgstr "Cộng đồng"
+
+#: classes/Admin/Support.php:40
+msgid "Ask questions and share solutions with other Popup Maker users."
+msgstr ""
+"Đặt câu hỏi và chia sẻ giải pháp với những người dùng Popup Maker khác."
+
+#: classes/Admin/Support.php:46
+msgid "Find documentation for Popup Maker extensions."
+msgstr "Tìm tài liệu cho các tiện ích mở rộng của Popup Maker."
+
+#: classes/Admin/Support.php:51
+msgid "Developer Wiki"
+msgstr "Wiki dành cho nhà phát triển"
+
+#: classes/Admin/Support.php:52
+msgid "Contribute to or extend Popup Maker."
+msgstr "Đóng góp vào hoặc mở rộng Popup Maker."
+
+#: classes/Admin/Support.php:60
+msgid ""
+"Find answers, connect with the community, or contact the Popup Maker support "
+"team."
+msgstr ""
+"Tìm câu trả lời, kết nối với cộng đồng hoặc liên hệ với nhóm hỗ trợ Popup "
+"Maker."
+
+#: classes/Admin/Support.php:77
+msgid "Still need help?"
+msgstr "Vẫn cần trợ giúp?"
+
+#: classes/Admin/Support.php:78
+msgid ""
+"Open a support request and include the site URL, Popup Maker version, steps "
+"to reproduce, and any relevant error messages."
+msgstr ""
+"Mở yêu cầu hỗ trợ và bao gồm URL trang web, phiên bản Popup Maker, các bước "
+"để tái tạo lỗi và mọi thông báo lỗi liên quan."
+
+#: classes/Admin/Support.php:81
+msgid "Contact Support"
+msgstr "Liên hệ hỗ trợ"
 
 #: classes/Admin/Templates.php:52
 msgid "Check"
@@ -2331,12 +2390,6 @@ msgstr "Nhãn"
 msgid "Value"
 msgstr "Giá trị"
 
-#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
-#: classes/Controllers/Admin/WP/PluginsPage.php:106
-#: dist/packages/cta-editor.js:1
-msgid "Documentation"
-msgstr "Tài liệu"
-
 #: classes/Admin/Templates.php:844
 msgid "Add New Trigger"
 msgstr "Thêm trình kích hoạt mới"
@@ -2489,7 +2542,7 @@ msgid "Add New Cookie"
 msgstr "Thêm cookie mới"
 
 #: classes/Admin/Templates.php:1125 classes/Privacy.php:67
-#: classes/Site/Assets.php:301
+#: classes/Site/Assets.php:300
 msgid "Cookies"
 msgstr "Cookie"
 
@@ -4767,78 +4820,78 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr "Giữ chỗ biểu mẫu đăng ký"
 
-#: classes/Site/Assets.php:284
+#: classes/Site/Assets.php:283
 msgid "Debug Mode Enabled"
 msgstr "Đã bật chế độ gỡ lỗi"
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:284
 msgid "Debug started at:"
 msgstr "Gỡ lỗi bắt đầu lúc:"
 
 #. translators: 1. URL to documentation.
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:287
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr "Để biết thêm thông tin về cách sử dụng thông tin này, hãy truy cập %s"
 
-#: classes/Site/Assets.php:291
+#: classes/Site/Assets.php:290
 msgid "Global Information"
 msgstr "Thông tin chung"
 
-#: classes/Site/Assets.php:292
+#: classes/Site/Assets.php:291
 msgid "Localized variables"
 msgstr "Các biến cục bộ"
 
-#: classes/Site/Assets.php:293
+#: classes/Site/Assets.php:292
 msgid "Popups Initializing"
 msgstr "Đang khởi tạo popup"
 
-#: classes/Site/Assets.php:294
+#: classes/Site/Assets.php:293
 msgid "Popups Initialized"
 msgstr "Popup đã được khởi tạo"
 
-#: classes/Site/Assets.php:295
+#: classes/Site/Assets.php:294
 msgid "Popup: #"
 msgstr "Popup: #"
 
-#: classes/Site/Assets.php:296
+#: classes/Site/Assets.php:295
 msgid "Theme ID: "
 msgstr "ID giao diện: "
 
-#: classes/Site/Assets.php:297
+#: classes/Site/Assets.php:296
 msgid "Method Call:"
 msgstr "Lời gọi phương thức:"
 
-#: classes/Site/Assets.php:298
+#: classes/Site/Assets.php:297
 msgid "Method Arguments:"
 msgstr "Đối số phương thức:"
 
-#: classes/Site/Assets.php:302
+#: classes/Site/Assets.php:301
 msgid "Delay:"
 msgstr "Độ trễ:"
 
-#: classes/Site/Assets.php:304
+#: classes/Site/Assets.php:303
 msgid "Cookie:"
 msgstr "Cookie:"
 
-#: classes/Site/Assets.php:305
+#: classes/Site/Assets.php:304
 msgid "Settings:"
 msgstr "Cài đặt:"
 
-#: classes/Site/Assets.php:306
+#: classes/Site/Assets.php:305
 msgid "Selector:"
 msgstr "Bộ chọn:"
 
-#: classes/Site/Assets.php:307
+#: classes/Site/Assets.php:306
 msgid "Mobile Disabled:"
 msgstr "Đã tắt trên thiết bị di động:"
 
-#: classes/Site/Assets.php:308
+#: classes/Site/Assets.php:307
 msgid "Tablet Disabled:"
 msgstr "Đã tắt trên máy tính bảng:"
 
 #. translators: 1. Event name.
-#: classes/Site/Assets.php:310
+#: classes/Site/Assets.php:309
 #, php-format
 msgid "Event: %s"
 msgstr "Sự kiện: %s"
