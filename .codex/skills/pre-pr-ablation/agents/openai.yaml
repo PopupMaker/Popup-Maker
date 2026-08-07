@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pre-PR Ablation"
+  short_description: "Prove every nontrivial change is necessary before review."
+  default_prompt: "Use $pre-pr-ablation to prove the smallest behaviorally complete change before opening or updating a PR."
