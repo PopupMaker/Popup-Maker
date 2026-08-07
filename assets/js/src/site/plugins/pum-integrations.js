@@ -7,15 +7,17 @@
 	// Ensure PUM exists globally
 	window.PUM = window.PUM || {};
 	window.PUM.integrations = window.PUM.integrations || {};
+	const PUM = window.PUM;
+	const pumVars = window.pum_vars;
 
 	function filterNull( x ) {
 		return x;
 	}
 
 	$.extend( window.PUM.integrations, {
-		init: function () {
-			if ( 'undefined' !== typeof pum_vars.form_submission ) {
-				var submission = pum_vars.form_submission;
+		init() {
+			if ( pumVars && 'undefined' !== typeof pumVars.form_submission ) {
+				const submission = pumVars.form_submission;
 
 				// Declare these are not AJAX submissions.
 				submission.ajax = false;
@@ -39,15 +41,15 @@
 		 * @param {Object} form JavaScript DOM node or jQuery object for the form submitted
 		 * @param {Object} args {
 		 *     @type {string} formProvider Such as gravityforms or ninjaforms
-		 *     @type {string|int} formId Usually an integer ID number such as 1
-		 *     @type {int} formInstanceId Not all form plugins support this.
+		 *     @type {string|number} formId Usually an integer ID number such as 1
+		 *     @type {number} formInstanceId Not all form plugins support this.
 		 *     @type {string|number} submissionId Optional provider submission or entry ID.
 		 *     @type {number} sourcePostId Optional post/page ID where the form was submitted.
 		 *     @type {Object} context Extension-owned submission context.
 		 * }
 		 */
-		formSubmission: function ( form, args ) {
-			var $popup = PUM.getPopup( form );
+		formSubmission( form, args ) {
+			const $popup = PUM.getPopup( form );
 
 			args = $.extend(
 				{
@@ -100,13 +102,13 @@
 			 * @param {Object} form JavaScript DOM node or jQuery object for the form submitted
 			 * @param {Object} args {
 			 *     @type {string} formProvider Such as gravityforms or ninjaforms
-			 *     @type {string|int} formId Usually an integer ID number such as 1
-			 *     @type {int} formInstanceId Not all form plugins support this.
+			 *     @type {string|number} formId Usually an integer ID number such as 1
+			 *     @type {number} formInstanceId Not all form plugins support this.
 			 *     @type {string|number} submissionId Optional provider submission or entry ID.
 			 *     @type {number} sourcePostId Optional post/page ID where the form was submitted.
 			 *     @type {Object} context Extension-owned submission context.
 			 *     @type {string} formKey Concatenation of provider, ID & Instance ID.
-			 *     @type {int} popupId The ID of the popup the form was in.
+			 *     @type {number} popupId The ID of the popup the form was in.
 			 *     @type {Object} popup Usable jQuery object for the popup.
 			 * }
 			 */
@@ -116,14 +118,14 @@
 				args
 			);
 		},
-		checkFormKeyMatches: function (
+		checkFormKeyMatches(
 			formIdentifier,
 			formInstanceId,
 			submittedFormArgs
 		) {
 			formInstanceId = '' === formInstanceId ? formInstanceId : false;
 			// Check if the submitted form matches trigger requirements.
-			var checks = [
+			const checks = [
 					// Any supported form.
 					formIdentifier === 'any',
 
@@ -158,28 +160,28 @@
 			 * @since 1.9.0
 			 *
 			 * @param {boolean} matchFound A boolean determining whether a match was found.
-			 * @param {Object} args {
+			 * @param {Object}  args       {
 			 *		@type {string} formIdentifier gravityforms_any or ninjaforms_1
-			 *		@type {int} formInstanceId Not all form plugins support this.
+			 *		@type {number} formInstanceId Not all form plugins support this.
 			 *		@type {Object} submittedFormArgs{
 			 *			@type {string} formProvider Such as gravityforms or ninjaforms
-			 * 			@type {string|int} formId Usually an integer ID number such as 1
-			 *			@type {int} formInstanceId Not all form plugins support this.
+			 * 			@type {string|number} formId Usually an integer ID number such as 1
+			 *			@type {number} formInstanceId Not all form plugins support this.
 			 *			@type {string} formKey Concatenation of provider, ID & Instance ID.
-			 *			@type {int} popupId The ID of the popup the form was in.
+			 *			@type {number} popupId The ID of the popup the form was in.
 			 *			@type {Object} popup Usable jQuery object for the popup.
 			 *		}
 			 * }
 			 *
-			 * @returns {boolean}
+			 * @return {boolean}
 			 */
 			return window.PUM.hooks.applyFilters(
 				'pum.integration.checkFormKeyMatches',
 				matchFound,
 				{
-					formIdentifier: formIdentifier,
-					formInstanceId: formInstanceId,
-					submittedFormArgs: submittedFormArgs,
+					formIdentifier,
+					formInstanceId,
+					submittedFormArgs,
 				}
 			);
 		},
