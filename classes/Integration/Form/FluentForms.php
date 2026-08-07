@@ -112,11 +112,30 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 
 		pum_integrated_form_submission(
 			[
-				'popup_id'      => $popup_id,
-				'form_provider' => $this->key,
-				'form_id'       => $form_id,
+				'popup_id'       => $popup_id,
+				'form_provider'  => $this->key,
+				'form_id'        => $form_id,
+				'submission_id'  => $submission_id,
+				'source_post_id' => $this->get_source_post_id(),
 			]
 		);
+	}
+
+	/**
+	 * Resolve the post that supplied the submitted form.
+	 *
+	 * @return int|null
+	 */
+	private function get_source_post_id() {
+		$referer = wp_get_raw_referer();
+
+		if ( ! $referer ) {
+			return null;
+		}
+
+		$post_id = url_to_postid( $referer );
+
+		return $post_id ? $post_id : null;
 	}
 
 	/**

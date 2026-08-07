@@ -41,6 +41,9 @@
 		 *     @type {string} formProvider Such as gravityforms or ninjaforms
 		 *     @type {string|int} formId Usually an integer ID number such as 1
 		 *     @type {int} formInstanceId Not all form plugins support this.
+		 *     @type {string|number} submissionId Optional provider submission or entry ID.
+		 *     @type {number} sourcePostId Optional post/page ID where the form was submitted.
+		 *     @type {Object} context Extension-owned submission context.
 		 * }
 		 */
 		formSubmission: function ( form, args ) {
@@ -52,6 +55,9 @@
 					formProvider: null,
 					formId: null,
 					formInstanceId: null,
+					submissionId: null,
+					sourcePostId: null,
+					context: {},
 					formKey: null,
 					ajax: true, // Allows detecting submissions that may have already been counted.
 					tracked: false,
@@ -74,6 +80,17 @@
 			}
 
 			/**
+			 * Filters normalized form submission arguments before success handlers run.
+			 *
+			 * Extensions can append context without coupling to individual providers.
+			 */
+			args = window.PUM.hooks.applyFilters(
+				'pum.integration.form.submissionArgs',
+				args,
+				form
+			);
+
+			/**
 			 * This hook fires after any integrated form is submitted successfully.
 			 *
 			 * It does not matter if the form is in a popup or not.
@@ -85,6 +102,9 @@
 			 *     @type {string} formProvider Such as gravityforms or ninjaforms
 			 *     @type {string|int} formId Usually an integer ID number such as 1
 			 *     @type {int} formInstanceId Not all form plugins support this.
+			 *     @type {string|number} submissionId Optional provider submission or entry ID.
+			 *     @type {number} sourcePostId Optional post/page ID where the form was submitted.
+			 *     @type {Object} context Extension-owned submission context.
 			 *     @type {string} formKey Concatenation of provider, ID & Instance ID.
 			 *     @type {int} popupId The ID of the popup the form was in.
 			 *     @type {Object} popup Usable jQuery object for the popup.
