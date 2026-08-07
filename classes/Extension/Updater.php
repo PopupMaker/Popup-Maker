@@ -442,6 +442,11 @@ class PUM_Extension_Updater {
 			$_data = $edd_api_request_transient;
 		}
 
+		// A failed API request leaves WordPress's default false response in place.
+		if ( ! is_object( $_data ) ) {
+			return $_data;
+		}
+
 		// Convert sections into an associative array, since we're getting an object, but Core expects an array.
 		if ( isset( $_data->sections ) && ! is_array( $_data->sections ) ) {
 			$_data->sections = $this->convert_object_to_array( $_data->sections );
