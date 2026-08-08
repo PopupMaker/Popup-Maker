@@ -198,7 +198,13 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 	 * @return \PopupMaker\Controllers\Builders
 	 */
 	private function make_controller() {
-		$builder    = new Elementor( \PopupMaker\plugin() );
+		$builder    = new class( \PopupMaker\plugin() ) extends Elementor {
+
+			/** @return bool */
+			public function is_available() {
+				return true;
+			}
+		};
 		$controller = new class( \PopupMaker\plugin(), $builder ) extends \PopupMaker\Controllers\Builders {
 
 			/** @var PageBuilder */
