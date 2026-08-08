@@ -66,18 +66,21 @@ and never use restoration steps that reset or overwrite it.
 Test one candidate at a time:
 
 1. Restore the current-source checkpoint and recreate the runtime-state
-   snapshot, then verify both. Record the full current solution's smallest
-   sensitive test and applicable operational measurements. For a user-facing
-   path, also exercise the real UI; otherwise observe the relevant event,
-   persisted state, request, or other external effect. Require a pass unless the
-   candidate is explicitly suspected to be harmful; then record the expected
-   failing baseline and the defect it demonstrates.
+   snapshot, then verify both. Regenerate artifacts, invalidate caches, and run
+   any required warm-up using a recorded preparation sequence. Record the full
+   current solution's smallest sensitive test and applicable operational
+   measurements. For a user-facing path, also exercise the real UI; otherwise
+   observe the relevant event, persisted state, request, or other external
+   effect. Require a pass unless the candidate is explicitly suspected to be
+   harmful; then record the expected failing baseline and the defect it
+   demonstrates.
 2. Remove exactly one candidate as a coherent change. When it is structural,
    remove its dependent references so the variant remains syntactically valid,
    autoloadable, and interface-compliant without removing unrelated behavior.
 3. Keep the ablated source tree and previously accepted removals intact. Restore
    and verify only the same runtime-state snapshot, regenerate every artifact
-   needed for the edited layer, and invalidate caches.
+   needed for the edited layer, invalidate caches, and run the identical warm-up
+   sequence used for the full solution.
 4. Confirm the variant builds or loads successfully, then repeat the same
    focused test, operational measurements, and applicable UI or external-effect
    observation.
@@ -91,10 +94,10 @@ Test one candidate at a time:
    - `unproven`: the test cannot distinguish it; improve the fixture before
      deciding.
 
-6. Restore required code. For conditional code, narrow it behind the
-   demonstrated condition or prove it is inert outside that condition, then
-   test both sides. Delete redundant/harmful code, then advance the
-   current-source checkpoint to the accepted source state.
+6. Restore required and unproven code. For conditional code, narrow it behind
+   the demonstrated condition or prove it is inert outside that condition, then
+   test both sides. Delete redundant/harmful code, then advance the current-source
+   checkpoint to the accepted source state.
 7. Record the command, meaningful output, and visible result in an ablation
    table or durable discovery note.
 
