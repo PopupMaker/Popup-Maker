@@ -2,8 +2,13 @@
 
 ## Unreleased
 
+**Features**
+
+-   Expanded Elementor support with direct popup editing, previews, and correctly styled frontend rendering.
+
 **Improvements**
 
+-   Improved page builder compatibility with more efficient asset loading and an easier path to supporting additional builders.
 -   Improved compatibility with PHP 8.3, 8.4, and 8.5.
 
 **Fixes**
