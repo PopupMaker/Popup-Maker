@@ -201,6 +201,16 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			'post_type' => 'popup',
 			'p'         => $popup_id,
 		], home_url( '/' ) ) );
+		$script_was_registered = wp_script_is( 'pum-builder-preview', 'registered' );
+		$style_was_registered  = wp_style_is( 'pum-builder-preview', 'registered' );
+
+		if ( ! $script_was_registered ) {
+			wp_register_script( 'pum-builder-preview', false, [], 'test', true );
+		}
+
+		if ( ! $style_was_registered ) {
+			wp_register_style( 'pum-builder-preview', false, [], 'test' );
+		}
 
 		$preloaded = [];
 		$capture   = function ( $loaded_id ) use ( &$preloaded ) {
@@ -211,10 +221,20 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 		remove_action( 'pum_preload_popup', $capture );
 
-		$this->assertContains( $popup_id, $preloaded );
-		$this->assertTrue( wp_script_is( 'pum-builder-preview', 'enqueued' ) );
-		$this->assertTrue( wp_style_is( 'pum-builder-preview', 'enqueued' ) );
-		$this->assertContains( 'pum-builder-preview', $controller->filter_canvas_body_classes( [] ) );
+		try {
+			$this->assertContains( $popup_id, $preloaded );
+			$this->assertTrue( wp_script_is( 'pum-builder-preview', 'enqueued' ) );
+			$this->assertTrue( wp_style_is( 'pum-builder-preview', 'enqueued' ) );
+			$this->assertContains( 'pum-builder-preview', $controller->filter_canvas_body_classes( [] ) );
+		} finally {
+			if ( ! $script_was_registered ) {
+				wp_deregister_script( 'pum-builder-preview' );
+			}
+
+			if ( ! $style_was_registered ) {
+				wp_deregister_style( 'pum-builder-preview' );
+			}
+		}
 	}
 
 	/** @return void */
