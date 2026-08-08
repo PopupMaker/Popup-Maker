@@ -138,25 +138,31 @@ class Elementor extends PageBuilder {
 	/**
 	 * Render a popup through Elementor's public frontend API.
 	 *
-	 * @param int  $popup_id Popup ID.
-	 * @param bool $is_canvas Whether Elementor is rendering its editor canvas.
+	 * @param int  $popup_id        Popup ID.
+	 * @param bool $is_editor_canvas Whether Elementor is rendering its editor canvas.
 	 *
 	 * @return string|null
 	 */
-	public function render_document( $popup_id, $is_canvas = false ) {
+	public function render_document( $popup_id, $is_editor_canvas = false ) {
 		if ( ! $this->is_ready() ) {
 			return null;
 		}
 
-		$popup_id = absint( $popup_id );
-		$frontend = \Elementor\Plugin::$instance->frontend;
+		$popup_id          = absint( $popup_id );
+		$frontend          = \Elementor\Plugin::$instance->frontend;
+		$is_signed_preview = absint( BuilderPreviewUrl::read_request( $this->key() ) ) === $popup_id;
 
 		// Lets Elementor and third-party widgets register state for this
 		// secondary document before its markup is generated.
 		do_action( 'elementor/post/render', $popup_id );
 
-		if ( $is_canvas && method_exists( $frontend, 'get_builder_content' ) ) {
-			$rendered = $frontend->get_builder_content( $popup_id );
+		if ( ( $is_editor_canvas || $is_signed_preview ) && method_exists( $frontend, 'get_builder_content' ) ) {
+			// Elementor's display helper intentionally returns empty when the
+			// requested document is also the current standalone preview document.
+			$rendered = $frontend->get_builder_content(
+				$popup_id,
+				$is_signed_preview && (bool) did_action( 'wp_head' )
+			);
 		} elseif ( method_exists( $frontend, 'get_builder_content_for_display' ) ) {
 			// Elementor enqueues document CSS before the head and prints it inline
 			// when Popup Maker discovers the document after the head has passed.
