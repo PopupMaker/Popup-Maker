@@ -146,10 +146,6 @@ const config = {
 			// combinedOutputFile: '../plugin-assets.php',
 		} ),
 	],
-	optimization: {
-		...defaultConfig.optimization,
-		minimize: NODE_ENV !== 'development',
-	},
 };
 
 module.exports = config;

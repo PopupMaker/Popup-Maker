@@ -58,7 +58,7 @@ class Assets extends Controller {
 		}
 
 		$packages = [
-			'addons-page'          => [
+			'addons-page'         => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-addons-page',
 				'styles'  => true,
@@ -122,6 +122,13 @@ class Assets extends Controller {
 						'paramNames' => \PopupMaker\get_param_names(),
 					];
 				},
+			],
+			'builder-preview'     => [
+				'bundled'   => false,
+				'handle'    => 'pum-builder-preview',
+				'styles'    => true,
+				'deps'      => [ 'popup-maker-site' ],
+				'styleDeps' => [ 'popup-maker-site' ],
 			],
 			'components'          => [
 				'bundled'  => false,
@@ -330,7 +337,9 @@ class Assets extends Controller {
 
 			if ( isset( $package_data['styles'] ) && $package_data['styles'] && file_exists( $css_path ) ) {
 				$css_file = $this->container->get_url( "$path/$package{$rtl}.css" );
-				$css_deps = [ 'wp-components', 'wp-block-editor', 'dashicons' ];
+				$css_deps = isset( $package_data['styleDeps'] )
+					? (array) $package_data['styleDeps']
+					: [ 'wp-components', 'wp-block-editor', 'dashicons' ];
 
 				if ( $bundled ) {
 					pum_register_style( $handle, $css_file, $css_deps, $meta['version'] );
@@ -425,9 +434,9 @@ class Assets extends Controller {
 		$vars = apply_filters(
 			'popup_maker/layout_vars',
 			[
-				'navTabs'            => [],
-				'supportMenuItems'   => [],
-				'showSupport'        => true,
+				'navTabs'          => [],
+				'supportMenuItems' => [],
+				'showSupport'      => true,
 			]
 		);
 

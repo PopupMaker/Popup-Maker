@@ -1,0 +1,31 @@
+html,
+body.pum-builder-preview {
+	min-height: 100%;
+}
+
+body.pum-builder-preview {
+	margin: 0;
+	min-height: 100vh;
+	overflow: auto;
+
+	&.pum-builder-preview-overlay-disabled {
+		background: transparent !important;
+	}
+
+	> .pum {
+		display: block !important;
+		opacity: 1 !important;
+		visibility: visible !important;
+	}
+
+	.pum-container,
+	.pum-close {
+		display: block !important;
+		opacity: 1 !important;
+		visibility: visible !important;
+	}
+
+	.pum-close {
+		pointer-events: none !important;
+	}
+}

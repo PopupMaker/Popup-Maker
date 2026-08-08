@@ -14,6 +14,7 @@
 
 **Developers**
 
+-   Added shared page builder preview, rendering, and asset-loading primitives for bundled integrations.
 -   Updated extension-added post and metadata field handling to avoid deprecated dynamic properties, and expanded automated and release-package runtime coverage through PHP 8.5.
 
 ## v1.24.0 - 2026-08-03
