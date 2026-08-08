@@ -1,0 +1,107 @@
+<?php
+/**
+ * Beaver Builder provider.
+ *
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2026, Code Atlantic LLC
+ */
+
+namespace PopupMaker\Builders;
+
+use PopupMaker\Base\PageBuilder;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Registers Beaver Builder without duplicating its native Popup Maker support.
+ *
+ * Beaver Builder 2.8+ ships `extensions/fl-builder-popup-maker`, which owns the
+ * integration: post type registration, front-end editing, popup rendering,
+ * per-layout assets, and trigger preloading. Popup Maker only identifies its
+ * native editor request and prevents its broad redirect from claiming another
+ * builder's popup request.
+ *
+ * @since 1.25.0
+ */
+class BeaverBuilder extends PageBuilder {
+
+	/**
+	 * Whether Beaver's native Popup Maker integration is active.
+	 *
+	 * @return bool
+	 */
+	public function is_available() {
+		return defined( 'FL_BUILDER_VERSION' ) &&
+			class_exists( '\FLBuilder' ) &&
+			class_exists( '\FLBuilderPopupMaker' );
+	}
+
+	/**
+	 * Keep Beaver's native popup redirect away from other builders' requests.
+	 *
+	 * Beaver registers the rest of its integration hooks itself. Its generic
+	 * non-builder redirect also matches other builders' popup canvases and signed
+	 * previews, so remove it before the default-priority callback runs there.
+	 *
+	 * @return void
+	 */
+	public function register_hooks() {
+		add_action( 'wp', [ $this, 'preserve_builder_request' ], 0 );
+	}
+
+	/**
+	 * Get the popup ID Beaver Builder is requesting.
+	 *
+	 * Authorization is intentionally absent; the coordinator performs it.
+	 *
+	 * @return int
+	 */
+	public function get_requested_popup_id() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Capability checked by the coordinator.
+		if (
+			! isset( $_GET['fl_builder'] ) ||
+			! isset( $_GET['post_type'], $_GET['p'] ) ||
+			! is_scalar( $_GET['post_type'] ) ||
+			! is_scalar( $_GET['p'] ) ||
+			'popup' !== sanitize_key( wp_unslash( $_GET['post_type'] ) )
+		) {
+			return 0;
+		}
+
+		return absint( wp_unslash( $_GET['p'] ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+	}
+
+	/**
+	 * Whether Beaver is rendering the editable iframe or legacy canvas.
+	 *
+	 * Beaver 2.8+ uses a shell marked by `fl_builder_ui` and renders the page in
+	 * `fl_builder_ui_iframe`. Older releases render the canvas directly.
+	 *
+	 * @return bool
+	 */
+	public function is_canvas_request() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Capability checked by the coordinator.
+		return isset( $_GET['fl_builder_ui_iframe'] ) || ! isset( $_GET['fl_builder_ui'] );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+	}
+
+	/**
+	 * Let an authorized builder request continue to its own canvas.
+	 *
+	 * @return void
+	 */
+	public function preserve_builder_request() {
+		$builders = $this->container->get_controller( 'Builders' );
+
+		if ( ! $builders instanceof \PopupMaker\Controllers\Builders || ! $builders->get_edit_popup_id() ) {
+			return;
+		}
+
+		if ( ! class_exists( '\FLBuilderPopupMaker' ) || ! method_exists( '\FLBuilderPopupMaker', 'redirect_to_admin_edit' ) ) {
+			return;
+		}
+
+		remove_action( 'wp', 'FLBuilderPopupMaker::redirect_to_admin_edit' );
+	}
+}
