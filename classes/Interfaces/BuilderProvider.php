@@ -13,10 +13,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Base contract every page builder provider implements.
  *
- * Mirrors the long-standing form provider contract
- * (`PUM_Interface_Integration`): a stable key and an availability probe.
- * Everything beyond that is an optional capability, because no two builders
- * expose the same surface.
+ * Keeps only the operations every bundled integration shares. The coordinator
+ * checks for builder-specific operations before calling them, because no two
+ * builders expose the same surface.
  *
  * Providers answer questions and perform single operations. They never own
  * request lifecycle, batching, or finalization — that belongs to
@@ -29,7 +28,7 @@ interface BuilderProvider {
 	/**
 	 * Stable provider key.
 	 *
-	 * Used for hook names, signed preview URLs, and registry lookups, so it
+	 * Used for hook names, signed preview URLs, and coordinator lookups, so it
 	 * must not change once shipped.
 	 *
 	 * @return string

@@ -1,12 +1,10 @@
-import './builder-preview.scss';
+import './styles.scss';
 
-( function ( $, PUM ) {
-	'use strict';
+import $ from 'jquery';
 
-	if ( ! $ || ! PUM || 'function' !== typeof PUM.getPopup ) {
-		return;
-	}
+const PUM = window.PUM;
 
+if ( PUM && 'function' === typeof PUM.getPopup ) {
 	const $popupElement = $( 'body.pum-builder-preview > .pum' ).first();
 	const popupId = parseInt(
 		( $popupElement.attr( 'id' ) || '' ).replace( 'pum-', '' ),
@@ -16,7 +14,7 @@ import './builder-preview.scss';
 	const $container =
 		$popup && $popup.length ? $popup.find( '.pum-container' ) : null;
 
-	function constrainPopupToVisibleViewport() {
+	const constrainPopupToVisibleViewport = (): void => {
 		const inset = 10;
 		const bounds = {
 			left: inset,
@@ -24,7 +22,6 @@ import './builder-preview.scss';
 			right: window.innerWidth - inset,
 			bottom: window.innerHeight - inset,
 		};
-		let frameRect;
 
 		if ( ! $container || ! $container.length ) {
 			return;
@@ -32,7 +29,7 @@ import './builder-preview.scss';
 
 		if ( window.frameElement && window.parent !== window ) {
 			try {
-				frameRect = window.frameElement.getBoundingClientRect();
+				const frameRect = window.frameElement.getBoundingClientRect();
 				bounds.left = Math.max( bounds.left, inset - frameRect.left );
 				bounds.top = Math.max( bounds.top, inset - frameRect.top );
 				bounds.right = Math.min(
@@ -72,9 +69,9 @@ import './builder-preview.scss';
 			left: ( parseFloat( $container.css( 'left' ) ) || 0 ) + offsetLeft,
 			top: ( parseFloat( $container.css( 'top' ) ) || 0 ) + offsetTop,
 		} );
-	}
+	};
 
-	function repositionPopup() {
+	const repositionPopup = (): void => {
 		if (
 			! $popup ||
 			! $popup.length ||
@@ -94,15 +91,15 @@ import './builder-preview.scss';
 			popupId,
 		] );
 		constrainPopupToVisibleViewport();
-	}
+	};
 
 	if ( $popup && $popup.length ) {
-		$popup.on( 'pumBeforeClose.pumBuilderPreview', function () {
+		$popup.on( 'pumBeforeClose.pumBuilderPreview', () => {
 			$popup.addClass( 'preventClose' );
 		} );
 		$popup.on( 'pumAfterOpen.pumBuilderPreview', repositionPopup );
 
-		if ( 'ResizeObserver' in window && $container.length ) {
+		if ( 'ResizeObserver' in window && $container?.length ) {
 			new window.ResizeObserver( repositionPopup ).observe(
 				$container[ 0 ]
 			);
@@ -119,4 +116,4 @@ import './builder-preview.scss';
 	}
 
 	$( window ).on( 'resize.pumBuilderPreview', repositionPopup );
-} )( window.jQuery, window.PUM );
+}

@@ -9,9 +9,6 @@
 namespace PopupMaker\Builders;
 
 use PopupMaker\Interfaces\BuilderProvider;
-use PopupMaker\Interfaces\BuilderProvider\EditsPopups;
-use PopupMaker\Interfaces\BuilderProvider\ProvidesPreviewUrl;
-use PopupMaker\Interfaces\BuilderProvider\RendersDocuments;
 use PopupMaker\Services\BuilderPreviewUrl;
 
 defined( 'ABSPATH' ) || exit;
@@ -25,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.25.0
  */
-class Elementor implements BuilderProvider, EditsPopups, RendersDocuments, ProvidesPreviewUrl {
+class Elementor implements BuilderProvider {
 
 	/**
 	 * Plugin container.

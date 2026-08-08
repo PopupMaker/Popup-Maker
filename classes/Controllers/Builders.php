@@ -9,13 +9,8 @@
 namespace PopupMaker\Controllers;
 
 use PopupMaker\Interfaces\BuilderProvider;
-use PopupMaker\Interfaces\BuilderProvider\EditsPopups;
-use PopupMaker\Interfaces\BuilderProvider\LoadsDocumentAssets;
-use PopupMaker\Interfaces\BuilderProvider\ProvidesPreviewUrl;
-use PopupMaker\Interfaces\BuilderProvider\RendersDocuments;
 use PopupMaker\Plugin\Controller;
 use PopupMaker\Services\BuilderPreviewUrl;
-use PopupMaker\Services\BuilderProviders;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -39,11 +34,11 @@ defined( 'ABSPATH' ) || exit;
 class Builders extends Controller {
 
 	/**
-	 * Provider registry.
+	 * Bundled builder integrations, keyed by builder.
 	 *
-	 * @var BuilderProviders
+	 * @var array<string,BuilderProvider>
 	 */
-	private $providers;
+	private $providers = [];
 
 	/**
 	 * Provider keys whose runtime hooks have been registered.
@@ -55,7 +50,7 @@ class Builders extends Controller {
 	/**
 	 * Provider keys with assets awaiting finalization.
 	 *
-	 * @var array<string,bool>
+	 * @var array<string,BuilderProvider>
 	 */
 	private $pending = [];
 
@@ -72,18 +67,18 @@ class Builders extends Controller {
 	 * @return void
 	 */
 	public function init() {
-		$this->providers = new BuilderProviders();
-
 		foreach ( $this->default_providers() as $provider ) {
-			$this->providers->register( $provider );
-		}
+			$key = sanitize_key( $provider->key() );
 
-		// Core initializes on `plugins_loaded:11`; Pro and add-ons load at 12/13.
-		// Delay the extension point until their registration callbacks exist.
-		if ( did_action( 'plugins_loaded' ) && ! doing_action( 'plugins_loaded' ) ) {
-			$this->register_providers();
-		} else {
-			add_action( 'plugins_loaded', [ $this, 'register_providers' ], 20 );
+			if ( ! $key ) {
+				continue;
+			}
+
+			$this->providers[ $key ] = $provider;
+
+			if ( method_exists( $provider, 'register_preview_url' ) ) {
+				$provider->register_preview_url();
+			}
 		}
 
 		// Theme builders are available after setup. Some plugin builders construct
@@ -130,51 +125,19 @@ class Builders extends Controller {
 	}
 
 	/**
-	 * Get the provider registry.
-	 *
-	 * @return BuilderProviders
-	 */
-	public function providers() {
-		return $this->providers;
-	}
-
-	/**
-	 * Register providers supplied by add-ons and their preview URL filters.
-	 *
-	 * @return void
-	 */
-	public function register_providers() {
-		/**
-		 * Register additional page builder providers.
-		 *
-		 * Mirrors the `pum_integrations` filter used by form providers.
-		 *
-		 * @param BuilderProviders $providers Provider registry.
-		 */
-		do_action( 'popup_maker/register_builder_providers', $this->providers );
-
-		// Preview URL filters do not depend on a bootstrapped builder runtime.
-		foreach ( $this->providers->all() as $provider ) {
-			if ( $provider instanceof ProvidesPreviewUrl ) {
-				$provider->register_preview_url();
-			}
-		}
-	}
-
-	/**
 	 * Register hooks for every available provider.
 	 *
 	 * @return void
 	 */
 	public function register_provider_hooks() {
-		foreach ( $this->providers->available() as $provider ) {
-			if ( isset( $this->registered[ $provider->key() ] ) ) {
+		foreach ( $this->providers as $key => $provider ) {
+			if ( isset( $this->registered[ $key ] ) || ! $provider->is_available() ) {
 				continue;
 			}
 
 			$provider->register_hooks();
 
-			$this->registered[ $provider->key() ] = true;
+			$this->registered[ $key ] = true;
 		}
 	}
 
@@ -197,10 +160,10 @@ class Builders extends Controller {
 		 * the popup query still has to be restored (and live triggers stripped)
 		 * for the editor to work at all.
 		 */
-		foreach ( $this->providers->all() as $provider ) {
+		foreach ( $this->providers as $provider ) {
 			$popup_id = absint( BuilderPreviewUrl::read_request( $provider->key() ) );
 
-			if ( ! $popup_id && $provider instanceof EditsPopups ) {
+			if ( ! $popup_id && method_exists( $provider, 'get_requested_popup_id' ) ) {
 				$popup_id = absint( $provider->get_requested_popup_id() );
 			}
 
@@ -257,7 +220,11 @@ class Builders extends Controller {
 
 		$is_signed_preview = (bool) BuilderPreviewUrl::read_request( $provider->key() );
 
-		if ( ! $is_signed_preview && $provider instanceof EditsPopups && ! $provider->is_canvas_request() ) {
+		if (
+			! $is_signed_preview &&
+			method_exists( $provider, 'get_requested_popup_id' ) &&
+			( ! method_exists( $provider, 'is_canvas_request' ) || ! $provider->is_canvas_request() )
+		) {
 			return 0;
 		}
 
@@ -401,17 +368,10 @@ class Builders extends Controller {
 			$popups->preload_popup( $popup );
 
 			wp_enqueue_style(
-				'pum-builder-preview',
-				\Popup_Maker::$URL . 'dist/assets/builder-preview.css',
-				[ 'popup-maker-site' ],
-				\Popup_Maker::$VER
+				'pum-builder-preview'
 			);
 			wp_enqueue_script(
-				'pum-builder-preview',
-				\Popup_Maker::$URL . 'dist/assets/builder-preview.js',
-				[ 'popup-maker-site' ],
-				\Popup_Maker::$VER,
-				true
+				'pum-builder-preview'
 			);
 		}
 	}
@@ -463,10 +423,18 @@ class Builders extends Controller {
 	 *
 	 * @param int $popup_id Popup ID.
 	 *
-	 * @return RendersDocuments|null
+	 * @return BuilderProvider|null
 	 */
 	protected function find_document_provider( $popup_id ) {
-		foreach ( $this->providers->supporting( RendersDocuments::class ) as $provider ) {
+		foreach ( $this->providers as $provider ) {
+			if (
+				! $provider->is_available() ||
+				! method_exists( $provider, 'is_builder_document' ) ||
+				! method_exists( $provider, 'render_document' )
+			) {
+				continue;
+			}
+
 			if ( $provider->is_builder_document( $popup_id ) ) {
 				return $provider;
 			}
@@ -484,10 +452,19 @@ class Builders extends Controller {
 	 *
 	 * @param int $popup_id Popup ID.
 	 *
-	 * @return LoadsDocumentAssets|null
+	 * @return BuilderProvider|null
 	 */
 	protected function find_asset_provider( $popup_id ) {
-		foreach ( $this->providers->supporting( LoadsDocumentAssets::class ) as $provider ) {
+		foreach ( $this->providers as $provider ) {
+			if (
+				! $provider->is_available() ||
+				! method_exists( $provider, 'is_builder_document' ) ||
+				! method_exists( $provider, 'collect_document_assets' ) ||
+				! method_exists( $provider, 'finalize_document_assets' )
+			) {
+				continue;
+			}
+
 			if ( $provider->is_builder_document( $popup_id ) ) {
 				return $provider;
 			}
@@ -508,7 +485,10 @@ class Builders extends Controller {
 	 * @return void
 	 */
 	protected function collect_assets( BuilderProvider $provider, $popup_id ) {
-		if ( ! $provider instanceof LoadsDocumentAssets ) {
+		if (
+			! method_exists( $provider, 'collect_document_assets' ) ||
+			! method_exists( $provider, 'finalize_document_assets' )
+		) {
 			return;
 		}
 
@@ -520,7 +500,7 @@ class Builders extends Controller {
 
 		$provider->collect_document_assets( $popup_id );
 
-		$this->pending[ $provider->key() ] = true;
+		$this->pending[ $provider->key() ] = $provider;
 	}
 
 	/**
@@ -553,10 +533,8 @@ class Builders extends Controller {
 			return;
 		}
 
-		foreach ( array_keys( $this->pending ) as $key ) {
-			$provider = $this->providers->get( $key );
-
-			if ( ! $provider instanceof LoadsDocumentAssets ) {
+		foreach ( $this->pending as $key => $provider ) {
+			if ( ! method_exists( $provider, 'finalize_document_assets' ) ) {
 				unset( $this->pending[ $key ] );
 				continue;
 			}

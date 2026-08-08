@@ -6,14 +6,10 @@
  */
 
 use PopupMaker\Interfaces\BuilderProvider;
-use PopupMaker\Interfaces\BuilderProvider\EditsPopups;
-use PopupMaker\Interfaces\BuilderProvider\LoadsDocumentAssets;
-use PopupMaker\Interfaces\BuilderProvider\RendersDocuments;
 use PopupMaker\Services\BuilderPreviewUrl;
-use PopupMaker\Services\BuilderProviders;
 
 /**
- * Test the builder-agnostic provider registry, coordinator, and signed previews.
+ * Test the builder coordinator and signed previews.
  *
  * These tests deliberately use stub providers rather than a live builder so the
  * shared contracts are verified without third-party builders installed.
@@ -56,75 +52,6 @@ class Builder_Providers_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The registry only exposes providers whose builder is available.
-	 *
-	 * @return void
-	 */
-	public function test_registry_hides_unavailable_providers() {
-		$registry = new BuilderProviders();
-		$late     = $this->make_provider( 'late', false );
-
-		$registry->register( $this->make_provider( 'present', true ) );
-		$registry->register( $this->make_provider( 'absent', false ) );
-		$registry->register( $late );
-
-		$this->assertSame( [ 'present', 'absent', 'late' ], array_keys( $registry->all() ) );
-		$this->assertSame( [ 'present' ], array_keys( $registry->available() ) );
-		$this->assertNull( $registry->get( 'absent' ) );
-		$this->assertInstanceOf( BuilderProvider::class, $registry->get( 'present' ) );
-
-		$late->available = true;
-
-		$this->assertSame( [ 'present', 'late' ], array_keys( $registry->available() ) );
-
-		global $wp_current_filter;
-
-		$previous_current_filter = $wp_current_filter;
-		$wp_current_filter[]     = 'plugins_loaded';
-
-		try {
-			$controller = $this->make_coordinator( [] );
-		} finally {
-			$wp_current_filter = $previous_current_filter;
-		}
-
-		$this->assertSame( 20, has_action( 'plugins_loaded', [ $controller, 'register_providers' ] ) );
-
-		$extension = $this->make_provider( 'extension', true );
-		$register  = function ( $providers ) use ( $extension ) {
-			if ( $providers instanceof BuilderProviders ) {
-				$providers->register( $extension );
-			}
-		};
-
-		add_action( 'popup_maker/register_builder_providers', $register );
-
-		try {
-			$controller->register_providers();
-
-			$this->assertSame( $extension, $controller->providers()->get( 'extension' ) );
-		} finally {
-			remove_action( 'popup_maker/register_builder_providers', $register );
-			remove_action( 'plugins_loaded', [ $controller, 'register_providers' ], 20 );
-		}
-	}
-
-	/**
-	 * Capability lookups only match providers implementing the interface.
-	 *
-	 * @return void
-	 */
-	public function test_registry_filters_by_capability() {
-		$registry = new BuilderProviders();
-
-		$registry->register( $this->make_provider( 'plain', true ) );
-		$registry->register( $this->make_edit_provider( 'editor', 0 ) );
-
-		$this->assertSame( [ 'editor' ], array_keys( $registry->supporting( EditsPopups::class ) ) );
-		$this->assertSame( [], array_keys( $registry->supporting( RendersDocuments::class ) ) );
-	}
-
-	/**
 	 * A signed preview URL round-trips for the builder that created it.
 	 *
 	 * @return void
@@ -144,7 +71,7 @@ class Builder_Providers_Test extends WP_UnitTestCase {
 				$controller->get_edit_popup_id(),
 				$controller->allow_builder_request( [] )['p'],
 			],
-			'Signed previews work without EditsPopups and restore the popup query.'
+			'Signed previews work without edit-request methods and restore the popup query.'
 		);
 	}
 
@@ -503,7 +430,7 @@ class Builder_Providers_Test extends WP_UnitTestCase {
 		$this->assertSame( 'original', $controller->render_popup_content( 'original', $popup_id ) );
 		$this->assertSame( 0, $provider->collected );
 
-		$empty_renderer = \Mockery::mock( BuilderProvider::class . ', ' . RendersDocuments::class );
+		$empty_renderer = \Mockery::mock( BuilderProvider::class );
 		$empty_renderer->shouldReceive( 'key' )->andReturn( 'empty-renderer' );
 		$empty_renderer->shouldReceive( 'is_available' )->andReturn( true );
 		$empty_renderer->shouldReceive( 'is_builder_document' )->with( $popup_id )->andReturn( true );
@@ -672,7 +599,7 @@ class Builder_Providers_Test extends WP_UnitTestCase {
 	 * @return BuilderProvider
 	 */
 	private function make_edit_provider( $key, $popup_id, $is_canvas = true ) {
-		return new class( $key, $popup_id, $is_canvas ) implements BuilderProvider, EditsPopups {
+		return new class( $key, $popup_id, $is_canvas ) implements BuilderProvider {
 
 			/**
 			 * Provider key.
@@ -761,7 +688,7 @@ class Builder_Providers_Test extends WP_UnitTestCase {
 	 * @return BuilderProvider
 	 */
 	private function make_asset_provider( $key ) {
-		return new class( $key ) implements BuilderProvider, LoadsDocumentAssets {
+		return new class( $key ) implements BuilderProvider {
 
 			/**
 			 * Provider key.
