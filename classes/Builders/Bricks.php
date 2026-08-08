@@ -118,7 +118,7 @@ class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDoc
 		$this->register_post_type_support();
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_canvas_assets' ], 20 );
-		add_filter( 'popup_maker/builder_canvas_body_tag', [ $this, 'open_canvas_body' ], 10, 2 );
+		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
 		add_action( 'wp_body_open', [ $this, 'open_canvas' ] );
 		add_action( 'wp_footer', [ $this, 'close_canvas' ], 1 );
 
@@ -153,48 +153,25 @@ class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDoc
 	}
 
 	/**
-	 * Emit the canvas body tag through Bricks.
+	 * Add the popup theme classes to Bricks' canvas body.
 	 *
-	 * Bricks' `bricks_body` action prints the whole `<body>` tag, adding the
-	 * `data-builder-mode` and `data-builder-window` attributes its editor reads
-	 * (`setup.php:body_tag()`). It must therefore replace the canvas's own body
-	 * tag rather than run inside it.
+	 * Bricks replaces the popup wrapper after mounting, so the theme classes must
+	 * remain on an ancestor of its own content element.
 	 *
-	 * @param mixed $emitted Whether another integration emitted the body tag.
-	 * @param mixed $classes Body classes the canvas would apply.
+	 * @param mixed $classes Body classes.
 	 *
-	 * @return bool Whether the body tag was emitted.
+	 * @return mixed Filtered body classes.
 	 */
-	public function open_canvas_body( $emitted, $classes = [] ) {
-		if ( $emitted ) {
-			return true;
+	public function filter_canvas_body_classes( $classes ) {
+		if ( ! is_array( $classes ) || ! $this->get_canvas_popup() ) {
+			return $classes;
 		}
 
-		if ( ! $this->get_canvas_popup() || ! has_action( 'bricks_body' ) ) {
-			return false;
-		}
-
-		/**
-		 * Bricks builds the class list from `get_body_class()`, so the canvas's
-		 * own classes are contributed through the standard filter.
-		 *
-		 * The popup's theme classes go on the body as well. Popup Maker generates
-		 * container styles as `.pum-theme-{id} .pum-container`, a descendant rule,
-		 * and Bricks' editor owns the element that plays the container role — so
-		 * the theme class has to sit on an ancestor of it.
-		 */
-		$classes = array_merge( is_array( $classes ) ? $classes : [], $this->get_popup_theme_classes() );
-
-		add_filter(
-			'body_class',
-			function ( $body_classes ) use ( $classes ) {
-				return array_merge( (array) $body_classes, array_map( 'sanitize_html_class', $classes ) );
-			}
+		return array_values(
+			array_unique(
+				array_merge( $classes, array_map( 'sanitize_html_class', $this->get_popup_theme_classes() ) )
+			)
 		);
-
-		do_action( 'bricks_body' );
-
-		return true;
 	}
 
 	/**

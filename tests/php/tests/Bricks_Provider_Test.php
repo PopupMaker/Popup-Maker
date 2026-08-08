@@ -366,6 +366,13 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 			$this->assertTrue( $this->provider->is_canvas_request() );
 
 			$this->assertSame( $popup_id, $builders->get_canvas_popup_id() );
+			$canvas_body_classes = $this->provider->filter_canvas_body_classes( [ 'existing' ] );
+
+			$this->assertSame(
+				array_merge( [ 'existing' ], $this->provider->filter_canvas_body_classes( [] ) ),
+				$canvas_body_classes
+			);
+			$this->assertGreaterThan( 1, count( $canvas_body_classes ), 'The popup theme must remain above Bricks-owned content.' );
 
 			$this->provider->enqueue_canvas_assets();
 
