@@ -52,6 +52,9 @@ class BuilderPreviewUrl {
 			[
 				'post_type'       => 'popup',
 				'p'               => $popup_id,
+				'preview'         => 'true',
+				'preview_id'      => $popup_id,
+				'preview_nonce'   => wp_create_nonce( 'post_preview_' . $popup_id ),
 				self::BUILDER_ARG => $builder,
 				'_wpnonce'        => wp_create_nonce( self::action( $popup_id, $builder ) ),
 			],

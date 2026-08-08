@@ -42,8 +42,13 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$controller    = $this->make_controller( [ $builder ] );
 
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
-		$this->apply_request( BuilderPreviewUrl::create( $popup_id, 'preview-only' ) );
+		$url = BuilderPreviewUrl::create( $popup_id, 'preview-only' );
+		wp_parse_str( wp_parse_url( $url, PHP_URL_QUERY ), $query );
+		$this->apply_request( $url );
 
+		$this->assertSame( 'true', $query['preview'] );
+		$this->assertSame( (string) $popup_id, $query['preview_id'] );
+		$this->assertSame( 1, wp_verify_nonce( $query['preview_nonce'], 'post_preview_' . $popup_id ) );
 		$this->assertSame( $popup_id, BuilderPreviewUrl::read_request( 'preview-only' ) );
 		$this->assertSame( $popup_id, $controller->get_edit_popup_id() );
 		$this->assertSame( $popup_id, $controller->allow_builder_request( [] )['p'] );
