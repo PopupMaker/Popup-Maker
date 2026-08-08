@@ -26,7 +26,8 @@ Before removing anything:
    late/deferred paths only when the integration exposes them; for headless
    paths, observe the relevant request, event, persisted state, or other external
    effect. If a documented compatibility contract cannot be reproduced,
-   preserve it and classify the candidate as `unproven` rather than redundant.
+   preserve it and classify the candidate as `unproven` rather than redundant;
+   do not remove it while that contract remains supported.
 4. Record temporary environment and persistent-state changes so they can be
    restored: options, roles/capabilities, active plugins/themes, database
    records, fixture metadata, generated assets, and caches.
@@ -163,3 +164,6 @@ signed URLs, customer data, and other secrets from recorded commands and output;
 keep unredacted logs only in an appropriately protected local location. Do not
 finish with `unproven` candidates silently present; either improve the
 experiment, remove the candidate, or state the unresolved risk explicitly.
+For an unproven candidate that protects a documented supported compatibility
+contract, preserve the candidate and state the unresolved risk rather than
+choosing removal.
