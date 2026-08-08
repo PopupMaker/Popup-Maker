@@ -13,6 +13,8 @@ const srcPath = path.join( process.cwd(), 'assets/js/src' );
 const distPath = path.join( process.cwd(), 'dist/assets' );
 
 const jsBuilds = {
+	// Builder previews
+	'builder-preview': `${ srcPath }/integration/builder-preview.js`,
 	// Site
 	site: `${ srcPath }/site/index.js`,
 	// Admin
@@ -106,7 +108,8 @@ const config = {
 		maxAge: isProduction ? 1000 * 60 * 60 * 24 * 7 : 1000 * 60 * 60 * 24,
 		compression: 'gzip',
 		name: `popup-maker-legacy-${ NODE_ENV }`,
-		version: require( path.resolve( process.cwd(), 'package.json' ) ).version,
+		version: require( path.resolve( process.cwd(), 'package.json' ) )
+			.version,
 	},
 	optimization: {
 		...defaultConfig.optimization,

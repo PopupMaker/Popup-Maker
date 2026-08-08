@@ -97,6 +97,7 @@ class Builders extends Controller {
 		// Select the authorized popup canvas after builders replace the template.
 		add_filter( 'template_include', [ $this, 'use_popup_canvas' ], PHP_INT_MAX );
 		add_filter( 'popup_maker/is_builder_preview', [ $this, 'is_builder_canvas' ] );
+		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
 
 		// Route popup content through whichever builder owns the document.
 		add_filter( 'pum_popup_content', [ $this, 'render_popup_content' ], 1000, 2 );
@@ -350,6 +351,34 @@ class Builders extends Controller {
 	}
 
 	/**
+	 * Add presentation classes to the isolated builder canvas.
+	 *
+	 * @param mixed $classes Body classes.
+	 *
+	 * @return mixed Filtered body classes.
+	 */
+	public function filter_canvas_body_classes( $classes ) {
+		if ( ! is_array( $classes ) ) {
+			return $classes;
+		}
+
+		$popup_id = $this->get_canvas_popup_id();
+
+		if ( ! $popup_id ) {
+			return $classes;
+		}
+
+		$classes[] = 'pum-builder-preview';
+		$popup     = pum_get_popup( $popup_id );
+
+		if ( pum_is_popup( $popup ) && $popup->get_setting( 'overlay_disabled', false ) ) {
+			$classes[] = 'pum-builder-preview-overlay-disabled';
+		}
+
+		return array_values( array_unique( $classes ) );
+	}
+
+	/**
 	 * Preload the isolated canvas popup before head assets are printed.
 	 *
 	 * @return void
@@ -370,6 +399,20 @@ class Builders extends Controller {
 			$popups instanceof \PopupMaker\Controllers\Frontend\Popups
 		) {
 			$popups->preload_popup( $popup );
+
+			wp_enqueue_style(
+				'pum-builder-preview',
+				\Popup_Maker::$URL . 'dist/assets/builder-preview.css',
+				[ 'popup-maker-site' ],
+				\Popup_Maker::$VER
+			);
+			wp_enqueue_script(
+				'pum-builder-preview',
+				\Popup_Maker::$URL . 'dist/assets/builder-preview.js',
+				[ 'popup-maker-site' ],
+				\Popup_Maker::$VER,
+				true
+			);
 		}
 	}
 

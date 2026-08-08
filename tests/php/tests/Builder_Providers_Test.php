@@ -47,6 +47,10 @@ class Builder_Providers_Test extends WP_UnitTestCase {
 	public function tearDown(): void {
 		$_GET = $this->original_get;
 		wp_set_current_user( 0 );
+		wp_dequeue_script( 'pum-builder-preview' );
+		wp_deregister_script( 'pum-builder-preview' );
+		wp_dequeue_style( 'pum-builder-preview' );
+		wp_deregister_style( 'pum-builder-preview' );
 
 		parent::tearDown();
 	}
@@ -323,6 +327,9 @@ class Builder_Providers_Test extends WP_UnitTestCase {
 		}
 
 		$this->assertContains( $popup_id, $preloaded, 'The draft canvas must enqueue Popup Maker CSS and JavaScript before wp_head().' );
+		$this->assertTrue( wp_script_is( 'pum-builder-preview', 'enqueued' ) );
+		$this->assertTrue( wp_style_is( 'pum-builder-preview', 'enqueued' ) );
+		$this->assertContains( 'pum-builder-preview', $controller->filter_canvas_body_classes( [] ) );
 	}
 
 	/**
