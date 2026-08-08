@@ -86,10 +86,7 @@ if ( PUM && 'function' === typeof PUM.getPopup ) {
 			tabindex: '-1',
 		} );
 
-		$( document ).trigger( 'pumBuilderPreviewReposition', [
-			$popup,
-			popupId,
-		] );
+		PUM.hooks.doAction( 'pum.builderPreview.reposition', $popup, popupId );
 		constrainPopupToVisibleViewport();
 	};
 

@@ -239,12 +239,17 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 	/** @return void */
 	public function test_builder_boot_is_idempotent_and_retries_late_availability() {
-		$builder            = $this->make_builder( 'late' );
-		$builder->available = false;
-		$controller         = $this->make_controller( [ $builder ] );
+		$builder                     = $this->make_builder( 'late' );
+		$builder->available          = false;
+		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder->requested_popup_id = $popup_id;
+		$controller                  = $this->make_controller( [ $builder ] );
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
 
 		$this->assertFalse( $builder->is_ready() );
 		$this->assertSame( 0, $builder->hooks_registered );
+		$this->assertFalse( has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
+		$this->assertSame( 0, $controller->get_edit_popup_id() );
 
 		$builder->available = true;
 		$controller->boot_builders();
@@ -252,6 +257,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 		$this->assertTrue( $builder->is_ready() );
 		$this->assertSame( 1, $builder->hooks_registered );
+		$this->assertSame( 10, has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
+		$this->assertSame( 15, has_action( 'wp_footer', [ $controller, 'flush_pending_assets_late' ] ) );
+		$this->assertSame( $popup_id, $controller->get_edit_popup_id() );
 	}
 
 	/** @return void */

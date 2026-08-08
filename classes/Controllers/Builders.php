@@ -75,6 +75,13 @@ class Builders extends Controller {
 	private $initialized = false;
 
 	/**
+	 * Whether shared request and rendering hooks have been registered.
+	 *
+	 * @var bool
+	 */
+	private $pipeline_initialized = false;
+
+	/**
 	 * Initialize the coordinator.
 	 *
 	 * @return void
@@ -99,12 +106,25 @@ class Builders extends Controller {
 			return;
 		}
 
-		$this->boot_builders();
-
 		// Theme builders appear after setup, while some plugin builders finish
 		// constructing their APIs on init. PageBuilder::boot() is idempotent.
 		add_action( 'after_setup_theme', [ $this, 'boot_builders' ], 20 );
 		add_action( 'init', [ $this, 'boot_builders' ], 20 );
+
+		$this->boot_builders();
+	}
+
+	/**
+	 * Register the shared builder pipeline once an adapter is ready.
+	 *
+	 * @return void
+	 */
+	private function register_pipeline_hooks() {
+		if ( $this->pipeline_initialized ) {
+			return;
+		}
+
+		$this->pipeline_initialized = true;
 
 		add_filter( 'request', [ $this, 'allow_builder_request' ] );
 		add_filter( 'template_include', [ $this, 'use_popup_canvas' ], PHP_INT_MAX );
@@ -118,7 +138,7 @@ class Builders extends Controller {
 		// Finalize documents discovered during preload before wp_head(), then
 		// catch documents discovered while rendering the page in the footer.
 		add_action( 'wp_enqueue_scripts', [ $this, 'flush_pending_assets' ], 12 );
-		add_action( 'wp_footer', [ $this, 'flush_pending_assets_late' ], 0 );
+		add_action( 'wp_footer', [ $this, 'flush_pending_assets_late' ], 15 );
 	}
 
 	/**
@@ -140,11 +160,17 @@ class Builders extends Controller {
 	 */
 	public function boot_builders() {
 		$became_ready = false;
+		$has_ready    = false;
 
 		foreach ( $this->builders as $builder ) {
 			$was_ready = $builder->is_ready();
+			$is_ready  = $builder->boot();
 
-			if ( $builder->boot() && ! $was_ready ) {
+			if ( $is_ready ) {
+				$has_ready = true;
+			}
+
+			if ( $is_ready && ! $was_ready ) {
 				$became_ready = true;
 			}
 		}
@@ -152,7 +178,13 @@ class Builders extends Controller {
 		// A lookup made unusually early must not hide a builder that became ready
 		// at after_setup_theme or init.
 		if ( $became_ready ) {
-			$this->owners = [];
+			$this->owners                = [];
+			$this->edit_request          = null;
+			$this->edit_request_resolved = false;
+		}
+
+		if ( $has_ready ) {
+			$this->register_pipeline_hooks();
 		}
 	}
 
@@ -170,6 +202,10 @@ class Builders extends Controller {
 		$this->edit_request          = null;
 
 		foreach ( $this->builders as $builder ) {
+			if ( ! $builder->is_ready() ) {
+				continue;
+			}
+
 			$popup_id = absint( BuilderPreviewUrl::read_request( $builder->key() ) );
 
 			if ( ! $popup_id ) {
