@@ -79,7 +79,13 @@ class Builders extends Controller {
 	 * @return PageBuilder[]
 	 */
 	protected function default_builders() {
-		return [];
+		if ( ! defined( 'ELEMENTOR_VERSION' ) && ! did_action( 'elementor/loaded' ) ) {
+			return [];
+		}
+
+		return [
+			new \PopupMaker\Builders\Elementor( $this->container ),
+		];
 	}
 
 	/**
