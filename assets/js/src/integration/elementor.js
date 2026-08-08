@@ -4,27 +4,26 @@
 {
 	const formProvider = 'elementor';
 	const $ = window.jQuery;
+	const refreshedElements = new WeakSet();
 
 	const refreshWidgets = ( popup ) => {
-		const elementorRoot = popup.querySelector( '.elementor' );
-
-		if ( ! elementorRoot ) {
-			return;
-		}
-
 		if (
 			window.elementorFrontend &&
 			window.elementorFrontend.elementsHandler &&
 			typeof window.elementorFrontend.elementsHandler.runReadyTrigger ===
 				'function'
 		) {
-			$( elementorRoot )
-				.find( '[data-element_type]' )
-				.addBack( '[data-element_type]' )
+			$( popup )
+				.find( '.elementor [data-element_type]' )
 				.each( function () {
+					if ( refreshedElements.has( this ) ) {
+						return;
+					}
+
 					window.elementorFrontend.elementsHandler.runReadyTrigger(
 						this
 					);
+					refreshedElements.add( this );
 				} );
 		}
 	};
@@ -47,7 +46,7 @@
 	} );
 
 	// Reinitialize Elementor widgets after their popup becomes visible.
-	$( document ).on( 'pumAfterOpen', '.pum', function () {
+	$( document ).on( 'pumAfterOpen.pumElementor', '.pum', function () {
 		refreshWidgets( this );
 	} );
 }

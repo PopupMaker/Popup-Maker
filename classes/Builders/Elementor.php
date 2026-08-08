@@ -158,7 +158,12 @@ class Elementor extends PageBuilder {
 		if ( $is_canvas && method_exists( $frontend, 'get_builder_content' ) ) {
 			$rendered = $frontend->get_builder_content( $popup_id );
 		} elseif ( method_exists( $frontend, 'get_builder_content_for_display' ) ) {
-			$rendered = $frontend->get_builder_content_for_display( $popup_id );
+			// Elementor enqueues document CSS before the head and prints it inline
+			// when Popup Maker discovers the document after the head has passed.
+			$rendered = $frontend->get_builder_content_for_display(
+				$popup_id,
+				(bool) did_action( 'wp_head' )
+			);
 		} else {
 			return null;
 		}
