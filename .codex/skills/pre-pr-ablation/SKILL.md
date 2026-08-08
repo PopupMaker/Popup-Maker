@@ -49,20 +49,24 @@ test failure proves only that the test is coupled to the candidate.
 
 ## Run the ablation loop
 
-Create a reversible checkpoint or patch of the original index and worktree
-before the first ablation. Preserve unrelated changes and never use restoration
-steps that reset or overwrite them.
+Create a reversible checkpoint of every affected state before the first
+ablation: staged and unstaged tracked changes, untracked files, relevant ignored
+or generated artifacts, fixtures, database records, assets, caches, and
+temporary environment settings. Preserve unrelated state and never use
+restoration steps that reset or overwrite it.
 
 Test one candidate at a time:
 
-1. Restore or recreate the fixture and all persistent runtime state from the
-   same pre-trial snapshot. Confirm the full current solution passes the
-   smallest sensitive test and, for user-facing behavior, works in the real UI.
+1. Restore or recreate the complete pre-trial checkpoint and verify that every
+   relevant state matches it. Record the full current solution's result for the
+   smallest sensitive test and real UI. Require a pass unless the candidate is
+   explicitly suspected to be harmful; then record the expected failing
+   baseline and the defect it demonstrates.
 2. Remove exactly one candidate as a coherent change. When it is structural,
    remove its dependent references so the variant remains syntactically valid,
    autoloadable, and interface-compliant without removing unrelated behavior.
-3. Restore the same pre-trial fixture and persistent-state snapshot, regenerate
-   every artifact needed for the edited layer, and invalidate caches.
+3. Restore and verify the same complete pre-trial checkpoint, regenerate every
+   artifact needed for the edited layer, and invalidate caches.
 4. Confirm the variant builds or loads successfully, then repeat the same
    focused test and UI interaction.
 5. Classify the candidate:
@@ -93,8 +97,9 @@ removing protection on a happy path.
 
 For integration or framework work:
 
-1. Fit at least two consumers with meaningfully different lifecycles when the
-   available test environment permits it.
+1. Test at least two consumers with meaningfully different lifecycles before
+   making a cross-lifecycle claim. If the environment cannot provide both,
+   limit the claim and record the missing coverage and unresolved risk.
 2. Include a negative control that already works natively and should need no
    integration capability.
 3. Let consumers implement only capabilities they actually possess. Change the
@@ -122,8 +127,9 @@ Before declaring the branch ready:
 1. Remove temporary instrumentation, production test accessors, comments that
    describe deleted experiments, and unused imports/files.
 2. Restore the runtime environment and clear generated caches once more.
-3. Run the exact full baselines and confirm new code contributes no accepted
-   warning or static-analysis error.
+3. Run the exact full regression and static-analysis checks on the final
+   proposed branch. Compare its failures, skips, warnings, and exit status with
+   the target-branch baseline, and accept no new failure or warning.
 4. Review the final diff for PHP/language-version constraints, third-party hook
    defensiveness, and accidental generated or unrelated changes.
 5. When the project produces a package or deployable artifact, run its
