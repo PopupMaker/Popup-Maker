@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2024, Code Atlantic LLC
  */
 
-$is_builder_preview = (bool) apply_filters( 'popup_maker/is_builder_preview', false );
+$is_builder_preview = (bool) apply_filters( 'pum_is_builder_preview', false );
 
 // Preserve the legacy Bricks template behavior.
 // Keep it until Bricks adopts the shared builder preview controller.

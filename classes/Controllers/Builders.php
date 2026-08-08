@@ -128,7 +128,7 @@ class Builders extends Controller {
 
 		add_filter( 'request', [ $this, 'allow_builder_request' ] );
 		add_filter( 'template_include', [ $this, 'use_popup_canvas' ], PHP_INT_MAX );
-		add_filter( 'popup_maker/is_builder_preview', [ $this, 'is_builder_canvas' ] );
+		add_filter( 'pum_is_builder_preview', [ $this, 'is_builder_canvas' ] );
 		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
 		add_filter( 'pum_popup_content', [ $this, 'render_popup_content' ], 1000, 2 );
 
