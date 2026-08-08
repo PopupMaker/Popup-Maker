@@ -1,0 +1,239 @@
+<?php
+/**
+ * Divi builder provider.
+ *
+ * @package   PopupMaker
+ * @copyright Copyright (c) 2026, Code Atlantic LLC
+ */
+
+namespace PopupMaker\Builders;
+
+use PopupMaker\Interfaces\BuilderProvider;
+use PopupMaker\Interfaces\BuilderProvider\EditsPopups;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Divi support for popup documents.
+ *
+ * Divi's front-end Visual Builder needs the popup query restored and the
+ * isolated canvas. Divi renders layouts and assets through its existing
+ * `the_content` pipeline, so this provider claims no render or asset capability.
+ *
+ * Divi ships as both a theme and a plugin, so availability is probed the same
+ * way Divi probes itself.
+ *
+ * @since 1.25.0
+ */
+class Divi implements BuilderProvider, EditsPopups {
+
+	/**
+	 * Provider key.
+	 *
+	 * @return string
+	 */
+	public function key() {
+		return 'divi';
+	}
+
+	/**
+	 * Whether Divi is active as either a theme or a plugin.
+	 *
+	 * @return bool
+	 */
+	public function is_available() {
+		return ( defined( 'ET_BUILDER_THEME' ) && ET_BUILDER_THEME ) ||
+			function_exists( 'et_divi_fonts_url' ) ||
+			defined( 'ET_BUILDER_PLUGIN_VERSION' ) ||
+			class_exists( 'ET_Builder_Plugin' ) ||
+			defined( 'ET_BUILDER_VERSION' ) ||
+			function_exists( 'et_setup_builder' );
+	}
+
+	/**
+	 * Register Divi-specific hooks.
+	 *
+	 * @return void
+	 */
+	public function register_hooks() {
+		add_filter( 'pum_popup_content', [ $this, 'render_visual_builder_mount' ], -12000, 2 );
+		add_filter( 'et_builder_post_types', [ $this, 'add_popup_support' ] );
+		add_filter( 'et_fb_is_enabled', [ $this, 'enable_frontend_builder' ], 10, 2 );
+
+		// Divi 4 disables the block editor for its builder post types.
+		add_filter( 'use_block_editor_for_post', [ $this, 'force_classic_editor' ], 999, 2 );
+	}
+
+	/**
+	 * Add popups to Divi's supported post types.
+	 *
+	 * @param mixed $post_types Supported post types.
+	 *
+	 * @return mixed
+	 */
+	public function add_popup_support( $post_types ) {
+		if ( ! is_array( $post_types ) ) {
+			return $post_types;
+		}
+
+		if ( ! in_array( 'popup', $post_types, true ) ) {
+			$post_types[] = 'popup';
+		}
+
+		return $post_types;
+	}
+
+	/**
+	 * Enable Divi's front-end builder for editable popups.
+	 *
+	 * @param mixed $enabled Current enabled state.
+	 * @param mixed $post_id Post ID being checked.
+	 *
+	 * @return mixed
+	 */
+	public function enable_frontend_builder( $enabled, $post_id = 0 ) {
+		if ( ! is_numeric( $post_id ) ) {
+			return $enabled;
+		}
+
+		$post_id = absint( $post_id );
+
+		if ( ! $post_id || 'popup' !== get_post_type( $post_id ) ) {
+			return $enabled;
+		}
+
+		return current_user_can( 'edit_post', $post_id );
+	}
+
+	/**
+	 * Get the popup ID Divi is requesting.
+	 *
+	 * Authorization is intentionally absent; the coordinator performs it.
+	 *
+	 * @return int
+	 */
+	public function get_requested_popup_id() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Capability checked by the coordinator.
+		if ( ! isset( $_GET['et_fb'] ) && ! isset( $_GET['et_bfb'] ) ) {
+			return 0;
+		}
+
+		foreach ( [ 'p', 'post', 'post_id', 'et_post_id' ] as $param ) {
+			if ( ! isset( $_GET[ $param ] ) || ! is_scalar( $_GET[ $param ] ) ) {
+				continue;
+			}
+
+			$post_id = absint( wp_unslash( $_GET[ $param ] ) );
+
+			if ( $post_id ) {
+				return $post_id;
+			}
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		return 0;
+	}
+
+	/**
+	 * Whether this request renders the isolated canvas.
+	 *
+	 * Divi's front-end Visual Builder edits the rendered document, so it can use
+	 * Popup Maker's isolated canvas. Its back-end builder uses the same `et_fb`
+	 * flag together with `et_bfb`, but expects its own wireframe response.
+	 *
+	 * @return bool
+	 */
+	public function is_canvas_request() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Capability checked by the coordinator.
+		return isset( $_GET['et_fb'] ) && ! isset( $_GET['et_bfb'] );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+	}
+
+	/**
+	 * Replace rendered popup content with Divi's Visual Builder mount point.
+	 *
+	 * Divi performs this substitution on `the_content`, but Popup Maker renders
+	 * popup documents through `pum_popup_content`.
+	 *
+	 * @param mixed $content  Popup content.
+	 * @param mixed $popup_id Popup ID.
+	 *
+	 * @return mixed
+	 */
+	public function render_visual_builder_mount( $content, $popup_id = 0 ) {
+		if (
+			! is_string( $content ) ||
+			! is_numeric( $popup_id ) ||
+			! $this->is_canvas_request()
+		) {
+			return $content;
+		}
+
+		$popup_id = absint( $popup_id );
+
+		if (
+			! $popup_id ||
+			$popup_id !== $this->get_requested_popup_id() ||
+			! $this->is_visual_builder_document( $popup_id )
+		) {
+			return $content;
+		}
+
+		return '<div id="et-boc"><div class="et-l"><div id="et-fb-app"></div></div></div>';
+	}
+
+	/**
+	 * Whether Divi owns the popup document.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	protected function is_visual_builder_document( $popup_id ) {
+		if ( ! function_exists( 'et_pb_is_pagebuilder_used' ) ) {
+			return false;
+		}
+
+		try {
+			return (bool) et_pb_is_pagebuilder_used( absint( $popup_id ) );
+		} catch ( \Throwable $error ) {
+			unset( $error );
+
+			return false;
+		}
+	}
+
+	/**
+	 * Force the classic editor for popups when Divi 4 is active.
+	 *
+	 * @param mixed $use_block_editor Whether to use the block editor.
+	 * @param mixed $post             Post being checked.
+	 *
+	 * @return mixed
+	 */
+	public function force_classic_editor( $use_block_editor, $post = null ) {
+		if ( ! $post instanceof \WP_Post || 'popup' !== $post->post_type ) {
+			return $use_block_editor;
+		}
+
+		if ( ! $this->is_divi_4() ) {
+			return $use_block_editor;
+		}
+
+		return $this->is_visual_builder_document( $post->ID ) ? false : $use_block_editor;
+	}
+
+	/**
+	 * Whether the active Divi is a 4.x release.
+	 *
+	 * @return bool
+	 */
+	protected function is_divi_4() {
+		if ( ! defined( 'ET_BUILDER_VERSION' ) ) {
+			return false;
+		}
+
+		return version_compare( ET_BUILDER_VERSION, '4.0.0', '>=' ) &&
+			version_compare( ET_BUILDER_VERSION, '5.0.0', '<' );
+	}
+}
