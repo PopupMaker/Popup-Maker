@@ -22,10 +22,11 @@ Before removing anything:
    lint/static-analysis totals, then record the proposed change's baseline.
 3. Build the smallest realistic fixture for each failure mode. For integrations,
    cover the installed version, relevant supported version boundaries, and
-   external API consumers, plus the real editor, preview, visitor, save, and
-   late/deferred paths. If a documented compatibility contract cannot be
-   reproduced, preserve it and classify the candidate as `unproven` rather than
-   redundant.
+   external API consumers. Exercise real editor, preview, visitor, save, and
+   late/deferred paths only when the integration exposes them; for headless
+   paths, observe the relevant request, event, persisted state, or other external
+   effect. If a documented compatibility contract cannot be reproduced,
+   preserve it and classify the candidate as `unproven` rather than redundant.
 4. Record temporary environment and persistent-state changes so they can be
    restored: options, roles/capabilities, active plugins/themes, database
    records, fixture metadata, generated assets, and caches.
@@ -54,22 +55,23 @@ test failure proves only that the test is coupled to the candidate.
 
 ## Run the ablation loop
 
-Create a reversible source checkpoint before the first ablation, including
-staged and unstaged tracked changes, untracked files, and relevant ignored or
-generated artifacts. Separately snapshot affected runtime state such as
-fixtures, database records, assets, caches, and temporary environment settings.
-Preserve unrelated state and never use restoration steps that reset or overwrite
-it.
+Create an immutable original-source checkpoint before the first ablation,
+including staged and unstaged tracked changes, untracked files, and relevant
+ignored or generated artifacts. Maintain a separate current-source checkpoint,
+initially identical, and advance it after every accepted source change.
+Separately snapshot affected runtime state such as fixtures, database records,
+assets, caches, and temporary environment settings. Preserve unrelated state
+and never use restoration steps that reset or overwrite it.
 
 Test one candidate at a time:
 
-1. Restore or recreate both pre-trial snapshots and verify that every relevant
-   state matches them. Record the full current solution's smallest sensitive
-   test and applicable operational measurements. For a user-facing path, also
-   exercise the real UI; otherwise observe the relevant event, persisted state,
-   request, or other external effect. Require a pass unless the candidate is
-   explicitly suspected to be harmful; then record the expected failing
-   baseline and the defect it demonstrates.
+1. Restore the current-source checkpoint and recreate the runtime-state
+   snapshot, then verify both. Record the full current solution's smallest
+   sensitive test and applicable operational measurements. For a user-facing
+   path, also exercise the real UI; otherwise observe the relevant event,
+   persisted state, request, or other external effect. Require a pass unless the
+   candidate is explicitly suspected to be harmful; then record the expected
+   failing baseline and the defect it demonstrates.
 2. Remove exactly one candidate as a coherent change. When it is structural,
    remove its dependent references so the variant remains syntactically valid,
    autoloadable, and interface-compliant without removing unrelated behavior.
@@ -91,7 +93,8 @@ Test one candidate at a time:
 
 6. Restore required code. For conditional code, narrow it behind the
    demonstrated condition or prove it is inert outside that condition, then
-   test both sides. Delete redundant/harmful code.
+   test both sides. Delete redundant/harmful code, then advance the
+   current-source checkpoint to the accepted source state.
 7. Record the command, meaningful output, and visible result in an ablation
    table or durable discovery note.
 
