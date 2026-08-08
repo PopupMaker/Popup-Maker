@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
  * controller whether a builder owns the request, so the two never fight over
  * the same popup.
  *
- * @since 1.21.0
+ * @since 1.25.0
  */
 class Previews extends Controller {
 
