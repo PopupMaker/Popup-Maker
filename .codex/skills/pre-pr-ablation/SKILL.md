@@ -13,14 +13,21 @@ only when evidence shows that it owns a requirement or failure mode.
 
 Before removing anything:
 
-1. List the user-visible behaviors and safety invariants the change must preserve.
+1. List the user-visible behaviors, safety invariants, and applicable operational
+   thresholds the change must preserve, such as latency, query count, memory,
+   retries, or third-party request budgets.
 2. Run the same checks against the target branch in a separate clean worktree or
    equivalent isolated checkout before accepting failures or reduced counts as
    pre-existing. Record its test counts, assertions/skips when stable, and
    lint/static-analysis totals, then record the proposed change's baseline.
 3. Build the smallest realistic fixture for each failure mode. For integrations,
-   use the installed third-party version and its real editor, preview, visitor
-   path, save path, and late/deferred path when applicable.
+   cover the installed version, relevant supported version boundaries, and
+   external API consumers. Exercise real editor, preview, visitor, save, and
+   late/deferred paths only when the integration exposes them; for headless
+   paths, observe the relevant request, event, persisted state, or other external
+   effect. If a documented compatibility contract cannot be reproduced,
+   preserve it and classify the candidate as `unproven` rather than redundant;
+   do not remove it while that contract remains supported.
 4. Record temporary environment and persistent-state changes so they can be
    restored: options, roles/capabilities, active plugins/themes, database
    records, fixture metadata, generated assets, and caches.
@@ -49,26 +56,35 @@ test failure proves only that the test is coupled to the candidate.
 
 ## Run the ablation loop
 
-Create a reversible checkpoint of every affected state before the first
-ablation: staged and unstaged tracked changes, untracked files, relevant ignored
-or generated artifacts, fixtures, database records, assets, caches, and
-temporary environment settings. Preserve unrelated state and never use
-restoration steps that reset or overwrite it.
+Create an immutable original-source checkpoint before the first ablation,
+including staged and unstaged tracked changes, untracked files, and relevant
+ignored or generated artifacts. Maintain a separate current-source checkpoint,
+initially identical, and advance it after every accepted source change.
+Separately snapshot affected runtime state such as fixtures, database records,
+assets, caches, and temporary environment settings. Preserve unrelated state
+and never use restoration steps that reset or overwrite it.
 
 Test one candidate at a time:
 
-1. Restore or recreate the complete pre-trial checkpoint and verify that every
-   relevant state matches it. Record the full current solution's result for the
-   smallest sensitive test and real UI. Require a pass unless the candidate is
-   explicitly suspected to be harmful; then record the expected failing
-   baseline and the defect it demonstrates.
+1. Restore the current-source checkpoint and recreate the runtime-state
+   snapshot, then verify both. Regenerate artifacts, invalidate caches, and run
+   any required warm-up using a recorded preparation sequence. Record the full
+   current solution's smallest sensitive test and applicable operational
+   measurements. For a user-facing path, also exercise the real UI; otherwise
+   observe the relevant event, persisted state, request, or other external
+   effect. Require a pass unless the candidate is explicitly suspected to be
+   harmful; then record the expected failing baseline and the defect it
+   demonstrates.
 2. Remove exactly one candidate as a coherent change. When it is structural,
    remove its dependent references so the variant remains syntactically valid,
    autoloadable, and interface-compliant without removing unrelated behavior.
-3. Restore and verify the same complete pre-trial checkpoint, regenerate every
-   artifact needed for the edited layer, and invalidate caches.
+3. Keep the ablated source tree and previously accepted removals intact. Restore
+   and verify only the same runtime-state snapshot, regenerate every artifact
+   needed for the edited layer, invalidate caches, and run the identical warm-up
+   sequence used for the full solution.
 4. Confirm the variant builds or loads successfully, then repeat the same
-   focused test and UI interaction.
+   focused test, operational measurements, and applicable UI or external-effect
+   observation.
 5. Classify the candidate:
 
    - `required`: removal reproduces a failure and restoration fixes it;
@@ -79,9 +95,10 @@ Test one candidate at a time:
    - `unproven`: the test cannot distinguish it; improve the fixture before
      deciding.
 
-6. Restore required code. For conditional code, narrow it behind the
-   demonstrated condition or prove it is inert outside that condition, then
-   test both sides. Delete redundant/harmful code.
+6. Restore required and unproven code. For conditional code, narrow it behind
+   the demonstrated condition or prove it is inert outside that condition, then
+   test both sides. Delete redundant/harmful code, then advance the current-source
+   checkpoint to the accepted source state.
 7. Record the command, meaningful output, and visible result in an ablation
    table or durable discovery note.
 
@@ -147,3 +164,6 @@ signed URLs, customer data, and other secrets from recorded commands and output;
 keep unredacted logs only in an appropriately protected local location. Do not
 finish with `unproven` candidates silently present; either improve the
 experiment, remove the candidate, or state the unresolved risk explicitly.
+For an unproven candidate that protects a documented supported compatibility
+contract, preserve the candidate and state the unresolved risk rather than
+choosing removal.
