@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pre-PR Ablation"
+  short_description: "Ablate in-scope integration and infrastructure changes."
+  default_prompt: "For in-scope integration, compatibility, lifecycle, caching, or asynchronous changes—not copy-only edits, simple visual UI changes, generated-file updates, or deterministic mechanical refactors—use $pre-pr-ablation to prove the smallest behaviorally complete change before review."
