@@ -56,7 +56,7 @@ class Builders extends Controller {
 	/**
 	 * Cached authorized builder request.
 	 *
-	 * @var array{builder:PageBuilder,popup_id:int}|null
+	 * @var array{builder:PageBuilder,popup_id:int,signed:bool}|null
 	 */
 	private $edit_request;
 
@@ -191,7 +191,7 @@ class Builders extends Controller {
 	/**
 	 * Get the authorized builder request for this page load.
 	 *
-	 * @return array{builder:PageBuilder,popup_id:int}|null
+	 * @return array{builder:PageBuilder,popup_id:int,signed:bool}|null
 	 */
 	protected function get_edit_request() {
 		if ( $this->edit_request_resolved ) {
@@ -206,7 +206,8 @@ class Builders extends Controller {
 				continue;
 			}
 
-			$popup_id = absint( BuilderPreviewUrl::read_request( $builder->key() ) );
+			$popup_id  = absint( BuilderPreviewUrl::read_request( $builder->key() ) );
+			$is_signed = (bool) $popup_id;
 
 			if ( ! $popup_id ) {
 				$popup_id = absint( $builder->get_requested_popup_id() );
@@ -224,6 +225,7 @@ class Builders extends Controller {
 			$this->edit_request = [
 				'builder'  => $builder,
 				'popup_id' => $popup_id,
+				'signed'   => $is_signed,
 			];
 
 			break;
@@ -255,10 +257,9 @@ class Builders extends Controller {
 			return 0;
 		}
 
-		$builder           = $request['builder'];
-		$is_signed_preview = (bool) BuilderPreviewUrl::read_request( $builder->key() );
+		$builder = $request['builder'];
 
-		if ( ! $is_signed_preview && ! $builder->is_canvas_request() ) {
+		if ( ! $request['signed'] && ! $builder->is_canvas_request() ) {
 			return 0;
 		}
 
@@ -426,7 +427,7 @@ class Builders extends Controller {
 
 		$rendered = $builder->render_document(
 			$popup_id,
-			$popup_id === $this->get_canvas_popup_id()
+			$this->is_editor_canvas( $builder, $popup_id )
 		);
 
 		if ( is_string( $rendered ) ) {
@@ -436,6 +437,27 @@ class Builders extends Controller {
 		$this->collect_assets( $builder, $popup_id );
 
 		return $content;
+	}
+
+	/**
+	 * Whether a builder is rendering its native editor canvas.
+	 *
+	 * Signed standalone previews use the isolated Popup Maker template too, but
+	 * they still need the builder's normal display renderer and document assets.
+	 *
+	 * @param PageBuilder $builder  Owning builder.
+	 * @param int         $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	private function is_editor_canvas( PageBuilder $builder, $popup_id ) {
+		$request = $this->get_edit_request();
+
+		return $request &&
+			! $request['signed'] &&
+			$request['builder'] === $builder &&
+			$request['popup_id'] === $popup_id &&
+			$builder->is_canvas_request();
 	}
 
 	/**

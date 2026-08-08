@@ -145,13 +145,13 @@ abstract class PageBuilder {
 	 *
 	 * Return null to preserve content from WordPress' normal content pipeline.
 	 *
-	 * @param int  $popup_id Popup ID.
-	 * @param bool $is_canvas Whether the document is in the isolated canvas.
+	 * @param int  $popup_id        Popup ID.
+	 * @param bool $is_editor_canvas Whether this is the builder's native editor canvas.
 	 *
 	 * @return string|null
 	 */
-	public function render_document( $popup_id, $is_canvas = false ) {
-		unset( $popup_id, $is_canvas );
+	public function render_document( $popup_id, $is_editor_canvas = false ) {
+		unset( $popup_id, $is_editor_canvas );
 
 		return null;
 	}

@@ -282,6 +282,31 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_only_native_builder_requests_use_editor_rendering() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$user_id  = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		wp_set_current_user( $user_id );
+
+		$builder           = $this->make_builder( 'signed' );
+		$builder->rendered = 'signed preview';
+		$signed_controller = $this->make_controller( [ $builder ] );
+		$this->apply_request( BuilderPreviewUrl::create( $popup_id, 'signed' ) );
+		$signed_controller->render_popup_content( 'original', $popup_id );
+
+		$this->assertFalse( $builder->last_editor_canvas );
+
+		$_GET = [];
+
+		$builder                     = $this->make_builder( 'native' );
+		$builder->requested_popup_id = $popup_id;
+		$builder->rendered           = 'native editor';
+		$native_controller           = $this->make_controller( [ $builder ] );
+		$native_controller->render_popup_content( 'original', $popup_id );
+
+		$this->assertTrue( $builder->last_editor_canvas );
+	}
+
+	/** @return void */
 	public function test_native_rendering_can_still_collect_builder_assets() {
 		$builder                  = $this->make_builder( 'native' );
 		$builder->rendered        = null;
@@ -444,6 +469,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			/** @var bool */
 			public $last_after_head = false;
 
+			/** @var bool */
+			public $last_editor_canvas = false;
+
 			/**
 			 * @param \PopupMaker\Plugin\Core $container Plugin container.
 			 * @param string                  $key Builder key.
@@ -487,12 +515,13 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			}
 
 			/**
-			 * @param int  $popup_id Popup ID.
-			 * @param bool $is_canvas Whether this is the canvas.
+			 * @param int  $popup_id        Popup ID.
+			 * @param bool $is_editor_canvas Whether this is the builder editor canvas.
 			 * @return string|null
 			 */
-			public function render_document( $popup_id, $is_canvas = false ) {
-				unset( $popup_id, $is_canvas );
+			public function render_document( $popup_id, $is_editor_canvas = false ) {
+				unset( $popup_id );
+				$this->last_editor_canvas = (bool) $is_editor_canvas;
 
 				return $this->rendered;
 			}
