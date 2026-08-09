@@ -24,6 +24,7 @@ PopupMaker\Base\PageBuilder
 ├── is_available()
 ├── register_hooks()                 optional
 ├── get_requested_popup_id()         optional
+├── can_edit_document()              optional
 ├── is_canvas_request()              optional
 ├── owns_document()                  optional
 └── render_document()                optional
@@ -37,9 +38,10 @@ PopupMaker\Builders\*
 
 There is intentionally no public registry, collector object, capability
 interface tree, or trait hierarchy. Popup Maker ships a small, known set of
-integrations and normally only one builder is active. `Builders` conditionally
-constructs adapters only when the corresponding plugin or theme is detected,
-and each adapter overrides only the methods it needs.
+integrations. `Builders` conditionally constructs an adapter only when the
+corresponding plugin or theme is detected, and each adapter overrides only the
+methods it needs. Multiple active builders are supported, while one adapter owns
+each popup document.
 
 This keeps the runtime contract visible in one abstract class without forcing
 unrelated builders into the same rendering or asset mechanism.
@@ -68,7 +70,9 @@ The shared controller resolves that mismatch as follows:
 1. Each active adapter recognizes only its builder's native request arguments
    and returns the requested popup ID.
 2. The controller verifies that the ID is a `popup`, the visitor is logged in,
-   and `current_user_can( 'edit_post', $popup_id )` succeeds.
+   and `current_user_can( 'edit_post', $popup_id )` succeeds. An adapter whose
+   builder has stricter role or post-type rules also verifies them through
+   `can_edit_document()`.
 3. The `request` filter restores the private popup query for that authorized
    request, including draft status when necessary.
 4. WordPress renders the active theme's normal single template. Popup Maker
@@ -88,7 +92,13 @@ document structure.
 Some builders have separate shell and canvas requests. Their shell must remain
 fully builder-owned; only the editable iframe or front-end canvas enters the
 Popup Maker rendering lifecycle. `is_canvas_request()` expresses that one
-distinction without creating another contract type.
+distinction without creating another contract type. Authorized shell requests
+also suppress Popup Maker's normal live popups so they cannot cover or interfere
+with the builder interface.
+
+Editor GET requests carry no trustworthy save nonce. They may select an adapter
+for the current request, but must never persist document ownership. Saved builder
+state remains the source of truth for normal frontend requests.
 
 ## Document ownership and rendering
 
@@ -129,7 +139,7 @@ the same mechanism. They do not:
 
 | Builder | Secondary popup strategy |
 | --- | --- |
-| Elementor | Rendering through Elementor's frontend API registers document state; Elementor's normal footer pass emits the accumulated styles. |
+| Elementor | Rendering through Elementor's frontend API always registers the document stylesheet. Before `wp_head` it is enqueued normally; after `wp_head`, the adapter asks Elementor to print that document CSS inline with the popup markup. |
 | Bricks | Render the popup element data without replacing the host page's active-template state; generate only the popup CSS delta and restore Bricks' shared statics. |
 | Divi | Use Divi's normal content and asset pipeline. |
 | Beaver Builder | Let Beaver's bundled Popup Maker integration render and enqueue the layout. |
@@ -144,13 +154,16 @@ The repeatable policy is smaller than the implementations:
 3. Let WordPress print scripts in the footer whenever possible.
 4. If `wp_head` has passed, print only newly registered styles or the exact
    builder-generated delta.
-5. Never reset or emit a builder's global asset bucket wholesale.
+5. Never destructively reset or emit a builder's global asset bucket wholesale.
+   Temporary snapshot-reset-restore isolation is acceptable when restoration is
+   guaranteed in `finally`.
 6. Never re-run one-time builder bootstrap methods to process another popup.
 
 This scales to many popups without multiplying the builder's complete page
-bootstrap. The adapter performs one small native operation per owned document,
-deduplicates repeated renders, and finalizes a batch only when its builder
-requires it.
+bootstrap. The adapter deduplicates repeated asset collection and finalizes a
+batch only when its builder requires it. `render_document()` may run more than
+once, so rendering must remain safe and idempotent; only ownership lookups and
+builder-specific asset IDs are cached.
 
 ## Canvas behavior
 
@@ -166,10 +179,10 @@ particular is easy to duplicate: many builders already initialize visible
 editor content themselves.
 
 Bricks is the deliberate exception to the standard popup DOM. Its Vue editor
-replaces descendants of its own content root, so its adapter adopts Bricks'
-surviving canvas as the popup container and mirrors only the Popup Maker theme
-and geometry it needs. That behavior stays in `Builders\Bricks`; it is not a
-shared canvas capability.
+replaces descendants of its own content root, so the shared package can adopt a
+builder-owned canvas as the popup container and mirror only the Popup Maker
+theme and geometry it needs. The Bricks adapter supplies the surviving canvas
+selector and display settings; there is no separate Bricks preview script.
 
 Brizy has one similarly narrow CSS correction for its first empty editor block.
 All other integrations use the shared canvas behavior unchanged.
@@ -184,7 +197,7 @@ All other integrations use the shared canvas behavior unchanged.
 | Beaver Builder | Recognize its native request and stop Beaver's broad popup redirect from intercepting another authorized builder. Everything else remains native. |
 | SiteOrigin | Inject runtime post-type support without persisting it, retain its classic editor only for SiteOrigin documents, and repair the Live Editor preview URL. |
 | Brizy | Register the post type, distinguish shell/iframe requests, provide two native mount nodes, render compiled visitor content, and use Brizy's asset manager. |
-| Visual Composer | Honor its Role Manager, distinguish shell/iframe requests, provide its native mount, and use its secondary-source asset queue. |
+| Visual Composer | Distinguish shell/iframe requests, provide its native mount, and use its secondary-source asset queue. |
 
 Gutenberg and TinyMCE require no adapter. They prove that an active builder
 must not take over an unrelated popup document.
@@ -214,10 +227,11 @@ conflicts.
 Create `classes/Builders/<Builder>.php` extending `PageBuilder`. Implement only
 the methods proven necessary. Builder hooks belong in `register_hooks()`.
 
-Add one conditional detection block to `Builders::default_builders()`. Detection
-must be cheap and safe before the builder has completed initialization;
-`is_available()` performs the stronger API check when the controller retries at
-`plugins_loaded`, `after_setup_theme`, and `init`.
+Add one conditional detection block to `Builders::detected_builder_classes()`.
+Append only the adapter class string after a cheap external plugin or theme
+signal appears. A PHP `::class` expression is only a string and does not autoload
+the adapter; `is_available()` performs the stronger API check after detection
+when the controller retries at `plugins_loaded`, `after_setup_theme`, and `init`.
 
 Third-party hook callbacks must validate arguments defensively and remain PHP
 7.4 compatible.
