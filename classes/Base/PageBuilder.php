@@ -78,6 +78,21 @@ abstract class PageBuilder {
 	}
 
 	/**
+	 * Remember this builder after its native editor saves a popup.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return void
+	 */
+	protected function remember_document_owner( $popup_id ) {
+		$builders = $this->container->get_controller( 'Builders' );
+
+		if ( $builders instanceof \PopupMaker\Controllers\Builders ) {
+			$builders->remember_document_owner( $this, $popup_id );
+		}
+	}
+
+	/**
 	 * Whether the native builder request is its editable canvas.
 	 *
 	 * Frontend builders may claim a separate shell request and return false.

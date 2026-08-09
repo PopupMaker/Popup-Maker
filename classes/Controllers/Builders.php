@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class Builders extends Controller {
 
 	/**
+	 * Popup meta containing the last builder that saved the document.
+	 *
+	 * @var string
+	 */
+	const OWNER_META_KEY = '_pum_page_builder';
+
+	/**
 	 * Available builders, keyed by class name.
 	 *
 	 * @var array<string,PageBuilder>
@@ -208,6 +215,43 @@ class Builders extends Controller {
 		$request = $this->get_edit_request();
 
 		return $request ? $request['popup_id'] : 0;
+	}
+
+	/**
+	 * Remember the builder selected by an authenticated native save.
+	 *
+	 * Builder adapters call this only from their own verified save lifecycle.
+	 * The controller repeats the common popup and permission checks before it
+	 * accepts the ownership hint.
+	 *
+	 * @param mixed $builder  Builder performing the save.
+	 * @param mixed $popup_id Popup ID.
+	 *
+	 * @return bool Whether the owner was accepted.
+	 */
+	public function remember_document_owner( $builder, $popup_id ) {
+		$popup_id = absint( $popup_id );
+
+		if (
+			! $builder instanceof PageBuilder ||
+			! in_array( $builder, $this->builders, true ) ||
+			! $popup_id ||
+			'popup' !== get_post_type( $popup_id ) ||
+			! current_user_can( 'edit_post', $popup_id ) ||
+			! $builder->can_edit_document( $popup_id )
+		) {
+			return false;
+		}
+
+		$builder_class = get_class( $builder );
+
+		if ( get_post_meta( $popup_id, self::OWNER_META_KEY, true ) !== $builder_class ) {
+			update_post_meta( $popup_id, self::OWNER_META_KEY, wp_slash( $builder_class ) );
+		}
+
+		unset( $this->owners[ $popup_id ] );
+
+		return true;
 	}
 
 	/**
@@ -459,12 +503,28 @@ class Builders extends Controller {
 	 */
 	protected function owner_for( $popup_id ) {
 		$popup_id = absint( $popup_id );
+		$request  = $this->get_edit_request();
+
+		// A verified editor request owns only this request. Persistence happens
+		// later, from the builder's authenticated save lifecycle.
+		if ( $request && $request['popup_id'] === $popup_id ) {
+			$this->owners[ $popup_id ] = $request['builder'];
+
+			return $request['builder'];
+		}
 
 		if ( array_key_exists( $popup_id, $this->owners ) ) {
 			return $this->owners[ $popup_id ];
 		}
 
 		$this->owners[ $popup_id ] = null;
+		$saved_owner               = get_post_meta( $popup_id, self::OWNER_META_KEY, true );
+
+		if ( is_string( $saved_owner ) && isset( $this->builders[ $saved_owner ] ) ) {
+			$this->owners[ $popup_id ] = $this->builders[ $saved_owner ];
+
+			return $this->owners[ $popup_id ];
+		}
 
 		foreach ( $this->builders as $builder ) {
 			if ( $builder->owns_document( $popup_id ) ) {

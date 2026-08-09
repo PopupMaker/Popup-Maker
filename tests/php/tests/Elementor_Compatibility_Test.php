@@ -150,6 +150,18 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 		$this->assertSame( 'https://example.com/preview', $builder->filter_preview_url( 'https://example.com/preview' ) );
 	}
 
+	/** @return void */
+	public function test_elementor_registers_its_authenticated_save_hook() {
+		$builder = new Elementor( \PopupMaker\plugin() );
+
+		$builder->register_hooks();
+
+		$this->assertSame( 10, has_action( 'elementor/editor/after_save', [ $builder, 'remember_saved_document' ] ) );
+
+		remove_action( 'elementor/editor/after_save', [ $builder, 'remember_saved_document' ], 10 );
+		remove_filter( 'elementor/document/urls/wp_preview', [ $builder, 'filter_preview_url' ], 10 );
+	}
+
 	/**
 	 * @return \PopupMaker\Controllers\Builders
 	 */

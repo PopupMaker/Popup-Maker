@@ -44,6 +44,25 @@ class Elementor extends PageBuilder {
 	public function register_hooks() {
 		add_post_type_support( 'popup', 'elementor' );
 		add_filter( 'elementor/document/urls/wp_preview', [ $this, 'filter_preview_url' ], 10, 2 );
+		add_action( 'elementor/editor/after_save', [ $this, 'remember_saved_document' ], 10, 2 );
+	}
+
+	/**
+	 * Remember Elementor after its authenticated editor save completes.
+	 *
+	 * @param mixed $post_id     Saved post ID.
+	 * @param mixed $editor_data Saved editor data.
+	 *
+	 * @return void
+	 */
+	public function remember_saved_document( $post_id, $editor_data = null ) {
+		unset( $editor_data );
+
+		if ( ! is_numeric( $post_id ) ) {
+			return;
+		}
+
+		$this->remember_document_owner( absint( $post_id ) );
 	}
 
 	/**
