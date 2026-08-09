@@ -91,8 +91,6 @@ class Bricks extends PageBuilder {
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_canvas_assets' ], 20 );
 		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
-		add_action( 'wp_body_open', [ $this, 'open_canvas' ] );
-		add_action( 'wp_footer', [ $this, 'close_canvas' ], 1 );
 
 		/**
 		 * Bricks' editor owns the canvas DOM: on mount it replaces the wrapper's
@@ -199,37 +197,6 @@ class Bricks extends PageBuilder {
 		}
 
 		return $classes;
-	}
-
-	/**
-	 * Open Bricks' canvas wrapper.
-	 *
-	 * Bricks' canvas is a Vue application that mounts into
-	 * `<div class="brx-body iframe">`, emitted from `bricks_before_site_wrapper`
-	 * in the theme's `header.php` (`builder.php:1070-1076`). Firing it here gives
-	 * the editor its mount point inside Popup Maker's canvas.
-	 *
-	 * @return void
-	 */
-	public function open_canvas() {
-		if ( ! $this->get_canvas_popup() ) {
-			return;
-		}
-
-		do_action( 'bricks_before_site_wrapper' );
-	}
-
-	/**
-	 * Close Bricks' canvas wrapper.
-	 *
-	 * @return void
-	 */
-	public function close_canvas() {
-		if ( ! $this->get_canvas_popup() ) {
-			return;
-		}
-
-		do_action( 'bricks_after_site_wrapper' );
 	}
 
 	/**
@@ -749,7 +716,7 @@ class Bricks extends PageBuilder {
 		}
 
 		wp_add_inline_style(
-			'popup-maker-site',
+			'popup-maker-builder-preview',
 			// Bricks' canvas stretches its content wrapper with flexbox.
 			'body.pum-builder-preview #brx-content { flex: initial; }' .
 			'body.pum-builder-preview .pum-container .brxe-container { max-width: 100%; }' .
@@ -759,13 +726,7 @@ class Bricks extends PageBuilder {
 			'body.pum-builder-preview .pum-builder-canvas-close-anchor { display: none !important; }'
 		);
 
-		wp_enqueue_script(
-			'pum-bricks-builder-preview',
-			\Popup_Maker::$URL . 'dist/assets/bricks-builder-preview.js',
-			[ 'popup-maker-site' ],
-			\Popup_Maker::$VER,
-			true
-		);
+		wp_enqueue_script( 'popup-maker-builder-preview' );
 
 		ob_start();
 		\pum_popup_close_text( $popup->ID );
@@ -773,9 +734,10 @@ class Bricks extends PageBuilder {
 		$close_content = is_string( $close_content ) ? $close_content : '';
 
 		wp_localize_script(
-			'pum-bricks-builder-preview',
-			'pumBricksBuilderPreview',
+			'popup-maker-builder-preview',
+			'pumBuilderOwnedCanvas',
 			[
+				'canvas_selector'      => '#brx-content',
 				'popup_id'             => absint( $popup->ID ),
 				'size'                 => (string) $popup->get_setting( 'size', 'medium' ),
 				'location'             => (string) $popup->get_setting( 'location', 'center top' ),

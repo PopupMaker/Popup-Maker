@@ -13,11 +13,6 @@ const srcPath = path.join( process.cwd(), 'assets/js/src' );
 const distPath = path.join( process.cwd(), 'dist/assets' );
 
 const jsBuilds = {
-	// Builder previews
-	'bricks-builder-preview': path.join(
-		srcPath,
-		'integration/bricks-preview.js'
-	),
 	// Site
 	site: `${ srcPath }/site/index.js`,
 	// Admin

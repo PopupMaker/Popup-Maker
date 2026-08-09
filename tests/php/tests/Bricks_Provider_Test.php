@@ -382,20 +382,19 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 
 			$this->provider->enqueue_canvas_assets();
 
-			$localized = wp_scripts()->get_data( 'pum-bricks-builder-preview', 'data' );
+			$localized = wp_scripts()->get_data( 'popup-maker-builder-preview', 'data' );
 
 			$this->assertIsString( $localized );
-			$this->assertMatchesRegularExpression( '/var pumBricksBuilderPreview = (.+);/', $localized );
+			$this->assertMatchesRegularExpression( '/var pumBuilderOwnedCanvas = (.+);/', $localized );
 
-			preg_match( '/var pumBricksBuilderPreview = (.+);/', $localized, $matches );
+			preg_match( '/var pumBuilderOwnedCanvas = (.+);/', $localized, $matches );
 			$display = json_decode( $matches[1], true );
 
 			$this->assertSame( '1', $display['position_fixed'] );
 			$this->assertSame( '<i class="fas fa-camera"></i>', $display['close_content'] );
 		} finally {
 			$this->remove_controller_hooks( $builders );
-			wp_dequeue_script( 'pum-bricks-builder-preview' );
-			wp_deregister_script( 'pum-bricks-builder-preview' );
+				wp_dequeue_script( 'popup-maker-builder-preview' );
 			$_GET = $previous_get;
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
@@ -465,9 +464,19 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 				parent::__construct( $container );
 			}
 
-			/** @return Bricks[] */
-			protected function default_builders() {
-				return [ $this->test_builder ];
+			/** @return string[] */
+			protected function detected_builder_classes() {
+				return [ get_class( $this->test_builder ) ];
+			}
+
+			/**
+			 * @param string $builder_class Builder class.
+			 * @return Bricks
+			 */
+			protected function instantiate_builder( $builder_class ) {
+				unset( $builder_class );
+
+				return $this->test_builder;
 			}
 		};
 		$controller->init();
