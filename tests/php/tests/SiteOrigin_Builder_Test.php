@@ -55,11 +55,20 @@ class SiteOrigin_Builder_Test extends WP_UnitTestCase {
 		$builder  = new SiteOrigin( \PopupMaker\plugin() );
 		$settings = [ 'post-types' => [ 'post', 'page' ] ];
 
+		$filtered = $builder->add_popup_post_type( $settings );
+
+		$this->assertSame( [ 'post-types' => [ 'post', 'page', 'popup' ] ], $filtered );
 		$this->assertSame(
-			[ 'post-types' => [ 'post', 'page', 'popup' ] ],
-			$builder->add_popup_post_type( $settings )
+			$settings,
+			$builder->strip_injected_post_type( $filtered, $filtered ),
+			'An already-filtered old value must not persist the runtime injection.'
 		);
-		$this->assertSame( $settings, $builder->strip_injected_post_type( $builder->add_popup_post_type( $settings ), $settings ) );
+
+		$owner_enabled = new SiteOrigin( \PopupMaker\plugin() );
+		$stored        = [ 'post-types' => [ 'post', 'page', 'popup' ] ];
+
+		$owner_enabled->add_popup_post_type( $stored );
+		$this->assertSame( $stored, $owner_enabled->strip_injected_post_type( $stored, $stored ) );
 	}
 
 	/** @return void */

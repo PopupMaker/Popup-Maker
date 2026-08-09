@@ -25,6 +25,13 @@ defined( 'ABSPATH' ) || exit;
 class SiteOrigin extends PageBuilder {
 
 	/**
+	 * Whether popup support existed before this provider injected it.
+	 *
+	 * @var bool|null
+	 */
+	private $stored_popup_support;
+
+	/**
 	 * Whether SiteOrigin's APIs used by this provider are available.
 	 *
 	 * @return bool
@@ -123,6 +130,10 @@ class SiteOrigin extends PageBuilder {
 			? $settings['post-types']
 			: [];
 
+		if ( null === $this->stored_popup_support ) {
+			$this->stored_popup_support = in_array( 'popup', $post_types, true );
+		}
+
 		if ( ! in_array( 'popup', $post_types, true ) ) {
 			$post_types[]           = 'popup';
 			$settings['post-types'] = $post_types;
@@ -144,11 +155,14 @@ class SiteOrigin extends PageBuilder {
 			return $value;
 		}
 
-		$stored = is_array( $old_value ) && isset( $old_value['post-types'] ) && is_array( $old_value['post-types'] )
+		$stored        = is_array( $old_value ) && isset( $old_value['post-types'] ) && is_array( $old_value['post-types'] )
 			? $old_value['post-types']
 			: [];
+		$owner_enabled = null !== $this->stored_popup_support
+			? $this->stored_popup_support
+			: in_array( 'popup', $stored, true );
 
-		if ( in_array( 'popup', $stored, true ) ) {
+		if ( $owner_enabled ) {
 			return $value;
 		}
 
