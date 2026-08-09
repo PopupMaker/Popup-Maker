@@ -23,12 +23,21 @@ class Admin extends Controller {
 	 * Initialize admin controller.
 	 */
 	public function init() {
-		$this->container->register_controllers( [
-			'Admin\Toolbar'              => new \PopupMaker\Controllers\Admin\Toolbar( $this->container ),
-			'Admin\ToolbarNotifications' => new \PopupMaker\Controllers\Admin\ToolbarNotifications( $this->container ),
-			'Admin\WP\PluginsPage'       => new \PopupMaker\Controllers\Admin\WP\PluginsPage( $this->container ),
-			'Admin\CallToActions'        => new \PopupMaker\Controllers\Admin\CallToActions( $this->container ),
-		] );
+		$controllers = [];
+
+		if ( is_admin() || is_user_logged_in() ) {
+			$controllers = [
+				'Admin\Toolbar'              => new \PopupMaker\Controllers\Admin\Toolbar( $this->container ),
+				'Admin\ToolbarNotifications' => new \PopupMaker\Controllers\Admin\ToolbarNotifications( $this->container ),
+			];
+		}
+
+		if ( is_admin() ) {
+			$controllers['Admin\WP\PluginsPage'] = new \PopupMaker\Controllers\Admin\WP\PluginsPage( $this->container );
+			$controllers['Admin\CallToActions']  = new \PopupMaker\Controllers\Admin\CallToActions( $this->container );
+		}
+
+		$this->container->register_controllers( $controllers );
 
 		add_filter( 'popup_maker/layout_vars', [ $this, 'filter_layout_vars' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
