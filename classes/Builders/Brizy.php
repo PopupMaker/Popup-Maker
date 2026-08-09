@@ -68,7 +68,7 @@ class Brizy extends PageBuilder {
 		}
 
 		wp_add_inline_style(
-			'pum-builder-preview',
+			'popup-maker-builder-preview',
 			'body.pum-builder-preview.brz-ed .pum-container .brz-ed-wrap-block-wrap--first{height:auto!important;}'
 		);
 	}

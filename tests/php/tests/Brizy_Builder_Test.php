@@ -53,6 +53,13 @@ class Brizy_Builder_Test extends WP_UnitTestCase {
 			'<div id="brz-ed-root"></div><div id="brz-popups"></div>',
 			$builder->render_document( 123, true )
 		);
+
+		wp_register_style( 'popup-maker-builder-preview', false, [], 'test' );
+		$builder->add_canvas_styles();
+
+		$this->assertNotEmpty( wp_styles()->get_data( 'popup-maker-builder-preview', 'after' ) );
+
+		wp_deregister_style( 'popup-maker-builder-preview' );
 	}
 
 	/** @return void */
