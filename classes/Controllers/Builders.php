@@ -505,8 +505,8 @@ class Builders extends Controller {
 		$popup_id = absint( $popup_id );
 		$request  = $this->get_edit_request();
 
-		// A verified editor request owns only this request. Persistence happens
-		// later, from the builder's authenticated save lifecycle.
+		// A verified editor request owns only this request.
+		// The builder persists ownership later in its authenticated save lifecycle.
 		if ( $request && $request['popup_id'] === $popup_id ) {
 			$this->owners[ $popup_id ] = $request['builder'];
 
