@@ -80,8 +80,8 @@ class Elementor extends PageBuilder {
 	 * @return int
 	 */
 	public function get_requested_popup_id() {
-		// Elementor's iframe carries no nonce; access rests on the per-popup
-		// capability check applied by the controller.
+		// Elementor's iframe carries no nonce. The controller applies a per-popup
+		// capability check.
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if (
 			! isset( $_GET['elementor-preview'], $_GET['p'], $_GET['post_type'] ) ||
