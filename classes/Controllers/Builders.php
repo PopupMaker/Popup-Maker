@@ -521,12 +521,22 @@ class Builders extends Controller {
 		$saved_owner               = get_post_meta( $popup_id, self::OWNER_META_KEY, true );
 
 		if ( is_string( $saved_owner ) && isset( $this->builders[ $saved_owner ] ) ) {
-			$this->owners[ $popup_id ] = $this->builders[ $saved_owner ];
+			$saved_builder = $this->builders[ $saved_owner ];
 
-			return $this->owners[ $popup_id ];
+			if ( $saved_builder->owns_document( $popup_id ) ) {
+				$this->owners[ $popup_id ] = $saved_builder;
+
+				return $this->owners[ $popup_id ];
+			}
+
+			delete_post_meta( $popup_id, self::OWNER_META_KEY );
 		}
 
-		foreach ( $this->builders as $builder ) {
+		foreach ( $this->builders as $builder_class => $builder ) {
+			if ( $builder_class === $saved_owner ) {
+				continue;
+			}
+
 			if ( $builder->owns_document( $popup_id ) ) {
 				$this->owners[ $popup_id ] = $builder;
 				break;

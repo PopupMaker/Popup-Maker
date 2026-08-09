@@ -88,7 +88,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
-	public function test_authenticated_builder_save_persists_document_owner() {
+	public function test_authenticated_builder_save_persists_and_revalidates_document_owner() {
 		$popup_id   = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$builder    = $this->make_builder();
 		$controller = $this->make_controller( $builder );
@@ -101,8 +101,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$builder->owns     = false;
 		$builder->rendered = 'saved builder content';
 
-		$this->assertSame( 'saved builder content', $controller->render_popup_content( 'original', $popup_id ) );
-		$this->assertSame( 0, $builder->ownership_checks );
+		$this->assertSame( 'original', $controller->render_popup_content( 'original', $popup_id ) );
+		$this->assertSame( '', get_post_meta( $popup_id, $controller::OWNER_META_KEY, true ) );
+		$this->assertSame( 1, $builder->ownership_checks );
 	}
 
 	/** @return void */
