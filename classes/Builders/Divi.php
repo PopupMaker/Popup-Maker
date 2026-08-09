@@ -8,8 +8,7 @@
 
 namespace PopupMaker\Builders;
 
-use PopupMaker\Interfaces\BuilderProvider;
-use PopupMaker\Interfaces\BuilderProvider\EditsPopups;
+use PopupMaker\Base\PageBuilder;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,16 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.25.0
  */
-class Divi implements BuilderProvider, EditsPopups {
-
-	/**
-	 * Provider key.
-	 *
-	 * @return string
-	 */
-	public function key() {
-		return 'divi';
-	}
+class Divi extends PageBuilder {
 
 	/**
 	 * Whether Divi is active as either a theme or a plugin.
@@ -56,7 +46,6 @@ class Divi implements BuilderProvider, EditsPopups {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_filter( 'pum_popup_content', [ $this, 'render_visual_builder_mount' ], -12000, 2 );
 		add_filter( 'et_builder_post_types', [ $this, 'add_popup_support' ] );
 		add_filter( 'et_fb_is_enabled', [ $this, 'enable_frontend_builder' ], 10, 2 );
 
@@ -150,46 +139,13 @@ class Divi implements BuilderProvider, EditsPopups {
 	}
 
 	/**
-	 * Replace rendered popup content with Divi's Visual Builder mount point.
-	 *
-	 * Divi performs this substitution on `the_content`, but Popup Maker renders
-	 * popup documents through `pum_popup_content`.
-	 *
-	 * @param mixed $content  Popup content.
-	 * @param mixed $popup_id Popup ID.
-	 *
-	 * @return mixed
-	 */
-	public function render_visual_builder_mount( $content, $popup_id = 0 ) {
-		if (
-			! is_string( $content ) ||
-			! is_numeric( $popup_id ) ||
-			! $this->is_canvas_request()
-		) {
-			return $content;
-		}
-
-		$popup_id = absint( $popup_id );
-
-		if (
-			! $popup_id ||
-			$popup_id !== $this->get_requested_popup_id() ||
-			! $this->is_visual_builder_document( $popup_id )
-		) {
-			return $content;
-		}
-
-		return '<div id="et-boc"><div class="et-l"><div id="et-fb-app"></div></div></div>';
-	}
-
-	/**
 	 * Whether Divi owns the popup document.
 	 *
 	 * @param int $popup_id Popup ID.
 	 *
 	 * @return bool
 	 */
-	protected function is_visual_builder_document( $popup_id ) {
+	public function owns_document( $popup_id ) {
 		if ( ! function_exists( 'et_pb_is_pagebuilder_used' ) ) {
 			return false;
 		}
@@ -201,6 +157,24 @@ class Divi implements BuilderProvider, EditsPopups {
 
 			return false;
 		}
+	}
+
+	/**
+	 * Give Divi's front-end Visual Builder its native mount hierarchy.
+	 *
+	 * Visitor rendering stays in Divi's existing content pipeline.
+	 *
+	 * @param int  $popup_id         Popup ID.
+	 * @param bool $is_editor_canvas Whether this is the native editor canvas.
+	 *
+	 * @return string|null
+	 */
+	public function render_document( $popup_id, $is_editor_canvas = false ) {
+		unset( $popup_id );
+
+		return $is_editor_canvas
+			? '<div id="et-boc"><div class="et-l"><div id="et-fb-app"></div></div></div>'
+			: null;
 	}
 
 	/**
@@ -220,7 +194,7 @@ class Divi implements BuilderProvider, EditsPopups {
 			return $use_block_editor;
 		}
 
-		return $this->is_visual_builder_document( $post->ID ) ? false : $use_block_editor;
+		return $this->owns_document( $post->ID ) ? false : $use_block_editor;
 	}
 
 	/**
