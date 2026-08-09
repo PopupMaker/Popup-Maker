@@ -7,6 +7,10 @@
 
 use PopupMaker\Builders\BeaverBuilder;
 
+if ( ! class_exists( 'FLBuilderPopupMaker' ) ) {
+	require_once __DIR__ . '/fixtures/class-fl-builder-popup-maker.php';
+}
+
 /**
  * Verify the small compatibility layer around Beaver's native integration.
  */
@@ -26,6 +30,8 @@ class Beaver_Builder_Test extends WP_UnitTestCase {
 	/** @return void */
 	public function tearDown(): void {
 		$_GET = $this->original_get;
+		wp_set_current_user( 0 );
+		remove_action( 'wp', 'FLBuilderPopupMaker::redirect_to_admin_edit' );
 
 		parent::tearDown();
 	}
@@ -53,5 +59,22 @@ class Beaver_Builder_Test extends WP_UnitTestCase {
 		unset( $_GET['fl_builder'] );
 
 		$this->assertSame( 0, $builder->get_requested_popup_id() );
+	}
+
+	/** @return void */
+	public function test_signed_popup_preview_bypasses_native_redirect() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$_GET = [
+			'popup_preview' => wp_create_nonce( 'popup-preview' ),
+			'popup'         => (string) $popup_id,
+		];
+
+		add_action( 'wp', 'FLBuilderPopupMaker::redirect_to_admin_edit' );
+
+		$builder = new BeaverBuilder( \PopupMaker\plugin() );
+		$builder->preserve_builder_request();
+
+		$this->assertFalse( has_action( 'wp', 'FLBuilderPopupMaker::redirect_to_admin_edit' ) );
 	}
 }

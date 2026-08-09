@@ -9,6 +9,7 @@
 namespace PopupMaker\Builders;
 
 use PopupMaker\Base\PageBuilder;
+use PopupMaker\Controllers\Previews;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -93,8 +94,17 @@ class BeaverBuilder extends PageBuilder {
 	 */
 	public function preserve_builder_request() {
 		$builders = $this->container->get_controller( 'Builders' );
+		$previews = $this->container->get_controller( 'Previews' );
+		$popup_id = $builders instanceof \PopupMaker\Controllers\Builders
+			? $builders->get_edit_popup_id()
+			: 0;
 
-		if ( ! $builders instanceof \PopupMaker\Controllers\Builders || ! $builders->get_edit_popup_id() ) {
+		if ( ! $popup_id && $previews instanceof Previews ) {
+			$preview_id = $previews->get_popup_preview();
+			$popup_id   = $preview_id && current_user_can( 'edit_post', $preview_id ) ? $preview_id : 0;
+		}
+
+		if ( ! $popup_id ) {
 			return;
 		}
 
