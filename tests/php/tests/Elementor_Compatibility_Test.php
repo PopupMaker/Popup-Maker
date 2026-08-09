@@ -7,7 +7,6 @@
 
 use PopupMaker\Base\PageBuilder;
 use PopupMaker\Builders\Elementor;
-use PopupMaker\Services\BuilderPreviewUrl;
 
 /**
  * Test Elementor popup preview requests without loading Elementor itself.
@@ -82,7 +81,7 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
-	public function test_elementor_request_uses_isolated_popup_canvas() {
+	public function test_elementor_request_uses_theme_popup_canvas() {
 		$popup_id = $this->factory->post->create(
 			[
 				'post_type'   => 'popup',
@@ -101,17 +100,15 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 		$controller = $this->make_controller();
 		$popups     = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' );
 		add_action( 'wp_footer', [ $popups, 'render_popups' ] );
+		$GLOBALS['wp_query']->in_the_loop = true;
 
 		$this->assertSame( $popup_id, $controller->get_canvas_popup_id() );
-		$this->assertSame(
-			Popup_Maker::$DIR . 'templates/single-popup.php',
-			$controller->use_popup_canvas( 'theme-single.php' )
-		);
-		$this->assertFalse( has_action( 'wp_footer', [ $popups, 'render_popups' ] ) );
+		$this->assertSame( '', $controller->suppress_canvas_content( 'duplicate document' ) );
+		$this->assertNotFalse( has_action( 'wp_footer', [ $popups, 'render_popups' ] ) );
 	}
 
 	/** @return void */
-	public function test_elementor_preview_button_uses_signed_popup_url() {
+	public function test_elementor_preview_button_uses_real_page_preview_url() {
 		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$builder  = new Elementor( \PopupMaker\plugin() );
 
@@ -137,61 +134,13 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 		parse_str( (string) wp_parse_url( $preview_url, PHP_URL_QUERY ), $query );
 		$_GET = $query;
 
-		$this->assertSame( 'popup', $query['post_type'] );
-		$this->assertSame( (string) $popup_id, $query['p'] );
-		$this->assertSame( 'elementor', $query['pum-builder-preview'] );
-		$this->assertSame( $popup_id, BuilderPreviewUrl::read_request( 'elementor' ) );
-	}
+		$previews = \PopupMaker\plugin()->get_controller( 'Previews' );
 
-	/** @return void */
-	public function test_signed_elementor_preview_still_requires_valid_nonce() {
-		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
-
-		$this->apply_request( BuilderPreviewUrl::create( $popup_id, 'elementor' ) );
-		$this->assertSame( $popup_id, $this->make_controller()->get_edit_popup_id() );
-
-		$_GET['_wpnonce'] = 'tampered';
+		$this->assertSame( home_url( '/' ), strtok( $preview_url, '?' ) );
+		$this->assertSame( (string) $popup_id, $query['popup'] );
+		$this->assertSame( 'true', $query['preview'] );
+		$this->assertSame( $popup_id, $previews->get_popup_preview() );
 		$this->assertSame( 0, $this->make_controller()->get_edit_popup_id() );
-	}
-
-	/** @return void */
-	public function test_builder_preview_adds_canonical_toolbar_edit_link() {
-		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
-		$this->set_elementor_request( $popup_id );
-
-		$builders  = $this->make_controller();
-		$container = new class( $builders ) {
-
-			/** @var \PopupMaker\Controllers\Builders */
-			private $builders;
-
-			/** @param \PopupMaker\Controllers\Builders $builders Builder controller. */
-			public function __construct( $builders ) {
-				$this->builders = $builders;
-			}
-
-			/**
-			 * @param string $name Controller name.
-			 * @return \PopupMaker\Controllers\Builders|null
-			 */
-			public function get_controller( $name ) {
-				return 'Builders' === $name ? $this->builders : null;
-			}
-		};
-		$toolbar   = new \PopupMaker\Controllers\Admin\Toolbar( $container );
-
-		if ( ! class_exists( 'WP_Admin_Bar' ) ) {
-			require_once ABSPATH . WPINC . '/class-wp-admin-bar.php';
-		}
-
-		$admin_bar = new WP_Admin_Bar();
-		$toolbar->add_preview_edit_link( $admin_bar );
-		$edit_node = $admin_bar->get_node( 'edit' );
-
-		$this->assertInstanceOf( stdClass::class, $edit_node );
-		$this->assertSame( get_edit_post_link( $popup_id, 'raw' ), $edit_node->href );
 	}
 
 	/**
@@ -240,16 +189,5 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 			'p'                 => (string) $popup_id,
 			'post_type'         => 'popup',
 		];
-	}
-
-	/**
-	 * @param string $url Preview URL.
-	 * @return void
-	 */
-	private function apply_request( $url ) {
-		$query = [];
-		parse_str( (string) wp_parse_url( $url, PHP_URL_QUERY ), $query );
-
-		$_GET = $query;
 	}
 }

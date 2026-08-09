@@ -9,7 +9,7 @@
 namespace PopupMaker\Builders;
 
 use PopupMaker\Base\PageBuilder;
-use PopupMaker\Services\BuilderPreviewUrl;
+use PopupMaker\Controllers\Previews;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,13 +19,6 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.25.0
  */
 class Elementor extends PageBuilder {
-
-	/**
-	 * Stable builder key.
-	 *
-	 * @var string
-	 */
-	protected $key = 'elementor';
 
 	/**
 	 * Whether Elementor's document and rendering APIs are usable.
@@ -48,13 +41,13 @@ class Elementor extends PageBuilder {
 	 *
 	 * @return void
 	 */
-	protected function register_hooks() {
+	public function register_hooks() {
 		add_post_type_support( 'popup', 'elementor' );
 		add_filter( 'elementor/document/urls/wp_preview', [ $this, 'filter_preview_url' ], 10, 2 );
 	}
 
 	/**
-	 * Point Elementor's preview button at an authorized standalone preview.
+	 * Point Elementor's preview button at Popup Maker's real-page preview.
 	 *
 	 * @param mixed $url      WordPress preview URL.
 	 * @param mixed $document Elementor document.
@@ -68,15 +61,15 @@ class Elementor extends PageBuilder {
 
 		$popup_id = absint( $document->get_main_id() );
 
-		if (
-			! $popup_id ||
-			'popup' !== get_post_type( $popup_id ) ||
-			! current_user_can( 'edit_post', $popup_id )
-		) {
+		if ( ! $popup_id || 'popup' !== get_post_type( $popup_id ) ) {
 			return $url;
 		}
 
-		return BuilderPreviewUrl::create( $popup_id, $this->key() );
+		$previews = $this->container->get_controller( 'Previews' );
+
+		$preview_url = $previews instanceof Previews ? $previews->get_preview_url( $popup_id ) : '';
+
+		return $preview_url ?: $url;
 	}
 
 	/**
@@ -112,15 +105,6 @@ class Elementor extends PageBuilder {
 	}
 
 	/**
-	 * Elementor's front-end preview request is its editing canvas.
-	 *
-	 * @return bool
-	 */
-	public function is_canvas_request() {
-		return true;
-	}
-
-	/**
 	 * Whether a popup is built with Elementor.
 	 *
 	 * @param int $popup_id Popup ID.
@@ -144,25 +128,19 @@ class Elementor extends PageBuilder {
 	 * @return string|null
 	 */
 	public function render_document( $popup_id, $is_editor_canvas = false ) {
-		if ( ! $this->is_ready() ) {
+		if ( ! $this->is_available() ) {
 			return null;
 		}
 
-		$popup_id          = absint( $popup_id );
-		$frontend          = \Elementor\Plugin::$instance->frontend;
-		$is_signed_preview = absint( BuilderPreviewUrl::read_request( $this->key() ) ) === $popup_id;
+		$popup_id = absint( $popup_id );
+		$frontend = \Elementor\Plugin::$instance->frontend;
 
 		// Lets Elementor and third-party widgets register state for this
 		// secondary document before its markup is generated.
 		do_action( 'elementor/post/render', $popup_id );
 
-		if ( ( $is_editor_canvas || $is_signed_preview ) && method_exists( $frontend, 'get_builder_content' ) ) {
-			// Elementor's display helper intentionally returns empty when the
-			// requested document is also the current standalone preview document.
-			$rendered = $frontend->get_builder_content(
-				$popup_id,
-				$is_signed_preview && (bool) did_action( 'wp_head' )
-			);
+		if ( $is_editor_canvas && method_exists( $frontend, 'get_builder_content' ) ) {
+			$rendered = $frontend->get_builder_content( $popup_id );
 		} elseif ( method_exists( $frontend, 'get_builder_content_for_display' ) ) {
 			// Elementor enqueues document CSS before the head and prints it inline
 			// when Popup Maker discovers the document after the head has passed.
@@ -185,7 +163,7 @@ class Elementor extends PageBuilder {
 	 * @return object|null
 	 */
 	private function get_document( $popup_id ) {
-		if ( ! $this->is_ready() ) {
+		if ( ! $this->is_available() ) {
 			return null;
 		}
 
