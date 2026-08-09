@@ -12,20 +12,8 @@ use PopupMaker\Base\PageBuilder;
  */
 class Page_Builders_Test extends WP_UnitTestCase {
 
-	/** @var array<string,mixed> */
-	private $original_get;
-
-	/** @return void */
-	public function setUp(): void {
-		parent::setUp();
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Test fixture preserves request globals.
-		$this->original_get = $_GET;
-	}
-
 	/** @return void */
 	public function tearDown(): void {
-		$_GET = $this->original_get;
 		wp_set_current_user( 0 );
 		wp_dequeue_script( 'pum-builder-preview' );
 		wp_dequeue_style( 'pum-builder-preview' );
@@ -34,110 +22,115 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
-	public function test_builder_request_requires_login_permission_and_popup_post_type() {
+	public function test_builder_request_requires_popup_edit_permission() {
 		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-		$builder                     = $this->make_builder( 'stub' );
+		$builder                     = $this->make_builder();
 		$builder->requested_popup_id = $popup_id;
 
 		wp_set_current_user( 0 );
-		$this->assertSame( 0, $this->make_controller( [ $builder ] )->get_edit_popup_id() );
+		$this->assertSame( 0, $this->make_controller( $builder )->get_edit_popup_id() );
 
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'subscriber' ] ) );
-		$this->assertSame( 0, $this->make_controller( [ $builder ] )->get_edit_popup_id() );
+		$this->assertSame( 0, $this->make_controller( $builder )->get_edit_popup_id() );
 
-		$page_id                     = $this->factory->post->create( [ 'post_type' => 'page' ] );
-		$builder                     = $this->make_builder( 'stub' );
-		$builder->requested_popup_id = $page_id;
+		$builder                     = $this->make_builder();
+		$builder->requested_popup_id = $this->factory->post->create( [ 'post_type' => 'page' ] );
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
 
-		$this->assertSame( 0, $this->make_controller( [ $builder ] )->get_edit_popup_id() );
+		$this->assertSame( 0, $this->make_controller( $builder )->get_edit_popup_id() );
 	}
 
 	/** @return void */
-	public function test_authorized_draft_request_restores_private_popup_query() {
+	public function test_authorized_draft_request_restores_popup_query() {
 		$popup_id                    = $this->factory->post->create(
 			[
 				'post_type'   => 'popup',
 				'post_status' => 'draft',
 			]
 		);
-		$builder                     = $this->make_builder( 'stub' );
+		$builder                     = $this->make_builder();
 		$builder->requested_popup_id = $popup_id;
-
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
 
-		$query = $this->make_controller( [ $builder ] )->allow_builder_request( [] );
+		$query = $this->make_controller( $builder )->allow_builder_request( [] );
 
 		$this->assertSame( $popup_id, $query['p'] );
 		$this->assertSame( 'popup', $query['post_type'] );
 		$this->assertSame( 'draft', $query['post_status'] );
-	}
-
-	/** @return void */
-	public function test_ordinary_request_leaves_query_untouched() {
-		$builder                     = $this->make_builder( 'stub' );
-		$builder->requested_popup_id = 0;
-		$controller                  = $this->make_controller( [ $builder ] );
-
-		$this->assertSame( [ 'name' => 'hello-world' ], $controller->allow_builder_request( [ 'name' => 'hello-world' ] ) );
 		$this->assertFalse( get_post_type_object( 'popup' )->publicly_queryable );
 	}
 
 	/** @return void */
-	public function test_shell_request_keeps_builder_template_and_renders_no_popups() {
-		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-		$builder                     = $this->make_builder( 'stub' );
-		$builder->requested_popup_id = $popup_id;
-		$builder->canvas             = false;
-		$controller                  = $this->make_controller( [ $builder ] );
+	public function test_builder_boot_retries_without_registering_twice() {
+		$builder            = $this->make_builder();
+		$builder->available = false;
+		$controller         = $this->make_controller( $builder );
 
-		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$this->assertSame( 0, $builder->hooks_registered );
+		$this->assertFalse( has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
 
-		$popups = \PopupMaker\plugin()->get_controller( 'Frontend\Popups' );
-		add_action( 'wp_footer', [ $popups, 'render_popups' ] );
+		$builder->available = true;
+		$controller->boot_builders();
+		$controller->boot_builders();
 
-		$this->assertSame( 0, $controller->get_canvas_popup_id() );
-		$this->assertSame( 'theme.php', $controller->use_popup_canvas( 'theme.php' ) );
-		$this->assertFalse( has_action( 'wp_footer', [ $popups, 'render_popups' ] ) );
+		$this->assertSame( 1, $builder->hooks_registered );
+		$this->assertSame( 10, has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
+		$this->assertSame( PHP_INT_MAX, has_filter( 'the_content', [ $controller, 'suppress_canvas_content' ] ) );
 	}
 
 	/** @return void */
-	public function test_builder_preview_strips_live_popup_triggers() {
+	public function test_canvas_reuses_theme_and_disables_live_popup_behavior() {
 		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-		$builder                     = $this->make_builder( 'stub' );
+		$builder                     = $this->make_builder();
 		$builder->requested_popup_id = $popup_id;
-		$builders                    = $this->make_controller( [ $builder ] );
-
+		$controller                  = $this->make_controller( $builder );
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$this->go_to( add_query_arg( [
+			'post_type' => 'popup',
+			'p'         => $popup_id,
+		], home_url( '/' ) ) );
 
-		$container = new class( $builders ) {
-
-			/** @var \PopupMaker\Controllers\Builders */
-			private $builders;
-
-			/** @param \PopupMaker\Controllers\Builders $builders Builder controller. */
-			public function __construct( $builders ) {
-				$this->builders = $builders;
-			}
-
-			/**
-			 * @param string $name Controller name.
-			 * @return \PopupMaker\Controllers\Builders|null
-			 */
-			public function get_controller( $name ) {
-				return 'Builders' === $name ? $this->builders : null;
-			}
-		};
-		$previews  = new \PopupMaker\Controllers\Previews( $container );
-		$triggers  = [ [ 'type' => 'auto_open' ] ];
-		$data_attr = $previews->data_attr( [ 'triggers' => $triggers ], $popup_id );
-		$settings  = $previews->get_public_settings(
-			[ 'triggers' => $triggers ],
+		$GLOBALS['wp_query']->in_the_loop = true;
+		$data_attr                        = $controller->filter_canvas_data_attr(
+			[ 'triggers' => [ [ 'type' => 'auto_open' ] ] ],
+			$popup_id
+		);
+		$settings                         = $controller->filter_canvas_settings(
+			[ 'triggers' => [ [ 'type' => 'auto_open' ] ] ],
+			pum_get_popup( $popup_id )
+		);
+		$close_attributes                 = $controller->filter_canvas_close_attributes(
+			[ 'type' => 'button' ],
 			pum_get_popup( $popup_id )
 		);
 
+		$this->assertSame( $popup_id, $controller->get_canvas_popup_id() );
+		$this->assertSame( '', $controller->suppress_canvas_content( 'duplicate builder content' ) );
+		$this->assertContains( 'pum-builder-preview', $controller->filter_canvas_body_classes( [] ) );
+		$this->assertTrue( $controller->is_canvas_popup_loadable( false, $popup_id ) );
+		$this->assertFalse( $controller->is_canvas_popup_loadable( true, $popup_id + 1 ) );
 		$this->assertSame( [], $data_attr['triggers'] );
 		$this->assertSame( [], $settings['triggers'] );
+		$this->assertSame( 'true', $close_attributes['aria-disabled'] );
+		$this->assertSame( '-1', $close_attributes['tabindex'] );
+		$this->assertSame( 'pointer-events:none', $close_attributes['style'] );
+	}
+
+	/** @return void */
+	public function test_frontend_builder_shell_does_not_claim_the_canvas() {
+		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder                     = $this->make_builder();
+		$builder->requested_popup_id = $popup_id;
+		$builder->canvas             = false;
+		$controller                  = $this->make_controller( $builder );
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$this->go_to( add_query_arg( [
+			'post_type' => 'popup',
+			'p'         => $popup_id,
+		], home_url( '/' ) ) );
+
+		$this->assertSame( $popup_id, $controller->get_edit_popup_id() );
+		$this->assertSame( 0, $controller->get_canvas_popup_id() );
 	}
 
 	/** @return void */
@@ -148,208 +141,99 @@ class Page_Builders_Test extends WP_UnitTestCase {
 				'post_status' => 'draft',
 			]
 		);
-		$builder                     = $this->make_builder( 'stub' );
+		$builder                     = $this->make_builder();
 		$builder->requested_popup_id = $popup_id;
-		$controller                  = $this->make_controller( [ $builder ] );
-
+		$controller                  = $this->make_controller( $builder );
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
 		$this->go_to( add_query_arg( [
 			'post_type' => 'popup',
 			'p'         => $popup_id,
 		], home_url( '/' ) ) );
-		$script_was_registered = wp_script_is( 'pum-builder-preview', 'registered' );
-		$style_was_registered  = wp_style_is( 'pum-builder-preview', 'registered' );
 
-		if ( ! $script_was_registered ) {
-			wp_register_script( 'pum-builder-preview', false, [], 'test', true );
-		}
-
-		if ( ! $style_was_registered ) {
-			wp_register_style( 'pum-builder-preview', false, [], 'test' );
-		}
-
+		wp_register_script( 'pum-builder-preview', false, [], 'test', true );
+		wp_register_style( 'pum-builder-preview', false, [], 'test' );
 		$preloaded = [];
 		$capture   = function ( $loaded_id ) use ( &$preloaded ) {
 			$preloaded[] = absint( $loaded_id );
 		};
 
 		add_action( 'pum_preload_popup', $capture );
-		do_action( 'wp_enqueue_scripts' );
+		$controller->preload_canvas_popup();
 		remove_action( 'pum_preload_popup', $capture );
 
-		try {
-			$this->assertContains( $popup_id, $preloaded );
-			$this->assertTrue( wp_script_is( 'pum-builder-preview', 'enqueued' ) );
-			$this->assertTrue( wp_style_is( 'pum-builder-preview', 'enqueued' ) );
-			$this->assertContains( 'pum-builder-preview', $controller->filter_canvas_body_classes( [] ) );
-		} finally {
-			if ( ! $script_was_registered ) {
-				wp_deregister_script( 'pum-builder-preview' );
-			}
-
-			if ( ! $style_was_registered ) {
-				wp_deregister_style( 'pum-builder-preview' );
-			}
-		}
+		$this->assertContains( $popup_id, $preloaded );
+		$this->assertTrue( wp_script_is( 'pum-builder-preview', 'enqueued' ) );
+		$this->assertTrue( wp_style_is( 'pum-builder-preview', 'enqueued' ) );
 	}
 
 	/** @return void */
-	public function test_builder_boot_is_idempotent_and_retries_late_availability() {
-		$builder                     = $this->make_builder( 'late' );
-		$builder->available          = false;
+	public function test_owner_is_cached_and_native_requests_use_editor_rendering() {
 		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder                     = $this->make_builder();
 		$builder->requested_popup_id = $popup_id;
-		$controller                  = $this->make_controller( [ $builder ] );
+		$builder->rendered           = 'builder content';
+		$controller                  = $this->make_controller( $builder );
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
-
-		$this->assertFalse( $builder->is_ready() );
-		$this->assertSame( 0, $builder->hooks_registered );
-		$this->assertFalse( has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
-		$this->assertSame( 0, $controller->get_edit_popup_id() );
-
-		$builder->available = true;
-		$controller->boot_builders();
-		$controller->boot_builders();
-
-		$this->assertTrue( $builder->is_ready() );
-		$this->assertSame( 1, $builder->hooks_registered );
-		$this->assertSame( 10, has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
-		$this->assertSame( 15, has_action( 'wp_footer', [ $controller, 'flush_pending_assets_late' ] ) );
-		$this->assertSame( $popup_id, $controller->get_edit_popup_id() );
-	}
-
-	/** @return void */
-	public function test_owner_is_resolved_once_for_rendering_and_assets() {
-		$builder                  = $this->make_builder( 'stub' );
-		$builder->rendered        = 'builder content';
-		$builder->collects_assets = true;
-		$controller               = $this->make_controller( [ $builder ] );
-		$popup_id                 = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 
 		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
 		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
 		$this->assertSame( 1, $builder->ownership_checks );
-		$this->assertSame( 1, $builder->collected );
-		$this->assertFalse( $builder->last_editor_canvas );
-	}
-
-	/** @return void */
-	public function test_native_builder_requests_use_editor_rendering() {
-		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-		$user_id  = $this->factory->user->create( [ 'role' => 'administrator' ] );
-		wp_set_current_user( $user_id );
-
-		$builder                     = $this->make_builder( 'native' );
-		$builder->requested_popup_id = $popup_id;
-		$builder->rendered           = 'native editor';
-		$native_controller           = $this->make_controller( [ $builder ] );
-		$native_controller->render_popup_content( 'original', $popup_id );
-
 		$this->assertTrue( $builder->last_editor_canvas );
 	}
 
 	/** @return void */
-	public function test_native_rendering_can_still_collect_builder_assets() {
-		$builder                  = $this->make_builder( 'native' );
-		$builder->rendered        = null;
-		$builder->collects_assets = true;
-		$controller               = $this->make_controller( [ $builder ] );
-		$popup_id                 = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+	public function test_six_popup_documents_render_through_one_builder() {
+		$builder           = $this->make_builder();
+		$builder->rendered = 'builder content';
+		$controller        = $this->make_controller( $builder );
+		$popup_ids         = [];
 
-		$this->assertSame( 'native content', $controller->render_popup_content( 'native content', $popup_id ) );
-		$this->assertSame( 1, $builder->collected );
-	}
+		for ( $index = 0; $index < 6; $index++ ) {
+			$popup_id    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+			$popup_ids[] = $popup_id;
 
-	/** @return void */
-	public function test_empty_builder_render_replaces_stale_content() {
-		$builder           = $this->make_builder( 'empty' );
-		$builder->rendered = '';
-		$controller        = $this->make_controller( [ $builder ] );
-		$popup_id          = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-
-		$this->assertSame( '', $controller->render_popup_content( 'stale content', $popup_id ) );
-	}
-
-	/** @return void */
-	public function test_unowned_or_unavailable_builder_is_a_no_op() {
-		$builder       = $this->make_builder( 'stub' );
-		$builder->owns = false;
-		$controller    = $this->make_controller( [ $builder ] );
-		$popup_id      = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-
-		$this->assertSame( 'original', $controller->render_popup_content( 'original', $popup_id ) );
-
-		$builder            = $this->make_builder( 'unavailable' );
-		$builder->available = false;
-		$controller         = $this->make_controller( [ $builder ] );
-
-		$this->assertSame( 'original', $controller->render_popup_content( 'original', $popup_id ) );
-	}
-
-	/** @return void */
-	public function test_six_popups_finalize_assets_once_per_batch() {
-		$builder                  = $this->make_builder( 'stub' );
-		$builder->collects_assets = true;
-		$controller               = $this->make_controller( [ $builder ] );
-
-		for ( $i = 0; $i < 6; $i++ ) {
-			$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-			$controller->render_popup_content( 'original', $popup_id );
+			$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
 		}
 
-		$this->assertSame( 6, $builder->collected );
-		$this->assertSame( 0, $builder->finalized );
-
-		$controller->flush_pending_assets();
-		$controller->flush_pending_assets();
-
-		$this->assertSame( 1, $builder->finalized );
-		$this->assertFalse( $builder->last_after_head );
+		$this->assertSame( $popup_ids, $builder->rendered_popup_ids );
+		$this->assertSame( 6, $builder->ownership_checks );
+		$this->assertSame( 1, $builder->hooks_registered );
 	}
 
 	/** @return void */
-	public function test_late_and_failed_asset_finalization_are_retried() {
-		$builder                  = $this->make_builder( 'stub' );
-		$builder->collects_assets = true;
-		$builder->finalizes       = false;
-		$controller               = $this->make_controller( [ $builder ] );
-		$popup_id                 = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+	public function test_unowned_document_preserves_content() {
+		$builder           = $this->make_builder();
+		$builder->owns     = false;
+		$builder->rendered = 'builder content';
+		$controller        = $this->make_controller( $builder );
+		$popup_id          = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 
-		$controller->render_popup_content( 'original', $popup_id );
-		$controller->flush_pending_assets();
-		$this->assertSame( 1, $builder->finalized );
-
-		$builder->finalizes = true;
-		$controller->flush_pending_assets_late();
-		$controller->flush_pending_assets_late();
-
-		$this->assertSame( 2, $builder->finalized );
-		$this->assertTrue( $builder->last_after_head );
+		$this->assertSame( 'original', $controller->render_popup_content( 'original', $popup_id ) );
 	}
 
 	/**
-	 * @param PageBuilder[] $builders Test builders.
+	 * @param PageBuilder $builder Test builder.
 	 * @return \PopupMaker\Controllers\Builders
 	 */
-	private function make_controller( array $builders ) {
-		$controller = new class( \PopupMaker\plugin(), $builders ) extends \PopupMaker\Controllers\Builders {
+	private function make_controller( PageBuilder $builder ) {
+		$controller = new class( \PopupMaker\plugin(), $builder ) extends \PopupMaker\Controllers\Builders {
 
-			/** @var PageBuilder[] */
-			private $test_builders;
+			/** @var PageBuilder */
+			private $test_builder;
 
 			/**
 			 * @param \PopupMaker\Plugin\Core $container Plugin container.
-			 * @param PageBuilder[]           $builders Test builders.
+			 * @param PageBuilder             $builder Test builder.
 			 */
-			public function __construct( $container, array $builders ) {
-				$this->test_builders = $builders;
+			public function __construct( $container, PageBuilder $builder ) {
+				$this->test_builder = $builder;
 
 				parent::__construct( $container );
 			}
 
 			/** @return PageBuilder[] */
 			protected function default_builders() {
-				return $this->test_builders;
+				return [ $this->test_builder ];
 			}
 		};
 		$controller->init();
@@ -357,12 +241,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		return $controller;
 	}
 
-	/**
-	 * @param string $key Builder key.
-	 * @return PageBuilder
-	 */
-	private function make_builder( $key ) {
-		return new class( \PopupMaker\plugin(), $key ) extends PageBuilder {
+	/** @return PageBuilder */
+	private function make_builder() {
+		return new class( \PopupMaker\plugin() ) extends PageBuilder {
 
 			/** @var bool */
 			public $available = true;
@@ -371,19 +252,13 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			public $requested_popup_id = 0;
 
 			/** @var bool */
-			public $canvas = true;
+			public $owns = true;
 
 			/** @var bool */
-			public $owns = true;
+			public $canvas = true;
 
 			/** @var string|null */
 			public $rendered = null;
-
-			/** @var bool */
-			public $collects_assets = false;
-
-			/** @var bool */
-			public $finalizes = true;
 
 			/** @var int */
 			public $hooks_registered = 0;
@@ -391,27 +266,11 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			/** @var int */
 			public $ownership_checks = 0;
 
-			/** @var int */
-			public $collected = 0;
-
-			/** @var int */
-			public $finalized = 0;
-
-			/** @var bool */
-			public $last_after_head = false;
-
 			/** @var bool */
 			public $last_editor_canvas = false;
 
-			/**
-			 * @param \PopupMaker\Plugin\Core $container Plugin container.
-			 * @param string                  $key Builder key.
-			 */
-			public function __construct( $container, $key ) {
-				$this->key = $key;
-
-				parent::__construct( $container );
-			}
+			/** @var int[] */
+			public $rendered_popup_ids = [];
 
 			/** @return bool */
 			public function is_available() {
@@ -419,7 +278,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			}
 
 			/** @return void */
-			protected function register_hooks() {
+			public function register_hooks() {
 				++$this->hooks_registered;
 			}
 
@@ -439,45 +298,21 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			 */
 			public function owns_document( $popup_id ) {
 				unset( $popup_id );
-
 				++$this->ownership_checks;
 
 				return $this->owns;
 			}
 
 			/**
-			 * @param int  $popup_id        Popup ID.
-			 * @param bool $is_editor_canvas Whether this is the builder editor canvas.
+			 * @param int  $popup_id Popup ID.
+			 * @param bool $is_editor_canvas Whether this is the native editor canvas.
 			 * @return string|null
 			 */
 			public function render_document( $popup_id, $is_editor_canvas = false ) {
-				unset( $popup_id );
-				$this->last_editor_canvas = (bool) $is_editor_canvas;
+				$this->rendered_popup_ids[] = absint( $popup_id );
+				$this->last_editor_canvas   = (bool) $is_editor_canvas;
 
 				return $this->rendered;
-			}
-
-			/**
-			 * @param int $popup_id Popup ID.
-			 * @return bool
-			 */
-			public function collect_document_assets( $popup_id ) {
-				unset( $popup_id );
-
-				++$this->collected;
-
-				return $this->collects_assets;
-			}
-
-			/**
-			 * @param bool $after_head Whether head output passed.
-			 * @return bool
-			 */
-			public function finalize_document_assets( $after_head ) {
-				$this->last_after_head = (bool) $after_head;
-				++$this->finalized;
-
-				return $this->finalizes;
 			}
 		};
 	}

@@ -5,9 +5,6 @@ declare global {
 
 	interface PUM {
 		getPopup: ( popupId: number ) => JQuery;
-		hooks: {
-			doAction: ( hook: string, ...args: unknown[] ) => void;
-		};
 		initialized: boolean;
 	}
 

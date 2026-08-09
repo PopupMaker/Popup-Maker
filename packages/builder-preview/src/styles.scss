@@ -8,19 +8,15 @@ body.pum-builder-preview {
 	min-height: 100vh;
 	overflow: auto;
 
-	&.pum-builder-preview-overlay-disabled {
-		background: transparent !important;
-
-		> .pum {
-			background: transparent !important;
-		}
-	}
-
 	> .pum {
 		display: block !important;
 		opacity: 1 !important;
 		overflow: auto !important;
 		visibility: visible !important;
+
+		&.pum-overlay-disabled {
+			background: transparent !important;
+		}
 	}
 
 	.pum-container,

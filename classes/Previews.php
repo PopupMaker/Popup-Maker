@@ -118,44 +118,6 @@ class PUM_Previews {
 	}
 
 	/**
-	 * Restore the popup query for an authorized builder request.
-	 *
-	 * @deprecated 1.25.0 Handled by PopupMaker\Controllers\Builders.
-	 *
-	 * @param mixed $query_vars Parsed query variables.
-	 *
-	 * @return mixed
-	 */
-	public static function allow_builder_preview_request( $query_vars ) {
-		_deprecated_function( __METHOD__, '1.25.0', 'PopupMaker\Controllers\Builders::allow_builder_request()' );
-
-		$builders = PopupMaker\plugin()->get_controller( 'Builders' );
-
-		return $builders instanceof PopupMaker\Controllers\Builders
-			? $builders->allow_builder_request( $query_vars )
-			: $query_vars;
-	}
-
-	/**
-	 * Select the isolated popup canvas for a builder request.
-	 *
-	 * @deprecated 1.25.0 Handled by PopupMaker\Controllers\Builders.
-	 *
-	 * @param string $template Selected template path.
-	 *
-	 * @return string
-	 */
-	public static function use_builder_preview_template( $template ) {
-		_deprecated_function( __METHOD__, '1.25.0', 'PopupMaker\Controllers\Builders::use_popup_canvas()' );
-
-		$builders = PopupMaker\plugin()->get_controller( 'Builders' );
-
-		return $builders instanceof PopupMaker\Controllers\Builders
-			? $builders->use_popup_canvas( $template )
-			: $template;
-	}
-
-	/**
 	 * Get the modern preview controller.
 	 *
 	 * @return PopupMaker\Controllers\Previews|null

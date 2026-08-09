@@ -19,12 +19,8 @@ defined( 'ABSPATH' ) || exit;
  * classic and block editors, which renders a real popup on a real page with a
  * debug trigger.
  *
- * Third-party page builders are *not* handled here. They need query
- * restoration, an isolated canvas, and secondary-document asset loading, none
- * of which are preview concerns — those live in
- * {@see \PopupMaker\Controllers\Builders}. This controller only asks that
- * controller whether a builder owns the request, so the two never fight over
- * the same popup.
+ * Builder preview buttons may reuse this real-page flow, while their native
+ * editing canvases remain the responsibility of the Builders controller.
  *
  * @since 1.25.0
  */
@@ -155,14 +151,6 @@ class Previews extends Controller {
 	 * @return bool Whether the popup is loadable.
 	 */
 	public function is_loadable( $loadable, $popup_id ) {
-		$builder_popup_id = $this->get_builder_popup_id();
-
-		// A builder request edits exactly one popup; loading any other would
-		// put unrelated popups in the editing canvas.
-		if ( $builder_popup_id ) {
-			return absint( $popup_id ) === $builder_popup_id;
-		}
-
 		return $this->is_previewing_popup( $popup_id ) ? true : $loadable;
 	}
 
@@ -177,14 +165,11 @@ class Previews extends Controller {
 	 * @return mixed
 	 */
 	public function data_attr( $data_attr, $popup_id ) {
-		if ( ! is_array( $data_attr ) ) {
+		if ( ! is_array( $data_attr ) || ! $this->is_previewing_popup( $popup_id ) ) {
 			return $data_attr;
 		}
 
-		$data_attr['triggers'] = $this->filter_triggers(
-			isset( $data_attr['triggers'] ) ? $data_attr['triggers'] : [],
-			$popup_id
-		);
+		$data_attr['triggers'] = $this->preview_triggers();
 
 		return $data_attr;
 	}
@@ -198,64 +183,31 @@ class Previews extends Controller {
 	 * @return array
 	 */
 	public function get_public_settings( $settings, $popup ) {
-		if ( ! is_array( $settings ) || ! is_object( $popup ) || ! isset( $popup->ID ) ) {
+		if (
+			! is_array( $settings ) ||
+			! is_object( $popup ) ||
+			! isset( $popup->ID ) ||
+			! $this->is_previewing_popup( $popup->ID )
+		) {
 			return $settings;
 		}
 
-		$settings['triggers'] = $this->filter_triggers(
-			isset( $settings['triggers'] ) ? $settings['triggers'] : [],
-			$popup->ID
-		);
+		$settings['triggers'] = $this->preview_triggers();
 
 		return $settings;
 	}
 
 	/**
-	 * Replace a popup's triggers for preview contexts.
-	 *
-	 * Builder canvases get no triggers at all: the canvas is already visible,
-	 * so a time-delay or auto-open trigger would re-open it mid-edit and apply
-	 * animations and focus locks while the user is working.
-	 *
-	 * Core editor previews get a single debug trigger so the popup opens once
-	 * for inspection.
-	 *
-	 * @param array $triggers Existing triggers.
-	 * @param int   $popup_id Popup ID.
+	 * Get the debug trigger used by real-page previews.
 	 *
 	 * @return array
 	 */
-	private function filter_triggers( $triggers, $popup_id ) {
-		if ( ! is_array( $triggers ) ) {
-			$triggers = [];
-		}
-
-		if ( absint( $popup_id ) === $this->get_builder_popup_id() ) {
-			return [];
-		}
-
-		if ( ! $this->is_previewing_popup( $popup_id ) ) {
-			return $triggers;
-		}
-
+	private function preview_triggers() {
 		return [
 			[
 				'type' => 'admin_debug',
 			],
 		];
-	}
-
-	/**
-	 * Get the popup ID owned by an authorized builder request.
-	 *
-	 * @return int
-	 */
-	private function get_builder_popup_id() {
-		$builders = $this->container->get_controller( 'Builders' );
-
-		return $builders instanceof \PopupMaker\Controllers\Builders
-			? $builders->get_edit_popup_id()
-			: 0;
 	}
 
 	/**

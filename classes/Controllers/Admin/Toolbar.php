@@ -24,58 +24,9 @@ class Toolbar extends Controller {
 	 * Initializes this module.
 	 */
 	public function init() {
-		add_action( 'admin_bar_menu', [ $this, 'add_preview_edit_link' ], 80 );
 		add_action( 'admin_bar_menu', [ $this, 'toolbar_links' ], 999 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_files' ] );
 		add_action( 'init', [ $this, 'show_debug_bar' ] );
-	}
-
-	/**
-	 * Add the canonical edit link to authorized popup previews.
-	 *
-	 * Popup post types stay hidden from the admin bar globally so they do not
-	 * appear in WordPress's New menu. Core and builder previews still need the
-	 * same direct edit link WordPress shows for ordinary post previews.
-	 *
-	 * @param mixed $wp_admin_bar WordPress admin bar instance.
-	 *
-	 * @return void
-	 */
-	public function add_preview_edit_link( $wp_admin_bar ) {
-		if ( ! $wp_admin_bar instanceof \WP_Admin_Bar || is_admin() ) {
-			return;
-		}
-
-		$previews = $this->container->get_controller( 'Previews' );
-		$popup_id = $previews instanceof \PopupMaker\Controllers\Previews
-			? absint( $previews->get_popup_preview() )
-			: 0;
-
-		if ( ! $popup_id ) {
-			$builders = $this->container->get_controller( 'Builders' );
-			$popup_id = $builders instanceof \PopupMaker\Controllers\Builders
-				? absint( $builders->get_edit_popup_id() )
-				: 0;
-		}
-
-		if ( ! $popup_id || ! current_user_can( 'edit_post', $popup_id ) ) {
-			return;
-		}
-
-		$edit_url = get_edit_post_link( $popup_id, 'raw' );
-
-		if ( ! is_string( $edit_url ) || '' === $edit_url ) {
-			return;
-		}
-
-		$wp_admin_bar->add_node(
-			[
-				'id'     => 'edit',
-				'title'  => get_post_type_object( 'popup' )->labels->edit_item,
-				'href'   => $edit_url,
-				'parent' => false,
-			]
-		);
 	}
 
 	/**

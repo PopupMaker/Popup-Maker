@@ -97,29 +97,11 @@ class Previews_Test extends WP_UnitTestCase {
 		];
 
 		$settings = apply_filters( 'pum_popup_get_public_settings', [], pum_get_popup( $popup_id ) );
-		$toolbar  = \PopupMaker\plugin()->get_controller( 'Admin\\Toolbar' );
-
-		if ( ! class_exists( 'WP_Admin_Bar' ) ) {
-			require_once ABSPATH . WPINC . '/class-wp-admin-bar.php';
-		}
-
-		$admin_bar = new WP_Admin_Bar();
-
-		$toolbar->add_preview_edit_link( $admin_bar );
-		$edit_node = $admin_bar->get_node( 'edit' );
 
 		$this->assertTrue( apply_filters( 'pum_popup_is_loadable', false, $popup_id ) );
 		$this->assertSame( 'admin_debug', $settings['triggers'][0]['type'] );
-		$this->assertInstanceOf( stdClass::class, $edit_node );
-		$this->assertSame( get_edit_post_link( $popup_id, 'raw' ), $edit_node->href );
-		$this->assertSame( get_post_type_object( 'popup' )->labels->edit_item, $edit_node->title );
-
 		$_GET['popup_preview'] = 'tampered';
-		$admin_bar             = new WP_Admin_Bar();
-
-		$toolbar->add_preview_edit_link( $admin_bar );
-
-		$this->assertNull( $admin_bar->get_node( 'edit' ) );
+		$this->assertFalse( apply_filters( 'pum_popup_is_loadable', false, $popup_id ) );
 	}
 
 	/**
