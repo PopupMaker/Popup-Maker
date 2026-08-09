@@ -15,8 +15,8 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	/** @return void */
 	public function tearDown(): void {
 		wp_set_current_user( 0 );
-		wp_dequeue_script( 'pum-builder-preview' );
-		wp_dequeue_style( 'pum-builder-preview' );
+		wp_dequeue_script( 'popup-maker-builder-preview' );
+		wp_dequeue_style( 'popup-maker-builder-preview' );
 
 		parent::tearDown();
 	}
@@ -105,6 +105,8 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		);
 
 		$this->assertSame( $popup_id, $controller->get_canvas_popup_id() );
+		$this->assertSame( '', $controller->suppress_canvas_title( 'Duplicate popup title', $popup_id ) );
+		$this->assertSame( 'Other title', $controller->suppress_canvas_title( 'Other title', $popup_id + 1 ) );
 		$this->assertSame( '', $controller->suppress_canvas_content( 'duplicate builder content' ) );
 		$this->assertContains( 'pum-builder-preview', $controller->filter_canvas_body_classes( [] ) );
 		$this->assertTrue( $controller->is_canvas_popup_loadable( false, $popup_id ) );
@@ -122,6 +124,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$builder                     = $this->make_builder();
 		$builder->requested_popup_id = $popup_id;
 		$builder->canvas             = false;
+		$builder->rendered           = 'builder content';
 		$controller                  = $this->make_controller( $builder );
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
 		$this->go_to( add_query_arg( [
@@ -131,6 +134,28 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 		$this->assertSame( $popup_id, $controller->get_edit_popup_id() );
 		$this->assertSame( 0, $controller->get_canvas_popup_id() );
+		$this->assertTrue( $controller->is_canvas_popup_loadable( true, $popup_id + 1 ) );
+		$this->assertSame(
+			[ 'triggers' => [ [ 'type' => 'auto_open' ] ] ],
+			$controller->filter_canvas_data_attr( [ 'triggers' => [ [ 'type' => 'auto_open' ] ] ], $popup_id )
+		);
+		$this->assertSame(
+			[ 'triggers' => [ [ 'type' => 'auto_open' ] ] ],
+			$controller->filter_canvas_settings(
+				[ 'triggers' => [ [ 'type' => 'auto_open' ] ] ],
+				pum_get_popup( $popup_id )
+			)
+		);
+		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
+		$this->assertFalse( $builder->last_editor_canvas );
+	}
+
+	/** @return void */
+	public function test_builder_preview_handle_matches_workspace_dependency_mapping() {
+		$assets   = \PopupMaker\plugin()->get_controller( 'Assets' );
+		$packages = $assets->get_packages();
+
+		$this->assertSame( 'popup-maker-builder-preview', $packages['builder-preview']['handle'] );
 	}
 
 	/** @return void */
@@ -150,8 +175,8 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			'p'         => $popup_id,
 		], home_url( '/' ) ) );
 
-		wp_register_script( 'pum-builder-preview', false, [], 'test', true );
-		wp_register_style( 'pum-builder-preview', false, [], 'test' );
+		wp_register_script( 'popup-maker-builder-preview', false, [], 'test', true );
+		wp_register_style( 'popup-maker-builder-preview', false, [], 'test' );
 		$preloaded = [];
 		$capture   = function ( $loaded_id ) use ( &$preloaded ) {
 			$preloaded[] = absint( $loaded_id );
@@ -162,8 +187,8 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		remove_action( 'pum_preload_popup', $capture );
 
 		$this->assertContains( $popup_id, $preloaded );
-		$this->assertTrue( wp_script_is( 'pum-builder-preview', 'enqueued' ) );
-		$this->assertTrue( wp_style_is( 'pum-builder-preview', 'enqueued' ) );
+		$this->assertTrue( wp_script_is( 'popup-maker-builder-preview', 'enqueued' ) );
+		$this->assertTrue( wp_style_is( 'popup-maker-builder-preview', 'enqueued' ) );
 	}
 
 	/** @return void */
@@ -174,6 +199,10 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$builder->rendered           = 'builder content';
 		$controller                  = $this->make_controller( $builder );
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$this->go_to( add_query_arg( [
+			'post_type' => 'popup',
+			'p'         => $popup_id,
+		], home_url( '/' ) ) );
 
 		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
 		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );

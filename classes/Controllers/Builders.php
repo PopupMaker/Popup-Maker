@@ -125,6 +125,7 @@ class Builders extends Controller {
 
 		add_filter( 'request', [ $this, 'allow_builder_request' ] );
 		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
+		add_filter( 'the_title', [ $this, 'suppress_canvas_title' ], PHP_INT_MAX, 2 );
 		add_filter( 'the_content', [ $this, 'suppress_canvas_content' ], PHP_INT_MAX );
 		add_filter( 'pum_popup_is_loadable', [ $this, 'is_canvas_popup_loadable' ], 1001, 2 );
 		add_filter( 'pum_popup_data_attr', [ $this, 'filter_canvas_data_attr' ], 1001, 2 );
@@ -263,6 +264,20 @@ class Builders extends Controller {
 	}
 
 	/**
+	 * Prevent the theme loop from rendering the popup title behind the canvas.
+	 *
+	 * @param mixed $title   Post title.
+	 * @param mixed $post_id Post ID.
+	 *
+	 * @return mixed
+	 */
+	public function suppress_canvas_title( $title, $post_id = 0 ) {
+		$canvas_id = $this->get_canvas_popup_id();
+
+		return $canvas_id && absint( $post_id ) === $canvas_id && in_the_loop() && is_main_query() ? '' : $title;
+	}
+
+	/**
 	 * Load only the popup being edited on a native builder canvas.
 	 *
 	 * @param bool $loadable Whether the popup is loadable.
@@ -271,7 +286,7 @@ class Builders extends Controller {
 	 * @return bool
 	 */
 	public function is_canvas_popup_loadable( $loadable, $popup_id ) {
-		$canvas_id = $this->get_edit_popup_id();
+		$canvas_id = $this->get_canvas_popup_id();
 
 		return $canvas_id ? absint( $popup_id ) === $canvas_id : $loadable;
 	}
@@ -285,7 +300,7 @@ class Builders extends Controller {
 	 * @return mixed
 	 */
 	public function filter_canvas_data_attr( $data_attr, $popup_id ) {
-		if ( is_array( $data_attr ) && absint( $popup_id ) === $this->get_edit_popup_id() ) {
+		if ( is_array( $data_attr ) && absint( $popup_id ) === $this->get_canvas_popup_id() ) {
 			$data_attr['triggers'] = [];
 		}
 
@@ -305,7 +320,7 @@ class Builders extends Controller {
 			is_array( $settings ) &&
 			is_object( $popup ) &&
 			isset( $popup->ID ) &&
-			absint( $popup->ID ) === $this->get_edit_popup_id()
+			absint( $popup->ID ) === $this->get_canvas_popup_id()
 		) {
 			$settings['triggers'] = [];
 		}
@@ -366,8 +381,8 @@ class Builders extends Controller {
 		}
 
 		$popups->preload_popup( $popup );
-		wp_enqueue_style( 'pum-builder-preview' );
-		wp_enqueue_script( 'pum-builder-preview' );
+		wp_enqueue_style( 'popup-maker-builder-preview' );
+		wp_enqueue_script( 'popup-maker-builder-preview' );
 	}
 
 	/**
@@ -402,7 +417,8 @@ class Builders extends Controller {
 		$request          = $this->get_edit_request();
 		$is_editor_canvas = $request &&
 			$request['builder'] === $builder &&
-			$request['popup_id'] === $popup_id;
+			$request['popup_id'] === $popup_id &&
+			$this->get_canvas_popup_id() === $popup_id;
 		$rendered         = $builder->render_document( $popup_id, $is_editor_canvas );
 
 		return is_string( $rendered ) ? $rendered : $content;

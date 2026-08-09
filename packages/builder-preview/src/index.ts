@@ -3,7 +3,7 @@ import './styles.scss';
 import $ from 'jquery';
 
 const PUM = window.PUM;
-const $element = $( 'body.pum-builder-preview > .pum' ).first();
+const $element = $( 'body.pum-builder-preview .pum' ).first();
 const popupId = parseInt(
 	( $element.attr( 'id' ) || '' ).replace( 'pum-', '' ),
 	10

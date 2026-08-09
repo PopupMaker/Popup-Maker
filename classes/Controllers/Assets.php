@@ -125,7 +125,7 @@ class Assets extends Controller {
 			],
 			'builder-preview'     => [
 				'bundled'   => false,
-				'handle'    => 'pum-builder-preview',
+				'handle'    => 'popup-maker-builder-preview',
 				'styles'    => true,
 				'deps'      => [ 'popup-maker-site' ],
 				'styleDeps' => [ 'popup-maker-site' ],
