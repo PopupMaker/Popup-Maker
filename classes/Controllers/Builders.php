@@ -163,7 +163,8 @@ class Builders extends Controller {
 		add_filter( 'pum_popup_data_attr', [ $this, 'filter_canvas_data_attr' ], 1001, 2 );
 		add_filter( 'pum_popup_get_public_settings', [ $this, 'filter_canvas_settings' ], 1001, 2 );
 		add_filter( 'pum_popup_close_button_attributes', [ $this, 'filter_canvas_close_attributes' ], 1001, 2 );
-		add_filter( 'pum_popup_content', [ $this, 'render_popup_content' ], 1000, 2 );
+		// Insert builder markup while popup-scoped shortcode compatibility guards are active.
+		add_filter( 'pum_popup_content', [ $this, 'render_popup_content' ], 10, 2 );
 
 		// Draft canvases are absent from Popup Maker's normal preload query.
 		add_action( 'wp_enqueue_scripts', [ $this, 'preload_canvas_popup' ], 11 );

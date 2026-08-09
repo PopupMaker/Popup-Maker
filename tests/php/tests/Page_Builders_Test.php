@@ -134,6 +134,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$this->assertSame( 1, $builder->hooks_registered );
 		$this->assertSame( 10, has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
 		$this->assertSame( PHP_INT_MAX, has_filter( 'the_content', [ $controller, 'suppress_canvas_content' ] ) );
+		$this->assertSame( 10, has_filter( 'pum_popup_content', [ $controller, 'render_popup_content' ] ) );
 	}
 
 	/** @return void */
