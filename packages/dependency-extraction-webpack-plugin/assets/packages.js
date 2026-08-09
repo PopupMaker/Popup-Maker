@@ -5,6 +5,7 @@ module.exports = [
 	'@popup-maker/admin-notifications',
 	'@popup-maker/block-editor',
 	'@popup-maker/block-library',
+	'@popup-maker/builder-preview',
 	'@popup-maker/components',
 	'@popup-maker/core-data',
 	'@popup-maker/cta-admin',
