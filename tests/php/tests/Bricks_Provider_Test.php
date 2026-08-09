@@ -555,7 +555,7 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 		remove_filter( 'pum_popup_is_loadable', [ $controller, 'is_canvas_popup_loadable' ], 1001 );
 		remove_filter( 'pum_popup_data_attr', [ $controller, 'filter_canvas_data_attr' ], 1001 );
 		remove_filter( 'pum_popup_get_public_settings', [ $controller, 'filter_canvas_settings' ], 1001 );
-		remove_filter( 'pum_popup_content', [ $controller, 'render_popup_content' ], 1000 );
+		remove_filter( 'pum_popup_content', [ $controller, 'render_popup_content' ], 10 );
 		remove_action( 'wp_enqueue_scripts', [ $controller, 'preload_canvas_popup' ], 11 );
 	}
 }
