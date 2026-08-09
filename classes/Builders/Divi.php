@@ -48,10 +48,49 @@ class Divi extends PageBuilder {
 	public function register_hooks() {
 		add_filter( 'et_builder_post_types', [ $this, 'add_popup_support' ] );
 		add_filter( 'et_fb_is_enabled', [ $this, 'enable_frontend_builder' ], 10, 2 );
+		add_filter( 'post_type_link', [ $this, 'include_popup_id_in_permalink' ], 10, 2 );
+		add_action( 'et_save_post', [ $this, 'remember_saved_document' ], PHP_INT_MAX );
 
 		// Divi 4's block-editor integration prevents Popup Maker's editors from loading.
 		add_filter( 'use_block_editor_for_post_type', [ $this, 'force_classic_editor' ], 999, 2 );
 		add_filter( 'pum_settings_fields', [ $this, 'explain_classic_editor_requirement' ] );
+	}
+
+	/**
+	 * Keep the popup ID in URLs Divi turns into Visual Builder links.
+	 *
+	 * Popup Maker popups have no public rewrite route, so their generated URL
+	 * cannot be resolved back to a post before the coordinator restores it.
+	 *
+	 * @param mixed $url  Post permalink.
+	 * @param mixed $post Post being linked.
+	 *
+	 * @return mixed
+	 */
+	public function include_popup_id_in_permalink( $url, $post = null ) {
+		if ( ! is_string( $url ) || ! $post instanceof \WP_Post || 'popup' !== $post->post_type ) {
+			return $url;
+		}
+
+		return add_query_arg( 'p', absint( $post->ID ), $url );
+	}
+
+	/**
+	 * Remember Divi after its authenticated save lifecycle completes.
+	 *
+	 * @param mixed $post_id Saved post ID.
+	 *
+	 * @return void
+	 */
+	public function remember_saved_document( $post_id ) {
+		if (
+			! is_numeric( $post_id ) ||
+			'on' !== get_post_meta( absint( $post_id ), '_et_pb_use_builder', true )
+		) {
+			return;
+		}
+
+		$this->remember_document_owner( absint( $post_id ) );
 	}
 
 	/**
@@ -219,7 +258,7 @@ class Divi extends PageBuilder {
 		$field['disabled'] = true;
 		$description       = isset( $field['desc'] ) && is_string( $field['desc'] ) ? $field['desc'] : '';
 		$field['desc']     = $description . '<br><strong>' . esc_html__(
-			'Divi 4 requires the classic editor for popup editing, so this setting is enforced automatically.',
+			'Divi 4 requires the classic editor for popup editing. This setting is automatically enforced for compatibility.',
 			'popup-maker'
 		) . '</strong>';
 

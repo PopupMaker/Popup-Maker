@@ -33,29 +33,46 @@ class Divi_Builder_Test extends WP_UnitTestCase {
 
 	/** @return void */
 	public function test_frontend_visual_builder_uses_popup_canvas() {
-		$provider = $this->make_provider( 123 );
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$provider = $this->make_provider( $popup_id );
+		$url      = $provider->include_popup_id_in_permalink( home_url( '/popup-preview/' ), get_post( $popup_id ) );
+
+		$this->assertStringContainsString( 'p=' . $popup_id, $url );
 
 		$_GET = [
 			'et_fb'  => '1',
 			'et_bfb' => '1',
-			'p'      => '123',
+			'p'      => (string) $popup_id,
 		];
 
-		$this->assertSame( 123, $provider->get_requested_popup_id() );
+		$this->assertSame( $popup_id, $provider->get_requested_popup_id() );
 		$this->assertFalse( $provider->is_canvas_request() );
-		$this->assertNull( $provider->render_document( 123, false ) );
+		$this->assertNull( $provider->render_document( $popup_id, false ) );
 
 		$_GET = [
 			'et_fb'      => '1',
-			'et_post_id' => '123',
+			'et_post_id' => (string) $popup_id,
 		];
 
-		$this->assertSame( 123, $provider->get_requested_popup_id() );
+		$this->assertSame( $popup_id, $provider->get_requested_popup_id() );
 		$this->assertTrue( $provider->is_canvas_request() );
 		$this->assertSame(
 			'<div id="et-boc"><div class="et-l"><div id="et-fb-app"></div></div></div>',
-			$provider->render_document( 123, true )
+			$provider->render_document( $popup_id, true )
 		);
+	}
+
+	/** @return void */
+	public function test_divi_save_remembers_only_builder_documents() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$provider = $this->make_provider( $popup_id );
+
+		$provider->remember_saved_document( $popup_id );
+		$this->assertSame( 0, $provider->remembered_owner );
+
+		update_post_meta( $popup_id, '_et_pb_use_builder', 'on' );
+		$provider->remember_saved_document( $popup_id );
+		$this->assertSame( $popup_id, $provider->remembered_owner );
 	}
 
 	/** @return void */
@@ -93,11 +110,15 @@ class Divi_Builder_Test extends WP_UnitTestCase {
 		try {
 			$this->assertNotFalse( has_filter( 'et_builder_post_types', [ $provider, 'add_popup_support' ] ) );
 			$this->assertNotFalse( has_filter( 'et_fb_is_enabled', [ $provider, 'enable_frontend_builder' ] ) );
+			$this->assertNotFalse( has_filter( 'post_type_link', [ $provider, 'include_popup_id_in_permalink' ] ) );
+			$this->assertNotFalse( has_action( 'et_save_post', [ $provider, 'remember_saved_document' ] ) );
 			$this->assertNotFalse( has_filter( 'use_block_editor_for_post_type', [ $provider, 'force_classic_editor' ] ) );
 			$this->assertNotFalse( has_filter( 'pum_settings_fields', [ $provider, 'explain_classic_editor_requirement' ] ) );
 		} finally {
 			remove_filter( 'et_builder_post_types', [ $provider, 'add_popup_support' ] );
 			remove_filter( 'et_fb_is_enabled', [ $provider, 'enable_frontend_builder' ] );
+			remove_filter( 'post_type_link', [ $provider, 'include_popup_id_in_permalink' ] );
+			remove_action( 'et_save_post', [ $provider, 'remember_saved_document' ], PHP_INT_MAX );
 			remove_filter( 'use_block_editor_for_post_type', [ $provider, 'force_classic_editor' ], 999 );
 			remove_filter( 'pum_settings_fields', [ $provider, 'explain_classic_editor_requirement' ] );
 		}
@@ -109,6 +130,9 @@ class Divi_Builder_Test extends WP_UnitTestCase {
 	 */
 	private function make_provider( $document_id ) {
 		return new class( \PopupMaker\plugin(), $document_id ) extends Divi {
+
+			/** @var int */
+			public $remembered_owner = 0;
 
 			/** @var int */
 			private $document_id;
@@ -134,6 +158,14 @@ class Divi_Builder_Test extends WP_UnitTestCase {
 			 */
 			public function owns_document( $popup_id ) {
 				return $this->document_id === $popup_id;
+			}
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return void
+			 */
+			protected function remember_document_owner( $popup_id ) {
+				$this->remembered_owner = absint( $popup_id );
 			}
 		};
 	}
