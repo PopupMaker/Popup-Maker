@@ -62,6 +62,22 @@ abstract class PageBuilder {
 	}
 
 	/**
+	 * Whether the current user satisfies this builder's own access rules.
+	 *
+	 * The controller already verifies WordPress's per-post capability. Override
+	 * this only when the builder applies an additional permission layer.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	public function can_edit_document( $popup_id ) {
+		unset( $popup_id );
+
+		return true;
+	}
+
+	/**
 	 * Whether the native builder request is its editable canvas.
 	 *
 	 * Frontend builders may claim a separate shell request and return false.

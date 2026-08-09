@@ -61,6 +61,17 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_builder_specific_permission_can_reject_request() {
+		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder                     = $this->make_builder();
+		$builder->requested_popup_id = $popup_id;
+		$builder->can_edit           = false;
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertSame( 0, $this->make_controller( $builder )->get_edit_popup_id() );
+	}
+
+	/** @return void */
 	public function test_builder_boot_retries_without_registering_twice() {
 		$builder            = $this->make_builder();
 		$builder->available = false;
@@ -325,6 +336,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			/** @var bool */
 			public $canvas = true;
 
+			/** @var bool */
+			public $can_edit = true;
+
 			/** @var string|null */
 			public $rendered = null;
 
@@ -353,6 +367,16 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			/** @return int */
 			public function get_requested_popup_id() {
 				return $this->requested_popup_id;
+			}
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return bool
+			 */
+			public function can_edit_document( $popup_id ) {
+				unset( $popup_id );
+
+				return $this->can_edit;
 			}
 
 			/** @return bool */

@@ -105,6 +105,27 @@ class Elementor extends PageBuilder {
 	}
 
 	/**
+	 * Honor Elementor's own role and document access rules.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	public function can_edit_document( $popup_id ) {
+		if ( ! class_exists( '\Elementor\User' ) || ! method_exists( '\Elementor\User', 'is_current_user_can_edit' ) ) {
+			return false;
+		}
+
+		try {
+			return (bool) \Elementor\User::is_current_user_can_edit( absint( $popup_id ) );
+		} catch ( \Throwable $error ) {
+			unset( $error );
+
+			return false;
+		}
+	}
+
+	/**
 	 * Whether a popup is built with Elementor.
 	 *
 	 * @param int $popup_id Popup ID.

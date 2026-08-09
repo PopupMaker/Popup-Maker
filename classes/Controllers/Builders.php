@@ -182,7 +182,8 @@ class Builders extends Controller {
 				! $popup_id ||
 				'popup' !== get_post_type( $popup_id ) ||
 				! is_user_logged_in() ||
-				! current_user_can( 'edit_post', $popup_id )
+				! current_user_can( 'edit_post', $popup_id ) ||
+				! $builder->can_edit_document( $popup_id )
 			) {
 				continue;
 			}

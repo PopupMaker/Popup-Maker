@@ -160,6 +160,16 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 			public function is_available() {
 				return true;
 			}
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return bool
+			 */
+			public function can_edit_document( $popup_id ) {
+				unset( $popup_id );
+
+				return true;
+			}
 		};
 		$controller = new class( \PopupMaker\plugin(), $builder ) extends \PopupMaker\Controllers\Builders {
 
