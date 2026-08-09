@@ -371,6 +371,27 @@ class Bricks extends PageBuilder {
 	}
 
 	/**
+	 * Honor Bricks' own role and post-type access rules.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	public function can_edit_document( $popup_id ) {
+		if ( ! class_exists( '\Bricks\Capabilities' ) || ! method_exists( '\Bricks\Capabilities', 'current_user_can_use_builder' ) ) {
+			return false;
+		}
+
+		try {
+			return (bool) \Bricks\Capabilities::current_user_can_use_builder( absint( $popup_id ) );
+		} catch ( \Throwable $error ) {
+			unset( $error );
+
+			return false;
+		}
+	}
+
+	/**
 	 * Whether this request is the editor canvas rather than the editor shell.
 	 *
 	 * Bricks marks the canvas iframe with `brickspreview` and its toolbar preview
@@ -429,6 +450,11 @@ class Bricks extends PageBuilder {
 		$elements = \Bricks\Database::get_data( $popup_id, 'content' );
 
 		if ( [] === $elements ) {
+			if ( ! $is_editor_canvas ) {
+				$this->collect_document_assets( $popup_id );
+				$this->finalize_document_assets( did_action( 'wp_head' ) && ! doing_action( 'wp_head' ) );
+			}
+
 			return '';
 		}
 
@@ -534,7 +560,7 @@ class Bricks extends PageBuilder {
 
 		$elements = \Bricks\Database::get_data( $popup_id, 'content' );
 
-		if ( empty( $elements ) || ! is_array( $elements ) ) {
+		if ( ! is_array( $elements ) ) {
 			return;
 		}
 
@@ -552,6 +578,10 @@ class Bricks extends PageBuilder {
 		}
 
 		$this->collect_late_page_settings( $popup_id );
+
+		if ( [] === $elements ) {
+			return;
+		}
 
 		$before = isset( \Bricks\Assets::$inline_css['popup'] ) && is_string( \Bricks\Assets::$inline_css['popup'] )
 			? \Bricks\Assets::$inline_css['popup']

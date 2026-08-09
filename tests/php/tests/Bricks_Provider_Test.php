@@ -166,7 +166,7 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 	public function test_repeated_collection_generates_css_once() {
 		$popup_id = $this->create_bricks_popup( 'oncel' );
 
-		$this->provider->collect_document_assets( $popup_id );
+		$this->assertSame( '', $this->provider->render_document( $popup_id ) );
 		$this->provider->collect_document_assets( $popup_id );
 
 		ob_start();
@@ -288,6 +288,48 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 		$this->assertStringContainsString( '#brxe-latepageset', $printed );
 		$this->assertStringContainsString( 'window.pumLateHeader=1', $printed );
 		$this->assertStringContainsString( 'window.pumLateBodyHeader=1', $printed );
+	}
+
+	/**
+	 * Empty documents still collect their page-level styles and scripts.
+	 *
+	 * @return void
+	 */
+	public function test_empty_document_collects_page_settings() {
+		$popup_id = $this->factory->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+			]
+		);
+
+		update_post_meta( $popup_id, '_bricks_page_content_2', [] );
+		update_post_meta( $popup_id, '_bricks_editor_mode', 'bricks' );
+		update_post_meta(
+			$popup_id,
+			BRICKS_DB_PAGE_SETTINGS,
+			[ 'customCss' => '.empty-bricks-popup{outline:17px solid red}' ]
+		);
+
+		global $wp_actions;
+
+		$previous_head         = isset( $wp_actions['wp_head'] ) ? $wp_actions['wp_head'] : null;
+		$wp_actions['wp_head'] = 1;
+
+		$this->assertSame( '', $this->provider->render_document( $popup_id ) );
+
+		ob_start();
+		$this->provider->finalize_document_assets( true );
+		$printed = ob_get_clean();
+
+		if ( null === $previous_head ) {
+			unset( $wp_actions['wp_head'] );
+		} else {
+			$wp_actions['wp_head'] = $previous_head;
+		}
+
+		$this->assertContains( $popup_id, \Bricks\Assets::$page_settings_post_ids );
+		$this->assertStringContainsString( '.empty-bricks-popup', $printed );
 	}
 
 	/**

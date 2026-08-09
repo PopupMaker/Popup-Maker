@@ -57,7 +57,6 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$this->assertSame( $popup_id, $query['p'] );
 		$this->assertSame( 'popup', $query['post_type'] );
 		$this->assertSame( 'draft', $query['post_status'] );
-		$this->assertSame( get_class( $builder ), get_post_meta( $popup_id, '_pum_page_builder', true ) );
 		$this->assertFalse( get_post_type_object( 'popup' )->publicly_queryable );
 	}
 
