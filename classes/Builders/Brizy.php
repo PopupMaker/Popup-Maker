@@ -58,7 +58,66 @@ class Brizy extends PageBuilder {
 	 */
 	public function register_hooks() {
 		add_filter( 'brizy_supported_post_types', [ $this, 'add_popup_post_type' ] );
+		add_action( 'save_post_popup', [ $this, 'remember_saved_document' ], PHP_INT_MAX, 3 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'add_canvas_styles' ], 12 );
+	}
+
+	/**
+	 * Remember Brizy after its authenticated editor save reaches WordPress.
+	 *
+	 * @param mixed $post_id Saved post ID.
+	 * @param mixed $post    Saved post object.
+	 * @param mixed $update  Whether this was an update.
+	 *
+	 * @return void
+	 */
+	public function remember_saved_document( $post_id, $post = null, $update = false ) {
+		unset( $post, $update );
+
+		$save_action = $this->get_save_action();
+
+		if ( ! is_numeric( $post_id ) || ! $save_action ) {
+			return;
+		}
+
+		// Brizy verifies these values before its save reaches this core hook.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if (
+			! isset( $_REQUEST['action'], $_REQUEST['post'], $_REQUEST['hash'] ) ||
+			! is_scalar( $_REQUEST['action'] ) ||
+			! is_scalar( $_REQUEST['post'] ) ||
+			! is_scalar( $_REQUEST['hash'] ) ||
+			sanitize_key( wp_unslash( $_REQUEST['action'] ) ) !== sanitize_key( $save_action ) ||
+			absint( wp_unslash( $_REQUEST['post'] ) ) !== absint( $post_id ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['hash'] ) ), 'brizy-api' ) ||
+			! $this->owns_document( absint( $post_id ) )
+		) {
+			return;
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		$this->remember_document_owner( absint( $post_id ) );
+	}
+
+	/**
+	 * Get Brizy's possibly white-labeled save action.
+	 *
+	 * @return string
+	 */
+	protected function get_save_action() {
+		if ( ! class_exists( '\\Brizy_Editor' ) || ! method_exists( '\\Brizy_Editor', 'prefix' ) ) {
+			return '';
+		}
+
+		try {
+			$save_action = \Brizy_Editor::prefix( '_update_item' );
+
+			return is_string( $save_action ) ? sanitize_key( $save_action ) : '';
+		} catch ( \Throwable $error ) {
+			unset( $error );
+
+			return '';
+		}
 	}
 
 	/**

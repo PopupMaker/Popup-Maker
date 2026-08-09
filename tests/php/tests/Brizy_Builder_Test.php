@@ -15,19 +15,76 @@ class Brizy_Builder_Test extends WP_UnitTestCase {
 	/** @var array<string,mixed> */
 	private $original_get;
 
+	/** @var array<string,mixed> */
+	private $original_request;
+
 	/** @return void */
 	public function setUp(): void {
 		parent::setUp();
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Test fixture preserves request globals.
 		$this->original_get = $_GET;
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Test fixture preserves request globals.
+		$this->original_request = $_REQUEST;
 	}
 
 	/** @return void */
 	public function tearDown(): void {
-		$_GET = $this->original_get;
+		$_GET     = $this->original_get;
+		$_REQUEST = $this->original_request;
+		wp_set_current_user( 0 );
 
 		parent::tearDown();
+	}
+
+	/** @return void */
+	public function test_authenticated_native_save_records_brizy_ownership() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder  = new class( \PopupMaker\plugin() ) extends Brizy {
+
+			/** @var int */
+			public $remembered_popup_id = 0;
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return bool
+			 */
+			public function owns_document( $popup_id ) {
+				return 0 < absint( $popup_id );
+			}
+
+			/** @return string */
+			protected function get_save_action() {
+				return 'brizy_update_item';
+			}
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return void
+			 */
+			protected function remember_document_owner( $popup_id ) {
+				$this->remembered_popup_id = absint( $popup_id );
+			}
+		};
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$builder->register_hooks();
+
+		$this->assertSame( PHP_INT_MAX, has_action( 'save_post_popup', [ $builder, 'remember_saved_document' ] ) );
+
+		$_REQUEST = [
+			'action' => 'brizy_update_item',
+			'post'   => (string) $popup_id,
+			'hash'   => 'invalid',
+		];
+		$builder->remember_saved_document( $popup_id );
+		$this->assertSame( 0, $builder->remembered_popup_id );
+
+		$_REQUEST['hash'] = wp_create_nonce( 'brizy-api' );
+		$builder->remember_saved_document( $popup_id );
+		$this->assertSame( $popup_id, $builder->remembered_popup_id );
+
+		remove_action( 'save_post_popup', [ $builder, 'remember_saved_document' ], PHP_INT_MAX );
 	}
 
 	/** @return void */
