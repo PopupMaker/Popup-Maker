@@ -45,6 +45,7 @@
 		"@popup-maker/admin-marketing": "workspace:*",
 		"@popup-maker/block-editor": "workspace:*",
 		"@popup-maker/block-library": "workspace:*",
+		"@popup-maker/builder-preview": "workspace:*",
 		"@popup-maker/components": "workspace:*",
 		"@popup-maker/core-data": "workspace:*",
 		"@popup-maker/cta-admin": "workspace:*",

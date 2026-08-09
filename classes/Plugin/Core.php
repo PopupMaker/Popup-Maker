@@ -43,6 +43,8 @@ final class Core extends \PopupMaker\Plugin\Container {
 			'Admin'         => new \PopupMaker\Controllers\Admin( $this ),
 			'Assets'        => new \PopupMaker\Controllers\Assets( $this ),
 			'CallToActions' => new \PopupMaker\Controllers\CallToActions( $this ),
+			'Previews'      => new \PopupMaker\Controllers\Previews( $this ),
+			'Builders'      => new \PopupMaker\Controllers\Builders( $this ),
 			'Compatibility' => new \PopupMaker\Controllers\Compatibility( $this ),
 			'Debug'         => new \PopupMaker\Controllers\Debug( $this ),
 			'PostTypes'     => new \PopupMaker\Controllers\PostTypes( $this ),
