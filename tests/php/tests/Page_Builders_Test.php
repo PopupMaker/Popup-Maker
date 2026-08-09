@@ -6,7 +6,6 @@
  */
 
 use PopupMaker\Base\PageBuilder;
-use PopupMaker\Services\BuilderPreviewUrl;
 
 /**
  * Verify the shared builder contract and coordinator.
@@ -32,54 +31,6 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		wp_dequeue_style( 'pum-builder-preview' );
 
 		parent::tearDown();
-	}
-
-	/** @return void */
-	public function test_signed_preview_url_round_trips() {
-		$popup_id      = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-		$builder       = $this->make_builder( 'preview-only' );
-		$builder->owns = false;
-		$controller    = $this->make_controller( [ $builder ] );
-
-		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
-		$url = BuilderPreviewUrl::create( $popup_id, 'preview-only' );
-		wp_parse_str( wp_parse_url( $url, PHP_URL_QUERY ), $query );
-		$this->apply_request( $url );
-
-		$this->assertSame( 'true', $query['preview'] );
-		$this->assertSame( (string) $popup_id, $query['preview_id'] );
-		$this->assertSame( 1, wp_verify_nonce( $query['preview_nonce'], 'post_preview_' . $popup_id ) );
-		$this->assertSame( $popup_id, BuilderPreviewUrl::read_request( 'preview-only' ) );
-		$this->assertSame( $popup_id, $controller->get_edit_popup_id() );
-		$this->assertSame( $popup_id, $controller->allow_builder_request( [] )['p'] );
-	}
-
-	/** @return void */
-	public function test_signed_preview_is_bound_to_builder_and_popup() {
-		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-		$other_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-
-		$this->apply_request( BuilderPreviewUrl::create( $popup_id, 'bricks' ) );
-
-		$this->assertSame( 0, BuilderPreviewUrl::read_request( 'elementor' ) );
-
-		$_GET['p'] = (string) $other_id;
-		$this->assertSame( 0, BuilderPreviewUrl::read_request( 'bricks' ) );
-	}
-
-	/** @return void */
-	public function test_unsigned_preview_requests_are_rejected() {
-		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
-
-		$_GET = [
-			'pum-builder-preview' => 'bricks',
-			'p'                   => (string) $popup_id,
-		];
-
-		$this->assertSame( 0, BuilderPreviewUrl::read_request( 'bricks' ) );
-
-		$_GET['_wpnonce'] = 'tampered';
-		$this->assertSame( 0, BuilderPreviewUrl::read_request( 'bricks' ) );
 	}
 
 	/** @return void */
@@ -279,23 +230,14 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
 		$this->assertSame( 1, $builder->ownership_checks );
 		$this->assertSame( 1, $builder->collected );
+		$this->assertFalse( $builder->last_editor_canvas );
 	}
 
 	/** @return void */
-	public function test_only_native_builder_requests_use_editor_rendering() {
+	public function test_native_builder_requests_use_editor_rendering() {
 		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$user_id  = $this->factory->user->create( [ 'role' => 'administrator' ] );
 		wp_set_current_user( $user_id );
-
-		$builder           = $this->make_builder( 'signed' );
-		$builder->rendered = 'signed preview';
-		$signed_controller = $this->make_controller( [ $builder ] );
-		$this->apply_request( BuilderPreviewUrl::create( $popup_id, 'signed' ) );
-		$signed_controller->render_popup_content( 'original', $popup_id );
-
-		$this->assertFalse( $builder->last_editor_canvas );
-
-		$_GET = [];
 
 		$builder                     = $this->make_builder( 'native' );
 		$builder->requested_popup_id = $popup_id;
@@ -383,17 +325,6 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 		$this->assertSame( 2, $builder->finalized );
 		$this->assertTrue( $builder->last_after_head );
-	}
-
-	/**
-	 * @param string $url Preview URL.
-	 * @return void
-	 */
-	private function apply_request( $url ) {
-		$args = [];
-		parse_str( (string) wp_parse_url( $url, PHP_URL_QUERY ), $args );
-
-		$_GET = $args;
 	}
 
 	/**

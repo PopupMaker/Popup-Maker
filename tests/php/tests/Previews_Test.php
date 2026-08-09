@@ -55,6 +55,28 @@ class Previews_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Preview URLs use the existing real-page preview flow and preserve autosaves.
+	 *
+	 * @return void
+	 */
+	public function test_preview_url_targets_the_frontend_and_preserves_autosaves() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$previews = \PopupMaker\plugin()->get_controller( 'Previews' );
+		$url      = $previews->get_preview_url( $popup_id );
+		$query    = [];
+		wp_parse_str( wp_parse_url( $url, PHP_URL_QUERY ), $query );
+
+		$this->assertSame( home_url( '/' ), strtok( $url, '?' ) );
+		$this->assertSame( (string) $popup_id, $query['popup'] );
+		$this->assertSame( 'true', $query['preview'] );
+		$this->assertSame( (string) $popup_id, $query['preview_id'] );
+		$this->assertSame( 1, wp_verify_nonce( $query['popup_preview'], 'popup-preview' ) );
+		$this->assertSame( 1, wp_verify_nonce( $query['preview_nonce'], 'post_preview_' . $popup_id ) );
+	}
+
+	/**
 	 * Core editor previews retain their load and debug-trigger behavior.
 	 *
 	 * @return void

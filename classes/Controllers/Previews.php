@@ -88,6 +88,40 @@ class Previews extends Controller {
 	}
 
 	/**
+	 * Create an authorized real-page preview URL for a popup.
+	 *
+	 * WordPress preview parameters let page builders select the current
+	 * autosave while Popup Maker's existing preview parameters force the popup
+	 * to load on the site's front page.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return string Preview URL, or an empty string for an invalid popup.
+	 */
+	public function get_preview_url( $popup_id ) {
+		$popup_id = absint( $popup_id );
+
+		if (
+			! $popup_id ||
+			'popup' !== get_post_type( $popup_id ) ||
+			! current_user_can( 'edit_post', $popup_id )
+		) {
+			return '';
+		}
+
+		return add_query_arg(
+			[
+				'popup_preview' => wp_create_nonce( 'popup-preview' ),
+				'popup'         => $popup_id,
+				'preview'       => 'true',
+				'preview_id'    => $popup_id,
+				'preview_nonce' => wp_create_nonce( 'post_preview_' . $popup_id ),
+			],
+			home_url( '/' )
+		);
+	}
+
+	/**
 	 * Force a core editor preview popup to load regardless of post status.
 	 *
 	 * @return void

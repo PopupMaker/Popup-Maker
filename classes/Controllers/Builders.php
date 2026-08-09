@@ -10,7 +10,6 @@ namespace PopupMaker\Controllers;
 
 use PopupMaker\Base\PageBuilder;
 use PopupMaker\Plugin\Controller;
-use PopupMaker\Services\BuilderPreviewUrl;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -56,7 +55,7 @@ class Builders extends Controller {
 	/**
 	 * Cached authorized builder request.
 	 *
-	 * @var array{builder:PageBuilder,popup_id:int,signed:bool}|null
+	 * @var array{builder:PageBuilder,popup_id:int}|null
 	 */
 	private $edit_request;
 
@@ -191,7 +190,7 @@ class Builders extends Controller {
 	/**
 	 * Get the authorized builder request for this page load.
 	 *
-	 * @return array{builder:PageBuilder,popup_id:int,signed:bool}|null
+	 * @return array{builder:PageBuilder,popup_id:int}|null
 	 */
 	protected function get_edit_request() {
 		if ( $this->edit_request_resolved ) {
@@ -206,12 +205,7 @@ class Builders extends Controller {
 				continue;
 			}
 
-			$popup_id  = absint( BuilderPreviewUrl::read_request( $builder->key() ) );
-			$is_signed = (bool) $popup_id;
-
-			if ( ! $popup_id ) {
-				$popup_id = absint( $builder->get_requested_popup_id() );
-			}
+			$popup_id = absint( $builder->get_requested_popup_id() );
 
 			if (
 				! $popup_id ||
@@ -225,7 +219,6 @@ class Builders extends Controller {
 			$this->edit_request = [
 				'builder'  => $builder,
 				'popup_id' => $popup_id,
-				'signed'   => $is_signed,
 			];
 
 			break;
@@ -259,7 +252,7 @@ class Builders extends Controller {
 
 		$builder = $request['builder'];
 
-		if ( ! $request['signed'] && ! $builder->is_canvas_request() ) {
+		if ( ! $builder->is_canvas_request() ) {
 			return 0;
 		}
 
@@ -442,9 +435,6 @@ class Builders extends Controller {
 	/**
 	 * Whether a builder is rendering its native editor canvas.
 	 *
-	 * Signed standalone previews use the isolated Popup Maker template too, but
-	 * they still need the builder's normal display renderer and document assets.
-	 *
 	 * @param PageBuilder $builder  Owning builder.
 	 * @param int         $popup_id Popup ID.
 	 *
@@ -454,7 +444,6 @@ class Builders extends Controller {
 		$request = $this->get_edit_request();
 
 		return $request &&
-			! $request['signed'] &&
 			$request['builder'] === $builder &&
 			$request['popup_id'] === $popup_id &&
 			$builder->is_canvas_request();
