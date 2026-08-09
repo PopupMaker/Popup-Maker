@@ -143,6 +143,13 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 		$this->assertSame( 0, $this->make_controller()->get_edit_popup_id() );
 	}
 
+	/** @return void */
+	public function test_preview_filter_tolerates_a_missing_document_argument() {
+		$builder = new Elementor( \PopupMaker\plugin() );
+
+		$this->assertSame( 'https://example.com/preview', $builder->filter_preview_url( 'https://example.com/preview' ) );
+	}
+
 	/**
 	 * @return \PopupMaker\Controllers\Builders
 	 */
@@ -169,9 +176,19 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 				parent::__construct( $container );
 			}
 
-			/** @return PageBuilder[] */
-			protected function default_builders() {
-				return [ $this->test_builder ];
+			/** @return string[] */
+			protected function detected_builder_classes() {
+				return [ get_class( $this->test_builder ) ];
+			}
+
+			/**
+			 * @param string $builder_class Builder class.
+			 * @return PageBuilder
+			 */
+			protected function instantiate_builder( $builder_class ) {
+				unset( $builder_class );
+
+				return $this->test_builder;
 			}
 		};
 		$controller->init();

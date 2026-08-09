@@ -79,6 +79,35 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_inactive_bundled_builders_are_not_loaded_or_constructed() {
+		if ( defined( 'ELEMENTOR_VERSION' ) || did_action( 'elementor/loaded' ) ) {
+			$this->markTestSkipped( 'Elementor is active in this test environment.' );
+		}
+
+		$elementor_loaded = class_exists( \PopupMaker\Builders\Elementor::class, false );
+		$controller       = new class( \PopupMaker\plugin() ) extends \PopupMaker\Controllers\Builders {
+
+			/** @var int */
+			public $builders_constructed = 0;
+
+			/**
+			 * @param string $builder_class Builder class.
+			 * @return PageBuilder
+			 */
+			protected function instantiate_builder( $builder_class ) {
+				++$this->builders_constructed;
+
+				return parent::instantiate_builder( $builder_class );
+			}
+		};
+
+		$controller->init();
+
+		$this->assertSame( 0, $controller->builders_constructed );
+		$this->assertSame( $elementor_loaded, class_exists( \PopupMaker\Builders\Elementor::class, false ) );
+	}
+
+	/** @return void */
 	public function test_canvas_reuses_theme_and_disables_live_popup_behavior() {
 		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$builder                     = $this->make_builder();
@@ -260,9 +289,19 @@ class Page_Builders_Test extends WP_UnitTestCase {
 				parent::__construct( $container );
 			}
 
-			/** @return PageBuilder[] */
-			protected function default_builders() {
-				return [ $this->test_builder ];
+			/** @return string[] */
+			protected function detected_builder_classes() {
+				return [ get_class( $this->test_builder ) ];
+			}
+
+			/**
+			 * @param string $builder_class Builder class.
+			 * @return PageBuilder
+			 */
+			protected function instantiate_builder( $builder_class ) {
+				unset( $builder_class );
+
+				return $this->test_builder;
 			}
 		};
 		$controller->init();

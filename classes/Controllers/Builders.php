@@ -71,21 +71,30 @@ class Builders extends Controller {
 	}
 
 	/**
-	 * Builders bundled with the plugin.
+	 * Detected builder classes bundled with the plugin.
 	 *
-	 * Concrete integrations add only detected builders to this plain list, so
-	 * inactive integrations consume no request-time objects or hooks.
+	 * Class constants resolve to strings without autoloading. An adapter is only
+	 * loaded and constructed after its builder's cheap runtime signal appears.
 	 *
-	 * @return PageBuilder[]
+	 * @return class-string<PageBuilder>[]
 	 */
-	protected function default_builders() {
+	protected function detected_builder_classes() {
 		if ( ! defined( 'ELEMENTOR_VERSION' ) && ! did_action( 'elementor/loaded' ) ) {
 			return [];
 		}
 
-		return [
-			new \PopupMaker\Builders\Elementor( $this->container ),
-		];
+		return [ \PopupMaker\Builders\Elementor::class ];
+	}
+
+	/**
+	 * Construct a detected builder.
+	 *
+	 * @param class-string<PageBuilder> $builder_class Builder class.
+	 *
+	 * @return PageBuilder
+	 */
+	protected function instantiate_builder( $builder_class ) {
+		return new $builder_class( $this->container );
 	}
 
 	/**
@@ -94,7 +103,17 @@ class Builders extends Controller {
 	 * @return void
 	 */
 	public function boot_builders() {
-		foreach ( $this->default_builders() as $builder ) {
+		foreach ( $this->detected_builder_classes() as $builder_class ) {
+			if (
+				! is_string( $builder_class ) ||
+				isset( $this->builders[ $builder_class ] ) ||
+				! is_subclass_of( $builder_class, PageBuilder::class )
+			) {
+				continue;
+			}
+
+			$builder = $this->instantiate_builder( $builder_class );
+
 			if ( ! $builder instanceof PageBuilder || ! $builder->is_available() ) {
 				continue;
 			}

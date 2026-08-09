@@ -54,7 +54,7 @@ class Elementor extends PageBuilder {
 	 *
 	 * @return mixed
 	 */
-	public function filter_preview_url( $url, $document ) {
+	public function filter_preview_url( $url, $document = null ) {
 		if ( ! is_object( $document ) || ! method_exists( $document, 'get_main_id' ) ) {
 			return $url;
 		}
