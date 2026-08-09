@@ -49,8 +49,9 @@ class Divi extends PageBuilder {
 		add_filter( 'et_builder_post_types', [ $this, 'add_popup_support' ] );
 		add_filter( 'et_fb_is_enabled', [ $this, 'enable_frontend_builder' ], 10, 2 );
 
-		// Divi 4 disables the block editor for its builder post types.
-		add_filter( 'use_block_editor_for_post', [ $this, 'force_classic_editor' ], 999, 2 );
+		// Divi 4's block-editor integration prevents Popup Maker's editors from loading.
+		add_filter( 'use_block_editor_for_post_type', [ $this, 'force_classic_editor' ], 999, 2 );
+		add_filter( 'pum_settings_fields', [ $this, 'explain_classic_editor_requirement' ] );
 	}
 
 	/**
@@ -181,12 +182,12 @@ class Divi extends PageBuilder {
 	 * Force the classic editor for popups when Divi 4 is active.
 	 *
 	 * @param mixed $use_block_editor Whether to use the block editor.
-	 * @param mixed $post             Post being checked.
+	 * @param mixed $post_type        Post type being checked.
 	 *
 	 * @return mixed
 	 */
-	public function force_classic_editor( $use_block_editor, $post = null ) {
-		if ( ! $post instanceof \WP_Post || 'popup' !== $post->post_type ) {
+	public function force_classic_editor( $use_block_editor, $post_type = '' ) {
+		if ( ! is_string( $post_type ) || ! in_array( $post_type, [ 'popup', 'popup_theme' ], true ) ) {
 			return $use_block_editor;
 		}
 
@@ -194,7 +195,35 @@ class Divi extends PageBuilder {
 			return $use_block_editor;
 		}
 
-		return $this->owns_document( $post->ID ) ? false : $use_block_editor;
+		return false;
+	}
+
+	/**
+	 * Explain why the classic-editor setting is locked while Divi 4 is active.
+	 *
+	 * @param mixed $fields Popup Maker settings fields.
+	 *
+	 * @return mixed
+	 */
+	public function explain_classic_editor_requirement( $fields ) {
+		if (
+			! $this->is_divi_4() ||
+			! is_array( $fields ) ||
+			! isset( $fields['general']['main']['enable_classic_editor'] ) ||
+			! is_array( $fields['general']['main']['enable_classic_editor'] )
+		) {
+			return $fields;
+		}
+
+		$field             = &$fields['general']['main']['enable_classic_editor'];
+		$field['disabled'] = true;
+		$description       = isset( $field['desc'] ) && is_string( $field['desc'] ) ? $field['desc'] : '';
+		$field['desc']     = $description . '<br><strong>' . esc_html__(
+			'Divi 4 requires the classic editor for popup editing, so this setting is enforced automatically.',
+			'popup-maker'
+		) . '</strong>';
+
+		return $fields;
 	}
 
 	/**
