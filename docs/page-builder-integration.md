@@ -180,7 +180,7 @@ The shared `@popup-maker/builder-preview` package runs only on an authorized
 builder canvas. It asks Popup Maker's existing JavaScript API to reposition the
 popup after opening, on window resize, and when a `ResizeObserver` detects a
 container-size change. It also prevents accidental closing while leaving the
-themed close control visible for design work.
+themed close control visible for design work when that control is enabled.
 
 Do not add builder-specific JavaScript until a real editor demonstrates a gap
 that the shared popup events cannot solve. Widget reinitialization in
@@ -205,7 +205,7 @@ unchanged.
 | Bricks | Inject runtime post-type support without persisting it, distinguish shell/canvas/preview, safely render secondary element data and CSS, and adapt its DOM-owning canvas. |
 | Divi | Register the post type, authorize the front-end builder, preserve the back-end builder, and use the minimum editor mount. |
 | Beaver Builder | Recognize its native request and stop Beaver's broad popup redirect from intercepting another authorized builder. Everything else remains native. |
-| SiteOrigin | Inject runtime post-type support without persisting it, retain its classic editor only for SiteOrigin documents, and repair the Live Editor preview URL. |
+| SiteOrigin | Inject runtime post-type support without persisting it, retain its classic editor for saved SiteOrigin documents and explicit first-edit builder requests, and repair the Live Editor preview URL. |
 | Brizy | Register the post type, distinguish shell/iframe requests, provide two native mount nodes, render compiled visitor content, and use Brizy's asset manager. |
 | Visual Composer | Distinguish shell/iframe requests, provide its native mount, and use its secondary-source asset queue. |
 
@@ -282,7 +282,9 @@ Verify all of the following in a real browser:
 2. builder controls edit actual popup content;
 3. popup theme, overlay, title, close button, size, and position match settings;
 4. when enabled, the close control is visibly present but inert in the editor;
-5. Preview opens a real visitor page when the builder exposes that control;
+5. Preview opens a real visitor page when the builder exposes that control, or
+   a builder-native standalone preview when that is the builder's intended
+   workflow;
 6. a builder-built main page and builder-built popup render together;
 7. multiple builder popups do not duplicate document assets;
 8. late-discovered popups retain CSS and interactivity;

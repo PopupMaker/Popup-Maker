@@ -129,9 +129,9 @@ priority 10 always finish first, regardless of plugin registration order.
 
 ### Immediate Fix
 ```php
-// Move popup preloading back to safe timing
-// FROM: add_action( 'wp_head', [ $this, 'preload_popups' ], 0 );
-// TO:   add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 11 );
+// Move popup preloading back to safe timing.
+// Replace the wp_head priority 0 callback with this registration.
+add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 11 );
 ```
 
 Do not conditionally fall back to `wp_head:0` based on a list of detected page
