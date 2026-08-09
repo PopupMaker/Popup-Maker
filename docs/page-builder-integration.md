@@ -189,8 +189,9 @@ builder-owned canvas as the popup container and mirror only the Popup Maker
 theme and geometry it needs. The Bricks adapter supplies the surviving canvas
 selector and display settings; there is no separate Bricks preview script.
 
-Brizy has one similarly narrow CSS correction for its first empty editor block.
-All other integrations use the shared canvas behavior unchanged.
+Brizy has one similarly narrow CSS correction for its first editable block's
+forced viewport height. All other integrations use the shared canvas behavior
+unchanged.
 
 ## Builder-specific findings
 
@@ -276,12 +277,14 @@ Verify all of the following in a real browser:
 1. direct editor opens without a 404 or redirect;
 2. builder controls edit actual popup content;
 3. popup theme, overlay, title, close button, size, and position match settings;
-4. close is visibly present but inert in the editor;
+4. when enabled, the close control is visibly present but inert in the editor;
 5. Preview opens a real visitor page when the builder exposes that control;
 6. a builder-built main page and builder-built popup render together;
 7. multiple builder popups do not duplicate document assets;
 8. late-discovered popups retain CSS and interactivity;
-9. Gutenberg and TinyMCE popups still use their own editors; and
+9. Gutenberg and TinyMCE popups are not claimed by another builder, while
+   compatibility-specific routing such as Divi 4's classic editor remains
+   allowed; and
 10. another installed builder cannot intercept the request.
 
 ## Anti-patterns
