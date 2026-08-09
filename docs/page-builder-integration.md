@@ -113,9 +113,10 @@ ownership merely because a builder plugin is active.
 An authorized native editor request temporarily selects its adapter even before
 the builder has saved canonical ownership state. This is handled once by the
 controller rather than reimplemented in `owns_document()`. On frontend requests,
-the last authenticated builder save resolves popups that still contain metadata
-from more than one builder; otherwise the controller falls back to each active
-adapter's canonical ownership check.
+the last authenticated save resolves popups that still contain metadata from
+more than one builder when that adapter records its native save lifecycle;
+otherwise the controller falls back to each active adapter's canonical ownership
+check.
 
 `render_document( $popup_id, $is_editor_canvas )` follows three rules:
 
@@ -159,10 +160,12 @@ The repeatable policy is smaller than the implementations:
 2. Collect each popup ID at most once per request.
 3. Let WordPress print scripts in the footer whenever possible.
 4. If `wp_head` has passed, print only newly registered styles or the exact
-   builder-generated delta.
-5. Never destructively reset or emit a builder's global asset bucket wholesale.
-   Temporary snapshot-reset-restore isolation is acceptable when restoration is
-   guaranteed in `finally`.
+   builder-generated delta when one can be calculated safely. If a builder
+   replaces or reorders its generated output, emit the complete regenerated
+   output for that isolated batch rather than dropping required assets.
+5. Never destructively reset a builder's global asset bucket. Temporary
+   snapshot-reset-restore isolation is acceptable when restoration is guaranteed
+   in `finally`.
 6. Never re-run one-time builder bootstrap methods to process another popup.
 
 This scales to many popups without multiplying the builder's complete page
