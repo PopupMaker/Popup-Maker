@@ -73,9 +73,13 @@ class Visual_Composer_Builder_Test extends WP_UnitTestCase {
 
 		$_GET = [];
 
-		update_post_meta( $popup_id, 'vcv-be-editor', '1' );
+		update_post_meta( $popup_id, 'vcv-pageContent', rawurlencode( '{"elements":[]}' ) );
 
 		$this->assertTrue( $builder->owns_document( $popup_id ) );
+
+		update_post_meta( $popup_id, 'vcv-be-editor', 'gutenberg' );
+
+		$this->assertFalse( $builder->owns_document( $popup_id ) );
 	}
 
 	/** @return void */
@@ -86,7 +90,7 @@ class Visual_Composer_Builder_Test extends WP_UnitTestCase {
 
 		require_once dirname( __DIR__ ) . '/fixtures/visual-composer-api.php';
 
-		$GLOBALS['pum_visual_composer_assets'] = new class() {
+		$assets                                 = new class() {
 
 			/** @var int[] */
 			public $posts = [];
@@ -100,22 +104,85 @@ class Visual_Composer_Builder_Test extends WP_UnitTestCase {
 				$this->posts[] = absint( $post_id );
 			}
 		};
-		$GLOBALS['pum_visual_composer_events'] = 0;
+		$access                                 = new class() {
 
-		$builder = new VisualComposer( \PopupMaker\plugin() );
+			/** @var bool */
+			public $allowed = true;
+
+			/**
+			 * @param int $post_id Post ID.
+			 * @return bool
+			 */
+			// phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid -- Mirrors Visual Composer's API.
+			public function canEdit( $post_id ) {
+				unset( $post_id );
+
+				return $this->allowed;
+			}
+		};
+		$events                                 = new class() {
+
+			/** @var array<string,callable> */
+			public $listeners = [];
+
+			/**
+			 * @param string   $event    Event name.
+			 * @param callable $listener Event listener.
+			 * @return void
+			 */
+			public function listen( $event, $listener ) {
+				$this->listeners[ $event ] = $listener;
+			}
+		};
+		$GLOBALS['pum_visual_composer_helpers'] = [
+			'AccessUserCapabilities' => $access,
+			'AssetsEnqueue'          => $assets,
+			'Events'                 => $events,
+		];
+		$GLOBALS['pum_visual_composer_events']  = 0;
+
+		$builder  = new class( \PopupMaker\plugin() ) extends VisualComposer {
+
+			/** @var int */
+			public $remembered_owner = 0;
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return void
+			 */
+			protected function remember_document_owner( $popup_id ) {
+				$this->remembered_owner = absint( $popup_id );
+			}
+		};
+		$popup_id = self::factory()->post->create( [ 'post_type' => 'popup' ] );
+
+		$this->assertTrue( $builder->can_edit_document( $popup_id ) );
+		$access->allowed = false;
+		$this->assertFalse( $builder->can_edit_document( $popup_id ) );
+		$access->allowed = true;
+
+		$builder->register_hooks();
+		$this->assertArrayHasKey( 'vcv:api:postSaved', $events->listeners );
+
+		update_post_meta( $popup_id, 'vcv-pageContent', rawurlencode( '{"elements":[]}' ) );
+		call_user_func( $events->listeners['vcv:api:postSaved'], $popup_id, get_post( $popup_id ) );
+		$this->assertSame( $popup_id, $builder->remembered_owner );
+
 		$builder->collect_document_assets( 123 );
 		$builder->collect_document_assets( 123 );
 		$builder->collect_document_assets( 456 );
 		$builder->flush_preloaded_assets();
 		$builder->flush_preloaded_assets();
 
-		$this->assertSame( [ 123, 456 ], $GLOBALS['pum_visual_composer_assets']->posts );
+		$this->assertSame( [ 123, 456 ], $assets->posts );
 		$this->assertSame( 1, $GLOBALS['pum_visual_composer_events'] );
 
 		$builder->collect_document_assets( 789 );
 		$builder->finalize_document_assets( true );
 
-		$this->assertSame( [ 123, 456, 789 ], $GLOBALS['pum_visual_composer_assets']->posts );
+		$this->assertSame( [ 123, 456, 789 ], $assets->posts );
 		$this->assertSame( 2, $GLOBALS['pum_visual_composer_events'] );
+
+		remove_action( 'wp_enqueue_scripts', [ $builder, 'flush_preloaded_assets' ], 12 );
 	}
 }

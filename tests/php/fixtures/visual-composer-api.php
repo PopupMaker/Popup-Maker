@@ -13,7 +13,9 @@
  * @return object|null
  */
 function vchelper( $service ) {
-	return 'AssetsEnqueue' === $service ? $GLOBALS['pum_visual_composer_assets'] : null;
+	return isset( $GLOBALS['pum_visual_composer_helpers'][ $service ] )
+		? $GLOBALS['pum_visual_composer_helpers'][ $service ]
+		: null;
 }
 
 /**

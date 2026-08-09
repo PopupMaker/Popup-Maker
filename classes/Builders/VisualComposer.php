@@ -49,6 +49,71 @@ class VisualComposer extends PageBuilder {
 	 */
 	public function register_hooks() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'flush_preloaded_assets' ], 12 );
+
+		if ( ! function_exists( 'vchelper' ) ) {
+			return;
+		}
+
+		try {
+			$events = vchelper( 'Events' );
+
+			if ( is_object( $events ) && method_exists( $events, 'listen' ) ) {
+				$events->listen( 'vcv:api:postSaved', [ $this, 'remember_saved_document' ] );
+			}
+		} catch ( \Throwable $error ) {
+			unset( $error );
+		}
+	}
+
+	/**
+	 * Honor Visual Composer's Role Manager and post access rules.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	public function can_edit_document( $popup_id ) {
+		if ( ! function_exists( 'vchelper' ) ) {
+			return false;
+		}
+
+		try {
+			$access = vchelper( 'AccessUserCapabilities' );
+
+			return is_object( $access ) &&
+				method_exists( $access, 'canEdit' ) &&
+				(bool) $access->canEdit( absint( $popup_id ) );
+		} catch ( \Throwable $error ) {
+			unset( $error );
+
+			return false;
+		}
+	}
+
+	/**
+	 * Remember Visual Composer after its authenticated save event.
+	 *
+	 * Parameter names mirror Visual Composer's associative event payload.
+	 *
+	 * @param mixed $sourceId Saved post ID.
+	 * @param mixed $post     Saved post object.
+	 *
+	 * @return void
+	 */
+	public function remember_saved_document( $sourceId = 0, $post = null ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+		unset( $post );
+
+		if ( ! is_numeric( $sourceId ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+			return;
+		}
+
+		$popup_id = absint( $sourceId ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+
+		if ( ! $popup_id || ! $this->owns_document( $popup_id ) ) {
+			return;
+		}
+
+		$this->remember_document_owner( $popup_id );
 	}
 
 	/**
@@ -90,7 +155,12 @@ class VisualComposer extends PageBuilder {
 	 * @return bool
 	 */
 	public function owns_document( $popup_id ) {
-		return (bool) get_post_meta( absint( $popup_id ), 'vcv-be-editor', true );
+		$popup_id     = absint( $popup_id );
+		$page_content = get_post_meta( $popup_id, 'vcv-pageContent', true );
+		$saved_editor = get_post_meta( $popup_id, 'vcv-be-editor', true );
+
+		// Mirrors Visual Composer's Gutenberg::isVisualComposerPage() marker.
+		return ! empty( $page_content ) && 'gutenberg' !== $saved_editor;
 	}
 
 	/**
