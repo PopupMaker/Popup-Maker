@@ -69,7 +69,7 @@ class Visual_Composer_Builder_Test extends WP_UnitTestCase {
 			'vcv-source-id' => (string) $popup_id,
 		];
 
-		$this->assertTrue( $builder->owns_document( $popup_id ) );
+		$this->assertFalse( $builder->owns_document( $popup_id ), 'A request alone must not claim frontend ownership.' );
 
 		$_GET = [];
 

@@ -90,13 +90,7 @@ class VisualComposer extends PageBuilder {
 	 * @return bool
 	 */
 	public function owns_document( $popup_id ) {
-		$popup_id = absint( $popup_id );
-
-		if ( $popup_id && $popup_id === $this->get_requested_popup_id() ) {
-			return true;
-		}
-
-		return (bool) get_post_meta( $popup_id, 'vcv-be-editor', true );
+		return (bool) get_post_meta( absint( $popup_id ), 'vcv-be-editor', true );
 	}
 
 	/**
