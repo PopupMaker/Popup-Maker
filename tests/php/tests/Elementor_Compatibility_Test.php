@@ -8,6 +8,8 @@
 use PopupMaker\Base\PageBuilder;
 use PopupMaker\Builders\Elementor;
 
+require_once __DIR__ . '/fixtures/class-elementor-plugin.php';
+
 /**
  * Test Elementor popup preview requests without loading Elementor itself.
  */
@@ -26,7 +28,8 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 
 	/** @return void */
 	public function tearDown(): void {
-		$_GET = $this->original_get;
+		$_GET                        = $this->original_get;
+		\Elementor\Plugin::$instance = null;
 		wp_set_current_user( 0 );
 
 		parent::tearDown();
@@ -157,9 +160,70 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 		$builder->register_hooks();
 
 		$this->assertSame( 10, has_action( 'elementor/editor/after_save', [ $builder, 'remember_saved_document' ] ) );
+		$this->assertSame( 11, has_action( 'template_redirect', [ $builder, 'disable_canvas_content_filter' ] ) );
 
 		remove_action( 'elementor/editor/after_save', [ $builder, 'remember_saved_document' ], 10 );
+		remove_action( 'template_redirect', [ $builder, 'disable_canvas_content_filter' ], 11 );
 		remove_filter( 'elementor/document/urls/wp_preview', [ $builder, 'filter_preview_url' ], 10 );
+	}
+
+	/** @return void */
+	public function test_elementor_canvas_skips_its_native_content_render() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$this->set_elementor_request( $popup_id );
+
+		$frontend  = new class() {
+
+			/** @var int */
+			public $render_count = 0;
+
+			/** @return void */
+			public function remove_content_filter() {
+				remove_filter( 'the_content', [ $this, 'apply_builder_in_content' ], 9 );
+			}
+
+			/**
+			 * @param mixed $content Post content.
+			 * @return mixed
+			 */
+			public function apply_builder_in_content( $content ) {
+				++$this->render_count;
+
+				return $content;
+			}
+		};
+		$elementor = new \Elementor\Plugin();
+
+		$elementor->frontend         = $frontend;
+		\Elementor\Plugin::$instance = $elementor;
+
+		$builder = new class( \PopupMaker\plugin(), $popup_id ) extends Elementor {
+
+			/** @var int */
+			private $canvas_popup_id;
+
+			/**
+			 * @param \PopupMaker\Plugin\Core $container Plugin container.
+			 * @param int                     $popup_id  Canvas popup ID.
+			 */
+			public function __construct( $container, $popup_id ) {
+				parent::__construct( $container );
+
+				$this->canvas_popup_id = $popup_id;
+			}
+
+			/** @return int */
+			protected function get_canvas_popup_id() {
+				return $this->canvas_popup_id;
+			}
+		};
+
+		add_filter( 'the_content', [ $frontend, 'apply_builder_in_content' ], 9 );
+
+		$builder->disable_canvas_content_filter();
+		apply_filters( 'the_content', 'Theme loop content.' );
+
+		$this->assertSame( 0, $frontend->render_count );
 	}
 
 	/**

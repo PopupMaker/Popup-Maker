@@ -45,6 +45,40 @@ class Elementor extends PageBuilder {
 		add_post_type_support( 'popup', 'elementor' );
 		add_filter( 'elementor/document/urls/wp_preview', [ $this, 'filter_preview_url' ], 10, 2 );
 		add_action( 'elementor/editor/after_save', [ $this, 'remember_saved_document' ], 10, 2 );
+		add_action( 'template_redirect', [ $this, 'disable_canvas_content_filter' ], 11 );
+	}
+
+	/**
+	 * Prevent Elementor from rendering the canvas document in the theme loop.
+	 *
+	 * Popup Maker renders the document once inside the popup. Elementor's normal
+	 * priority-9 content filter ignores the incoming content and renders the
+	 * current post again, so returning an empty string later cannot prevent the
+	 * duplicate work. Remove that filter only on this authorized canvas request.
+	 *
+	 * @return void
+	 */
+	public function disable_canvas_content_filter() {
+		$popup_id = $this->get_requested_popup_id();
+
+		if ( ! $popup_id || $popup_id !== $this->get_canvas_popup_id() ) {
+			return;
+		}
+
+		if ( ! class_exists( '\Elementor\Plugin' ) ) {
+			return;
+		}
+
+		$elementor = \Elementor\Plugin::$instance;
+
+		if (
+			is_object( $elementor ) &&
+			isset( $elementor->frontend ) &&
+			is_object( $elementor->frontend ) &&
+			method_exists( $elementor->frontend, 'remove_content_filter' )
+		) {
+			$elementor->frontend->remove_content_filter();
+		}
 	}
 
 	/**
@@ -216,5 +250,18 @@ class Elementor extends PageBuilder {
 		$document = \Elementor\Plugin::$instance->documents->get( $popup_id );
 
 		return is_object( $document ) ? $document : null;
+	}
+
+	/**
+	 * Get the popup rendered by the shared authorized canvas.
+	 *
+	 * @return int
+	 */
+	protected function get_canvas_popup_id() {
+		$builders = $this->container->get_controller( 'Builders' );
+
+		return $builders instanceof \PopupMaker\Controllers\Builders
+			? $builders->get_canvas_popup_id()
+			: 0;
 	}
 }
