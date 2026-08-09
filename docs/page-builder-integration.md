@@ -97,8 +97,11 @@ also suppress Popup Maker's normal live popups so they cannot cover or interfere
 with the builder interface.
 
 Editor GET requests carry no trustworthy save nonce. They may select an adapter
-for the current request, but must never persist document ownership. Saved builder
-state remains the source of truth for normal frontend requests.
+for the current request, but must never persist document ownership. When a native
+editor successfully saves, its adapter may call the base ownership helper from
+that builder's authenticated save lifecycle. The controller then records the
+last builder that saved the popup after repeating the common post and capability
+checks.
 
 ## Document ownership and rendering
 
@@ -106,10 +109,12 @@ state remains the source of truth for normal frontend requests.
 its document API, editor-mode helper, or stable post meta. Do not infer
 ownership merely because a builder plugin is active.
 
-There is one exception for a first edit: a builder may not save its ownership
-meta until the document is first updated. In that case the adapter may claim an
-already-authorized native request for that same popup. Visual Composer uses
-this pattern.
+An authorized native editor request temporarily selects its adapter even before
+the builder has saved canonical ownership state. This is handled once by the
+controller rather than reimplemented in `owns_document()`. On frontend requests,
+the last authenticated builder save resolves popups that still contain metadata
+from more than one builder; otherwise the controller falls back to each active
+adapter's canonical ownership check.
 
 `render_document( $popup_id, $is_editor_canvas )` follows three rules:
 
@@ -144,7 +149,7 @@ the same mechanism. They do not:
 | Divi | Use Divi's normal content and asset pipeline. |
 | Beaver Builder | Let Beaver's bundled Popup Maker integration render and enqueue the layout. |
 | SiteOrigin | Let SiteOrigin's bundled Popup Maker content filter render the layout and its secondary CSS. |
-| Brizy | Add the popup through Brizy's asset manager, deduplicate document IDs, and emit only late styles/head-code deltas when the head has passed. |
+| Brizy | Add the popup through Brizy's asset manager, deduplicate document IDs, and emit append-only late deltas when possible. If Brizy replaces or reorders a generated bucket, preserve its complete regenerated output rather than risk dropping required code. |
 | Visual Composer | Add the popup ID to Visual Composer's `AssetsEnqueue` list and flush its CSS-list event once per collected batch. |
 
 The repeatable policy is smaller than the implementations:
