@@ -150,8 +150,19 @@ class Bricks extends PageBuilder {
 			return $attributes;
 		}
 
-		$classes = isset( $attributes['class'] ) ? $attributes['class'] : [];
-		$classes = is_array( $classes ) ? $classes : explode( ' ', (string) $classes );
+		$raw_classes = isset( $attributes['class'] ) && is_array( $attributes['class'] )
+			? $attributes['class']
+			: [ $attributes['class'] ?? '' ];
+		$classes     = [];
+
+		foreach ( $raw_classes as $raw_class ) {
+			if ( ! is_scalar( $raw_class ) ) {
+				continue;
+			}
+
+			$tokens  = preg_split( '/\s+/', trim( (string) $raw_class ), -1, PREG_SPLIT_NO_EMPTY );
+			$classes = array_merge( $classes, is_array( $tokens ) ? $tokens : [] );
+		}
 
 		$attributes['class'] = array_values( array_unique( array_merge( $classes, [ 'pum-container', 'pum-content' ] ) ) );
 

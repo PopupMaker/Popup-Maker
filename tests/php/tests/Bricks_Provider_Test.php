@@ -427,6 +427,12 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 				[ 'pum-container', 'pum-content' ],
 				$this->provider->filter_content_attributes( [] )['class']
 			);
+			$this->assertSame(
+				[ 'existing', 'split', 'classes', '7', 'pum-container', 'pum-content' ],
+				$this->provider->filter_content_attributes(
+					[ 'class' => [ 'existing split', new stdClass(), 'classes', 7, [] ] ]
+				)['class']
+			);
 			$this->assertSame( PHP_INT_MAX, has_action( 'save_post_popup', [ $this->provider, 'remember_saved_document' ] ) );
 
 			$this->provider->enqueue_canvas_assets();
