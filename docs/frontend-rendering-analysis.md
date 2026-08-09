@@ -134,21 +134,10 @@ priority 10 always finish first, regardless of plugin registration order.
 // TO:   add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 11 );
 ```
 
-### Conditional Loading
-```php
-public function init() {
-    $timing_hook = $this->has_page_builder() ? 'wp_enqueue_scripts' : 'wp_head';
-    $timing_priority = $this->has_page_builder() ? 11 : 0;
-
-    add_action( $timing_hook, [ $this, 'preload_popups' ], $timing_priority );
-}
-
-private function has_page_builder() {
-    return is_plugin_active('bb-plugin/fl-builder.php') ||
-           is_plugin_active('elementor/elementor.php') ||
-           is_plugin_active('divi-builder/divi-builder.php');
-}
-```
+Do not conditionally fall back to `wp_head:0` based on a list of detected page
+builders. Builder detection is necessarily incomplete, and the early path can
+break an integration that is active but not listed. Popup preloading should use
+`wp_enqueue_scripts:11` consistently.
 
 ## Testing Verification
 

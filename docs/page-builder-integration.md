@@ -80,7 +80,8 @@ The shared controller resolves that mismatch as follows:
 5. The main loop's copy of `the_content` is suppressed on the editable canvas.
 6. Popup Maker's normal footer renderer outputs exactly one popup with its real
    theme, overlay, container, size, position, title, and close button.
-7. Live triggers are removed and the close button remains visible but inert.
+7. Live triggers are removed and, when enabled, the close button remains
+   visible but inert.
 8. The owning adapter supplies native builder markup or the mount node required
    by the builder.
 
