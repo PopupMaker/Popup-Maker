@@ -168,7 +168,6 @@ class Popup_Maker {
 		PUM_Admin::init();
 		PUM_Utils_Upgrades::instance();
 		PUM_Newsletters::init();
-		PUM_Previews::init();
 		PUM_Integrations::init();
 		PUM_Privacy::init();
 

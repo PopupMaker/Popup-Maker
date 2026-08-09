@@ -33,6 +33,9 @@
 			"path": "./packages/block-library"
 		},
 		{
+			"path": "./packages/builder-preview"
+		},
+		{
 			"path": "./packages/components"
 		},
 		{

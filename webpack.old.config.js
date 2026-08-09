@@ -106,7 +106,8 @@ const config = {
 		maxAge: isProduction ? 1000 * 60 * 60 * 24 * 7 : 1000 * 60 * 60 * 24,
 		compression: 'gzip',
 		name: `popup-maker-legacy-${ NODE_ENV }`,
-		version: require( path.resolve( process.cwd(), 'package.json' ) ).version,
+		version: require( path.resolve( process.cwd(), 'package.json' ) )
+			.version,
 	},
 	optimization: {
 		...defaultConfig.optimization,
@@ -146,10 +147,6 @@ const config = {
 			// combinedOutputFile: '../plugin-assets.php',
 		} ),
 	],
-	optimization: {
-		...defaultConfig.optimization,
-		minimize: NODE_ENV !== 'development',
-	},
 };
 
 module.exports = config;

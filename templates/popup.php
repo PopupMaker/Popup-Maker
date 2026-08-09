@@ -56,7 +56,7 @@ $has_title = pum_get_popup_title() !== '';
 		 */
 		?>
 		<?php if ( pum_show_close_button() ) : ?>
-			<button type="button" class="<?php pum_popup_classes( null, 'close' ); ?>" aria-label="<?php esc_attr_e( 'Close', 'popup-maker' ); ?>">
+			<button<?php pum_popup_close_button_attributes(); ?>>
 			<?php pum_popup_close_text(); ?>
 			</button>
 		<?php endif; ?>
