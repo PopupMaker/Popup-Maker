@@ -8,10 +8,7 @@
 
 namespace PopupMaker\Builders;
 
-use PopupMaker\Interfaces\BuilderProvider;
-use PopupMaker\Interfaces\BuilderProvider\EditsPopups;
-use PopupMaker\Interfaces\BuilderProvider\LoadsDocumentAssets;
-use PopupMaker\Interfaces\BuilderProvider\RendersDocuments;
+use PopupMaker\Base\PageBuilder;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,14 +33,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.25.0
  */
-class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDocumentAssets {
-
-	/**
-	 * Plugin container.
-	 *
-	 * @var \PopupMaker\Plugin\Core
-	 */
-	private $container;
+class Bricks extends PageBuilder {
 
 	/**
 	 * CSS generated for popup documents and awaiting emission.
@@ -75,24 +65,6 @@ class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDoc
 	 * @var bool|null
 	 */
 	private $stored_popup_support;
-
-	/**
-	 * Construct the provider.
-	 *
-	 * @param \PopupMaker\Plugin\Core $container Plugin container.
-	 */
-	public function __construct( $container ) {
-		$this->container = $container;
-	}
-
-	/**
-	 * Provider key.
-	 *
-	 * @return string
-	 */
-	public function key() {
-		return 'bricks';
-	}
 
 	/**
 	 * Whether Bricks is active and exposes every API used here.
@@ -454,7 +426,7 @@ class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDoc
 	 *
 	 * @return bool
 	 */
-	public function is_builder_document( $popup_id ) {
+	public function owns_document( $popup_id ) {
 		if ( ! $this->is_available() ) {
 			return false;
 		}
@@ -471,11 +443,12 @@ class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDoc
 	 * `<main id="brx-content">`, which is wrong inside a popup container and
 	 * would duplicate that ID when a Bricks page renders on the same request.
 	 *
-	 * @param int $popup_id Popup ID.
+	 * @param int  $popup_id         Popup ID.
+	 * @param bool $is_editor_canvas Whether this is the native editor canvas.
 	 *
 	 * @return string|null
 	 */
-	public function render_document( $popup_id ) {
+	public function render_document( $popup_id, $is_editor_canvas = false ) {
 		if ( ! $this->is_available() ) {
 			return null;
 		}
@@ -494,6 +467,11 @@ class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDoc
 
 		if ( ! is_array( $elements ) ) {
 			return null;
+		}
+
+		// Bricks' Vue canvas renders the editable tree into `#brx-content`.
+		if ( $is_editor_canvas ) {
+			return '';
 		}
 
 		$popup_post = get_post( $popup_id );
@@ -546,6 +524,9 @@ class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDoc
 				wp_reset_postdata();
 			}
 		}
+
+		$this->collect_document_assets( $popup_id );
+		$this->finalize_document_assets( did_action( 'wp_head' ) && ! doing_action( 'wp_head' ) );
 
 		return is_string( $rendered ) ? $rendered : null;
 	}
@@ -772,6 +753,9 @@ class Bricks implements BuilderProvider, EditsPopups, RendersDocuments, LoadsDoc
 			// Bricks' canvas stretches its content wrapper with flexbox.
 			'body.pum-builder-preview #brx-content { flex: initial; }' .
 			'body.pum-builder-preview .pum-container .brxe-container { max-width: 100%; }' .
+			'body.pum-builder-preview > .pum > .pum-container { display: none !important; }' .
+			'body.pum-builder-preview > .pum { pointer-events: none !important; z-index: 0 !important; }' .
+			'body.pum-builder-preview > .brx-body { position: relative; z-index: 1; }' .
 			'body.pum-builder-preview .pum-builder-canvas-close-anchor { display: none !important; }'
 		);
 

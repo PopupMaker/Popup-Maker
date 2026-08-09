@@ -196,6 +196,13 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 		$this->assertSame( 'header', \Bricks\Frontend::$area );
 	}
 
+	/** @return void */
+	public function test_editor_canvas_uses_bricks_owned_render_tree() {
+		$popup_id = $this->create_bricks_popup( 'canvastree' );
+
+		$this->assertSame( '', $this->provider->render_document( $popup_id, true ) );
+	}
+
 	/**
 	 * Rendering restores the global post.
 	 *
@@ -351,8 +358,7 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 			'p'              => (string) $popup_id,
 			'bricks_preview' => (string) time(),
 		];
-		$builders     = \PopupMaker\plugin()->get_controller( 'Builders' );
-		$builders->providers()->register( $this->provider );
+		$builders     = $this->make_controller();
 
 		$this->go_to(
 			add_query_arg(
@@ -387,6 +393,7 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 			$this->assertSame( '1', $display['position_fixed'] );
 			$this->assertSame( '<i class="fas fa-camera"></i>', $display['close_content'] );
 		} finally {
+			$this->remove_controller_hooks( $builders );
 			wp_dequeue_script( 'pum-bricks-builder-preview' );
 			wp_deregister_script( 'pum-bricks-builder-preview' );
 			$_GET = $previous_get;
@@ -407,7 +414,7 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertFalse( $this->provider->is_builder_document( $popup_id ) );
+		$this->assertFalse( $this->provider->owns_document( $popup_id ) );
 		$this->assertNull( $this->provider->render_document( $popup_id ) );
 
 		$empty_popup_id = $this->factory->post->create(
@@ -421,7 +428,7 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 		update_post_meta( $empty_popup_id, '_bricks_page_content_2', [] );
 		update_post_meta( $empty_popup_id, '_bricks_editor_mode', 'bricks' );
 
-		$this->assertTrue( $this->provider->is_builder_document( $empty_popup_id ) );
+		$this->assertTrue( $this->provider->owns_document( $empty_popup_id ) );
 		$this->assertSame( '', $this->provider->render_document( $empty_popup_id ) );
 	}
 
@@ -439,5 +446,52 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 		$this->assertIsString( $rendered );
 		$this->assertStringNotContainsString( 'brx-content', $rendered );
 		$this->assertStringContainsString( 'brxe-heading', $rendered );
+	}
+
+	/** @return \PopupMaker\Controllers\Builders */
+	private function make_controller() {
+		$controller = new class( \PopupMaker\plugin(), $this->provider ) extends \PopupMaker\Controllers\Builders {
+
+			/** @var Bricks */
+			private $test_builder;
+
+			/**
+			 * @param \PopupMaker\Plugin\Core $container Plugin container.
+			 * @param Bricks                  $builder Test builder.
+			 */
+			public function __construct( $container, Bricks $builder ) {
+				$this->test_builder = $builder;
+
+				parent::__construct( $container );
+			}
+
+			/** @return Bricks[] */
+			protected function default_builders() {
+				return [ $this->test_builder ];
+			}
+		};
+		$controller->init();
+
+		return $controller;
+	}
+
+	/**
+	 * Remove hooks registered by the isolated test controller.
+	 *
+	 * @param \PopupMaker\Controllers\Builders $controller Test controller.
+	 * @return void
+	 */
+	private function remove_controller_hooks( $controller ) {
+		remove_action( 'plugins_loaded', [ $controller, 'boot_builders' ], 20 );
+		remove_action( 'after_setup_theme', [ $controller, 'boot_builders' ], 20 );
+		remove_action( 'init', [ $controller, 'boot_builders' ], 20 );
+		remove_filter( 'request', [ $controller, 'allow_builder_request' ] );
+		remove_filter( 'body_class', [ $controller, 'filter_canvas_body_classes' ] );
+		remove_filter( 'the_content', [ $controller, 'suppress_canvas_content' ], PHP_INT_MAX );
+		remove_filter( 'pum_popup_is_loadable', [ $controller, 'is_canvas_popup_loadable' ], 1001 );
+		remove_filter( 'pum_popup_data_attr', [ $controller, 'filter_canvas_data_attr' ], 1001 );
+		remove_filter( 'pum_popup_get_public_settings', [ $controller, 'filter_canvas_settings' ], 1001 );
+		remove_filter( 'pum_popup_content', [ $controller, 'render_popup_content' ], 1000 );
+		remove_action( 'wp_enqueue_scripts', [ $controller, 'preload_canvas_popup' ], 11 );
 	}
 }
