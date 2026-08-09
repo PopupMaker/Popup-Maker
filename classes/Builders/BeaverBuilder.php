@@ -74,6 +74,31 @@ class BeaverBuilder extends PageBuilder {
 	}
 
 	/**
+	 * Honor Beaver Builder's own role-access setting.
+	 *
+	 * @param mixed $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	public function can_edit_document( $popup_id ) {
+		if (
+			! is_numeric( $popup_id ) ||
+			! class_exists( '\\FLBuilderUserAccess' ) ||
+			! method_exists( '\\FLBuilderUserAccess', 'current_user_can' )
+		) {
+			return false;
+		}
+
+		try {
+			return (bool) \FLBuilderUserAccess::current_user_can( 'builder_access' );
+		} catch ( \Throwable $error ) {
+			unset( $error );
+
+			return false;
+		}
+	}
+
+	/**
 	 * Whether Beaver is rendering the editable iframe or legacy canvas.
 	 *
 	 * Beaver 2.8+ uses a shell marked by `fl_builder_ui` and renders the page in

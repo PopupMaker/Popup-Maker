@@ -11,6 +11,10 @@ if ( ! class_exists( 'FLBuilderPopupMaker' ) ) {
 	require_once __DIR__ . '/fixtures/class-fl-builder-popup-maker.php';
 }
 
+if ( ! class_exists( 'FLBuilderUserAccess' ) ) {
+	require_once __DIR__ . '/fixtures/class-fl-builder-user-access.php';
+}
+
 /**
  * Verify the small compatibility layer around Beaver's native integration.
  */
@@ -33,7 +37,27 @@ class Beaver_Builder_Test extends WP_UnitTestCase {
 		wp_set_current_user( 0 );
 		remove_action( 'wp', 'FLBuilderPopupMaker::redirect_to_admin_edit' );
 
+		if ( property_exists( 'FLBuilderUserAccess', 'can_edit' ) ) {
+			FLBuilderUserAccess::$can_edit = true;
+		}
+
 		parent::tearDown();
+	}
+
+	/** @return void */
+	public function test_builder_access_uses_beaver_role_restriction() {
+		if ( ! property_exists( 'FLBuilderUserAccess', 'can_edit' ) ) {
+			$this->markTestSkipped( 'The active Beaver Builder class is not the test double.' );
+		}
+
+		$builder = new BeaverBuilder( \PopupMaker\plugin() );
+
+		FLBuilderUserAccess::$can_edit = false;
+		$this->assertFalse( $builder->can_edit_document( 123 ) );
+
+		FLBuilderUserAccess::$can_edit = true;
+		$this->assertTrue( $builder->can_edit_document( 123 ) );
+		$this->assertFalse( $builder->can_edit_document( [] ) );
 	}
 
 	/** @return void */
