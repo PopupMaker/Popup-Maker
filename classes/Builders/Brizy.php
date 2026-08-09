@@ -34,6 +34,13 @@ class Brizy extends PageBuilder {
 	private $assets_finalized = false;
 
 	/**
+	 * Style queue before Brizy collects the current late document batch.
+	 *
+	 * @var string[]|null
+	 */
+	private $style_queue_before_collection;
+
+	/**
 	 * Whether Brizy's editor API is available.
 	 *
 	 * @return bool
@@ -223,6 +230,14 @@ class Brizy extends PageBuilder {
 				return;
 			}
 
+			if ( null === $this->style_queue_before_collection || $this->assets_finalized ) {
+				global $wp_styles;
+
+				$this->style_queue_before_collection = $wp_styles instanceof \WP_Styles
+					? (array) $wp_styles->queue
+					: [];
+			}
+
 			$manager->enqueuePost( $post );
 			$this->collected_documents[ $popup_id ] = true;
 			$this->assets_finalized                 = false;
@@ -268,7 +283,9 @@ class Brizy extends PageBuilder {
 
 		global $wp_styles;
 
-		$before           = $wp_styles instanceof \WP_Styles ? (array) $wp_styles->queue : [];
+		$before           = is_array( $this->style_queue_before_collection )
+			? $this->style_queue_before_collection
+			: ( $wp_styles instanceof \WP_Styles ? (array) $wp_styles->queue : [] );
 		$head_code_before = $this->capture_head_code_assets( $manager );
 
 		try {
@@ -302,7 +319,8 @@ class Brizy extends PageBuilder {
 			echo $head_code_after;
 		}
 
-		$this->assets_finalized = true;
+		$this->style_queue_before_collection = null;
+		$this->assets_finalized              = true;
 
 		return true;
 	}

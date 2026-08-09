@@ -124,6 +124,7 @@ class Brizy_Builder_Test extends WP_UnitTestCase {
 				unset( $post );
 
 				++self::$enqueue_count;
+				wp_enqueue_style( 'pum-brizy-test-document' );
 			}
 
 			/** @return void */
@@ -149,20 +150,26 @@ class Brizy_Builder_Test extends WP_UnitTestCase {
 		);
 
 		\Brizy_Public_Main::$content = '<div>[' . $shortcode . ']</div>';
+		wp_register_style( 'pum-brizy-test-document', home_url( '/brizy-test.css' ), [], 'test' );
 
 		try {
 			$builder = new Brizy( \PopupMaker\plugin() );
 			$content = $builder->render_document( 123 );
 			$builder->render_document( 123 );
+			ob_start();
 			$builder->finalize_document_assets( true );
+			$late_assets = ob_get_clean();
 			$builder->finalize_document_assets( true );
 		} finally {
 			remove_shortcode( $shortcode );
+			wp_dequeue_style( 'pum-brizy-test-document' );
+			wp_deregister_style( 'pum-brizy-test-document' );
 		}
 
 		$this->assertIsString( $content );
 		$this->assertStringNotContainsString( '[' . $shortcode . ']', $content );
 		$this->assertStringContainsString( 'id="brizy-shortcode-rendered"', $content );
+		$this->assertStringContainsString( 'brizy-test.css', $late_assets );
 		$this->assertSame( 1, \Brizy_Public_AssetEnqueueManager::$enqueue_count );
 		$this->assertSame( 1, \Brizy_Public_AssetEnqueueManager::$finalize_count );
 	}
