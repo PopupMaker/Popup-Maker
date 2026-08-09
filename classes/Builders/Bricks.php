@@ -89,6 +89,7 @@ class Bricks extends PageBuilder {
 	public function register_hooks() {
 		$this->register_post_type_support();
 
+		add_action( 'save_post_popup', [ $this, 'remember_saved_document' ], PHP_INT_MAX, 3 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_canvas_assets' ], 20 );
 		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
 
@@ -100,6 +101,41 @@ class Bricks extends PageBuilder {
 		 * theme styles apply to the element the editor already manages.
 		 */
 		add_filter( 'bricks/content/attributes', [ $this, 'filter_content_attributes' ] );
+	}
+
+	/**
+	 * Remember Bricks after its authenticated AJAX save reaches WordPress.
+	 *
+	 * @param mixed $post_id Saved post ID.
+	 * @param mixed $post    Saved post object.
+	 * @param mixed $update  Whether this was an update.
+	 *
+	 * @return void
+	 */
+	public function remember_saved_document( $post_id, $post = null, $update = false ) {
+		unset( $post, $update );
+
+		if ( ! wp_doing_ajax() || ! is_numeric( $post_id ) ) {
+			return;
+		}
+
+		// Bricks verifies the same nonce and post access before saving. Repeat the
+		// request identity checks because this callback is attached to a core hook.
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		if (
+			! isset( $_POST['action'], $_POST['postId'], $_POST['nonce'] ) ||
+			! is_scalar( $_POST['action'] ) ||
+			! is_scalar( $_POST['postId'] ) ||
+			! is_scalar( $_POST['nonce'] ) ||
+			'bricks_save_post' !== sanitize_key( wp_unslash( $_POST['action'] ) ) ||
+			absint( wp_unslash( $_POST['postId'] ) ) !== absint( $post_id ) ||
+			! check_ajax_referer( 'bricks-nonce-builder', 'nonce', false )
+		) {
+			return;
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		$this->remember_document_owner( absint( $post_id ) );
 	}
 
 	/**
@@ -117,7 +153,7 @@ class Bricks extends PageBuilder {
 		$classes = isset( $attributes['class'] ) ? $attributes['class'] : [];
 		$classes = is_array( $classes ) ? $classes : explode( ' ', (string) $classes );
 
-		$attributes['class'] = array_values( array_unique( array_merge( $classes, [ 'pum-container' ] ) ) );
+		$attributes['class'] = array_values( array_unique( array_merge( $classes, [ 'pum-container', 'pum-content' ] ) ) );
 
 		return $attributes;
 	}
@@ -133,13 +169,21 @@ class Bricks extends PageBuilder {
 	 * @return mixed Filtered body classes.
 	 */
 	public function filter_canvas_body_classes( $classes ) {
-		if ( ! is_array( $classes ) || ! $this->get_canvas_popup() ) {
+		$popup = $this->get_canvas_popup();
+
+		if ( ! is_array( $classes ) || ! pum_is_popup( $popup ) ) {
 			return $classes;
+		}
+
+		$theme_classes = array_map( 'sanitize_html_class', $this->get_popup_theme_classes() );
+
+		if ( $popup->get_setting( 'overlay_disabled' ) ) {
+			$theme_classes[] = 'pum-overlay-disabled';
 		}
 
 		return array_values(
 			array_unique(
-				array_merge( $classes, array_map( 'sanitize_html_class', $this->get_popup_theme_classes() ) )
+				array_merge( $classes, $theme_classes )
 			)
 		);
 	}

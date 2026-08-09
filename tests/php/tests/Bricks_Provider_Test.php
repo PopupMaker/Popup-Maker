@@ -387,8 +387,9 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 			$popup_id,
 			'popup_settings',
 			[
-				'position_fixed' => true,
-				'close_text'     => 'fas fa-camera',
+				'position_fixed'   => true,
+				'overlay_disabled' => true,
+				'close_text'       => 'fas fa-camera',
 			]
 		);
 
@@ -421,6 +422,12 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 				$canvas_body_classes
 			);
 			$this->assertGreaterThan( 1, count( $canvas_body_classes ), 'The popup theme must remain above Bricks-owned content.' );
+			$this->assertContains( 'pum-overlay-disabled', $canvas_body_classes );
+			$this->assertSame(
+				[ 'pum-container', 'pum-content' ],
+				$this->provider->filter_content_attributes( [] )['class']
+			);
+			$this->assertSame( 10, has_action( 'save_post_popup', [ $this->provider, 'remember_saved_document' ] ) );
 
 			$this->provider->enqueue_canvas_assets();
 
