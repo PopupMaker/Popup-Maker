@@ -89,11 +89,13 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT DISTINCT form_name, element_id, post_id
-				FROM %i
-				WHERE form_name IS NOT NULL AND form_name != ''
-				ORDER BY form_name ASC",
-				$table_name
+				"SELECT DISTINCT submissions.form_name, submissions.element_id, submissions.post_id, posts.post_title
+				FROM %i AS submissions
+				LEFT JOIN %i AS posts ON posts.ID = submissions.post_id
+				WHERE submissions.form_name IS NOT NULL AND submissions.form_name != ''
+				ORDER BY submissions.form_name ASC",
+				$table_name,
+				$wpdb->posts
 			)
 		);
 
@@ -103,14 +105,7 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 			$element_id = $result->element_id;
 			$form_name  = $result->form_name;
 
-			// Get post title if available.
-			$post_title = '';
-			if ( ! empty( $result->post_id ) ) {
-				$post = get_post( $result->post_id );
-				if ( $post ) {
-					$post_title = $post->post_title;
-				}
-			}
+			$post_title = isset( $result->post_title ) ? $result->post_title : '';
 
 			// Use element_id as the unique identifier.
 			$forms[ $element_id ] = [
