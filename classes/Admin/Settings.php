@@ -700,10 +700,71 @@ class PUM_Admin_Settings {
 	}
 
 	/**
+	 * Pretty-prints minified CSS for readable display/copying.
+	 *
+	 * The built core stylesheet is minified to a single line, which is
+	 * unreadable when shown in the settings textarea, so it needs to be
+	 * reformatted before being displayed to the user.
+	 *
+	 * @param string $css Minified (or already formatted) CSS.
+	 *
+	 * @return string
+	 */
+	public static function format_css( $css ) {
+		$formatted    = '';
+		$indent       = 0;
+		$in_string    = false;
+		$string_char  = '';
+		$length       = strlen( $css );
+
+		for ( $i = 0; $i < $length; $i++ ) {
+			$char = $css[ $i ];
+
+			if ( $in_string ) {
+				$formatted .= $char;
+				if ( $char === $string_char && '\\' !== $css[ $i - 1 ] ) {
+					$in_string = false;
+				}
+				continue;
+			}
+
+			switch ( $char ) {
+				case '"':
+				case "'":
+					$in_string   = true;
+					$string_char = $char;
+					$formatted  .= $char;
+					break;
+
+				case '{':
+					$formatted .= " {\n" . str_repeat( "\t", ++$indent );
+					break;
+
+				case '}':
+					$formatted .= "\n" . str_repeat( "\t", --$indent ) . "}\n" . str_repeat( "\t", $indent );
+					break;
+
+				case ';':
+					$formatted .= ";\n" . str_repeat( "\t", $indent );
+					break;
+
+				default:
+					$formatted .= $char;
+			}
+		}
+
+		// Clean up trailing whitespace and blank lines left by the pass above.
+		$formatted = preg_replace( '/[ \t]+\n/', "\n", $formatted );
+		$formatted = preg_replace( '/\n{2,}/', "\n", $formatted );
+
+		return trim( $formatted );
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function field_pum_styles() {
-		$core_styles = file_get_contents( Popup_Maker::$DIR . 'dist/assets/site' . ( is_rtl() ? '-rtl' : '' ) . '.css' );
+		$core_styles = "/** Popup Maker Core Styles */\n" . self::format_css( file_get_contents( Popup_Maker::$DIR . 'dist/assets/site' . ( is_rtl() ? '-rtl' : '' ) . '.css' ) );
 
 		$user_styles = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles() . PUM_AssetCache::generate_popup_styles();
 
@@ -727,22 +788,14 @@ class PUM_Admin_Settings {
 		<div id="pum_style_output" style="display:none;">
 			<label for="pum_core_styles"><?php esc_html_e( 'Core Styles', 'popup-maker' ); ?></label> <br />
 
-			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly">
-				<?php
-				// Ignored because this is generated CSS.
-				echo esc_html( $core_styles );
-				?>
-			</textarea>
+			<?php // Ignored because this is generated CSS. ?>
+			<textarea id="pum_core_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly"><?php echo esc_html( $core_styles ); ?></textarea>
 
 			<br /> <br />
 
 			<label for="pum_generated_styles"><?php esc_html_e( 'Generated Popup & Popup Theme Styles', 'popup-maker' ); ?></label> <br />
 
-			<textarea id="pum_generated_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly">
-				<?php
-				echo esc_html( $safe_user_styles );
-				?>
-			</textarea>
+			<textarea id="pum_generated_styles" wrap="off" style="white-space: pre; width: 100%; min-height: 200px;" readonly="readonly"><?php echo esc_html( $safe_user_styles ); ?></textarea>
 		</div>
 
 		<?php
