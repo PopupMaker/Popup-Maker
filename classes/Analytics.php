@@ -219,33 +219,38 @@ class PUM_Analytics {
 	public static function analytics_endpoint( WP_REST_Request $request ) {
 		$args = $request->get_params();
 
-		// Batch beacon: the client may send multiple events in one request as
-		// an `events` array (debounced/flush-on-exit batching). Each entry is a
-		// full event payload; process them through the same single-event path.
-		// Back-compatible — a single-event POST (top-level pid/event) still works.
-		$batch = self::parse_batch_events( $request, $args );
+		if ( $request->has_param( 'events' ) ) {
+			$events = self::parse_batch_events( $request, $args );
 
-		if ( null !== $batch ) {
-			foreach ( $batch as $event_args ) {
-				if ( is_array( $event_args ) && ! empty( $event_args['pid'] ) ) {
-					self::track( $event_args );
-				}
+			if ( is_wp_error( $events ) ) {
+				return $events;
+			}
+		} else {
+			$events = [ $args ];
+		}
+
+		$validated_events = [];
+
+		// Validate the complete payload before tracking to prevent partial batches.
+		foreach ( $events as $event_args ) {
+			$validated_event = self::validate_event( $event_args );
+
+			if ( is_wp_error( $validated_event ) ) {
+				return $validated_event;
 			}
 
+			$validated_events[] = $validated_event;
+		}
+
+		foreach ( $validated_events as $event_args ) {
+			self::track( $event_args );
+		}
+
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			self::serve_no_content();
-
-			return true;
 		}
 
-		if ( ! $args || empty( $args['pid'] ) ) {
-			return new WP_Error( 'missing_params', __( 'Missing Parameters.', 'default' ), [ 'status' => 404 ] );
-		}
-
-		self::track( $args );
-
-		self::serve_no_content();
-
-		return true;
+		return new WP_REST_Response( null, 204 );
 	}
 
 	/**
@@ -256,31 +261,72 @@ class PUM_Analytics {
 	 *
 	 * @param WP_REST_Request $request Request.
 	 * @param array           $args    Parsed params.
-	 * @return array<int,array>|null Array of event payloads, or null when not a batch.
+	 * @return array<int,array>|WP_Error Array of event payloads or an error.
 	 */
 	protected static function parse_batch_events( WP_REST_Request $request, $args ) {
 		$events = isset( $args['events'] ) ? $args['events'] : $request->get_param( 'events' );
 
-		if ( empty( $events ) ) {
-			return null;
-		}
-
 		if ( is_string( $events ) ) {
 			$decoded = json_decode( $events, true );
-			$events  = is_array( $decoded ) ? $decoded : null;
+
+			if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $decoded ) ) {
+				return new WP_Error( 'invalid_events', __( 'Invalid analytics events payload.', 'popup-maker' ), [ 'status' => 400 ] );
+			}
+
+			$events = $decoded;
 		}
 
 		if ( ! is_array( $events ) || empty( $events ) ) {
-			return null;
+			return new WP_Error( 'invalid_events', __( 'Invalid analytics events payload.', 'popup-maker' ), [ 'status' => 400 ] );
 		}
 
-		// Must be a list of event objects, not an associative single event.
-		$first = reset( $events );
-		if ( ! is_array( $first ) ) {
-			return null;
+		// Require a list of event objects, not an associative single event.
+		if ( array_values( $events ) !== $events ) {
+			return new WP_Error( 'invalid_events', __( 'Invalid analytics events payload.', 'popup-maker' ), [ 'status' => 400 ] );
 		}
 
-		return array_values( $events );
+		foreach ( $events as $event ) {
+			if ( ! is_array( $event ) ) {
+				return new WP_Error( 'invalid_events', __( 'Invalid analytics events payload.', 'popup-maker' ), [ 'status' => 400 ] );
+			}
+		}
+
+		return $events;
+	}
+
+	/**
+	 * Validate and normalize one analytics event before tracking.
+	 *
+	 * @param mixed $args Event arguments.
+	 * @return array|WP_Error Normalized event arguments or an error.
+	 */
+	protected static function validate_event( $args ) {
+		if ( ! is_array( $args ) || empty( $args['event'] ) || empty( $args['pid'] ) ) {
+			return new WP_Error( 'missing_params', __( 'Missing Parameters.', 'default' ), [ 'status' => 400 ] );
+		}
+
+		if ( ! is_string( $args['event'] ) || ! is_numeric( $args['pid'] ) ) {
+			return new WP_Error( 'invalid_params', __( 'Invalid analytics event parameters.', 'popup-maker' ), [ 'status' => 400 ] );
+		}
+
+		$args['event'] = sanitize_text_field( $args['event'] );
+		$args['pid']   = absint( $args['pid'] );
+
+		if ( empty( $args['pid'] ) || ! in_array( $args['event'], self::valid_events(), true ) ) {
+			return new WP_Error( 'invalid_params', __( 'Invalid analytics event parameters.', 'popup-maker' ), [ 'status' => 400 ] );
+		}
+
+		$popup = pum_get_popup( $args['pid'] );
+
+		if ( ! pum_is_popup( $popup ) ) {
+			return new WP_Error( 'invalid_params', __( 'Invalid analytics event parameters.', 'popup-maker' ), [ 'status' => 400 ] );
+		}
+
+		if ( array_key_exists( 'eventData', $args ) ) {
+			$args['eventData'] = self::sanitize_event_data( $args['eventData'] );
+		}
+
+		return $args;
 	}
 
 	/**
@@ -331,16 +377,20 @@ class PUM_Analytics {
 					'permission_callback' => '__return_true',
 					'args'                => [
 						'event'     => [
-							'required'    => true,
+							'required'    => false,
 							'description' => __( 'Event Type', 'popup-maker' ),
 							'type'        => 'string',
 						],
 						'pid'       => [
-							'required'            => true,
+							'required'            => false,
 							'description'         => __( 'Popup ID', 'popup-maker' ),
 							'type'                => 'integer',
 							'validation_callback' => [ __CLASS__, 'endpoint_absint' ],
 							'sanitize_callback'   => 'absint',
+						],
+						'events'    => [
+							'required'    => false,
+							'description' => __( 'Analytics events (JSON or array)', 'popup-maker' ),
 						],
 						'eventData' => [
 							'required'          => false,
