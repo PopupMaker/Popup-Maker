@@ -21,6 +21,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Telemetry {
 
 	/**
+	 * Alert code for the 50 billion popup views campaign.
+	 *
+	 * @var string
+	 */
+	const OPTIN_ALERT_CODE = 'pum_telemetry_50_billion_notice';
+
+	/**
+	 * Alert code used by the original telemetry prompt.
+	 *
+	 * @var string
+	 */
+	const LEGACY_OPTIN_ALERT_CODE = 'pum_telemetry_notice';
+
+	/**
 	 * Initialization method
 	 */
 	public static function init() {
@@ -248,7 +262,7 @@ class PUM_Telemetry {
 	}
 
 	/**
-	 * Adds admin notice if we haven't asked before.
+	 * Adds the telemetry opt-in campaign alert when tracking is disabled.
 	 *
 	 * @param array $alerts The alerts currently in the alert system.
 	 * @return array Alerts for the alert system.
@@ -260,26 +274,27 @@ class PUM_Telemetry {
 		}
 
 		$alerts[] = [
-			'code'        => 'pum_telemetry_notice',
-			'title'       => '📊 ' . __( 'Help us make Popup Maker better', 'popup-maker' ),
-			'type'        => 'info',
-			'category'    => 'recommendation',
-			'message'     => esc_html__( "Help us prioritize the features that matter most by sharing anonymous usage stats. No visitor data or popup content is ever collected.", 'popup-maker' ),
-			'priority'    => 10,
-			'dismissible' => true,
-			'global'      => false,
-			'actions'     => [
+			'code'           => self::OPTIN_ALERT_CODE,
+			'title'          => '🎉 ' . __( 'The countdown to 50 billion popup views is on', 'popup-maker' ),
+			'type'           => 'info',
+			'category'       => 'announcement',
+			'message'        => esc_html__( "We're closing in on an estimated 50 billion popup views! Enable usage tracking to include your site's views in a more accurate estimate, show us which features matter most, and help us build even better ones. The more sites that join in, the sooner we can reach—and celebrate—the milestone together. No visitor data or popup content is collected.", 'popup-maker' ),
+			'priority'       => 10,
+			'dismissible'    => true,
+			'global'         => false,
+			'display_inline' => true,
+			'actions'        => [
 				[
 					'primary' => true,
 					'type'    => 'action',
 					'action'  => 'pum_optin_check_allow',
-					'text'    => __( 'Allow', 'popup-maker' ),
+					'text'    => __( 'Count my popup views', 'popup-maker' ),
 				],
 				[
 					'primary' => false,
 					'type'    => 'action',
 					'action'  => 'dismiss',
-					'text'    => __( 'Do not allow', 'popup-maker' ),
+					'text'    => __( 'Not now', 'popup-maker' ),
 				],
 				[
 					'primary' => false,
@@ -302,21 +317,21 @@ class PUM_Telemetry {
 	 * @since 1.11.0
 	 */
 	public static function optin_alert_check( $code, $action ) {
-		if ( 'pum_telemetry_notice' === $code ) {
-			if ( 'pum_optin_check_allow' === $action ) {
-				// The alert dismiss handler only requires edit_posts; enabling
-				// telemetry is a settings-level decision.
-				if ( ! current_user_can( \PopupMaker\plugin()->get_permission( 'manage_settings' ) ) ) {
-					return;
-				}
-
-				pum_update_option( 'telemetry', true );
-			}
+		if ( ! in_array( $code, [ self::OPTIN_ALERT_CODE, self::LEGACY_OPTIN_ALERT_CODE ], true ) || 'pum_optin_check_allow' !== $action ) {
+			return;
 		}
+
+		// The alert dismiss handler only requires edit_posts; enabling
+		// telemetry is a settings-level decision.
+		if ( ! current_user_can( \PopupMaker\plugin()->get_permission( 'manage_settings' ) ) ) {
+			return;
+		}
+
+		pum_update_option( 'telemetry', true );
 	}
 
 	/**
-	 * Whether or not we should show optin alert
+	 * Whether or not we should show the opt-in alert.
 	 *
 	 * @since 1.11.0
 	 * @return bool True if alert should be shown
