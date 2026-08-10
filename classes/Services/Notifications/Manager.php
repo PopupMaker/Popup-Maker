@@ -67,6 +67,7 @@ class Manager extends Service {
 		if ( $this->booted ) {
 			return;
 		}
+
 		$this->booted = true;
 
 		$this->providers = $this->resolve_providers();
@@ -87,6 +88,8 @@ class Manager extends Service {
 	 * @return array<int,Provider>
 	 */
 	public function get_providers() {
+		$this->init();
+
 		return $this->providers;
 	}
 
