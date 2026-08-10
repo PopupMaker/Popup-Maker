@@ -197,7 +197,7 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 		$elementor->frontend         = $frontend;
 		\Elementor\Plugin::$instance = $elementor;
 
-		$builder = new class( \PopupMaker\plugin(), $popup_id ) extends Elementor {
+		$controller = new class( \PopupMaker\plugin(), $popup_id ) extends \PopupMaker\Controllers\Builders {
 
 			/** @var int */
 			private $canvas_popup_id;
@@ -213,10 +213,29 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 			}
 
 			/** @return int */
-			protected function get_canvas_popup_id() {
+			public function get_canvas_popup_id() {
 				return $this->canvas_popup_id;
 			}
 		};
+		$container  = new class( $controller ) {
+
+			/** @var \PopupMaker\Controllers\Builders */
+			private $builders;
+
+			/** @param \PopupMaker\Controllers\Builders $builders Builder controller. */
+			public function __construct( $builders ) {
+				$this->builders = $builders;
+			}
+
+			/**
+			 * @param string $controller Controller key.
+			 * @return object|null
+			 */
+			public function get_controller( $controller ) {
+				return 'Builders' === $controller ? $this->builders : null;
+			}
+		};
+		$builder    = new Elementor( $container );
 
 		add_filter( 'the_content', [ $frontend, 'apply_builder_in_content' ], 9 );
 

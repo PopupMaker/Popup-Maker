@@ -23,6 +23,9 @@ class Builders extends Controller {
 	/**
 	 * Popup meta containing the last builder that saved the document.
 	 *
+	 * This breaks ties when switching builders leaves more than one builder's
+	 * native ownership marker behind.
+	 *
 	 * @var string
 	 */
 	const OWNER_META_KEY = '_pum_page_builder';
@@ -521,6 +524,7 @@ class Builders extends Controller {
 		$this->owners[ $popup_id ] = null;
 		$saved_owner               = get_post_meta( $popup_id, self::OWNER_META_KEY, true );
 
+		// Treat the saved builder as a hint and revalidate its native marker.
 		if ( is_string( $saved_owner ) && isset( $this->builders[ $saved_owner ] ) ) {
 			$saved_builder = $this->builders[ $saved_owner ];
 

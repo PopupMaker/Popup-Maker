@@ -72,8 +72,6 @@ abstract class PageBuilder {
 	 * @return bool
 	 */
 	public function can_edit_document( $popup_id ) {
-		unset( $popup_id );
-
 		return true;
 	}
 
@@ -111,8 +109,6 @@ abstract class PageBuilder {
 	 * @return bool
 	 */
 	public function owns_document( $popup_id ) {
-		unset( $popup_id );
-
 		return false;
 	}
 
@@ -127,8 +123,6 @@ abstract class PageBuilder {
 	 * @return string|null
 	 */
 	public function render_document( $popup_id, $is_editor_canvas = false ) {
-		unset( $popup_id, $is_editor_canvas );
-
 		return null;
 	}
 }

@@ -60,8 +60,13 @@ class Elementor extends PageBuilder {
 	 */
 	public function disable_canvas_content_filter() {
 		$popup_id = $this->get_requested_popup_id();
+		$builders = $this->container->get_controller( 'Builders' );
 
-		if ( ! $popup_id || $popup_id !== $this->get_canvas_popup_id() ) {
+		if (
+			! $popup_id ||
+			! $builders instanceof \PopupMaker\Controllers\Builders ||
+			$popup_id !== $builders->get_canvas_popup_id()
+		) {
 			return;
 		}
 
@@ -90,8 +95,6 @@ class Elementor extends PageBuilder {
 	 * @return void
 	 */
 	public function remember_saved_document( $post_id, $editor_data = null ) {
-		unset( $editor_data );
-
 		if ( ! is_numeric( $post_id ) ) {
 			return;
 		}
@@ -172,8 +175,6 @@ class Elementor extends PageBuilder {
 		try {
 			return (bool) \Elementor\User::is_current_user_can_edit( absint( $popup_id ) );
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return false;
 		}
 	}
@@ -186,9 +187,19 @@ class Elementor extends PageBuilder {
 	 * @return bool
 	 */
 	public function owns_document( $popup_id ) {
-		$document = $this->get_document( $popup_id );
+		if ( ! $this->is_available() ) {
+			return false;
+		}
 
-		return $document &&
+		$popup_id = absint( $popup_id );
+
+		if ( ! $popup_id || 'popup' !== get_post_type( $popup_id ) ) {
+			return false;
+		}
+
+		$document = \Elementor\Plugin::$instance->documents->get( $popup_id );
+
+		return is_object( $document ) &&
 			method_exists( $document, 'is_built_with_elementor' ) &&
 			$document->is_built_with_elementor();
 	}
@@ -227,41 +238,5 @@ class Elementor extends PageBuilder {
 		}
 
 		return is_string( $rendered ) ? $rendered : null;
-	}
-
-	/**
-	 * Get an Elementor document for a popup.
-	 *
-	 * @param int $popup_id Popup ID.
-	 *
-	 * @return object|null
-	 */
-	private function get_document( $popup_id ) {
-		if ( ! $this->is_available() ) {
-			return null;
-		}
-
-		$popup_id = absint( $popup_id );
-
-		if ( ! $popup_id || 'popup' !== get_post_type( $popup_id ) ) {
-			return null;
-		}
-
-		$document = \Elementor\Plugin::$instance->documents->get( $popup_id );
-
-		return is_object( $document ) ? $document : null;
-	}
-
-	/**
-	 * Get the popup rendered by the shared authorized canvas.
-	 *
-	 * @return int
-	 */
-	protected function get_canvas_popup_id() {
-		$builders = $this->container->get_controller( 'Builders' );
-
-		return $builders instanceof \PopupMaker\Controllers\Builders
-			? $builders->get_canvas_popup_id()
-			: 0;
 	}
 }
