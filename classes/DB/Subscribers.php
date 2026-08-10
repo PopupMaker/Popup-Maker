@@ -26,7 +26,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	/**
 	 * The version of our database table
 	 */
-	public $version = 20200917;
+	public $version = 20260810;
 
 	/**
 	 * The name of the primary column
@@ -112,7 +112,8 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		  KEY email (email),
 		  KEY user_id (user_id),
 		  KEY popup_id (popup_id),
-		  KEY email_hash (email_hash)
+		  KEY email_hash (email_hash),
+		  KEY created (created)
 		) $charset_collate;";
 
 		$results = dbDelta( $sql );
