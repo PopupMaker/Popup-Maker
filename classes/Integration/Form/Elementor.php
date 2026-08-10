@@ -89,10 +89,13 @@ class PUM_Integration_Form_Elementor extends PUM_Abstract_Integration_Form {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT DISTINCT submissions.form_name, submissions.element_id, submissions.post_id, posts.post_title
-				FROM %i AS submissions
+				"SELECT submissions.form_name, submissions.element_id, submissions.post_id, posts.post_title
+				FROM (
+					SELECT DISTINCT form_name, element_id, post_id
+					FROM %i
+					WHERE form_name IS NOT NULL AND form_name != ''
+				) AS submissions
 				LEFT JOIN %i AS posts ON posts.ID = submissions.post_id
-				WHERE submissions.form_name IS NOT NULL AND submissions.form_name != ''
 				ORDER BY submissions.form_name ASC",
 				$table_name,
 				$wpdb->posts

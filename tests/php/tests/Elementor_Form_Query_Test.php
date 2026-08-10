@@ -83,12 +83,55 @@ class Elementor_Form_Query_Test extends WP_UnitTestCase {
 		global $wpdb;
 
 		wp_cache_flush();
-		$query_count = $wpdb->num_queries;
-		$forms       = ( new PUM_Integration_Form_Elementor() )->get_forms( true );
+		$query_count  = $wpdb->num_queries;
+		$forms        = ( new PUM_Integration_Form_Elementor() )->get_forms( true );
 		$used_queries = $wpdb->num_queries - $query_count;
 
 		$this->assertCount( 20, $forms );
 		$this->assertSame( get_the_title( $this->post_ids[0] ), $forms['element-0']['post_title'] );
 		$this->assertLessThanOrEqual( 5, $used_queries );
+	}
+
+	/**
+	 * Duplicate submissions are reduced before source pages are joined.
+	 */
+	public function test_form_discovery_deduplicates_before_joining_posts() {
+		global $wpdb;
+
+		for ( $copy = 0; $copy < 50; $copy++ ) {
+			for ( $index = 0; $index < 20; $index++ ) {
+				$wpdb->insert(
+					$this->table_name,
+					[
+						'form_name'  => 'Form ' . $index,
+						'element_id' => 'element-' . $index,
+						'post_id'    => $this->post_ids[ $index % 10 ],
+					]
+				);
+			}
+		}
+
+		$form_query   = '';
+		$query_filter = static function ( $query ) use ( &$form_query ) {
+			if ( false !== strpos( $query, 'pum_elementor_query_test' ) && 0 === stripos( ltrim( $query ), 'SELECT' ) ) {
+				$form_query = $query;
+			}
+
+			return $query;
+		};
+
+		add_filter( 'query', $query_filter );
+
+		try {
+			$forms = ( new PUM_Integration_Form_Elementor() )->get_forms( true );
+		} finally {
+			remove_filter( 'query', $query_filter );
+		}
+
+		$this->assertCount( 20, $forms );
+		$this->assertMatchesRegularExpression(
+			'/FROM\s+\(\s*SELECT DISTINCT\s+form_name,\s+element_id,\s+post_id\s+FROM/i',
+			$form_query
+		);
 	}
 }
