@@ -34,6 +34,10 @@ body.pum-builder-preview {
 		pointer-events: none !important;
 	}
 
+	.pum-builder-canvas-close-anchor {
+		display: none !important;
+	}
+
 	.pum-builder-canvas-area.pum-content {
 		&:focus {
 			outline: none;
