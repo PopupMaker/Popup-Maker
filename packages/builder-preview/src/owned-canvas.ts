@@ -271,6 +271,15 @@ if ( ownedCanvas?.popup_id ) {
 			.pum-builder-canvas-area *::after {
 				box-sizing: border-box;
 			}
+			.pum-builder-canvas-area.pum-content:focus {
+				outline: none;
+			}
+			.pum-builder-canvas-area.pum-content > :nth-child(1 of :not(.pum-builder-canvas-title, .pum-builder-canvas-close-anchor, .pum-builder-canvas-close)) {
+				margin-top: 0;
+			}
+			.pum-builder-canvas-area.pum-content > :nth-last-child(1 of :not(.pum-builder-canvas-title, .pum-builder-canvas-close-anchor, .pum-builder-canvas-close)) {
+				margin-bottom: 0;
+			}
 			.pum-builder-canvas-area.pum-scrollable > .pum-builder-canvas-title,
 			.pum-builder-canvas-area.pum-scrollable > .pum-builder-canvas-close {
 				translate: 0 var(--pum-builder-canvas-scroll-y, 0) !important;

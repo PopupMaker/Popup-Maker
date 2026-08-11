@@ -178,6 +178,10 @@ describe( 'builder-owned popup canvas', () => {
 				?.textContent
 		).toContain( 'box-sizing: border-box' );
 		expect(
+			iframeDocument?.getElementById( 'pum-builder-owned-canvas' )
+				?.textContent
+		).toContain( ':nth-last-child(1 of :not(' );
+		expect(
 			canvas?.firstElementChild?.classList.contains(
 				'pum-builder-canvas-title'
 			)
