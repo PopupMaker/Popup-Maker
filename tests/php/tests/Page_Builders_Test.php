@@ -61,6 +61,64 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_builder_specific_permission_can_reject_request() {
+		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder                     = $this->make_builder();
+		$builder->requested_popup_id = $popup_id;
+		$builder->can_edit           = false;
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertSame( 0, $this->make_controller( $builder )->get_edit_popup_id() );
+	}
+
+	/** @return void */
+	public function test_authorized_editor_request_temporarily_owns_an_unbuilt_document() {
+		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder                     = $this->make_builder();
+		$builder->requested_popup_id = $popup_id;
+		$builder->owns               = false;
+		$builder->rendered           = 'builder content';
+		$controller                  = $this->make_controller( $builder );
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
+		$this->assertSame( '', get_post_meta( $popup_id, $controller::OWNER_META_KEY, true ) );
+		$this->assertSame( 0, $builder->ownership_checks );
+	}
+
+	/** @return void */
+	public function test_authenticated_builder_save_persists_and_revalidates_document_owner() {
+		$popup_id   = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder    = $this->make_builder();
+		$controller = $this->make_controller( $builder );
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertTrue( $controller->remember_document_owner( $builder, $popup_id ) );
+		$this->assertSame( get_class( $builder ), get_post_meta( $popup_id, $controller::OWNER_META_KEY, true ) );
+
+		$builder->owns     = false;
+		$builder->rendered = 'saved builder content';
+
+		$this->assertSame( 'original', $controller->render_popup_content( 'original', $popup_id ) );
+		$this->assertSame( '', get_post_meta( $popup_id, $controller::OWNER_META_KEY, true ) );
+		$this->assertSame( 1, $builder->ownership_checks );
+	}
+
+	/** @return void */
+	public function test_document_owner_rejects_an_unauthorized_save() {
+		$popup_id   = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder    = $this->make_builder();
+		$controller = $this->make_controller( $builder );
+
+		wp_set_current_user( 0 );
+
+		$this->assertFalse( $controller->remember_document_owner( $builder, $popup_id ) );
+		$this->assertSame( '', get_post_meta( $popup_id, $controller::OWNER_META_KEY, true ) );
+	}
+
+	/** @return void */
 	public function test_builder_boot_retries_without_registering_twice() {
 		$builder            = $this->make_builder();
 		$builder->available = false;
@@ -76,6 +134,36 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$this->assertSame( 1, $builder->hooks_registered );
 		$this->assertSame( 10, has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
 		$this->assertSame( PHP_INT_MAX, has_filter( 'the_content', [ $controller, 'suppress_canvas_content' ] ) );
+		$this->assertSame( 10, has_filter( 'pum_popup_content', [ $controller, 'render_popup_content' ] ) );
+	}
+
+	/** @return void */
+	public function test_inactive_bundled_builders_are_not_loaded_or_constructed() {
+		if ( defined( 'ELEMENTOR_VERSION' ) || did_action( 'elementor/loaded' ) ) {
+			$this->markTestSkipped( 'Elementor is active in this test environment.' );
+		}
+
+		$elementor_loaded = class_exists( \PopupMaker\Builders\Elementor::class, false );
+		$controller       = new class( \PopupMaker\plugin() ) extends \PopupMaker\Controllers\Builders {
+
+			/** @var int */
+			public $builders_constructed = 0;
+
+			/**
+			 * @param string $builder_class Builder class.
+			 * @return PageBuilder
+			 */
+			protected function instantiate_builder( $builder_class ) {
+				++$this->builders_constructed;
+
+				return parent::instantiate_builder( $builder_class );
+			}
+		};
+
+		$controller->init();
+
+		$this->assertSame( 0, $controller->builders_constructed );
+		$this->assertSame( $elementor_loaded, class_exists( \PopupMaker\Builders\Elementor::class, false ) );
 	}
 
 	/** @return void */
@@ -192,7 +280,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
-	public function test_owner_is_cached_and_native_requests_use_editor_rendering() {
+	public function test_native_request_owner_is_cached_and_uses_editor_rendering() {
 		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$builder                     = $this->make_builder();
 		$builder->requested_popup_id = $popup_id;
@@ -206,7 +294,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
 		$this->assertSame( 'builder content', $controller->render_popup_content( 'original', $popup_id ) );
-		$this->assertSame( 1, $builder->ownership_checks );
+		$this->assertSame( 0, $builder->ownership_checks );
 		$this->assertTrue( $builder->last_editor_canvas );
 	}
 
@@ -260,9 +348,19 @@ class Page_Builders_Test extends WP_UnitTestCase {
 				parent::__construct( $container );
 			}
 
-			/** @return PageBuilder[] */
-			protected function default_builders() {
-				return [ $this->test_builder ];
+			/** @return string[] */
+			protected function detected_builder_classes() {
+				return [ get_class( $this->test_builder ) ];
+			}
+
+			/**
+			 * @param string $builder_class Builder class.
+			 * @return PageBuilder
+			 */
+			protected function instantiate_builder( $builder_class ) {
+				unset( $builder_class );
+
+				return $this->test_builder;
 			}
 		};
 		$controller->init();
@@ -285,6 +383,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 			/** @var bool */
 			public $canvas = true;
+
+			/** @var bool */
+			public $can_edit = true;
 
 			/** @var string|null */
 			public $rendered = null;
@@ -314,6 +415,16 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			/** @return int */
 			public function get_requested_popup_id() {
 				return $this->requested_popup_id;
+			}
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return bool
+			 */
+			public function can_edit_document( $popup_id ) {
+				unset( $popup_id );
+
+				return $this->can_edit;
 			}
 
 			/** @return bool */
