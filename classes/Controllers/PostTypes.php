@@ -26,7 +26,8 @@ class PostTypes extends Controller {
 	 */
 	public function init() {
 		add_action( 'init', [ $this, 'register_post_types' ] );
-		add_action( 'rest_api_init', [ $this, 'register_standard_rest_routes' ] );
+		// Run after core creates its post, revision, and autosave controllers.
+		add_action( 'rest_api_init', [ $this, 'register_standard_rest_routes' ], 100 );
 		add_action( 'save_post_popup', [ $this, 'save_post' ], 10, 3 );
 		add_filter( 'post_updated_messages', [ $this, 'updated_messages' ] );
 
