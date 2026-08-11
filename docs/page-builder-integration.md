@@ -2,8 +2,8 @@
 
 This guide describes the minimum architecture used by Popup Maker's bundled
 page-builder integrations. It is based on live testing with Elementor, Bricks,
-Divi, Beaver Builder, SiteOrigin Page Builder, Brizy, and Visual Composer, with
-Gutenberg and TinyMCE as controls.
+Divi, Beaver Builder, SiteOrigin Page Builder, Brizy, Visual Composer, and Etch,
+with Gutenberg and TinyMCE as controls.
 
 The central lesson is simple: share the WordPress and Popup Maker lifecycle,
 but leave every builder's native APIs in its own small adapter.
@@ -17,7 +17,8 @@ PopupMaker\Controllers\Builders
 ├── restores private popup queries for authorized users
 ├── renders the normal site theme as the editor background
 ├── suppresses the theme loop's duplicate popup content
-├── loads one editable popup through Popup Maker's footer renderer
+├── loads one editable popup through the normal footer renderer when possible
+├── projects popup presentation onto builder-owned canvases when necessary
 └── delegates document ownership and rendering to one adapter
 
 PopupMaker\Base\PageBuilder
@@ -25,6 +26,7 @@ PopupMaker\Base\PageBuilder
 ├── register_hooks()                 optional
 ├── get_requested_popup_id()         optional
 ├── can_edit_document()              optional
+├── enqueue_owned_canvas_preview()   optional protected helper
 ├── is_canvas_request()              optional
 ├── owns_document()                  optional
 └── render_document()                optional
@@ -40,8 +42,8 @@ There is intentionally no public registry, collector object, capability
 interface tree, or trait hierarchy. Popup Maker ships a small, known set of
 integrations. `Builders` conditionally constructs an adapter only when the
 corresponding plugin or theme is detected, and each adapter overrides only the
-methods it needs. Multiple active builders are supported, while one adapter owns
-each popup document.
+methods it needs. Multiple active builders are supported, while at most one
+adapter owns each popup document. Native WordPress content can remain unowned.
 
 This keeps the runtime contract visible in one abstract class without forcing
 unrelated builders into the same rendering or asset mechanism.
@@ -84,6 +86,13 @@ The shared controller resolves that mismatch as follows:
    visible but inert.
 8. The owning adapter supplies native builder markup or the mount node required
    by the builder.
+
+Builders that own the editable DOM follow the same authorization and shell
+isolation but do not force their canvas through the footer renderer. Instead,
+the protected builder-owned canvas helper projects the selected popup theme and
+display settings onto the builder's surviving content node. Etch uses this path
+for its blank iframe; Bricks uses it because its Vue editor replaces server-
+rendered descendants.
 
 Using the active theme is important. It makes the area under a transparent or
 disabled popup overlay match the user's site, preserves the site's real head
@@ -153,6 +162,7 @@ the same mechanism. They do not:
 | SiteOrigin | Let SiteOrigin's bundled Popup Maker content filter render the layout and its secondary CSS. |
 | Brizy | Add the popup through Brizy's asset manager, deduplicate document IDs, and emit append-only late deltas when possible. If Brizy replaces or reorders a generated bucket, preserve its complete regenerated output rather than risk dropping required code. |
 | Visual Composer | Add the popup ID to Visual Composer's `AssetsEnqueue` list and flush its CSS-list event once per collected batch. |
+| Etch | Use the normal WordPress block renderer and asset pipeline; no secondary-document collector is needed. |
 
 The repeatable policy is smaller than the implementations:
 
@@ -187,11 +197,13 @@ that the shared popup events cannot solve. Widget reinitialization in
 particular is easy to duplicate: many builders already initialize visible
 editor content themselves.
 
-Bricks is the deliberate exception to the standard popup DOM. Its Vue editor
-replaces descendants of its own content root, so the shared package can adopt a
-builder-owned canvas as the popup container and mirror only the Popup Maker
-theme and geometry it needs. The Bricks adapter supplies the surviving canvas
-selector and display settings; there is no separate Bricks preview script.
+Bricks and Etch are deliberate exceptions to the standard popup DOM. Bricks'
+Vue editor replaces descendants of its content root, while Etch mounts editable
+blocks into a same-origin blank iframe. The shared builder-owned canvas helper
+keeps those nodes under builder control while projecting the Popup Maker theme,
+overlay, title, close control, and geometry onto the surviving canvas. Each
+adapter supplies only its selectors and genuinely builder-specific CSS; neither
+needs a separate preview script.
 
 Brizy has one similarly narrow CSS correction for its first editable block's
 forced viewport height. All other integrations use the shared canvas behavior
@@ -208,6 +220,7 @@ unchanged.
 | SiteOrigin | Inject runtime post-type support without persisting it, retain its classic editor for saved SiteOrigin documents and explicit first-edit builder requests, and repair the Live Editor preview URL. |
 | Brizy | Register the post type, distinguish shell/iframe requests, provide two native mount nodes, render compiled visitor content, and use Brizy's asset manager. |
 | Visual Composer | Distinguish shell/iframe requests, provide its native mount, and use its secondary-source asset queue. |
+| Etch | Recognize its front-page editor shell, expose the core REST revision/autosave routes it needs, and project the popup frame into its builder-owned iframe without moving block nodes. Frontend content remains native blocks. |
 
 Gutenberg and TinyMCE require no adapter. They prove that an active builder
 must not take over an unrelated popup document.
@@ -300,7 +313,9 @@ Verify all of the following in a real browser:
 - Persisting a builder's global post-type setting when runtime injection works.
 - Treating every active-builder popup as owned by that builder.
 - Calling internal one-time bootstrap methods once per popup.
-- Copying an entire builder asset bucket into Popup Maker output.
+- Copying an entire builder asset bucket when a safe delta exists. A complete
+  regenerated output is allowed for an isolated non-append-only batch when
+  emitting a delta would drop required code.
 - Reinitializing every frontend widget after each popup open without evidence.
 - Adding an interface or trait for a behavior currently used by one adapter.
 - Moving builder asset compatibility into the preview controller.
