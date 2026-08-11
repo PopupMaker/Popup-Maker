@@ -6,10 +6,10 @@ Divi, Beaver Builder, SiteOrigin Page Builder, Brizy, Visual Composer, and Etch,
 with Gutenberg and TinyMCE as controls.
 
 > **Implementation status:** `develop` currently includes Elementor, Beaver
-> Builder, SiteOrigin, and Brizy. Divi (#1295), Visual Composer (#1297), the
-> builder-owned canvas helper (#1335), Bricks (#1294), and Etch (#1312) remain
-> proposed until their linked pull requests merge. This guide documents the
-> intended final contract for that reviewed stack.
+> Builder, SiteOrigin, Brizy, Visual Composer, and Divi. The builder-owned canvas
+> helper (#1335), Bricks (#1294), and Etch (#1312) remain proposed until their
+> linked pull requests merge. This guide documents the intended final contract
+> for that reviewed stack.
 
 The central lesson is simple: share the WordPress and Popup Maker lifecycle,
 but leave every builder's native APIs in its own small adapter.
@@ -135,10 +135,10 @@ check.
 
 `render_document( $popup_id, $is_editor_canvas )` follows three rules:
 
-- Return `null` when WordPress's existing content pipeline is already correct.
-- Return a string only when the builder needs native rendering or an editor
-  mount hierarchy.
-- Use the builder's public frontend API whenever one exists.
+-   Return `null` when WordPress's existing content pipeline is already correct.
+-   Return a string only when the builder needs native rendering or an editor
+    mount hierarchy.
+-   Use the builder's public frontend API whenever one exists.
 
 For example, Elementor renders through its frontend API. Divi visitors stay in
 the normal content pipeline, while its front-end editor receives the minimum
@@ -159,16 +159,16 @@ post, so correct HTML alone is not sufficient.
 Do not build a shared asset collector unless multiple builders genuinely expose
 the same mechanism. They do not:
 
-| Builder | Secondary popup strategy |
-| --- | --- |
-| Elementor | Rendering through Elementor's frontend API always registers the document stylesheet. Before `wp_head` it is enqueued normally; after `wp_head`, the adapter asks Elementor to print that document CSS inline with the popup markup. |
-| Bricks | Render the popup element data without replacing the host page's active-template state; generate only the popup CSS delta and restore Bricks' shared statics. |
-| Divi | Use Divi's normal content and asset pipeline. |
-| Beaver Builder | Let Beaver's bundled Popup Maker integration render and enqueue the layout. |
-| SiteOrigin | Let SiteOrigin's bundled Popup Maker content filter render the layout and its secondary CSS. |
-| Brizy | Add the popup through Brizy's asset manager, deduplicate document IDs, and emit append-only late deltas when possible. If Brizy replaces or reorders a generated bucket, preserve its complete regenerated output rather than risk dropping required code. |
-| Visual Composer | Add the popup ID to Visual Composer's `AssetsEnqueue` list and flush its CSS-list event once per collected batch. |
-| Etch | Use the normal WordPress block renderer and asset pipeline; no secondary-document collector is needed. |
+| Builder         | Secondary popup strategy                                                                                                                                                                                                                                   |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Elementor       | Rendering through Elementor's frontend API always registers the document stylesheet. Before `wp_head` it is enqueued normally; after `wp_head`, the adapter asks Elementor to print that document CSS inline with the popup markup.                        |
+| Bricks          | Render the popup element data without replacing the host page's active-template state; generate only the popup CSS delta and restore Bricks' shared statics.                                                                                               |
+| Divi            | Use Divi's normal content and asset pipeline.                                                                                                                                                                                                              |
+| Beaver Builder  | Let Beaver's bundled Popup Maker integration render and enqueue the layout.                                                                                                                                                                                |
+| SiteOrigin      | Let SiteOrigin's bundled Popup Maker content filter render the layout and its secondary CSS.                                                                                                                                                               |
+| Brizy           | Add the popup through Brizy's asset manager, deduplicate document IDs, and emit append-only late deltas when possible. If Brizy replaces or reorders a generated bucket, preserve its complete regenerated output rather than risk dropping required code. |
+| Visual Composer | Add the popup ID to Visual Composer's `AssetsEnqueue` list and flush its CSS-list event once per collected batch.                                                                                                                                          |
+| Etch            | Use the normal WordPress block renderer and asset pipeline; no secondary-document collector is needed.                                                                                                                                                     |
 
 The repeatable policy is smaller than the implementations:
 
@@ -217,16 +217,16 @@ unchanged.
 
 ## Builder-specific findings
 
-| Builder | Minimum Popup Maker responsibility |
-| --- | --- |
-| Elementor | Add post-type support, authorize its iframe request, render through the frontend API, and point Preview at the real-page preview controller. |
-| Bricks | Inject runtime post-type support without persisting it, distinguish shell/canvas/preview, safely render secondary element data and CSS, and adapt its DOM-owning canvas. |
-| Divi | Register the post type, authorize the front-end builder, preserve the back-end builder, and use the minimum editor mount. |
-| Beaver Builder | Recognize its native request and stop Beaver's broad popup redirect from intercepting another authorized builder. Everything else remains native. |
-| SiteOrigin | Inject runtime post-type support without persisting it, retain its classic editor for saved SiteOrigin documents and explicit first-edit builder requests, and repair the Live Editor preview URL. |
-| Brizy | Register the post type, distinguish shell/iframe requests, provide two native mount nodes, render compiled visitor content, and use Brizy's asset manager. |
-| Visual Composer | Distinguish shell/iframe requests, provide its native mount, and use its secondary-source asset queue. |
-| Etch | Recognize its front-page editor shell, expose the core REST revision/autosave routes it needs, and project the popup frame into its builder-owned iframe without moving block nodes. Frontend content remains native blocks. |
+| Builder         | Minimum Popup Maker responsibility                                                                                                                                                                                           |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Elementor       | Add post-type support, authorize its iframe request, render through the frontend API, and point Preview at the real-page preview controller.                                                                                 |
+| Bricks          | Inject runtime post-type support without persisting it, distinguish shell/canvas/preview, safely render secondary element data and CSS, and adapt its DOM-owning canvas.                                                     |
+| Divi            | Register the post type, authorize the front-end builder, preserve the back-end builder, and use the minimum editor mount.                                                                                                    |
+| Beaver Builder  | Recognize its native request and stop Beaver's broad popup redirect from intercepting another authorized builder. Everything else remains native.                                                                            |
+| SiteOrigin      | Inject runtime post-type support without persisting it, retain its classic editor for saved SiteOrigin documents and explicit first-edit builder requests, and repair the Live Editor preview URL.                           |
+| Brizy           | Register the post type, distinguish shell/iframe requests, provide two native mount nodes, render compiled visitor content, and use Brizy's asset manager.                                                                   |
+| Visual Composer | Distinguish shell/iframe requests, provide its native mount, and use its secondary-source asset queue.                                                                                                                       |
+| Etch            | Recognize its front-page editor shell, expose the core REST revision/autosave routes it needs, and project the popup frame into its builder-owned iframe without moving block nodes. Frontend content remains native blocks. |
 
 Gutenberg and TinyMCE require no adapter. They prove that an active builder
 must not take over an unrelated popup document.
@@ -237,15 +237,15 @@ must not take over an unrelated popup document.
 
 Use a dedicated `wp-env` instance with the current builder release. Record:
 
-- how the builder enables a custom post type;
-- whether that setting is global, per role, or per document;
-- editor shell, canvas, and standalone preview request shapes;
-- canonical document-ownership state;
-- public frontend renderer;
-- per-document asset API and output timing;
-- whether the editor preserves or replaces server-rendered DOM; and
-- any native Popup Maker or popup-feature integration that must not be
-  duplicated.
+-   how the builder enables a custom post type;
+-   whether that setting is global, per role, or per document;
+-   editor shell, canvas, and standalone preview request shapes;
+-   canonical document-ownership state;
+-   public frontend renderer;
+-   per-document asset API and output timing;
+-   whether the editor preserves or replaces server-rendered DOM; and
+-   any native Popup Maker or popup-feature integration that must not be
+    duplicated.
 
 Test with the builder on both the host page and the popup. A popup-only test
 misses global-state corruption, duplicate IDs, and primary/secondary asset
@@ -281,14 +281,14 @@ If removal changes nothing in the supported matrix, delete the code.
 
 At minimum cover:
 
-- false-positive request rejection;
-- shell versus canvas recognition;
-- controller authorization and private-query restoration;
-- saved document ownership and first-edit ownership when needed;
-- visitor render fallback (`null`) versus custom output;
-- asset deduplication and late-output boundaries;
-- host-page state restoration after nested rendering; and
-- inactive integration overhead.
+-   false-positive request rejection;
+-   shell versus canvas recognition;
+-   controller authorization and private-query restoration;
+-   saved document ownership and first-edit ownership when needed;
+-   visitor render fallback (`null`) versus custom output;
+-   asset deduplication and late-output boundaries;
+-   host-page state restoration after nested rendering; and
+-   inactive integration overhead.
 
 Keep builder API doubles in isolated fixtures. The full Popup Maker test suite
 validates shared regressions; builder-specific tests should remain focused.
@@ -314,17 +314,17 @@ Verify all of the following in a real browser:
 
 ## Anti-patterns
 
-- Replacing the active theme with a full custom HTML template.
-- Making the `popup` post type publicly queryable to satisfy a builder.
-- Persisting a builder's global post-type setting when runtime injection works.
-- Treating every active-builder popup as owned by that builder.
-- Calling internal one-time bootstrap methods once per popup.
-- Copying an entire builder asset bucket when a safe delta exists. A complete
-  regenerated output is allowed for an isolated non-append-only batch when
-  emitting a delta would drop required code.
-- Reinitializing every frontend widget after each popup open without evidence.
-- Adding an interface or trait for a behavior currently used by one adapter.
-- Moving builder asset compatibility into the preview controller.
+-   Replacing the active theme with a full custom HTML template.
+-   Making the `popup` post type publicly queryable to satisfy a builder.
+-   Persisting a builder's global post-type setting when runtime injection works.
+-   Treating every active-builder popup as owned by that builder.
+-   Calling internal one-time bootstrap methods once per popup.
+-   Copying an entire builder asset bucket when a safe delta exists. A complete
+    regenerated output is allowed for an isolated non-append-only batch when
+    emitting a delta would drop required code.
+-   Reinitializing every frontend widget after each popup open without evidence.
+-   Adding an interface or trait for a behavior currently used by one adapter.
+-   Moving builder asset compatibility into the preview controller.
 
 The target is not identical code for every builder. It is one understandable
 orchestration path, small adapters around native APIs, and no custom mechanism
