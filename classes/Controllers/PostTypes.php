@@ -85,25 +85,25 @@ class PostTypes extends Controller {
 	private function full_capabilities( $permission, $singular ) {
 		return [
 			// Meta caps -> per-object singular primitives (resolved by map_meta_cap).
-			'edit_post'                    => 'edit_' . $singular,
-			'read_post'                    => 'read_' . $singular,
-			'delete_post'                  => 'delete_' . $singular,
+			'edit_post'              => 'edit_' . $singular,
+			'read_post'              => 'read_' . $singular,
+			'delete_post'            => 'delete_' . $singular,
 			// Singular primitives the meta caps resolve to -> the permission.
-			'edit_' . $singular            => $permission,
-			'read_' . $singular            => $permission,
-			'delete_' . $singular          => $permission,
+			'edit_' . $singular      => $permission,
+			'read_' . $singular      => $permission,
+			'delete_' . $singular    => $permission,
 			// Plural primitive caps -> the permission.
-			'create_posts'                 => $permission,
-			'edit_posts'                   => $permission,
-			'edit_others_posts'            => $permission,
-			'edit_published_posts'         => $permission,
-			'edit_private_posts'           => $permission,
-			'publish_posts'                => $permission,
-			'read_private_posts'           => $permission,
-			'delete_posts'                 => $permission,
-			'delete_others_posts'          => $permission,
-			'delete_published_posts'       => $permission,
-			'delete_private_posts'         => $permission,
+			'create_posts'           => $permission,
+			'edit_posts'             => $permission,
+			'edit_others_posts'      => $permission,
+			'edit_published_posts'   => $permission,
+			'edit_private_posts'     => $permission,
+			'publish_posts'          => $permission,
+			'read_private_posts'     => $permission,
+			'delete_posts'           => $permission,
+			'delete_others_posts'    => $permission,
+			'delete_published_posts' => $permission,
+			'delete_private_posts'   => $permission,
 		];
 	}
 
@@ -162,6 +162,42 @@ class PostTypes extends Controller {
 			};
 
 			$controller->register_routes();
+
+			if ( post_type_supports( $post_type, 'revisions' ) && class_exists( '\\WP_REST_Revisions_Controller' ) ) {
+				$revisions = new class( $post_type ) extends \WP_REST_Revisions_Controller {
+
+					/**
+					 * Set up standard WordPress revision routes for a Popup Maker post type.
+					 *
+					 * @param string $post_type Parent post type key.
+					 */
+					public function __construct( $post_type ) {
+						parent::__construct( $post_type );
+
+						$this->namespace = 'wp/v2';
+					}
+				};
+
+				$revisions->register_routes();
+			}
+
+			if ( class_exists( '\\WP_REST_Autosaves_Controller' ) ) {
+				$autosaves = new class( $post_type ) extends \WP_REST_Autosaves_Controller {
+
+					/**
+					 * Set up standard WordPress autosave routes for a Popup Maker post type.
+					 *
+					 * @param string $post_type Parent post type key.
+					 */
+					public function __construct( $post_type ) {
+						parent::__construct( $post_type );
+
+						$this->namespace = 'wp/v2';
+					}
+				};
+
+				$autosaves->register_routes();
+			}
 		}
 	}
 
