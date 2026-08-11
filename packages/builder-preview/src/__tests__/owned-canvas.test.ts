@@ -527,6 +527,8 @@ describe( 'builder-owned popup canvas', () => {
 	} );
 
 	it( 'restores an iframe canvas after it loses the selector', async () => {
+		document.head.innerHTML =
+			'<style id="popup-maker-site-inline-css">body { color: red; }</style>';
 		document.body.innerHTML = '<iframe data-builder-frame></iframe>';
 		window.pumBuilderOwnedCanvas = {
 			...settings(),
@@ -543,6 +545,11 @@ describe( 'builder-owned popup canvas', () => {
 		canvas.style.setProperty( 'position', 'relative' );
 
 		await import( '../owned-canvas' );
+		expect(
+			iframe.contentDocument.getElementById(
+				'pum-builder-copy-popup-maker-site-inline-css'
+			)
+		).not.toBeNull();
 
 		iframe.removeAttribute( 'data-builder-frame' );
 		mutationCallbacks.forEach( ( callback ) => {
@@ -561,6 +568,14 @@ describe( 'builder-owned popup canvas', () => {
 		expect(
 			iframe.contentDocument.documentElement.classList
 		).not.toContain( 'pum-builder-owned-canvas-root' );
+		expect(
+			iframe.contentDocument.getElementById(
+				'pum-builder-copy-popup-maker-site-inline-css'
+			)
+		).toBeNull();
+		expect(
+			iframe.contentDocument.getElementById( 'pum-builder-owned-canvas' )
+		).toBeNull();
 	} );
 
 	it( 'positions a nested canvas in viewport coordinates', async () => {
@@ -657,6 +672,45 @@ describe( 'builder-owned popup canvas', () => {
 		expect( canvas.style.getPropertyValue( 'position' ) ).toBe( 'fixed' );
 		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '-90px' );
 		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-180px' );
+	} );
+
+	it( 'compensates for a transform on the builder canvas', async () => {
+		document.body.innerHTML = '<main id="builder-canvas"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			location: 'center',
+			show_close: false,
+		};
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Transformed canvas fixture was not created.' );
+		}
+
+		canvas.style.transform = 'translate(100px, 50px)';
+		canvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue(
+				rect( {
+					bottom: 250,
+					height: 200,
+					left: 100,
+					right: 400,
+					top: 50,
+					width: 300,
+				} )
+			);
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'transform' ) ).toBe(
+			'translate(100px, 50px)'
+		);
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '234px' );
+		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '262px' );
 	} );
 
 	it( 'adopts an existing canvas after its selector attribute changes', async () => {

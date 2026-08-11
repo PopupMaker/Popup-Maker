@@ -18,6 +18,7 @@ if ( ownedCanvas?.popup_id ) {
 	let ownedRootClasses: Array< { className: string; element: Element } > = [];
 	let ownedCanvasClasses: string[] = [];
 	let syntheticCanvasElements: HTMLElement[] = [];
+	let ownedStyleElements: HTMLElement[] = [];
 	const canvasStyles = new Map<
 		string,
 		{
@@ -190,6 +191,7 @@ if ( ownedCanvas?.popup_id ) {
 							copy.addEventListener( 'load', adoptCanvas );
 						}
 						targetDocument.head.append( copy );
+						ownedStyleElements.push( copy );
 					} );
 			}
 		);
@@ -248,6 +250,7 @@ if ( ownedCanvas?.popup_id ) {
 			}
 		`;
 		targetDocument.head.append( style );
+		ownedStyleElements.push( style );
 	};
 
 	const attachTitle = (): void => {
@@ -624,6 +627,21 @@ if ( ownedCanvas?.popup_id ) {
 			viewportLeft,
 			position
 		);
+		const transform = canvasWindow
+			.getComputedStyle( canvas )
+			.getPropertyValue( 'transform' );
+
+		if ( transform && 'none' !== transform ) {
+			const positionedBounds = canvas.getBoundingClientRect();
+			const transformOffset = viewportToPosition(
+				positionedBounds.top,
+				positionedBounds.left,
+				position
+			);
+
+			coordinates.top -= transformOffset.top;
+			coordinates.left -= transformOffset.left;
+		}
 
 		setCanvasStyle(
 			'top',
@@ -669,6 +687,8 @@ if ( ownedCanvas?.popup_id ) {
 		}
 		restoreRootMinHeight();
 		clearOverlayIdentity();
+		ownedStyleElements.forEach( ( element ) => element.remove() );
+		ownedStyleElements = [];
 		targetObserver?.disconnect();
 		targetObserver = null;
 		canvasDocument = null;
