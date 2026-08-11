@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Features**
+
+-   Added complete Elementor support for building Popup Maker popups, including editor previews, frontend styling, and interactive widgets.
+
 **Improvements**
 
 -   Improved compatibility with PHP 8.3, 8.4, and 8.5.

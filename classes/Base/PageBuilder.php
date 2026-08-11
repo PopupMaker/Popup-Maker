@@ -62,6 +62,35 @@ abstract class PageBuilder {
 	}
 
 	/**
+	 * Whether the current user satisfies this builder's own access rules.
+	 *
+	 * The controller already verifies WordPress's per-post capability. Override
+	 * this only when the builder applies an additional permission layer.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	public function can_edit_document( $popup_id ) {
+		return true;
+	}
+
+	/**
+	 * Remember this builder after its native editor saves a popup.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return void
+	 */
+	protected function remember_document_owner( $popup_id ) {
+		$builders = $this->container->get_controller( 'Builders' );
+
+		if ( $builders instanceof \PopupMaker\Controllers\Builders ) {
+			$builders->remember_document_owner( $this, $popup_id );
+		}
+	}
+
+	/**
 	 * Whether the native builder request is its editable canvas.
 	 *
 	 * Frontend builders may claim a separate shell request and return false.
@@ -80,8 +109,6 @@ abstract class PageBuilder {
 	 * @return bool
 	 */
 	public function owns_document( $popup_id ) {
-		unset( $popup_id );
-
 		return false;
 	}
 
@@ -96,8 +123,6 @@ abstract class PageBuilder {
 	 * @return string|null
 	 */
 	public function render_document( $popup_id, $is_editor_canvas = false ) {
-		unset( $popup_id, $is_editor_canvas );
-
 		return null;
 	}
 }
