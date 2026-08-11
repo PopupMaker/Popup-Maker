@@ -4,6 +4,7 @@
 
 **Features**
 
+-   Added complete Brizy support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
 -   Added complete Elementor support for building Popup Maker popups, including editor previews, frontend styling, and interactive widgets.
 -   Added complete SiteOrigin Page Builder support for building Popup Maker popups, including its Live Editor and properly styled frontend layouts.
 
