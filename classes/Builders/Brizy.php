@@ -72,8 +72,6 @@ class Brizy extends PageBuilder {
 	 * @return void
 	 */
 	public function remember_saved_document( $post_id, $post = null, $update = false ) {
-		unset( $post, $update );
-
 		$save_action = $this->get_save_action();
 
 		if ( ! is_numeric( $post_id ) || ! $save_action ) {
@@ -114,8 +112,6 @@ class Brizy extends PageBuilder {
 
 			return is_string( $save_action ) ? sanitize_key( $save_action ) : '';
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return '';
 		}
 	}
@@ -209,8 +205,6 @@ class Brizy extends PageBuilder {
 		try {
 			return (bool) \Brizy_Editor_Entity::isBrizyEnabled( absint( $popup_id ) );
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return false;
 		}
 	}
@@ -252,8 +246,6 @@ class Brizy extends PageBuilder {
 
 			return is_string( $content ) ? \PUM_Utils_Shortcodes::clean_do_shortcode( $content ) : null;
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return null;
 		}
 	}
@@ -301,7 +293,8 @@ class Brizy extends PageBuilder {
 			$this->collected_documents[ $popup_id ] = true;
 			$this->assets_finalized                 = false;
 		} catch ( \Throwable $error ) {
-			unset( $error );
+			// Preserve the popup content fallback when Brizy cannot collect assets.
+			return;
 		}
 	}
 
@@ -331,8 +324,6 @@ class Brizy extends PageBuilder {
 		try {
 			$manager = \Brizy_Public_AssetEnqueueManager::_init();
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return false;
 		}
 
@@ -355,8 +346,6 @@ class Brizy extends PageBuilder {
 			$manager->enqueueStyles();
 			$manager->enqueueScripts();
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return false;
 		}
 
@@ -403,8 +392,6 @@ class Brizy extends PageBuilder {
 			$manager->insertHeadCodeAssets();
 			$output = ob_get_clean();
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			while ( ob_get_level() > $buffer_level ) {
 				ob_end_clean();
 			}
