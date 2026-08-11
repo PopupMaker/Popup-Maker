@@ -3,8 +3,8 @@
 > This is a historical analysis of the v1.21.0 regression. The authoritative
 > integration contract is now documented in
 > [`page-builder-integration.md`](page-builder-integration.md). Current code uses
-> `wp_enqueue_scripts:11`, after builder initialization, as the proven preload
-> boundary.
+> `wp_enqueue_scripts:11`, after Beaver Builder's initialization callback, as
+> the proven preload boundary for that regression.
 
 ## Executive Summary
 
@@ -33,8 +33,9 @@ Historical testing found both of these avoided the original breakage:
 - `add_action( 'wp_head', [ $this, 'preload_popups' ], 1 );`
 - `add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 10 );`
 
-The production integration uses `wp_enqueue_scripts:11` so builder callbacks at
-priority 10 always finish first, regardless of plugin registration order.
+The production integration uses `wp_enqueue_scripts:11` so Beaver Builder's
+callback at priority 10 always finishes first, regardless of plugin registration
+order.
 
 ## Complete Frontend Process Comparison
 
