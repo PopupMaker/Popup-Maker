@@ -193,8 +193,6 @@ class Divi extends PageBuilder {
 		try {
 			return (bool) et_pb_is_pagebuilder_used( absint( $popup_id ) );
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return false;
 		}
 	}
@@ -210,8 +208,6 @@ class Divi extends PageBuilder {
 	 * @return string|null
 	 */
 	public function render_document( $popup_id, $is_editor_canvas = false ) {
-		unset( $popup_id );
-
 		return $is_editor_canvas
 			? '<div id="et-boc"><div class="et-l"><div id="et-fb-app"></div></div></div>'
 			: null;
