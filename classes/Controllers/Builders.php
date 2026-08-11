@@ -103,6 +103,10 @@ class Builders extends Controller {
 			$builders[] = \PopupMaker\Builders\SiteOrigin::class;
 		}
 
+		if ( defined( 'BRIZY_VERSION' ) || class_exists( '\Brizy_Editor' ) ) {
+			$builders[] = \PopupMaker\Builders\Brizy::class;
+		}
+
 		return $builders;
 	}
 
