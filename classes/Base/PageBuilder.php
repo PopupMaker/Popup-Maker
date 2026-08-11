@@ -115,7 +115,7 @@ abstract class PageBuilder {
 
 		$popup = pum_get_popup( $popup_id );
 
-		if ( ! pum_is_popup( $popup ) ) {
+		if ( ! pum_is_popup( $popup ) || ! current_user_can( 'edit_post', $popup_id ) ) {
 			return false;
 		}
 

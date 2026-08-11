@@ -30,15 +30,37 @@ const settings = (): BuilderOwnedCanvasSettings => ( {
 	],
 } );
 
+const rect = ( values: Partial< DOMRect > ): DOMRect => ( {
+	bottom: 0,
+	height: 0,
+	left: 0,
+	right: 0,
+	top: 0,
+	width: 0,
+	x: 0,
+	y: 0,
+	toJSON: () => ( {} ),
+	...values,
+} );
+
+const nextFrame = async (): Promise< void > =>
+	new Promise( ( resolve ) =>
+		window.requestAnimationFrame( () => resolve() )
+	);
+
 describe( 'builder-owned popup canvas', () => {
 	let nativeInnerWidth: number;
 	let nativeMutationObserver: typeof window.MutationObserver;
+	let nativeResizeObserver: typeof window.ResizeObserver;
 	let mutationCallbacks: MutationCallback[];
+	let resizeCallbacks: ResizeObserverCallback[];
 
 	beforeEach( () => {
 		nativeInnerWidth = window.innerWidth;
 		nativeMutationObserver = window.MutationObserver;
+		nativeResizeObserver = window.ResizeObserver;
 		mutationCallbacks = [];
+		resizeCallbacks = [];
 		window.MutationObserver = class implements MutationObserver {
 			constructor( callback: MutationCallback ) {
 				mutationCallbacks.push( callback );
@@ -52,18 +74,35 @@ describe( 'builder-owned popup canvas', () => {
 				return [];
 			}
 		};
+		window.ResizeObserver = class implements ResizeObserver {
+			constructor( callback: ResizeObserverCallback ) {
+				resizeCallbacks.push( callback );
+			}
+
+			disconnect(): void {}
+
+			observe(): void {}
+
+			unobserve(): void {}
+		};
 	} );
 
 	afterEach( () => {
 		delete window.pumBuilderOwnedCanvas;
 		document.head.innerHTML = '';
 		document.body.innerHTML = '';
+		document.body.className = '';
+		document.body.id = '';
+		document.documentElement.className = '';
+		document.documentElement.id = '';
 		document.documentElement.removeAttribute( 'style' );
 		Object.defineProperty( window, 'innerWidth', {
 			configurable: true,
 			value: nativeInnerWidth,
 		} );
 		window.MutationObserver = nativeMutationObserver;
+		window.ResizeObserver = nativeResizeObserver;
+		jest.restoreAllMocks();
 		jest.resetModules();
 	} );
 
@@ -86,29 +125,41 @@ describe( 'builder-owned popup canvas', () => {
 			configurable: true,
 			value: 900,
 		} );
+		Object.defineProperty( iframe.contentWindow, 'innerWidth', {
+			configurable: true,
+			value: 1000,
+		} );
+		iframe.contentDocument.documentElement.id = 'builder-document';
+		iframe.contentDocument.body.id = 'builder-content';
 		iframe.contentDocument.body.getBoundingClientRect = jest
 			.fn< () => DOMRect >()
-			.mockReturnValue( {
-				height: 300,
-				top: 580,
-			} as DOMRect );
+			.mockReturnValue(
+				rect( {
+					bottom: 300,
+					height: 300,
+					left: 0,
+					right: 420,
+					top: 0,
+					width: 420,
+				} )
+			);
 
 		await import( '../owned-canvas' );
 
 		const iframeDocument = iframe?.contentDocument;
 		const canvas = iframeDocument?.body;
 
-		expect( iframeDocument?.documentElement.id ).toBe( 'pum-12' );
+		expect( iframeDocument?.documentElement.id ).toBe( 'builder-document' );
 		expect( iframeDocument?.documentElement.classList ).toContain(
 			'pum-theme-4'
 		);
-		expect( canvas?.id ).toBe( 'popmake-12' );
+		expect( canvas?.id ).toBe( 'builder-content' );
 		expect( canvas?.classList ).toContain( 'pum-container' );
 		expect( canvas?.classList ).toContain( 'pum-content' );
 		expect( canvas?.style.getPropertyValue( 'width' ) ).toBe( '420px' );
 		expect( canvas?.style.getPropertyValue( 'height' ) ).toBe( '300px' );
-		expect( canvas?.style.getPropertyValue( 'right' ) ).toBe( '30px' );
-		expect( canvas?.style.getPropertyValue( 'bottom' ) ).toBe( '20px' );
+		expect( canvas?.style.getPropertyValue( 'left' ) ).toBe( '550px' );
+		expect( canvas?.style.getPropertyValue( 'top' ) ).toBe( '580px' );
 		expect(
 			iframeDocument?.getElementById(
 				'pum-builder-copy-popup-maker-site-inline-css'
@@ -153,10 +204,16 @@ describe( 'builder-owned popup canvas', () => {
 
 		canvas.getBoundingClientRect = jest
 			.fn< () => DOMRect >()
-			.mockReturnValue( {
-				height: window.innerHeight + 100,
-				top: -50,
-			} as DOMRect );
+			.mockReturnValue(
+				rect( {
+					bottom: window.innerHeight + 100,
+					height: window.innerHeight + 100,
+					left: 0,
+					right: 420,
+					top: 0,
+					width: 420,
+				} )
+			);
 
 		await import( '../owned-canvas' );
 
@@ -170,9 +227,12 @@ describe( 'builder-owned popup canvas', () => {
 		expect( canvas.style.getPropertyValue( 'position' ) ).toBe(
 			'absolute'
 		);
-		expect( canvas.style.getPropertyValue( 'transform' ) ).toBe(
-			'translateX(-50%)'
-		);
+		expect( canvas.style.getPropertyValue( 'transform' ) ).toBe( 'none' );
+		expect( document.documentElement.classList ).toContain( 'pum-theme-4' );
+		expect( document.body.classList ).toContain( 'pum-theme-4' );
+		expect(
+			document.documentElement.style.getPropertyValue( 'min-height' )
+		).toBe( `${ Math.ceil( window.innerHeight + 120 ) }px` );
 	} );
 
 	it( 'keeps a right-positioned custom canvas inside a narrow viewport', async () => {
@@ -197,14 +257,16 @@ describe( 'builder-owned popup canvas', () => {
 		document.documentElement.style.setProperty( 'min-height', '999px' );
 		canvas.getBoundingClientRect = jest
 			.fn< () => DOMRect >()
-			.mockReturnValue( {
-				bottom: 280,
-				height: 260,
-				left: -36,
-				right: 284,
-				top: 20,
-				width: 320,
-			} as DOMRect );
+			.mockReturnValue(
+				rect( {
+					bottom: 280,
+					height: 260,
+					left: -36,
+					right: 284,
+					top: 20,
+					width: 320,
+				} )
+			);
 
 		await import( '../owned-canvas' );
 
@@ -215,7 +277,7 @@ describe( 'builder-owned popup canvas', () => {
 		);
 		expect(
 			document.documentElement.style.getPropertyValue( 'min-height' )
-		).toBe( '' );
+		).toBe( '999px' );
 	} );
 
 	it( 'adopts a replacement builder canvas in the same document', async () => {
@@ -236,6 +298,7 @@ describe( 'builder-owned popup canvas', () => {
 		mutationCallbacks.forEach( ( callback ) => {
 			callback( [], {} as MutationObserver );
 		} );
+		await nextFrame();
 
 		expect( replacementCanvas.classList ).toContain( 'pum-container' );
 		expect( replacementCanvas.classList ).toContain( 'pum-content' );
@@ -245,5 +308,194 @@ describe( 'builder-owned popup canvas', () => {
 		expect(
 			replacementCanvas.querySelector( '.pum-builder-canvas-close' )
 		).not.toBeNull();
+	} );
+
+	it( 'adopts a canvas inserted after its iframe is ready', async () => {
+		document.body.innerHTML = '<iframe id="builder-canvas"></iframe>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			canvas_selector: '#late-canvas',
+		};
+		const iframe =
+			document.querySelector< HTMLIFrameElement >( '#builder-canvas' );
+
+		if ( ! iframe?.contentDocument ) {
+			throw new Error( 'Iframe fixture was not created.' );
+		}
+
+		await import( '../owned-canvas' );
+
+		const lateCanvas = iframe.contentDocument.createElement( 'main' );
+		lateCanvas.id = 'late-canvas';
+		lateCanvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue(
+				rect( {
+					bottom: 300,
+					height: 300,
+					left: 0,
+					right: 420,
+					top: 0,
+					width: 420,
+				} )
+			);
+		iframe.contentDocument.body.append( lateCanvas );
+
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		expect( lateCanvas.id ).toBe( 'late-canvas' );
+		expect( lateCanvas.classList ).toContain( 'pum-container' );
+		expect(
+			lateCanvas.querySelector( '.pum-builder-canvas-title' )
+		).not.toBeNull();
+	} );
+
+	it( 'positions a nested canvas in viewport coordinates', async () => {
+		document.body.innerHTML =
+			'<section id="canvas-parent"><main id="builder-canvas"></main></section>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			location: 'left top',
+			position_left: '20',
+			position_top: '10',
+		};
+		const parent =
+			document.querySelector< HTMLElement >( '#canvas-parent' );
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! parent || ! canvas ) {
+			throw new Error( 'Nested canvas fixture was not created.' );
+		}
+
+		parent.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue( rect( { left: 200, top: 100 } ) );
+		Object.defineProperties( parent, {
+			clientLeft: { configurable: true, value: 2 },
+			clientTop: { configurable: true, value: 2 },
+			scrollLeft: { configurable: true, value: 10 },
+			scrollTop: { configurable: true, value: 20 },
+		} );
+		Object.defineProperty( canvas, 'offsetParent', {
+			configurable: true,
+			value: parent,
+		} );
+		canvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue(
+				rect( {
+					bottom: 200,
+					height: 200,
+					left: 0,
+					right: 300,
+					top: 0,
+					width: 300,
+				} )
+			);
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '-72px' );
+		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-172px' );
+	} );
+
+	it( 'keeps an outside close button inside the viewport', async () => {
+		document.body.innerHTML = '<main id="builder-canvas"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			location: 'right top',
+			position_right: '0',
+			position_top: '0',
+		};
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Canvas fixture was not created.' );
+		}
+
+		Object.defineProperty( window, 'innerWidth', {
+			configurable: true,
+			value: 320,
+		} );
+		canvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue(
+				rect( {
+					bottom: 200,
+					height: 200,
+					left: 0,
+					right: 250,
+					top: 0,
+					width: 250,
+				} )
+			);
+		jest.spyOn(
+			HTMLElement.prototype,
+			'getBoundingClientRect'
+		).mockImplementation( function () {
+			return this.classList.contains( 'pum-builder-canvas-close' )
+				? rect( {
+						bottom: 20,
+						height: 40,
+						left: 230,
+						right: 280,
+						top: -20,
+						width: 50,
+				  } )
+				: rect( {} );
+		} );
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '30px' );
+		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '30px' );
+	} );
+
+	it( 'coalesces repeated resize observations into one frame', async () => {
+		document.body.innerHTML = '<main id="builder-canvas"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+		};
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Canvas fixture was not created.' );
+		}
+
+		canvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue(
+				rect( {
+					bottom: 300,
+					height: 300,
+					left: 0,
+					right: 420,
+					top: 0,
+					width: 420,
+				} )
+			);
+
+		await import( '../owned-canvas' );
+		expect( canvas.getBoundingClientRect ).toHaveBeenCalledTimes( 1 );
+
+		resizeCallbacks[ 0 ]( [], {} as ResizeObserver );
+		resizeCallbacks[ 0 ]( [], {} as ResizeObserver );
+		resizeCallbacks[ 0 ]( [], {} as ResizeObserver );
+
+		expect( canvas.getBoundingClientRect ).toHaveBeenCalledTimes( 1 );
+		await nextFrame();
+		expect( canvas.getBoundingClientRect ).toHaveBeenCalledTimes( 2 );
 	} );
 } );

@@ -355,7 +355,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			 * @param int $popup_id Popup ID.
 			 * @return bool
 			 */
-			public function enqueue_test_canvas( $popup_id ) {
+			public function pum_enqueue_test_canvas( $popup_id ) {
 				return $this->enqueue_owned_canvas_preview(
 					$popup_id,
 					[
@@ -369,8 +369,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 		wp_register_script( 'popup-maker-builder-preview', false, [], 'test', true );
 		wp_register_style( 'popup-maker-builder-preview', false, [], 'test' );
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
 
-		$this->assertTrue( $builder->enqueue_test_canvas( $popup_id ) );
+		$this->assertTrue( $builder->pum_enqueue_test_canvas( $popup_id ) );
 		$this->assertTrue( wp_script_is( 'popup-maker-builder-preview', 'enqueued' ) );
 		$this->assertTrue( wp_style_is( 'popup-maker-builder-preview', 'enqueued' ) );
 
@@ -396,6 +397,34 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 		$this->assertIsArray( $theme_styles );
 		$this->assertStringContainsString( ".pum-theme-{$theme_id}", implode( "\n", $theme_styles ) );
+	}
+
+	/** @return void */
+	public function test_builder_owned_canvas_requires_popup_edit_access() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder  = new class( \PopupMaker\plugin() ) extends PageBuilder {
+
+			/** @return bool */
+			public function is_available() {
+				return true;
+			}
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return bool
+			 */
+			public function pum_enqueue_test_canvas( $popup_id ) {
+				return $this->enqueue_owned_canvas_preview(
+					$popup_id,
+					[ 'canvas_selector' => '#builder-canvas' ]
+				);
+			}
+		};
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'subscriber' ] ) );
+
+		$this->assertFalse( current_user_can( 'edit_post', $popup_id ) );
+		$this->assertFalse( $builder->pum_enqueue_test_canvas( $popup_id ) );
 	}
 
 	/** @return void */
