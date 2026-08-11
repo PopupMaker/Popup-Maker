@@ -113,8 +113,6 @@ class Bricks extends PageBuilder {
 	 * @return void
 	 */
 	public function remember_saved_document( $post_id, $post = null, $update = false ) {
-		unset( $post, $update );
-
 		if ( ! wp_doing_ajax() || ! is_numeric( $post_id ) ) {
 			return;
 		}
@@ -440,8 +438,6 @@ class Bricks extends PageBuilder {
 		try {
 			return (bool) \Bricks\Capabilities::current_user_can_use_builder( absint( $popup_id ) );
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return false;
 		}
 	}
