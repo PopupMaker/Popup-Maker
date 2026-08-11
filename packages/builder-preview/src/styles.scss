@@ -19,6 +19,20 @@ html.pum-builder-owned-canvas-root > body {
 	box-sizing: border-box;
 }
 
+.pum-builder-canvas-area.pum-content {
+	&:focus {
+		outline: none;
+	}
+
+	> :first-child {
+		margin-top: 0;
+	}
+
+	> :last-child {
+		margin-bottom: 0;
+	}
+}
+
 .pum-builder-canvas-area.pum-scrollable {
 	> .pum-builder-canvas-title,
 	> .pum-builder-canvas-close {
@@ -62,18 +76,6 @@ body.pum-builder-preview {
 	}
 
 	.pum-builder-canvas-area.pum-content {
-		&:focus {
-			outline: none;
-		}
-
-		> :first-child {
-			margin-top: 0;
-		}
-
-		> :last-child {
-			margin-bottom: 0;
-		}
-
 		&.pum-scrollable {
 			overflow: auto;
 			overflow-y: scroll;

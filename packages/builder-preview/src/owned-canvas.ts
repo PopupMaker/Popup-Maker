@@ -8,6 +8,7 @@ if ( ownedCanvas?.popup_id ) {
 	let canvasWindow: Window | null = null;
 	let targetObserver: MutationObserver | null = null;
 	let resizeObserver: ResizeObserver | null = null;
+	let canvasTransformObserver: MutationObserver | null = null;
 	let adoptionFrame: number | null = null;
 	let geometryFrame: number | null = null;
 	let rootElement: HTMLElement | null = null;
@@ -19,6 +20,7 @@ if ( ownedCanvas?.popup_id ) {
 	let ownedCanvasClasses: string[] = [];
 	let syntheticCanvasElements: HTMLElement[] = [];
 	let ownedStyleElements: HTMLElement[] = [];
+	let canvasTransformSignature = '';
 	const canvasStyles = new Map<
 		string,
 		{
@@ -370,6 +372,9 @@ if ( ownedCanvas?.popup_id ) {
 
 		resizeObserver?.disconnect();
 		resizeObserver = null;
+		canvasTransformObserver?.disconnect();
+		canvasTransformObserver = null;
+		canvasTransformSignature = '';
 		scrollCanvas?.removeEventListener( 'scroll', mirrorCanvasScroll );
 		scrollCanvas = null;
 
@@ -456,6 +461,136 @@ if ( ownedCanvas?.popup_id ) {
 		return null;
 	};
 
+	const transformMatrix = (
+		transform: string
+	): {
+		a: number;
+		b: number;
+		c: number;
+		d: number;
+		e: number;
+		f: number;
+	} | null => {
+		const match = transform.match( /^(matrix|matrix3d)\((.+)\)$/ );
+
+		if ( ! match ) {
+			return null;
+		}
+
+		const values = match[ 2 ].split( ',' ).map( Number );
+
+		if ( values.some( ( value ) => Number.isNaN( value ) ) ) {
+			return null;
+		}
+
+		if ( 'matrix' === match[ 1 ] && 6 === values.length ) {
+			const [ a, b, c, d, e, f ] = values;
+
+			return { a, b, c, d, e, f };
+		}
+
+		if ( 'matrix3d' === match[ 1 ] && 16 === values.length ) {
+			const isPlanar = [ 2, 3, 6, 7, 8, 9, 11, 14 ].every(
+				( index ) => 0 === values[ index ]
+			);
+
+			if ( ! isPlanar || 1 !== values[ 10 ] || 1 !== values[ 15 ] ) {
+				return null;
+			}
+
+			return {
+				a: values[ 0 ],
+				b: values[ 1 ],
+				c: values[ 4 ],
+				d: values[ 5 ],
+				e: values[ 12 ],
+				f: values[ 13 ],
+			};
+		}
+
+		return null;
+	};
+
+	const transformOriginLength = ( value: string, size: number ): number => {
+		const length = parseFloat( value );
+
+		if ( Number.isNaN( length ) ) {
+			return 0;
+		}
+
+		return value.endsWith( '%' ) ? ( length / 100 ) * size : length;
+	};
+
+	const transformedContainingBlockPosition = (
+		element: HTMLElement,
+		viewportTop: number,
+		viewportLeft: number
+	): { left: number; top: number } | null => {
+		if ( ! canvasWindow ) {
+			return null;
+		}
+
+		const style = canvasWindow.getComputedStyle( element );
+		const matrix = transformMatrix( style.getPropertyValue( 'transform' ) );
+		const width = element.offsetWidth;
+		const height = element.offsetHeight;
+
+		if ( ! matrix || ! width || ! height ) {
+			return null;
+		}
+
+		const determinant = matrix.a * matrix.d - matrix.b * matrix.c;
+
+		if ( ! determinant ) {
+			return null;
+		}
+
+		const originParts = style
+			.getPropertyValue( 'transform-origin' )
+			.split( /\s+/ );
+		const originX = transformOriginLength( originParts[ 0 ] || '0', width );
+		const originY = transformOriginLength(
+			originParts[ 1 ] || '0',
+			height
+		);
+		const transformPoint = ( left: number, top: number ) => ( {
+			left:
+				originX +
+				matrix.a * ( left - originX ) +
+				matrix.c * ( top - originY ) +
+				matrix.e,
+			top:
+				originY +
+				matrix.b * ( left - originX ) +
+				matrix.d * ( top - originY ) +
+				matrix.f,
+		} );
+		const corners = [
+			transformPoint( 0, 0 ),
+			transformPoint( width, 0 ),
+			transformPoint( 0, height ),
+			transformPoint( width, height ),
+		];
+		const minLeft = Math.min( ...corners.map( ( point ) => point.left ) );
+		const minTop = Math.min( ...corners.map( ( point ) => point.top ) );
+		const bounds = element.getBoundingClientRect();
+		const relativeLeft = viewportLeft - ( bounds.left - minLeft ) - originX;
+		const relativeTop = viewportTop - ( bounds.top - minTop ) - originY;
+		const translatedLeft = relativeLeft - matrix.e;
+		const translatedTop = relativeTop - matrix.f;
+
+		return {
+			left:
+				originX +
+				( matrix.d * translatedLeft - matrix.c * translatedTop ) /
+					determinant,
+			top:
+				originY +
+				( -matrix.b * translatedLeft + matrix.a * translatedTop ) /
+					determinant,
+		};
+	};
+
 	const viewportToPosition = (
 		viewportTop: number,
 		viewportLeft: number,
@@ -465,16 +600,36 @@ if ( ownedCanvas?.popup_id ) {
 			return { left: viewportLeft, top: viewportTop };
 		}
 
-		const offsetParent =
+		const offsetParent = (
 			'fixed' === position
 				? fixedContainingBlock() || canvas.offsetParent
-				: canvas.offsetParent;
+				: canvas.offsetParent
+		) as HTMLElement | null;
 
 		if ( 'fixed' === position && ! offsetParent ) {
 			return { left: viewportLeft, top: viewportTop };
 		}
 
 		if ( offsetParent ) {
+			const transformedPosition = transformedContainingBlockPosition(
+				offsetParent,
+				viewportTop,
+				viewportLeft
+			);
+
+			if ( transformedPosition ) {
+				return {
+					left:
+						transformedPosition.left +
+						offsetParent.scrollLeft -
+						offsetParent.clientLeft,
+					top:
+						transformedPosition.top +
+						offsetParent.scrollTop -
+						offsetParent.clientTop,
+				};
+			}
+
 			const parentBounds = offsetParent.getBoundingClientRect();
 
 			return {
@@ -496,6 +651,20 @@ if ( ownedCanvas?.popup_id ) {
 			top: viewportTop + canvasWindow.scrollY,
 		};
 	};
+
+	const getCanvasTransformSignature = (
+		style: CSSStyleDeclaration
+	): string =>
+		[ 'transform', 'transform-origin', 'translate', 'scale', 'rotate' ]
+			.map( ( property ) => style.getPropertyValue( property ) )
+			.join( '|' );
+
+	const hasCanvasTransform = ( style: CSSStyleDeclaration ): boolean =>
+		[ 'transform', 'translate', 'scale', 'rotate' ].some( ( property ) => {
+			const value = style.getPropertyValue( property );
+
+			return Boolean( value && 'none' !== value && 'normal' !== value );
+		} );
 
 	function mirrorPopupGeometry(): void {
 		if ( ! canvas || ! canvasWindow ) {
@@ -627,11 +796,10 @@ if ( ownedCanvas?.popup_id ) {
 			viewportLeft,
 			position
 		);
-		const transform = canvasWindow
-			.getComputedStyle( canvas )
-			.getPropertyValue( 'transform' );
+		const canvasStyle = canvasWindow.getComputedStyle( canvas );
+		canvasTransformSignature = getCanvasTransformSignature( canvasStyle );
 
-		if ( transform && 'none' !== transform ) {
+		if ( hasCanvasTransform( canvasStyle ) ) {
 			const positionedBounds = canvas.getBoundingClientRect();
 			const transformOffset = viewportToPosition(
 				positionedBounds.top,
@@ -676,6 +844,47 @@ if ( ownedCanvas?.popup_id ) {
 			geometryFrame = null;
 			mirrorPopupGeometry();
 		} );
+	};
+
+	const scheduleTransformGeometry = (): void => {
+		if ( ! canvas || ! canvasWindow ) {
+			return;
+		}
+
+		const signature = getCanvasTransformSignature(
+			canvasWindow.getComputedStyle( canvas )
+		);
+
+		if ( signature === canvasTransformSignature ) {
+			return;
+		}
+
+		canvasTransformSignature = signature;
+		scheduleGeometry();
+	};
+
+	const scheduleAdoptionFromMutations = (
+		records: MutationRecord[]
+	): void => {
+		const onlyCurrentCanvasStyles =
+			Boolean( records.length && canvas ) &&
+			records.every( ( record ) => {
+				if (
+					'attributes' !== record.type ||
+					'style' !== record.attributeName ||
+					record.target !== canvas
+				) {
+					return false;
+				}
+
+				return ( record.target as HTMLElement ).matches(
+					display.canvas_selector
+				);
+			} );
+
+		if ( ! onlyCurrentCanvasStyles ) {
+			scheduleAdoption();
+		}
 	};
 
 	const releaseCanvasDocument = (): void => {
@@ -736,7 +945,7 @@ if ( ownedCanvas?.popup_id ) {
 			if ( iframe ) {
 				if ( 'MutationObserver' in window ) {
 					targetObserver = new window.MutationObserver(
-						scheduleAdoption
+						scheduleAdoptionFromMutations
 					);
 					targetObserver.observe( targetDocument.documentElement, {
 						attributes: true,
@@ -776,6 +985,19 @@ if ( ownedCanvas?.popup_id ) {
 			canvas = targetCanvas;
 			scrollCanvas = targetCanvas;
 			scrollCanvas.addEventListener( 'scroll', mirrorCanvasScroll );
+
+			if ( 'MutationObserver' in window ) {
+				canvasTransformSignature = getCanvasTransformSignature(
+					targetWindow.getComputedStyle( targetCanvas )
+				);
+				canvasTransformObserver = new window.MutationObserver(
+					scheduleTransformGeometry
+				);
+				canvasTransformObserver.observe( targetCanvas, {
+					attributes: true,
+					attributeFilter: [ 'style' ],
+				} );
+			}
 		}
 
 		addCanvasClasses( targetCanvas, display.container_classes );
@@ -816,7 +1038,7 @@ if ( ownedCanvas?.popup_id ) {
 	adoptCanvas();
 
 	if ( 'MutationObserver' in window ) {
-		new window.MutationObserver( scheduleAdoption ).observe(
+		new window.MutationObserver( scheduleAdoptionFromMutations ).observe(
 			document.body,
 			{
 				attributes: true,

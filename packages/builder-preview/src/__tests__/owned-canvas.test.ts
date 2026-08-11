@@ -674,6 +674,54 @@ describe( 'builder-owned popup canvas', () => {
 		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-180px' );
 	} );
 
+	it( 'inverts a scaled containing block when positioning', async () => {
+		document.body.innerHTML =
+			'<section id="canvas-parent"><main id="builder-canvas"></main></section>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			location: 'left top',
+			position_left: '20',
+			position_top: '10',
+			position_fixed: true,
+			show_close: false,
+		};
+		const parent =
+			document.querySelector< HTMLElement >( '#canvas-parent' );
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! parent || ! canvas ) {
+			throw new Error( 'Scaled canvas fixture was not created.' );
+		}
+
+		parent.style.transform = 'matrix(0.5, 0, 0, 0.5, 0, 0)';
+		parent.style.transformOrigin = '0 0';
+		Object.defineProperties( parent, {
+			offsetHeight: { configurable: true, value: 600 },
+			offsetWidth: { configurable: true, value: 800 },
+		} );
+		parent.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue(
+				rect( {
+					height: 300,
+					left: 100,
+					top: 50,
+					width: 400,
+				} )
+			);
+		canvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue( rect( { height: 200, width: 300 } ) );
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '-80px' );
+		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-160px' );
+	} );
+
 	it( 'compensates for a transform on the builder canvas', async () => {
 		document.body.innerHTML = '<main id="builder-canvas"></main>';
 		window.pumBuilderOwnedCanvas = {
@@ -690,27 +738,72 @@ describe( 'builder-owned popup canvas', () => {
 			throw new Error( 'Transformed canvas fixture was not created.' );
 		}
 
-		canvas.style.transform = 'translate(100px, 50px)';
-		canvas.getBoundingClientRect = jest
-			.fn< () => DOMRect >()
-			.mockReturnValue(
-				rect( {
-					bottom: 250,
-					height: 200,
-					left: 100,
-					right: 400,
-					top: 50,
-					width: 300,
-				} )
-			);
+		const getBounds = jest.fn< () => DOMRect >().mockReturnValue(
+			rect( {
+				bottom: 200,
+				height: 200,
+				right: 300,
+				width: 300,
+			} )
+		);
+		canvas.getBoundingClientRect = getBounds;
 
 		await import( '../owned-canvas' );
+
+		canvas.style.transform = 'translate(100px, 50px)';
+		getBounds.mockReturnValue(
+			rect( {
+				bottom: 250,
+				height: 200,
+				left: 100,
+				right: 400,
+				top: 50,
+				width: 300,
+			} )
+		);
+		const styleMutation = {
+			attributeName: 'style',
+			target: canvas,
+			type: 'attributes',
+		} as MutationRecord;
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [ styleMutation ], {} as MutationObserver );
+		} );
+		await nextFrame();
 
 		expect( canvas.style.getPropertyValue( 'transform' ) ).toBe(
 			'translate(100px, 50px)'
 		);
 		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '234px' );
 		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '262px' );
+	} );
+
+	it( 'ignores owned geometry mutations for style-based selectors', async () => {
+		document.body.innerHTML = '<main style="--builder-canvas: 1"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '[style*="builder-canvas"]',
+		};
+		const canvas = document.querySelector< HTMLElement >( 'main' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Style-selected canvas fixture was not created.' );
+		}
+
+		await import( '../owned-canvas' );
+
+		const requestFrame = jest.spyOn( window, 'requestAnimationFrame' );
+		const styleMutation = {
+			attributeName: 'style',
+			target: canvas,
+			type: 'attributes',
+		} as MutationRecord;
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [ styleMutation ], {} as MutationObserver );
+		} );
+
+		expect( requestFrame ).not.toHaveBeenCalled();
 	} );
 
 	it( 'adopts an existing canvas after its selector attribute changes', async () => {
