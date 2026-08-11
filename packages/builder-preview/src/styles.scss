@@ -8,6 +8,17 @@ html.pum-builder-owned-canvas-root > body.pum-overlay-disabled {
 	background: transparent !important;
 }
 
+html.pum-builder-owned-canvas-root > body {
+	background: transparent !important;
+}
+
+.pum-builder-canvas-area,
+.pum-builder-canvas-area *,
+.pum-builder-canvas-area *::before,
+.pum-builder-canvas-area *::after {
+	box-sizing: border-box;
+}
+
 .pum-builder-canvas-area.pum-scrollable {
 	> .pum-builder-canvas-title,
 	> .pum-builder-canvas-close {

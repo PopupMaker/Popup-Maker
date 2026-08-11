@@ -153,6 +153,7 @@ describe( 'builder-owned popup canvas', () => {
 		expect( iframeDocument?.documentElement.classList ).toContain(
 			'pum-theme-4'
 		);
+		expect( iframeDocument?.body.classList ).toContain( 'pum-theme-4' );
 		expect( iframeDocument?.documentElement.classList ).not.toContain(
 			'pum-overlay'
 		);
@@ -168,6 +169,14 @@ describe( 'builder-owned popup canvas', () => {
 				'pum-builder-copy-popup-maker-site-inline-css'
 			)?.textContent
 		).toContain( '.pum-theme-4' );
+		expect(
+			iframeDocument?.getElementById( 'pum-builder-owned-canvas' )
+				?.textContent
+		).toContain( 'html.pum-builder-owned-canvas-root > body' );
+		expect(
+			iframeDocument?.getElementById( 'pum-builder-owned-canvas' )
+				?.textContent
+		).toContain( 'box-sizing: border-box' );
 		expect(
 			canvas?.firstElementChild?.classList.contains(
 				'pum-builder-canvas-title'
@@ -307,12 +316,61 @@ describe( 'builder-owned popup canvas', () => {
 
 		await import( '../owned-canvas' );
 
+		expect( canvas.style.getPropertyValue( 'width' ) ).toBe( '60vw' );
 		expect( canvas.style.getPropertyValue( 'min-width' ) ).toBe(
 			'min(20vw, calc(100vw - 20px))'
 		);
 		expect( canvas.style.getPropertyValue( 'max-width' ) ).toBe(
 			'min(80vw, calc(100vw - 20px))'
 		);
+	} );
+
+	it( 'uses viewport units for percentage custom dimensions', async () => {
+		document.body.innerHTML = '<main id="builder-canvas"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			custom_width: '100%',
+			custom_height: '50%',
+		};
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Custom canvas fixture was not created.' );
+		}
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'width' ) ).toBe( '100vw' );
+		expect( canvas.style.getPropertyValue( 'height' ) ).toBe( '50vh' );
+	} );
+
+	it( 'deduplicates copied styles without source IDs', async () => {
+		document.head.innerHTML =
+			'<style class="popup-maker-anonymous-style">.pum-content { color: red; }</style>';
+		document.body.innerHTML = '<iframe id="builder-canvas"></iframe>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			style_selectors: [ '.popup-maker-anonymous-style' ],
+		};
+
+		await import( '../owned-canvas' );
+
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		const iframe =
+			document.querySelector< HTMLIFrameElement >( '#builder-canvas' );
+
+		expect(
+			iframe?.contentDocument.querySelectorAll(
+				'#pum-builder-copy-anonymous-0-0'
+			)
+		).toHaveLength( 1 );
 	} );
 
 	it( 'adopts a replacement builder canvas in the same document', async () => {

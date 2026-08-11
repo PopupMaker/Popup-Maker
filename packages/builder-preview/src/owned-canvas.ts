@@ -52,34 +52,62 @@ if ( ownedCanvas?.popup_id ) {
 		addClasses( targetDocument.body, rootClasses );
 	};
 
-	const viewportRelativeLength = ( value: string ): string => {
+	const viewportRelativeLength = (
+		value: string,
+		viewportUnit = 'vw'
+	): string => {
 		const percentage = value.trim().match( /^(\d+(?:\.\d+)?)%$/ );
 
-		return percentage ? `${ percentage[ 1 ] }vw` : value;
+		return percentage ? `${ percentage[ 1 ] }${ viewportUnit }` : value;
+	};
+
+	const responsiveWidth = ( size: string, viewportWidth: number ): string => {
+		if ( viewportWidth < 1024 ) {
+			return '95vw';
+		}
+
+		// Mirrors the responsive presets in the site stylesheet, using viewport
+		// units because a builder canvas may have a narrower containing block.
+		const widths: Record< string, string > = {
+			nano: '10vw',
+			micro: '20vw',
+			tiny: '30vw',
+			small: '40vw',
+			medium: '60vw',
+			normal: '70vw',
+			large: '80vw',
+			xlarge: '95vw',
+		};
+
+		return widths[ size ] || '95vw';
 	};
 
 	const copyPopupStyles = ( targetDocument: Document ): void => {
-		( display.style_selectors || [] ).forEach( ( selector ) => {
-			document.querySelectorAll( selector ).forEach( ( source ) => {
-				const sourceId = source.getAttribute( 'id' );
-				const copyId = sourceId ? `pum-builder-copy-${ sourceId }` : '';
+		( display.style_selectors || [] ).forEach(
+			( selector, selectorIndex ) => {
+				document
+					.querySelectorAll( selector )
+					.forEach( ( source, sourceIndex ) => {
+						const sourceId = source.getAttribute( 'id' );
+						const copyId = sourceId
+							? `pum-builder-copy-${ sourceId }`
+							: `pum-builder-copy-anonymous-${ selectorIndex }-${ sourceIndex }`;
 
-				if ( copyId && targetDocument.getElementById( copyId ) ) {
-					return;
-				}
+						if ( targetDocument.getElementById( copyId ) ) {
+							return;
+						}
 
-				const copy = source.cloneNode( true ) as HTMLElement;
+						const copy = source.cloneNode( true ) as HTMLElement;
 
-				if ( copyId ) {
-					copy.id = copyId;
-				}
+						copy.id = copyId;
 
-				if ( 'LINK' === copy.tagName ) {
-					copy.addEventListener( 'load', adoptCanvas );
-				}
-				targetDocument.head.append( copy );
-			} );
-		} );
+						if ( 'LINK' === copy.tagName ) {
+							copy.addEventListener( 'load', adoptCanvas );
+						}
+						targetDocument.head.append( copy );
+					} );
+			}
+		);
 	};
 
 	const attachCanvasStyles = ( targetDocument: Document ): void => {
@@ -90,6 +118,9 @@ if ( ownedCanvas?.popup_id ) {
 		const style = targetDocument.createElement( 'style' );
 		style.id = 'pum-builder-owned-canvas';
 		style.textContent = `
+			html.pum-builder-owned-canvas-root > body {
+				background: transparent !important;
+			}
 			html.pum-builder-owned-canvas-root.pum-overlay-disabled,
 			html.pum-builder-owned-canvas-root > body.pum-overlay-disabled {
 				background: transparent !important;
@@ -119,6 +150,12 @@ if ( ownedCanvas?.popup_id ) {
 			}
 			.pum-builder-canvas-close-anchor {
 				display: none !important;
+			}
+			.pum-builder-canvas-area,
+			.pum-builder-canvas-area *,
+			.pum-builder-canvas-area *::before,
+			.pum-builder-canvas-area *::after {
+				box-sizing: border-box;
 			}
 			.pum-builder-canvas-area.pum-scrollable > .pum-builder-canvas-title,
 			.pum-builder-canvas-area.pum-scrollable > .pum-builder-canvas-close {
@@ -293,16 +330,16 @@ if ( ownedCanvas?.popup_id ) {
 		const isResponsive = ! isCustom && 'auto' !== display.size;
 		const height =
 			isCustom && ! isEnabled( display.custom_height_auto )
-				? display.custom_height
+				? viewportRelativeLength( display.custom_height, 'vh' )
 				: 'auto';
 		let vertical = 'center';
 		let horizontal = 'center';
 		let width = 'auto';
 
 		if ( isCustom ) {
-			width = display.custom_width;
+			width = viewportRelativeLength( display.custom_width );
 		} else if ( isResponsive ) {
-			width = '';
+			width = responsiveWidth( display.size, canvasWindow.innerWidth );
 		}
 
 		( display.location || 'center' ).split( ' ' ).forEach( ( part ) => {
