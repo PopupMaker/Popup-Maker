@@ -107,6 +107,10 @@ class Builders extends Controller {
 			$builders[] = \PopupMaker\Builders\Brizy::class;
 		}
 
+		if ( defined( 'VCV_VERSION' ) || function_exists( 'vchelper' ) ) {
+			$builders[] = \PopupMaker\Builders\VisualComposer::class;
+		}
+
 		return $builders;
 	}
 
