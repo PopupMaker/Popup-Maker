@@ -800,6 +800,10 @@ class Bricks extends PageBuilder {
 			return;
 		}
 
+		if ( ! $this->enqueue_owned_canvas_preview( $popup->ID, [ 'canvas_selector' => '#brx-content' ] ) ) {
+			return;
+		}
+
 		wp_add_inline_style(
 			'popup-maker-builder-preview',
 			// Bricks' canvas stretches its content wrapper with flexbox.
@@ -807,43 +811,7 @@ class Bricks extends PageBuilder {
 			'body.pum-builder-preview .pum-container .brxe-container { max-width: 100%; }' .
 			'body.pum-builder-preview > .pum > .pum-container { display: none !important; }' .
 			'body.pum-builder-preview > .pum { pointer-events: none !important; z-index: 0 !important; }' .
-			'body.pum-builder-preview > .brx-body { position: relative; z-index: 1; }' .
-			'body.pum-builder-preview .pum-builder-canvas-close-anchor { display: none !important; }'
-		);
-
-		wp_enqueue_script( 'popup-maker-builder-preview' );
-
-		ob_start();
-		\pum_popup_close_text( $popup->ID );
-		$close_content = ob_get_clean();
-		$close_content = is_string( $close_content ) ? $close_content : '';
-
-		wp_localize_script(
-			'popup-maker-builder-preview',
-			'pumBuilderOwnedCanvas',
-			[
-				'canvas_selector'      => '#brx-content',
-				'popup_id'             => absint( $popup->ID ),
-				'size'                 => (string) $popup->get_setting( 'size', 'medium' ),
-				'location'             => (string) $popup->get_setting( 'location', 'center top' ),
-				'container_classes'    => implode( ' ', $popup->get_classes( 'container' ) ),
-				'title'                => (string) $popup->get_title(),
-				'title_classes'        => implode( ' ', $popup->get_classes( 'title' ) ),
-				'custom_width'         => (string) $popup->get_setting( 'custom_width', '640px' ),
-				'custom_height_auto'   => (bool) $popup->get_setting( 'custom_height_auto', false ),
-				'custom_height'        => (string) $popup->get_setting( 'custom_height', '380px' ),
-				'responsive_min_width' => (string) $popup->get_setting( 'responsive_min_width', '0%' ),
-				'responsive_max_width' => (string) $popup->get_setting( 'responsive_max_width', '100%' ),
-				'position_top'         => (string) $popup->get_setting( 'position_top', '100' ),
-				'position_bottom'      => (string) $popup->get_setting( 'position_bottom', '0' ),
-				'position_left'        => (string) $popup->get_setting( 'position_left', '0' ),
-				'position_right'       => (string) $popup->get_setting( 'position_right', '0' ),
-				'position_fixed'       => (bool) $popup->get_setting( 'position_fixed', false ),
-				'show_close'           => $popup->show_close_button(),
-				'close_content'        => $close_content,
-				'close_classes'        => implode( ' ', $popup->get_classes( 'close' ) ),
-				'close_label'          => esc_html__( 'Close', 'popup-maker' ),
-			]
+			'body.pum-builder-preview > .brx-body { position: relative; z-index: 1; }'
 		);
 	}
 
