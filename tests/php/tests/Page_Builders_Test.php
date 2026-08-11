@@ -144,15 +144,28 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			did_action( 'elementor/loaded' ) ||
 			defined( 'FL_BUILDER_VERSION' ) ||
 			class_exists( 'FLBuilder', false ) ||
-			class_exists( 'SiteOrigin_Panels', false )
+			class_exists( 'SiteOrigin_Panels', false ) ||
+			defined( 'BRIZY_VERSION' ) ||
+			class_exists( 'Brizy_Editor', false ) ||
+			defined( 'VCV_VERSION' ) ||
+			function_exists( 'vchelper' ) ||
+			defined( 'ET_BUILDER_THEME' ) ||
+			defined( 'ET_BUILDER_PLUGIN_VERSION' ) ||
+			defined( 'ET_BUILDER_VERSION' ) ||
+			function_exists( 'et_divi_fonts_url' ) ||
+			function_exists( 'et_setup_builder' ) ||
+			class_exists( 'ET_Builder_Plugin' )
 		) {
 			$this->markTestSkipped( 'A bundled builder is active in this test environment.' );
 		}
 
-		$elementor_loaded  = class_exists( \PopupMaker\Builders\Elementor::class, false );
-		$beaver_loaded     = class_exists( \PopupMaker\Builders\BeaverBuilder::class, false );
-		$siteorigin_loaded = class_exists( \PopupMaker\Builders\SiteOrigin::class, false );
-		$controller        = new class( \PopupMaker\plugin() ) extends \PopupMaker\Controllers\Builders {
+		$elementor_loaded       = class_exists( \PopupMaker\Builders\Elementor::class, false );
+		$beaver_loaded          = class_exists( \PopupMaker\Builders\BeaverBuilder::class, false );
+		$siteorigin_loaded      = class_exists( \PopupMaker\Builders\SiteOrigin::class, false );
+		$brizy_loaded           = class_exists( \PopupMaker\Builders\Brizy::class, false );
+		$visual_composer_loaded = class_exists( \PopupMaker\Builders\VisualComposer::class, false );
+		$divi_loaded            = class_exists( \PopupMaker\Builders\Divi::class, false );
+		$controller             = new class( \PopupMaker\plugin() ) extends \PopupMaker\Controllers\Builders {
 
 			/** @var int */
 			public $builders_constructed = 0;
@@ -174,6 +187,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$this->assertSame( $elementor_loaded, class_exists( \PopupMaker\Builders\Elementor::class, false ) );
 		$this->assertSame( $beaver_loaded, class_exists( \PopupMaker\Builders\BeaverBuilder::class, false ) );
 		$this->assertSame( $siteorigin_loaded, class_exists( \PopupMaker\Builders\SiteOrigin::class, false ) );
+		$this->assertSame( $brizy_loaded, class_exists( \PopupMaker\Builders\Brizy::class, false ) );
+		$this->assertSame( $visual_composer_loaded, class_exists( \PopupMaker\Builders\VisualComposer::class, false ) );
+		$this->assertSame( $divi_loaded, class_exists( \PopupMaker\Builders\Divi::class, false ) );
 	}
 
 	/** @return void */
