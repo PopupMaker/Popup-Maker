@@ -660,6 +660,22 @@ if ( ownedCanvas?.popup_id ) {
 		} );
 	};
 
+	const releaseCanvasDocument = (): void => {
+		restoreCanvas();
+		canvasWindow?.removeEventListener( 'resize', scheduleGeometry );
+		if ( null !== geometryFrame && canvasWindow ) {
+			canvasWindow.cancelAnimationFrame( geometryFrame );
+			geometryFrame = null;
+		}
+		restoreRootMinHeight();
+		clearOverlayIdentity();
+		targetObserver?.disconnect();
+		targetObserver = null;
+		canvasDocument = null;
+		canvasWindow = null;
+		rootElement = null;
+	};
+
 	const adoptCanvas = (): void => {
 		const iframe = display.iframe_selector
 			? document.querySelector< HTMLIFrameElement >(
@@ -668,6 +684,10 @@ if ( ownedCanvas?.popup_id ) {
 			: null;
 
 		if ( display.iframe_selector && ! iframe ) {
+			canvasIframe?.removeEventListener( 'load', adoptCanvas );
+			canvasIframe = null;
+			releaseCanvasDocument();
+
 			return;
 		}
 
@@ -687,16 +707,7 @@ if ( ownedCanvas?.popup_id ) {
 		const documentChanged = canvasDocument !== targetDocument;
 
 		if ( documentChanged ) {
-			restoreCanvas();
-			canvasWindow?.removeEventListener( 'resize', scheduleGeometry );
-			if ( null !== geometryFrame && canvasWindow ) {
-				canvasWindow.cancelAnimationFrame( geometryFrame );
-				geometryFrame = null;
-			}
-			restoreRootMinHeight();
-			clearOverlayIdentity();
-			targetObserver?.disconnect();
-			targetObserver = null;
+			releaseCanvasDocument();
 
 			canvasDocument = targetDocument;
 			canvasWindow = targetWindow;

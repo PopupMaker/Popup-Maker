@@ -526,6 +526,43 @@ describe( 'builder-owned popup canvas', () => {
 		);
 	} );
 
+	it( 'restores an iframe canvas after it loses the selector', async () => {
+		document.body.innerHTML = '<iframe data-builder-frame></iframe>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: '[data-builder-frame]',
+		};
+		const iframe = document.querySelector< HTMLIFrameElement >( 'iframe' );
+
+		if ( ! iframe?.contentDocument ) {
+			throw new Error( 'Iframe fixture was not created.' );
+		}
+
+		const canvas = iframe.contentDocument.body;
+		canvas.classList.add( 'builder-owned-class' );
+		canvas.style.setProperty( 'position', 'relative' );
+
+		await import( '../owned-canvas' );
+
+		iframe.removeAttribute( 'data-builder-frame' );
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		expect( canvas.classList ).toContain( 'builder-owned-class' );
+		expect( canvas.classList ).not.toContain( 'pum-container' );
+		expect( canvas.style.getPropertyValue( 'position' ) ).toBe(
+			'relative'
+		);
+		expect(
+			canvas.querySelector( '.pum-builder-canvas-title' )
+		).toBeNull();
+		expect(
+			iframe.contentDocument.documentElement.classList
+		).not.toContain( 'pum-builder-owned-canvas-root' );
+	} );
+
 	it( 'positions a nested canvas in viewport coordinates', async () => {
 		document.body.innerHTML =
 			'<section id="canvas-parent"><main id="builder-canvas"></main></section>';
