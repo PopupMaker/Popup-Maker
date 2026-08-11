@@ -109,6 +109,56 @@ class Etch_Builder_Test extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'post_id=' . $popup_id, $actions['edit_with_etch'] );
 	}
 
+	/** @return void */
+	public function test_successful_native_rest_save_records_etch_ownership() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder  = new class( \PopupMaker\plugin() ) extends Etch {
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return void
+			 */
+			protected function remember_document_owner( $popup_id ) {
+				update_post_meta(
+					$popup_id,
+					\PopupMaker\Controllers\Builders::OWNER_META_KEY,
+					wp_slash( get_class( $this ) )
+				);
+			}
+		};
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		update_post_meta(
+			$popup_id,
+			\PopupMaker\Controllers\Builders::OWNER_META_KEY,
+			\PopupMaker\Builders\Elementor::class
+		);
+
+		$request  = new WP_REST_Request( 'POST', '/etch-api/post/' . $popup_id . '/blocks' );
+		$response = new WP_REST_Response( [ 'post_id' => $popup_id ], 200 );
+
+		$this->assertSame( $response, $builder->remember_rest_save( $response, [], $request ) );
+		$this->assertSame(
+			get_class( $builder ),
+			get_post_meta( $popup_id, \PopupMaker\Controllers\Builders::OWNER_META_KEY, true )
+		);
+		$this->assertTrue( $builder->owns_document( $popup_id ) );
+	}
+
+	/** @return void */
+	public function test_failed_native_rest_save_does_not_record_etch_ownership() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder  = new Etch( \PopupMaker\plugin() );
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$request  = new WP_REST_Request( 'POST', '/etch-api/post/' . $popup_id . '/blocks' );
+		$response = new WP_REST_Response( [ 'error' => 'Save failed.' ], 400 );
+
+		$this->assertSame( $response, $builder->remember_rest_save( $response, [], $request ) );
+		$this->assertFalse( $builder->owns_document( $popup_id ) );
+	}
+
 	/**
 	 * @return \PopupMaker\Controllers\Builders
 	 */

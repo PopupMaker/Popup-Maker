@@ -23,6 +23,13 @@ defined( 'ABSPATH' ) || exit;
 class Etch extends PageBuilder {
 
 	/**
+	 * Marker confirming that Etch successfully saved this document.
+	 *
+	 * @var string
+	 */
+	const DOCUMENT_META_KEY = '_pum_etch_document';
+
+	/**
 	 * Whether Etch is active.
 	 *
 	 * @return bool
@@ -38,7 +45,62 @@ class Etch extends PageBuilder {
 	 */
 	public function register_hooks() {
 		add_filter( 'post_row_actions', [ $this, 'filter_row_actions' ], 10, 2 );
+		add_filter( 'rest_request_after_callbacks', [ $this, 'remember_rest_save' ], 10, 3 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_canvas_assets' ], 20 );
+	}
+
+	/**
+	 * Remember Etch after its authenticated block save succeeds.
+	 *
+	 * @param mixed $response REST response.
+	 * @param mixed $handler  Matched REST route handler.
+	 * @param mixed $request  REST request.
+	 *
+	 * @return mixed
+	 */
+	public function remember_rest_save( $response, $handler = null, $request = null ) {
+		if (
+			! $request instanceof \WP_REST_Request ||
+			'POST' !== $request->get_method() ||
+			is_wp_error( $response ) ||
+			( is_object( $response ) && method_exists( $response, 'get_status' ) && 400 <= absint( $response->get_status() ) )
+		) {
+			return $response;
+		}
+
+		$route = $request->get_route();
+
+		if ( ! is_string( $route ) || ! preg_match( '#^/etch-api/post/([\d]+)/blocks/?$#', $route, $matches ) ) {
+			return $response;
+		}
+
+		$popup_id = absint( $matches[1] );
+
+		if (
+			! $popup_id ||
+			'popup' !== get_post_type( $popup_id ) ||
+			! current_user_can( 'edit_post', $popup_id ) ||
+			! $this->can_edit_document( $popup_id )
+		) {
+			return $response;
+		}
+
+		update_post_meta( $popup_id, self::DOCUMENT_META_KEY, '1' );
+		$this->remember_document_owner( $popup_id );
+
+		return $response;
+	}
+
+	/**
+	 * Whether Etch last saved this popup through its native editor.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	public function owns_document( $popup_id ) {
+		return '1' === get_post_meta( $popup_id, self::DOCUMENT_META_KEY, true ) &&
+			get_class( $this ) === get_post_meta( $popup_id, \PopupMaker\Controllers\Builders::OWNER_META_KEY, true );
 	}
 
 	/**

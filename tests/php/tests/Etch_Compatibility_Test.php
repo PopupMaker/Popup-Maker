@@ -179,6 +179,35 @@ class Etch_Compatibility_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Child routes follow Popup Maker's alias when another integration changes the native base.
+	 *
+	 * @return void
+	 */
+	public function test_standard_rest_child_routes_follow_the_alias_base() {
+		global $wp_rest_server;
+
+		$post_type = get_post_type_object( 'popup' );
+
+		if ( ! $post_type ) {
+			$this->fail( 'Popup post type was not registered.' );
+		}
+
+		$original_rest_base   = $post_type->rest_base;
+		$post_type->rest_base = 'third-party-popups';
+		$wp_rest_server       = null;
+
+		try {
+			$routes = rest_get_server()->get_routes();
+		} finally {
+			$post_type->rest_base = $original_rest_base;
+			$wp_rest_server       = null;
+		}
+
+		$this->assertArrayHasKey( '/wp/v2/popups/(?P<parent>[\\d]+)/revisions', $routes );
+		$this->assertArrayHasKey( '/wp/v2/popups/(?P<id>[\\d]+)/autosaves', $routes );
+	}
+
+	/**
 	 * Create a popup containing a serialized test block.
 	 *
 	 * @param string $label  Block label.

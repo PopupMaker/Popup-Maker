@@ -164,6 +164,9 @@ class PostTypes extends Controller {
 
 			$controller->register_routes();
 
+			$original_rest_base          = $post_type_object->rest_base;
+			$post_type_object->rest_base = $rest_base;
+
 			if ( post_type_supports( $post_type, 'revisions' ) && class_exists( '\\WP_REST_Revisions_Controller' ) ) {
 				$revisions = new class( $post_type ) extends \WP_REST_Revisions_Controller {
 
@@ -199,6 +202,8 @@ class PostTypes extends Controller {
 
 				$autosaves->register_routes();
 			}
+
+			$post_type_object->rest_base = $original_rest_base;
 		}
 	}
 
