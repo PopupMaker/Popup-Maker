@@ -99,6 +99,10 @@ class Builders extends Controller {
 			$builders[] = \PopupMaker\Builders\BeaverBuilder::class;
 		}
 
+		if ( class_exists( '\SiteOrigin_Panels' ) ) {
+			$builders[] = \PopupMaker\Builders\SiteOrigin::class;
+		}
+
 		return $builders;
 	}
 

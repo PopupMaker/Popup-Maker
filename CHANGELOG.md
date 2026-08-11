@@ -5,9 +5,11 @@
 **Features**
 
 -   Added complete Elementor support for building Popup Maker popups, including editor previews, frontend styling, and interactive widgets.
+-   Added complete SiteOrigin Page Builder support for building Popup Maker popups, including its Live Editor and properly styled frontend layouts.
 
 **Improvements**
 
+-   Improved Beaver Builder support so Popup Maker popups open in Beaver Builder's editor and authorized popup previews are no longer redirected away.
 -   Improved compatibility with PHP 8.3, 8.4, and 8.5.
 
 **Fixes**
