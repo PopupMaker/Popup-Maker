@@ -332,6 +332,30 @@ describe( 'builder-owned popup canvas', () => {
 		);
 	} );
 
+	it( 'uses absolute positioning for responsive popups at 1024px', async () => {
+		document.body.innerHTML = '<main id="builder-canvas"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			size: 'medium',
+			position_fixed: true,
+		};
+		Object.defineProperty( window, 'innerWidth', {
+			configurable: true,
+			value: 1024,
+		} );
+
+		await import( '../owned-canvas' );
+
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		expect( canvas?.style.getPropertyValue( 'position' ) ).toBe(
+			'absolute'
+		);
+	} );
+
 	it( 'uses viewport units for percentage custom dimensions', async () => {
 		document.body.innerHTML = '<main id="builder-canvas"></main>';
 		window.pumBuilderOwnedCanvas = {
@@ -387,13 +411,22 @@ describe( 'builder-owned popup canvas', () => {
 			iframe_selector: undefined,
 			canvas_selector: '#builder-canvas',
 		};
+		const originalCanvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! originalCanvas ) {
+			throw new Error( 'Original canvas fixture was not created.' );
+		}
+
+		originalCanvas.classList.add( 'builder-owned-class' );
+		originalCanvas.style.setProperty( 'position', 'relative' );
+		originalCanvas.style.setProperty( 'width', '75%' );
 
 		await import( '../owned-canvas' );
 
-		const originalCanvas = document.querySelector( '#builder-canvas' );
 		const replacementCanvas = document.createElement( 'main' );
 		replacementCanvas.id = 'builder-canvas';
-		originalCanvas?.replaceWith( replacementCanvas );
+		originalCanvas.replaceWith( replacementCanvas );
 
 		mutationCallbacks.forEach( ( callback ) => {
 			callback( [], {} as MutationObserver );
@@ -408,6 +441,21 @@ describe( 'builder-owned popup canvas', () => {
 		expect(
 			replacementCanvas.querySelector( '.pum-builder-canvas-close' )
 		).not.toBeNull();
+		expect( originalCanvas.classList ).toContain( 'builder-owned-class' );
+		expect( originalCanvas.classList ).not.toContain( 'pum-container' );
+		expect( originalCanvas.classList ).not.toContain( 'pum-content' );
+		expect( originalCanvas.style.getPropertyValue( 'position' ) ).toBe(
+			'relative'
+		);
+		expect( originalCanvas.style.getPropertyValue( 'width' ) ).toBe(
+			'75%'
+		);
+		expect(
+			originalCanvas.querySelector( '.pum-builder-canvas-title' )
+		).toBeNull();
+		expect(
+			originalCanvas.querySelector( '.pum-builder-canvas-close' )
+		).toBeNull();
 	} );
 
 	it( 'adopts a canvas inserted after its iframe is ready', async () => {
@@ -451,6 +499,31 @@ describe( 'builder-owned popup canvas', () => {
 		expect(
 			lateCanvas.querySelector( '.pum-builder-canvas-title' )
 		).not.toBeNull();
+	} );
+
+	it( 'adopts an iframe after its selector attribute changes', async () => {
+		document.body.innerHTML = '<iframe></iframe>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: '[data-builder-frame]',
+		};
+		const iframe = document.querySelector< HTMLIFrameElement >( 'iframe' );
+
+		if ( ! iframe?.contentDocument ) {
+			throw new Error( 'Iframe fixture was not created.' );
+		}
+
+		await import( '../owned-canvas' );
+
+		iframe.setAttribute( 'data-builder-frame', '' );
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		expect( iframe.contentDocument.body.classList ).toContain(
+			'pum-builder-canvas-area'
+		);
 	} );
 
 	it( 'positions a nested canvas in viewport coordinates', async () => {
@@ -576,12 +649,19 @@ describe( 'builder-owned popup canvas', () => {
 			iframe_selector: undefined,
 			canvas_selector: '#builder-canvas',
 		};
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Canvas fixture was not created.' );
+		}
+
+		canvas.classList.add( 'builder-owned-class' );
+		canvas.style.setProperty( 'position', 'relative' );
 
 		await import( '../owned-canvas' );
 
-		const canvas =
-			document.querySelector< HTMLElement >( '#builder-canvas' );
-		canvas?.removeAttribute( 'id' );
+		canvas.removeAttribute( 'id' );
 		mutationCallbacks.forEach( ( callback ) => {
 			callback( [], {} as MutationObserver );
 		} );
@@ -594,6 +674,18 @@ describe( 'builder-owned popup canvas', () => {
 			'pum-theme-4'
 		);
 		expect( document.body.classList ).not.toContain( 'pum-theme-4' );
+		expect( canvas.classList ).toContain( 'builder-owned-class' );
+		expect( canvas.classList ).not.toContain( 'pum-container' );
+		expect( canvas.classList ).not.toContain( 'pum-content' );
+		expect( canvas.style.getPropertyValue( 'position' ) ).toBe(
+			'relative'
+		);
+		expect(
+			canvas.querySelector( '.pum-builder-canvas-title' )
+		).toBeNull();
+		expect(
+			canvas.querySelector( '.pum-builder-canvas-close' )
+		).toBeNull();
 	} );
 
 	it( 'keeps an outside close button inside the viewport', async () => {

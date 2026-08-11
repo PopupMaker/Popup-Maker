@@ -16,6 +16,17 @@ if ( ownedCanvas?.popup_id ) {
 	let originalRootMinHeightPriority = '';
 	let installedRootMinHeight = '';
 	let ownedRootClasses: Array< { className: string; element: Element } > = [];
+	let ownedCanvasClasses: string[] = [];
+	let syntheticCanvasElements: HTMLElement[] = [];
+	const canvasStyles = new Map<
+		string,
+		{
+			installedPriority: string;
+			installedValue: string;
+			originalPriority: string;
+			originalValue: string;
+		}
+	>();
 	// Mirrors the responsive presets in the site stylesheet, using viewport
 	// units because a builder canvas may have a narrower containing block.
 	const responsiveWidths: Record< string, string > = {
@@ -38,15 +49,42 @@ if ( ownedCanvas?.popup_id ) {
 		return Number.isNaN( offset ) ? 0 : offset;
 	};
 
-	const addClasses = ( element: Element, classes: string ): void => {
+	const addCanvasClasses = ( element: Element, classes: string ): void => {
 		classes
 			.split( /\s+/ )
 			.filter( Boolean )
 			.forEach( ( className ) => {
 				if ( ! element.classList.contains( className ) ) {
 					element.classList.add( className );
+					ownedCanvasClasses.push( className );
 				}
 			} );
+	};
+
+	const setCanvasStyle = (
+		property: string,
+		value: string,
+		priority = ''
+	): void => {
+		if ( ! canvas ) {
+			return;
+		}
+
+		let state = canvasStyles.get( property );
+
+		if ( ! state ) {
+			state = {
+				installedPriority: '',
+				installedValue: '',
+				originalPriority: canvas.style.getPropertyPriority( property ),
+				originalValue: canvas.style.getPropertyValue( property ),
+			};
+			canvasStyles.set( property, state );
+		}
+
+		canvas.style.setProperty( property, value, priority );
+		state.installedPriority = canvas.style.getPropertyPriority( property );
+		state.installedValue = canvas.style.getPropertyValue( property );
 	};
 
 	const addRootClass = ( element: Element, className: string ): void => {
@@ -91,14 +129,23 @@ if ( ownedCanvas?.popup_id ) {
 			} );
 	};
 
-	const selectorAttributeFilter = (): string[] => {
+	const selectorAttributeFilter = (
+		...selectors: Array< string | undefined >
+	): string[] => {
 		const attributes = [ 'class', 'id' ];
 		const pattern = /\[\s*([^\s~|^$*=\]]+)/g;
-		let match: RegExpExecArray | null;
 
-		while ( ( match = pattern.exec( display.canvas_selector ) ) ) {
-			attributes.push( match[ 1 ] );
-		}
+		selectors.forEach( ( selector ) => {
+			if ( ! selector ) {
+				return;
+			}
+
+			let match: RegExpExecArray | null;
+
+			while ( ( match = pattern.exec( selector ) ) ) {
+				attributes.push( match[ 1 ] );
+			}
+		} );
 
 		return Array.from( new Set( attributes ) );
 	};
@@ -223,6 +270,7 @@ if ( ownedCanvas?.popup_id ) {
 			title.className = `${ display.title_classes } pum-builder-canvas-title`;
 			title.id = `pum_popup_title_${ display.popup_id }`;
 			title.textContent = display.title_text;
+			syntheticCanvasElements.push( title );
 		}
 
 		if ( canvas.firstElementChild !== title ) {
@@ -263,12 +311,14 @@ if ( ownedCanvas?.popup_id ) {
 				'important'
 			);
 			closeButton.tabIndex = -1;
+			syntheticCanvasElements.push( closeButton );
 		}
 
 		if ( ! closeAnchor ) {
 			closeAnchor = canvas.ownerDocument.createElement( 'div' );
 			closeAnchor.className = `${ display.content_classes } pum-builder-canvas-close-anchor`;
 			closeAnchor.setAttribute( 'aria-hidden', 'true' );
+			syntheticCanvasElements.push( closeAnchor );
 		}
 
 		if ( closeButton.previousElementSibling !== closeAnchor ) {
@@ -304,10 +354,51 @@ if ( ownedCanvas?.popup_id ) {
 			return;
 		}
 
-		canvas.style.setProperty(
+		setCanvasStyle(
 			'--pum-builder-canvas-scroll-y',
 			isEnabled( display.scrollable ) ? `${ canvas.scrollTop }px` : '0px'
 		);
+	};
+
+	const restoreCanvas = (): void => {
+		if ( ! canvas ) {
+			return;
+		}
+
+		resizeObserver?.disconnect();
+		resizeObserver = null;
+		scrollCanvas?.removeEventListener( 'scroll', mirrorCanvasScroll );
+		scrollCanvas = null;
+
+		syntheticCanvasElements.forEach( ( element ) => element.remove() );
+		syntheticCanvasElements = [];
+		ownedCanvasClasses.forEach( ( className ) => {
+			canvas?.classList.remove( className );
+		} );
+		ownedCanvasClasses = [];
+
+		canvasStyles.forEach( ( state, property ) => {
+			if (
+				canvas?.style.getPropertyValue( property ) !==
+					state.installedValue ||
+				canvas.style.getPropertyPriority( property ) !==
+					state.installedPriority
+			) {
+				return;
+			}
+
+			if ( state.originalValue ) {
+				canvas.style.setProperty(
+					property,
+					state.originalValue,
+					state.originalPriority
+				);
+			} else {
+				canvas.style.removeProperty( property );
+			}
+		} );
+		canvasStyles.clear();
+		canvas = null;
 	};
 
 	const setRootMinHeight = ( height: string ): void => {
@@ -432,9 +523,11 @@ if ( ownedCanvas?.popup_id ) {
 			}
 		} );
 
-		const requestedPosition = isEnabled( display.position_fixed )
-			? 'fixed'
-			: 'absolute';
+		const requestedPosition =
+			isEnabled( display.position_fixed ) &&
+			! ( isResponsive && canvasWindow.innerWidth <= 1024 )
+				? 'fixed'
+				: 'absolute';
 		const properties: Record< string, string > = {
 			position: requestedPosition,
 			width,
@@ -459,9 +552,7 @@ if ( ownedCanvas?.popup_id ) {
 
 		Object.entries( properties ).forEach( ( [ property, value ] ) => {
 			if ( value ) {
-				canvas?.style.setProperty( property, value, 'important' );
-			} else {
-				canvas?.style.removeProperty( property );
+				setCanvasStyle( property, value, 'important' );
 			}
 		} );
 
@@ -527,25 +618,25 @@ if ( ownedCanvas?.popup_id ) {
 		viewportLeft = Math.max( minLeft, Math.min( viewportLeft, maxLeft ) );
 
 		const position = isOversized ? 'absolute' : requestedPosition;
-		canvas.style.setProperty( 'position', position, 'important' );
+		setCanvasStyle( 'position', position, 'important' );
 		const coordinates = viewportToPosition(
 			viewportTop,
 			viewportLeft,
 			position
 		);
 
-		canvas.style.setProperty(
+		setCanvasStyle(
 			'top',
 			`${ Math.round( coordinates.top * 100 ) / 100 }px`,
 			'important'
 		);
-		canvas.style.setProperty( 'bottom', 'auto', 'important' );
-		canvas.style.setProperty(
+		setCanvasStyle( 'bottom', 'auto', 'important' );
+		setCanvasStyle(
 			'left',
 			`${ Math.round( coordinates.left * 100 ) / 100 }px`,
 			'important'
 		);
-		canvas.style.setProperty( 'right', 'auto', 'important' );
+		setCanvasStyle( 'right', 'auto', 'important' );
 
 		if ( isOversized ) {
 			setRootMinHeight(
@@ -596,6 +687,7 @@ if ( ownedCanvas?.popup_id ) {
 		const documentChanged = canvasDocument !== targetDocument;
 
 		if ( documentChanged ) {
+			restoreCanvas();
 			canvasWindow?.removeEventListener( 'resize', scheduleGeometry );
 			if ( null !== geometryFrame && canvasWindow ) {
 				canvasWindow.cancelAnimationFrame( geometryFrame );
@@ -617,7 +709,9 @@ if ( ownedCanvas?.popup_id ) {
 					);
 					targetObserver.observe( targetDocument.documentElement, {
 						attributes: true,
-						attributeFilter: selectorAttributeFilter(),
+						attributeFilter: selectorAttributeFilter(
+							display.canvas_selector
+						),
 						childList: true,
 						subtree: true,
 					} );
@@ -639,29 +733,23 @@ if ( ownedCanvas?.popup_id ) {
 		if ( ! targetCanvas ) {
 			restoreRootMinHeight();
 			clearOverlayIdentity();
-			resizeObserver?.disconnect();
-			resizeObserver = null;
-			scrollCanvas?.removeEventListener( 'scroll', mirrorCanvasScroll );
-			scrollCanvas = null;
-			canvas = null;
+			restoreCanvas();
 
 			return;
 		}
 
 		const canvasChanged = canvas !== targetCanvas;
 
-		if ( documentChanged || canvasChanged ) {
-			resizeObserver?.disconnect();
-			resizeObserver = null;
-			scrollCanvas?.removeEventListener( 'scroll', mirrorCanvasScroll );
+		if ( canvasChanged ) {
+			restoreCanvas();
 			canvas = targetCanvas;
 			scrollCanvas = targetCanvas;
 			scrollCanvas.addEventListener( 'scroll', mirrorCanvasScroll );
 		}
 
-		addClasses( targetCanvas, display.container_classes );
-		addClasses( targetCanvas, display.content_classes );
-		targetCanvas.classList.add( 'pum-builder-canvas-area' );
+		addCanvasClasses( targetCanvas, display.container_classes );
+		addCanvasClasses( targetCanvas, display.content_classes );
+		addCanvasClasses( targetCanvas, 'pum-builder-canvas-area' );
 
 		addOverlayIdentity( targetDocument, display.overlay_classes );
 
@@ -701,7 +789,10 @@ if ( ownedCanvas?.popup_id ) {
 			document.body,
 			{
 				attributes: true,
-				attributeFilter: selectorAttributeFilter(),
+				attributeFilter: selectorAttributeFilter(
+					display.canvas_selector,
+					display.iframe_selector
+				),
 				childList: true,
 				subtree: true,
 			}
