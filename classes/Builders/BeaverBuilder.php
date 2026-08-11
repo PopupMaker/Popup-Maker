@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Registers Beaver Builder without duplicating its native Popup Maker support.
  *
- * Beaver Builder 2.8+ ships `extensions/fl-builder-popup-maker`, which owns the
+ * Beaver Builder ships `extensions/fl-builder-popup-maker`, which owns the
  * integration: post type registration, front-end editing, popup rendering,
  * per-layout assets, and trigger preloading. Popup Maker only identifies its
  * native editor request and prevents its broad redirect from claiming another
@@ -92,8 +92,6 @@ class BeaverBuilder extends PageBuilder {
 		try {
 			return (bool) \FLBuilderUserAccess::current_user_can( 'builder_access' );
 		} catch ( \Throwable $error ) {
-			unset( $error );
-
 			return false;
 		}
 	}
@@ -101,8 +99,8 @@ class BeaverBuilder extends PageBuilder {
 	/**
 	 * Whether Beaver is rendering the editable iframe or legacy canvas.
 	 *
-	 * Beaver 2.8+ uses a shell marked by `fl_builder_ui` and renders the page in
-	 * `fl_builder_ui_iframe`. Older releases render the canvas directly.
+	 * Modern releases use a shell marked by `fl_builder_ui` and render the page
+	 * in `fl_builder_ui_iframe`. Older releases render the canvas directly.
 	 *
 	 * @return bool
 	 */
@@ -133,7 +131,7 @@ class BeaverBuilder extends PageBuilder {
 			return;
 		}
 
-		if ( ! class_exists( '\FLBuilderPopupMaker' ) || ! method_exists( '\FLBuilderPopupMaker', 'redirect_to_admin_edit' ) ) {
+		if ( ! method_exists( '\FLBuilderPopupMaker', 'redirect_to_admin_edit' ) ) {
 			return;
 		}
 
