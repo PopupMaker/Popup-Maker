@@ -160,6 +160,12 @@ describe( 'builder-owned popup canvas', () => {
 
 		await import( '../owned-canvas' );
 
+		expect(
+			document.getElementById( 'pum-builder-owned-canvas' )
+		).toBeNull();
+		expect(
+			document.querySelector( '[id^="pum-builder-copy-"]' )
+		).toBeNull();
 		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '10px' );
 		expect( canvas.style.getPropertyValue( 'position' ) ).toBe(
 			'absolute'

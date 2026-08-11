@@ -8,6 +8,10 @@ body.pum-builder-preview {
 	min-height: 100vh;
 	overflow: auto;
 
+	&.pum-overlay-disabled {
+		background: transparent !important;
+	}
+
 	.pum {
 		display: block !important;
 		opacity: 1 !important;
@@ -28,5 +32,25 @@ body.pum-builder-preview {
 
 	.pum-close {
 		pointer-events: none !important;
+	}
+
+	.pum-builder-canvas-area.pum-content {
+		&:focus {
+			outline: none;
+		}
+
+		> :first-child {
+			margin-top: 0;
+		}
+
+		> :last-child {
+			margin-bottom: 0;
+		}
+
+		&.pum-scrollable {
+			overflow: auto;
+			overflow-y: scroll;
+			max-height: 95%;
+		}
 	}
 }

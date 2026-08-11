@@ -331,8 +331,12 @@ if ( ownedCanvas?.popup_id ) {
 
 			canvasDocument = targetDocument;
 			canvasWindow = targetWindow;
-			copyPopupStyles( targetDocument );
-			attachCanvasStyles( targetDocument );
+
+			if ( iframe ) {
+				copyPopupStyles( targetDocument );
+				attachCanvasStyles( targetDocument );
+			}
+
 			targetWindow.addEventListener( 'resize', mirrorPopupGeometry );
 		}
 
