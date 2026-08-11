@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
-"PO-Revision-Date: 2026-08-05 03:29+0000\n"
+"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"PO-Revision-Date: 2026-08-06 02:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hu-HU\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
 #: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
 #: classes/Extension/Activator.php:201 classes/Privacy.php:36
-#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Services/License.php:915 classes/Site/Assets.php:283
 #: classes/Triggers.php:226 classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
@@ -202,11 +202,11 @@ msgstr "Popup Maker rövidkódok"
 msgid "There was an error in generating the preview"
 msgstr "Hiba történt az előnézet létrehozása közben"
 
-#: classes/Admin/Assets.php:149
+#: classes/Admin/Assets.php:143
 msgid "Your all set, the upgrades completed successfully!"
 msgstr "Minden készen áll, a frissítések sikeresen befejeződtek!"
 
-#: classes/Admin/Assets.php:150
+#: classes/Admin/Assets.php:144
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
@@ -435,7 +435,7 @@ msgstr "Feliratkozók"
 #: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
 #: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:298
 msgid "Settings"
 msgstr "Beállítások"
 
@@ -445,6 +445,7 @@ msgid "Extend"
 msgstr "Bővítések"
 
 #: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
+#: classes/Admin/Support.php:58
 msgid "Help & Support"
 msgstr "Súgó és támogatás"
 
@@ -627,7 +628,7 @@ msgid "Display"
 msgstr "Megjelenítés"
 
 #: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
-#: classes/Site/Assets.php:300
+#: classes/Site/Assets.php:299
 msgid "Triggers"
 msgstr "Kiváltók"
 
@@ -650,7 +651,7 @@ msgstr "Általános beállítások"
 msgid "Triggers & Cookies"
 msgstr "Kiváltók és sütik"
 
-#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:302
 msgid "Conditions"
 msgstr "Feltételek"
 
@@ -1854,7 +1855,7 @@ msgstr "Popup Maker beállítások"
 msgid "Subscriptions"
 msgstr "Előfizetések"
 
-#: classes/Admin/Settings.php:1131
+#: classes/Admin/Settings.php:1131 classes/Admin/Support.php:45
 msgid "Extensions"
 msgstr "Bővítmények"
 
@@ -1981,12 +1982,72 @@ msgstr "Érvénytelen nonce"
 msgid "Error"
 msgstr "Hiba"
 
-#: classes/Admin/Support.php:52
-msgid ""
-"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
+#: classes/Admin/Support.php:27
+msgid "Getting Started"
+msgstr "Első lépések"
+
+#: classes/Admin/Support.php:28
+msgid "Learn the basics and build your first popup."
+msgstr "Ismerd meg az alapokat, és hozd létre az első felugró ablakodat."
+
+#: classes/Admin/Support.php:33 classes/Admin/Templates.php:730
+#: classes/Admin/Templates.php:735
+#: classes/Controllers/Admin/WP/PluginsPage.php:106
+#: dist/packages/cta-editor.js:1
+msgid "Documentation"
+msgstr "Dokumentáció"
+
+#: classes/Admin/Support.php:34
+msgid "Browse setup guides, common questions, and advanced documentation."
 msgstr ""
-"<b>Biztonságos HTTPS kapcsolatfelvételi oldal</b>, iframe-en keresztül fut "
-"külső doménről"
+"Böngészd a beállítási útmutatókat, a gyakori kérdéseket és a haladó "
+"dokumentációt."
+
+#: classes/Admin/Support.php:39
+msgid "Community"
+msgstr "Közösség"
+
+#: classes/Admin/Support.php:40
+msgid "Ask questions and share solutions with other Popup Maker users."
+msgstr ""
+"Tegyél fel kérdéseket, és oszd meg megoldásaidat más Popup Maker "
+"felhasználókkal."
+
+#: classes/Admin/Support.php:46
+msgid "Find documentation for Popup Maker extensions."
+msgstr "A Popup Maker bővítmények dokumentációját itt találod."
+
+#: classes/Admin/Support.php:51
+msgid "Developer Wiki"
+msgstr "Fejlesztői Wiki"
+
+#: classes/Admin/Support.php:52
+msgid "Contribute to or extend Popup Maker."
+msgstr "Járulj hozzá a Popup Makerhez, vagy bővítsd azt."
+
+#: classes/Admin/Support.php:60
+msgid ""
+"Find answers, connect with the community, or contact the Popup Maker support "
+"team."
+msgstr ""
+"Találj válaszokat, kapcsolódj a közösséghez, vagy vedd fel a kapcsolatot a "
+"Popup Maker támogatási csapatával."
+
+#: classes/Admin/Support.php:77
+msgid "Still need help?"
+msgstr "Még mindig segítségre van szükséged?"
+
+#: classes/Admin/Support.php:78
+msgid ""
+"Open a support request and include the site URL, Popup Maker version, steps "
+"to reproduce, and any relevant error messages."
+msgstr ""
+"Nyiss támogatási kérést, és add meg a webhely URL-jét, a Popup Maker "
+"verzióját, a reprodukálás lépéseit, valamint minden releváns hibaüzenetet."
+
+#: classes/Admin/Support.php:81
+msgid "Contact Support"
+msgstr "Kapcsolatfelvétel az ügyfélszolgálattal"
 
 #: classes/Admin/Templates.php:52
 msgid "Check"
@@ -2360,12 +2421,6 @@ msgstr "Címke"
 msgid "Value"
 msgstr "Érték"
 
-#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
-#: classes/Controllers/Admin/WP/PluginsPage.php:106
-#: dist/packages/cta-editor.js:1
-msgid "Documentation"
-msgstr "Dokumentáció"
-
 #: classes/Admin/Templates.php:844
 msgid "Add New Trigger"
 msgstr "Új trigger hozzáadása"
@@ -2522,7 +2577,7 @@ msgid "Add New Cookie"
 msgstr "Új cookie hozzáadása"
 
 #: classes/Admin/Templates.php:1125 classes/Privacy.php:67
-#: classes/Site/Assets.php:301
+#: classes/Site/Assets.php:300
 msgid "Cookies"
 msgstr "Cookie-k"
 
@@ -4839,80 +4894,80 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr "Feliratkozási űrlap helyőrző szövege"
 
-#: classes/Site/Assets.php:284
+#: classes/Site/Assets.php:283
 msgid "Debug Mode Enabled"
 msgstr "Hibakeresési mód engedélyezve"
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:284
 msgid "Debug started at:"
 msgstr "Hibakeresés kezdete:"
 
 #. translators: 1. URL to documentation.
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:287
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 "További információért arról, hogyan használja ezeket az információkat, "
 "látogasson el ide: %s"
 
-#: classes/Site/Assets.php:291
+#: classes/Site/Assets.php:290
 msgid "Global Information"
 msgstr "Globális információk"
 
-#: classes/Site/Assets.php:292
+#: classes/Site/Assets.php:291
 msgid "Localized variables"
 msgstr "Lokalizált változók"
 
-#: classes/Site/Assets.php:293
+#: classes/Site/Assets.php:292
 msgid "Popups Initializing"
 msgstr "Felugró ablakok inicializálása"
 
-#: classes/Site/Assets.php:294
+#: classes/Site/Assets.php:293
 msgid "Popups Initialized"
 msgstr "Felugró ablakok inicializálva"
 
-#: classes/Site/Assets.php:295
+#: classes/Site/Assets.php:294
 msgid "Popup: #"
 msgstr "Felugró ablak: #"
 
-#: classes/Site/Assets.php:296
+#: classes/Site/Assets.php:295
 msgid "Theme ID: "
 msgstr "Témaazonosító: "
 
-#: classes/Site/Assets.php:297
+#: classes/Site/Assets.php:296
 msgid "Method Call:"
 msgstr "Metódushívás:"
 
-#: classes/Site/Assets.php:298
+#: classes/Site/Assets.php:297
 msgid "Method Arguments:"
 msgstr "Metódusargumentumok:"
 
-#: classes/Site/Assets.php:302
+#: classes/Site/Assets.php:301
 msgid "Delay:"
 msgstr "Késleltetés:"
 
-#: classes/Site/Assets.php:304
+#: classes/Site/Assets.php:303
 msgid "Cookie:"
 msgstr "Süti:"
 
-#: classes/Site/Assets.php:305
+#: classes/Site/Assets.php:304
 msgid "Settings:"
 msgstr "Beállítások:"
 
-#: classes/Site/Assets.php:306
+#: classes/Site/Assets.php:305
 msgid "Selector:"
 msgstr "Kiválasztó:"
 
-#: classes/Site/Assets.php:307
+#: classes/Site/Assets.php:306
 msgid "Mobile Disabled:"
 msgstr "Mobilon letiltva:"
 
-#: classes/Site/Assets.php:308
+#: classes/Site/Assets.php:307
 msgid "Tablet Disabled:"
 msgstr "Táblagépen letiltva:"
 
 #. translators: 1. Event name.
-#: classes/Site/Assets.php:310
+#: classes/Site/Assets.php:309
 #, php-format
 msgid "Event: %s"
 msgstr "Esemény: %s"
