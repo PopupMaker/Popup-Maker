@@ -72,6 +72,29 @@ class SiteOrigin_Builder_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_existing_siteorigin_document_uses_classic_editor_without_overriding_blocks() {
+		global $post;
+
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder  = new SiteOrigin( \PopupMaker\plugin() );
+		$post     = get_post( $popup_id );
+
+		update_post_meta( $popup_id, 'panels_data', [ 'widgets' => [] ] );
+		$this->assertFalse( $builder->use_classic_editor( true, 'popup' ) );
+
+		wp_update_post( [
+			'ID'           => $popup_id,
+			'post_content' => '<!-- wp:paragraph --><p>Block content</p><!-- /wp:paragraph -->',
+		] );
+		$post = get_post( $popup_id );
+
+		$this->assertTrue( $builder->use_classic_editor( true, 'popup' ) );
+
+		$_GET['siteorigin-page-builder'] = '';
+		$this->assertFalse( $builder->use_classic_editor( true, 'popup' ) );
+	}
+
+	/** @return void */
 	public function test_live_editor_uses_authorized_popup_url() {
 		global $post;
 
@@ -88,8 +111,18 @@ class SiteOrigin_Builder_Test extends WP_UnitTestCase {
 		$before = wp_scripts()->get_data( 'so-panels-admin', 'before' );
 
 		$this->assertIsArray( $before );
-		$this->assertStringContainsString( 'siteorigin_panels_live_editor', implode( "\n", $before ) );
-		$this->assertStringContainsString( 'post_type=popup', implode( "\n", $before ) );
-		$this->assertStringContainsString( 'p=' . $popup_id, implode( "\n", $before ) );
+
+		$script = implode( "\n", $before );
+		$this->assertStringContainsString( 'siteorigin_panels_live_editor', $script );
+		$this->assertStringContainsString( 'post_type=popup', $script );
+		$this->assertStringContainsString( 'p=' . $popup_id, $script );
+		$this->assertSame( 1, preg_match( '/setAttribute\( "data-preview-url", (.+?) \);/', $script, $matches ) );
+
+		$url = json_decode( $matches[1], true );
+		$this->assertIsString( $url );
+
+		wp_parse_str( (string) wp_parse_url( $url, PHP_URL_QUERY ), $query_args );
+		$this->assertArrayHasKey( '_panelsnonce', $query_args );
+		$this->assertSame( 1, wp_verify_nonce( $query_args['_panelsnonce'], 'live-editor-preview' ) );
 	}
 }

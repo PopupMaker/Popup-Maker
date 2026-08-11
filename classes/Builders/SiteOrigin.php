@@ -48,6 +48,7 @@ class SiteOrigin extends PageBuilder {
 		add_filter( 'siteorigin_panels_settings', [ $this, 'add_popup_post_type' ] );
 		add_filter( 'pre_update_option_siteorigin_panels_settings', [ $this, 'strip_injected_post_type' ], 10, 2 );
 
+		add_filter( 'use_block_editor_for_post_type', [ $this, 'use_classic_editor' ], 999, 2 );
 		add_action( 'siteorigin_panels_metabox_end', [ $this, 'override_preview_url' ] );
 	}
 
@@ -76,6 +77,37 @@ class SiteOrigin extends PageBuilder {
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		return 0;
+	}
+
+	/**
+	 * Preserve SiteOrigin's editor choice after Popup Maker's post type filter.
+	 *
+	 * @param mixed $use_block_editor Whether the block editor should be used.
+	 * @param mixed $post_type        Post type being checked.
+	 *
+	 * @return mixed
+	 */
+	public function use_classic_editor( $use_block_editor, $post_type = '' ) {
+		if ( ! is_string( $post_type ) || 'popup' !== $post_type ) {
+			return $use_block_editor;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only editor routing flag.
+		if ( isset( $_GET['siteorigin-page-builder'] ) ) {
+			return false;
+		}
+
+		global $post;
+
+		if (
+			! $post instanceof \WP_Post ||
+			'popup' !== $post->post_type ||
+			( function_exists( 'has_blocks' ) && has_blocks( $post ) )
+		) {
+			return $use_block_editor;
+		}
+
+		return get_post_meta( $post->ID, 'panels_data', true ) ? false : $use_block_editor;
 	}
 
 	/**
