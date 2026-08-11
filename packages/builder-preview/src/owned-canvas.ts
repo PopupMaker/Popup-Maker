@@ -15,6 +15,7 @@ if ( ownedCanvas?.popup_id ) {
 	let originalRootMinHeight = '';
 	let originalRootMinHeightPriority = '';
 	let installedRootMinHeight = '';
+	let ownedRootClasses: Array< { className: string; element: Element } > = [];
 	// Mirrors the responsive presets in the site stylesheet, using viewport
 	// units because a builder canvas may have a narrower containing block.
 	const responsiveWidths: Record< string, string > = {
@@ -41,7 +42,27 @@ if ( ownedCanvas?.popup_id ) {
 		classes
 			.split( /\s+/ )
 			.filter( Boolean )
-			.forEach( ( className ) => element.classList.add( className ) );
+			.forEach( ( className ) => {
+				if ( ! element.classList.contains( className ) ) {
+					element.classList.add( className );
+				}
+			} );
+	};
+
+	const addRootClass = ( element: Element, className: string ): void => {
+		if ( element.classList.contains( className ) ) {
+			return;
+		}
+
+		element.classList.add( className );
+		ownedRootClasses.push( { className, element } );
+	};
+
+	const clearOverlayIdentity = (): void => {
+		ownedRootClasses.forEach( ( { className, element } ) => {
+			element.classList.remove( className );
+		} );
+		ownedRootClasses = [];
 	};
 
 	const addOverlayIdentity = (
@@ -57,11 +78,29 @@ if ( ownedCanvas?.popup_id ) {
 			)
 			.join( ' ' );
 
-		targetDocument.documentElement.classList.add(
+		addRootClass(
+			targetDocument.documentElement,
 			'pum-builder-owned-canvas-root'
 		);
-		addClasses( targetDocument.documentElement, rootClasses );
-		addClasses( targetDocument.body, rootClasses );
+		rootClasses
+			.split( /\s+/ )
+			.filter( Boolean )
+			.forEach( ( className ) => {
+				addRootClass( targetDocument.documentElement, className );
+				addRootClass( targetDocument.body, className );
+			} );
+	};
+
+	const selectorAttributeFilter = (): string[] => {
+		const attributes = [ 'class', 'id' ];
+		const pattern = /\[\s*([^\s~|^$*=\]]+)/g;
+		let match: RegExpExecArray | null;
+
+		while ( ( match = pattern.exec( display.canvas_selector ) ) ) {
+			attributes.push( match[ 1 ] );
+		}
+
+		return Array.from( new Set( attributes ) );
 	};
 
 	const viewportRelativeLength = (
@@ -218,6 +257,11 @@ if ( ownedCanvas?.popup_id ) {
 			closeButton.innerHTML = display.close_content;
 			closeButton.setAttribute( 'aria-disabled', 'true' );
 			closeButton.setAttribute( 'aria-label', display.close_label );
+			closeButton.style.setProperty(
+				'pointer-events',
+				'none',
+				'important'
+			);
 			closeButton.tabIndex = -1;
 		}
 
@@ -282,6 +326,42 @@ if ( ownedCanvas?.popup_id ) {
 		rootElement.style.setProperty( 'min-height', height, 'important' );
 	};
 
+	const fixedContainingBlock = (): HTMLElement | null => {
+		if ( ! canvas || ! canvasWindow ) {
+			return null;
+		}
+
+		let ancestor = canvas.parentElement;
+
+		while ( ancestor ) {
+			const style = canvasWindow.getComputedStyle( ancestor );
+			const contain = style.getPropertyValue( 'contain' );
+			const willChange = style.getPropertyValue( 'will-change' );
+			const createsContainingBlock =
+				[
+					'transform',
+					'perspective',
+					'filter',
+					'backdrop-filter',
+				].some( ( property ) => {
+					const value = style.getPropertyValue( property );
+
+					return '' !== value && 'none' !== value;
+				} ) ||
+				/(?:layout|paint|strict|content)/.test( contain ) ||
+				/(?:transform|perspective|filter)/.test( willChange ) ||
+				'auto' === style.getPropertyValue( 'content-visibility' );
+
+			if ( createsContainingBlock ) {
+				return ancestor;
+			}
+
+			ancestor = ancestor.parentElement;
+		}
+
+		return null;
+	};
+
 	const viewportToPosition = (
 		viewportTop: number,
 		viewportLeft: number,
@@ -291,7 +371,10 @@ if ( ownedCanvas?.popup_id ) {
 			return { left: viewportLeft, top: viewportTop };
 		}
 
-		const offsetParent = canvas.offsetParent;
+		const offsetParent =
+			'fixed' === position
+				? fixedContainingBlock() || canvas.offsetParent
+				: canvas.offsetParent;
 
 		if ( 'fixed' === position && ! offsetParent ) {
 			return { left: viewportLeft, top: viewportTop };
@@ -372,7 +455,6 @@ if ( ownedCanvas?.popup_id ) {
 			bottom: 'auto',
 			left: '0',
 			right: 'auto',
-			transform: 'none',
 		};
 
 		Object.entries( properties ).forEach( ( [ property, value ] ) => {
@@ -464,7 +546,6 @@ if ( ownedCanvas?.popup_id ) {
 			'important'
 		);
 		canvas.style.setProperty( 'right', 'auto', 'important' );
-		canvas.style.setProperty( 'transform', 'none', 'important' );
 
 		if ( isOversized ) {
 			setRootMinHeight(
@@ -521,6 +602,7 @@ if ( ownedCanvas?.popup_id ) {
 				geometryFrame = null;
 			}
 			restoreRootMinHeight();
+			clearOverlayIdentity();
 			targetObserver?.disconnect();
 			targetObserver = null;
 
@@ -534,6 +616,8 @@ if ( ownedCanvas?.popup_id ) {
 						scheduleAdoption
 					);
 					targetObserver.observe( targetDocument.documentElement, {
+						attributes: true,
+						attributeFilter: selectorAttributeFilter(),
 						childList: true,
 						subtree: true,
 					} );
@@ -553,6 +637,8 @@ if ( ownedCanvas?.popup_id ) {
 		);
 
 		if ( ! targetCanvas ) {
+			restoreRootMinHeight();
+			clearOverlayIdentity();
 			resizeObserver?.disconnect();
 			resizeObserver = null;
 			scrollCanvas?.removeEventListener( 'scroll', mirrorCanvasScroll );
@@ -580,7 +666,8 @@ if ( ownedCanvas?.popup_id ) {
 		addOverlayIdentity( targetDocument, display.overlay_classes );
 
 		if ( iframe ) {
-			targetDocument.documentElement.classList.add(
+			addRootClass(
+				targetDocument.documentElement,
 				'pum-builder-owned-canvas'
 			);
 		}
@@ -613,6 +700,8 @@ if ( ownedCanvas?.popup_id ) {
 		new window.MutationObserver( scheduleAdoption ).observe(
 			document.body,
 			{
+				attributes: true,
+				attributeFilter: selectorAttributeFilter(),
 				childList: true,
 				subtree: true,
 			}

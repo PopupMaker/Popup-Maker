@@ -192,6 +192,10 @@ describe( 'builder-owned popup canvas', () => {
 			)
 		).toBe( true );
 		expect(
+			( canvas?.lastElementChild as HTMLElement | undefined )?.style
+				.pointerEvents
+		).toBe( 'none' );
+		expect(
 			canvas?.lastElementChild?.previousElementSibling?.classList.contains(
 				'pum-builder-canvas-close-anchor'
 			)
@@ -226,6 +230,7 @@ describe( 'builder-owned popup canvas', () => {
 					width: 420,
 				} )
 			);
+		canvas.style.transform = 'scale(0.8)';
 
 		await import( '../owned-canvas' );
 
@@ -239,7 +244,9 @@ describe( 'builder-owned popup canvas', () => {
 		expect( canvas.style.getPropertyValue( 'position' ) ).toBe(
 			'absolute'
 		);
-		expect( canvas.style.getPropertyValue( 'transform' ) ).toBe( 'none' );
+		expect( canvas.style.getPropertyValue( 'transform' ) ).toBe(
+			'scale(0.8)'
+		);
 		expect( document.documentElement.classList ).toContain( 'pum-theme-4' );
 		expect( document.body.classList ).toContain( 'pum-theme-4' );
 		expect( document.documentElement.classList ).not.toContain(
@@ -496,6 +503,97 @@ describe( 'builder-owned popup canvas', () => {
 
 		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '-72px' );
 		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-172px' );
+	} );
+
+	it( 'positions a fixed canvas inside a transformed ancestor', async () => {
+		document.body.innerHTML =
+			'<section id="canvas-parent"><main id="builder-canvas"></main></section>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			location: 'left top',
+			position_left: '20',
+			position_top: '10',
+			position_fixed: true,
+			show_close: false,
+		};
+		const parent =
+			document.querySelector< HTMLElement >( '#canvas-parent' );
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! parent || ! canvas ) {
+			throw new Error( 'Fixed canvas fixture was not created.' );
+		}
+
+		parent.style.transform = 'translateZ(0)';
+		parent.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue( rect( { left: 200, top: 100 } ) );
+		canvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue(
+				rect( {
+					bottom: 200,
+					height: 200,
+					right: 300,
+					width: 300,
+				} )
+			);
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'position' ) ).toBe( 'fixed' );
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '-90px' );
+		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-180px' );
+	} );
+
+	it( 'adopts an existing canvas after its selector attribute changes', async () => {
+		document.body.innerHTML = '<main></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '[data-popup-canvas]',
+		};
+
+		await import( '../owned-canvas' );
+
+		const canvas = document.querySelector< HTMLElement >( 'main' );
+		canvas?.setAttribute( 'data-popup-canvas', '' );
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		expect( canvas?.classList ).toContain( 'pum-builder-canvas-area' );
+	} );
+
+	it( 'clears preview root classes when the canvas disappears', async () => {
+		document.body.innerHTML = '<main id="builder-canvas"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+		};
+
+		await import( '../owned-canvas' );
+
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+		canvas?.removeAttribute( 'id' );
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		expect( document.documentElement.classList ).not.toContain(
+			'pum-builder-owned-canvas-root'
+		);
+		expect( document.documentElement.classList ).not.toContain(
+			'pum-theme-4'
+		);
+		expect( document.body.classList ).not.toContain( 'pum-theme-4' );
 	} );
 
 	it( 'keeps an outside close button inside the viewport', async () => {
