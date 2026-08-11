@@ -117,7 +117,7 @@ describe( 'builder-owned popup canvas', () => {
 		const iframe =
 			document.querySelector< HTMLIFrameElement >( '#builder-canvas' );
 
-		if ( ! iframe?.contentWindow ) {
+		if ( ! iframe?.contentWindow || ! iframe.contentDocument ) {
 			throw new Error( 'Iframe fixture was not created.' );
 		}
 
