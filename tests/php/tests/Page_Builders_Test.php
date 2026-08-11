@@ -154,7 +154,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			defined( 'ET_BUILDER_VERSION' ) ||
 			function_exists( 'et_divi_fonts_url' ) ||
 			function_exists( 'et_setup_builder' ) ||
-			class_exists( 'ET_Builder_Plugin', false )
+			class_exists( 'ET_Builder_Plugin' )
 		) {
 			$this->markTestSkipped( 'A bundled builder is active in this test environment.' );
 		}
