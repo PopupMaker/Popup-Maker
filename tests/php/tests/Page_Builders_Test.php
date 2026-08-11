@@ -246,9 +246,11 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			'p'         => $popup_id,
 		], home_url( '/' ) ) );
 
+		$this->assertSame( [], $controller->allow_builder_request( [] ) );
 		$this->assertSame( $popup_id, $controller->get_edit_popup_id() );
 		$this->assertSame( 0, $controller->get_canvas_popup_id() );
-		$this->assertTrue( $controller->is_canvas_popup_loadable( true, $popup_id + 1 ) );
+		$this->assertFalse( $controller->is_canvas_popup_loadable( true, $popup_id ) );
+		$this->assertFalse( $controller->is_canvas_popup_loadable( true, $popup_id + 1 ) );
 		$this->assertSame(
 			[ 'triggers' => [ [ 'type' => 'auto_open' ] ] ],
 			$controller->filter_canvas_data_attr( [ 'triggers' => [ [ 'type' => 'auto_open' ] ] ], $popup_id )
@@ -303,6 +305,68 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$this->assertContains( $popup_id, $preloaded );
 		$this->assertTrue( wp_script_is( 'popup-maker-builder-preview', 'enqueued' ) );
 		$this->assertTrue( wp_style_is( 'popup-maker-builder-preview', 'enqueued' ) );
+	}
+
+	/** @return void */
+	public function test_builder_owned_canvas_localizes_the_shared_popup_frame() {
+		$popup_id = $this->factory->post->create(
+			[
+				'post_type'  => 'popup',
+				'post_title' => 'Builder popup',
+			]
+		);
+		$builder  = new class( \PopupMaker\plugin() ) extends PageBuilder {
+
+			/** @return bool */
+			public function is_available() {
+				return true;
+			}
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return bool
+			 */
+			public function enqueue_test_canvas( $popup_id ) {
+				return $this->enqueue_owned_canvas_preview(
+					$popup_id,
+					[
+						'iframe_selector' => '#builder-frame',
+						'canvas_selector' => 'body',
+						'style_selectors' => [ '#popup-maker-site-css' ],
+					]
+				);
+			}
+		};
+
+		wp_register_script( 'popup-maker-builder-preview', false, [], 'test', true );
+		wp_register_style( 'popup-maker-builder-preview', false, [], 'test' );
+
+		$this->assertTrue( $builder->enqueue_test_canvas( $popup_id ) );
+		$this->assertTrue( wp_script_is( 'popup-maker-builder-preview', 'enqueued' ) );
+		$this->assertTrue( wp_style_is( 'popup-maker-builder-preview', 'enqueued' ) );
+
+		$localized = wp_scripts()->get_data( 'popup-maker-builder-preview', 'data' );
+
+		$this->assertIsString( $localized );
+		$this->assertMatchesRegularExpression( '/var pumBuilderOwnedCanvas = (.+);/', $localized );
+
+		preg_match( '/var pumBuilderOwnedCanvas = (.+);/', $localized, $matches );
+		$config = json_decode( $matches[1], true );
+
+		$this->assertSame( (string) $popup_id, $config['popup_id'] );
+		$this->assertSame( '#builder-frame', $config['iframe_selector'] );
+		$this->assertSame( 'body', $config['canvas_selector'] );
+		$this->assertContains( '#popup-maker-site-css', $config['style_selectors'] );
+		$this->assertContains( '#popup-maker-builder-preview-inline-css', $config['style_selectors'] );
+		$this->assertContains( 'pum-overlay', explode( ' ', $config['overlay_classes'] ) );
+		$this->assertContains( 'pum-container', explode( ' ', $config['container_classes'] ) );
+		$this->assertContains( 'pum-content', explode( ' ', $config['content_classes'] ) );
+
+		$theme_styles = wp_styles()->get_data( 'popup-maker-builder-preview', 'after' );
+		$theme_id     = pum_get_popup( $popup_id )->get_theme_id();
+
+		$this->assertIsArray( $theme_styles );
+		$this->assertStringContainsString( ".pum-theme-{$theme_id}", implode( "\n", $theme_styles ) );
 	}
 
 	/** @return void */

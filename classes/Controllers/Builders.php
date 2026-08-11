@@ -318,11 +318,13 @@ class Builders extends Controller {
 			return $query_vars;
 		}
 
-		$popup_id = $this->get_edit_popup_id();
+		$request = $this->get_edit_request();
 
-		if ( ! $popup_id ) {
+		if ( ! $request || ! $request['builder']->is_canvas_request() ) {
 			return $query_vars;
 		}
+
+		$popup_id = $request['popup_id'];
 
 		$query_vars['p']         = $popup_id;
 		$query_vars['post_type'] = 'popup';
@@ -389,9 +391,15 @@ class Builders extends Controller {
 	 * @return bool
 	 */
 	public function is_canvas_popup_loadable( $loadable, $popup_id ) {
+		$request = $this->get_edit_request();
+
+		if ( ! $request ) {
+			return $loadable;
+		}
+
 		$canvas_id = $this->get_canvas_popup_id();
 
-		return $canvas_id ? absint( $popup_id ) === $canvas_id : $loadable;
+		return $canvas_id ? absint( $popup_id ) === $canvas_id : false;
 	}
 
 	/**
