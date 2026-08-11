@@ -89,11 +89,17 @@ class Builders extends Controller {
 	 * @return class-string<PageBuilder>[]
 	 */
 	protected function detected_builder_classes() {
-		if ( ! defined( 'ELEMENTOR_VERSION' ) && ! did_action( 'elementor/loaded' ) ) {
-			return [];
+		$builders = [];
+
+		if ( defined( 'ELEMENTOR_VERSION' ) || did_action( 'elementor/loaded' ) ) {
+			$builders[] = \PopupMaker\Builders\Elementor::class;
 		}
 
-		return [ \PopupMaker\Builders\Elementor::class ];
+		if ( defined( 'FL_BUILDER_VERSION' ) || class_exists( '\FLBuilder' ) ) {
+			$builders[] = \PopupMaker\Builders\BeaverBuilder::class;
+		}
+
+		return $builders;
 	}
 
 	/**
