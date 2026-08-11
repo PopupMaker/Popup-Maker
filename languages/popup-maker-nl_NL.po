@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
-"PO-Revision-Date: 2026-08-05 03:29+0000\n"
+"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"PO-Revision-Date: 2026-08-06 02:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl-NL\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
 #: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
 #: classes/Extension/Activator.php:201 classes/Privacy.php:36
-#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Services/License.php:915 classes/Site/Assets.php:283
 #: classes/Triggers.php:226 classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
@@ -202,11 +202,11 @@ msgstr "Popup Maker-shortcodes"
 msgid "There was an error in generating the preview"
 msgstr "Er is een fout opgetreden bij het genereren van de voorvertoning"
 
-#: classes/Admin/Assets.php:149
+#: classes/Admin/Assets.php:143
 msgid "Your all set, the upgrades completed successfully!"
 msgstr "Alles is in orde, de upgrades zijn succesvol voltooid!"
 
-#: classes/Admin/Assets.php:150
+#: classes/Admin/Assets.php:144
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
@@ -431,7 +431,7 @@ msgstr "Abonnees"
 #: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
 #: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:298
 msgid "Settings"
 msgstr "Instellingen"
 
@@ -441,6 +441,7 @@ msgid "Extend"
 msgstr "Uitbreiden"
 
 #: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
+#: classes/Admin/Support.php:58
 msgid "Help & Support"
 msgstr "Help & ondersteuning"
 
@@ -623,7 +624,7 @@ msgid "Display"
 msgstr "Weergave"
 
 #: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
-#: classes/Site/Assets.php:300
+#: classes/Site/Assets.php:299
 msgid "Triggers"
 msgstr "Triggers"
 
@@ -646,7 +647,7 @@ msgstr "Algemene instellingen"
 msgid "Triggers & Cookies"
 msgstr "Triggers & cookies"
 
-#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:302
 msgid "Conditions"
 msgstr "Voorwaarden"
 
@@ -1855,7 +1856,7 @@ msgstr "Instellingen van Popup Maker"
 msgid "Subscriptions"
 msgstr "Abonnementen"
 
-#: classes/Admin/Settings.php:1131
+#: classes/Admin/Settings.php:1131 classes/Admin/Support.php:45
 msgid "Extensions"
 msgstr "Extensies"
 
@@ -1982,12 +1983,71 @@ msgstr "Ongeldige nonce"
 msgid "Error"
 msgstr "Fout"
 
-#: classes/Admin/Support.php:52
-msgid ""
-"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
+#: classes/Admin/Support.php:27
+msgid "Getting Started"
+msgstr "Aan de slag"
+
+#: classes/Admin/Support.php:28
+msgid "Learn the basics and build your first popup."
+msgstr "Leer de basisprincipes en maak je eerste pop-up."
+
+#: classes/Admin/Support.php:33 classes/Admin/Templates.php:730
+#: classes/Admin/Templates.php:735
+#: classes/Controllers/Admin/WP/PluginsPage.php:106
+#: dist/packages/cta-editor.js:1
+msgid "Documentation"
+msgstr "Documentatie"
+
+#: classes/Admin/Support.php:34
+msgid "Browse setup guides, common questions, and advanced documentation."
 msgstr ""
-"<b>Beveiligde HTTPS-contactpagina</b>, uitgevoerd via iframe vanaf extern "
-"domein"
+"Blader door installatiehandleidingen, veelgestelde vragen en geavanceerde "
+"documentatie."
+
+#: classes/Admin/Support.php:39
+msgid "Community"
+msgstr "Community"
+
+#: classes/Admin/Support.php:40
+msgid "Ask questions and share solutions with other Popup Maker users."
+msgstr "Stel vragen en deel oplossingen met andere Popup Maker-gebruikers."
+
+#: classes/Admin/Support.php:46
+msgid "Find documentation for Popup Maker extensions."
+msgstr "Vind documentatie voor Popup Maker-extensies."
+
+#: classes/Admin/Support.php:51
+msgid "Developer Wiki"
+msgstr "Ontwikkelaarswiki"
+
+#: classes/Admin/Support.php:52
+msgid "Contribute to or extend Popup Maker."
+msgstr "Draag bij aan of breid Popup Maker uit."
+
+#: classes/Admin/Support.php:60
+msgid ""
+"Find answers, connect with the community, or contact the Popup Maker support "
+"team."
+msgstr ""
+"Vind antwoorden, kom in contact met de community of neem contact op met het "
+"ondersteuningsteam van Popup Maker."
+
+#: classes/Admin/Support.php:77
+msgid "Still need help?"
+msgstr "Heb je nog steeds hulp nodig?"
+
+#: classes/Admin/Support.php:78
+msgid ""
+"Open a support request and include the site URL, Popup Maker version, steps "
+"to reproduce, and any relevant error messages."
+msgstr ""
+"Open een supportverzoek en vermeld de site-URL, de versie van Popup Maker, "
+"de stappen om het probleem te reproduceren en eventuele relevante "
+"foutmeldingen."
+
+#: classes/Admin/Support.php:81
+msgid "Contact Support"
+msgstr "Neem contact op met ondersteuning"
 
 #: classes/Admin/Templates.php:52
 msgid "Check"
@@ -2363,12 +2423,6 @@ msgstr "Label"
 msgid "Value"
 msgstr "Waarde"
 
-#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
-#: classes/Controllers/Admin/WP/PluginsPage.php:106
-#: dist/packages/cta-editor.js:1
-msgid "Documentation"
-msgstr "Documentatie"
-
 #: classes/Admin/Templates.php:844
 msgid "Add New Trigger"
 msgstr "Nieuwe trigger toevoegen"
@@ -2524,7 +2578,7 @@ msgid "Add New Cookie"
 msgstr "Nieuwe cookie toevoegen"
 
 #: classes/Admin/Templates.php:1125 classes/Privacy.php:67
-#: classes/Site/Assets.php:301
+#: classes/Site/Assets.php:300
 msgid "Cookies"
 msgstr "Cookies"
 
@@ -4825,78 +4879,78 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr "Plaatshouder voor inschrijfformulier"
 
-#: classes/Site/Assets.php:284
+#: classes/Site/Assets.php:283
 msgid "Debug Mode Enabled"
 msgstr "Debugmodus ingeschakeld"
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:284
 msgid "Debug started at:"
 msgstr "Debug gestart op:"
 
 #. translators: 1. URL to documentation.
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:287
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr "Voor meer informatie over het gebruik van deze informatie, bezoek %s"
 
-#: classes/Site/Assets.php:291
+#: classes/Site/Assets.php:290
 msgid "Global Information"
 msgstr "Globale informatie"
 
-#: classes/Site/Assets.php:292
+#: classes/Site/Assets.php:291
 msgid "Localized variables"
 msgstr "Gelokaliseerde variabelen"
 
-#: classes/Site/Assets.php:293
+#: classes/Site/Assets.php:292
 msgid "Popups Initializing"
 msgstr "Pop-ups initialiseren"
 
-#: classes/Site/Assets.php:294
+#: classes/Site/Assets.php:293
 msgid "Popups Initialized"
 msgstr "Pop-ups geïnitialiseerd"
 
-#: classes/Site/Assets.php:295
+#: classes/Site/Assets.php:294
 msgid "Popup: #"
 msgstr "Pop-up: #"
 
-#: classes/Site/Assets.php:296
+#: classes/Site/Assets.php:295
 msgid "Theme ID: "
 msgstr "Thema-ID: "
 
-#: classes/Site/Assets.php:297
+#: classes/Site/Assets.php:296
 msgid "Method Call:"
 msgstr "Methode-aanroep:"
 
-#: classes/Site/Assets.php:298
+#: classes/Site/Assets.php:297
 msgid "Method Arguments:"
 msgstr "Methode-argumenten:"
 
-#: classes/Site/Assets.php:302
+#: classes/Site/Assets.php:301
 msgid "Delay:"
 msgstr "Vertraging:"
 
-#: classes/Site/Assets.php:304
+#: classes/Site/Assets.php:303
 msgid "Cookie:"
 msgstr "Cookie:"
 
-#: classes/Site/Assets.php:305
+#: classes/Site/Assets.php:304
 msgid "Settings:"
 msgstr "Instellingen:"
 
-#: classes/Site/Assets.php:306
+#: classes/Site/Assets.php:305
 msgid "Selector:"
 msgstr "Selector:"
 
-#: classes/Site/Assets.php:307
+#: classes/Site/Assets.php:306
 msgid "Mobile Disabled:"
 msgstr "Mobiel uitgeschakeld:"
 
-#: classes/Site/Assets.php:308
+#: classes/Site/Assets.php:307
 msgid "Tablet Disabled:"
 msgstr "Tablet uitgeschakeld:"
 
 #. translators: 1. Event name.
-#: classes/Site/Assets.php:310
+#: classes/Site/Assets.php:309
 #, php-format
 msgid "Event: %s"
 msgstr "Gebeurtenis: %s"
