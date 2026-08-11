@@ -190,12 +190,12 @@ class PUM_Admin_Themes {
 			<p class="pum-desc">
 			<?php
 				$tips = [
-					__( 'If you move this theme preview to the bottom of your sidebar here it will follow you down the page?', 'popup-maker' ),
-					__( 'Clicking on an element in this theme preview will take you to its relevant settings in the editor?', 'popup-maker' ),
+					__( 'If you move this theme preview to the bottom of your sidebar here it will follow you down the page', 'popup-maker' ),
+					__( 'Clicking on an element in this theme preview will take you to its relevant settings in the editor', 'popup-maker' ),
 				];
 				$key  = array_rand( $tips, 1 );
 				?>
-				<i class="dashicons dashicons-info"></i> <?php echo wp_kses_post( '<strong>' . __( 'Did you know:', 'popup-maker' ) . '</strong>  ' . $tips[ $key ] ); ?>
+				<i class="dashicons dashicons-info"></i> <?php echo wp_kses_post( '<strong>' . __( 'Did you know?', 'popup-maker' ) . '</strong>  ' . $tips[ $key ] ); ?>
 			</p>
 		</div>
 
