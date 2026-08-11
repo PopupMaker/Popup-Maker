@@ -24,11 +24,27 @@ html.pum-builder-owned-canvas-root > body {
 		outline: none;
 	}
 
-	> :first-child {
+	> :nth-child(
+			1
+				of
+				:not(
+					.pum-builder-canvas-title,
+					.pum-builder-canvas-close-anchor,
+					.pum-builder-canvas-close
+				)
+		) {
 		margin-top: 0;
 	}
 
-	> :last-child {
+	> :nth-last-child(
+			1
+				of
+				:not(
+					.pum-builder-canvas-title,
+					.pum-builder-canvas-close-anchor,
+					.pum-builder-canvas-close
+				)
+		) {
 		margin-bottom: 0;
 	}
 }

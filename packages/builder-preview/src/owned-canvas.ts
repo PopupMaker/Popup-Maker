@@ -21,6 +21,8 @@ if ( ownedCanvas?.popup_id ) {
 	let syntheticCanvasElements: HTMLElement[] = [];
 	let ownedStyleElements: HTMLElement[] = [];
 	let canvasTransformSignature = '';
+	let canvasSelectorAttributes: string[] = [];
+	const ownedCanvasAttributes = new Map< string, string | null >();
 	const canvasStyles = new Map<
 		string,
 		{
@@ -52,7 +54,26 @@ if ( ownedCanvas?.popup_id ) {
 		return Number.isNaN( offset ) ? 0 : offset;
 	};
 
+	const rememberOwnedCanvasAttribute = (
+		element: Element,
+		attribute: string,
+		previousValue: string | null
+	): void => {
+		if (
+			element === canvas &&
+			( ! ownedCanvasAttributes.has( attribute ) ||
+				ownedCanvasAttributes.get( attribute ) === previousValue )
+		) {
+			ownedCanvasAttributes.set(
+				attribute,
+				element.getAttribute( attribute )
+			);
+		}
+	};
+
 	const addCanvasClasses = ( element: Element, classes: string ): void => {
+		const previousClass = element.getAttribute( 'class' );
+
 		classes
 			.split( /\s+/ )
 			.filter( Boolean )
@@ -62,6 +83,8 @@ if ( ownedCanvas?.popup_id ) {
 					ownedCanvasClasses.push( className );
 				}
 			} );
+
+		rememberOwnedCanvasAttribute( element, 'class', previousClass );
 	};
 
 	const setCanvasStyle = (
@@ -73,6 +96,7 @@ if ( ownedCanvas?.popup_id ) {
 			return;
 		}
 
+		const previousStyle = canvas.getAttribute( 'style' );
 		let state = canvasStyles.get( property );
 
 		if ( ! state ) {
@@ -88,6 +112,7 @@ if ( ownedCanvas?.popup_id ) {
 		canvas.style.setProperty( property, value, priority );
 		state.installedPriority = canvas.style.getPropertyPriority( property );
 		state.installedValue = canvas.style.getPropertyValue( property );
+		rememberOwnedCanvasAttribute( canvas, 'style', previousStyle );
 	};
 
 	const addRootClass = ( element: Element, className: string ): void => {
@@ -406,6 +431,8 @@ if ( ownedCanvas?.popup_id ) {
 			}
 		} );
 		canvasStyles.clear();
+		ownedCanvasAttributes.clear();
+		canvasSelectorAttributes = [];
 		canvas = null;
 	};
 
@@ -439,6 +466,9 @@ if ( ownedCanvas?.popup_id ) {
 			const createsContainingBlock =
 				[
 					'transform',
+					'translate',
+					'scale',
+					'rotate',
 					'perspective',
 					'filter',
 					'backdrop-filter',
@@ -461,16 +491,31 @@ if ( ownedCanvas?.popup_id ) {
 		return null;
 	};
 
-	const transformMatrix = (
-		transform: string
-	): {
+	type Matrix2D = {
 		a: number;
 		b: number;
 		c: number;
 		d: number;
-		e: number;
-		f: number;
-	} | null => {
+	};
+
+	const identityMatrix = (): Matrix2D => ( {
+		a: 1,
+		b: 0,
+		c: 0,
+		d: 1,
+	} );
+
+	const multiplyMatrices = (
+		left: Matrix2D,
+		right: Matrix2D
+	): Matrix2D => ( {
+		a: left.a * right.a + left.c * right.b,
+		b: left.b * right.a + left.d * right.b,
+		c: left.a * right.c + left.c * right.d,
+		d: left.b * right.c + left.d * right.d,
+	} );
+
+	const transformMatrix = ( transform: string ): Matrix2D | null => {
 		const match = transform.match( /^(matrix|matrix3d)\((.+)\)$/ );
 
 		if ( ! match ) {
@@ -484,9 +529,9 @@ if ( ownedCanvas?.popup_id ) {
 		}
 
 		if ( 'matrix' === match[ 1 ] && 6 === values.length ) {
-			const [ a, b, c, d, e, f ] = values;
+			const [ a, b, c, d ] = values;
 
-			return { a, b, c, d, e, f };
+			return { a, b, c, d };
 		}
 
 		if ( 'matrix3d' === match[ 1 ] && 16 === values.length ) {
@@ -503,22 +548,184 @@ if ( ownedCanvas?.popup_id ) {
 				b: values[ 1 ],
 				c: values[ 4 ],
 				d: values[ 5 ],
-				e: values[ 12 ],
-				f: values[ 13 ],
 			};
 		}
 
 		return null;
 	};
 
-	const transformOriginLength = ( value: string, size: number ): number => {
-		const length = parseFloat( value );
+	const scaleValue = ( value: string ): number | null => {
+		const scale = parseFloat( value );
 
-		if ( Number.isNaN( length ) ) {
-			return 0;
+		if ( Number.isNaN( scale ) ) {
+			return null;
 		}
 
-		return value.endsWith( '%' ) ? ( length / 100 ) * size : length;
+		return value.endsWith( '%' ) ? scale / 100 : scale;
+	};
+
+	const scaleMatrix = ( scale: string ): Matrix2D | null => {
+		if ( ! scale || 'none' === scale ) {
+			return identityMatrix();
+		}
+
+		const values = scale.trim().split( /\s+/ ).map( scaleValue );
+
+		if (
+			values.some( ( value ) => null === value ) ||
+			values.length < 1 ||
+			values.length > 3 ||
+			( 3 === values.length && 1 !== values[ 2 ] )
+		) {
+			return null;
+		}
+
+		return {
+			...identityMatrix(),
+			a: values[ 0 ] as number,
+			d: ( values[ 1 ] ?? values[ 0 ] ) as number,
+		};
+	};
+
+	const angleRadians = ( value: string ): number | null => {
+		const angle = parseFloat( value );
+
+		if ( Number.isNaN( angle ) ) {
+			return null;
+		}
+
+		if ( value.endsWith( 'deg' ) ) {
+			return ( angle * Math.PI ) / 180;
+		}
+
+		if ( value.endsWith( 'grad' ) ) {
+			return ( angle * Math.PI ) / 200;
+		}
+
+		if ( value.endsWith( 'turn' ) ) {
+			return angle * Math.PI * 2;
+		}
+
+		return value.endsWith( 'rad' ) || 0 === angle ? angle : null;
+	};
+
+	const rotateMatrix = ( rotate: string ): Matrix2D | null => {
+		if ( ! rotate || 'none' === rotate ) {
+			return identityMatrix();
+		}
+
+		const values = rotate.trim().split( /\s+/ );
+		let direction = 1;
+		let angleValue = '';
+
+		if ( 1 === values.length ) {
+			[ angleValue ] = values;
+		} else if ( 2 === values.length && 'z' === values[ 0 ] ) {
+			angleValue = values[ 1 ];
+		} else if ( 4 === values.length ) {
+			const axes = values.slice( 0, 3 ).map( Number );
+
+			if (
+				axes.some( ( axis ) => Number.isNaN( axis ) ) ||
+				0 !== axes[ 0 ] ||
+				0 !== axes[ 1 ] ||
+				0 === axes[ 2 ]
+			) {
+				return null;
+			}
+
+			direction = Math.sign( axes[ 2 ] );
+			angleValue = values[ 3 ];
+		} else {
+			return null;
+		}
+
+		const angle = angleRadians( angleValue );
+
+		if ( null === angle ) {
+			return null;
+		}
+
+		const cosine = Math.cos( angle * direction );
+		const sine = Math.sin( angle * direction );
+
+		return {
+			...identityMatrix(),
+			a: cosine,
+			b: sine,
+			c: -sine,
+			d: cosine,
+		};
+	};
+
+	const elementTransformMatrix = (
+		style: CSSStyleDeclaration
+	): Matrix2D | null => {
+		const transform = style.getPropertyValue( 'transform' );
+		const transformValue =
+			! transform || 'none' === transform
+				? identityMatrix()
+				: transformMatrix( transform );
+		const scale = scaleMatrix( style.getPropertyValue( 'scale' ) );
+		const rotate = rotateMatrix( style.getPropertyValue( 'rotate' ) );
+
+		if ( ! transformValue || ! scale || ! rotate ) {
+			return null;
+		}
+
+		// Individual transforms are applied translate, rotate, scale, then
+		// the transform list. Translation and origins affect only the affine
+		// offset, which is recovered from the element's viewport bounds.
+		return multiplyMatrices(
+			rotate,
+			multiplyMatrices( scale, transformValue )
+		);
+	};
+
+	const transformedAncestorMatrix = (
+		element: HTMLElement
+	): Matrix2D | null => {
+		if ( ! canvasWindow ) {
+			return null;
+		}
+
+		let current: HTMLElement | null = element;
+		let transformed = false;
+		const matrices: Matrix2D[] = [];
+
+		while ( current ) {
+			const style = canvasWindow.getComputedStyle( current );
+			const currentMatrix = elementTransformMatrix( style );
+
+			if ( ! currentMatrix ) {
+				return null;
+			}
+
+			if (
+				[ 'transform', 'translate', 'scale', 'rotate' ].some(
+					( property ) => {
+						const value = style.getPropertyValue( property );
+
+						return Boolean(
+							value && 'none' !== value && 'normal' !== value
+						);
+					}
+				)
+			) {
+				transformed = true;
+			}
+
+			matrices.push( currentMatrix );
+			current = current.parentElement;
+		}
+
+		return transformed
+			? matrices.reduce(
+					( matrix, currentMatrix ) =>
+						multiplyMatrices( currentMatrix, matrix ),
+					identityMatrix()
+			  )
+			: null;
 	};
 
 	const transformedContainingBlockPosition = (
@@ -530,8 +737,7 @@ if ( ownedCanvas?.popup_id ) {
 			return null;
 		}
 
-		const style = canvasWindow.getComputedStyle( element );
-		const matrix = transformMatrix( style.getPropertyValue( 'transform' ) );
+		const matrix = transformedAncestorMatrix( element );
 		const width = element.offsetWidth;
 		const height = element.offsetHeight;
 
@@ -545,25 +751,9 @@ if ( ownedCanvas?.popup_id ) {
 			return null;
 		}
 
-		const originParts = style
-			.getPropertyValue( 'transform-origin' )
-			.split( /\s+/ );
-		const originX = transformOriginLength( originParts[ 0 ] || '0', width );
-		const originY = transformOriginLength(
-			originParts[ 1 ] || '0',
-			height
-		);
 		const transformPoint = ( left: number, top: number ) => ( {
-			left:
-				originX +
-				matrix.a * ( left - originX ) +
-				matrix.c * ( top - originY ) +
-				matrix.e,
-			top:
-				originY +
-				matrix.b * ( left - originX ) +
-				matrix.d * ( top - originY ) +
-				matrix.f,
+			left: matrix.a * left + matrix.c * top,
+			top: matrix.b * left + matrix.d * top,
 		} );
 		const corners = [
 			transformPoint( 0, 0 ),
@@ -574,20 +764,16 @@ if ( ownedCanvas?.popup_id ) {
 		const minLeft = Math.min( ...corners.map( ( point ) => point.left ) );
 		const minTop = Math.min( ...corners.map( ( point ) => point.top ) );
 		const bounds = element.getBoundingClientRect();
-		const relativeLeft = viewportLeft - ( bounds.left - minLeft ) - originX;
-		const relativeTop = viewportTop - ( bounds.top - minTop ) - originY;
-		const translatedLeft = relativeLeft - matrix.e;
-		const translatedTop = relativeTop - matrix.f;
+		const relativeLeft = viewportLeft - ( bounds.left - minLeft );
+		const relativeTop = viewportTop - ( bounds.top - minTop );
 
 		return {
 			left:
-				originX +
-				( matrix.d * translatedLeft - matrix.c * translatedTop ) /
-					determinant,
+				( matrix.d * relativeLeft - matrix.c * relativeTop ) /
+				determinant,
 			top:
-				originY +
-				( -matrix.b * translatedLeft + matrix.a * translatedTop ) /
-					determinant,
+				( -matrix.b * relativeLeft + matrix.a * relativeTop ) /
+				determinant,
 		};
 	};
 
@@ -653,11 +839,31 @@ if ( ownedCanvas?.popup_id ) {
 	};
 
 	const getCanvasTransformSignature = (
-		style: CSSStyleDeclaration
-	): string =>
-		[ 'transform', 'transform-origin', 'translate', 'scale', 'rotate' ]
-			.map( ( property ) => style.getPropertyValue( property ) )
-			.join( '|' );
+		element: HTMLElement,
+		targetWindow: Window
+	): string => {
+		const signatures: string[] = [];
+		let current: HTMLElement | null = element;
+
+		while ( current ) {
+			const style = targetWindow.getComputedStyle( current );
+
+			signatures.push(
+				[
+					'transform',
+					'transform-origin',
+					'translate',
+					'scale',
+					'rotate',
+				]
+					.map( ( property ) => style.getPropertyValue( property ) )
+					.join( '|' )
+			);
+			current = current.parentElement;
+		}
+
+		return signatures.join( '||' );
+	};
 
 	const hasCanvasTransform = ( style: CSSStyleDeclaration ): boolean =>
 		[ 'transform', 'translate', 'scale', 'rotate' ].some( ( property ) => {
@@ -797,7 +1003,10 @@ if ( ownedCanvas?.popup_id ) {
 			position
 		);
 		const canvasStyle = canvasWindow.getComputedStyle( canvas );
-		canvasTransformSignature = getCanvasTransformSignature( canvasStyle );
+		canvasTransformSignature = getCanvasTransformSignature(
+			canvas,
+			canvasWindow
+		);
 
 		if ( hasCanvasTransform( canvasStyle ) ) {
 			const positionedBounds = canvas.getBoundingClientRect();
@@ -851,9 +1060,7 @@ if ( ownedCanvas?.popup_id ) {
 			return;
 		}
 
-		const signature = getCanvasTransformSignature(
-			canvasWindow.getComputedStyle( canvas )
-		);
+		const signature = getCanvasTransformSignature( canvas, canvasWindow );
 
 		if ( signature === canvasTransformSignature ) {
 			return;
@@ -866,26 +1073,44 @@ if ( ownedCanvas?.popup_id ) {
 	const scheduleAdoptionFromMutations = (
 		records: MutationRecord[]
 	): void => {
-		const onlyCurrentCanvasStyles =
+		const onlyOwnedCanvasAttributes =
 			Boolean( records.length && canvas ) &&
 			records.every( ( record ) => {
 				if (
 					'attributes' !== record.type ||
-					'style' !== record.attributeName ||
+					! record.attributeName ||
 					record.target !== canvas
 				) {
 					return false;
 				}
 
-				return ( record.target as HTMLElement ).matches(
-					display.canvas_selector
+				return (
+					ownedCanvasAttributes.has( record.attributeName ) &&
+					ownedCanvasAttributes.get( record.attributeName ) ===
+						( record.target as HTMLElement ).getAttribute(
+							record.attributeName
+						)
 				);
 			} );
 
-		if ( ! onlyCurrentCanvasStyles ) {
+		if ( ! onlyOwnedCanvasAttributes ) {
 			scheduleAdoption();
 		}
 	};
+
+	const currentCanvasRetainsIdentity = (
+		targetDocument: Document
+	): boolean =>
+		Boolean(
+			canvas &&
+				canvas.ownerDocument === targetDocument &&
+				canvas.isConnected &&
+				canvasSelectorAttributes.every(
+					( attribute ) =>
+						ownedCanvasAttributes.get( attribute ) ===
+						canvas?.getAttribute( attribute )
+				)
+		);
 
 	const releaseCanvasDocument = (): void => {
 		restoreCanvas();
@@ -966,9 +1191,16 @@ if ( ownedCanvas?.popup_id ) {
 			attachCanvasStyles( targetDocument );
 		}
 
-		const targetCanvas = targetDocument.querySelector< HTMLElement >(
+		let targetCanvas = targetDocument.querySelector< HTMLElement >(
 			display.canvas_selector
 		);
+
+		if (
+			! targetCanvas &&
+			currentCanvasRetainsIdentity( targetDocument )
+		) {
+			targetCanvas = canvas;
+		}
 
 		if ( ! targetCanvas ) {
 			restoreRootMinHeight();
@@ -985,18 +1217,42 @@ if ( ownedCanvas?.popup_id ) {
 			canvas = targetCanvas;
 			scrollCanvas = targetCanvas;
 			scrollCanvas.addEventListener( 'scroll', mirrorCanvasScroll );
+			canvasSelectorAttributes = selectorAttributeFilter(
+				display.canvas_selector
+			);
+			if ( ! canvasSelectorAttributes.includes( 'style' ) ) {
+				canvasSelectorAttributes.push( 'style' );
+			}
+		}
 
-			if ( 'MutationObserver' in window ) {
-				canvasTransformSignature = getCanvasTransformSignature(
-					targetWindow.getComputedStyle( targetCanvas )
-				);
+		canvasSelectorAttributes.forEach( ( attribute ) => {
+			ownedCanvasAttributes.set(
+				attribute,
+				targetCanvas.getAttribute( attribute )
+			);
+		} );
+
+		if ( 'MutationObserver' in window ) {
+			if ( ! canvasTransformObserver ) {
 				canvasTransformObserver = new window.MutationObserver(
 					scheduleTransformGeometry
 				);
-				canvasTransformObserver.observe( targetCanvas, {
+			} else {
+				canvasTransformObserver.disconnect();
+			}
+
+			canvasTransformSignature = getCanvasTransformSignature(
+				targetCanvas,
+				targetWindow
+			);
+			let transformTarget: HTMLElement | null = targetCanvas;
+
+			while ( transformTarget ) {
+				canvasTransformObserver.observe( transformTarget, {
 					attributes: true,
 					attributeFilter: [ 'style' ],
 				} );
+				transformTarget = transformTarget.parentElement;
 			}
 		}
 

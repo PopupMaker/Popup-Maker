@@ -722,6 +722,98 @@ describe( 'builder-owned popup canvas', () => {
 		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-160px' );
 	} );
 
+	it( 'tracks individual transforms above the offset parent', async () => {
+		document.body.innerHTML =
+			'<section id="zoom-wrapper"><div id="canvas-parent"><main id="builder-canvas"></main></div></section>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			location: 'left top',
+			position_left: '20',
+			position_top: '10',
+			position_fixed: false,
+			show_close: false,
+		};
+		const wrapper =
+			document.querySelector< HTMLElement >( '#zoom-wrapper' );
+		const parent =
+			document.querySelector< HTMLElement >( '#canvas-parent' );
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! wrapper || ! parent || ! canvas ) {
+			throw new Error( 'Nested transform fixture was not created.' );
+		}
+
+		wrapper.style.setProperty( 'scale', '1' );
+		Object.defineProperty( canvas, 'offsetParent', {
+			configurable: true,
+			value: parent,
+		} );
+		Object.defineProperties( parent, {
+			offsetHeight: { configurable: true, value: 600 },
+			offsetWidth: { configurable: true, value: 800 },
+		} );
+		const parentBounds = jest.fn< () => DOMRect >().mockReturnValue(
+			rect( {
+				height: 600,
+				left: 100,
+				top: 50,
+				width: 800,
+			} )
+		);
+		parent.getBoundingClientRect = parentBounds;
+		canvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue( rect( { height: 200, width: 300 } ) );
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '-40px' );
+		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-80px' );
+
+		wrapper.style.setProperty( 'scale', '0.5' );
+		parentBounds.mockReturnValue(
+			rect( {
+				height: 300,
+				left: 100,
+				top: 50,
+				width: 400,
+			} )
+		);
+		const styleMutation = {
+			attributeName: 'style',
+			target: wrapper,
+			type: 'attributes',
+		} as MutationRecord;
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [ styleMutation ], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '-80px' );
+		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-160px' );
+
+		wrapper.style.removeProperty( 'scale' );
+		wrapper.style.setProperty( 'rotate', '90deg' );
+		parentBounds.mockReturnValue(
+			rect( {
+				height: 800,
+				left: 100,
+				top: 50,
+				width: 600,
+			} )
+		);
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [ styleMutation ], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '680px' );
+		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '-40px' );
+	} );
+
 	it( 'compensates for a transform on the builder canvas', async () => {
 		document.body.innerHTML = '<main id="builder-canvas"></main>';
 		window.pumBuilderOwnedCanvas = {
@@ -779,11 +871,11 @@ describe( 'builder-owned popup canvas', () => {
 	} );
 
 	it( 'ignores owned geometry mutations for style-based selectors', async () => {
-		document.body.innerHTML = '<main style="--builder-canvas: 1"></main>';
+		document.body.innerHTML = '<main style="position: relative"></main>';
 		window.pumBuilderOwnedCanvas = {
 			...settings(),
 			iframe_selector: undefined,
-			canvas_selector: '[style*="builder-canvas"]',
+			canvas_selector: '[style*="position: relative"]',
 		};
 		const canvas = document.querySelector< HTMLElement >( 'main' );
 
@@ -792,6 +884,9 @@ describe( 'builder-owned popup canvas', () => {
 		}
 
 		await import( '../owned-canvas' );
+		expect( canvas.matches( '[style*="position: relative"]' ) ).toBe(
+			false
+		);
 
 		const requestFrame = jest.spyOn( window, 'requestAnimationFrame' );
 		const styleMutation = {
@@ -804,6 +899,18 @@ describe( 'builder-owned popup canvas', () => {
 		} );
 
 		expect( requestFrame ).not.toHaveBeenCalled();
+
+		const childMutation = {
+			target: canvas,
+			type: 'childList',
+		} as MutationRecord;
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [ childMutation ], {} as MutationObserver );
+		} );
+		expect( requestFrame ).toHaveBeenCalledTimes( 1 );
+		await nextFrame();
+
+		expect( canvas.classList ).toContain( 'pum-builder-canvas-area' );
 	} );
 
 	it( 'adopts an existing canvas after its selector attribute changes', async () => {
