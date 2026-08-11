@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
-"PO-Revision-Date: 2026-08-05 03:29+0000\n"
+"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"PO-Revision-Date: 2026-08-06 02:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id-ID\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
 #: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
 #: classes/Extension/Activator.php:201 classes/Privacy.php:36
-#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Services/License.php:915 classes/Site/Assets.php:283
 #: classes/Triggers.php:226 classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
@@ -199,11 +199,11 @@ msgstr "Shortcode Popup Maker"
 msgid "There was an error in generating the preview"
 msgstr "Terjadi kesalahan saat membuat pratinjau"
 
-#: classes/Admin/Assets.php:149
+#: classes/Admin/Assets.php:143
 msgid "Your all set, the upgrades completed successfully!"
 msgstr "Semuanya sudah siap, peningkatan berhasil diselesaikan!"
 
-#: classes/Admin/Assets.php:150
+#: classes/Admin/Assets.php:144
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
@@ -429,7 +429,7 @@ msgstr "Pelanggan"
 #: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
 #: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:298
 msgid "Settings"
 msgstr "Pengaturan"
 
@@ -439,6 +439,7 @@ msgid "Extend"
 msgstr "Perluas"
 
 #: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
+#: classes/Admin/Support.php:58
 msgid "Help & Support"
 msgstr "Bantuan & Dukungan"
 
@@ -618,7 +619,7 @@ msgid "Display"
 msgstr "Tampilan"
 
 #: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
-#: classes/Site/Assets.php:300
+#: classes/Site/Assets.php:299
 msgid "Triggers"
 msgstr "Pemicu"
 
@@ -641,7 +642,7 @@ msgstr "Pengaturan Umum"
 msgid "Triggers & Cookies"
 msgstr "Pemicu & Cookie"
 
-#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:302
 msgid "Conditions"
 msgstr "Kondisi"
 
@@ -1834,7 +1835,7 @@ msgstr "Pengaturan Popup Maker"
 msgid "Subscriptions"
 msgstr "Langganan"
 
-#: classes/Admin/Settings.php:1131
+#: classes/Admin/Settings.php:1131 classes/Admin/Support.php:45
 msgid "Extensions"
 msgstr "Ekstensi"
 
@@ -1959,12 +1960,69 @@ msgstr "Nonce tidak valid"
 msgid "Error"
 msgstr "Kesalahan"
 
-#: classes/Admin/Support.php:52
-msgid ""
-"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
+#: classes/Admin/Support.php:27
+msgid "Getting Started"
+msgstr "Memulai"
+
+#: classes/Admin/Support.php:28
+msgid "Learn the basics and build your first popup."
+msgstr "Pelajari dasar-dasarnya dan buat popup pertama Anda."
+
+#: classes/Admin/Support.php:33 classes/Admin/Templates.php:730
+#: classes/Admin/Templates.php:735
+#: classes/Controllers/Admin/WP/PluginsPage.php:106
+#: dist/packages/cta-editor.js:1
+msgid "Documentation"
+msgstr "Dokumentasi"
+
+#: classes/Admin/Support.php:34
+msgid "Browse setup guides, common questions, and advanced documentation."
+msgstr "Jelajahi panduan penyiapan, pertanyaan umum, dan dokumentasi lanjutan."
+
+#: classes/Admin/Support.php:39
+msgid "Community"
+msgstr "Komunitas"
+
+#: classes/Admin/Support.php:40
+msgid "Ask questions and share solutions with other Popup Maker users."
 msgstr ""
-"<b>Halaman kontak HTTPS aman</b>, berjalan melalui iframe dari domain "
-"eksternal"
+"Ajukan pertanyaan dan bagikan solusi dengan pengguna Popup Maker lainnya."
+
+#: classes/Admin/Support.php:46
+msgid "Find documentation for Popup Maker extensions."
+msgstr "Temukan dokumentasi untuk ekstensi Popup Maker."
+
+#: classes/Admin/Support.php:51
+msgid "Developer Wiki"
+msgstr "Wiki Pengembang"
+
+#: classes/Admin/Support.php:52
+msgid "Contribute to or extend Popup Maker."
+msgstr "Berkontribusi pada atau memperluas Popup Maker."
+
+#: classes/Admin/Support.php:60
+msgid ""
+"Find answers, connect with the community, or contact the Popup Maker support "
+"team."
+msgstr ""
+"Temukan jawaban, terhubung dengan komunitas, atau hubungi tim dukungan Popup "
+"Maker."
+
+#: classes/Admin/Support.php:77
+msgid "Still need help?"
+msgstr "Masih butuh bantuan?"
+
+#: classes/Admin/Support.php:78
+msgid ""
+"Open a support request and include the site URL, Popup Maker version, steps "
+"to reproduce, and any relevant error messages."
+msgstr ""
+"Buka permintaan dukungan dan sertakan URL situs, versi Popup Maker, langkah-"
+"langkah untuk mereproduksi, dan pesan kesalahan yang relevan."
+
+#: classes/Admin/Support.php:81
+msgid "Contact Support"
+msgstr "Hubungi Dukungan"
 
 #: classes/Admin/Templates.php:52
 msgid "Check"
@@ -2340,12 +2398,6 @@ msgstr "Label"
 msgid "Value"
 msgstr "Nilai"
 
-#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
-#: classes/Controllers/Admin/WP/PluginsPage.php:106
-#: dist/packages/cta-editor.js:1
-msgid "Documentation"
-msgstr "Dokumentasi"
-
 #: classes/Admin/Templates.php:844
 msgid "Add New Trigger"
 msgstr "Tambahkan Pemicu Baru"
@@ -2498,7 +2550,7 @@ msgid "Add New Cookie"
 msgstr "Tambahkan Cookie Baru"
 
 #: classes/Admin/Templates.php:1125 classes/Privacy.php:67
-#: classes/Site/Assets.php:301
+#: classes/Site/Assets.php:300
 msgid "Cookies"
 msgstr "Cookie"
 
@@ -4783,80 +4835,80 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr "Placeholder Formulir Berlangganan"
 
-#: classes/Site/Assets.php:284
+#: classes/Site/Assets.php:283
 msgid "Debug Mode Enabled"
 msgstr "Mode Debug Diaktifkan"
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:284
 msgid "Debug started at:"
 msgstr "Debug dimulai pada:"
 
 #. translators: 1. URL to documentation.
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:287
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 "Untuk informasi lebih lanjut tentang cara menggunakan informasi ini, "
 "kunjungi %s"
 
-#: classes/Site/Assets.php:291
+#: classes/Site/Assets.php:290
 msgid "Global Information"
 msgstr "Informasi Global"
 
-#: classes/Site/Assets.php:292
+#: classes/Site/Assets.php:291
 msgid "Localized variables"
 msgstr "Variabel yang dilokalkan"
 
-#: classes/Site/Assets.php:293
+#: classes/Site/Assets.php:292
 msgid "Popups Initializing"
 msgstr "Inisialisasi popup"
 
-#: classes/Site/Assets.php:294
+#: classes/Site/Assets.php:293
 msgid "Popups Initialized"
 msgstr "Popup diinisialisasi"
 
-#: classes/Site/Assets.php:295
+#: classes/Site/Assets.php:294
 msgid "Popup: #"
 msgstr "Popup: #"
 
-#: classes/Site/Assets.php:296
+#: classes/Site/Assets.php:295
 msgid "Theme ID: "
 msgstr "ID tema: "
 
-#: classes/Site/Assets.php:297
+#: classes/Site/Assets.php:296
 msgid "Method Call:"
 msgstr "Panggilan Metode:"
 
-#: classes/Site/Assets.php:298
+#: classes/Site/Assets.php:297
 msgid "Method Arguments:"
 msgstr "Argumen Metode:"
 
-#: classes/Site/Assets.php:302
+#: classes/Site/Assets.php:301
 msgid "Delay:"
 msgstr "Penundaan:"
 
-#: classes/Site/Assets.php:304
+#: classes/Site/Assets.php:303
 msgid "Cookie:"
 msgstr "Cookie:"
 
-#: classes/Site/Assets.php:305
+#: classes/Site/Assets.php:304
 msgid "Settings:"
 msgstr "Pengaturan:"
 
-#: classes/Site/Assets.php:306
+#: classes/Site/Assets.php:305
 msgid "Selector:"
 msgstr "Pemilih:"
 
-#: classes/Site/Assets.php:307
+#: classes/Site/Assets.php:306
 msgid "Mobile Disabled:"
 msgstr "Dinonaktifkan di ponsel:"
 
-#: classes/Site/Assets.php:308
+#: classes/Site/Assets.php:307
 msgid "Tablet Disabled:"
 msgstr "Dinonaktifkan di tablet:"
 
 #. translators: 1. Event name.
-#: classes/Site/Assets.php:310
+#: classes/Site/Assets.php:309
 #, php-format
 msgid "Event: %s"
 msgstr "Acara: %s"
