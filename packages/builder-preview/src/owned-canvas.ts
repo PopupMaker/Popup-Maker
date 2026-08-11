@@ -15,6 +15,18 @@ if ( ownedCanvas?.popup_id ) {
 	let originalRootMinHeight = '';
 	let originalRootMinHeightPriority = '';
 	let installedRootMinHeight = '';
+	// Mirrors the responsive presets in the site stylesheet, using viewport
+	// units because a builder canvas may have a narrower containing block.
+	const responsiveWidths: Record< string, string > = {
+		nano: '10vw',
+		micro: '20vw',
+		tiny: '30vw',
+		small: '40vw',
+		medium: '60vw',
+		normal: '70vw',
+		large: '80vw',
+		xlarge: '95vw',
+	};
 
 	const isEnabled = ( value: boolean | string ): boolean =>
 		true === value || '1' === value;
@@ -66,20 +78,7 @@ if ( ownedCanvas?.popup_id ) {
 			return '95vw';
 		}
 
-		// Mirrors the responsive presets in the site stylesheet, using viewport
-		// units because a builder canvas may have a narrower containing block.
-		const widths: Record< string, string > = {
-			nano: '10vw',
-			micro: '20vw',
-			tiny: '30vw',
-			small: '40vw',
-			medium: '60vw',
-			normal: '70vw',
-			large: '80vw',
-			xlarge: '95vw',
-		};
-
-		return widths[ size ] || '95vw';
+		return responsiveWidths[ size ] || '95vw';
 	};
 
 	const copyPopupStyles = ( targetDocument: Document ): void => {
