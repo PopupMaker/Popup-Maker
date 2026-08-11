@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
-"PO-Revision-Date: 2026-08-05 03:29+0000\n"
+"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"PO-Revision-Date: 2026-08-06 02:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pl-PL\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
 #: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
 #: classes/Extension/Activator.php:201 classes/Privacy.php:36
-#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Services/License.php:915 classes/Site/Assets.php:283
 #: classes/Triggers.php:226 classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
@@ -206,11 +206,11 @@ msgstr "Skróty Popup Maker"
 msgid "There was an error in generating the preview"
 msgstr "Wystąpił błąd podczas generowania podglądu"
 
-#: classes/Admin/Assets.php:149
+#: classes/Admin/Assets.php:143
 msgid "Your all set, the upgrades completed successfully!"
 msgstr "Wszystko gotowe, aktualizacje zostały pomyślnie zakończone!"
 
-#: classes/Admin/Assets.php:150
+#: classes/Admin/Assets.php:144
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
@@ -437,7 +437,7 @@ msgstr "Subskrybenci"
 #: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
 #: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:298
 msgid "Settings"
 msgstr "Ustawienia"
 
@@ -447,6 +447,7 @@ msgid "Extend"
 msgstr "Rozszerz"
 
 #: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
+#: classes/Admin/Support.php:58
 msgid "Help & Support"
 msgstr "Pomoc i wsparcie"
 
@@ -634,7 +635,7 @@ msgid "Display"
 msgstr "Wyświetlanie"
 
 #: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
-#: classes/Site/Assets.php:300
+#: classes/Site/Assets.php:299
 msgid "Triggers"
 msgstr "Wyzwalacze"
 
@@ -657,7 +658,7 @@ msgstr "Ustawienia ogólne"
 msgid "Triggers & Cookies"
 msgstr "Wyzwalacze i pliki cookie"
 
-#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:302
 msgid "Conditions"
 msgstr "Warunki"
 
@@ -1853,7 +1854,7 @@ msgstr "Ustawienia Popup Maker"
 msgid "Subscriptions"
 msgstr "Subskrypcje"
 
-#: classes/Admin/Settings.php:1131
+#: classes/Admin/Settings.php:1131 classes/Admin/Support.php:45
 msgid "Extensions"
 msgstr "Rozszerzenia"
 
@@ -1982,12 +1983,72 @@ msgstr "Nieprawidłowy nonce"
 msgid "Error"
 msgstr "Błąd"
 
-#: classes/Admin/Support.php:52
-msgid ""
-"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
+#: classes/Admin/Support.php:27
+msgid "Getting Started"
+msgstr "Pierwsze kroki"
+
+#: classes/Admin/Support.php:28
+msgid "Learn the basics and build your first popup."
+msgstr "Poznaj podstawy i stwórz swoje pierwsze okienko popup."
+
+#: classes/Admin/Support.php:33 classes/Admin/Templates.php:730
+#: classes/Admin/Templates.php:735
+#: classes/Controllers/Admin/WP/PluginsPage.php:106
+#: dist/packages/cta-editor.js:1
+msgid "Documentation"
+msgstr "Dokumentacja"
+
+#: classes/Admin/Support.php:34
+msgid "Browse setup guides, common questions, and advanced documentation."
 msgstr ""
-"<b>Bezpieczna strona kontaktowa HTTPS</b>, uruchamiana przez iframe z "
-"zewnętrznej domeny"
+"Przeglądaj przewodniki konfiguracji, najczęstsze pytania i zaawansowaną "
+"dokumentację."
+
+#: classes/Admin/Support.php:39
+msgid "Community"
+msgstr "Społeczność"
+
+#: classes/Admin/Support.php:40
+msgid "Ask questions and share solutions with other Popup Maker users."
+msgstr ""
+"Zadawaj pytania i dziel się rozwiązaniami z innymi użytkownikami Popup Maker."
+
+#: classes/Admin/Support.php:46
+msgid "Find documentation for Popup Maker extensions."
+msgstr "Znajdź dokumentację rozszerzeń Popup Maker."
+
+#: classes/Admin/Support.php:51
+msgid "Developer Wiki"
+msgstr "Wiki dla deweloperów"
+
+#: classes/Admin/Support.php:52
+msgid "Contribute to or extend Popup Maker."
+msgstr "Współtwórz Popup Maker lub rozszerzaj jego możliwości."
+
+#: classes/Admin/Support.php:60
+msgid ""
+"Find answers, connect with the community, or contact the Popup Maker support "
+"team."
+msgstr ""
+"Znajdź odpowiedzi, skontaktuj się ze społecznością lub z zespołem wsparcia "
+"Popup Maker."
+
+#: classes/Admin/Support.php:77
+msgid "Still need help?"
+msgstr "Nadal potrzebujesz pomocy?"
+
+#: classes/Admin/Support.php:78
+msgid ""
+"Open a support request and include the site URL, Popup Maker version, steps "
+"to reproduce, and any relevant error messages."
+msgstr ""
+"Otwórz zgłoszenie do pomocy technicznej i dołącz adres URL witryny, wersję "
+"Popup Maker, kroki pozwalające odtworzyć problem oraz wszelkie istotne "
+"komunikaty o błędach."
+
+#: classes/Admin/Support.php:81
+msgid "Contact Support"
+msgstr "Skontaktuj się z pomocą techniczną"
 
 #: classes/Admin/Templates.php:52
 msgid "Check"
@@ -2367,12 +2428,6 @@ msgstr "Etykieta"
 msgid "Value"
 msgstr "Wartość"
 
-#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
-#: classes/Controllers/Admin/WP/PluginsPage.php:106
-#: dist/packages/cta-editor.js:1
-msgid "Documentation"
-msgstr "Dokumentacja"
-
 #: classes/Admin/Templates.php:844
 msgid "Add New Trigger"
 msgstr "Dodaj nowy wyzwalacz"
@@ -2525,7 +2580,7 @@ msgid "Add New Cookie"
 msgstr "Dodaj nowy plik cookie"
 
 #: classes/Admin/Templates.php:1125 classes/Privacy.php:67
-#: classes/Site/Assets.php:301
+#: classes/Site/Assets.php:300
 msgid "Cookies"
 msgstr "Pliki cookie"
 
@@ -4838,79 +4893,79 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr "Tekst zastępczy formularza subskrypcji"
 
-#: classes/Site/Assets.php:284
+#: classes/Site/Assets.php:283
 msgid "Debug Mode Enabled"
 msgstr "Tryb debugowania włączony"
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:284
 msgid "Debug started at:"
 msgstr "Debugowanie rozpoczęto o:"
 
 #. translators: 1. URL to documentation.
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:287
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 "Więcej informacji o tym, jak korzystać z tych informacji, znajdziesz na %s"
 
-#: classes/Site/Assets.php:291
+#: classes/Site/Assets.php:290
 msgid "Global Information"
 msgstr "Informacje globalne"
 
-#: classes/Site/Assets.php:292
+#: classes/Site/Assets.php:291
 msgid "Localized variables"
 msgstr "Zmienne lokalne"
 
-#: classes/Site/Assets.php:293
+#: classes/Site/Assets.php:292
 msgid "Popups Initializing"
 msgstr "Inicjowanie wyskakujących okienek"
 
-#: classes/Site/Assets.php:294
+#: classes/Site/Assets.php:293
 msgid "Popups Initialized"
 msgstr "Wyskakujące okienka zainicjowane"
 
-#: classes/Site/Assets.php:295
+#: classes/Site/Assets.php:294
 msgid "Popup: #"
 msgstr "Popup: #"
 
-#: classes/Site/Assets.php:296
+#: classes/Site/Assets.php:295
 msgid "Theme ID: "
 msgstr "ID motywu: "
 
-#: classes/Site/Assets.php:297
+#: classes/Site/Assets.php:296
 msgid "Method Call:"
 msgstr "Wywołanie metody:"
 
-#: classes/Site/Assets.php:298
+#: classes/Site/Assets.php:297
 msgid "Method Arguments:"
 msgstr "Argumenty metody:"
 
-#: classes/Site/Assets.php:302
+#: classes/Site/Assets.php:301
 msgid "Delay:"
 msgstr "Opóźnienie:"
 
-#: classes/Site/Assets.php:304
+#: classes/Site/Assets.php:303
 msgid "Cookie:"
 msgstr "Ciasteczko:"
 
-#: classes/Site/Assets.php:305
+#: classes/Site/Assets.php:304
 msgid "Settings:"
 msgstr "Ustawienia:"
 
-#: classes/Site/Assets.php:306
+#: classes/Site/Assets.php:305
 msgid "Selector:"
 msgstr "Selektor:"
 
-#: classes/Site/Assets.php:307
+#: classes/Site/Assets.php:306
 msgid "Mobile Disabled:"
 msgstr "Wyłączone na urządzeniach mobilnych:"
 
-#: classes/Site/Assets.php:308
+#: classes/Site/Assets.php:307
 msgid "Tablet Disabled:"
 msgstr "Wyłączone na tabletach:"
 
 #. translators: 1. Event name.
-#: classes/Site/Assets.php:310
+#: classes/Site/Assets.php:309
 #, php-format
 msgid "Event: %s"
 msgstr "Zdarzenie: %s"
