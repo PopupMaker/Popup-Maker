@@ -139,11 +139,17 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 	/** @return void */
 	public function test_inactive_bundled_builders_are_not_loaded_or_constructed() {
-		if ( defined( 'ELEMENTOR_VERSION' ) || did_action( 'elementor/loaded' ) ) {
-			$this->markTestSkipped( 'Elementor is active in this test environment.' );
+		if (
+			defined( 'ELEMENTOR_VERSION' ) ||
+			did_action( 'elementor/loaded' ) ||
+			defined( 'FL_BUILDER_VERSION' ) ||
+			class_exists( 'FLBuilder', false )
+		) {
+			$this->markTestSkipped( 'A bundled builder is active in this test environment.' );
 		}
 
 		$elementor_loaded = class_exists( \PopupMaker\Builders\Elementor::class, false );
+		$beaver_loaded    = class_exists( \PopupMaker\Builders\BeaverBuilder::class, false );
 		$controller       = new class( \PopupMaker\plugin() ) extends \PopupMaker\Controllers\Builders {
 
 			/** @var int */
@@ -164,6 +170,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 		$this->assertSame( 0, $controller->builders_constructed );
 		$this->assertSame( $elementor_loaded, class_exists( \PopupMaker\Builders\Elementor::class, false ) );
+		$this->assertSame( $beaver_loaded, class_exists( \PopupMaker\Builders\BeaverBuilder::class, false ) );
 	}
 
 	/** @return void */
