@@ -170,13 +170,13 @@ class PUM_Analytics_REST_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Empty batches are rejected without tracking.
+	 * Empty and non-list batches are rejected without tracking.
 	 *
-	 * @dataProvider empty_batch_provider
+	 * @dataProvider invalid_batch_payload_provider
 	 *
 	 * @param mixed $events Events value.
 	 */
-	public function test_empty_batch_returns_400_without_tracking( $events ) {
+	public function test_invalid_batch_payload_returns_400_without_tracking( $events ) {
 		$response = $this->dispatch_form_request( [ 'events' => $events ] );
 
 		$this->assert_error_response( $response, 'invalid_events' );
@@ -184,15 +184,23 @@ class PUM_Analytics_REST_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Supply empty batch encodings.
+	 * Supply empty and non-list batch encodings.
 	 *
 	 * @return array<string,array<int,mixed>>
 	 */
-	public function empty_batch_provider() {
+	public function invalid_batch_payload_provider() {
 		return [
-			'empty JSON array' => [ '[]' ],
-			'empty array'      => [ [] ],
-			'empty string'     => [ '' ],
+			'empty JSON array'          => [ '[]' ],
+			'empty array'               => [ [] ],
+			'empty string'              => [ '' ],
+			'JSON object'               => [ '{"event":"open","pid":1}' ],
+			'JSON scalar'               => [ '42' ],
+			'decoded associative array' => [
+				[
+					'event' => 'open',
+					'pid'   => 1,
+				],
+			],
 		];
 	}
 
@@ -242,6 +250,21 @@ class PUM_Analytics_REST_Test extends WP_UnitTestCase {
 
 		$this->assert_error_response( $invalid_event, 'invalid_params' );
 		$this->assert_error_response( $invalid_popup, 'invalid_params' );
+		$this->assert_event_counts( 0, 0 );
+	}
+
+	/**
+	 * Flat popup IDs are validated before the route sanitizes them.
+	 */
+	public function test_flat_negative_popup_id_fails_route_validation_without_tracking() {
+		$response = $this->dispatch_form_request(
+			[
+				'event' => 'open',
+				'pid'   => -$this->popup_id,
+			]
+		);
+
+		$this->assert_error_response( $response, 'rest_invalid_param' );
 		$this->assert_event_counts( 0, 0 );
 	}
 
@@ -299,6 +322,76 @@ class PUM_Analytics_REST_Test extends WP_UnitTestCase {
 			'invalid event' => [ 'event' ],
 			'invalid popup' => [ 'popup' ],
 		];
+	}
+
+	/**
+	 * Batch popup IDs must be positive integers before normalization.
+	 */
+	public function test_batch_rejects_popup_ids_that_would_normalize_to_valid_popup() {
+		$hook_count = 0;
+		$hook       = function () use ( &$hook_count ) {
+			++$hook_count;
+		};
+
+		add_action( 'pum_analytics_event', $hook );
+
+		foreach ( [ -$this->popup_id, $this->popup_id + 0.5 ] as $invalid_pid ) {
+			$response = $this->dispatch_json_request(
+				[
+					'events' => [
+						[
+							'event' => 'open',
+							'pid'   => $invalid_pid,
+						],
+					],
+				]
+			);
+
+			$this->assert_error_response( $response, 'invalid_params' );
+		}
+
+		remove_action( 'pum_analytics_event', $hook );
+
+		$this->assert_event_counts( 0, 0 );
+		$this->assertSame( 0, $hook_count );
+	}
+
+	/**
+	 * Oversized batches are rejected atomically before tracking.
+	 */
+	public function test_batch_limit_rejects_complete_payload_without_tracking() {
+		$hook_count   = 0;
+		$hook         = function () use ( &$hook_count ) {
+			++$hook_count;
+		};
+		$limit_filter = function () {
+			return 1;
+		};
+
+		add_action( 'pum_analytics_event', $hook );
+		add_filter( 'pum_analytics_rest_batch_limit', $limit_filter );
+
+		$response = $this->dispatch_json_request(
+			[
+				'events' => [
+					[
+						'event' => 'open',
+						'pid'   => $this->popup_id,
+					],
+					[
+						'event' => 'conversion',
+						'pid'   => $this->popup_id,
+					],
+				],
+			]
+		);
+
+		remove_filter( 'pum_analytics_rest_batch_limit', $limit_filter );
+		remove_action( 'pum_analytics_event', $hook );
+
+		$this->assert_error_response( $response, 'invalid_events' );
+		$this->assert_event_counts( 0, 0 );
+		$this->assertSame( 0, $hook_count );
 	}
 
 	/**

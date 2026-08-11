@@ -188,7 +188,10 @@ class PUM_Analytics_Expanded_Test extends WP_UnitTestCase {
 	 * Test sanitize_event_data with array input.
 	 */
 	public function test_sanitize_event_data_array_passthrough() {
-		$data   = [ 'type' => 'form_submission', 'formId' => '123' ];
+		$data   = [
+			'type'   => 'form_submission',
+			'formId' => '123',
+		];
 		$result = PUM_Analytics::sanitize_event_data( $data );
 
 		$this->assertEquals( $data, $result, 'Array input should pass through unchanged.' );
@@ -365,9 +368,24 @@ class PUM_Analytics_Expanded_Test extends WP_UnitTestCase {
 		}
 		$popup->reset_counts();
 
-		PUM_Analytics::track( [ 'pid' => $this->popup_id, 'event' => 'open' ] );
-		PUM_Analytics::track( [ 'pid' => $this->popup_id, 'event' => 'open' ] );
-		PUM_Analytics::track( [ 'pid' => $this->popup_id, 'event' => 'open' ] );
+		PUM_Analytics::track(
+			[
+				'pid'   => $this->popup_id,
+				'event' => 'open',
+			]
+		);
+		PUM_Analytics::track(
+			[
+				'pid'   => $this->popup_id,
+				'event' => 'open',
+			]
+		);
+		PUM_Analytics::track(
+			[
+				'pid'   => $this->popup_id,
+				'event' => 'open',
+			]
+		);
 
 		$count = (int) get_post_meta( $this->popup_id, 'popup_open_count', true );
 		$this->assertEquals( 3, $count, 'Open count should be 3 after three tracks.' );
@@ -450,15 +468,15 @@ class PUM_Analytics_Expanded_Test extends WP_UnitTestCase {
 	 * Test endpoint_absint with float values.
 	 */
 	public function test_endpoint_absint_with_float() {
-		$this->assertTrue( PUM_Analytics::endpoint_absint( '3.14' ), 'Float string should pass is_numeric check.' );
-		$this->assertTrue( PUM_Analytics::endpoint_absint( 3.14 ), 'Float should pass is_numeric check.' );
+		$this->assertFalse( PUM_Analytics::endpoint_absint( '3.14' ), 'Float string should fail.' );
+		$this->assertFalse( PUM_Analytics::endpoint_absint( 3.14 ), 'Float should fail.' );
 	}
 
 	/**
 	 * Test endpoint_absint with negative numbers.
 	 */
 	public function test_endpoint_absint_with_negative() {
-		$this->assertTrue( PUM_Analytics::endpoint_absint( '-5' ), 'Negative numeric string should pass is_numeric.' );
+		$this->assertFalse( PUM_Analytics::endpoint_absint( '-5' ), 'Negative numeric string should fail.' );
 	}
 
 	/**
