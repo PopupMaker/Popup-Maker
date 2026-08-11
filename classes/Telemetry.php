@@ -274,16 +274,15 @@ class PUM_Telemetry {
 		}
 
 		$alerts[] = [
-			'code'           => self::OPTIN_ALERT_CODE,
-			'title'          => '🎉 ' . __( 'The countdown to 50 billion popup views is on', 'popup-maker' ),
-			'type'           => 'info',
-			'category'       => 'announcement',
-			'message'        => esc_html__( "We're closing in on an estimated 50 billion popup views! Enable usage tracking to include your site's views in a more accurate estimate, show us which features matter most, and help us build even better ones. The more sites that join in, the sooner we can reach—and celebrate—the milestone together. No visitor data or popup content is collected.", 'popup-maker' ),
-			'priority'       => 10,
-			'dismissible'    => true,
-			'global'         => false,
-			'display_inline' => true,
-			'actions'        => [
+			'code'        => self::OPTIN_ALERT_CODE,
+			'title'       => '🎉 ' . __( 'The countdown to 50 billion popup views is on', 'popup-maker' ),
+			'type'        => 'info',
+			'category'    => 'announcement',
+			'message'     => esc_html__( "We're closing in on an estimated 50 billion popup views! Enable usage tracking to include your site's views in a more accurate estimate, show us which features matter most, and help us build even better ones. The more sites that join in, the sooner we can reach—and celebrate—the milestone together. No visitor data or popup content is collected.", 'popup-maker' ),
+			'priority'    => 10,
+			'dismissible' => true,
+			'global'      => false,
+			'actions'     => [
 				[
 					'primary' => true,
 					'type'    => 'action',
@@ -321,8 +320,8 @@ class PUM_Telemetry {
 			return;
 		}
 
-		// The alert dismiss handler only requires edit_posts; enabling
-		// telemetry is a settings-level decision.
+		// The alert dismiss handler only requires edit_posts.
+		// Enabling telemetry is a settings-level decision.
 		if ( ! current_user_can( \PopupMaker\plugin()->get_permission( 'manage_settings' ) ) ) {
 			return;
 		}
