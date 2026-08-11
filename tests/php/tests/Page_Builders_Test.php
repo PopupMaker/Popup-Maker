@@ -135,6 +135,23 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_unavailable_saved_owner_blocks_stale_active_builder_metadata() {
+		$popup_id          = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder           = $this->make_builder();
+		$builder->owns     = true;
+		$builder->rendered = 'stale builder content';
+		$controller        = $this->make_controller( $builder );
+		$saved_owner       = 'PopupMaker\\Builders\\InactiveBuilder';
+
+		update_post_meta( $popup_id, $controller::OWNER_META_KEY, wp_slash( $saved_owner ) );
+
+		$this->assertSame( $saved_owner, get_post_meta( $popup_id, $controller::OWNER_META_KEY, true ) );
+		$this->assertSame( 'original', $controller->render_popup_content( 'original', $popup_id ) );
+		$this->assertSame( $saved_owner, get_post_meta( $popup_id, $controller::OWNER_META_KEY, true ) );
+		$this->assertSame( 0, $builder->ownership_checks );
+	}
+
+	/** @return void */
 	public function test_document_owner_rejects_an_unauthorized_save() {
 		$popup_id   = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$builder    = $this->make_builder();

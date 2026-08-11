@@ -578,7 +578,13 @@ class Builders extends Controller {
 		$this->owners[ $popup_id ] = null;
 		$saved_owner               = get_post_meta( $popup_id, self::OWNER_META_KEY, true );
 
-		// Treat the saved builder as a hint and revalidate its native marker.
+		// An unavailable saved owner remains authoritative: falling through could
+		// revive stale native metadata left by an older builder.
+		if ( is_string( $saved_owner ) && '' !== $saved_owner && ! isset( $this->builders[ $saved_owner ] ) ) {
+			return null;
+		}
+
+		// Revalidate an available saved builder against its native marker.
 		if ( is_string( $saved_owner ) && isset( $this->builders[ $saved_owner ] ) ) {
 			$saved_builder = $this->builders[ $saved_owner ];
 
