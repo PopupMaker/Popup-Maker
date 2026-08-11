@@ -188,6 +188,7 @@ class Builders extends Controller {
 		$this->pipeline_initialized = true;
 
 		add_filter( 'request', [ $this, 'allow_builder_request' ] );
+		add_action( 'wp', [ $this, 'reset_edit_request' ] );
 		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
 		add_filter( 'the_title', [ $this, 'suppress_canvas_title' ], PHP_INT_MAX, 2 );
 		add_filter( 'the_content', [ $this, 'suppress_canvas_content' ], PHP_INT_MAX );
@@ -232,11 +233,27 @@ class Builders extends Controller {
 				'builder'  => $builder,
 				'popup_id' => $popup_id,
 			];
+			$this->owners       = [];
 
 			break;
 		}
 
 		return $this->edit_request;
+	}
+
+	/**
+	 * Recheck request ownership after WordPress resolves the queried object.
+	 *
+	 * Some builders address their editor shell by permalink rather than an
+	 * explicit post ID. Limit that fallback to one additional resolution pass
+	 * instead of repeating every active builder check for each popup.
+	 *
+	 * @return void
+	 */
+	public function reset_edit_request() {
+		if ( null === $this->edit_request ) {
+			$this->edit_request_resolved = false;
+		}
 	}
 
 	/**

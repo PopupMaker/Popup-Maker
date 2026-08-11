@@ -61,6 +61,34 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_failed_early_request_resolution_can_retry_after_the_query() {
+		$popup_id   = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder    = $this->make_builder();
+		$controller = $this->make_controller( $builder );
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertSame( 0, $controller->get_edit_popup_id() );
+
+		$builder->requested_popup_id = $popup_id;
+		$controller->reset_edit_request();
+
+		$this->assertSame( $popup_id, $controller->get_edit_popup_id() );
+	}
+
+	/** @return void */
+	public function test_editor_request_selects_owner_without_persisting_get_state() {
+		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder                     = $this->make_builder();
+		$builder->requested_popup_id = $popup_id;
+		$builder->rendered           = 'requested builder content';
+		$controller                  = $this->make_controller( $builder );
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertSame( 'requested builder content', $controller->render_popup_content( 'original', $popup_id ) );
+		$this->assertSame( '', get_post_meta( $popup_id, '_pum_page_builder', true ) );
+	}
+
+	/** @return void */
 	public function test_builder_specific_permission_can_reject_request() {
 		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$builder                     = $this->make_builder();
@@ -133,6 +161,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 
 		$this->assertSame( 1, $builder->hooks_registered );
 		$this->assertSame( 10, has_filter( 'request', [ $controller, 'allow_builder_request' ] ) );
+		$this->assertSame( 10, has_action( 'wp', [ $controller, 'reset_edit_request' ] ) );
 		$this->assertSame( PHP_INT_MAX, has_filter( 'the_content', [ $controller, 'suppress_canvas_content' ] ) );
 		$this->assertSame( 10, has_filter( 'pum_popup_content', [ $controller, 'render_popup_content' ] ) );
 	}
@@ -233,7 +262,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
-	public function test_frontend_builder_shell_does_not_claim_the_canvas() {
+	public function test_frontend_builder_shell_suppresses_live_popups_without_claiming_the_canvas() {
 		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$builder                     = $this->make_builder();
 		$builder->requested_popup_id = $popup_id;
