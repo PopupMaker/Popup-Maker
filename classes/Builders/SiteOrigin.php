@@ -16,9 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * SiteOrigin Page Builder support for popup documents.
  *
  * SiteOrigin edits in wp-admin and ships its own Popup Maker content filter,
- * including secondary-document CSS. The provider therefore claims no runtime
- * coordinator capability; its hooks supply only the missing post type support
- * and a working live-preview target for Popup Maker's non-queryable post type.
+ * including secondary-document CSS. This provider supplies the missing post
+ * type support and routes its live editor through Popup Maker's framed canvas.
  *
  * @since 1.25.0
  */
@@ -49,7 +48,6 @@ class SiteOrigin extends PageBuilder {
 		add_filter( 'siteorigin_panels_settings', [ $this, 'add_popup_post_type' ] );
 		add_filter( 'pre_update_option_siteorigin_panels_settings', [ $this, 'strip_injected_post_type' ], 10, 2 );
 
-		add_filter( 'use_block_editor_for_post_type', [ $this, 'use_classic_editor' ], 999, 2 );
 		add_action( 'siteorigin_panels_metabox_end', [ $this, 'override_preview_url' ] );
 	}
 
@@ -78,40 +76,6 @@ class SiteOrigin extends PageBuilder {
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		return 0;
-	}
-
-	/**
-	 * Use SiteOrigin's classic wp-admin interface for its popup documents.
-	 *
-	 * Popup Maker otherwise enables the block editor for popups after
-	 * SiteOrigin's own priority-10 compatibility check. Limit the override to
-	 * existing SiteOrigin documents or its explicit new-builder request so an
-	 * active SiteOrigin plugin does not take over unrelated popups.
-	 *
-	 * @param mixed $use_block_editor Whether the block editor should be used.
-	 * @param mixed $post_type        Post type being checked.
-	 *
-	 * @return mixed
-	 */
-	public function use_classic_editor( $use_block_editor, $post_type = '' ) {
-		if ( ! is_string( $post_type ) || 'popup' !== $post_type ) {
-			return $use_block_editor;
-		}
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only editor routing flag.
-		if ( isset( $_GET['siteorigin-page-builder'] ) ) {
-			return false;
-		}
-
-		global $post;
-
-		if ( ! $post instanceof \WP_Post || 'popup' !== $post->post_type ) {
-			return $use_block_editor;
-		}
-
-		$panels_data = get_post_meta( $post->ID, 'panels_data', true );
-
-		return ! empty( $panels_data ) ? false : $use_block_editor;
 	}
 
 	/**
