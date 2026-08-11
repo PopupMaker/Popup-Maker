@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
-"PO-Revision-Date: 2026-08-05 03:29+0000\n"
+"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"PO-Revision-Date: 2026-08-06 02:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh-CN\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
 #: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
 #: classes/Extension/Activator.php:201 classes/Privacy.php:36
-#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Services/License.php:915 classes/Site/Assets.php:283
 #: classes/Triggers.php:226 classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
@@ -193,11 +193,11 @@ msgstr "Popup Maker 短代码"
 msgid "There was an error in generating the preview"
 msgstr "生成预览时出错"
 
-#: classes/Admin/Assets.php:149
+#: classes/Admin/Assets.php:143
 msgid "Your all set, the upgrades completed successfully!"
 msgstr "一切就绪，升级已成功完成！"
 
-#: classes/Admin/Assets.php:150
+#: classes/Admin/Assets.php:144
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
@@ -403,7 +403,7 @@ msgstr "订阅者"
 #: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
 #: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:298
 msgid "Settings"
 msgstr "设置"
 
@@ -413,6 +413,7 @@ msgid "Extend"
 msgstr "扩展"
 
 #: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
+#: classes/Admin/Support.php:58
 msgid "Help & Support"
 msgstr "帮助与支持"
 
@@ -590,7 +591,7 @@ msgid "Display"
 msgstr "显示"
 
 #: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
-#: classes/Site/Assets.php:300
+#: classes/Site/Assets.php:299
 msgid "Triggers"
 msgstr "触发器"
 
@@ -613,7 +614,7 @@ msgstr "常规设置"
 msgid "Triggers & Cookies"
 msgstr "触发器和 Cookie"
 
-#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:302
 msgid "Conditions"
 msgstr "条件"
 
@@ -1761,7 +1762,7 @@ msgstr "Popup Maker 设置"
 msgid "Subscriptions"
 msgstr "订阅"
 
-#: classes/Admin/Settings.php:1131
+#: classes/Admin/Settings.php:1131 classes/Admin/Support.php:45
 msgid "Extensions"
 msgstr "扩展"
 
@@ -1886,10 +1887,66 @@ msgstr "Nonce 无效"
 msgid "Error"
 msgstr "错误"
 
+#: classes/Admin/Support.php:27
+msgid "Getting Started"
+msgstr "入门指南"
+
+#: classes/Admin/Support.php:28
+msgid "Learn the basics and build your first popup."
+msgstr "学习基础知识并创建你的第一个弹窗。"
+
+#: classes/Admin/Support.php:33 classes/Admin/Templates.php:730
+#: classes/Admin/Templates.php:735
+#: classes/Controllers/Admin/WP/PluginsPage.php:106
+#: dist/packages/cta-editor.js:1
+msgid "Documentation"
+msgstr "文档"
+
+#: classes/Admin/Support.php:34
+msgid "Browse setup guides, common questions, and advanced documentation."
+msgstr "浏览设置指南、常见问题和高级文档。"
+
+#: classes/Admin/Support.php:39
+msgid "Community"
+msgstr "社区"
+
+#: classes/Admin/Support.php:40
+msgid "Ask questions and share solutions with other Popup Maker users."
+msgstr "向其他 Popup Maker 用户提问并分享解决方案。"
+
+#: classes/Admin/Support.php:46
+msgid "Find documentation for Popup Maker extensions."
+msgstr "查找 Popup Maker 扩展的文档。"
+
+#: classes/Admin/Support.php:51
+msgid "Developer Wiki"
+msgstr "开发者 Wiki"
+
 #: classes/Admin/Support.php:52
+msgid "Contribute to or extend Popup Maker."
+msgstr "为 Popup Maker 做出贡献或进行扩展。"
+
+#: classes/Admin/Support.php:60
 msgid ""
-"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
-msgstr "<b>安全 HTTPS 联系页面</b>，通过来自外部域的 iframe 运行"
+"Find answers, connect with the community, or contact the Popup Maker support "
+"team."
+msgstr "查找答案、与社区联系，或联系 Popup Maker 支持团队。"
+
+#: classes/Admin/Support.php:77
+msgid "Still need help?"
+msgstr "还需要帮助？"
+
+#: classes/Admin/Support.php:78
+msgid ""
+"Open a support request and include the site URL, Popup Maker version, steps "
+"to reproduce, and any relevant error messages."
+msgstr ""
+"提交支持请求，并包含网站 URL、Popup Maker 版本、复现步骤以及任何相关错误信"
+"息。"
+
+#: classes/Admin/Support.php:81
+msgid "Contact Support"
+msgstr "联系支持"
 
 #: classes/Admin/Templates.php:52
 msgid "Check"
@@ -2244,12 +2301,6 @@ msgstr "标签"
 msgid "Value"
 msgstr "值"
 
-#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
-#: classes/Controllers/Admin/WP/PluginsPage.php:106
-#: dist/packages/cta-editor.js:1
-msgid "Documentation"
-msgstr "文档"
-
 #: classes/Admin/Templates.php:844
 msgid "Add New Trigger"
 msgstr "添加新触发器"
@@ -2394,7 +2445,7 @@ msgid "Add New Cookie"
 msgstr "添加新 Cookie"
 
 #: classes/Admin/Templates.php:1125 classes/Privacy.php:67
-#: classes/Site/Assets.php:301
+#: classes/Site/Assets.php:300
 msgid "Cookies"
 msgstr "Cookie"
 
@@ -4577,78 +4628,78 @@ msgstr "留空则刷新，或输入一个用户在成功后将被带往的 URL�
 msgid "Subscription Form Placeholder"
 msgstr "订阅表单占位文本"
 
-#: classes/Site/Assets.php:284
+#: classes/Site/Assets.php:283
 msgid "Debug Mode Enabled"
 msgstr "已启用调试模式"
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:284
 msgid "Debug started at:"
 msgstr "调试开始于："
 
 #. translators: 1. URL to documentation.
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:287
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr "有关如何使用此信息的更多信息，请访问 %s"
 
-#: classes/Site/Assets.php:291
+#: classes/Site/Assets.php:290
 msgid "Global Information"
 msgstr "全局信息"
 
-#: classes/Site/Assets.php:292
+#: classes/Site/Assets.php:291
 msgid "Localized variables"
 msgstr "本地化变量"
 
-#: classes/Site/Assets.php:293
+#: classes/Site/Assets.php:292
 msgid "Popups Initializing"
 msgstr "弹窗正在初始化"
 
-#: classes/Site/Assets.php:294
+#: classes/Site/Assets.php:293
 msgid "Popups Initialized"
 msgstr "弹窗已初始化"
 
-#: classes/Site/Assets.php:295
+#: classes/Site/Assets.php:294
 msgid "Popup: #"
 msgstr "弹窗：#"
 
-#: classes/Site/Assets.php:296
+#: classes/Site/Assets.php:295
 msgid "Theme ID: "
 msgstr "主题 ID："
 
-#: classes/Site/Assets.php:297
+#: classes/Site/Assets.php:296
 msgid "Method Call:"
 msgstr "方法调用："
 
-#: classes/Site/Assets.php:298
+#: classes/Site/Assets.php:297
 msgid "Method Arguments:"
 msgstr "方法参数："
 
-#: classes/Site/Assets.php:302
+#: classes/Site/Assets.php:301
 msgid "Delay:"
 msgstr "延迟："
 
-#: classes/Site/Assets.php:304
+#: classes/Site/Assets.php:303
 msgid "Cookie:"
 msgstr "Cookie："
 
-#: classes/Site/Assets.php:305
+#: classes/Site/Assets.php:304
 msgid "Settings:"
 msgstr "设置："
 
-#: classes/Site/Assets.php:306
+#: classes/Site/Assets.php:305
 msgid "Selector:"
 msgstr "选择器："
 
-#: classes/Site/Assets.php:307
+#: classes/Site/Assets.php:306
 msgid "Mobile Disabled:"
 msgstr "移动端已禁用："
 
-#: classes/Site/Assets.php:308
+#: classes/Site/Assets.php:307
 msgid "Tablet Disabled:"
 msgstr "平板已禁用："
 
 #. translators: 1. Event name.
-#: classes/Site/Assets.php:310
+#: classes/Site/Assets.php:309
 #, php-format
 msgid "Event: %s"
 msgstr "事件：%s"

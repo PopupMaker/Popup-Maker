@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-05T03:28:32+00:00\n"
-"PO-Revision-Date: 2026-08-05 03:29+0000\n"
+"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"PO-Revision-Date: 2026-08-06 02:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fa-IR\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: classes/Controllers/PostTypes.php:185 classes/Cookies.php:103
 #: classes/Extension/Activator.php:176 classes/Extension/Activator.php:188
 #: classes/Extension/Activator.php:201 classes/Privacy.php:36
-#: classes/Services/License.php:915 classes/Site/Assets.php:284
+#: classes/Services/License.php:915 classes/Site/Assets.php:283
 #: classes/Triggers.php:226 classes/Utils/Alerts.php:497
 #: includes/admin/class-pum-admin-upgrades.php:224
 #: includes/integrations/class-pum-gravity-forms.php:89
@@ -197,11 +197,11 @@ msgstr "شورت‌کدهای Popup Maker"
 msgid "There was an error in generating the preview"
 msgstr "در هنگام ایجاد پیش‌نمایش خطایی رخ داد"
 
-#: classes/Admin/Assets.php:149
+#: classes/Admin/Assets.php:143
 msgid "Your all set, the upgrades completed successfully!"
 msgstr "همه‌چیز آماده است، ارتقاها با موفقیت تکمیل شدند!"
 
-#: classes/Admin/Assets.php:150
+#: classes/Admin/Assets.php:144
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
@@ -426,7 +426,7 @@ msgstr "مشترکین"
 #: classes/Admin/Pages.php:76 classes/Admin/Pages.php:262
 #: classes/Admin/Templates.php:866 classes/Admin/Templates.php:1139
 #: classes/Controllers/Admin/Toolbar.php:264
-#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:299
+#: classes/Controllers/Admin/WP/PluginsPage.php:65 classes/Site/Assets.php:298
 msgid "Settings"
 msgstr "تنظیمات"
 
@@ -436,6 +436,7 @@ msgid "Extend"
 msgstr "گسترش"
 
 #: classes/Admin/Pages.php:88 classes/Admin/Pages.php:267
+#: classes/Admin/Support.php:58
 msgid "Help & Support"
 msgstr "راهنما و پشتیبانی"
 
@@ -616,7 +617,7 @@ msgid "Display"
 msgstr "نمایش"
 
 #: classes/Admin/Popups.php:566 classes/Admin/Templates.php:852
-#: classes/Site/Assets.php:300
+#: classes/Site/Assets.php:299
 msgid "Triggers"
 msgstr "محرک‌ها"
 
@@ -639,7 +640,7 @@ msgstr "تنظیمات عمومی"
 msgid "Triggers & Cookies"
 msgstr "محرک‌ها و کوکی‌ها"
 
-#: classes/Admin/Popups.php:589 classes/Site/Assets.php:303
+#: classes/Admin/Popups.php:589 classes/Site/Assets.php:302
 msgid "Conditions"
 msgstr "شرایط"
 
@@ -1820,7 +1821,7 @@ msgstr "تنظیمات Popup Maker"
 msgid "Subscriptions"
 msgstr "اشتراک‌ها"
 
-#: classes/Admin/Settings.php:1131
+#: classes/Admin/Settings.php:1131 classes/Admin/Support.php:45
 msgid "Extensions"
 msgstr "افزونه‌ها"
 
@@ -1945,10 +1946,70 @@ msgstr "Nonce نامعتبر"
 msgid "Error"
 msgstr "خطا"
 
+#: classes/Admin/Support.php:27
+msgid "Getting Started"
+msgstr "شروع به کار"
+
+#: classes/Admin/Support.php:28
+msgid "Learn the basics and build your first popup."
+msgstr "با اصول اولیه آشنا شوید و اولین پاپ‌آپ خود را بسازید."
+
+#: classes/Admin/Support.php:33 classes/Admin/Templates.php:730
+#: classes/Admin/Templates.php:735
+#: classes/Controllers/Admin/WP/PluginsPage.php:106
+#: dist/packages/cta-editor.js:1
+msgid "Documentation"
+msgstr "مستندات"
+
+#: classes/Admin/Support.php:34
+msgid "Browse setup guides, common questions, and advanced documentation."
+msgstr "راهنماهای راه‌اندازی، پرسش‌های متداول و مستندات پیشرفته را مرور کنید."
+
+#: classes/Admin/Support.php:39
+msgid "Community"
+msgstr "جامعه"
+
+#: classes/Admin/Support.php:40
+msgid "Ask questions and share solutions with other Popup Maker users."
+msgstr ""
+"سؤالات خود را بپرسید و راه‌حل‌ها را با دیگر کاربران Popup Maker به اشتراک "
+"بگذارید."
+
+#: classes/Admin/Support.php:46
+msgid "Find documentation for Popup Maker extensions."
+msgstr "مستندات افزونه‌های Popup Maker را پیدا کنید."
+
+#: classes/Admin/Support.php:51
+msgid "Developer Wiki"
+msgstr "ویکی توسعه‌دهندگان"
+
 #: classes/Admin/Support.php:52
+msgid "Contribute to or extend Popup Maker."
+msgstr "در Popup Maker مشارکت کنید یا آن را گسترش دهید."
+
+#: classes/Admin/Support.php:60
 msgid ""
-"<b>Secure HTTPS contact page</b>, running via iframe from external domain"
-msgstr "<b>صفحه تماس امن HTTPS</b>، در حال اجرا از طریق iframe از دامنه خارجی"
+"Find answers, connect with the community, or contact the Popup Maker support "
+"team."
+msgstr ""
+"پاسخ‌ها را پیدا کنید، با جامعه ارتباط برقرار کنید یا با تیم پشتیبانی Popup "
+"Maker تماس بگیرید."
+
+#: classes/Admin/Support.php:77
+msgid "Still need help?"
+msgstr "هنوز به کمک نیاز دارید؟"
+
+#: classes/Admin/Support.php:78
+msgid ""
+"Open a support request and include the site URL, Popup Maker version, steps "
+"to reproduce, and any relevant error messages."
+msgstr ""
+"یک درخواست پشتیبانی باز کنید و نشانی سایت، نسخه Popup Maker، مراحل بازتولید "
+"و هر پیام خطای مرتبط را درج کنید."
+
+#: classes/Admin/Support.php:81
+msgid "Contact Support"
+msgstr "تماس با پشتیبانی"
 
 #: classes/Admin/Templates.php:52
 msgid "Check"
@@ -2316,12 +2377,6 @@ msgstr "برچسب"
 msgid "Value"
 msgstr "مقدار"
 
-#: classes/Admin/Templates.php:730 classes/Admin/Templates.php:735
-#: classes/Controllers/Admin/WP/PluginsPage.php:106
-#: dist/packages/cta-editor.js:1
-msgid "Documentation"
-msgstr "مستندات"
-
 #: classes/Admin/Templates.php:844
 msgid "Add New Trigger"
 msgstr "افزودن محرک جدید"
@@ -2472,7 +2527,7 @@ msgid "Add New Cookie"
 msgstr "افزودن کوکی جدید"
 
 #: classes/Admin/Templates.php:1125 classes/Privacy.php:67
-#: classes/Site/Assets.php:301
+#: classes/Site/Assets.php:300
 msgid "Cookies"
 msgstr "کوکی‌ها"
 
@@ -4743,79 +4798,79 @@ msgstr ""
 msgid "Subscription Form Placeholder"
 msgstr "جای‌نگهدار فرم اشتراک"
 
-#: classes/Site/Assets.php:284
+#: classes/Site/Assets.php:283
 msgid "Debug Mode Enabled"
 msgstr "حالت اشکال‌زدایی فعال شد"
 
-#: classes/Site/Assets.php:285
+#: classes/Site/Assets.php:284
 msgid "Debug started at:"
 msgstr "اشکال‌زدایی در این زمان آغاز شد:"
 
 #. translators: 1. URL to documentation.
-#: classes/Site/Assets.php:288
+#: classes/Site/Assets.php:287
 #, php-format
 msgid "For more information on how to use this information visit %s"
 msgstr ""
 "برای اطلاعات بیشتر دربارهٔ نحوهٔ استفاده از این اطلاعات، به %s مراجعه کنید"
 
-#: classes/Site/Assets.php:291
+#: classes/Site/Assets.php:290
 msgid "Global Information"
 msgstr "اطلاعات سراسری"
 
-#: classes/Site/Assets.php:292
+#: classes/Site/Assets.php:291
 msgid "Localized variables"
 msgstr "متغیرهای محلی‌سازی‌شده"
 
-#: classes/Site/Assets.php:293
+#: classes/Site/Assets.php:292
 msgid "Popups Initializing"
 msgstr "در حال مقداردهی اولیهٔ پنجره‌های بازشو"
 
-#: classes/Site/Assets.php:294
+#: classes/Site/Assets.php:293
 msgid "Popups Initialized"
 msgstr "پنجره‌های بازشو مقداردهی اولیه شدند"
 
-#: classes/Site/Assets.php:295
+#: classes/Site/Assets.php:294
 msgid "Popup: #"
 msgstr "پنجرهٔ بازشو: #"
 
-#: classes/Site/Assets.php:296
+#: classes/Site/Assets.php:295
 msgid "Theme ID: "
 msgstr "شناسهٔ پوسته: "
 
-#: classes/Site/Assets.php:297
+#: classes/Site/Assets.php:296
 msgid "Method Call:"
 msgstr "فراخوانی متد:"
 
-#: classes/Site/Assets.php:298
+#: classes/Site/Assets.php:297
 msgid "Method Arguments:"
 msgstr "آرگومان‌های متد:"
 
-#: classes/Site/Assets.php:302
+#: classes/Site/Assets.php:301
 msgid "Delay:"
 msgstr "تأخیر:"
 
-#: classes/Site/Assets.php:304
+#: classes/Site/Assets.php:303
 msgid "Cookie:"
 msgstr "کوکی:"
 
-#: classes/Site/Assets.php:305
+#: classes/Site/Assets.php:304
 msgid "Settings:"
 msgstr "تنظیمات:"
 
-#: classes/Site/Assets.php:306
+#: classes/Site/Assets.php:305
 msgid "Selector:"
 msgstr "انتخاب‌گر:"
 
-#: classes/Site/Assets.php:307
+#: classes/Site/Assets.php:306
 msgid "Mobile Disabled:"
 msgstr "در موبایل غیرفعال:"
 
-#: classes/Site/Assets.php:308
+#: classes/Site/Assets.php:307
 msgid "Tablet Disabled:"
 msgstr "در تبلت غیرفعال:"
 
 #. translators: 1. Event name.
-#: classes/Site/Assets.php:310
+#: classes/Site/Assets.php:309
 #, php-format
 msgid "Event: %s"
 msgstr "رویداد: %s"
