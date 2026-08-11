@@ -244,7 +244,7 @@ class Brizy extends PageBuilder {
 
 			$content = $renderer->insert_page_content( 'brz-root__container' );
 
-			return is_string( $content ) ? \PUM_Utils_Shortcodes::clean_do_shortcode( $content ) : null;
+			return is_string( $content ) ? $content : null;
 		} catch ( \Throwable $error ) {
 			return null;
 		}

@@ -120,7 +120,7 @@ class Brizy_Builder_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
-	public function test_rendered_document_processes_popup_shortcodes() {
+	public function test_rendered_document_leaves_shortcodes_for_popup_content_pipeline() {
 		if (
 			class_exists( '\Brizy_Editor_Post' ) ||
 			class_exists( '\Brizy_Public_Main' ) ||
@@ -197,12 +197,22 @@ class Brizy_Builder_Test extends WP_UnitTestCase {
 
 		class_alias( get_class( $asset_manager ), 'Brizy_Public_AssetEnqueueManager' );
 
-		$shortcode = 'pum_brizy_shortcode_proof';
+		$shortcode        = 'pum_brizy_shortcode_proof';
+		$nested_shortcode = 'pum_brizy_nested_shortcode_proof';
+		$nested_runs      = 0;
 
 		add_shortcode(
 			$shortcode,
-			function () {
-				return '<strong id="brizy-shortcode-rendered">Shortcode rendered</strong>';
+			function () use ( $nested_shortcode ) {
+				return '[' . $nested_shortcode . ']';
+			}
+		);
+		add_shortcode(
+			$nested_shortcode,
+			function () use ( &$nested_runs ) {
+				++$nested_runs;
+
+				return '<strong id="brizy-nested-shortcode-rendered">Nested shortcode rendered</strong>';
 			}
 		);
 
@@ -217,15 +227,20 @@ class Brizy_Builder_Test extends WP_UnitTestCase {
 			$builder->finalize_document_assets( true );
 			$late_assets = ob_get_clean();
 			$builder->finalize_document_assets( true );
+			$filtered_content = \PUM_Utils_Shortcodes::clean_do_shortcode( $content );
 		} finally {
 			remove_shortcode( $shortcode );
+			remove_shortcode( $nested_shortcode );
 			wp_dequeue_style( 'pum-brizy-test-document' );
 			wp_deregister_style( 'pum-brizy-test-document' );
 		}
 
 		$this->assertIsString( $content );
-		$this->assertStringNotContainsString( '[' . $shortcode . ']', $content );
-		$this->assertStringContainsString( 'id="brizy-shortcode-rendered"', $content );
+		$this->assertStringContainsString( '[' . $shortcode . ']', $content );
+
+		$this->assertStringNotContainsString( '[' . $shortcode . ']', $filtered_content );
+		$this->assertStringContainsString( '[' . $nested_shortcode . ']', $filtered_content );
+		$this->assertSame( 0, $nested_runs );
 		$this->assertStringContainsString( 'brizy-test.css', $late_assets );
 		$this->assertSame( 1, \Brizy_Public_AssetEnqueueManager::$enqueue_count );
 		$this->assertSame( 1, \Brizy_Public_AssetEnqueueManager::$finalize_count );
