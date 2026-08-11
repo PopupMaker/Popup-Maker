@@ -111,6 +111,17 @@ class Builders extends Controller {
 			$builders[] = \PopupMaker\Builders\VisualComposer::class;
 		}
 
+		if (
+			( defined( 'ET_BUILDER_THEME' ) && ET_BUILDER_THEME ) ||
+			function_exists( 'et_divi_fonts_url' ) ||
+			defined( 'ET_BUILDER_PLUGIN_VERSION' ) ||
+			class_exists( 'ET_Builder_Plugin' ) ||
+			defined( 'ET_BUILDER_VERSION' ) ||
+			function_exists( 'et_setup_builder' )
+		) {
+			$builders[] = \PopupMaker\Builders\Divi::class;
+		}
+
 		return $builders;
 	}
 
