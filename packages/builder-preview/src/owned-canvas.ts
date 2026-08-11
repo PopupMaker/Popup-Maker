@@ -11,6 +11,7 @@ if ( ownedCanvas?.popup_id ) {
 	let adoptionFrame: number | null = null;
 	let geometryFrame: number | null = null;
 	let rootElement: HTMLElement | null = null;
+	let scrollCanvas: HTMLElement | null = null;
 	let originalRootMinHeight = '';
 	let originalRootMinHeightPriority = '';
 	let installedRootMinHeight = '';
@@ -29,6 +30,32 @@ if ( ownedCanvas?.popup_id ) {
 			.split( /\s+/ )
 			.filter( Boolean )
 			.forEach( ( className ) => element.classList.add( className ) );
+	};
+
+	const addOverlayIdentity = (
+		targetDocument: Document,
+		classes: string
+	): void => {
+		const rootClasses = classes
+			.split( /\s+/ )
+			.filter(
+				( className ) =>
+					className.startsWith( 'pum-theme-' ) ||
+					'pum-overlay-disabled' === className
+			)
+			.join( ' ' );
+
+		targetDocument.documentElement.classList.add(
+			'pum-builder-owned-canvas-root'
+		);
+		addClasses( targetDocument.documentElement, rootClasses );
+		addClasses( targetDocument.body, rootClasses );
+	};
+
+	const viewportRelativeLength = ( value: string ): string => {
+		const percentage = value.trim().match( /^(\d+(?:\.\d+)?)%$/ );
+
+		return percentage ? `${ percentage[ 1 ] }vw` : value;
 	};
 
 	const copyPopupStyles = ( targetDocument: Document ): void => {
@@ -63,6 +90,10 @@ if ( ownedCanvas?.popup_id ) {
 		const style = targetDocument.createElement( 'style' );
 		style.id = 'pum-builder-owned-canvas';
 		style.textContent = `
+			html.pum-builder-owned-canvas-root.pum-overlay-disabled,
+			html.pum-builder-owned-canvas-root > body.pum-overlay-disabled {
+				background: transparent !important;
+			}
 			html.pum-builder-owned-canvas {
 				display: block !important;
 				min-height: 100%;
@@ -88,6 +119,10 @@ if ( ownedCanvas?.popup_id ) {
 			}
 			.pum-builder-canvas-close-anchor {
 				display: none !important;
+			}
+			.pum-builder-canvas-area.pum-scrollable > .pum-builder-canvas-title,
+			.pum-builder-canvas-area.pum-scrollable > .pum-builder-canvas-close {
+				translate: 0 var(--pum-builder-canvas-scroll-y, 0) !important;
 			}
 		`;
 		targetDocument.head.append( style );
@@ -184,6 +219,17 @@ if ( ownedCanvas?.popup_id ) {
 		installedRootMinHeight = '';
 	};
 
+	const mirrorCanvasScroll = (): void => {
+		if ( ! canvas ) {
+			return;
+		}
+
+		canvas.style.setProperty(
+			'--pum-builder-canvas-scroll-y',
+			isEnabled( display.scrollable ) ? `${ canvas.scrollTop }px` : '0px'
+		);
+	};
+
 	const setRootMinHeight = ( height: string ): void => {
 		if ( ! rootElement ) {
 			return;
@@ -275,11 +321,15 @@ if ( ownedCanvas?.popup_id ) {
 			width,
 			height,
 			'min-width': isResponsive
-				? `min(${ display.responsive_min_width }, calc(100% - 20px))`
+				? `min(${ viewportRelativeLength(
+						display.responsive_min_width
+				  ) }, calc(100vw - 20px))`
 				: '0',
 			'max-width': isResponsive
-				? `min(${ display.responsive_max_width }, calc(100% - 20px))`
-				: 'calc(100% - 20px)',
+				? `min(${ viewportRelativeLength(
+						display.responsive_max_width
+				  ) }, calc(100vw - 20px))`
+				: 'calc(100vw - 20px)',
 			'overflow-y': isEnabled( display.scrollable ) ? 'auto' : 'visible',
 			margin: '0',
 			top: '0',
@@ -342,12 +392,18 @@ if ( ownedCanvas?.popup_id ) {
 		}
 
 		const edgeGap = 10;
-		const minTop = edgeGap - visualTop;
+		const topEdgeGap = canvas.ownerDocument.body.classList.contains(
+			'admin-bar'
+		)
+			? 42
+			: edgeGap;
+		const minTop = topEdgeGap - visualTop;
 		const maxTop = canvasWindow.innerHeight - edgeGap - visualBottom;
 		const minLeft = edgeGap - visualLeft;
 		const maxLeft = canvasWindow.innerWidth - edgeGap - visualRight;
 		const isOversized =
-			visualBottom - visualTop + edgeGap * 2 > canvasWindow.innerHeight;
+			visualBottom - visualTop + topEdgeGap + edgeGap >
+			canvasWindow.innerHeight;
 
 		viewportTop = Math.max( minTop, Math.min( viewportTop, maxTop ) );
 		viewportLeft = Math.max( minLeft, Math.min( viewportLeft, maxLeft ) );
@@ -437,9 +493,6 @@ if ( ownedCanvas?.popup_id ) {
 			rootElement = targetDocument.documentElement;
 
 			if ( iframe ) {
-				copyPopupStyles( targetDocument );
-				attachCanvasStyles( targetDocument );
-
 				if ( 'MutationObserver' in window ) {
 					targetObserver = new window.MutationObserver(
 						scheduleAdoption
@@ -454,6 +507,11 @@ if ( ownedCanvas?.popup_id ) {
 			targetWindow.addEventListener( 'resize', scheduleGeometry );
 		}
 
+		if ( iframe ) {
+			copyPopupStyles( targetDocument );
+			attachCanvasStyles( targetDocument );
+		}
+
 		const targetCanvas = targetDocument.querySelector< HTMLElement >(
 			display.canvas_selector
 		);
@@ -461,6 +519,8 @@ if ( ownedCanvas?.popup_id ) {
 		if ( ! targetCanvas ) {
 			resizeObserver?.disconnect();
 			resizeObserver = null;
+			scrollCanvas?.removeEventListener( 'scroll', mirrorCanvasScroll );
+			scrollCanvas = null;
 			canvas = null;
 
 			return;
@@ -471,29 +531,27 @@ if ( ownedCanvas?.popup_id ) {
 		if ( documentChanged || canvasChanged ) {
 			resizeObserver?.disconnect();
 			resizeObserver = null;
+			scrollCanvas?.removeEventListener( 'scroll', mirrorCanvasScroll );
 			canvas = targetCanvas;
+			scrollCanvas = targetCanvas;
+			scrollCanvas.addEventListener( 'scroll', mirrorCanvasScroll );
 		}
 
 		addClasses( targetCanvas, display.container_classes );
 		addClasses( targetCanvas, display.content_classes );
 		targetCanvas.classList.add( 'pum-builder-canvas-area' );
 
-		const overlay = iframe
-			? targetDocument.documentElement
-			: targetDocument.body;
-		addClasses( overlay, display.overlay_classes );
+		addOverlayIdentity( targetDocument, display.overlay_classes );
 
 		if ( iframe ) {
-			overlay.classList.add( 'pum-builder-owned-canvas' );
-		} else {
-			addClasses(
-				targetDocument.documentElement,
-				display.overlay_classes
+			targetDocument.documentElement.classList.add(
+				'pum-builder-owned-canvas'
 			);
 		}
 
 		attachTitle();
 		attachCloseButton();
+		mirrorCanvasScroll();
 		mirrorPopupGeometry();
 
 		if ( 'ResizeObserver' in window && ! resizeObserver ) {

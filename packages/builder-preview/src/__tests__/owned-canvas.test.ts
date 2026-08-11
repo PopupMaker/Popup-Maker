@@ -153,6 +153,9 @@ describe( 'builder-owned popup canvas', () => {
 		expect( iframeDocument?.documentElement.classList ).toContain(
 			'pum-theme-4'
 		);
+		expect( iframeDocument?.documentElement.classList ).not.toContain(
+			'pum-overlay'
+		);
 		expect( canvas?.id ).toBe( 'builder-content' );
 		expect( canvas?.classList ).toContain( 'pum-container' );
 		expect( canvas?.classList ).toContain( 'pum-content' );
@@ -230,6 +233,10 @@ describe( 'builder-owned popup canvas', () => {
 		expect( canvas.style.getPropertyValue( 'transform' ) ).toBe( 'none' );
 		expect( document.documentElement.classList ).toContain( 'pum-theme-4' );
 		expect( document.body.classList ).toContain( 'pum-theme-4' );
+		expect( document.documentElement.classList ).not.toContain(
+			'pum-overlay'
+		);
+		expect( document.body.classList ).not.toContain( 'pum-overlay' );
 		expect(
 			document.documentElement.style.getPropertyValue( 'min-height' )
 		).toBe( `${ Math.ceil( window.innerHeight + 120 ) }px` );
@@ -273,11 +280,39 @@ describe( 'builder-owned popup canvas', () => {
 		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '10px' );
 		expect( canvas.style.getPropertyValue( 'right' ) ).toBe( 'auto' );
 		expect( canvas.style.getPropertyValue( 'max-width' ) ).toBe(
-			'calc(100% - 20px)'
+			'calc(100vw - 20px)'
 		);
 		expect(
 			document.documentElement.style.getPropertyValue( 'min-height' )
 		).toBe( '999px' );
+	} );
+
+	it( 'uses viewport units for responsive limits in a nested canvas', async () => {
+		document.body.innerHTML =
+			'<section><main id="builder-canvas"></main></section>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			size: 'medium',
+			responsive_min_width: '20%',
+			responsive_max_width: '80%',
+		};
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Responsive canvas fixture was not created.' );
+		}
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'min-width' ) ).toBe(
+			'min(20vw, calc(100vw - 20px))'
+		);
+		expect( canvas.style.getPropertyValue( 'max-width' ) ).toBe(
+			'min(80vw, calc(100vw - 20px))'
+		);
 	} );
 
 	it( 'adopts a replacement builder canvas in the same document', async () => {
@@ -458,6 +493,95 @@ describe( 'builder-owned popup canvas', () => {
 
 		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '30px' );
 		expect( canvas.style.getPropertyValue( 'left' ) ).toBe( '30px' );
+	} );
+
+	it( 'keeps a top-positioned canvas below the admin bar', async () => {
+		document.body.className = 'admin-bar';
+		document.body.innerHTML = '<main id="builder-canvas"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			location: 'left top',
+			position_left: '10',
+			position_top: '0',
+			show_close: false,
+		};
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Admin-bar canvas fixture was not created.' );
+		}
+
+		canvas.getBoundingClientRect = jest
+			.fn< () => DOMRect >()
+			.mockReturnValue(
+				rect( {
+					bottom: 200,
+					height: 200,
+					right: 300,
+					width: 300,
+				} )
+			);
+
+		await import( '../owned-canvas' );
+
+		expect( canvas.style.getPropertyValue( 'top' ) ).toBe( '42px' );
+	} );
+
+	it( 'reinstalls iframe styles after an in-place head replacement', async () => {
+		document.head.innerHTML =
+			'<style id="popup-maker-site-inline-css">.pum-theme-4 { color: red; }</style>';
+		document.body.innerHTML = '<iframe id="builder-canvas"></iframe>';
+		window.pumBuilderOwnedCanvas = settings();
+		const iframe =
+			document.querySelector< HTMLIFrameElement >( '#builder-canvas' );
+
+		if ( ! iframe?.contentDocument ) {
+			throw new Error( 'Iframe fixture was not created.' );
+		}
+
+		await import( '../owned-canvas' );
+
+		iframe.contentDocument.head.innerHTML = '';
+		mutationCallbacks.forEach( ( callback ) => {
+			callback( [], {} as MutationObserver );
+		} );
+		await nextFrame();
+
+		expect(
+			iframe.contentDocument.getElementById(
+				'pum-builder-copy-popup-maker-site-inline-css'
+			)
+		).not.toBeNull();
+		expect(
+			iframe.contentDocument.getElementById( 'pum-builder-owned-canvas' )
+		).not.toBeNull();
+	} );
+
+	it( 'keeps synthetic controls anchored while content scrolls', async () => {
+		document.body.innerHTML = '<main id="builder-canvas"></main>';
+		window.pumBuilderOwnedCanvas = {
+			...settings(),
+			iframe_selector: undefined,
+			canvas_selector: '#builder-canvas',
+			scrollable: true,
+		};
+		const canvas =
+			document.querySelector< HTMLElement >( '#builder-canvas' );
+
+		if ( ! canvas ) {
+			throw new Error( 'Scrollable canvas fixture was not created.' );
+		}
+
+		await import( '../owned-canvas' );
+		canvas.scrollTop = 80;
+		canvas.dispatchEvent( new Event( 'scroll' ) );
+
+		expect(
+			canvas.style.getPropertyValue( '--pum-builder-canvas-scroll-y' )
+		).toBe( '80px' );
 	} );
 
 	it( 'coalesces repeated resize observations into one frame', async () => {

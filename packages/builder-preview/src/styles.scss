@@ -3,6 +3,18 @@ body.pum-builder-preview {
 	min-height: 100%;
 }
 
+html.pum-builder-owned-canvas-root.pum-overlay-disabled,
+html.pum-builder-owned-canvas-root > body.pum-overlay-disabled {
+	background: transparent !important;
+}
+
+.pum-builder-canvas-area.pum-scrollable {
+	> .pum-builder-canvas-title,
+	> .pum-builder-canvas-close {
+		translate: 0 var(--pum-builder-canvas-scroll-y, 0) !important;
+	}
+}
+
 body.pum-builder-preview {
 	margin: 0;
 	min-height: 100vh;
