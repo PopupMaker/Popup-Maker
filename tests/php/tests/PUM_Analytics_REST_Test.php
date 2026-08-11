@@ -194,6 +194,7 @@ class PUM_Analytics_REST_Test extends WP_UnitTestCase {
 			'empty array'               => [ [] ],
 			'empty string'              => [ '' ],
 			'JSON object'               => [ '{"event":"open","pid":1}' ],
+			'numeric-keyed JSON object' => [ '{"0":{"event":"open","pid":1}}' ],
 			'JSON scalar'               => [ '42' ],
 			'decoded associative array' => [
 				[

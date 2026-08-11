@@ -267,13 +267,13 @@ class PUM_Analytics {
 		$events = isset( $args['events'] ) ? $args['events'] : null;
 
 		if ( is_string( $events ) ) {
-			$decoded = json_decode( $events, true );
+			$decoded = json_decode( $events );
 
 			if ( JSON_ERROR_NONE !== json_last_error() || ! is_array( $decoded ) ) {
 				return $error;
 			}
 
-			$events = $decoded;
+			$events = json_decode( $events, true );
 		}
 
 		if ( ! is_array( $events ) || empty( $events ) ) {
