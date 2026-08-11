@@ -21,6 +21,16 @@ defined( 'ABSPATH' ) || exit;
 class Builders extends Controller {
 
 	/**
+	 * Popup meta containing the last builder that saved the document.
+	 *
+	 * This breaks ties when switching builders leaves more than one builder's
+	 * native ownership marker behind.
+	 *
+	 * @var string
+	 */
+	const OWNER_META_KEY = '_pum_page_builder';
+
+	/**
 	 * Available builders, keyed by class name.
 	 *
 	 * @var array<string,PageBuilder>
@@ -71,15 +81,30 @@ class Builders extends Controller {
 	}
 
 	/**
-	 * Builders bundled with the plugin.
+	 * Detected builder classes bundled with the plugin.
 	 *
-	 * Concrete integrations add only detected builders to this plain list, so
-	 * inactive integrations consume no request-time objects or hooks.
+	 * Class constants resolve to strings without autoloading. An adapter is only
+	 * loaded and constructed after its builder's cheap runtime signal appears.
 	 *
-	 * @return PageBuilder[]
+	 * @return class-string<PageBuilder>[]
 	 */
-	protected function default_builders() {
-		return [];
+	protected function detected_builder_classes() {
+		if ( ! defined( 'ELEMENTOR_VERSION' ) && ! did_action( 'elementor/loaded' ) ) {
+			return [];
+		}
+
+		return [ \PopupMaker\Builders\Elementor::class ];
+	}
+
+	/**
+	 * Construct a detected builder.
+	 *
+	 * @param class-string<PageBuilder> $builder_class Builder class.
+	 *
+	 * @return PageBuilder
+	 */
+	protected function instantiate_builder( $builder_class ) {
+		return new $builder_class( $this->container );
 	}
 
 	/**
@@ -88,7 +113,17 @@ class Builders extends Controller {
 	 * @return void
 	 */
 	public function boot_builders() {
-		foreach ( $this->default_builders() as $builder ) {
+		foreach ( $this->detected_builder_classes() as $builder_class ) {
+			if (
+				! is_string( $builder_class ) ||
+				isset( $this->builders[ $builder_class ] ) ||
+				! is_subclass_of( $builder_class, PageBuilder::class )
+			) {
+				continue;
+			}
+
+			$builder = $this->instantiate_builder( $builder_class );
+
 			if ( ! $builder instanceof PageBuilder || ! $builder->is_available() ) {
 				continue;
 			}
@@ -131,7 +166,8 @@ class Builders extends Controller {
 		add_filter( 'pum_popup_data_attr', [ $this, 'filter_canvas_data_attr' ], 1001, 2 );
 		add_filter( 'pum_popup_get_public_settings', [ $this, 'filter_canvas_settings' ], 1001, 2 );
 		add_filter( 'pum_popup_close_button_attributes', [ $this, 'filter_canvas_close_attributes' ], 1001, 2 );
-		add_filter( 'pum_popup_content', [ $this, 'render_popup_content' ], 1000, 2 );
+		// Insert builder markup while popup-scoped shortcode compatibility guards are active.
+		add_filter( 'pum_popup_content', [ $this, 'render_popup_content' ], 10, 2 );
 
 		// Draft canvases are absent from Popup Maker's normal preload query.
 		add_action( 'wp_enqueue_scripts', [ $this, 'preload_canvas_popup' ], 11 );
@@ -157,7 +193,8 @@ class Builders extends Controller {
 				! $popup_id ||
 				'popup' !== get_post_type( $popup_id ) ||
 				! is_user_logged_in() ||
-				! current_user_can( 'edit_post', $popup_id )
+				! current_user_can( 'edit_post', $popup_id ) ||
+				! $builder->can_edit_document( $popup_id )
 			) {
 				continue;
 			}
@@ -182,6 +219,43 @@ class Builders extends Controller {
 		$request = $this->get_edit_request();
 
 		return $request ? $request['popup_id'] : 0;
+	}
+
+	/**
+	 * Remember the builder selected by an authenticated native save.
+	 *
+	 * Builder adapters call this only from their own verified save lifecycle.
+	 * The controller repeats the common popup and permission checks before it
+	 * accepts the ownership hint.
+	 *
+	 * @param mixed $builder  Builder performing the save.
+	 * @param mixed $popup_id Popup ID.
+	 *
+	 * @return bool Whether the owner was accepted.
+	 */
+	public function remember_document_owner( $builder, $popup_id ) {
+		$popup_id = absint( $popup_id );
+
+		if (
+			! $builder instanceof PageBuilder ||
+			! in_array( $builder, $this->builders, true ) ||
+			! $popup_id ||
+			'popup' !== get_post_type( $popup_id ) ||
+			! current_user_can( 'edit_post', $popup_id ) ||
+			! $builder->can_edit_document( $popup_id )
+		) {
+			return false;
+		}
+
+		$builder_class = get_class( $builder );
+
+		if ( get_post_meta( $popup_id, self::OWNER_META_KEY, true ) !== $builder_class ) {
+			update_post_meta( $popup_id, self::OWNER_META_KEY, wp_slash( $builder_class ) );
+		}
+
+		unset( $this->owners[ $popup_id ] );
+
+		return true;
 	}
 
 	/**
@@ -433,14 +507,41 @@ class Builders extends Controller {
 	 */
 	protected function owner_for( $popup_id ) {
 		$popup_id = absint( $popup_id );
+		$request  = $this->get_edit_request();
+
+		// A verified editor request owns only this request.
+		// The builder persists ownership later in its authenticated save lifecycle.
+		if ( $request && $request['popup_id'] === $popup_id ) {
+			$this->owners[ $popup_id ] = $request['builder'];
+
+			return $request['builder'];
+		}
 
 		if ( array_key_exists( $popup_id, $this->owners ) ) {
 			return $this->owners[ $popup_id ];
 		}
 
 		$this->owners[ $popup_id ] = null;
+		$saved_owner               = get_post_meta( $popup_id, self::OWNER_META_KEY, true );
 
-		foreach ( $this->builders as $builder ) {
+		// Treat the saved builder as a hint and revalidate its native marker.
+		if ( is_string( $saved_owner ) && isset( $this->builders[ $saved_owner ] ) ) {
+			$saved_builder = $this->builders[ $saved_owner ];
+
+			if ( $saved_builder->owns_document( $popup_id ) ) {
+				$this->owners[ $popup_id ] = $saved_builder;
+
+				return $this->owners[ $popup_id ];
+			}
+
+			delete_post_meta( $popup_id, self::OWNER_META_KEY );
+		}
+
+		foreach ( $this->builders as $builder_class => $builder ) {
+			if ( $builder_class === $saved_owner ) {
+				continue;
+			}
+
 			if ( $builder->owns_document( $popup_id ) ) {
 				$this->owners[ $popup_id ] = $builder;
 				break;
