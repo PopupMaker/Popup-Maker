@@ -449,7 +449,7 @@ class PUM_Admin_Settings {
 						'main'  => [
 							'disable_popup_open_tracking' => [
 								'type'  => 'checkbox',
-								'label' => __( 'Disables popup open tracking?', 'popup-maker' ),
+								'label' => __( 'Disable popup open tracking?', 'popup-maker' ),
 								'desc'  => __( 'This will disable the built in analytics functionality.', 'popup-maker' ),
 							],
 							'disable_pid_url_params'      => [
