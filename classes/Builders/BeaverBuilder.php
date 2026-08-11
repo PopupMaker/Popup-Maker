@@ -124,7 +124,11 @@ class BeaverBuilder extends PageBuilder {
 
 		if ( ! $popup_id && $previews instanceof Previews ) {
 			$preview_id = $previews->get_popup_preview();
-			$popup_id   = $preview_id && current_user_can( 'edit_post', $preview_id ) ? $preview_id : 0;
+			$popup_id   = $preview_id &&
+				'popup' === get_post_type( $preview_id ) &&
+				current_user_can( 'edit_post', $preview_id )
+				? $preview_id
+				: 0;
 		}
 
 		if ( ! $popup_id ) {

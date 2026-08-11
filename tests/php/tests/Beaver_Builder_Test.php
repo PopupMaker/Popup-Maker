@@ -101,4 +101,21 @@ class Beaver_Builder_Test extends WP_UnitTestCase {
 
 		$this->assertFalse( has_action( 'wp', 'FLBuilderPopupMaker::redirect_to_admin_edit' ) );
 	}
+
+	/** @return void */
+	public function test_signed_non_popup_preview_keeps_native_redirect() {
+		$post_id = $this->factory->post->create( [ 'post_type' => 'post' ] );
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$_GET = [
+			'popup_preview' => wp_create_nonce( 'popup-preview' ),
+			'popup'         => (string) $post_id,
+		];
+
+		add_action( 'wp', 'FLBuilderPopupMaker::redirect_to_admin_edit' );
+
+		$builder = new BeaverBuilder( \PopupMaker\plugin() );
+		$builder->preserve_builder_request();
+
+		$this->assertNotFalse( has_action( 'wp', 'FLBuilderPopupMaker::redirect_to_admin_edit' ) );
+	}
 }
