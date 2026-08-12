@@ -35,11 +35,19 @@ class WhatsNew extends Service implements Provider {
 	const SLOT_OPTION = 'pum_whats_new_slot';
 
 	/**
-	 * Option storing the last major.minor release the user dismissed.
+	 * Legacy site option used as an upgrade-state fallback.
+	 *
+	 * @var string
+	 * @deprecated 1.25.0 Dismissal state is now stored per user.
+	 */
+	const LAST_SEEN_OPTION = 'pum_whats_new_last_seen';
+
+	/**
+	 * User-meta key storing the last major.minor release the user dismissed.
 	 *
 	 * @var string
 	 */
-	const LAST_SEEN_OPTION = 'pum_whats_new_last_seen';
+	const LAST_SEEN_USER_META = 'pum_whats_new_last_seen';
 
 	/**
 	 * Prefix for the alert code. Actual code is suffixed with the current
@@ -130,8 +138,9 @@ class WhatsNew extends Service implements Provider {
 			return $alerts;
 		}
 
-		$latest = (string) $slot['latest'];
-		$since  = isset( $slot['since'] ) ? (string) $slot['since'] : '';
+		$latest         = (string) $slot['latest'];
+		$user_last_seen = $this->major_minor( (string) get_user_meta( get_current_user_id(), self::LAST_SEEN_USER_META, true ) );
+		$since          = $user_last_seen ?: ( isset( $slot['since'] ) ? (string) $slot['since'] : '' );
 
 		if ( $since && $since !== $latest ) {
 			/* translators: %s: version number they last dismissed notes for. */
@@ -268,10 +277,8 @@ class WhatsNew extends Service implements Provider {
 		$slot = $this->get_slot();
 
 		if ( ! empty( $slot['latest'] ) ) {
-			update_option( self::LAST_SEEN_OPTION, (string) $slot['latest'], false );
+			update_user_meta( get_current_user_id(), self::LAST_SEEN_USER_META, (string) $slot['latest'] );
 		}
-
-		delete_option( self::SLOT_OPTION );
 	}
 
 	/**

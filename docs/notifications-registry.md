@@ -23,7 +23,9 @@ Two dismissal paths from the panel:
 1. **Corner X** (`action: ''`) — permanent. Requires `dismissible: true` on the alert.
 2. **Declared "Not now" button** (`action: 'dismiss'` + `expires: '30 days'`) — snooze per the action's `expires` field.
 
-After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so providers can run post-dismissal logic (e.g. `WhatsNew::on_dismiss` clears its slot and records `last_seen`).
+After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so providers can run post-dismissal logic (e.g. `WhatsNew::on_dismiss` records that user's `last_seen` release).
+
+Dismissal scope is deliberately not configurable per message: standard notification dismissals are always per user. A custom action may change site state when that is the action's actual purpose (for example, enabling telemetry), but clicking Dismiss or the corner X must not suppress a message for other users.
 
 ## Registry
 
@@ -50,7 +52,7 @@ After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so pro
 
 | Code | Category | Dismissible | Notes |
 |---|---|---|---|
-| `pm_whats_new_release_<major>_<minor>` | `feature` | Yes (permanent) | Auto-generated release announcement. One slot at a time. Code is version-suffixed so each major.minor gets its own dismissal record. On dismiss, clears the slot option and writes `pum_whats_new_last_seen`. Parses highlights from readme.txt between `last_seen` and `latest`. |
+| `pm_whats_new_release_<major>_<minor>` | `feature` | Yes (permanent, per user) | Auto-generated release announcement. One shared release slot remains available until the next release so every eligible user can see it. The version-suffixed code and `pum_whats_new_last_seen` user meta keep dismissal and catch-up copy user-specific. Parses highlights from readme.txt between each user's `last_seen` and `latest`. |
 
 Actions:
 - **View changelog** — iframe to WP plugin-information screen (install_plugins cap) or public `/changelog/` link (fallback).
@@ -123,7 +125,8 @@ wp eval 'update_user_meta( get_current_user_id(), "_pum_dismissed_alerts", [] );
 
 # Reset WhatsNew state:
 wp option delete pum_whats_new_slot
-wp option delete pum_whats_new_last_seen
+wp user meta delete <user-id> pum_whats_new_last_seen
+wp option delete pum_whats_new_last_seen # Legacy pre-per-user fallback.
 
 # Flush FeatureAnnouncements transient cache (locale-scoped, 12h TTL).
 # `wp cache flush` won't touch these — they live in the options table.
