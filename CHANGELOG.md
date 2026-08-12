@@ -4,6 +4,7 @@
 
 **Features**
 
+-   Added a dismissible admin announcement when a supported page builder is active, so users can discover Popup Maker's complete builder integration.
 -   Added complete Brizy support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
 -   Added complete Bricks support for building Popup Maker popups, including editor previews, frontend styling, and interactive elements.
 -   Added complete Divi support for building Popup Maker popups, including Visual Builder editing, frontend styling, and interactive modules.
