@@ -188,6 +188,7 @@ class Builders extends Controller {
 		$this->pipeline_initialized = true;
 
 		add_filter( 'request', [ $this, 'allow_builder_request' ] );
+		add_action( 'wp', [ $this, 'reset_edit_request' ] );
 		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
 		add_filter( 'the_title', [ $this, 'suppress_canvas_title' ], PHP_INT_MAX, 2 );
 		add_filter( 'the_content', [ $this, 'suppress_canvas_content' ], PHP_INT_MAX );
@@ -232,11 +233,27 @@ class Builders extends Controller {
 				'builder'  => $builder,
 				'popup_id' => $popup_id,
 			];
+			$this->owners       = [];
 
 			break;
 		}
 
 		return $this->edit_request;
+	}
+
+	/**
+	 * Recheck request ownership after WordPress resolves the queried object.
+	 *
+	 * Some builders address their editor shell by permalink rather than an
+	 * explicit post ID. Limit that fallback to one additional resolution pass
+	 * instead of repeating every active builder check for each popup.
+	 *
+	 * @return void
+	 */
+	public function reset_edit_request() {
+		if ( null === $this->edit_request ) {
+			$this->edit_request_resolved = false;
+		}
 	}
 
 	/**
@@ -318,11 +335,13 @@ class Builders extends Controller {
 			return $query_vars;
 		}
 
-		$popup_id = $this->get_edit_popup_id();
+		$request = $this->get_edit_request();
 
-		if ( ! $popup_id ) {
+		if ( ! $request || ! $request['builder']->is_canvas_request() ) {
 			return $query_vars;
 		}
+
+		$popup_id = $request['popup_id'];
 
 		$query_vars['p']         = $popup_id;
 		$query_vars['post_type'] = 'popup';
@@ -389,9 +408,15 @@ class Builders extends Controller {
 	 * @return bool
 	 */
 	public function is_canvas_popup_loadable( $loadable, $popup_id ) {
+		$request = $this->get_edit_request();
+
+		if ( ! $request ) {
+			return $loadable;
+		}
+
 		$canvas_id = $this->get_canvas_popup_id();
 
-		return $canvas_id ? absint( $popup_id ) === $canvas_id : $loadable;
+		return $canvas_id ? absint( $popup_id ) === $canvas_id : false;
 	}
 
 	/**
@@ -553,7 +578,13 @@ class Builders extends Controller {
 		$this->owners[ $popup_id ] = null;
 		$saved_owner               = get_post_meta( $popup_id, self::OWNER_META_KEY, true );
 
-		// Treat the saved builder as a hint and revalidate its native marker.
+		// An unavailable saved owner remains authoritative: falling through could
+		// revive stale native metadata left by an older builder.
+		if ( is_string( $saved_owner ) && '' !== $saved_owner && ! isset( $this->builders[ $saved_owner ] ) ) {
+			return null;
+		}
+
+		// Revalidate an available saved builder against its native marker.
 		if ( is_string( $saved_owner ) && isset( $this->builders[ $saved_owner ] ) ) {
 			$saved_builder = $this->builders[ $saved_owner ];
 
