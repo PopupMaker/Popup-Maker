@@ -126,6 +126,10 @@ class Builders extends Controller {
 			$builders[] = \PopupMaker\Builders\Bricks::class;
 		}
 
+		if ( defined( 'ETCH_PLUGIN_FILE' ) || class_exists( '\\Etch\\Plugin', false ) ) {
+			$builders[] = \PopupMaker\Builders\Etch::class;
+		}
+
 		return $builders;
 	}
 
