@@ -91,6 +91,14 @@ class Manager extends Service {
 		}
 
 		foreach ( $this->get_deferred_boot_hooks() as $hook ) {
+			if ( did_action( $hook ) || did_filter( $hook ) ) {
+				// The event already fired earlier in this request — e.g. an
+				// upgrade dispatches popup_maker/update_version during
+				// plugins_loaded, before this registration runs on init.
+				$this->init();
+				return;
+			}
+
 			add_filter( $hook, [ $this, 'boot_on_demand' ], PHP_INT_MIN );
 		}
 	}
