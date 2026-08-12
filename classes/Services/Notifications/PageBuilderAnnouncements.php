@@ -9,6 +9,7 @@
 namespace PopupMaker\Services\Notifications;
 
 use PopupMaker\Base\Service;
+use PopupMaker\Base\PageBuilder;
 use PopupMaker\Controllers\Builders;
 
 defined( 'ABSPATH' ) || exit;
@@ -19,48 +20,6 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.25.0
  */
 class PageBuilderAnnouncements extends Service implements Provider {
-
-	/**
-	 * Supported builder display details, keyed by adapter class.
-	 *
-	 * Class constants resolve to strings without autoloading the adapters.
-	 *
-	 * @var array<class-string,array{slug:string,label:string}>
-	 */
-	const BUILDERS = [
-		\PopupMaker\Builders\Elementor::class      => [
-			'slug'  => 'elementor',
-			'label' => 'Elementor',
-		],
-		\PopupMaker\Builders\BeaverBuilder::class  => [
-			'slug'  => 'beaver-builder',
-			'label' => 'Beaver Builder',
-		],
-		\PopupMaker\Builders\SiteOrigin::class     => [
-			'slug'  => 'siteorigin',
-			'label' => 'SiteOrigin Page Builder',
-		],
-		\PopupMaker\Builders\Brizy::class          => [
-			'slug'  => 'brizy',
-			'label' => 'Brizy',
-		],
-		\PopupMaker\Builders\VisualComposer::class => [
-			'slug'  => 'visual-composer',
-			'label' => 'Visual Composer',
-		],
-		\PopupMaker\Builders\Divi::class           => [
-			'slug'  => 'divi',
-			'label' => 'Divi',
-		],
-		\PopupMaker\Builders\Bricks::class         => [
-			'slug'  => 'bricks',
-			'label' => 'Bricks',
-		],
-		\PopupMaker\Builders\Etch::class           => [
-			'slug'  => 'etch',
-			'label' => 'Etch',
-		],
-	];
 
 	/**
 	 * Page builder integrations hub.
@@ -169,8 +128,25 @@ class PageBuilderAnnouncements extends Service implements Provider {
 			return [];
 		}
 
-		$available = array_flip( $controller->get_available_builder_classes() );
+		$available = [];
 
-		return array_values( array_intersect_key( self::BUILDERS, $available ) );
+		foreach ( $controller->get_available_builders() as $builder ) {
+			if ( ! $builder instanceof PageBuilder || ! is_string( $builder->key ) || '' === $builder->key ) {
+				continue;
+			}
+
+			$label = $builder->label();
+
+			if ( ! is_string( $label ) || '' === $label ) {
+				continue;
+			}
+
+			$available[] = [
+				'slug'  => sanitize_key( $builder->key ),
+				'label' => $label,
+			];
+		}
+
+		return $available;
 	}
 }
