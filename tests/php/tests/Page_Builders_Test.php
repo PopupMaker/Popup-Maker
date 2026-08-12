@@ -189,6 +189,8 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$controller = $this->make_controller( $builder );
 
 		$this->assertSame( [ $builder ], $controller->get_available_builders() );
+		$this->assertSame( 'test-builder', $builder->key );
+		$this->assertSame( 'Test Builder', $builder->label() );
 	}
 
 	/** @return void */
