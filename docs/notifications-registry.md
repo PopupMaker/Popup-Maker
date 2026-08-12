@@ -75,6 +75,12 @@ Shared helpers (in `FeatureAnnouncements`):
 - `feature_url( $slug, $campaign )` — `wppopupmaker.com/features/<slug>/` with UTM. Supports nested slugs (`popup-triggers/exit-intent-triggers`).
 - `upgrade_url( $campaign )` — wraps `\PopupMaker\get_upgrade_link()` → `wppopupmaker.com/pricing/` with UTM. Kept for future pricing-direct CTAs; current upsells route to feature pages instead.
 
+#### PageBuilderAnnouncements provider (`classes/Services/Notifications/PageBuilderAnnouncements.php`)
+
+| Code | Category | Condition | Destination | Notes |
+|---|---|---|---|---|
+| `pm_feat_page_builder_support_2026_<builder-slugs>` | `feature` | At least one bundled page builder adapter passed runtime detection and its availability check | `/integrations/page-builder-integrations/` | Consolidates every active supported builder into one dismissible announcement. The stable builder slug suffix scopes dismissal to the detected set, so installing another supported builder can surface the new capability without loading inactive adapters. |
+
 ### Pro / Pro+ / extensions
 
 | Plugin | Registered alerts | Notes |
