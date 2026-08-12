@@ -5,11 +5,10 @@ page-builder integrations. It is based on live testing with Elementor, Bricks,
 Divi, Beaver Builder, SiteOrigin Page Builder, Brizy, Visual Composer, and Etch,
 with Gutenberg and TinyMCE as controls.
 
-> **Implementation status:** `develop` currently includes Elementor, Beaver
-> Builder, SiteOrigin, Brizy, Visual Composer, and Divi. The builder-owned canvas
-> helper (#1335), Bricks (#1294), and Etch (#1312) remain proposed until their
-> linked pull requests merge. This guide documents the intended final contract
-> for that reviewed stack.
+> **Implementation status:** `develop` includes the shared builder controller,
+> base adapter, builder-owned canvas helper, and bundled integrations for
+> Elementor, Bricks, Divi, Beaver Builder, SiteOrigin Page Builder, Brizy,
+> Visual Composer, and Etch.
 
 The central lesson is simple: share the WordPress and Popup Maker lifecycle,
 but leave every builder's native APIs in its own small adapter.
@@ -32,7 +31,7 @@ PopupMaker\Base\PageBuilder
 ├── register_hooks()                 optional
 ├── get_requested_popup_id()         optional
 ├── can_edit_document()              optional
-├── enqueue_owned_canvas_preview()   optional protected helper from #1335
+├── enqueue_owned_canvas_preview()   optional protected helper
 ├── is_canvas_request()              optional
 ├── owns_document()                  optional
 └── render_document()                optional
