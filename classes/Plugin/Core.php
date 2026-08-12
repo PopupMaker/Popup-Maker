@@ -21,27 +21,6 @@ defined( 'ABSPATH' ) || exit;
 final class Core extends \PopupMaker\Plugin\Container {
 
 	/**
-	 * Events that require notification providers on frontend requests.
-	 *
-	 * @var string[]
-	 */
-	private const DEFERRED_NOTIFICATION_HOOKS = [
-		'popup_maker/update_version',
-		'pum_alert_list',
-		'pum_alert_dismissed',
-		'save_post_popup',
-		'save_post_pum_cta',
-		'deleted_post',
-		'trashed_post',
-		'untrashed_post',
-		'update_option_pum_form_conversion_count',
-		'update_option_pum_total_conversion_count',
-		'update_option_pum_bypass_adblockers',
-		'activated_plugin',
-		'deactivated_plugin',
-	];
-
-	/**
 	 * Initiate the plugin.
 	 *
 	 * @param array<string,string|bool> $config Configuration variables passed from main plugin file.
@@ -369,34 +348,15 @@ final class Core extends \PopupMaker\Plugin\Container {
 		$form_conversion_tracking->init();
 
 		/*
-		 * Defer notifications orchestrator init until WordPress's `init`
+		 * Defer notification bootstrap until WordPress's `init`
 		 * action. Core loads on plugins_loaded@11, but addons (Pro, Pro+,
 		 * integrations) load at priority 12+ and need a window to register
-		 * their own providers via the `popup_maker/notification_providers`
-		 * filter before the Manager resolves the provider list.
+		 * their own providers and deferred trigger hooks before the Manager
+		 * resolves the provider list or registers frontend lazy boot hooks.
 		 */
 		add_action( 'init', function () {
-			if ( is_admin() ) {
-				$this->get( 'notifications' )->init();
-				return;
-			}
-
-			foreach ( self::DEFERRED_NOTIFICATION_HOOKS as $hook ) {
-				add_filter( $hook, [ $this, 'init_notifications_on_demand' ], PHP_INT_MIN );
-			}
+			$this->get( 'notifications' )->register_lazy_boot();
 		}, 5 );
-	}
-
-	/**
-	 * Boot notification providers when a frontend request reaches a relevant event.
-	 *
-	 * @param mixed $value Current filter value, if any.
-	 * @return mixed
-	 */
-	public function init_notifications_on_demand( $value = null ) {
-		$this->get( 'notifications' )->init();
-
-		return $value;
 	}
 
 	/**
