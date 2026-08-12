@@ -79,7 +79,7 @@ Shared helpers (in `FeatureAnnouncements`):
 
 | Code | Category | Condition | Destination | Notes |
 |---|---|---|---|---|
-| `pm_feat_page_builder_support_2026_<builder-slugs>` | `feature` | At least one bundled page builder adapter passed runtime detection and its availability check | `/integrations/page-builder-integrations/` | Consolidates every active supported builder into one dismissible announcement. The stable builder slug suffix scopes dismissal to the detected set, so installing another supported builder can surface the new capability without loading inactive adapters. |
+| `pm_feat_page_builder_support_2026_<builder-slugs>` | `feature` | At least one bundled page builder adapter passed runtime detection and its availability check | `/integrations/page-builder-integrations/` | Consolidates every active supported builder into one announcement with permanent per-user dismissal. The stable builder slug suffix scopes dismissal to the detected set, so installing another supported builder can surface the new capability without loading inactive adapters. |
 
 ### Pro / Pro+ / extensions
 
