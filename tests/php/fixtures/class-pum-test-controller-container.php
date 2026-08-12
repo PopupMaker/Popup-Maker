@@ -22,4 +22,16 @@ class PUM_Test_Controller_Container {
 	public function register_controllers( $controllers ) {
 		$this->registered = $controllers;
 	}
+
+	/**
+	 * Mirror the real container's permission lookup using plugin defaults.
+	 *
+	 * @param string $cap Permission key.
+	 * @return string
+	 */
+	public function get_permission( $cap ) {
+		$permissions = \PopupMaker\get_default_permissions();
+
+		return isset( $permissions[ $cap ] ) ? $permissions[ $cap ] : 'manage_options';
+	}
 }

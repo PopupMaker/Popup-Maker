@@ -65,12 +65,21 @@ class PUM_Admin_Loader_Test extends WP_UnitTestCase {
 	/**
 	 * @return void
 	 */
-	public function test_frontend_admin_controllers_load_only_for_logged_in_users() {
+	public function test_frontend_admin_controllers_load_only_for_toolbar_capable_users() {
 		$anonymous_container = new PUM_Test_Controller_Container();
 		$anonymous_admin     = new \PopupMaker\Controllers\Admin( $anonymous_container );
 		$anonymous_admin->init();
 
 		$this->assertSame( [], $anonymous_container->registered );
+
+		// Logged-in users without popup capabilities never see the toolbar.
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'subscriber' ] ) );
+
+		$subscriber_container = new PUM_Test_Controller_Container();
+		$subscriber_admin     = new \PopupMaker\Controllers\Admin( $subscriber_container );
+		$subscriber_admin->init();
+
+		$this->assertSame( [], $subscriber_container->registered );
 
 		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
 
