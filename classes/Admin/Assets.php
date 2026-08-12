@@ -140,7 +140,7 @@ class PUM_Admin_Assets {
 				'pum-admin-batch',
 				'pum_batch_vars',
 				[
-					'complete'              => __( 'Your all set, the upgrades completed successfully!', 'popup-maker' ),
+					'complete'              => __( 'You are all set, the upgrades completed successfully!', 'popup-maker' ),
 					'unsupported_browser'   => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'popup-maker' ),
 					'import_field_required' => 'This field must be mapped for the import to proceed.',
 				]
