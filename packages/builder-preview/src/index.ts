@@ -1,5 +1,7 @@
 import './styles.scss';
 
+import './owned-canvas';
+
 import $ from 'jquery';
 
 const PUM = window.PUM;
