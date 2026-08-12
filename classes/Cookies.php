@@ -238,7 +238,7 @@ class PUM_Cookies {
 					'time' => [
 						'label'       => __( 'Cookie Time', 'popup-maker' ),
 						'placeholder' => __( '364 days 23 hours 59 minutes 59 seconds', 'popup-maker' ),
-						'desc'        => __( 'Enter a plain english time before cookie expires.', 'popup-maker' ),
+						'desc'        => __( 'Enter a plain English time before cookie expires.', 'popup-maker' ),
 						'std'         => '1 month',
 						'priority'    => 2,
 					],
