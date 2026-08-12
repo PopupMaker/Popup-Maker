@@ -10,19 +10,26 @@ class PUM_Admin {
 
 	public static function init() {
 		PUM_Admin_BlockEditor::init();
-		PUM_Admin_Pages::init();
-		PUM_Admin_Extend::init();
-		PUM_Admin_Ajax::init();
-		PUM_Admin_Assets::init();
-		PUM_Admin_Notices::init();
+
+		if ( is_admin() ) {
+			PUM_Admin_Pages::init();
+			PUM_Admin_Extend::init();
+			PUM_Admin_Ajax::init();
+			PUM_Admin_Assets::init();
+			PUM_Admin_Notices::init();
+		}
+
 		PUM_Admin_Popups::init();
 		PUM_Admin_Themes::init();
-		PUM_Admin_Subscribers::init();
-		PUM_Admin_Settings::init();
-		PUM_Admin_Tools::init();
-		PUM_Admin_Shortcode_UI::init();
-		PUM_Upsell::init();
-		PUM_Admin_Onboarding::init();
+
+		if ( is_admin() ) {
+			PUM_Admin_Subscribers::init();
+			PUM_Admin_Settings::init();
+			PUM_Admin_Tools::init();
+			PUM_Admin_Shortcode_UI::init();
+			PUM_Upsell::init();
+			PUM_Admin_Onboarding::init();
+		}
 
 		add_filter( 'user_has_cap', [ __CLASS__, 'prevent_default_theme_deletion' ], 10, 3 );
 		add_action( 'admin_init', [ __CLASS__, 'after_install' ] );

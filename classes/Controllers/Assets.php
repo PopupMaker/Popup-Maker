@@ -95,20 +95,22 @@ class Assets extends Controller {
 				'styles'   => true,
 				'deps'     => [],
 				'varsName' => 'popupMakerBlockEditor',
-				'vars'     => [
-					'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
-					'popups'                     => pum_get_all_popups(),
-					'homeUrl'                    => home_url(),
-					'previewNonce'               => wp_create_nonce( 'popup-preview' ),
-					'popupTriggerExcludedBlocks' => apply_filters(
-						'pum_block_editor_popup_trigger_excluded_blocks',
-						[
-							'core/nextpage',
-							'popup-maker/call-to-action',
-							'popup-maker/call-to-actions',
-						]
-					),
-				],
+				'vars'     => function () {
+					return [
+						'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
+						'popups'                     => pum_get_all_popups(),
+						'homeUrl'                    => home_url(),
+						'previewNonce'               => wp_create_nonce( 'popup-preview' ),
+						'popupTriggerExcludedBlocks' => apply_filters(
+							'pum_block_editor_popup_trigger_excluded_blocks',
+							[
+								'core/nextpage',
+								'popup-maker/call-to-action',
+								'popup-maker/call-to-actions',
+							]
+						),
+					];
+				},
 			],
 			'block-library'       => [
 				'bundled'      => false,
