@@ -20,6 +20,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class Elementor extends PageBuilder {
 
+	/** @var string */
+	public $key = 'elementor';
+
+	/** @var string */
+	protected $label = 'Elementor';
+
 	/**
 	 * Whether Elementor's document and rendering APIs are usable.
 	 *

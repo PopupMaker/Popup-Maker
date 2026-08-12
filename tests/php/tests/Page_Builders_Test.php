@@ -184,11 +184,11 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
-	public function test_available_builder_classes_only_include_booted_adapters() {
+	public function test_available_builders_only_include_booted_adapters() {
 		$builder    = $this->make_builder();
 		$controller = $this->make_controller( $builder );
 
-		$this->assertSame( [ get_class( $builder ) ], $controller->get_available_builder_classes() );
+		$this->assertSame( [ $builder ], $controller->get_available_builders() );
 	}
 
 	/** @return void */
@@ -552,6 +552,12 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	/** @return PageBuilder */
 	private function make_builder() {
 		return new class( \PopupMaker\plugin() ) extends PageBuilder {
+
+			/** @var string */
+			public $key = 'test-builder';
+
+			/** @var string */
+			protected $label = 'Test Builder';
 
 			/** @var bool */
 			public $available = true;
