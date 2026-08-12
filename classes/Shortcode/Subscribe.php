@@ -347,7 +347,7 @@ class PUM_Shortcode_Subscribe extends PUM_Shortcode {
 						],
 						'privacy_consent_type'         => [
 							'label'        => __( 'Field Type', 'popup-maker' ),
-							'desc'         => __( 'Radio forces the user to make a choice, often resulting in more optins.', 'popup-maker' ),
+							'desc'         => __( 'Radio forces the user to make a choice, often resulting in more opt-ins.', 'popup-maker' ),
 							'type'         => 'select',
 							'options'      => [
 								'radio'    => __( 'Radio', 'popup-maker' ),
