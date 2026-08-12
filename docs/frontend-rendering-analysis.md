@@ -79,7 +79,7 @@ order.
 7. **`wp_footer`**
     - `render_popups()` → Outputs popup HTML via WP_Query loop
 
-### NEW Version (v1.21.0+) - Chronological Hook Execution
+### Regression Version (v1.21.0) - Chronological Hook Execution
 
 1. **`init` hook**
 

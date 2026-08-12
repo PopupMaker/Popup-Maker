@@ -31,6 +31,7 @@ PopupMaker\Base\PageBuilder
 ├── register_hooks()                 optional
 ├── get_requested_popup_id()         optional
 ├── can_edit_document()              optional
+├── remember_document_owner()        optional protected helper
 ├── enqueue_owned_canvas_preview()   optional protected helper
 ├── is_canvas_request()              optional
 ├── owns_document()                  optional
@@ -112,11 +113,11 @@ also suppress Popup Maker's normal live popups so they cannot cover or interfere
 with the builder interface.
 
 Editor GET requests carry no trustworthy save nonce. They may select an adapter
-for the current request, but must never persist document ownership. When a native
-editor successfully saves, its adapter may call the base ownership helper from
-that builder's authenticated save lifecycle. The controller then records the
-last builder that saved the popup after repeating the common post and capability
-checks.
+for the current request, but must never persist document ownership. After a
+native editor successfully saves, its adapter may call the protected
+`remember_document_owner()` helper from that builder's authenticated save
+lifecycle. The controller then records the last builder that saved the popup
+after repeating the common post and capability checks.
 
 ## Document ownership and rendering
 
