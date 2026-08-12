@@ -122,6 +122,10 @@ class Builders extends Controller {
 			$builders[] = \PopupMaker\Builders\Divi::class;
 		}
 
+		if ( defined( 'BRICKS_VERSION' ) || class_exists( '\Bricks\Database' ) ) {
+			$builders[] = \PopupMaker\Builders\Bricks::class;
+		}
+
 		return $builders;
 	}
 
