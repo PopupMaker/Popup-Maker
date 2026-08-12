@@ -35,32 +35,7 @@ class PUM_Integrations {
 	public static function init() {
 		self::$integrations = apply_filters(
 			'pum_integrations',
-			[
-				// Forms.
-				'ninjaforms'      => new PUM_Integration_Form_NinjaForms(),
-				'gravityforms'    => new PUM_Integration_Form_GravityForms(),
-				'contactform7'    => new PUM_Integration_Form_ContactForm7(),
-				'calderaforms'    => new PUM_Integration_Form_CalderaForms(),
-				'mc4wp'           => new PUM_Integration_Form_MC4WP(),
-				'newsletter'      => new PUM_Integration_Form_Newsletter(),
-				'wpforms'         => new PUM_Integration_Form_WPForms(),
-				'wsforms'         => new PUM_Integration_Form_WSForms(),
-				'formidableforms' => new PUM_Integration_Form_FormidableForms(),
-				'fluentforms'     => new PUM_Integration_Form_FluentForms(),
-				'beaverbuilder'   => new PUM_Integration_Form_BeaverBuilder(),
-				'bricksbuilder'   => new PUM_Integration_Form_BricksBuilder(),
-				'forminator'      => new PUM_Integration_Form_Forminator(),
-				'elementor'       => new PUM_Integration_Form_Elementor(),
-				'kaliForms'       => new PUM_Integration_Form_KaliForms(),
-				'happyforms'      => new PUM_Integration_Form_HappyForms(),
-				'bitform'         => new PUM_Integration_Form_BitForm(),
-				'htmlforms'       => new PUM_Integration_Form_HTMLForms(),
-				// Page Builders.
-				'kingcomposer'    => new PUM_Integration_Builder_KingComposer(),
-				'visualcomposer'  => new PUM_Integration_Builder_VisualComposer(),
-				'beaverbuilder_button' => new PUM_Integration_Builder_BeaverBuilder(),
-				// 'bricks'          => new PUM_Integration_Builder_Bricks(),
-			]
+			self::get_default_integrations()
 		);
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -80,6 +55,107 @@ class PUM_Integrations {
 		add_filter( 'pum_popup_settings', [ __CLASS__, 'popup_settings' ], 10, 2 );
 
 		PUM_Integration_GoogleFonts::init();
+	}
+
+	/**
+	 * Get integrations whose provider is available for this request.
+	 *
+	 * Avoid autoloading every adapter on sites that do not run its provider.
+	 * Provider detection mirrors each integration's enabled() implementation.
+	 *
+	 * @return array<string,PUM_Abstract_Integration>
+	 */
+	private static function get_default_integrations() {
+		$integrations = [];
+
+		// Forms.
+		if ( class_exists( 'Ninja_Forms' ) && ! ( version_compare( get_option( 'ninja_forms_version', '0.0.0' ), '3.0', '<' ) || get_option( 'ninja_forms_load_deprecated', false ) ) ) {
+			$integrations['ninjaforms'] = new PUM_Integration_Form_NinjaForms();
+		}
+
+		if ( class_exists( 'RGForms' ) ) {
+			$integrations['gravityforms'] = new PUM_Integration_Form_GravityForms();
+		}
+
+		if ( class_exists( 'WPCF7' ) || ( defined( 'WPCF7_VERSION' ) && WPCF7_VERSION ) ) {
+			$integrations['contactform7'] = new PUM_Integration_Form_ContactForm7();
+		}
+
+		if ( defined( 'CFCORE_VER' ) && CFCORE_VER ) {
+			$integrations['calderaforms'] = new PUM_Integration_Form_CalderaForms();
+		}
+
+		if ( defined( 'MC4WP_VERSION' ) && MC4WP_VERSION ) {
+			$integrations['mc4wp'] = new PUM_Integration_Form_MC4WP();
+		}
+
+		if ( defined( 'NEWSLETTER_VERSION' ) || class_exists( 'Newsletter' ) ) {
+			$integrations['newsletter'] = new PUM_Integration_Form_Newsletter();
+		}
+
+		if ( defined( 'WPFORMS_VERSION' ) && WPFORMS_VERSION ) {
+			$integrations['wpforms'] = new PUM_Integration_Form_WPForms();
+		}
+
+		if ( class_exists( 'WS_Form' ) || ( defined( 'WS_FORM_VERSION' ) && WS_FORM_VERSION ) ) {
+			$integrations['wsforms'] = new PUM_Integration_Form_WSForms();
+		}
+
+		if ( class_exists( 'FrmEntry' ) ) {
+			$integrations['formidableforms'] = new PUM_Integration_Form_FormidableForms();
+		}
+
+		if ( defined( 'FLUENTFORM_VERSION' ) && FLUENTFORM_VERSION ) {
+			$integrations['fluentforms'] = new PUM_Integration_Form_FluentForms();
+		}
+
+		if ( class_exists( 'FLBuilder' ) ) {
+			$integrations['beaverbuilder'] = new PUM_Integration_Form_BeaverBuilder();
+		}
+
+		if ( defined( 'BRICKS_VERSION' ) ) {
+			$integrations['bricksbuilder'] = new PUM_Integration_Form_BricksBuilder();
+		}
+
+		if ( defined( 'FORMINATOR_VERSION' ) ) {
+			$integrations['forminator'] = new PUM_Integration_Form_Forminator();
+		}
+
+		// Elementor Pro initializes its modules after Popup Maker's legacy bootstrap.
+		if ( defined( 'ELEMENTOR_PRO_VERSION' ) ) {
+			$integrations['elementor'] = new PUM_Integration_Form_Elementor();
+		}
+
+		if ( defined( 'KALIFORMS_VERSION' ) || class_exists( 'KaliForms\\Inc\\Frontend\\Form_Processor' ) ) {
+			$integrations['kaliForms'] = new PUM_Integration_Form_KaliForms();
+		}
+
+		if ( class_exists( 'HappyForms_Core' ) ) {
+			$integrations['happyforms'] = new PUM_Integration_Form_HappyForms();
+		}
+
+		if ( defined( 'BITFORMS_VERSION' ) ) {
+			$integrations['bitform'] = new PUM_Integration_Form_BitForm();
+		}
+
+		if ( function_exists( 'hf_get_forms' ) ) {
+			$integrations['htmlforms'] = new PUM_Integration_Form_HTMLForms();
+		}
+
+		// Page builders.
+		if ( class_exists( 'KingComposer' ) || defined( 'KC_VERSION' ) ) {
+			$integrations['kingcomposer'] = new PUM_Integration_Builder_KingComposer();
+		}
+
+		if ( defined( 'WPB_VC_VERSION' ) || defined( 'FL_BUILDER_VERSION' ) ) {
+			$integrations['visualcomposer'] = new PUM_Integration_Builder_VisualComposer();
+		}
+
+		if ( class_exists( 'FLBuilder' ) ) {
+			$integrations['beaverbuilder_button'] = new PUM_Integration_Builder_BeaverBuilder();
+		}
+
+		return $integrations;
 	}
 
 	/**
