@@ -200,7 +200,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			defined( 'ET_BUILDER_VERSION' ) ||
 			function_exists( 'et_divi_fonts_url' ) ||
 			function_exists( 'et_setup_builder' ) ||
-			class_exists( 'ET_Builder_Plugin' )
+			class_exists( 'ET_Builder_Plugin' ) ||
+			defined( 'BRICKS_VERSION' ) ||
+			class_exists( '\\Bricks\\Database', false )
 		) {
 			$this->markTestSkipped( 'A bundled builder is active in this test environment.' );
 		}
@@ -211,6 +213,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$brizy_loaded           = class_exists( \PopupMaker\Builders\Brizy::class, false );
 		$visual_composer_loaded = class_exists( \PopupMaker\Builders\VisualComposer::class, false );
 		$divi_loaded            = class_exists( \PopupMaker\Builders\Divi::class, false );
+		$bricks_loaded          = class_exists( \PopupMaker\Builders\Bricks::class, false );
 		$controller             = new class( \PopupMaker\plugin() ) extends \PopupMaker\Controllers\Builders {
 
 			/** @var int */
@@ -236,6 +239,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$this->assertSame( $brizy_loaded, class_exists( \PopupMaker\Builders\Brizy::class, false ) );
 		$this->assertSame( $visual_composer_loaded, class_exists( \PopupMaker\Builders\VisualComposer::class, false ) );
 		$this->assertSame( $divi_loaded, class_exists( \PopupMaker\Builders\Divi::class, false ) );
+		$this->assertSame( $bricks_loaded, class_exists( \PopupMaker\Builders\Bricks::class, false ) );
 	}
 
 	/** @return void */
