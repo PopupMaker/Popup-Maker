@@ -118,6 +118,93 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Query-result filters retain their title mutations.
+	 *
+	 * @dataProvider query_result_filter_provider
+	 * @param string $hook Query result hook.
+	 * @return void
+	 */
+	public function test_popup_selectlist_preserves_query_result_title_filters( $hook ) {
+		$popup_id = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+				'post_title'  => 'Stored popup title',
+			]
+		);
+		$filter   = static function ( $posts ) use ( $popup_id ) {
+			foreach ( $posts as $post ) {
+				if ( $post instanceof WP_Post && $popup_id === (int) $post->ID ) {
+					$post->post_title = 'Filtered popup title';
+				}
+			}
+
+			return $posts;
+		};
+
+		add_filter( $hook, $filter );
+
+		try {
+			$choices = PUM_Helpers::popup_selectlist( [ 'post__in' => [ $popup_id ] ] );
+		} finally {
+			remove_filter( $hook, $filter );
+		}
+
+		$this->assertSame( [ $popup_id => 'Filtered popup title' ], $choices );
+	}
+
+	/**
+	 * Query-result hooks that can alter popup titles.
+	 *
+	 * @return array<string,array{string}>
+	 */
+	public function query_result_filter_provider() {
+		return [
+			'posts_results' => [ 'posts_results' ],
+			'the_posts'     => [ 'the_posts' ],
+		];
+	}
+
+	/**
+	 * Suppressed query filters retain the normal raw-title fast path.
+	 *
+	 * @return void
+	 */
+	public function test_popup_selectlist_skips_query_result_filters_when_suppressed() {
+		$popup_id = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+				'post_title'  => 'Stored popup title',
+			]
+		);
+		$filter   = static function ( $posts ) {
+			foreach ( $posts as $post ) {
+				if ( $post instanceof WP_Post ) {
+					$post->post_title = 'Filtered popup title';
+				}
+			}
+
+			return $posts;
+		};
+
+		add_filter( 'posts_results', $filter );
+
+		try {
+			$choices = PUM_Helpers::popup_selectlist(
+				[
+					'post__in'         => [ $popup_id ],
+					'suppress_filters' => true,
+				]
+			);
+		} finally {
+			remove_filter( 'posts_results', $filter );
+		}
+
+		$this->assertSame( [ $popup_id => 'Stored popup title' ], $choices );
+	}
+
+	/**
 	 * A cold select list uses one ID query and one title projection query.
 	 *
 	 * @return void

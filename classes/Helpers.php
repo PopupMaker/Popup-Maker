@@ -411,6 +411,25 @@ class PUM_Helpers {
 			]
 		);
 
+		$use_filtered_posts = ! $query_args['suppress_filters'] && self::popup_query_result_filters_active();
+
+		if ( $use_filtered_posts ) {
+			$query_args['fields']                 = 'all';
+			$query_args['update_post_meta_cache'] = false;
+			$query_args['update_post_term_cache'] = false;
+			$popup_list                           = [];
+
+			foreach ( get_posts( $query_args ) as $popup ) {
+				if ( $popup instanceof WP_Post && 'publish' === get_post_status( $popup->ID ) ) {
+					$popup_list[ (string) $popup->ID ] = (string) $popup->post_title;
+				}
+			}
+
+			$filtered_popup_list = apply_filters( 'popup_maker/popup_title_choices', $popup_list );
+
+			return is_array( $filtered_popup_list ) ? $filtered_popup_list : $popup_list;
+		}
+
 		static $queries = [];
 
 		$query_key = md5( wp_json_encode( $query_args ) );
@@ -435,5 +454,44 @@ class PUM_Helpers {
 		}
 
 		return $popup_list;
+	}
+
+	/**
+	 * Check whether query-result filters can alter popup titles.
+	 *
+	 * WordPress registers its comment-status callback on `the_posts` by default;
+	 * that callback does not alter popup titles and should not disable the fast
+	 * projection path.
+	 *
+	 * @return bool
+	 */
+	private static function popup_query_result_filters_active() {
+		global $wp_filter;
+
+		if ( false !== has_filter( 'posts_results' ) ) {
+			return true;
+		}
+
+		if ( false === has_filter( 'the_posts' ) ) {
+			return false;
+		}
+
+		$the_posts_hook = isset( $wp_filter['the_posts'] ) ? $wp_filter['the_posts'] : null;
+
+		if ( ! is_object( $the_posts_hook ) || ! isset( $the_posts_hook->callbacks ) || ! is_array( $the_posts_hook->callbacks ) ) {
+			return true;
+		}
+
+		foreach ( $the_posts_hook->callbacks as $callbacks ) {
+			foreach ( $callbacks as $callback ) {
+				$function = isset( $callback['function'] ) ? $callback['function'] : null;
+
+				if ( '_close_comments_for_old_posts' !== $function ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }
