@@ -123,6 +123,20 @@ class PUM_Admin_Assets {
 
 		if ( pum_is_settings_page() ) {
 			wp_enqueue_script( 'pum-admin-settings-page' );
+			wp_localize_script(
+				'pum-admin-settings-page',
+				'pum_css_viewer',
+				[
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'nonce'    => wp_create_nonce( 'pum_get_css_styles' ),
+					'i18n'     => [
+						'loading'              => __( 'Loading Popup Maker CSS…', 'popup-maker' ),
+						'load_error'           => __( 'Popup Maker CSS could not be loaded. Please try again.', 'popup-maker' ),
+						'readable_unavailable' => __( 'Readable CSS is unavailable. Rebuild the plugin assets and try again.', 'popup-maker' ),
+						'show'                 => __( 'Show Popup Maker CSS', 'popup-maker' ),
+					],
+				]
+			);
 		}
 	}
 
