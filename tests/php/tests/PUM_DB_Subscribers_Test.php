@@ -554,6 +554,27 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test query with an exact indexed-column filter.
+	 */
+	public function test_query_with_exact_where_filter() {
+		$this->db->create_table();
+
+		$this->db->insert( [
+			'email' => 'person@example.com',
+			'name'  => 'Exact',
+		] );
+		$this->db->insert( [
+			'email' => 'person@example.com.invalid',
+			'name'  => 'Partial',
+		] );
+
+		$results = $this->db->query( [ 'where' => [ 'email' => 'person@example.com' ] ] );
+
+		$this->assertCount( 1, $results );
+		$this->assertSame( 'Exact', $results[0]->name );
+	}
+
+	/**
 	 * Test query with orderby and order.
 	 */
 	public function test_query_with_orderby() {
@@ -660,6 +681,33 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 		$this->db->insert( [ 'email' => 'bob@test.com', 'name' => 'Bob' ] );
 
 		$count = $this->db->total_rows( [ 's' => 'alice' ] );
+		$this->assertSame( 1, $count );
+	}
+
+	/**
+	 * Test total_rows delegates counting to the database.
+	 */
+	public function test_total_rows_uses_count_query() {
+		global $wpdb;
+
+		$this->db->create_table();
+		$this->db->insert( [ 'email' => 'count@example.com' ] );
+
+		$this->assertSame( 1, $this->db->total_rows( [] ) );
+		$this->assertStringContainsString( 'SELECT COUNT(*)', $wpdb->last_query );
+	}
+
+	/**
+	 * Test total_rows applies exact filters without pagination limits.
+	 */
+	public function test_total_rows_with_exact_where_filter() {
+		$this->db->create_table();
+
+		$this->db->insert( [ 'email' => 'match@example.com' ] );
+		$this->db->insert( [ 'email' => 'match@example.com.invalid' ] );
+
+		$count = $this->db->total_rows( [ 'where' => [ 'email' => 'match@example.com' ] ] );
+
 		$this->assertSame( 1, $count );
 	}
 
