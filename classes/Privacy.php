@@ -189,7 +189,7 @@ class PUM_Privacy {
 		$export_items = [];
 		$subscribers  = PUM_DB_Subscribers::instance()->query(
 			[
-				's'       => $email_address,
+				'where'   => [ 'email' => $email_address ],
 				'page'    => $page,
 				'limit'   => $number,
 				'orderby' => 'ID',
@@ -366,7 +366,7 @@ class PUM_Privacy {
 
 		$subscribers = PUM_DB_Subscribers::instance()->query(
 			[
-				's'       => $email_address,
+				'where'   => [ 'email' => $email_address ],
 				'page'    => $page,
 				'limit'   => $number,
 				'orderby' => 'ID',
