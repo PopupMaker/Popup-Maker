@@ -427,10 +427,28 @@ class PUM_Helpers {
 			$query_args['fields']                 = 'all';
 			$query_args['update_post_meta_cache'] = false;
 			$query_args['update_post_term_cache'] = false;
+			$queried_popup_ids                    = [];
 			$popup_list                           = [];
+			$capture_queried_ids                  = static function ( $posts ) use ( &$queried_popup_ids ) {
+				foreach ( $posts as $post ) {
+					if ( $post instanceof WP_Post ) {
+						$queried_popup_ids[] = (int) $post->ID;
+					}
+				}
 
-			foreach ( get_posts( $query_args ) as $popup ) {
-				if ( ! $popup instanceof WP_Post || 'popup' !== $popup->post_type || ! in_array( $popup->post_status, (array) $post_status, true ) ) {
+				return $posts;
+			};
+
+			add_filter( 'posts_results', $capture_queried_ids, PHP_INT_MIN );
+
+			try {
+				$filtered_posts = get_posts( $query_args );
+			} finally {
+				remove_filter( 'posts_results', $capture_queried_ids, PHP_INT_MIN );
+			}
+
+			foreach ( $filtered_posts as $popup ) {
+				if ( ! $popup instanceof WP_Post || ! in_array( (int) $popup->ID, $queried_popup_ids, true ) || 'popup' !== $popup->post_type || ! in_array( $popup->post_status, (array) $post_status, true ) ) {
 					continue;
 				}
 

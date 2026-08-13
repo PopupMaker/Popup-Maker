@@ -199,11 +199,12 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 	 * Filtered results cannot inject posts outside the permitted popup set.
 	 *
 	 * @dataProvider invalid_filtered_post_provider
-	 * @param string $post_type   Injected post type.
-	 * @param string $post_status Injected post status.
+	 * @param string $post_type         Injected post type.
+	 * @param string $post_status       Injected post status.
+	 * @param bool   $include_in_request Whether the injected post is requested.
 	 * @return void
 	 */
-	public function test_popup_selectlist_rejects_invalid_filtered_posts( $post_type, $post_status ) {
+	public function test_popup_selectlist_rejects_invalid_filtered_posts( $post_type, $post_status, $include_in_request ) {
 		$popup_id      = self::factory()->post->create(
 			[
 				'post_type'   => 'popup',
@@ -221,8 +222,14 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 			$injected_args['post_date'] = '2035-01-01 00:00:00';
 		}
 
-		$injected_id = self::factory()->post->create( $injected_args );
-		$filter      = static function ( $posts ) use ( $injected_id ) {
+		$injected_id   = self::factory()->post->create( $injected_args );
+		$requested_ids = [ $popup_id ];
+
+		if ( $include_in_request ) {
+			$requested_ids[] = $injected_id;
+		}
+
+		$filter = static function ( $posts ) use ( $injected_id ) {
 			$posts[] = get_post( $injected_id );
 
 			return $posts;
@@ -231,7 +238,7 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 		add_filter( 'posts_results', $filter );
 
 		try {
-			$choices = PUM_Helpers::popup_selectlist( [ 'post__in' => [ $popup_id ] ] );
+			$choices = PUM_Helpers::popup_selectlist( [ 'post__in' => $requested_ids ] );
 		} finally {
 			remove_filter( 'posts_results', $filter );
 		}
@@ -242,14 +249,15 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 	/**
 	 * Invalid posts that a query-result filter may inject.
 	 *
-	 * @return array<string,array{string,string}>
+	 * @return array<string,array{string,string,bool}>
 	 */
 	public function invalid_filtered_post_provider() {
 		return [
-			'published page' => [ 'page', 'publish' ],
-			'draft popup'    => [ 'popup', 'draft' ],
-			'future popup'   => [ 'popup', 'future' ],
-			'private popup'  => [ 'popup', 'private' ],
+			'published page'              => [ 'page', 'publish', true ],
+			'draft popup'                 => [ 'popup', 'draft', true ],
+			'future popup'                => [ 'popup', 'future', true ],
+			'private popup'               => [ 'popup', 'private', true ],
+			'unrequested published popup' => [ 'popup', 'publish', false ],
 		];
 	}
 
