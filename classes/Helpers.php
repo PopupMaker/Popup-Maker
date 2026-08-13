@@ -370,16 +370,128 @@ class PUM_Helpers {
 	 * @return array<string,string> Popup ID => title mapping
 	 */
 	public static function popup_selectlist( $args = [] ) {
-		$popup_list = [];
+		if ( ! is_array( $args ) ) {
+			return [];
+		}
 
-		$popups = pum_get_all_popups( $args );
+		if ( isset( $args['post_status'] ) ) {
+			$statuses = array_filter( (array) $args['post_status'] );
 
-		foreach ( $popups as $popup ) {
-			if ( $popup->is_published() ) {
-				$popup_list[ (string) $popup->ID ] = $popup->post_title;
+			if ( ! empty( $statuses ) && ! in_array( 'publish', $statuses, true ) && ! in_array( 'any', $statuses, true ) ) {
+				return [];
+			}
+		}
+
+		if ( isset( $args['popups'] ) ) {
+			$args['post__in'] = wp_parse_id_list( $args['popups'] );
+			unset( $args['popups'] );
+		}
+
+		if ( ! isset( $args['orderby'] ) ) {
+			$args['orderby'] = 'modified';
+		} elseif ( 'name' === $args['orderby'] ) {
+			$args['orderby'] = 'title';
+			$args['order']   = isset( $args['order'] ) ? $args['order'] : 'ASC';
+		} elseif ( 'activity' === $args['orderby'] ) {
+			$args['orderby'] = 'modified';
+		} elseif ( 'user_order' === $args['orderby'] && ! empty( $args['post__in'] ) ) {
+			$args['orderby'] = 'post__in';
+		}
+
+		$query_args = array_merge(
+			$args,
+			[
+				'post_type'        => 'popup',
+				'post_status'      => 'publish',
+				'posts_per_page'   => -1,
+				'fields'           => 'ids',
+				'no_found_rows'    => true,
+				'order'            => isset( $args['order'] ) ? $args['order'] : 'DESC',
+				'suppress_filters' => isset( $args['suppress_filters'] ) ? $args['suppress_filters'] : false,
+			]
+		);
+
+		$use_filtered_posts = ! $query_args['suppress_filters'] && self::popup_query_result_filters_active();
+
+		if ( $use_filtered_posts ) {
+			$query_args['fields']                 = 'all';
+			$query_args['update_post_meta_cache'] = false;
+			$query_args['update_post_term_cache'] = false;
+			$popup_list                           = [];
+
+			foreach ( get_posts( $query_args ) as $popup ) {
+				if ( $popup instanceof WP_Post && 'publish' === get_post_status( $popup->ID ) ) {
+					$popup_list[ (string) $popup->ID ] = (string) $popup->post_title;
+				}
+			}
+
+			$filtered_popup_list = apply_filters( 'popup_maker/popup_title_choices', $popup_list );
+
+			return is_array( $filtered_popup_list ) ? $filtered_popup_list : $popup_list;
+		}
+
+		static $queries = [];
+
+		$query_key = md5( wp_json_encode( $query_args ) );
+
+		if ( isset( $queries[ $query_key ] ) ) {
+			$popup_ids = $queries[ $query_key ];
+		} else {
+			$popup_ids             = array_map( 'absint', get_posts( $query_args ) );
+			$queries[ $query_key ] = $popup_ids;
+		}
+
+		if ( empty( $popup_ids ) ) {
+			return [];
+		}
+		$titles_by_id = \PopupMaker\plugin( 'popups' )->get_title_choices( $popup_ids );
+		$popup_list   = [];
+
+		foreach ( $popup_ids as $popup_id ) {
+			if ( isset( $titles_by_id[ $popup_id ] ) ) {
+				$popup_list[ (string) $popup_id ] = $titles_by_id[ $popup_id ];
 			}
 		}
 
 		return $popup_list;
+	}
+
+	/**
+	 * Check whether query-result filters can alter popup titles.
+	 *
+	 * WordPress registers its comment-status callback on `the_posts` by default;
+	 * that callback does not alter popup titles and should not disable the fast
+	 * projection path.
+	 *
+	 * @return bool
+	 */
+	private static function popup_query_result_filters_active() {
+		global $wp_filter;
+
+		if ( false !== has_filter( 'posts_results' ) ) {
+			return true;
+		}
+
+		if ( false === has_filter( 'the_posts' ) ) {
+			return false;
+		}
+
+		$the_posts_hook = isset( $wp_filter['the_posts'] ) ? $wp_filter['the_posts'] : null;
+
+		if ( ! is_object( $the_posts_hook ) || ! isset( $the_posts_hook->callbacks ) || ! is_array( $the_posts_hook->callbacks ) ) {
+			return true;
+		}
+
+		foreach ( $the_posts_hook->callbacks as $callbacks ) {
+			foreach ( $callbacks as $callback ) {
+				$function = isset( $callback['function'] ) ? $callback['function'] : null;
+
+				if ( '_close_comments_for_old_posts' !== $function ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }
