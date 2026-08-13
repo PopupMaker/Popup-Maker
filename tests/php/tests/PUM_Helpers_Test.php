@@ -300,6 +300,97 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Private choices refresh when the current user's capability changes.
+	 *
+	 * @return void
+	 */
+	public function test_popup_selectlist_refreshes_private_choices_after_capability_changes() {
+		$previous_user_id = get_current_user_id();
+		$admin_user_id    = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		$user_id          = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+		$user             = get_user_by( 'id', $user_id );
+		$post_type        = get_post_type_object( 'popup' );
+		$private_cap      = $post_type->cap->read_private_posts;
+		$private_id       = self::factory()->post->create(
+			[
+				'post_author' => $admin_user_id,
+				'post_type'   => 'popup',
+				'post_status' => 'private',
+				'post_title'  => 'Private popup',
+			]
+		);
+		$args             = [ 'post_status' => [ 'publish', 'private' ] ];
+
+		try {
+			$user->add_cap( $private_cap );
+			wp_set_current_user( $user_id );
+			$this->assertSame( [ $private_id => 'Private popup' ], PUM_Helpers::popup_selectlist( $args ) );
+
+			wp_get_current_user()->remove_cap( $private_cap );
+			$this->assertArrayNotHasKey( $private_id, PUM_Helpers::popup_selectlist( $args ) );
+		} finally {
+			$user->remove_cap( $private_cap );
+			wp_set_current_user( $previous_user_id );
+		}
+	}
+
+	/**
+	 * Nested query IDs cannot expand the outer filtered result set.
+	 *
+	 * @return void
+	 */
+	public function test_popup_selectlist_scopes_filtered_ids_to_outer_query() {
+		$requested_id = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+				'post_title'  => 'Requested popup',
+			]
+		);
+		$nested_id    = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+				'post_title'  => 'Nested popup',
+			]
+		);
+		$is_nested    = false;
+		$filter       = static function ( $posts ) use ( $nested_id, &$is_nested ) {
+			if ( $is_nested ) {
+				return $posts;
+			}
+
+			$is_nested   = true;
+			$nested_post = get_posts(
+				[
+					'post_type'        => 'popup',
+					'post_status'      => 'publish',
+					'post__in'         => [ $nested_id ],
+					'posts_per_page'   => 1,
+					'suppress_filters' => false,
+				]
+			);
+			$is_nested   = false;
+
+			if ( isset( $nested_post[0] ) ) {
+				$posts[] = $nested_post[0];
+			}
+
+			return $posts;
+		};
+
+		add_filter( 'posts_results', $filter );
+
+		try {
+			$choices = PUM_Helpers::popup_selectlist( [ 'post__in' => [ $requested_id ] ] );
+		} finally {
+			remove_filter( 'posts_results', $filter );
+		}
+
+		$this->assertSame( [ $requested_id => 'Requested popup' ], $choices );
+	}
+
+	/**
 	 * Suppressed query filters retain the normal raw-title fast path.
 	 *
 	 * @return void

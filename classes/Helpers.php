@@ -429,17 +429,26 @@ class PUM_Helpers {
 			$query_args['update_post_term_cache'] = false;
 			$queried_popup_ids                    = [];
 			$popup_list                           = [];
-			$capture_queried_ids                  = static function ( $posts ) use ( &$queried_popup_ids ) {
+			$outer_query                          = null;
+			$capture_queried_ids                  = static function ( $posts, $query ) use ( &$queried_popup_ids, &$outer_query ) {
+				if ( null === $outer_query ) {
+					$outer_query = $query;
+				}
+
+				if ( $query !== $outer_query ) {
+					return $posts;
+				}
+
 				foreach ( $posts as $post ) {
 					if ( $post instanceof WP_Post ) {
-						$queried_popup_ids[] = (int) $post->ID;
+						$queried_popup_ids[ (int) $post->ID ] = true;
 					}
 				}
 
 				return $posts;
 			};
 
-			add_filter( 'posts_results', $capture_queried_ids, PHP_INT_MIN );
+			add_filter( 'posts_results', $capture_queried_ids, PHP_INT_MIN, 2 );
 
 			try {
 				$filtered_posts = get_posts( $query_args );
@@ -448,7 +457,7 @@ class PUM_Helpers {
 			}
 
 			foreach ( $filtered_posts as $popup ) {
-				if ( ! $popup instanceof WP_Post || ! in_array( (int) $popup->ID, $queried_popup_ids, true ) || 'popup' !== $popup->post_type || ! in_array( $popup->post_status, (array) $post_status, true ) ) {
+				if ( ! $popup instanceof WP_Post || ! isset( $queried_popup_ids[ (int) $popup->ID ] ) || 'popup' !== $popup->post_type || ! in_array( $popup->post_status, (array) $post_status, true ) ) {
 					continue;
 				}
 
@@ -480,11 +489,16 @@ class PUM_Helpers {
 
 		$query_key = md5( wp_json_encode( $query_args ) . ':' . wp_cache_get_last_changed( 'posts' ) . ':' . get_current_user_id() );
 
-		if ( isset( $queries[ $query_key ] ) ) {
+		$cache_query = ! is_array( $post_status );
+
+		if ( $cache_query && isset( $queries[ $query_key ] ) ) {
 			$popup_ids = $queries[ $query_key ];
 		} else {
-			$popup_ids             = array_map( 'absint', get_posts( $query_args ) );
-			$queries[ $query_key ] = $popup_ids;
+			$popup_ids = array_map( 'absint', get_posts( $query_args ) );
+
+			if ( $cache_query ) {
+				$queries[ $query_key ] = $popup_ids;
+			}
 		}
 
 		if ( empty( $popup_ids ) ) {
