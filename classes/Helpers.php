@@ -375,9 +375,9 @@ class PUM_Helpers {
 		}
 
 		if ( isset( $args['post_status'] ) ) {
-			$statuses = (array) $args['post_status'];
+			$statuses = array_filter( (array) $args['post_status'] );
 
-			if ( ! in_array( 'publish', $statuses, true ) && ! in_array( 'any', $statuses, true ) ) {
+			if ( ! empty( $statuses ) && ! in_array( 'publish', $statuses, true ) && ! in_array( 'any', $statuses, true ) ) {
 				return [];
 			}
 		}
@@ -401,13 +401,13 @@ class PUM_Helpers {
 		$query_args = array_merge(
 			$args,
 			[
-				'post_type'              => 'popup',
-				'post_status'            => 'publish',
-				'posts_per_page'         => -1,
-				'fields'                 => 'ids',
-				'no_found_rows'          => true,
-				'order'                  => isset( $args['order'] ) ? $args['order'] : 'DESC',
-				'suppress_filters'       => isset( $args['suppress_filters'] ) ? $args['suppress_filters'] : false,
+				'post_type'        => 'popup',
+				'post_status'      => 'publish',
+				'posts_per_page'   => -1,
+				'fields'           => 'ids',
+				'no_found_rows'    => true,
+				'order'            => isset( $args['order'] ) ? $args['order'] : 'DESC',
+				'suppress_filters' => isset( $args['suppress_filters'] ) ? $args['suppress_filters'] : false,
 			]
 		);
 
@@ -416,18 +416,15 @@ class PUM_Helpers {
 		$query_key = md5( wp_json_encode( $query_args ) );
 
 		if ( isset( $queries[ $query_key ] ) ) {
-			return $queries[ $query_key ];
+			$popup_ids = $queries[ $query_key ];
+		} else {
+			$popup_ids             = array_map( 'absint', get_posts( $query_args ) );
+			$queries[ $query_key ] = $popup_ids;
 		}
-
-		$popup_ids = get_posts( $query_args );
 
 		if ( empty( $popup_ids ) ) {
-			$queries[ $query_key ] = [];
-
 			return [];
 		}
-
-		$popup_ids    = array_map( 'absint', $popup_ids );
 		$titles_by_id = \PopupMaker\plugin( 'popups' )->get_title_choices( $popup_ids );
 		$popup_list   = [];
 
@@ -436,8 +433,6 @@ class PUM_Helpers {
 				$popup_list[ (string) $popup_id ] = $titles_by_id[ $popup_id ];
 			}
 		}
-
-		$queries[ $query_key ] = $popup_list;
 
 		return $popup_list;
 	}

@@ -60,6 +60,33 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Empty status arguments retain WordPress's published-post default.
+	 *
+	 * @return void
+	 */
+	public function test_popup_selectlist_treats_empty_post_status_as_default() {
+		$popup_id = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+				'post_title'  => 'Published choice',
+			]
+		);
+
+		foreach ( [ '', false, [] ] as $post_status ) {
+			$this->assertSame(
+				[ $popup_id => 'Published choice' ],
+				PUM_Helpers::popup_selectlist(
+					[
+						'post__in'    => [ $popup_id ],
+						'post_status' => $post_status,
+					]
+				)
+			);
+		}
+	}
+
+	/**
 	 * Legacy name ordering remains ascending unless explicitly overridden.
 	 *
 	 * @return void
@@ -113,7 +140,7 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 		wp_cache_flush();
 		get_option( 'posts_per_page' );
 		$query_count = $wpdb->num_queries;
-		$choices    = PUM_Helpers::popup_selectlist( [ 'post__in' => $popup_ids ] );
+		$choices     = PUM_Helpers::popup_selectlist( [ 'post__in' => $popup_ids ] );
 
 		$this->assertCount( 10, $choices );
 		$this->assertSame( 2, $wpdb->num_queries - $query_count );
@@ -145,6 +172,40 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 				[ $popup_id => 'Translated title' ],
 				PUM_Helpers::popup_selectlist( [ 'post__in' => [ $popup_id ] ] )
 			);
+		} finally {
+			remove_filter( 'popup_maker/popup_title_choices', $filter );
+		}
+	}
+
+	/**
+	 * Title filters run again when a cached select list is requested.
+	 *
+	 * @return void
+	 */
+	public function test_popup_selectlist_reapplies_title_filter_to_cached_ids() {
+		$popup_id = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+				'post_title'  => 'Original title',
+			]
+		);
+		$language = 'English';
+		$filter   = static function ( $titles ) use ( $popup_id, &$language ) {
+			$titles[ $popup_id ] = $language . ' title';
+
+			return $titles;
+		};
+		$args     = [ 'post__in' => [ $popup_id ] ];
+
+		add_filter( 'popup_maker/popup_title_choices', $filter );
+
+		try {
+			$this->assertSame( [ $popup_id => 'English title' ], PUM_Helpers::popup_selectlist( $args ) );
+
+			$language = 'French';
+
+			$this->assertSame( [ $popup_id => 'French title' ], PUM_Helpers::popup_selectlist( $args ) );
 		} finally {
 			remove_filter( 'popup_maker/popup_title_choices', $filter );
 		}
