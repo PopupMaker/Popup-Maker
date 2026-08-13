@@ -374,11 +374,17 @@ class PUM_Helpers {
 			return [];
 		}
 
+		$post_status = 'publish';
+
 		if ( isset( $args['post_status'] ) ) {
-			$statuses = array_filter( (array) $args['post_status'] );
+			$statuses = array_values( array_unique( array_filter( array_map( 'sanitize_key', (array) $args['post_status'] ) ) ) );
 
 			if ( ! empty( $statuses ) && ! in_array( 'publish', $statuses, true ) && ! in_array( 'any', $statuses, true ) ) {
 				return [];
+			}
+
+			if ( in_array( 'publish', $statuses, true ) && in_array( 'private', $statuses, true ) ) {
+				$post_status = [ 'publish', 'private' ];
 			}
 		}
 
@@ -402,7 +408,7 @@ class PUM_Helpers {
 			$args,
 			[
 				'post_type'        => 'popup',
-				'post_status'      => 'publish',
+				'post_status'      => $post_status,
 				'posts_per_page'   => -1,
 				'fields'           => 'ids',
 				'no_found_rows'    => true,
@@ -410,6 +416,10 @@ class PUM_Helpers {
 				'suppress_filters' => isset( $args['suppress_filters'] ) ? $args['suppress_filters'] : false,
 			]
 		);
+
+		if ( is_array( $post_status ) ) {
+			$query_args['perm'] = 'readable';
+		}
 
 		$use_filtered_posts = ! $query_args['suppress_filters'] && self::popup_query_result_filters_active();
 
@@ -420,19 +430,37 @@ class PUM_Helpers {
 			$popup_list                           = [];
 
 			foreach ( get_posts( $query_args ) as $popup ) {
-				if ( $popup instanceof WP_Post && 'publish' === get_post_status( $popup->ID ) ) {
-					$popup_list[ (string) $popup->ID ] = (string) $popup->post_title;
+				if ( ! $popup instanceof WP_Post || 'popup' !== $popup->post_type || ! in_array( $popup->post_status, (array) $post_status, true ) ) {
+					continue;
 				}
+
+				if ( 'private' === $popup->post_status && ! current_user_can( 'read_post', $popup->ID ) ) {
+					continue;
+				}
+
+				$popup_list[ (string) $popup->ID ] = (string) $popup->post_title;
 			}
 
 			$filtered_popup_list = apply_filters( 'popup_maker/popup_title_choices', $popup_list );
 
-			return is_array( $filtered_popup_list ) ? $filtered_popup_list : $popup_list;
+			if ( ! is_array( $filtered_popup_list ) ) {
+				return $popup_list;
+			}
+
+			foreach ( $popup_list as $popup_id => $popup_title ) {
+				if ( array_key_exists( $popup_id, $filtered_popup_list ) ) {
+					$popup_list[ $popup_id ] = (string) $filtered_popup_list[ $popup_id ];
+				} else {
+					unset( $popup_list[ $popup_id ] );
+				}
+			}
+
+			return $popup_list;
 		}
 
 		static $queries = [];
 
-		$query_key = md5( wp_json_encode( $query_args ) );
+		$query_key = md5( wp_json_encode( $query_args ) . ':' . wp_cache_get_last_changed( 'posts' ) . ':' . get_current_user_id() );
 
 		if ( isset( $queries[ $query_key ] ) ) {
 			$popup_ids = $queries[ $query_key ];
