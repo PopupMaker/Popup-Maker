@@ -33,6 +33,18 @@ import './license-key-enhancements';
 		const args = settingsEditor.form_args || {};
 		const values = settingsEditor.current_values || {};
 		const cssViewerConfig = window.pum_css_viewer || {};
+		const configuredCssViewerI18n = cssViewerConfig.i18n || {};
+		const cssViewerI18n = {
+			loading:
+				configuredCssViewerI18n.loading || 'Loading Popup Maker CSS…',
+			load_error:
+				configuredCssViewerI18n.load_error ||
+				'Popup Maker CSS could not be loaded. Please try again.',
+			readable_unavailable:
+				configuredCssViewerI18n.readable_unavailable ||
+				'Readable CSS is unavailable. Rebuild the plugin assets and try again.',
+			show: configuredCssViewerI18n.show || 'Show Popup Maker CSS',
+		};
 		let cssViewerStyles = null;
 
 		function cssViewerErrorMessage( response ) {
@@ -40,7 +52,7 @@ import './license-key-enhancements';
 				response.responseJSON &&
 				response.responseJSON.data
 				? response.responseJSON.data.message
-				: cssViewerConfig.i18n.load_error;
+				: cssViewerI18n.load_error;
 		}
 
 		function showCssViewer( $viewer, styles ) {
@@ -55,7 +67,7 @@ import './license-key-enhancements';
 			if ( ! styles.readable_available ) {
 				$readableButton
 					.prop( 'disabled', true )
-					.attr( 'title', cssViewerConfig.i18n.readable_unavailable );
+					.attr( 'title', cssViewerI18n.readable_unavailable );
 			}
 
 			$viewer
@@ -74,9 +86,7 @@ import './license-key-enhancements';
 			const $button = $viewer.find( '#show_pum_styles' );
 			const $status = $viewer.find( '.pum-css-viewer__status' );
 
-			$button
-				.prop( 'disabled', true )
-				.text( cssViewerConfig.i18n.loading );
+			$button.prop( 'disabled', true ).text( cssViewerI18n.loading );
 			$status.attr( 'hidden', true ).removeClass( 'notice notice-error' );
 
 			$.ajax( {
@@ -90,12 +100,12 @@ import './license-key-enhancements';
 				.done( ( response ) => {
 					if ( ! response.success || ! response.data ) {
 						$status
-							.text( cssViewerConfig.i18n.load_error )
+							.text( cssViewerI18n.load_error )
 							.addClass( 'notice notice-error' )
 							.removeAttr( 'hidden' );
 						$button
 							.prop( 'disabled', false )
-							.text( cssViewerConfig.i18n.show );
+							.text( cssViewerI18n.show );
 						return;
 					}
 
@@ -109,7 +119,7 @@ import './license-key-enhancements';
 						.removeAttr( 'hidden' );
 					$button
 						.prop( 'disabled', false )
-						.text( cssViewerConfig.i18n.show );
+						.text( cssViewerI18n.show );
 				} );
 		}
 
