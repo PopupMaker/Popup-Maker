@@ -215,6 +215,10 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_create_table_adds_created_index() {
 		global $wpdb;
 
+		if ( ! $wpdb->has_cap( 'identifier_placeholders' ) ) {
+			$this->markTestSkipped( 'Index inspection requires WordPress 6.2 or later.' );
+		}
+
 		$this->db->create_table();
 
 		$index = $wpdb->get_var(
