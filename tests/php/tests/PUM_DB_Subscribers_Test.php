@@ -696,16 +696,18 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_query_numeric_search() {
 		$this->db->create_table();
 
-		$id1 = $this->db->insert( [
+		$id1         = $this->db->insert( [
 			'email'    => 'num1@example.com',
-			'popup_id' => 42,
+			'popup_id' => 0,
 		] );
-		$this->db->insert( [
+		$id2         = $this->db->insert( [
 			'email'    => 'num2@example.com',
-			'popup_id' => 99,
+			'popup_id' => 0,
 		] );
+		$search_value = max( (int) $id1, (int) $id2 ) + 1000;
+		$this->db->update( $id1, [ 'popup_id' => $search_value ] );
 
-		$results = $this->db->query( [ 's' => '42' ] );
+		$results = $this->db->query( [ 's' => (string) $search_value ] );
 		// Numeric search should match popup_id, user_id, and ID columns.
 		$this->assertCount( 1, $results );
 		$this->assertSame( (string) $id1, (string) $results[0]->ID );
