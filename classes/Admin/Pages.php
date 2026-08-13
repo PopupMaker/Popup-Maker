@@ -59,11 +59,11 @@ class PUM_Admin_Pages {
 	}
 
 	/**
-	 * Creates the admin submenu pages under the Popup Maker menu and assigns their
-	 * links to global variables
+	 * Get the filtered Popup Maker admin page definitions.
+	 *
+	 * @return array<string, array<string, mixed>|null>
 	 */
-	public static function register_pages() {
-
+	public static function get_page_definitions() {
 		$admin_pages = apply_filters(
 			'pum_admin_pages',
 			[
@@ -96,6 +96,40 @@ class PUM_Admin_Pages {
 				],
 			]
 		);
+
+		return is_array( $admin_pages ) ? $admin_pages : [];
+	}
+
+	/**
+	 * Get admin page slugs keyed by page definition.
+	 *
+	 * @param array<string, array<string, mixed>|null> $admin_pages Filtered page definitions.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function get_page_slugs( $admin_pages ) {
+		$page_slugs = [];
+
+		foreach ( $admin_pages as $key => $page ) {
+			if ( ! is_array( $page ) ) {
+				continue;
+			}
+
+			$menu_slug          = ! empty( $page['menu_slug'] ) ? $page['menu_slug'] : 'pum-' . $key;
+			$page_slugs[ $key ] = sanitize_key( $menu_slug );
+		}
+
+		return $page_slugs;
+	}
+
+	/**
+	 * Creates the admin submenu pages under the Popup Maker menu and assigns their
+	 * links to global variables
+	 */
+	public static function register_pages() {
+
+		$admin_pages = self::get_page_definitions();
+		$page_slugs  = self::get_page_slugs( $admin_pages );
 
 		foreach ( $admin_pages as $key => $page ) {
 			// Skip pages removed by an integration.
@@ -132,6 +166,8 @@ class PUM_Admin_Pages {
 			// For backward compatibility.
 			$GLOBALS[ 'popmake_' . $key . '_page' ] = self::$pages[ $key ];
 		}
+
+		PUM_Admin::init_request_components( $page_slugs );
 
 		// Add shortcut to theme editor from Appearance menu.
 		add_theme_page( __( 'Popup Themes', 'popup-maker' ), __( 'Popup Themes', 'popup-maker' ), 'edit_posts', 'edit.php?post_type=popup_theme' );

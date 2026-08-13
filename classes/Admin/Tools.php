@@ -30,8 +30,6 @@ class PUM_Admin_Tools {
 		add_action( 'pum_tools_page_tab_error_log', [ __CLASS__, 'errorlog_display' ] );
 		add_action( 'pum_tools_page_tab_action_scheduler', [ __CLASS__, 'action_scheduler_display' ] );
 		add_action( 'pum_tools_page_tab_import', [ __CLASS__, 'import_display' ] );
-		add_action( 'pum_save_enabled_betas', [ __CLASS__, 'save_enabled_betas' ] );
-		add_action( 'pum_empty_error_log', [ __CLASS__, 'error_log_empty' ] );
 	}
 
 	/**
