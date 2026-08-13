@@ -33,13 +33,6 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		// Most Admin Settings methods call fields() which reads dist/assets/site.css.
-		// Skip the entire class when dist is not built.
-		$dist_file = dirname( dirname( dirname( __DIR__ ) ) ) . '/dist/assets/site.css';
-		if ( ! file_exists( $dist_file ) ) {
-			$this->markTestSkipped( 'Dist assets not built in test environment.' );
-		}
-
 		// Run as admin so unfiltered_html is available.
 		wp_set_current_user( self::$admin_id );
 	}
@@ -66,6 +59,75 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'general', $fields, 'Missing general tab.' );
 		$this->assertArrayHasKey( 'privacy', $fields, 'Missing privacy tab.' );
 		$this->assertArrayHasKey( 'misc', $fields, 'Missing misc tab.' );
+	}
+
+	/**
+	 * The settings payload contains only the lazy viewer shell.
+	 */
+	public function test_css_viewer_does_not_embed_styles_eagerly() {
+		$html = PUM_Admin_Settings::field_pum_styles();
+
+		$this->assertStringContainsString( 'id="show_pum_styles"', $html );
+		$this->assertStringContainsString( 'data-pum-css-format="minified"', $html );
+		$this->assertStringContainsString( 'data-pum-css-format="readable"', $html );
+		$this->assertStringContainsString( 'id="pum_core_styles"', $html );
+		$this->assertStringContainsString( 'readonly="readonly"></textarea>', $html );
+		$this->assertLessThan( 3000, strlen( $html ) );
+	}
+
+	/**
+	 * CSS data is loaded from build artifacts only when requested.
+	 */
+	public function test_get_css_styles_returns_built_variants() {
+		$minified_path = Popup_Maker::$DIR . 'dist/assets/site.css';
+
+		if ( ! file_exists( $minified_path ) ) {
+			$this->markTestSkipped( 'Dist assets not built in test environment.' );
+		}
+
+		$readable_path = Popup_Maker::$DIR . 'dist/assets/site-readable.css';
+		$styles        = PUM_Admin_Settings::get_css_styles();
+
+		$this->assertIsArray( $styles );
+		$this->assertSame( file_get_contents( $minified_path ), $styles['core']['minified'] );
+		$this->assertSame( file_exists( $readable_path ), $styles['readable_available'] );
+		$this->assertSame(
+			file_exists( $readable_path ) ? file_get_contents( $readable_path ) : $styles['core']['minified'],
+			$styles['core']['readable']
+		);
+		$this->assertIsString( $styles['generated'] );
+	}
+
+	/**
+	 * Generated CSS cannot break out of the viewer textarea.
+	 */
+	public function test_get_css_styles_neutralizes_textarea_breakout_sequences() {
+		$minified_path = Popup_Maker::$DIR . 'dist/assets/site.css';
+
+		if ( ! file_exists( $minified_path ) ) {
+			$this->markTestSkipped( 'Dist assets not built in test environment.' );
+		}
+
+		$payload = '/* </TeXtArEa><script>window.pumXss = true;</script><textarea> */'
+			. '/* &lt;/t e x t a r e a&gt;<img src=x onerror=alert(1)>&lt;t e x t a r e a&gt; */';
+		$filter  = static function ( $styles ) use ( $payload ) {
+			return $styles . $payload;
+		};
+
+		add_filter( 'pum_generate_popup_theme_styles', $filter );
+
+		try {
+			$styles = PUM_Admin_Settings::get_css_styles();
+		} finally {
+			remove_filter( 'pum_generate_popup_theme_styles', $filter );
+		}
+
+		$this->assertIsArray( $styles );
+		$this->assertDoesNotMatchRegularExpression(
+			'/(<\/?\s*|&lt;\/?\s*)t\s*e\s*x\s*t\s*a\s*r\s*e\s*a\b/i',
+			$styles['generated']
+		);
+		$this->assertStringContainsString( 'window.pumXss = true;', $styles['generated'] );
 	}
 
 	/**
