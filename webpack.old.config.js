@@ -2,6 +2,7 @@ const path = require( 'path' );
 const CustomTemplatedPathPlugin = require( '@popup-maker/custom-templated-path-webpack-plugin' );
 const DependencyExtractionWebpackPlugin = require( '@popup-maker/dependency-extraction-webpack-plugin' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const ReadableCssAssetsWebpackPlugin = require( './custom-tools/readable-css-assets-webpack-plugin' );
 // const UnminifiedWebpackPlugin = require( 'unminified-webpack-plugin' );
 
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
@@ -146,6 +147,7 @@ const config = {
 			// combineAssets: true,
 			// combinedOutputFile: '../plugin-assets.php',
 		} ),
+		new ReadableCssAssetsWebpackPlugin(),
 	],
 };
 
