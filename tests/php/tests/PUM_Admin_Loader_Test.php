@@ -50,12 +50,18 @@ class PUM_Admin_Loader_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Frontend bootstrap defers the heavy editor classes until their save hooks run.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
 	 * @return void
 	 */
 	public function test_frontend_loads_only_cross_context_admin_hooks() {
 		$this->assertFalse( is_admin() );
 		$this->assertSame( 10, has_action( 'save_post', [ 'PUM_Admin_Popups', 'save' ] ) );
 		$this->assertSame( 10, has_action( 'save_post', [ 'PUM_Admin_Themes', 'save' ] ) );
+		$this->assertSame( 99, has_filter( 'wp_insert_post_data', [ 'PUM_Admin_Popups', 'set_slug' ] ) );
 		$this->assertSame( 10, has_action( 'enqueue_block_assets', [ 'PUM_Admin_BlockEditor', 'register_block_assets' ] ) );
 		$this->assertFalse( has_action( 'admin_menu', [ 'PUM_Admin_Pages', 'register_pages' ] ) );
 		$this->assertFalse( has_action( 'wp_ajax_pum_object_search', [ 'PUM_Admin_Ajax', 'object_search' ] ) );
