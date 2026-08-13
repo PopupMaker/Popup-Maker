@@ -751,13 +751,23 @@ class PUM_Admin_Settings {
 
 		$readable_available = false !== $readable_styles;
 		$user_styles        = PUM_AssetCache::generate_font_imports() . PUM_AssetCache::generate_popup_theme_styles() . PUM_AssetCache::generate_popup_styles();
+		$safe_user_styles   = preg_replace(
+			'/(<\/?\s*|&lt;\/?\s*)t\s*e\s*x\s*t\s*a\s*r\s*e\s*a\b/i',
+			'',
+			$user_styles
+		);
+
+		// Fail closed if the historical textarea-breakout hardening cannot run.
+		if ( ! is_string( $safe_user_styles ) ) {
+			$safe_user_styles = '';
+		}
 
 		return [
 			'core'               => [
 				'minified' => $minified_styles,
 				'readable' => $readable_available ? $readable_styles : $minified_styles,
 			],
-			'generated'          => $user_styles,
+			'generated'          => $safe_user_styles,
 			'readable_available' => $readable_available,
 		];
 	}

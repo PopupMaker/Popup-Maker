@@ -99,6 +99,38 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Generated CSS cannot break out of the viewer textarea.
+	 */
+	public function test_get_css_styles_neutralizes_textarea_breakout_sequences() {
+		$minified_path = Popup_Maker::$DIR . 'dist/assets/site.css';
+
+		if ( ! file_exists( $minified_path ) ) {
+			$this->markTestSkipped( 'Dist assets not built in test environment.' );
+		}
+
+		$payload = '/* </TeXtArEa><script>window.pumXss = true;</script><textarea> */'
+			. '/* &lt;/t e x t a r e a&gt;<img src=x onerror=alert(1)>&lt;t e x t a r e a&gt; */';
+		$filter  = static function ( $styles ) use ( $payload ) {
+			return $styles . $payload;
+		};
+
+		add_filter( 'pum_generate_popup_theme_styles', $filter );
+
+		try {
+			$styles = PUM_Admin_Settings::get_css_styles();
+		} finally {
+			remove_filter( 'pum_generate_popup_theme_styles', $filter );
+		}
+
+		$this->assertIsArray( $styles );
+		$this->assertDoesNotMatchRegularExpression(
+			'/(<\/?\s*|&lt;\/?\s*)t\s*e\s*x\s*t\s*a\s*r\s*e\s*a\b/i',
+			$styles['generated']
+		);
+		$this->assertStringContainsString( 'window.pumXss = true;', $styles['generated'] );
+	}
+
+	/**
 	 * Core alone keeps the Go Pro tab without rendering a redundant CTA field.
 	 */
 	public function test_core_alone_uses_hidden_go_pro_placeholder() {
