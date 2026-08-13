@@ -28,9 +28,90 @@ import './license-key-enhancements';
 			}
 		}
 
-		var $container = $( '#pum-settings-container' ),
-			args = pum_settings_editor.form_args || {},
-			values = pum_settings_editor.current_values || {};
+		const $container = $( '#pum-settings-container' );
+		const settingsEditor = window.pum_settings_editor || {};
+		const args = settingsEditor.form_args || {};
+		const values = settingsEditor.current_values || {};
+		const cssViewerConfig = window.pum_css_viewer || {};
+		let cssViewerStyles = null;
+
+		function cssViewerErrorMessage( response ) {
+			return response &&
+				response.responseJSON &&
+				response.responseJSON.data
+				? response.responseJSON.data.message
+				: cssViewerConfig.i18n.load_error;
+		}
+
+		function showCssViewer( $viewer, styles ) {
+			const $output = $viewer.find( '#pum_style_output' );
+			const $readableButton = $viewer.find(
+				'[data-pum-css-format="readable"]'
+			);
+
+			$viewer.find( '#pum_core_styles' ).val( styles.core.minified );
+			$viewer.find( '#pum_generated_styles' ).val( styles.generated );
+
+			if ( ! styles.readable_available ) {
+				$readableButton
+					.prop( 'disabled', true )
+					.attr( 'title', cssViewerConfig.i18n.readable_unavailable );
+			}
+
+			$viewer
+				.find( '#show_pum_styles' )
+				.attr( 'aria-expanded', 'true' )
+				.hide();
+			$output.removeAttr( 'hidden' ).hide().slideDown();
+		}
+
+		function loadCssViewer( $viewer ) {
+			if ( cssViewerStyles ) {
+				showCssViewer( $viewer, cssViewerStyles );
+				return;
+			}
+
+			const $button = $viewer.find( '#show_pum_styles' );
+			const $status = $viewer.find( '.pum-css-viewer__status' );
+
+			$button
+				.prop( 'disabled', true )
+				.text( cssViewerConfig.i18n.loading );
+			$status.attr( 'hidden', true ).removeClass( 'notice notice-error' );
+
+			$.ajax( {
+				url: cssViewerConfig.ajax_url,
+				method: 'POST',
+				data: {
+					action: 'pum_get_css_styles',
+					nonce: cssViewerConfig.nonce,
+				},
+			} )
+				.done( ( response ) => {
+					if ( ! response.success || ! response.data ) {
+						$status
+							.text( cssViewerConfig.i18n.load_error )
+							.addClass( 'notice notice-error' )
+							.removeAttr( 'hidden' );
+						$button
+							.prop( 'disabled', false )
+							.text( cssViewerConfig.i18n.show );
+						return;
+					}
+
+					cssViewerStyles = response.data;
+					showCssViewer( $viewer, cssViewerStyles );
+				} )
+				.fail( ( response ) => {
+					$status
+						.text( cssViewerErrorMessage( response ) )
+						.addClass( 'notice notice-error' )
+						.removeAttr( 'hidden' );
+					$button
+						.prop( 'disabled', false )
+						.text( cssViewerConfig.i18n.show );
+				} );
+		}
 
 		function updateSaveButtonVisibility() {
 			const $activeMainPanel = $container
@@ -49,8 +130,33 @@ import './license-key-enhancements';
 
 		if ( $container.length ) {
 			$container.find( '.pum-no-js' ).hide();
-			PUM_Admin.forms.render( args, values, $container );
+			window.PUM_Admin.forms.render( args, values, $container );
 			updateSaveButtonVisibility();
+
+			$container.on( 'click', '#show_pum_styles', function () {
+				loadCssViewer( $( this ).closest( '.pum-css-viewer' ) );
+			} );
+
+			$container.on( 'click', '[data-pum-css-format]', function () {
+				if ( ! cssViewerStyles ) {
+					return;
+				}
+
+				const $button = $( this );
+				const format = $button.data( 'pum-css-format' );
+				const $viewer = $button.closest( '.pum-css-viewer' );
+
+				$viewer
+					.find( '#pum_core_styles' )
+					.val( cssViewerStyles.core[ format ] );
+				$viewer
+					.find( '[data-pum-css-format]' )
+					.removeClass( 'button-primary' )
+					.attr( 'aria-pressed', 'false' );
+				$button
+					.addClass( 'button-primary' )
+					.attr( 'aria-pressed', 'true' );
+			} );
 
 			// Check hash on page load
 			switchToHashTab();
@@ -65,7 +171,7 @@ import './license-key-enhancements';
 				function () {
 					setTimeout( () => {
 						if ( window.location.hash ) {
-							history.replaceState(
+							window.history.replaceState(
 								null,
 								null,
 								window.location.pathname +
@@ -79,4 +185,4 @@ import './license-key-enhancements';
 			);
 		}
 	} );
-} )( jQuery );
+} )( window.jQuery );
