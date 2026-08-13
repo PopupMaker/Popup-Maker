@@ -370,15 +370,74 @@ class PUM_Helpers {
 	 * @return array<string,string> Popup ID => title mapping
 	 */
 	public static function popup_selectlist( $args = [] ) {
-		$popup_list = [];
+		if ( ! is_array( $args ) ) {
+			return [];
+		}
 
-		$popups = pum_get_all_popups( $args );
+		if ( isset( $args['post_status'] ) ) {
+			$statuses = (array) $args['post_status'];
 
-		foreach ( $popups as $popup ) {
-			if ( $popup->is_published() ) {
-				$popup_list[ (string) $popup->ID ] = $popup->post_title;
+			if ( ! in_array( 'publish', $statuses, true ) && ! in_array( 'any', $statuses, true ) ) {
+				return [];
 			}
 		}
+
+		if ( isset( $args['popups'] ) ) {
+			$args['post__in'] = wp_parse_id_list( $args['popups'] );
+			unset( $args['popups'] );
+		}
+
+		if ( ! isset( $args['orderby'] ) ) {
+			$args['orderby'] = 'modified';
+		} elseif ( 'name' === $args['orderby'] ) {
+			$args['orderby'] = 'title';
+			$args['order']   = isset( $args['order'] ) ? $args['order'] : 'ASC';
+		} elseif ( 'activity' === $args['orderby'] ) {
+			$args['orderby'] = 'modified';
+		} elseif ( 'user_order' === $args['orderby'] && ! empty( $args['post__in'] ) ) {
+			$args['orderby'] = 'post__in';
+		}
+
+		$query_args = array_merge(
+			$args,
+			[
+				'post_type'              => 'popup',
+				'post_status'            => 'publish',
+				'posts_per_page'         => -1,
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'order'                  => isset( $args['order'] ) ? $args['order'] : 'DESC',
+				'suppress_filters'       => isset( $args['suppress_filters'] ) ? $args['suppress_filters'] : false,
+			]
+		);
+
+		static $queries = [];
+
+		$query_key = md5( wp_json_encode( $query_args ) );
+
+		if ( isset( $queries[ $query_key ] ) ) {
+			return $queries[ $query_key ];
+		}
+
+		$popup_ids = get_posts( $query_args );
+
+		if ( empty( $popup_ids ) ) {
+			$queries[ $query_key ] = [];
+
+			return [];
+		}
+
+		$popup_ids    = array_map( 'absint', $popup_ids );
+		$titles_by_id = \PopupMaker\plugin( 'popups' )->get_title_choices( $popup_ids );
+		$popup_list   = [];
+
+		foreach ( $popup_ids as $popup_id ) {
+			if ( isset( $titles_by_id[ $popup_id ] ) ) {
+				$popup_list[ (string) $popup_id ] = $titles_by_id[ $popup_id ];
+			}
+		}
+
+		$queries[ $query_key ] = $popup_list;
 
 		return $popup_list;
 	}
