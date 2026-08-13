@@ -154,6 +154,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 				'limit'   => null,
 				'offset'  => null,
 				's'       => null,
+				'where'   => [],
 				'orderby' => null,
 				'order'   => null,
 			]
@@ -179,28 +180,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		// Set up $values array for wpdb::prepare
 		$values = [];
 
-		// Define an empty WHERE clause to start from.
-		$where = 'WHERE 1=1';
-
-		// Build search query.
-		if ( $args['s'] && ! empty( $args['s'] ) ) {
-			$search = wp_unslash( trim( $args['s'] ) );
-
-			$search_where = [];
-
-			foreach ( $columns as $key => $type ) {
-				if ( in_array( $key, $fields, true ) ) {
-					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
-						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
-						$search_where[] = "`$key` LIKE '%s'";
-					}
-				}
-			}
-
-			if ( ! empty( $search_where ) ) {
-				$where .= ' AND (' . join( ' OR ', $search_where ) . ')';
-			}
-		}
+		$where = $this->prepare_where_clause( $args, $fields, $values );
 
 		$query .= " $where";
 
@@ -246,17 +226,71 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	}
 
 	/**
+	 * Build the shared WHERE clause for row and count queries.
+	 *
+	 * @param array<string,mixed> $args Query arguments.
+	 * @param string[]            $fields Selected fields.
+	 * @param array<int,mixed>    $values Prepared-query values.
+	 * @return string
+	 */
+	protected function prepare_where_clause( $args, $fields, &$values ) {
+		global $wpdb;
+
+		$columns = $this->get_columns();
+		$where   = 'WHERE 1=1';
+
+		foreach ( (array) $args['where'] as $column => $value ) {
+			if ( ! isset( $columns[ $column ] ) || ! is_scalar( $value ) ) {
+				continue;
+			}
+
+			$where   .= " AND `$column` = {$columns[$column]}";
+			$values[] = $value;
+		}
+
+		if ( $args['s'] && ! empty( $args['s'] ) ) {
+			$search       = wp_unslash( trim( $args['s'] ) );
+			$search_where = [];
+
+			foreach ( $columns as $key => $type ) {
+				if ( in_array( $key, $fields, true ) && ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) ) {
+					$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
+					$search_where[] = "`$key` LIKE '%s'";
+				}
+			}
+
+			if ( ! empty( $search_where ) ) {
+				$where .= ' AND (' . join( ' OR ', $search_where ) . ')';
+			}
+		}
+
+		return $where;
+	}
+
+	/**
 	 * @param $args
 	 *
 	 * @return int
 	 */
 	public function total_rows( $args ) {
-		$args['limit']  = null;
-		$args['offset'] = null;
-		$args['page']   = null;
+		global $wpdb;
 
-		$results = $this->query( $args );
+		$args = wp_parse_args(
+			$args,
+			[
+				'fields' => '*',
+				's'      => null,
+				'where'  => [],
+			]
+		);
 
-		return $results ? count( $results ) : 0;
+		$fields = '*' === $args['fields'] ? array_keys( $this->get_columns() ) : array_map( 'trim', explode( ',', $args['fields'] ) );
+		$values = [];
+		$where  = $this->prepare_where_clause( $args, $fields, $values );
+		$query  = "SELECT COUNT(*) FROM %i $where";
+		$values = array_merge( [ $this->table_name() ], $values );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return (int) $wpdb->get_var( $wpdb->prepare( $query, $values ) );
 	}
 }
