@@ -221,7 +221,7 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 
 		$this->db->create_table();
 
-		$index = $wpdb->get_var(
+		$index = $wpdb->get_row(
 			$wpdb->prepare(
 				'SHOW INDEX FROM %i WHERE Key_name = %s',
 				$this->db->table_name(),
@@ -230,6 +230,7 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 		);
 
 		$this->assertNotNull( $index );
+		$this->assertSame( 'created', $index->Column_name );
 	}
 
 	// ─── insert() ──────────────────────────────────────────────────────
