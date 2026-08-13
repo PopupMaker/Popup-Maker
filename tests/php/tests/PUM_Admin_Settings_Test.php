@@ -79,32 +79,72 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	 * CSS data is loaded from build artifacts only when requested.
 	 */
 	public function test_get_css_styles_returns_built_variants() {
-		$minified_path = Popup_Maker::$DIR . 'dist/assets/site.css';
+		$asset_directory = Popup_Maker::$DIR . 'dist/assets/';
+		$asset_name      = 'site' . ( is_rtl() ? '-rtl' : '' );
+		$minified_path   = $asset_directory . $asset_name . '.css';
+		$readable_path   = $asset_directory . $asset_name . '-readable.css';
 
-		if ( ! file_exists( $minified_path ) ) {
+		if ( ! is_readable( $minified_path ) || ! is_readable( $readable_path ) ) {
 			$this->markTestSkipped( 'Dist assets not built in test environment.' );
 		}
 
-		$readable_path = Popup_Maker::$DIR . 'dist/assets/site-readable.css';
-		$styles        = PUM_Admin_Settings::get_css_styles();
+		$styles = PUM_Admin_Settings::get_css_styles();
 
 		$this->assertIsArray( $styles );
 		$this->assertSame( file_get_contents( $minified_path ), $styles['core']['minified'] );
-		$this->assertSame( file_exists( $readable_path ), $styles['readable_available'] );
-		$this->assertSame(
-			file_exists( $readable_path ) ? file_get_contents( $readable_path ) : $styles['core']['minified'],
-			$styles['core']['readable']
-		);
+		$this->assertTrue( $styles['readable_available'] );
+		$this->assertSame( file_get_contents( $readable_path ), $styles['core']['readable'] );
 		$this->assertIsString( $styles['generated'] );
+	}
+
+	/**
+	 * A missing readable artifact falls back to the minified core stylesheet.
+	 */
+	public function test_get_css_styles_uses_minified_readable_fallback() {
+		$original_directory = Popup_Maker::$DIR;
+		$fixture_directory  = get_temp_dir() . 'pum-css-viewer-' . wp_generate_uuid4() . '/';
+		$asset_directory    = $fixture_directory . 'dist/assets/';
+		$asset_name         = 'site' . ( is_rtl() ? '-rtl' : '' );
+		$minified_path      = $asset_directory . $asset_name . '.css';
+		$minified_styles    = '.pum{display:block}';
+
+		try {
+			$this->assertTrue( wp_mkdir_p( $asset_directory ) );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Isolated test fixture.
+			$this->assertNotFalse( file_put_contents( $minified_path, $minified_styles ) );
+
+			Popup_Maker::$DIR = $fixture_directory;
+			$styles           = PUM_Admin_Settings::get_css_styles();
+		} finally {
+			Popup_Maker::$DIR = $original_directory;
+
+			if ( is_file( $minified_path ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Remove only the test-created fixture.
+				unlink( $minified_path );
+			}
+
+			foreach ( [ $asset_directory, $fixture_directory . 'dist/', $fixture_directory ] as $directory ) {
+				if ( is_dir( $directory ) ) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Remove only test-created empty directories.
+					rmdir( $directory );
+				}
+			}
+		}
+
+		$this->assertIsArray( $styles );
+		$this->assertFalse( $styles['readable_available'] );
+		$this->assertSame( $styles['core']['minified'], $styles['core']['readable'] );
+		$this->assertSame( $minified_styles, $styles['core']['readable'] );
 	}
 
 	/**
 	 * Generated CSS cannot break out of the viewer textarea.
 	 */
 	public function test_get_css_styles_neutralizes_textarea_breakout_sequences() {
-		$minified_path = Popup_Maker::$DIR . 'dist/assets/site.css';
+		$asset_name    = 'site' . ( is_rtl() ? '-rtl' : '' );
+		$minified_path = Popup_Maker::$DIR . 'dist/assets/' . $asset_name . '.css';
 
-		if ( ! file_exists( $minified_path ) ) {
+		if ( ! is_readable( $minified_path ) ) {
 			$this->markTestSkipped( 'Dist assets not built in test environment.' );
 		}
 
