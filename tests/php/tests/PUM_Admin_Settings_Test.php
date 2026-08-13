@@ -80,10 +80,11 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	 */
 	public function test_get_css_styles_returns_built_variants() {
 		$asset_directory = Popup_Maker::$DIR . 'dist/assets/';
-		$minified_path   = $asset_directory . 'site.css';
-		$readable_path   = $asset_directory . 'site-readable.css';
+		$asset_name      = 'site' . ( is_rtl() ? '-rtl' : '' );
+		$minified_path   = $asset_directory . $asset_name . '.css';
+		$readable_path   = $asset_directory . $asset_name . '-readable.css';
 
-		if ( ! file_exists( $minified_path ) || ! file_exists( $readable_path ) ) {
+		if ( ! is_readable( $minified_path ) || ! is_readable( $readable_path ) ) {
 			$this->markTestSkipped( 'Dist assets not built in test environment.' );
 		}
 
@@ -103,27 +104,31 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 		$original_directory = Popup_Maker::$DIR;
 		$fixture_directory  = get_temp_dir() . 'pum-css-viewer-' . wp_generate_uuid4() . '/';
 		$asset_directory    = $fixture_directory . 'dist/assets/';
-		$minified_path      = $asset_directory . 'site.css';
+		$asset_name         = 'site' . ( is_rtl() ? '-rtl' : '' );
+		$minified_path      = $asset_directory . $asset_name . '.css';
 		$minified_styles    = '.pum{display:block}';
 
-		$this->assertTrue( wp_mkdir_p( $asset_directory ) );
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Isolated test fixture.
-		$this->assertNotFalse( file_put_contents( $minified_path, $minified_styles ) );
-
-		Popup_Maker::$DIR = $fixture_directory;
-
 		try {
-			$styles = PUM_Admin_Settings::get_css_styles();
+			$this->assertTrue( wp_mkdir_p( $asset_directory ) );
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Isolated test fixture.
+			$this->assertNotFalse( file_put_contents( $minified_path, $minified_styles ) );
+
+			Popup_Maker::$DIR = $fixture_directory;
+			$styles           = PUM_Admin_Settings::get_css_styles();
 		} finally {
 			Popup_Maker::$DIR = $original_directory;
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Remove only the test-created fixture.
-			unlink( $minified_path );
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Remove only test-created empty directories.
-			rmdir( $asset_directory );
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Remove only test-created empty directories.
-			rmdir( $fixture_directory . 'dist/' );
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Remove only the test-created empty directory.
-			rmdir( $fixture_directory );
+
+			if ( is_file( $minified_path ) ) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Remove only the test-created fixture.
+				unlink( $minified_path );
+			}
+
+			foreach ( [ $asset_directory, $fixture_directory . 'dist/', $fixture_directory ] as $directory ) {
+				if ( is_dir( $directory ) ) {
+					// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Remove only test-created empty directories.
+					rmdir( $directory );
+				}
+			}
 		}
 
 		$this->assertIsArray( $styles );
@@ -136,9 +141,10 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	 * Generated CSS cannot break out of the viewer textarea.
 	 */
 	public function test_get_css_styles_neutralizes_textarea_breakout_sequences() {
-		$minified_path = Popup_Maker::$DIR . 'dist/assets/site.css';
+		$asset_name    = 'site' . ( is_rtl() ? '-rtl' : '' );
+		$minified_path = Popup_Maker::$DIR . 'dist/assets/' . $asset_name . '.css';
 
-		if ( ! file_exists( $minified_path ) ) {
+		if ( ! is_readable( $minified_path ) ) {
 			$this->markTestSkipped( 'Dist assets not built in test environment.' );
 		}
 

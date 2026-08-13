@@ -33,7 +33,18 @@ import './license-key-enhancements';
 		const args = settingsEditor.form_args || {};
 		const values = settingsEditor.current_values || {};
 		const cssViewerConfig = window.pum_css_viewer || {};
-		const cssViewerI18n = cssViewerConfig.i18n || {};
+		const configuredCssViewerI18n = cssViewerConfig.i18n || {};
+		const cssViewerI18n = {
+			loading:
+				configuredCssViewerI18n.loading || 'Loading Popup Maker CSS…',
+			load_error:
+				configuredCssViewerI18n.load_error ||
+				'Popup Maker CSS could not be loaded. Please try again.',
+			readable_unavailable:
+				configuredCssViewerI18n.readable_unavailable ||
+				'Readable CSS is unavailable. Rebuild the plugin assets and try again.',
+			show: configuredCssViewerI18n.show || 'Show Popup Maker CSS',
+		};
 		let cssViewerStyles = null;
 
 		function cssViewerErrorMessage( response ) {
