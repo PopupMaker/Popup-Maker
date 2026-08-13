@@ -374,11 +374,17 @@ class PUM_Helpers {
 			return [];
 		}
 
+		$post_status = 'publish';
+
 		if ( isset( $args['post_status'] ) ) {
-			$statuses = array_filter( (array) $args['post_status'] );
+			$statuses = array_values( array_unique( array_filter( array_map( 'sanitize_key', (array) $args['post_status'] ) ) ) );
 
 			if ( ! empty( $statuses ) && ! in_array( 'publish', $statuses, true ) && ! in_array( 'any', $statuses, true ) ) {
 				return [];
+			}
+
+			if ( in_array( 'publish', $statuses, true ) && in_array( 'private', $statuses, true ) ) {
+				$post_status = [ 'publish', 'private' ];
 			}
 		}
 
@@ -402,7 +408,7 @@ class PUM_Helpers {
 			$args,
 			[
 				'post_type'        => 'popup',
-				'post_status'      => 'publish',
+				'post_status'      => $post_status,
 				'posts_per_page'   => -1,
 				'fields'           => 'ids',
 				'no_found_rows'    => true,
@@ -411,34 +417,85 @@ class PUM_Helpers {
 			]
 		);
 
+		if ( is_array( $post_status ) ) {
+			$query_args['perm'] = 'readable';
+		}
+
 		$use_filtered_posts = ! $query_args['suppress_filters'] && self::popup_query_result_filters_active();
 
 		if ( $use_filtered_posts ) {
 			$query_args['fields']                 = 'all';
 			$query_args['update_post_meta_cache'] = false;
 			$query_args['update_post_term_cache'] = false;
+			$query_marker                         = wp_unique_id( 'pum_popup_selectlist_' );
+			$query_args['pum_popup_selectlist']   = $query_marker;
+			$queried_popup_ids                    = [];
 			$popup_list                           = [];
-
-			foreach ( get_posts( $query_args ) as $popup ) {
-				if ( $popup instanceof WP_Post && 'publish' === get_post_status( $popup->ID ) ) {
-					$popup_list[ (string) $popup->ID ] = (string) $popup->post_title;
+			$capture_queried_ids                  = static function ( $posts, $query ) use ( &$queried_popup_ids, $query_marker ) {
+				if ( ! $query instanceof WP_Query || $query_marker !== $query->get( 'pum_popup_selectlist' ) ) {
+					return $posts;
 				}
+
+				foreach ( (array) $query->posts as $post ) {
+					if ( $post instanceof WP_Post ) {
+						$queried_popup_ids[ (int) $post->ID ] = true;
+					}
+				}
+
+				return $posts;
+			};
+
+			add_filter( 'posts_results', $capture_queried_ids, PHP_INT_MIN, 2 );
+
+			try {
+				$filtered_posts = get_posts( $query_args );
+			} finally {
+				remove_filter( 'posts_results', $capture_queried_ids, PHP_INT_MIN );
+			}
+
+			foreach ( $filtered_posts as $popup ) {
+				if ( ! $popup instanceof WP_Post || ! isset( $queried_popup_ids[ (int) $popup->ID ] ) || 'popup' !== $popup->post_type || ! in_array( $popup->post_status, (array) $post_status, true ) ) {
+					continue;
+				}
+
+				if ( 'private' === $popup->post_status && ! current_user_can( 'read_post', $popup->ID ) ) {
+					continue;
+				}
+
+				$popup_list[ (string) $popup->ID ] = (string) $popup->post_title;
 			}
 
 			$filtered_popup_list = apply_filters( 'popup_maker/popup_title_choices', $popup_list );
 
-			return is_array( $filtered_popup_list ) ? $filtered_popup_list : $popup_list;
+			if ( ! is_array( $filtered_popup_list ) ) {
+				return $popup_list;
+			}
+
+			foreach ( $popup_list as $popup_id => $popup_title ) {
+				if ( array_key_exists( $popup_id, $filtered_popup_list ) ) {
+					$popup_list[ $popup_id ] = (string) $filtered_popup_list[ $popup_id ];
+				} else {
+					unset( $popup_list[ $popup_id ] );
+				}
+			}
+
+			return $popup_list;
 		}
 
 		static $queries = [];
 
-		$query_key = md5( wp_json_encode( $query_args ) );
+		$query_key = md5( wp_json_encode( $query_args ) . ':' . wp_cache_get_last_changed( 'posts' ) . ':' . get_current_user_id() );
 
-		if ( isset( $queries[ $query_key ] ) ) {
+		$cache_query = ! is_array( $post_status );
+
+		if ( $cache_query && isset( $queries[ $query_key ] ) ) {
 			$popup_ids = $queries[ $query_key ];
 		} else {
-			$popup_ids             = array_map( 'absint', get_posts( $query_args ) );
-			$queries[ $query_key ] = $popup_ids;
+			$popup_ids = array_map( 'absint', get_posts( $query_args ) );
+
+			if ( $cache_query ) {
+				$queries[ $query_key ] = $popup_ids;
+			}
 		}
 
 		if ( empty( $popup_ids ) ) {
