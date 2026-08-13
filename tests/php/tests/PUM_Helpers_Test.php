@@ -379,12 +379,12 @@ class PUM_Helpers_Test extends WP_UnitTestCase {
 			return $posts;
 		};
 
-		add_filter( 'posts_results', $filter );
+		add_filter( 'posts_results', $filter, PHP_INT_MIN );
 
 		try {
 			$choices = PUM_Helpers::popup_selectlist( [ 'post__in' => [ $requested_id ] ] );
 		} finally {
-			remove_filter( 'posts_results', $filter );
+			remove_filter( 'posts_results', $filter, PHP_INT_MIN );
 		}
 
 		$this->assertSame( [ $requested_id => 'Requested popup' ], $choices );

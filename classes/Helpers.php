@@ -427,19 +427,16 @@ class PUM_Helpers {
 			$query_args['fields']                 = 'all';
 			$query_args['update_post_meta_cache'] = false;
 			$query_args['update_post_term_cache'] = false;
+			$query_marker                         = wp_unique_id( 'pum_popup_selectlist_' );
+			$query_args['pum_popup_selectlist']   = $query_marker;
 			$queried_popup_ids                    = [];
 			$popup_list                           = [];
-			$outer_query                          = null;
-			$capture_queried_ids                  = static function ( $posts, $query ) use ( &$queried_popup_ids, &$outer_query ) {
-				if ( null === $outer_query ) {
-					$outer_query = $query;
-				}
-
-				if ( $query !== $outer_query ) {
+			$capture_queried_ids                  = static function ( $posts, $query ) use ( &$queried_popup_ids, $query_marker ) {
+				if ( ! $query instanceof WP_Query || $query_marker !== $query->get( 'pum_popup_selectlist' ) ) {
 					return $posts;
 				}
 
-				foreach ( $posts as $post ) {
+				foreach ( (array) $query->posts as $post ) {
 					if ( $post instanceof WP_Post ) {
 						$queried_popup_ids[ (int) $post->ID ] = true;
 					}
