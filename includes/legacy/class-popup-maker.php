@@ -169,9 +169,7 @@ class Popup_Maker {
 		PUM_Utils_Upgrades::instance();
 		PUM_Newsletters::init();
 		PUM_Integrations::init();
-		PUM_Privacy::init();
-
-		PUM_Utils_Alerts::init();
+		$this->register_deferred_hooks();
 
 		PUM_Shortcode_Popup::init();
 		PUM_Shortcode_PopupTrigger::init();
@@ -179,9 +177,32 @@ class Popup_Maker {
 		PUM_Shortcode_PopupCookie::init();
 		PUM_Shortcode_CallToAction::init();
 
-		PUM_Telemetry::init();
-
 		new PUM_Extensions();
+	}
+
+	/**
+	 * Register hooks whose handlers are not needed during normal frontend bootstrap.
+	 *
+	 * String callbacks preserve the existing hooks while allowing WordPress to
+	 * autoload each implementation only when its hook runs.
+	 *
+	 * @return void
+	 */
+	private function register_deferred_hooks() {
+		add_filter( 'wp_privacy_personal_data_exporters', [ 'PUM_Privacy', 'register_exporter' ], 10 );
+		add_filter( 'wp_privacy_personal_data_erasers', [ 'PUM_Privacy', 'register_erasers' ], 10 );
+		add_action( 'admin_init', [ 'PUM_Privacy', 'privacy_policy_content' ], 20 );
+		add_action( 'pum_save_popup', [ 'PUM_Privacy', 'clear_cookie_list' ] );
+
+		add_action( 'admin_init', [ 'PUM_Utils_Alerts', 'hooks' ] );
+		add_action( 'admin_init', [ 'PUM_Utils_Alerts', 'php_handler' ] );
+		add_action( 'wp_ajax_pum_alerts_action', [ 'PUM_Utils_Alerts', 'ajax_handler' ] );
+		add_filter( 'pum_alert_list', [ 'PUM_Utils_Alerts', 'translation_request' ], 10 );
+		add_action( 'admin_menu', [ 'PUM_Utils_Alerts', 'append_alert_count' ], 999 );
+
+		add_action( 'pum_daily_scheduled_events', [ 'PUM_Telemetry', 'track_check' ] );
+		add_filter( 'pum_alert_list', [ 'PUM_Telemetry', 'optin_alert' ] );
+		add_action( 'pum_alert_dismissed', [ 'PUM_Telemetry', 'optin_alert_check' ], 10, 2 );
 	}
 
 	/**
