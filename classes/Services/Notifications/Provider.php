@@ -16,9 +16,9 @@ defined( 'ABSPATH' ) || exit;
  * entries to the `pum_alert_list` filter and optionally reacts to
  * dismissals, version changes, or other plugin events.
  *
- * Providers are booted once during plugin load via
- * `Notifications::init()` — each is given the opportunity to wire its own
- * hooks inside its `init()` method.
+ * Providers are booted once via `Notifications::init()` — each is given the
+ * opportunity to wire its own hooks inside its `init()` method. Frontend
+ * requests may defer that boot until a notification-related event.
  *
  * @since 1.23.0
  */

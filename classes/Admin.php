@@ -19,16 +19,20 @@ class PUM_Admin {
 			PUM_Admin_Notices::init();
 		}
 
-		PUM_Admin_Popups::init();
-		PUM_Admin_Themes::init();
-
 		if ( is_admin() ) {
+			PUM_Admin_Popups::init();
+			PUM_Admin_Themes::init();
 			PUM_Admin_Subscribers::init();
 			PUM_Admin_Settings::init();
 			PUM_Admin_Tools::init();
 			PUM_Admin_Shortcode_UI::init();
 			PUM_Upsell::init();
 			PUM_Admin_Onboarding::init();
+		} else {
+			// Preserve programmatic saves without loading the editor classes on every frontend request.
+			add_action( 'save_post', [ 'PUM_Admin_Popups', 'save' ], 10, 2 );
+			add_filter( 'wp_insert_post_data', [ 'PUM_Admin_Popups', 'set_slug' ], 99, 2 );
+			add_action( 'save_post', [ 'PUM_Admin_Themes', 'save' ], 10, 2 );
 		}
 
 		add_filter( 'user_has_cap', [ __CLASS__, 'prevent_default_theme_deletion' ], 10, 3 );
