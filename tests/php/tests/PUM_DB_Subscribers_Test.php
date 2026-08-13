@@ -706,7 +706,8 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 
 		$results = $this->db->query( [ 's' => '42' ] );
 		// Numeric search should match popup_id, user_id, and ID columns.
-		$this->assertGreaterThanOrEqual( 1, count( $results ) );
+		$this->assertCount( 1, $results );
+		$this->assertSame( (string) $id1, (string) $results[0]->ID );
 	}
 
 	// ─── total_rows() ──────────────────────────────────────────────────
