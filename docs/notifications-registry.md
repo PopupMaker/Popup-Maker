@@ -34,7 +34,6 @@ Dismissal scope is deliberately not configurable per message: standard notificat
 | Code | Source | Category | Type | Destination | Notes |
 |---|---|---|---|---|---|
 | `translation_request_<version>` | `classes/Utils/Alerts.php:244` | — | `info` | Legacy widget | Locale-specific translation nag. Version-suffixed so a new release re-prompts. |
-| `pum_notice_<id>` | `classes/Admin/Notices.php:53` | `announcement` | `success` | Panel | Remote-fetched notices feed (from `pum_plugin_notices` transient). IDs come from the server payload. Supports custom `disable_notices` action to turn off the whole feed. |
 | `php_<future_version>_<plugin_version>` | `classes/Admin/Notices.php:325` | `warning` | `error` (global) | Legacy widget | Upcoming PHP min-req nag. Version-suffixed so it re-fires on each plugin release while the server hasn't been upgraded. Non-dismissible for `manage_options` users. |
 | `wp_<future_version>_<plugin_version>` | `classes/Admin/Notices.php:340` | `warning` | `error` (global) | Legacy widget | Upcoming WordPress min-req nag. Same re-fire pattern as the PHP nag. |
 | `pum_telemetry_notice` | `classes/Telemetry.php:260` | — | `info` | Legacy widget | Opt-in prompt for anonymous usage telemetry. Suppressed in Pro via `Pro\Controllers\Admin\Telemetry::remove_telemetry_alert`. |
@@ -44,7 +43,7 @@ Dismissal scope is deliberately not configurable per message: standard notificat
 | `pum_tip_alert` | `classes/Admin/Onboarding.php:56` | — | `info` | Legacy widget | Rotating onboarding tips for new users (first N admin sessions). |
 | `pum_writeable_notice` | `classes/AssetCache.php:705` | — | `warning` | Legacy widget | Filesystem can't write asset cache. Stays on legacy widget (warning → not panel-eligible). |
 
-**Removed on this branch (2026):** `whats_new_1_8_0` (2018-era, inert), `integration_alerts` + `<integration>_integration_available` (BuddyPress addon unmaintained), `pum_bfcm_2024` (expired), `pum_block_editor_migration` (shipped).
+**Removed on this branch (2026):** `pum_notice_<id>` (remote community-notice feed), `whats_new_1_8_0` (2018-era, inert), `integration_alerts` + `<integration>_integration_available` (BuddyPress addon unmaintained), `pum_bfcm_2024` (expired), `pum_block_editor_migration` (shipped).
 
 ### Admin Notifications Panel plugin (this plugin)
 
