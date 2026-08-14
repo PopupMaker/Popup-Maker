@@ -76,6 +76,22 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Settings initialized after plugins_loaded retain legacy Pro operations.
+	 *
+	 * @return void
+	 */
+	public function test_init_registers_legacy_license_operation_after_plugins_loaded() {
+		try {
+			PUM_Admin_Settings::init();
+
+			$this->assertSame( 10, has_action( 'pum_save_settings', [ 'PUM_Admin_Settings', 'process_license_operation' ] ) );
+			$this->assertFalse( has_action( 'plugins_loaded', [ 'PUM_Admin_Settings', 'maybe_register_legacy_license_operation' ] ) );
+		} finally {
+			remove_action( 'pum_save_settings', [ 'PUM_Admin_Settings', 'process_license_operation' ] );
+		}
+	}
+
+	/**
 	 * CSS data is loaded from build artifacts only when requested.
 	 */
 	public function test_get_css_styles_returns_built_variants() {
