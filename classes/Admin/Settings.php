@@ -26,8 +26,13 @@ class PUM_Admin_Settings {
 	public static function init() {
 		add_action( 'admin_notices', [ __CLASS__, 'notices' ] );
 		add_action( 'admin_init', [ __CLASS__, 'save' ] );
-		add_action( 'wp_ajax_pum_get_css_styles', [ __CLASS__, 'ajax_get_css_styles' ] );
-		add_action( 'plugins_loaded', [ __CLASS__, 'maybe_register_legacy_license_operation' ], 100 );
+
+		if ( did_action( 'plugins_loaded' ) ) {
+			// The handler rechecks compatibility before processing the request.
+			add_action( 'pum_save_settings', [ __CLASS__, 'process_license_operation' ], 10, 1 );
+		} else {
+			add_action( 'plugins_loaded', [ __CLASS__, 'maybe_register_legacy_license_operation' ], 100 );
+		}
 	}
 
 	/**
