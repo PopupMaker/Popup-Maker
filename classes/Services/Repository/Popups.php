@@ -32,6 +32,17 @@ class Popups extends Repository {
 	protected $post_type_key = 'popup';
 
 	/**
+	 * Partition cached popup models by site.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return string
+	 */
+	protected function get_item_cache_key( $item_id ) {
+		return get_current_blog_id() . ':' . (int) $item_id;
+	}
+
+	/**
 	 * Initialize the service.
 	 *
 	 * @param \PopupMaker\Plugin\Core $container Container.
@@ -66,6 +77,20 @@ class Popups extends Repository {
 	 */
 	protected function cache_item( $item ) {
 		parent::cache_item( $item );
+	}
+
+	/**
+	 * Replace the cached popup model for the current site.
+	 *
+	 * This public operation intentionally delegates to the protected cache hook
+	 * so extension subclasses can retain protected cache_item() overrides.
+	 *
+	 * @param Popup $item Popup model to cache.
+	 *
+	 * @return void
+	 */
+	public function replace_cached_item( $item ) {
+		$this->cache_item( $item );
 	}
 
 	/**
@@ -136,6 +161,17 @@ class Popups extends Repository {
 		$filtered = apply_filters( 'popup_maker/popup_title_choices', $title_choices );
 
 		return is_array( $filtered ) ? $filtered : $title_choices;
+	}
+
+	/**
+	 * Discard a cached popup model for the current site.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return void
+	 */
+	public function forget_item( $item_id ) {
+		unset( $this->items_by_id[ $this->get_item_cache_key( $item_id ) ] );
 	}
 
 	/**
