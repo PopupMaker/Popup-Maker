@@ -28,6 +28,13 @@ class Assets extends Controller {
 	private $should_print_global_vars = false;
 
 	/**
+	 * Packages whose variables have already been localized this request.
+	 *
+	 * @var array<string,bool>
+	 */
+	private $localized_packages = [];
+
+	/**
 	 * Initialize the assets controller.
 	 */
 	public function init() {
@@ -139,7 +146,8 @@ class Assets extends Controller {
 				'varsName' => 'popupMakerComponents',
 				'vars'     => function () {
 					return [
-						'popups' => \pum_get_all_popups(),
+						// Preserve the original models for extensions that filter these variables.
+						'popups' => false !== has_filter( 'popup_maker/components_localized_vars' ) ? \pum_get_all_popups() : $this->get_popup_choices(),
 					];
 				},
 			],
@@ -598,7 +606,7 @@ class Assets extends Controller {
 					}
 				}
 
-				if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) ) {
+				if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) && ! isset( $this->localized_packages[ $package ] ) && 'admin_print_scripts' !== current_filter() ) {
 					$localized_vars = is_callable( $package_data['vars'] ) ?
 					call_user_func( $package_data['vars'] ) :
 					$package_data['vars'];
@@ -611,9 +619,29 @@ class Assets extends Controller {
 						// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
 						wp_localize_script( $handle, $package_data['varsName'], $localized_vars );
 					}
+
+					$this->localized_packages[ $package ] = true;
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get the minimal popup data consumed by PopupSelectControl.
+	 *
+	 * @return array<int,array{ID:int,post_title:string}>
+	 */
+	private function get_popup_choices() {
+		$choices = [];
+
+		foreach ( \PUM_Helpers::popup_selectlist( [ 'post_status' => [ 'publish', 'private' ] ] ) as $popup_id => $popup_title ) {
+			$choices[] = [
+				'ID'         => (int) $popup_id,
+				'post_title' => (string) $popup_title,
+			];
+		}
+
+		return $choices;
 	}
 
 	/**
