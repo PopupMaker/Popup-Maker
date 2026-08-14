@@ -105,7 +105,8 @@ class Assets extends Controller {
 				'vars'     => function () {
 					return [
 						'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
-						'popups'                     => pum_get_all_popups(),
+						// Preserve the original models for extensions that filter these variables.
+						'popups'                     => false !== has_filter( 'popup_maker/block-editor_localized_vars' ) ? \pum_get_all_popups() : $this->get_block_editor_popup_choices(),
 						'homeUrl'                    => home_url(),
 						'previewNonce'               => wp_create_nonce( 'popup-preview' ),
 						'popupTriggerExcludedBlocks' => apply_filters(
@@ -278,6 +279,24 @@ class Assets extends Controller {
 		];
 
 		return $packages;
+	}
+
+	/**
+	 * Adapt the shared popup title map for block editor select controls.
+	 *
+	 * @return array<int,array{ID:int,post_title:string}>
+	 */
+	private function get_block_editor_popup_choices() {
+		$choices = [];
+
+		foreach ( \PUM_Helpers::popup_selectlist( [ 'post_status' => [ 'publish', 'private' ] ] ) as $popup_id => $post_title ) {
+			$choices[] = [
+				'ID'         => (int) $popup_id,
+				'post_title' => (string) $post_title,
+			];
+		}
+
+		return $choices;
 	}
 
 		/**
