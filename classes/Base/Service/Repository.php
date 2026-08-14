@@ -40,9 +40,20 @@ abstract class Repository extends Service {
 	/**
 	 * Cache of instantiated items indexed by post ID.
 	 *
-	 * @var array<int, TPost>
+	 * @var array<int|string, TPost>
 	 */
 	protected $items_by_id = [];
+
+	/**
+	 * Get the cache key for an item ID.
+	 *
+	 * @param int|numeric-string $item_id Item ID.
+	 *
+	 * @return int|string
+	 */
+	protected function get_item_cache_key( $item_id ) {
+		return (int) $item_id;
+	}
 
 	/**
 	 * Initialize the service.
@@ -70,7 +81,7 @@ abstract class Repository extends Service {
 	 * @return void
 	 */
 	protected function cache_item( $item ) {
-		$this->items_by_id[ $item->ID ] = $item;
+		$this->items_by_id[ $this->get_item_cache_key( $item->ID ) ] = $item;
 	}
 
 	/**
@@ -175,11 +186,12 @@ abstract class Repository extends Service {
 	 */
 	public function get_by_id( $item_id = 0 ) {
 		// Convert to integer for consistent handling.
-		$item_id = (int) $item_id;
+		$item_id   = (int) $item_id;
+		$cache_key = $this->get_item_cache_key( $item_id );
 
 		// If item is cached, get the object.
-		if ( isset( $this->items_by_id[ $item_id ] ) ) {
-			return $this->items_by_id[ $item_id ];
+		if ( isset( $this->items_by_id[ $cache_key ] ) ) {
+			return $this->items_by_id[ $cache_key ];
 		}
 
 		// Query for a post by ID.
