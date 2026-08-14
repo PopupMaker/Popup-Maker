@@ -24,6 +24,8 @@ class PUM_Admin_Ajax {
 		add_action( 'wp_ajax_pum_object_search', [ __CLASS__, 'object_search' ] );
 		add_action( 'wp_ajax_pum_process_batch_request', [ __CLASS__, 'process_batch_request' ] );
 		add_action( 'wp_ajax_pum_save_enabled_state', [ __CLASS__, 'save_popup_enabled_state' ] );
+		add_action( 'wp_ajax_pum_get_css_styles', [ 'PUM_Admin_Settings', 'ajax_get_css_styles' ] );
+		add_action( 'wp_ajax_pum_do_shortcode', [ 'PUM_Admin_Shortcode_UI', 'do_shortcode' ] );
 	}
 
 	/**

@@ -147,6 +147,147 @@ class Popups extends Repository {
 	}
 
 	/**
+	 * Get aggregate analytics for the WordPress Dashboard widget.
+	 *
+	 * @return array{
+	 *     total_views: int,
+	 *     total_conversions: int,
+	 *     conversion_rate: float,
+	 *     top_performer: \WP_Post|null,
+	 *     top_performer_rate: float
+	 * }
+	 */
+	public function get_dashboard_stats() {
+		global $wpdb;
+
+		$query = new \WP_Query(
+			[
+				'post_type'              => $this->post_type,
+				'post_status'            => 'publish',
+				'posts_per_page'         => -1,
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'orderby'                => 'modified',
+				'order'                  => 'DESC',
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				// Restrict the ID-only query before filling the shared meta cache.
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'meta_query'             => [
+					'relation' => 'AND',
+					[
+						'key'     => 'enabled',
+						'value'   => 1,
+						'compare' => '=',
+					],
+					[
+						'key'     => 'popup_open_count',
+						'value'   => 0,
+						'compare' => '>',
+						'type'    => 'NUMERIC',
+					],
+				],
+			]
+		);
+
+		$popup_ids = array_map( 'absint', $query->posts );
+
+		if ( empty( $popup_ids ) ) {
+			return [
+				'total_views'        => 0,
+				'total_conversions'  => 0,
+				'conversion_rate'    => 0.0,
+				'top_performer'      => null,
+				'top_performer_rate' => 0.0,
+			];
+		}
+
+		$meta_keys        = [ 'popup_open_count', 'popup_conversion_count', 'popup_conversion_rate' ];
+		$id_placeholders  = implode( ', ', array_fill( 0, count( $popup_ids ), '%d' ) );
+		$key_placeholders = implode( ', ', array_fill( 0, count( $meta_keys ), '%s' ) );
+		$meta_query       = "SELECT post_id, meta_key, meta_value FROM %i WHERE post_id IN ($id_placeholders) AND meta_key IN ($key_placeholders) ORDER BY meta_id ASC";
+		$meta_query_args  = array_merge( [ $wpdb->postmeta ], $popup_ids, $meta_keys );
+
+		// Read only the counters used by the dashboard instead of priming all popup metadata.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+		$meta_rows = $wpdb->get_results( $wpdb->prepare( $meta_query, $meta_query_args ), ARRAY_A );
+		$meta_rows = is_array( $meta_rows ) ? $meta_rows : [];
+		$meta_map  = [];
+
+		foreach ( $meta_rows as $meta_row ) {
+			$popup_id = isset( $meta_row['post_id'] ) ? absint( $meta_row['post_id'] ) : 0;
+			$meta_key = isset( $meta_row['meta_key'] ) ? (string) $meta_row['meta_key'] : '';
+
+			// Match get_post_meta( ..., true ) by retaining the first stored value.
+			if ( 0 === $popup_id || ! in_array( $meta_key, $meta_keys, true ) || isset( $meta_map[ $popup_id ][ $meta_key ] ) ) {
+				continue;
+			}
+
+			$meta_map[ $popup_id ][ $meta_key ] = isset( $meta_row['meta_value'] ) ? $meta_row['meta_value'] : '';
+		}
+
+		$total_views       = 0;
+		$total_conversions = 0;
+		$top_id            = 0;
+		$top_stored_rate   = 0.0;
+		$top_conversions   = 0;
+		$top_views         = 0;
+
+		foreach ( $popup_ids as $popup_id ) {
+			$popup_meta  = isset( $meta_map[ $popup_id ] ) ? $meta_map[ $popup_id ] : [];
+			$views       = (int) $this->get_dashboard_meta_value( $popup_id, 'popup_open_count', $popup_meta );
+			$conversions = (int) $this->get_dashboard_meta_value( $popup_id, 'popup_conversion_count', $popup_meta );
+			$stored_rate = (float) $this->get_dashboard_meta_value( $popup_id, 'popup_conversion_rate', $popup_meta );
+
+			$total_views       += $views;
+			$total_conversions += $conversions;
+
+			if (
+				0 === $top_id
+				|| $stored_rate > $top_stored_rate
+				|| ( $stored_rate === $top_stored_rate && $conversions > $top_conversions )
+				|| ( $stored_rate === $top_stored_rate && $conversions === $top_conversions && $views > $top_views )
+			) {
+				$top_id          = $popup_id;
+				$top_stored_rate = $stored_rate;
+				$top_conversions = $conversions;
+				$top_views       = $views;
+			}
+		}
+
+		return [
+			'total_views'        => $total_views,
+			'total_conversions'  => $total_conversions,
+			'conversion_rate'    => $total_views > 0 ? ( $total_conversions / $total_views ) * 100 : 0.0,
+			'top_performer'      => get_post( $top_id ),
+			'top_performer_rate' => $top_views > 0 ? ( $top_conversions / $top_views ) * 100 : 0.0,
+		];
+	}
+
+	/**
+	 * Apply WordPress metadata filters to a projected Dashboard value.
+	 *
+	 * @param int                 $popup_id  Popup ID.
+	 * @param string              $meta_key  Analytics metadata key.
+	 * @param array<string,mixed> $meta_map  Projected raw metadata for the popup.
+	 *
+	 * @return mixed
+	 */
+	private function get_dashboard_meta_value( $popup_id, $meta_key, $meta_map ) {
+		$filtered_value = apply_filters( 'get_post_metadata', null, $popup_id, $meta_key, true, 'post' );
+
+		if ( null !== $filtered_value ) {
+			return is_array( $filtered_value ) ? ( isset( $filtered_value[0] ) ? $filtered_value[0] : null ) : $filtered_value;
+		}
+
+		if ( array_key_exists( $meta_key, $meta_map ) ) {
+			return maybe_unserialize( $meta_map[ $meta_key ] );
+		}
+
+		return apply_filters( 'default_post_metadata', '', $popup_id, $meta_key, true, 'post' );
+	}
+
+	/**
 	 * Allow per-request filtering of a raw ID => title map.
 	 *
 	 * Titles stay raw because WordPress title formatting entity-encodes plain-text
