@@ -46,7 +46,7 @@ describe( 'PUM normalized form submission phases', () => {
 			formId: 7,
 		} );
 
-		const args = actionArgs( 'pum.integration.form.success' );
+		const args = actionArgs( 'pum.integration.form.observed' );
 
 		expect( args.submissionId ).toEqual( expect.any( String ) );
 		expect( args.sourcePostId ).toBeNull();
@@ -58,6 +58,7 @@ describe( 'PUM normalized form submission phases', () => {
 			tracking: true,
 			frontend: true,
 		} );
+		expect( actionArgs( 'pum.integration.form.success' ) ).toBe( args );
 		expect( actionArgs( 'pum.integration.form.actions' ) ).toBe( args );
 	} );
 
@@ -104,7 +105,7 @@ describe( 'PUM normalized form submission phases', () => {
 			null
 		);
 
-		const args = actionArgs( 'pum.integration.form.success' );
+		const args = actionArgs( 'pum.integration.form.observed' );
 		expect( args.context.exampleExtension.campaignId ).toBe( 90 );
 		expect( args.phases.tracking ).toBe( false );
 	} );
@@ -132,7 +133,7 @@ describe( 'PUM normalized form submission phases', () => {
 			formId: 7,
 		} );
 
-		const args = actionArgs( 'pum.integration.form.success' );
+		const args = actionArgs( 'pum.integration.form.observed' );
 		expect( args.submissionId ).toBe( canonicalSubmissionId );
 		expect( args.context ).toEqual( {} );
 	} );
@@ -148,7 +149,7 @@ describe( 'PUM normalized form submission phases', () => {
 		} );
 
 		expect(
-			actionArgs( 'pum.integration.form.success' ).phases.tracking
+			actionArgs( 'pum.integration.form.observed' ).phases.tracking
 		).toBe( false );
 	} );
 
@@ -165,16 +166,21 @@ describe( 'PUM normalized form submission phases', () => {
 
 		expect(
 			doAction.mock.calls.filter(
-				( call ) => 'pum.integration.form.success' === call[ 0 ]
+				( call ) => 'pum.integration.form.observed' === call[ 0 ]
 			)
 		).toHaveLength( 2 );
+		expect(
+			doAction.mock.calls.filter(
+				( call ) => 'pum.integration.form.success' === call[ 0 ]
+			)
+		).toHaveLength( 1 );
 		expect(
 			doAction.mock.calls.filter(
 				( call ) => 'pum.integration.form.actions' === call[ 0 ]
 			)
 		).toHaveLength( 1 );
 		expect(
-			actionArgs( 'pum.integration.form.success', 1 ).phases
+			actionArgs( 'pum.integration.form.observed', 1 ).phases
 		).toEqual( {
 			actions: false,
 			tracking: false,
@@ -266,6 +272,7 @@ describe( 'PUM normalized form submission phases', () => {
 		} );
 
 		expect( popup.trigger ).not.toHaveBeenCalled();
-		expect( actionArgs( 'pum.integration.form.success' ) ).toBeDefined();
+		expect( actionArgs( 'pum.integration.form.success' ) ).toBeUndefined();
+		expect( actionArgs( 'pum.integration.form.observed' ) ).toBeDefined();
 	} );
 } );

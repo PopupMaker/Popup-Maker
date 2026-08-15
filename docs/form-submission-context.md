@@ -56,17 +56,19 @@ Use these observation hooks for capture, diagnostics, or consumers that must
 see every normalized success, including suppressed repeats:
 
 - PHP: `pum_integrated_form_submission`
-- JavaScript: `pum.integration.form.success`
+- JavaScript: `pum.integration.form.observed`
 
 Use these gated hooks for action runners:
 
 - PHP: `pum_integrated_form_submission_actions`
 - JavaScript: `pum.integration.form.actions`
 
-The action hooks only fire when `phases.actions` is true. Existing observation
-hooks remain unconditional for compatibility. Core analytics honors
-`phases.tracking`; Core cookies, form triggers, and popup close behavior honor
-`phases.frontend`.
+The action hooks only fire when `phases.actions` is true. The new browser
+`observed` hook is unconditional. The existing
+`pum.integration.form.success` hook remains the provider-confirmed frontend
+success/effect hook and fires only when `phases.frontend` is authorized. Core
+analytics observes `observed` and honors `phases.tracking`; Core cookies, form
+triggers, and popup close behavior remain on `success`.
 
 The PHP and JavaScript action hooks are runtime-specific contracts, not two
 halves of one guaranteed-once action. An AJAX provider may confirm success on
@@ -137,5 +139,6 @@ submission data.
 | `pum_integrated_form_submission_actions` | PHP action | Run authorized server actions. |
 | `pum.integration.form.submissionArgs` | JS filter | Extend or normalize the browser envelope. |
 | `pum.integration.form.phases` | JS filter | Authorize browser actions, tracking, and frontend effects independently. |
-| `pum.integration.form.success` | JS action | Observe every normalized browser success. |
+| `pum.integration.form.observed` | JS action | Observe every normalized browser success, including suppressed repeats. |
+| `pum.integration.form.success` | JS action | Run existing provider-confirmed frontend success effects when authorized. |
 | `pum.integration.form.actions` | JS action | Run authorized browser actions. |

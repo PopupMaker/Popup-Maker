@@ -39,7 +39,7 @@ describe( 'PUM form analytics phase policy', () => {
 		window.PUM = {
 			hooks: {
 				addAction: jest.fn( ( hookName, callback ) => {
-					if ( 'pum.integration.form.success' === hookName ) {
+					if ( 'pum.integration.form.observed' === hookName ) {
 						formSuccessHandler = callback;
 					}
 				} ),

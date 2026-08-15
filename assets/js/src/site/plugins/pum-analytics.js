@@ -255,7 +255,7 @@
 			};
 
 			window.PUM.hooks.addAction(
-				'pum.integration.form.success',
+				'pum.integration.form.observed',
 				window.PUM.coreFormAnalyticsHandler
 			);
 		} );

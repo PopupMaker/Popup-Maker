@@ -239,7 +239,8 @@
 			}
 
 			/**
-			 * This hook fires after any integrated form is submitted successfully.
+			 * Observes every normalized integrated form success, even when optional
+			 * browser effects are suppressed.
 			 *
 			 * It does not matter if the form is in a popup or not.
 			 *
@@ -261,17 +262,34 @@
 			 * }
 			 */
 			window.PUM.hooks.doAction(
-				'pum.integration.form.success',
+				'pum.integration.form.observed',
 				form,
 				args
 			);
+
+			if ( args.phases.frontend ) {
+				/**
+				 * Fires provider-confirmed frontend success effects.
+				 *
+				 * Existing cookie, trigger, and popup behavior remains attached to
+				 * this compatibility hook.
+				 *
+				 * @param {Object} form Submitted form element or jQuery object.
+				 * @param {Object} args Normalized submission arguments.
+				 */
+				window.PUM.hooks.doAction(
+					'pum.integration.form.success',
+					form,
+					args
+				);
+			}
 
 			if ( args.phases.actions ) {
 				/**
 				 * Fires when browser action runners are authorized.
 				 *
 				 * Observation consumers should use
-				 * `pum.integration.form.success`, which always fires.
+				 * `pum.integration.form.observed`, which always fires.
 				 *
 				 * @param {Object} form Submitted form element or jQuery object.
 				 * @param {Object} args Normalized submission arguments.

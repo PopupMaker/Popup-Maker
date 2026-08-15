@@ -662,10 +662,6 @@
 				PUM.hooks.addAction(
 					'pum.integration.form.success',
 					function ( form, args ) {
-						if ( args.phases && ! args.phases.frontend ) {
-							return;
-						}
-
 						// If this is the same popup the form was submitted in.
 						// Alternatively we can compare their IDs
 						if ( args.popup && args.popup[ 0 ] === $popup[ 0 ] ) {
