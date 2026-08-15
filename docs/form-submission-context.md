@@ -104,9 +104,12 @@ callbacks; independently generated IDs are not a cross-transport deduplication
 mechanism.
 
 `source_url` defaults to the sanitized request referrer in PHP and the current
-page URL in JavaScript. PHP resolves `source_post_id` from that URL when
-possible. Both values remain nullable because referrers may be unavailable and
-not every URL represents a WordPress post.
+page URL in JavaScript. PHP resolves `source_post_id` from the effective source
+URL when an explicit numeric post ID is not supplied, including after an
+extension replaces the URL. Both values remain nullable because referrers may
+be unavailable and not every URL represents a WordPress post. A PHP `null`
+source URL remains `null` when localized for browser replay rather than being
+replaced with the post-redirect page URL.
 
 ## Extension context
 

@@ -275,4 +275,25 @@ describe( 'PUM normalized form submission phases', () => {
 		expect( actionArgs( 'pum.integration.form.success' ) ).toBeUndefined();
 		expect( actionArgs( 'pum.integration.form.observed' ) ).toBeDefined();
 	} );
+
+	test( 'replaces non-finite numeric submission IDs', () => {
+		loadIntegrations();
+
+		[ NaN, Infinity, -Infinity ].forEach( ( submissionId ) => {
+			window.PUM.integrations.formSubmission( null, {
+				formProvider: 'gravityforms',
+				formId: 7,
+				submissionId,
+			} );
+		} );
+
+		const ids = doAction.mock.calls
+			.filter( ( call ) => 'pum.integration.form.observed' === call[ 0 ] )
+			.map( ( call ) => call[ 2 ].submissionId );
+		expect( ids ).toHaveLength( 3 );
+		ids.forEach( ( submissionId ) => {
+			expect( submissionId ).toEqual( expect.any( String ) );
+			expect( submissionId ).not.toHaveLength( 0 );
+		} );
+	} );
 } );

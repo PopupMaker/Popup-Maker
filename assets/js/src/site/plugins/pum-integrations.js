@@ -33,11 +33,11 @@
 	}
 
 	function validSubmissionId( submissionId ) {
-		return (
-			( 'string' === typeof submissionId ||
-				'number' === typeof submissionId ) &&
-			'' !== String( submissionId )
-		);
+		if ( 'number' === typeof submissionId ) {
+			return Number.isFinite( submissionId );
+		}
+
+		return 'string' === typeof submissionId && '' !== submissionId;
 	}
 
 	function normalizePhases( phases ) {
