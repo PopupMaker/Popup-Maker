@@ -218,6 +218,9 @@ Check out some of our most popular plugins:
 
 == Frequently Asked Questions ==
 
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the Popup Maker plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/5fbfef60-ab55-429d-9ed1-88abf0efa9bd). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 = What are some ways I can use popups to grow my email list? =
 People who use Popup Maker to grow their email list have found many creative ways to do so. Some of the most common popups include:
 
