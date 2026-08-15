@@ -414,7 +414,73 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 			'is_draft'       => 0,
 			'parent_item_id' => 0,
 		];
-		$integration->on_success( '104', 7, [ 'is_child' => false ] );
+		$integration->on_success( '104', 7, new stdClass() );
+		$this->assertSame( 1, $observed );
+	}
+
+	/**
+	 * A frontend draft becoming submitted emits once from Formidable's update path.
+	 */
+	public function test_formidable_draft_to_submitted_update_emits_once() {
+		$observed                 = 0;
+		$this->observation_action = static function () use ( &$observed ) {
+			++$observed;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new class() extends PUM_Integration_Form_FormidableForms {
+			/** @var object|null */
+			public $entry;
+
+			/**
+			 * Return a non-AJAX synthetic form.
+			 *
+			 * @param string $id Form ID.
+			 * @return object
+			 */
+			public function get_form( $id ) {
+				return (object) [ 'options' => [] ];
+			}
+
+			/**
+			 * Return controlled persisted entry state.
+			 *
+			 * @param int $entry_id Entry ID.
+			 * @return object|null
+			 */
+			protected function get_entry( $entry_id ) {
+				return $this->entry;
+			}
+		};
+
+		$integration->entry = (object) [
+			'is_draft'       => 1,
+			'parent_item_id' => 0,
+		];
+		$values             = [
+			'form_id'  => 7,
+			'is_draft' => 0,
+		];
+		$this->assertSame( $values, $integration->capture_draft_transition( $values, 105 ) );
+
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 0,
+		];
+		$integration->on_update_success( 105, 7 );
+		$integration->on_update_success( 105, 7 );
+		$this->assertSame( 1, $observed );
+
+		$integration->entry = (object) [
+			'is_draft'       => 1,
+			'parent_item_id' => 0,
+		];
+		$integration->capture_draft_transition( [ 'frm_saving_draft' => 1 ], 106 );
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 0,
+		];
+		$integration->on_update_success( 106, 7 );
 		$this->assertSame( 1, $observed );
 	}
 
