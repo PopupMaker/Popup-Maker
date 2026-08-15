@@ -1,6 +1,12 @@
 name: Sync readme/assets to WordPress.org
 
 on:
+    push:
+        branches:
+            - master
+        paths:
+            - 'readme.txt'
+            - '.wordpress-org/**'
     workflow_dispatch:
 
 jobs:
@@ -13,11 +19,39 @@ jobs:
         if: github.ref == 'refs/heads/master'
 
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
               with:
                   ref: master
+                  fetch-depth: 2
+
+            - name: Check for readme/assets-only update
+              id: changes
+              env:
+                  BEFORE: ${{ github.event.before }}
+                  AFTER: ${{ github.sha }}
+              run: |
+                  # Manual dispatches are explicitly requesting this narrow sync.
+                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                    echo "sync=true" >> "$GITHUB_OUTPUT"
+                    exit 0
+                  fi
+
+                  if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+                    BEFORE="${AFTER}^"
+                  fi
+
+                  CHANGED_FILES=$(git diff --name-only "$BEFORE" "$AFTER")
+                  echo "$CHANGED_FILES"
+
+                  if [ -n "$CHANGED_FILES" ] && ! echo "$CHANGED_FILES" | grep -Ev '^(readme\.txt|\.wordpress-org/)' >/dev/null; then
+                    echo "sync=true" >> "$GITHUB_OUTPUT"
+                  else
+                    echo "sync=false" >> "$GITHUB_OUTPUT"
+                    echo "A code-bearing commit will be handled by the full WordPress.org deploy."
+                  fi
 
             - uses: 10up/action-wordpress-plugin-asset-update@stable
+              if: steps.changes.outputs.sync == 'true'
               env:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}

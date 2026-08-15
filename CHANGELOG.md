@@ -2,6 +2,42 @@
 
 ## Unreleased
 
+**Features**
+
+-   Added complete Brizy support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
+-   Added complete Bricks support for building Popup Maker popups, including editor previews, frontend styling, and interactive elements.
+-   Added complete Divi support for building Popup Maker popups, including Visual Builder editing, frontend styling, and interactive modules.
+-   Added complete Elementor support for building Popup Maker popups, including editor previews, frontend styling, and interactive widgets.
+-   Added complete SiteOrigin Page Builder support for building Popup Maker popups, including its Live Editor and properly styled frontend layouts.
+-   Added complete Visual Composer support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
+-   Added complete Etch support for building Popup Maker popups, including its visual editor, selected popup theme, sizing, positioning, and overlay.
+
+**Improvements**
+
+-   Improved Beaver Builder support so Popup Maker popups open in Beaver Builder's editor and authorized popup previews are no longer redirected away.
+-   Improved compatibility with PHP 8.3, 8.4, and 8.5.
+
+**Performance**
+
+-   Reduced unnecessary PHP work on frontend requests by deferring admin-only systems and unavailable integrations until they are needed.
+-   Popup Maker admin screens and the block editor now use lightweight popup choices instead of loading complete popup models for selector controls.
+-   The block editor now reads Popup Maker's local editor styles directly instead of making internal HTTP requests during page load.
+-   Improved the Subscribers screen and privacy tools with native count queries, batch-loaded popup titles, indexed email lookups, and faster creation-date sorting on large subscriber tables.
+-   Reduced redundant popup, Call to Action, and form lookups in bulk actions, feature announcements, form selectors, and Elementor form discovery.
+-   Popup and form selectors now load only the records they need and avoid priming unused metadata and taxonomy caches.
+-   Settings CSS previews now load on demand and recover more reliably from incomplete or failed preview responses.
+-   Removed the proprietary remote community-notice request from wp-admin; failed WordPress.org translation lookups are now briefly cached to prevent repeated requests.
+
+**Fixes**
+
+-   Restored WPBakery Page Builder editing for popups when the block editor is enabled in Popup Maker.
+-   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
+-   Prevented Astra Custom Layouts rendered inside popups from corrupting the pending WordPress main loop.
+
+**Developers**
+
+-   Updated extension-added post and metadata field handling to avoid deprecated dynamic properties, and expanded automated and release-package runtime coverage through PHP 8.5.
+
 ## v1.24.0 - 2026-08-03
 
 **Security**

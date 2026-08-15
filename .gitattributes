@@ -21,6 +21,7 @@
 *.woff binary
 *.pyc binary
 *.pdf binary
+*.mo binary
 *.jpeg binary
 *.gif binary
 *.ico binary
@@ -85,5 +86,3 @@ readme.txt export-ignore
 /tasks/ export-ignore
 /assets/js/src/ export-ignore
 /assets/sass/ export-ignore
-
-*.mo binary

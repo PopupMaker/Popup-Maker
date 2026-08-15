@@ -51,8 +51,11 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 	public function get_forms() {
 		return get_posts(
 			[
-				'post_type'      => 'wpcf7_contact_form',
-				'posts_per_page' => - 1,
+				'post_type'              => 'wpcf7_contact_form',
+				'posts_per_page'         => -1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			]
 		);
 	}

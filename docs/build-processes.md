@@ -20,7 +20,7 @@
 ### **Dependency Management** 📦
 - **Frontend**: NPM workspaces with @popup-maker/* internal packages
 - **Backend**: Composer with Strauss vendor prefixing → `vendor-prefixed/`
-- **External Dependencies**: jQuery, iframe-resizer, mobile-detect
+- **External Dependencies**: jQuery, mobile-detect
 - **WordPress Dependencies**: Managed via custom extraction plugin
 
 ---

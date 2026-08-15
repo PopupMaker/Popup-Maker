@@ -23,6 +23,10 @@ describe( 'release artifact verifier', () => {
 			for ( const relativePath of [
 				'popup-maker.php',
 				'readme.txt',
+				'dist/assets/site.css',
+				'dist/assets/site-readable.css',
+				'dist/assets/site-rtl.css',
+				'dist/assets/site-rtl-readable.css',
 				'vendor-prefixed/autoload.php',
 			] ) {
 				const filePath = path.join( pluginRoot, relativePath );

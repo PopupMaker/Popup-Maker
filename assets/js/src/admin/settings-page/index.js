@@ -28,9 +28,100 @@ import './license-key-enhancements';
 			}
 		}
 
-		var $container = $( '#pum-settings-container' ),
-			args = pum_settings_editor.form_args || {},
-			values = pum_settings_editor.current_values || {};
+		const $container = $( '#pum-settings-container' );
+		const settingsEditor = window.pum_settings_editor || {};
+		const args = settingsEditor.form_args || {};
+		const values = settingsEditor.current_values || {};
+		const cssViewerConfig = window.pum_css_viewer || {};
+		const configuredCssViewerI18n = cssViewerConfig.i18n || {};
+		const cssViewerI18n = {
+			loading:
+				configuredCssViewerI18n.loading || 'Loading Popup Maker CSS…',
+			load_error:
+				configuredCssViewerI18n.load_error ||
+				'Popup Maker CSS could not be loaded. Please try again.',
+			readable_unavailable:
+				configuredCssViewerI18n.readable_unavailable ||
+				'Readable CSS is unavailable. Rebuild the plugin assets and try again.',
+			show: configuredCssViewerI18n.show || 'Show Popup Maker CSS',
+		};
+		let cssViewerStyles = null;
+
+		function cssViewerErrorMessage( response ) {
+			return response &&
+				response.responseJSON &&
+				response.responseJSON.data
+				? response.responseJSON.data.message
+				: cssViewerI18n.load_error;
+		}
+
+		function showCssViewer( $viewer, styles ) {
+			const $output = $viewer.find( '#pum_style_output' );
+			const $readableButton = $viewer.find(
+				'[data-pum-css-format="readable"]'
+			);
+
+			$viewer.find( '#pum_core_styles' ).val( styles.core.minified );
+			$viewer.find( '#pum_generated_styles' ).val( styles.generated );
+
+			if ( ! styles.readable_available ) {
+				$readableButton
+					.prop( 'disabled', true )
+					.attr( 'title', cssViewerI18n.readable_unavailable );
+			}
+
+			$viewer
+				.find( '#show_pum_styles' )
+				.attr( 'aria-expanded', 'true' )
+				.hide();
+			$output.removeAttr( 'hidden' ).hide().slideDown();
+		}
+
+		function loadCssViewer( $viewer ) {
+			if ( cssViewerStyles ) {
+				showCssViewer( $viewer, cssViewerStyles );
+				return;
+			}
+
+			const $button = $viewer.find( '#show_pum_styles' );
+			const $status = $viewer.find( '.pum-css-viewer__status' );
+
+			$button.prop( 'disabled', true ).text( cssViewerI18n.loading );
+			$status.attr( 'hidden', true ).removeClass( 'notice notice-error' );
+
+			$.ajax( {
+				url: cssViewerConfig.ajax_url,
+				method: 'POST',
+				data: {
+					action: 'pum_get_css_styles',
+					nonce: cssViewerConfig.nonce,
+				},
+			} )
+				.done( ( response ) => {
+					if ( ! response.success || ! response.data ) {
+						$status
+							.text( cssViewerI18n.load_error )
+							.addClass( 'notice notice-error' )
+							.removeAttr( 'hidden' );
+						$button
+							.prop( 'disabled', false )
+							.text( cssViewerI18n.show );
+						return;
+					}
+
+					cssViewerStyles = response.data;
+					showCssViewer( $viewer, cssViewerStyles );
+				} )
+				.fail( ( response ) => {
+					$status
+						.text( cssViewerErrorMessage( response ) )
+						.addClass( 'notice notice-error' )
+						.removeAttr( 'hidden' );
+					$button
+						.prop( 'disabled', false )
+						.text( cssViewerI18n.show );
+				} );
+		}
 
 		function updateSaveButtonVisibility() {
 			const $activeMainPanel = $container
@@ -49,8 +140,33 @@ import './license-key-enhancements';
 
 		if ( $container.length ) {
 			$container.find( '.pum-no-js' ).hide();
-			PUM_Admin.forms.render( args, values, $container );
+			window.PUM_Admin.forms.render( args, values, $container );
 			updateSaveButtonVisibility();
+
+			$container.on( 'click', '#show_pum_styles', function () {
+				loadCssViewer( $( this ).closest( '.pum-css-viewer' ) );
+			} );
+
+			$container.on( 'click', '[data-pum-css-format]', function () {
+				if ( ! cssViewerStyles ) {
+					return;
+				}
+
+				const $button = $( this );
+				const format = $button.data( 'pum-css-format' );
+				const $viewer = $button.closest( '.pum-css-viewer' );
+
+				$viewer
+					.find( '#pum_core_styles' )
+					.val( cssViewerStyles.core[ format ] );
+				$viewer
+					.find( '[data-pum-css-format]' )
+					.removeClass( 'button-primary' )
+					.attr( 'aria-pressed', 'false' );
+				$button
+					.addClass( 'button-primary' )
+					.attr( 'aria-pressed', 'true' );
+			} );
 
 			// Check hash on page load
 			switchToHashTab();
@@ -65,7 +181,7 @@ import './license-key-enhancements';
 				function () {
 					setTimeout( () => {
 						if ( window.location.hash ) {
-							history.replaceState(
+							window.history.replaceState(
 								null,
 								null,
 								window.location.pathname +
@@ -79,4 +195,4 @@ import './license-key-enhancements';
 			);
 		}
 	} );
-} )( jQuery );
+} )( window.jQuery );
