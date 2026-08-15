@@ -212,6 +212,25 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Removing the source URL also clears its implicitly derived post ID.
+	 */
+	public function test_filter_removed_source_url_clears_implicit_post_id() {
+		$post_id = self::factory()->post->create();
+
+		$this->context_filter = static function ( $args ) {
+			$args['source_url'] = null;
+
+			return $args;
+		};
+		add_filter( 'pum_integrated_form_submission_args', $this->context_filter );
+
+		pum_integrated_form_submission( [ 'source_url' => get_permalink( $post_id ) ] );
+
+		$this->assertNull( PUM_Integrations::$form_submission['source_post_id'] );
+		$this->assertNull( PUM_Integrations::$form_submission['source_url'] );
+	}
+
+	/**
 	 * Invalid extension values cannot break the portable envelope.
 	 */
 	public function test_invalid_context_values_are_normalized() {

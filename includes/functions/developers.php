@@ -172,8 +172,8 @@ function pum_integrated_form_submission( $args = [] ) {
 	$args['source_url']            = ! empty( $args['source_url'] ) && is_string( $args['source_url'] ) ? esc_url_raw( $args['source_url'] ) : null;
 	$args['context']               = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : [];
 
-	if ( ! $source_post_id_was_explicit && ! $filter_changed_source_post_id && $args['source_url'] ) {
-		$source_post_id         = url_to_postid( $args['source_url'] );
+	if ( ! $source_post_id_was_explicit && ! $filter_changed_source_post_id ) {
+		$source_post_id         = $args['source_url'] ? url_to_postid( $args['source_url'] ) : 0;
 		$args['source_post_id'] = $source_post_id ? $source_post_id : null;
 	}
 
