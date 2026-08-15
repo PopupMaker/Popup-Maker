@@ -26,7 +26,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * Could be used for other initiations as well where needed.
 	 */
 	public function __construct() {
-		add_action( 'frm_after_create_entry', [ $this, 'on_success' ], 1, 3 );
+		add_action( 'frm_after_create_entry', [ $this, 'on_success' ], 10, 3 );
 	}
 
 	/**
