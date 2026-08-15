@@ -120,8 +120,16 @@ class PUM_Integration_Form_Forminator extends PUM_Abstract_Integration_Form {
 	 */
 	public function on_success( $entry, $form_id, $field_data_array ) {
 		$status = is_object( $entry ) && isset( $entry->status ) ? $entry->status : ( is_array( $entry ) && isset( $entry['status'] ) ? $entry['status'] : null );
-		if ( 'active' !== $status ) {
+		if ( null !== $status && 'active' !== $status ) {
 			return;
+		}
+
+		if ( null === $status ) {
+			$is_spam  = is_object( $entry ) && isset( $entry->is_spam ) ? $entry->is_spam : ( is_array( $entry ) && isset( $entry['is_spam'] ) ? $entry['is_spam'] : false );
+			$draft_id = is_object( $entry ) && isset( $entry->draft_id ) ? $entry->draft_id : ( is_array( $entry ) && isset( $entry['draft_id'] ) ? $entry['draft_id'] : null );
+			if ( $is_spam || ! empty( $draft_id ) ) {
+				return;
+			}
 		}
 
 		if ( ! $this->should_process_submission() ) {

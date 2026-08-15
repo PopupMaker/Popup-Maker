@@ -346,9 +346,9 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Forminator drafts and abandoned entries are not successful submissions.
+	 * Forminator rejects explicit failures and legacy spam/draft entries.
 	 */
-	public function test_forminator_requires_active_entry_status() {
+	public function test_forminator_requires_active_or_legacy_success_entry() {
 		$observed                 = 0;
 		$this->observation_action = static function () use ( &$observed ) {
 			++$observed;
@@ -359,12 +359,14 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 		foreach ( [ 'draft', 'abandoned', 'spam' ] as $status ) {
 			$integration->on_success( (object) [ 'status' => $status ], 7, [] );
 		}
-		$integration->on_success( new stdClass(), 7, [] );
+		$integration->on_success( (object) [ 'is_spam' => true ], 7, [] );
+		$integration->on_success( (object) [ 'draft_id' => 'draft-7' ], 7, [] );
 
 		$this->assertSame( 0, $observed );
 
 		$integration->on_success( (object) [ 'status' => 'active' ], 7, [] );
-		$this->assertSame( 1, $observed );
+		$integration->on_success( new stdClass(), 7, [] );
+		$this->assertSame( 2, $observed );
 	}
 
 	/**
