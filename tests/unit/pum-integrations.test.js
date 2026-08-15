@@ -95,4 +95,23 @@ describe( 'PUM normalized form submission context', () => {
 		expect( args.submissionId ).toBe( canonicalSubmissionId );
 		expect( args.context ).toEqual( {} );
 	} );
+
+	test( 'replaces non-finite numeric submission IDs', () => {
+		[ NaN, Infinity, -Infinity ].forEach( ( submissionId ) => {
+			window.PUM.integrations.formSubmission( null, {
+				formProvider: 'gravityforms',
+				formId: 7,
+				submissionId,
+			} );
+		} );
+
+		const ids = doAction.mock.calls.map(
+			( call ) => call[ 2 ].submissionId
+		);
+		expect( ids ).toHaveLength( 3 );
+		ids.forEach( ( submissionId ) => {
+			expect( submissionId ).toEqual( expect.any( String ) );
+			expect( submissionId ).not.toHaveLength( 0 );
+		} );
+	} );
 } );

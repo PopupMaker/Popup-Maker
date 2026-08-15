@@ -140,6 +140,37 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Provider URLs resolve their own post ID when no explicit ID is supplied.
+	 */
+	public function test_source_post_id_is_resolved_from_provider_url() {
+		$post_id = self::factory()->post->create();
+
+		pum_integrated_form_submission( [ 'source_url' => get_permalink( $post_id ) ] );
+
+		$this->assertSame( $post_id, PUM_Integrations::$form_submission['source_post_id'] );
+	}
+
+	/**
+	 * A filter-replaced URL refreshes an implicitly derived post ID.
+	 */
+	public function test_filter_replaced_source_url_refreshes_implicit_post_id() {
+		$original_post_id = self::factory()->post->create();
+		$filtered_post_id = self::factory()->post->create();
+
+		$this->context_filter = static function ( $args ) use ( $filtered_post_id ) {
+			$args['source_url'] = get_permalink( $filtered_post_id );
+
+			return $args;
+		};
+		add_filter( 'pum_integrated_form_submission_args', $this->context_filter );
+
+		pum_integrated_form_submission( [ 'source_url' => get_permalink( $original_post_id ) ] );
+
+		$this->assertSame( $filtered_post_id, PUM_Integrations::$form_submission['source_post_id'] );
+		$this->assertSame( get_permalink( $filtered_post_id ), PUM_Integrations::$form_submission['source_url'] );
+	}
+
+	/**
 	 * Invalid extension values cannot break the portable envelope.
 	 */
 	public function test_invalid_context_values_are_normalized() {
@@ -161,6 +192,39 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 		$this->assertNull( $submission['source_post_id'] );
 		$this->assertNull( $submission['source_url'] );
 		$this->assertSame( [], $submission['context'] );
+	}
+
+	/**
+	 * Non-numeric source post IDs are never coerced into post 1.
+	 *
+	 * @dataProvider invalid_source_post_id_provider
+	 *
+	 * @param mixed $source_post_id Invalid source post ID.
+	 */
+	public function test_invalid_source_post_ids_are_rejected( $source_post_id ) {
+		$this->context_filter = static function ( $args ) use ( $source_post_id ) {
+			$args['source_post_id'] = $source_post_id;
+
+			return $args;
+		};
+		add_filter( 'pum_integrated_form_submission_args', $this->context_filter );
+
+		pum_integrated_form_submission();
+
+		$this->assertNull( PUM_Integrations::$form_submission['source_post_id'] );
+	}
+
+	/**
+	 * Invalid values for source post ID normalization.
+	 *
+	 * @return array<string,array{mixed}>
+	 */
+	public function invalid_source_post_id_provider() {
+		return [
+			'array'   => [ [ 1 ] ],
+			'object'  => [ new stdClass() ],
+			'boolean' => [ true ],
+		];
 	}
 
 	/**
@@ -189,5 +253,21 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 		$this->assertSame( 78, $submission['sourcePostId'] );
 		$this->assertSame( 'https://example.com/guide/', $submission['sourceUrl'] );
 		$this->assertSame( 90, $submission['context']['example_extension']['campaign_id'] );
+	}
+
+	/**
+	 * A nullable source URL remains null in localized JavaScript arguments.
+	 */
+	public function test_null_source_url_is_preserved_for_javascript() {
+		PUM_Integrations::$form_submission = [
+			'form_provider' => 'fluentforms',
+			'form_id'       => 4,
+			'source_url'    => null,
+		];
+
+		$submission = PUM_Integrations::pum_vars()['form_submission'];
+
+		$this->assertArrayHasKey( 'sourceUrl', $submission );
+		$this->assertNull( $submission['sourceUrl'] );
 	}
 }

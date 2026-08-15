@@ -54,9 +54,10 @@ function pum_trigger_popup_form_success( $popup_id = null, $settings = [] ) {
  * }
  */
 function pum_integrated_form_submission( $args = [] ) {
-	$source_url     = wp_get_raw_referer();
-	$source_url     = $source_url ? esc_url_raw( $source_url ) : null;
-	$source_post_id = $source_url ? url_to_postid( $source_url ) : null;
+	$args                        = is_array( $args ) ? $args : [];
+	$source_url                  = wp_get_raw_referer();
+	$source_url                  = $source_url ? esc_url_raw( $source_url ) : null;
+	$source_post_id_was_explicit = array_key_exists( 'source_post_id', $args );
 
 	$args = wp_parse_args(
 		$args,
@@ -66,7 +67,7 @@ function pum_integrated_form_submission( $args = [] ) {
 			'form_id'          => null,
 			'form_instance_id' => null,
 			'submission_id'    => null,
-			'source_post_id'   => $source_post_id ? $source_post_id : null,
+			'source_post_id'   => null,
 			'source_url'       => $source_url,
 			'context'          => [],
 			'ajax'             => false,
@@ -78,12 +79,18 @@ function pum_integrated_form_submission( $args = [] ) {
 		$args['submission_id'] = wp_generate_uuid4();
 	}
 
-	$source_post_id         = ! empty( $args['source_post_id'] ) ? absint( $args['source_post_id'] ) : 0;
+	$source_post_id         = is_scalar( $args['source_post_id'] ) && ! is_bool( $args['source_post_id'] ) && is_numeric( $args['source_post_id'] ) ? absint( $args['source_post_id'] ) : 0;
 	$args['source_post_id'] = $source_post_id ? $source_post_id : null;
 	$args['source_url']     = ! empty( $args['source_url'] ) && is_string( $args['source_url'] ) ? esc_url_raw( $args['source_url'] ) : null;
 	$args['context']        = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : [];
 
-	$submission_id = $args['submission_id'];
+	if ( ! $source_post_id_was_explicit && $args['source_url'] ) {
+		$source_post_id         = url_to_postid( $args['source_url'] );
+		$args['source_post_id'] = $source_post_id ? $source_post_id : null;
+	}
+
+	$submission_id                = $args['submission_id'];
+	$source_post_id_before_filter = $args['source_post_id'];
 
 	$args = apply_filters( 'pum_integrated_form_submission_args', $args );
 
@@ -91,10 +98,17 @@ function pum_integrated_form_submission( $args = [] ) {
 		$args['submission_id'] = $submission_id;
 	}
 
-	$source_post_id         = ! empty( $args['source_post_id'] ) ? absint( $args['source_post_id'] ) : 0;
-	$args['source_post_id'] = $source_post_id ? $source_post_id : null;
-	$args['source_url']     = ! empty( $args['source_url'] ) && is_string( $args['source_url'] ) ? esc_url_raw( $args['source_url'] ) : null;
-	$args['context']        = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : [];
+	$filtered_source_post_id       = isset( $args['source_post_id'] ) ? $args['source_post_id'] : null;
+	$filter_changed_source_post_id = $filtered_source_post_id !== $source_post_id_before_filter;
+	$source_post_id                = is_scalar( $filtered_source_post_id ) && ! is_bool( $filtered_source_post_id ) && is_numeric( $filtered_source_post_id ) ? absint( $filtered_source_post_id ) : 0;
+	$args['source_post_id']        = $source_post_id ? $source_post_id : null;
+	$args['source_url']            = ! empty( $args['source_url'] ) && is_string( $args['source_url'] ) ? esc_url_raw( $args['source_url'] ) : null;
+	$args['context']               = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : [];
+
+	if ( ! $source_post_id_was_explicit && ! $filter_changed_source_post_id && $args['source_url'] ) {
+		$source_post_id         = url_to_postid( $args['source_url'] );
+		$args['source_post_id'] = $source_post_id ? $source_post_id : null;
+	}
 
 	PUM_Integrations::$form_submission = $args;
 

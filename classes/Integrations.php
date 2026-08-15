@@ -540,6 +540,11 @@ class PUM_Integrations {
 					'source_url'       => 'sourceUrl',
 				]
 			);
+
+			// remap_keys intentionally skips empty values, but null is meaningful here.
+			if ( array_key_exists( 'source_url', self::$form_submission ) ) {
+				$vars['form_submission']['sourceUrl'] = self::$form_submission['source_url'];
+			}
 		}
 
 		return $vars;
