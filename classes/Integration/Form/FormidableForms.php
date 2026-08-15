@@ -26,7 +26,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * Could be used for other initiations as well where needed.
 	 */
 	public function __construct() {
-		add_action( 'frm_after_create_entry', [ $this, 'on_success' ], 1, 2 );
+		add_action( 'frm_after_create_entry', [ $this, 'on_success' ], 1, 3 );
 	}
 
 	/**
@@ -88,12 +88,13 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	/**
 	 * Hooks in a success functions specific to this provider for non AJAX submission handling.
 	 *
-	 * @param int $entry_id The ID of the entry added.
-	 * @param int $form_id The ID of the form.
+	 * @param int   $entry_id The ID of the entry added.
+	 * @param int   $form_id  The ID of the form.
+	 * @param array $args     Provider callback context.
 	 */
-	public function on_success( $entry_id, $form_id ) {
+	public function on_success( $entry_id, $form_id, $args = [] ) {
 
-		if ( ! $this->should_process_submission() ) {
+		if ( ! $this->should_process_submission() || ! $this->is_successful_entry( $entry_id, $args ) ) {
 			return;
 		}
 
@@ -114,6 +115,33 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 				'ajax'          => $is_ajax,
 			]
 		);
+	}
+
+	/**
+	 * Confirm this is the submitted parent entry rather than a draft or repeater child.
+	 *
+	 * @param int   $entry_id The ID of the entry added.
+	 * @param array $args     Provider callback context.
+	 * @return bool
+	 */
+	protected function is_successful_entry( $entry_id, $args ) {
+		if ( ! empty( $args['is_child'] ) ) {
+			return false;
+		}
+
+		$entry = $this->get_entry( $entry_id );
+
+		return is_object( $entry ) && empty( $entry->is_draft );
+	}
+
+	/**
+	 * Load the native entry for submission-state verification.
+	 *
+	 * @param int $entry_id Entry ID.
+	 * @return object|null
+	 */
+	protected function get_entry( $entry_id ) {
+		return is_callable( [ 'FrmEntry', 'getOne' ] ) ? FrmEntry::getOne( $entry_id ) : null;
 	}
 
 	/**

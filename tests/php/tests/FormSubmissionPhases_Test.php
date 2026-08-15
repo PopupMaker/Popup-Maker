@@ -329,6 +329,16 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 			public function get_form( $id ) {
 				return (object) [ 'options' => [ 'ajax_submit' => true ] ];
 			}
+
+			/**
+			 * Treat the synthetic entry as a submitted parent entry.
+			 *
+			 * @param int $entry_id Entry ID.
+			 * @return object
+			 */
+			protected function get_entry( $entry_id ) {
+				return (object) [ 'is_draft' => 0 ];
+			}
 		};
 		$integration->on_success( 'entry-95', 7 );
 
@@ -343,6 +353,51 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 			$observed['phases']
 		);
 		$this->assertNull( PUM_Integrations::$form_submission );
+	}
+
+	/**
+	 * Formidable drafts and repeater children never become conversions.
+	 */
+	public function test_formidable_requires_submitted_parent_entry() {
+		$observed                 = 0;
+		$this->observation_action = static function () use ( &$observed ) {
+			++$observed;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new class() extends PUM_Integration_Form_FormidableForms {
+			/** @var object|null */
+			public $entry;
+
+			/**
+			 * Return a non-AJAX synthetic form.
+			 *
+			 * @param string $id Form ID.
+			 * @return object
+			 */
+			public function get_form( $id ) {
+				return (object) [ 'options' => [] ];
+			}
+
+			/**
+			 * Verify provider callback state through a controlled entry seam.
+			 *
+			 * @param int $entry_id Entry ID.
+			 * @return object|null
+			 */
+			protected function get_entry( $entry_id ) {
+				return $this->entry;
+			}
+		};
+
+		$integration->entry = (object) [ 'is_draft' => 1 ];
+		$integration->on_success( 101, 7, [ 'is_child' => false ] );
+		$integration->entry = (object) [ 'is_draft' => 0 ];
+		$integration->on_success( 102, 7, [ 'is_child' => true ] );
+		$this->assertSame( 0, $observed );
+
+		$integration->on_success( 103, 7, [ 'is_child' => false ] );
+		$this->assertSame( 1, $observed );
 	}
 
 	/**
