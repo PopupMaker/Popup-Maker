@@ -159,6 +159,39 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Nullable and zero placeholders do not block source URL resolution.
+	 *
+	 * @dataProvider unresolved_source_post_id_provider
+	 *
+	 * @param int|string|null $source_post_id Unresolved source post ID placeholder.
+	 */
+	public function test_source_post_id_placeholder_is_resolved_from_provider_url( $source_post_id ) {
+		$post_id = self::factory()->post->create();
+
+		pum_integrated_form_submission(
+			[
+				'source_post_id' => $source_post_id,
+				'source_url'     => get_permalink( $post_id ),
+			]
+		);
+
+		$this->assertSame( $post_id, PUM_Integrations::$form_submission['source_post_id'] );
+	}
+
+	/**
+	 * Source post ID placeholders that still require URL resolution.
+	 *
+	 * @return array<string,array{int|string|null}>
+	 */
+	public function unresolved_source_post_id_provider() {
+		return [
+			'null'         => [ null ],
+			'integer zero' => [ 0 ],
+			'string zero'  => [ '0' ],
+		];
+	}
+
+	/**
 	 * A filter-replaced URL refreshes an implicitly derived post ID.
 	 */
 	public function test_filter_replaced_source_url_refreshes_implicit_post_id() {

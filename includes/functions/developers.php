@@ -123,7 +123,7 @@ function pum_integrated_form_submission( $args = [] ) {
 	$args                        = is_array( $args ) ? $args : [];
 	$source_url                  = wp_get_raw_referer();
 	$source_url                  = $source_url ? esc_url_raw( $source_url ) : null;
-	$source_post_id_was_explicit = array_key_exists( 'source_post_id', $args );
+	$source_post_id_was_explicit = isset( $args['source_post_id'] ) && is_scalar( $args['source_post_id'] ) && ! is_bool( $args['source_post_id'] ) && is_numeric( $args['source_post_id'] ) && absint( $args['source_post_id'] ) > 0;
 
 	$args = wp_parse_args(
 		$args,
