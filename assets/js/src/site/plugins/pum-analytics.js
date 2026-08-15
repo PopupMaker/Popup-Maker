@@ -5,22 +5,23 @@
 	$.fn.popmake.last_close_trigger = null;
 	$.fn.popmake.conversion_trigger = null;
 
-	var rest_enabled = !! (
-		typeof pum_vars.analytics_api !== 'undefined' && pum_vars.analytics_api
+	const pumVars = window.pum_vars;
+	const restEnabled = !! (
+		typeof pumVars.analytics_api !== 'undefined' && pumVars.analytics_api
 	);
 
 	// Debounce window (ms) for coalescing rapid events into one request. Events
 	// that fire close together (e.g. triggered + open on the same popup) are
 	// batched into a single beacon. Filterable for tuning.
-	var FLUSH_DEBOUNCE_MS = window.pum.hooks.applyFilters(
+	const FLUSH_DEBOUNCE_MS = window.pum.hooks.applyFilters(
 		'pum.analyticsBeaconDebounce',
 		400
 	);
 
 	// Pending event payloads awaiting flush, and their callbacks.
-	var queue = [];
-	var queueCallbacks = [];
-	var flushTimer = null;
+	let queue = [];
+	let queueCallbacks = [];
+	let flushTimer = null;
 
 	/**
 	 * Resolve the beacon endpoint URL (REST or ajax fallback).
@@ -28,14 +29,14 @@
 	 * @return {string} URL or '' when none configured.
 	 */
 	function beaconUrl() {
-		var url = rest_enabled ? pum_vars.analytics_api : pum_vars.ajaxurl;
+		let url = restEnabled ? pumVars.analytics_api : pumVars.ajaxurl;
 		if ( ! url ) {
 			return '';
 		}
-		if ( rest_enabled ) {
+		if ( restEnabled ) {
 			url += window.pum.hooks.applyFilters(
 				'pum.analyticsBeaconRoute',
-				'/' + pum_vars.analytics_route + '/'
+				'/' + pumVars.analytics_route + '/'
 			);
 		}
 		return url;
@@ -50,23 +51,23 @@
 	 * @return {boolean} Whether the send was dispatched.
 	 */
 	function dispatch( payload, callback ) {
-		var url = beaconUrl();
+		const url = beaconUrl();
 		if ( ! url ) {
 			return false;
 		}
 
-		if ( ! rest_enabled ) {
+		if ( ! restEnabled ) {
 			payload.action = 'pum_analytics';
 		}
 
 		if ( 'sendBeacon' in navigator ) {
 			try {
-				var formData = new FormData();
-				for ( var key in payload ) {
+				const formData = new FormData();
+				for ( const key in payload ) {
 					if (
 						Object.prototype.hasOwnProperty.call( payload, key )
 					) {
-						var value = payload[ key ];
+						let value = payload[ key ];
 						if ( typeof value === 'object' && value !== null ) {
 							value = JSON.stringify( value );
 						}
@@ -74,7 +75,7 @@
 					}
 				}
 
-				var success = navigator.sendBeacon( url, formData );
+				const success = navigator.sendBeacon( url, formData );
 				if ( success && typeof callback === 'function' ) {
 					callback();
 				}
@@ -89,7 +90,7 @@
 		}
 
 		// Fallback: traditional image beacon (single-event only — GET length).
-		var beacon = new Image();
+		const beacon = new window.Image();
 		$( beacon ).on(
 			'error success load done',
 			typeof callback === 'function' ? callback : function () {}
@@ -112,13 +113,13 @@
 			return;
 		}
 
-		var events = queue;
-		var callbacks = queueCallbacks;
+		const events = queue;
+		const callbacks = queueCallbacks;
 		queue = [];
 		queueCallbacks = [];
 
-		var done = function () {
-			for ( var i = 0; i < callbacks.length; i++ ) {
+		const done = function () {
+			for ( let i = 0; i < callbacks.length; i++ ) {
 				if ( typeof callbacks[ i ] === 'function' ) {
 					callbacks[ i ]();
 				}
@@ -132,7 +133,7 @@
 			return;
 		}
 
-		dispatch( { events: events, _cache: +new Date() }, done );
+		dispatch( { events, _cache: +new Date() }, done );
 	}
 
 	window.PUM_Analytics = {
@@ -142,8 +143,8 @@
 		 * @param {Object}   data     Event payload (event, pid, eventData…).
 		 * @param {Function} callback Optional success callback.
 		 */
-		beacon: function ( data, callback ) {
-			var payload = window.pum.hooks.applyFilters(
+		beacon( data, callback ) {
+			const payload = window.pum.hooks.applyFilters(
 				'pum.AnalyticsBeaconData',
 				$.extend(
 					true,
@@ -170,7 +171,7 @@
 		/**
 		 * Force-send any queued events immediately. Used on page exit.
 		 */
-		flush: flush,
+		flush,
 	};
 
 	// Guarantee delivery on page exit: pagehide covers navigation/close/bfcache,
@@ -183,14 +184,14 @@
 		}
 	} );
 
-	if ( pum_vars.analytics_enabled ) {
+	if ( pumVars.analytics_enabled ) {
 		// Only popups from the editor should fire analytics events.
 		$( document )
 			/**
 			 * Track opens for popups.
 			 */
 			.on( 'pumAfterOpen.core_analytics', '.pum', function () {
-				var $popup = window.PUM.getPopup( this ),
+				const $popup = window.PUM.getPopup( this ),
 					data = {
 						pid:
 							parseInt(
@@ -226,7 +227,7 @@
 				if ( args.popup.length === 0 ) {
 					return;
 				}
-				var data = {
+				const data = {
 					pid:
 						parseInt(
 							args.popup.popmake( 'getSettings' ).id,
@@ -259,4 +260,4 @@
 			);
 		} );
 	}
-} )( jQuery );
+} )( window.jQuery );
