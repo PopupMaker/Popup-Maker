@@ -219,6 +219,13 @@ final class Core extends \PopupMaker\Plugin\Container {
 		);
 
 		$this->set(
+			'legacy_extension_catalog',
+			function () {
+				return new \PopupMaker\Services\LegacyExtensionCatalog();
+			}
+		);
+
+		$this->set(
 			'logging',
 			/**
 			 * Get plugin logging.

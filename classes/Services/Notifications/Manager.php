@@ -167,6 +167,7 @@ class Manager extends Service {
 	protected function resolve_providers() {
 		$core = [
 			new WhatsNew( $this->container ),
+			new LegacyExtensionGuidance( $this->container ),
 			new FeatureAnnouncements( $this->container ),
 		];
 
