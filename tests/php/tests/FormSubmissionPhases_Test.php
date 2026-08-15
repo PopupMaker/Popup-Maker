@@ -346,6 +346,57 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Forminator drafts and abandoned entries are not successful submissions.
+	 */
+	public function test_forminator_requires_active_entry_status() {
+		$observed                 = 0;
+		$this->observation_action = static function () use ( &$observed ) {
+			++$observed;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new PUM_Integration_Form_Forminator();
+		foreach ( [ 'draft', 'abandoned', 'spam' ] as $status ) {
+			$integration->on_success( (object) [ 'status' => $status ], 7, [] );
+		}
+		$integration->on_success( new stdClass(), 7, [] );
+
+		$this->assertSame( 0, $observed );
+
+		$integration->on_success( (object) [ 'status' => 'active' ], 7, [] );
+		$this->assertSame( 1, $observed );
+	}
+
+	/**
+	 * WS Form saves and failed validation never become conversions.
+	 */
+	public function test_ws_form_requires_one_valid_submit_receipt() {
+		$observed                 = 0;
+		$this->observation_action = static function () use ( &$observed ) {
+			++$observed;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new PUM_Integration_Form_WSForms();
+		$valid       = [
+			'form_id'                  => 7,
+			'post_mode'                => 'submit',
+			'error'                    => false,
+			'error_validation_actions' => [],
+		];
+
+		$integration->on_success( (object) array_merge( $valid, [ 'post_mode' => 'save' ] ) );
+		$integration->on_success( (object) array_merge( $valid, [ 'error' => true ] ) );
+		$integration->on_success( (object) array_merge( $valid, [ 'error_validation_actions' => [ 'field_1' => 'Required' ] ] ) );
+		$integration->on_success( (object) array_merge( $valid, [ 'form_id' => 0 ] ) );
+
+		$this->assertSame( 0, $observed );
+
+		$integration->on_success( (object) $valid );
+		$this->assertSame( 1, $observed );
+	}
+
+	/**
 	 * Non-AJAX callbacks increment each Core metric exactly once.
 	 *
 	 * @runInSeparateProcess

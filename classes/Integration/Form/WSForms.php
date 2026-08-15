@@ -88,6 +88,18 @@ class PUM_Integration_Form_WSForms extends PUM_Abstract_Integration_Form {
 	 * @param \WS_Form_Submit $submit
 	 */
 	public function on_success( $submit ) {
+		if ( ! is_object( $submit )
+			|| ! isset( $submit->post_mode )
+			|| 'submit' !== $submit->post_mode
+			|| ! empty( $submit->error )
+			|| ! empty( $submit->error_validation_actions )
+			|| ! isset( $submit->form_id )
+			|| ! is_numeric( $submit->form_id )
+			|| $submit->form_id <= 0
+		) {
+			return;
+		}
+
 		if ( ! $this->should_process_submission() ) {
 			return;
 		}
