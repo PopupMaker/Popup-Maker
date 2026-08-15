@@ -24,6 +24,7 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 	public function tearDown(): void {
 		PUM_Integrations::$form_submission = null;
 		unset( $_REQUEST['pum_form_popup_id'] );
+		unset( $_POST['gform_ajax'] );
 
 		if ( $this->observation_action ) {
 			remove_action( 'pum_integrated_form_submission', $this->observation_action );
@@ -106,6 +107,56 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 		pum_integrated_form_submission( [ 'form_provider' => 'blocked' ] );
 
 		$this->assertSame( 0, $action_runs );
+	}
+
+	/**
+	 * Tracking policy sees the complete envelope once before either counter.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_complete_envelope_controls_all_server_tracking_once() {
+		remove_all_actions( 'pum_integrated_form_submission' );
+		remove_all_actions( 'pum_analytics_conversion' );
+
+		$filter_calls     = 0;
+		$popup_id         = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+			]
+		);
+		$tracking_service = new \PopupMaker\Services\FormConversionTracking( new stdClass() );
+		$tracking_service->reset_site_count();
+		$tracking_service->reset_popup_count( $popup_id );
+		$tracking_service->init();
+
+		$this->phases_filter = static function ( $phases, $args ) use ( &$filter_calls ) {
+			++$filter_calls;
+
+			if ( 7 === $args['form_id'] && 'entry-7' === $args['submission_id'] && 'blocked' === $args['context']['segment'] ) {
+				$phases['tracking'] = false;
+			}
+
+			return $phases;
+		};
+		add_filter( 'pum_integrated_form_submission_phases', $this->phases_filter, 10, 2 );
+
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $popup_id,
+				'form_provider' => 'example',
+				'form_id'       => 7,
+				'submission_id' => 'entry-7',
+				'context'       => [ 'segment' => 'blocked' ],
+			]
+		);
+
+		$this->assertSame( 1, $filter_calls );
+		$this->assertSame( 0, (int) get_post_meta( $popup_id, 'popup_conversion_count', true ) );
+		$this->assertSame( 0, $tracking_service->get_site_count() );
+		$this->assertSame( 0, $tracking_service->get_popup_count( $popup_id ) );
+		$this->assertFalse( PUM_Integrations::$form_submission['phases']['tracking'] );
 	}
 
 	/**
@@ -199,6 +250,47 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 		$this->assertSame( 1, (int) get_post_meta( $popup_id, 'popup_conversion_count', true ) );
 		$this->assertSame( 1, $tracking_service->get_site_count() );
 		$this->assertSame( 1, $tracking_service->get_popup_count( $popup_id ) );
+	}
+
+	/**
+	 * Gravity Forms' provider AJAX marker suppresses server tracking and replay.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_gravity_forms_ajax_marker_uses_async_phases() {
+		remove_all_actions( 'pum_integrated_form_submission' );
+		remove_all_actions( 'pum_analytics_conversion' );
+
+		$popup_id                      = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+			]
+		);
+		$_REQUEST['pum_form_popup_id'] = $popup_id;
+		$_POST['gform_ajax']           = 'form_id=7';
+		$observed                      = null;
+		$this->observation_action      = static function ( $args ) use ( &$observed ) {
+			$observed = $args;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new PUM_Integration_Form_GravityForms();
+		$integration->on_success( [ 'id' => 'entry-93' ], [ 'id' => 7 ] );
+
+		$this->assertSame( 'entry-93', $observed['submission_id'] );
+		$this->assertTrue( $observed['ajax'] );
+		$this->assertSame(
+			[
+				'actions'  => true,
+				'tracking' => false,
+				'frontend' => false,
+			],
+			$observed['phases']
+		);
+		$this->assertSame( 0, (int) get_post_meta( $popup_id, 'popup_conversion_count', true ) );
+		$this->assertNull( PUM_Integrations::$form_submission );
 	}
 
 	/**

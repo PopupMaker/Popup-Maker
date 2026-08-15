@@ -52,7 +52,7 @@ function pum_trigger_popup_form_success( $popup_id = null, $settings = [] ) {
 function pum_get_integrated_form_submission_phases( $args = [] ) {
 	$args = is_array( $args ) ? $args : [];
 
-	$is_async = wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST );
+	$is_async = wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ! empty( $args['ajax'] );
 	$phases   = isset( $args['phases'] ) && is_array( $args['phases'] ) ? $args['phases'] : [];
 	$phases   = wp_parse_args(
 		$phases,
@@ -163,6 +163,15 @@ function pum_integrated_form_submission( $args = [] ) {
 	$args['source_url']     = ! empty( $args['source_url'] ) && is_string( $args['source_url'] ) ? esc_url_raw( $args['source_url'] ) : null;
 	$args['context']        = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : [];
 	$args['phases']         = pum_get_integrated_form_submission_phases( $args );
+
+	if ( $args['phases']['tracking'] && ! empty( $args['popup_id'] ) ) {
+		$popup_id = absint( $args['popup_id'] );
+		$popup    = pum_get_popup( $popup_id );
+
+		if ( pum_is_popup( $popup ) ) {
+			$popup->increase_event_count( 'conversion' );
+		}
+	}
 
 	PUM_Integrations::$form_submission = $args['phases']['frontend'] ? $args : null;
 

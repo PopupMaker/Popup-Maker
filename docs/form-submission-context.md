@@ -43,14 +43,19 @@ The normalized phase map is:
 
 Normal browser POST requests default all three phases to `true`. Server-side
 AJAX and REST callbacks default to `actions: true`, `tracking: false`, and
-`frontend: false`. This lets extensions act on a provider-confirmed success
-without counting the conversion before the provider's browser success event or
-trying to replay browser behavior from an asynchronous response.
+`frontend: false`. Provider callbacks that use a custom transport outside
+WordPress's AJAX endpoint can pass `ajax: true` to receive the same defaults.
+This lets extensions act on a provider-confirmed success without counting the
+conversion before the provider's browser success event or trying to replay
+browser behavior from an asynchronous response.
 
 Callers may pass explicit phases to `pum_integrated_form_submission()`. The
 `pum_integrated_form_submission_phases` PHP filter and
 `pum.integration.form.phases` JavaScript filter can adjust the final policy.
 `tracked: true` is an authoritative receipt and always forces tracking off.
+The PHP phase filter runs once after the complete submission-args filter. Both
+the legacy popup conversion count and the form conversion counters consume
+that same resolved tracking decision.
 
 Use these observation hooks for capture, diagnostics, or consumers that must
 see every normalized success, including suppressed repeats:

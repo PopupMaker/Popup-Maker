@@ -72,17 +72,6 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	 * @since 1.13.0
 	 */
 	public function increase_conversion( $popup_id ) {
-		$phases = pum_get_integrated_form_submission_phases(
-			[
-				'popup_id'      => $popup_id,
-				'form_provider' => $this->key,
-			]
-		);
-
-		if ( ! $phases['tracking'] ) {
-			return;
-		}
-
 		$popup_id = intval( $popup_id );
 		$popup    = pum_get_popup( $popup_id );
 		$popup->increase_event_count( 'conversion' );

@@ -100,10 +100,6 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 
 		$popup_id = $this->get_popup_id();
 
-		if ( $popup_id ) {
-			$this->increase_conversion( $popup_id );
-		}
-
 		// Defensive validation - $form is stdClass, not array.
 		$form_id = null;
 		if ( is_object( $form ) && isset( $form->attributes ) && is_object( $form->attributes ) && isset( $form->attributes->id ) ) {

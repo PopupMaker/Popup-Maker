@@ -74,10 +74,9 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 		}
 
 		$popup_id = $this->get_popup_id();
-
-		if ( $popup_id ) {
-			$this->increase_conversion( $popup_id );
-		}
+		// Gravity Forms may use its own AJAX transport without admin-ajax.php.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Provider transport marker only.
+		$is_ajax = isset( $_POST['gform_ajax'] ) && null !== $_POST['gform_ajax'];
 
 		pum_integrated_form_submission(
 			[
@@ -85,6 +84,7 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 				'form_provider' => $this->key,
 				'form_id'       => $form['id'],
 				'submission_id' => isset( $entry['id'] ) && is_scalar( $entry['id'] ) ? $entry['id'] : null,
+				'ajax'          => $is_ajax,
 			]
 		);
 	}
