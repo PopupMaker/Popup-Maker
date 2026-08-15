@@ -4,6 +4,8 @@ on:
     push:
         branches:
             - master
+        paths-ignore:
+            - readme.txt
     workflow_dispatch:
         inputs:
             dry_run:
@@ -152,6 +154,10 @@ jobs:
 
                   echo "✅ Built into ${{ env.BUILD_DIR }}"
                   ls -la "${{ env.BUILD_DIR }}"
+
+            # Keep mixed code/readme pushes from deploying the release ZIP's stale readme.
+            - name: Use current readme
+              run: cp readme.txt "${{ env.BUILD_DIR }}/readme.txt"
 
             - name: Run WordPress Plugin Check
               uses: wordpress/plugin-check-action@v1

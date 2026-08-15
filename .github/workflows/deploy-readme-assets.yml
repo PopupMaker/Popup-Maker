@@ -1,6 +1,11 @@
 name: Sync readme/assets to WordPress.org
 
 on:
+    push:
+        branches:
+            - master
+        paths:
+            - readme.txt
     workflow_dispatch:
 
 jobs:
