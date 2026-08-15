@@ -96,5 +96,20 @@ describe( 'PUM form analytics phase policy', () => {
 				} ),
 			} )
 		);
+
+		beacon.mockClear();
+		formSuccessHandler( null, {
+			...args,
+			phases: { tracking: true },
+			submissionId: 0,
+		} );
+
+		expect( beacon ).toHaveBeenCalledWith(
+			expect.objectContaining( {
+				eventData: expect.objectContaining( {
+					submissionId: 0,
+				} ),
+			} )
+		);
 	} );
 } );

@@ -240,7 +240,10 @@
 						formId: args.formId || null,
 						formKey: args.formKey || null,
 						formInstanceId: args.formInstanceId || null,
-						submissionId: args.submissionId || null,
+						submissionId:
+							'undefined' === typeof args.submissionId
+								? null
+								: args.submissionId,
 						phases: args.phases,
 					},
 				};

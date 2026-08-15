@@ -62,11 +62,17 @@
 		};
 	}
 
+	function canonicalSubmissionKeyPart( value ) {
+		return null === value || 'undefined' === typeof value
+			? null
+			: String( value );
+	}
+
 	function duplicateNativeSubmission( args ) {
 		const key = JSON.stringify( [
-			args.formProvider || null,
-			args.formId || null,
-			args.submissionId,
+			canonicalSubmissionKeyPart( args.formProvider ),
+			canonicalSubmissionKeyPart( args.formId ),
+			canonicalSubmissionKeyPart( args.submissionId ),
 		] );
 		const duplicate = -1 !== seenNativeSubmissionKeys.indexOf( key );
 

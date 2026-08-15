@@ -188,6 +188,34 @@ describe( 'PUM normalized form submission phases', () => {
 		} );
 	} );
 
+	test( 'equivalent numeric and string receipts deduplicate', () => {
+		loadIntegrations();
+
+		window.PUM.integrations.formSubmission( null, {
+			formProvider: 'fluentforms',
+			formId: 4,
+			submissionId: 12,
+		} );
+		window.PUM.integrations.formSubmission( null, {
+			formProvider: 'fluentforms',
+			formId: '4',
+			submissionId: '12',
+		} );
+
+		expect(
+			doAction.mock.calls.filter(
+				( call ) => 'pum.integration.form.actions' === call[ 0 ]
+			)
+		).toHaveLength( 1 );
+		expect(
+			actionArgs( 'pum.integration.form.observed', 1 ).phases
+		).toEqual( {
+			actions: false,
+			tracking: false,
+			frontend: false,
+		} );
+	} );
+
 	test( 'native submission dedupe history is bounded', () => {
 		loadIntegrations();
 
