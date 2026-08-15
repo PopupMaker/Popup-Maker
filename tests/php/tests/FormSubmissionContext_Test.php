@@ -270,4 +270,36 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'sourceUrl', $submission );
 		$this->assertNull( $submission['sourceUrl'] );
 	}
+
+	/**
+	 * Zero-valued provider identifiers survive JavaScript remapping.
+	 *
+	 * @dataProvider zero_submission_id_provider
+	 *
+	 * @param int|string $submission_id Provider submission ID.
+	 */
+	public function test_zero_submission_id_is_preserved_for_javascript( $submission_id ) {
+		PUM_Integrations::$form_submission = [
+			'form_provider' => 'fluentforms',
+			'form_id'       => 4,
+			'submission_id' => $submission_id,
+		];
+
+		$submission = PUM_Integrations::pum_vars()['form_submission'];
+
+		$this->assertArrayHasKey( 'submissionId', $submission );
+		$this->assertSame( $submission_id, $submission['submissionId'] );
+	}
+
+	/**
+	 * Accepted zero-valued submission identifiers.
+	 *
+	 * @return array<string,array{int|string}>
+	 */
+	public function zero_submission_id_provider() {
+		return [
+			'integer zero' => [ 0 ],
+			'string zero'  => [ '0' ],
+		];
+	}
 }
