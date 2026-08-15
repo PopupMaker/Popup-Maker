@@ -38,6 +38,71 @@ function pum_trigger_popup_form_success( $popup_id = null, $settings = [] ) {
 }
 
 /**
+ * Resolve the processing phases authorized for a normalized form submission.
+ *
+ * Server callbacks may observe and action AJAX/REST submissions without also
+ * performing conversion tracking or preparing frontend replay. Callers can
+ * explicitly pass phase values and extensions can adjust the final policy.
+ *
+ * @since 1.24.0
+ *
+ * @param array $args Normalized or partial form submission arguments.
+ * @return array{actions:bool,tracking:bool,frontend:bool} Authorized phases.
+ */
+function pum_get_integrated_form_submission_phases( $args = [] ) {
+	$args = is_array( $args ) ? $args : [];
+
+	$is_async = wp_doing_ajax() || ( defined( 'REST_REQUEST' ) && REST_REQUEST );
+	$phases   = isset( $args['phases'] ) && is_array( $args['phases'] ) ? $args['phases'] : [];
+	$phases   = wp_parse_args(
+		$phases,
+		[
+			'actions'  => true,
+			'tracking' => ! $is_async,
+			'frontend' => ! $is_async,
+		]
+	);
+
+	/**
+	 * Filters the processing phases for a normalized form submission.
+	 *
+	 * @since 1.24.0
+	 *
+	 * @param array $phases {
+	 *     Authorized processing phases.
+	 *
+	 *     @type bool $actions  Whether action runners may execute.
+	 *     @type bool $tracking Whether Core conversion tracking may execute.
+	 *     @type bool $frontend Whether frontend effects may replay.
+	 * }
+	 * @param array $args Normalized or partial submission arguments.
+	 */
+	$phases = apply_filters( 'pum_integrated_form_submission_phases', $phases, $args );
+	$phases = is_array( $phases ) ? $phases : [];
+	$phases = wp_parse_args(
+		$phases,
+		[
+			'actions'  => true,
+			'tracking' => ! $is_async,
+			'frontend' => ! $is_async,
+		]
+	);
+
+	$phases = [
+		'actions'  => (bool) $phases['actions'],
+		'tracking' => (bool) $phases['tracking'],
+		'frontend' => (bool) $phases['frontend'],
+	];
+
+	// A tracking receipt is authoritative and cannot be opted back in.
+	if ( ! empty( $args['tracked'] ) ) {
+		$phases['tracking'] = false;
+	}
+
+	return $phases;
+}
+
+/**
  * @param array $args {
  *      An array of parameters that customize the way the parser works.
  *
@@ -49,7 +114,8 @@ function pum_trigger_popup_form_success( $popup_id = null, $settings = [] ) {
  *      @type int $source_post_id Optional post/page ID where the form was submitted.
  *      @type string $source_url Optional URL where the form was submitted.
  *      @type array $context Optional extension-owned submission context.
- *      @type bool $ajax If the submission was processed via AJAX. Generally gonna be false outside of JavaScript.
+ *      @type array $phases Optional actions, tracking, and frontend phase policy.
+ *      @type bool $ajax If the submission was processed via AJAX.
  *      @type bool $tracked Whether the submission has been handled by tracking code or not. Prevents duplicates.
  * }
  */
@@ -69,7 +135,8 @@ function pum_integrated_form_submission( $args = [] ) {
 			'source_post_id'   => $source_post_id ? $source_post_id : null,
 			'source_url'       => $source_url,
 			'context'          => [],
-			'ajax'             => false,
+			'phases'           => [],
+			'ajax'             => wp_doing_ajax(),
 			'tracked'          => false,
 		]
 	);
@@ -95,10 +162,25 @@ function pum_integrated_form_submission( $args = [] ) {
 	$args['source_post_id'] = $source_post_id ? $source_post_id : null;
 	$args['source_url']     = ! empty( $args['source_url'] ) && is_string( $args['source_url'] ) ? esc_url_raw( $args['source_url'] ) : null;
 	$args['context']        = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : [];
+	$args['phases']         = pum_get_integrated_form_submission_phases( $args );
 
-	PUM_Integrations::$form_submission = $args;
+	PUM_Integrations::$form_submission = $args['phases']['frontend'] ? $args : null;
 
 	do_action( 'pum_integrated_form_submission', $args );
+
+	if ( $args['phases']['actions'] ) {
+		/**
+		 * Fires when action runners are authorized for a normalized submission.
+		 *
+		 * Observation and capture consumers should continue using
+		 * `pum_integrated_form_submission`, which always fires.
+		 *
+		 * @since 1.24.0
+		 *
+		 * @param array $args Normalized submission arguments.
+		 */
+		do_action( 'pum_integrated_form_submission_actions', $args );
+	}
 }
 
 /**

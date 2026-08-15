@@ -202,6 +202,7 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
 				'form_id'       => (string) $form_id,
+				'submission_id' => is_scalar( $entry_id ) ? $entry_id : null,
 			]
 		);
 	}

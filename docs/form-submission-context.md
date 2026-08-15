@@ -6,6 +6,10 @@ Popup Maker form integrations report successful submissions through
 provider-independent, and extensions can attach their own namespaced data to
 `context` without changing each provider integration.
 
+The envelope also carries a `phases` policy. Observation is unconditional;
+actions, Core conversion tracking, and frontend effects are independently
+authorized.
+
 ## Contract
 
 PHP integrations use snake-cased keys:
@@ -24,6 +28,66 @@ pum_integrated_form_submission( [
 	],
 ] );
 ```
+
+## Processing phases
+
+The normalized phase map is:
+
+```php
+[
+	'actions'  => true,
+	'tracking' => true,
+	'frontend' => true,
+]
+```
+
+Normal browser POST requests default all three phases to `true`. Server-side
+AJAX and REST callbacks default to `actions: true`, `tracking: false`, and
+`frontend: false`. This lets extensions act on a provider-confirmed success
+without counting the conversion before the provider's browser success event or
+trying to replay browser behavior from an asynchronous response.
+
+Callers may pass explicit phases to `pum_integrated_form_submission()`. The
+`pum_integrated_form_submission_phases` PHP filter and
+`pum.integration.form.phases` JavaScript filter can adjust the final policy.
+`tracked: true` is an authoritative receipt and always forces tracking off.
+
+Use these observation hooks for capture, diagnostics, or consumers that must
+see every normalized success, including suppressed repeats:
+
+- PHP: `pum_integrated_form_submission`
+- JavaScript: `pum.integration.form.success`
+
+Use these gated hooks for action runners:
+
+- PHP: `pum_integrated_form_submission_actions`
+- JavaScript: `pum.integration.form.actions`
+
+The action hooks only fire when `phases.actions` is true. Existing observation
+hooks remain unconditional for compatibility. Core analytics honors
+`phases.tracking`; Core cookies, form triggers, and popup close behavior honor
+`phases.frontend`.
+
+The PHP and JavaScript action hooks are runtime-specific contracts, not two
+halves of one guaranteed-once action. An AJAX provider may confirm success on
+the server and later emit a browser success without exposing the same native
+receipt to JavaScript; both runtimes therefore default actions on. Server-side
+actions should subscribe only to the PHP action hook. Browser-only actions
+should subscribe only to the JavaScript action hook. A consumer that
+intentionally listens to both must provide its own cross-runtime idempotency
+key. Popup Maker does not treat independently generated UUIDs as proof that
+the callbacks represent the same submission.
+
+On a non-AJAX POST, PHP performs authorized server actions and tracking. The
+localized browser replay is marked `tracked: true` with actions and tracking
+disabled, while frontend effects remain enabled. This preserves cookies,
+triggers, and popup behavior without repeating server actions or conversions.
+
+JavaScript keeps a bounded, request-local history of the 100 most recent native
+submission keys (`provider + form + submission ID`). A repeated native key has
+all three phases disabled but still reaches the observation hook. Generated
+UUIDs identify one normalized event only and are never used to claim
+cross-transport deduplication.
 
 JavaScript integrations receive the camel-cased equivalents. When a provider
 does not supply `submission_id` / `submissionId`, Popup Maker generates a UUID
@@ -62,3 +126,16 @@ Context and source values are descriptive metadata, not proof of identity or
 authorization. Consumers must validate untrusted values before privileged
 operations and apply their own privacy and retention policies before storing
 submission data.
+
+## Public extension points
+
+| Name | Runtime | Purpose |
+| --- | --- | --- |
+| `pum_integrated_form_submission_args` | PHP filter | Extend or normalize the envelope before phases resolve. |
+| `pum_integrated_form_submission_phases` | PHP filter | Authorize actions, tracking, and frontend replay independently. |
+| `pum_integrated_form_submission` | PHP action | Observe every normalized server success. |
+| `pum_integrated_form_submission_actions` | PHP action | Run authorized server actions. |
+| `pum.integration.form.submissionArgs` | JS filter | Extend or normalize the browser envelope. |
+| `pum.integration.form.phases` | JS filter | Authorize browser actions, tracking, and frontend effects independently. |
+| `pum.integration.form.success` | JS action | Observe every normalized browser success. |
+| `pum.integration.form.actions` | JS action | Run authorized browser actions. |

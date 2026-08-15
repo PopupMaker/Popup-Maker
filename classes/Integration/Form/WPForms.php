@@ -97,6 +97,7 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
 				'form_id'       => $form_data['id'],
+				'submission_id' => is_numeric( $entry_id ) && absint( $entry_id ) > 0 ? $entry_id : null,
 			]
 		);
 	}

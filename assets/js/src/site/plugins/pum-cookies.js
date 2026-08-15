@@ -102,6 +102,10 @@
 			PUM.hooks.addAction(
 				'pum.integration.form.success',
 				function ( form, args ) {
+					if ( args.phases && ! args.phases.frontend ) {
+						return;
+					}
+
 					if ( ! settings.form.length ) {
 						return;
 					}

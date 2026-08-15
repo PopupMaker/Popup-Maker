@@ -73,12 +73,6 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 			return;
 		}
 
-		// This key is set when Gravity Forms is submitted via AJAX. Ignored because this is a simple boolean check.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( isset( $_POST['gform_ajax'] ) && ! is_null( $_POST['gform_ajax'] ) ) {
-			return;
-		}
-
 		$popup_id = $this->get_popup_id();
 
 		if ( $popup_id ) {
@@ -90,6 +84,7 @@ class PUM_Integration_Form_GravityForms extends PUM_Abstract_Integration_Form {
 				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
 				'form_id'       => $form['id'],
+				'submission_id' => isset( $entry['id'] ) && is_scalar( $entry['id'] ) ? $entry['id'] : null,
 			]
 		);
 	}

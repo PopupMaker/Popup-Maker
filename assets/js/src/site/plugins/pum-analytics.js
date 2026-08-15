@@ -214,7 +214,11 @@
 			// Store reference so Pro can unhook it
 			window.PUM.coreFormAnalyticsHandler = function ( form, args ) {
 				// If the submission has already been counted in the backend, we can bail early.
-				if ( args.ajax === false ) {
+				if (
+					args.ajax === false ||
+					args.tracked ||
+					( args.phases && ! args.phases.tracking )
+				) {
 					return;
 				}
 
@@ -235,6 +239,8 @@
 						formId: args.formId || null,
 						formKey: args.formKey || null,
 						formInstanceId: args.formInstanceId || null,
+						submissionId: args.submissionId || null,
+						phases: args.phases,
 					},
 				};
 
