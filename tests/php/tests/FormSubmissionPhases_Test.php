@@ -461,6 +461,19 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 			'form_id'  => 7,
 			'is_draft' => 0,
 		];
+		$malformed_values   = [ 'frm_saving_draft' => new stdClass() ];
+		$this->assertSame( $malformed_values, $integration->capture_draft_transition( $malformed_values, 105 ) );
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 0,
+		];
+		$integration->on_update_success( 105, 7 );
+		$this->assertSame( 0, $observed );
+
+		$integration->entry = (object) [
+			'is_draft'       => 1,
+			'parent_item_id' => 0,
+		];
 		$this->assertSame( $values, $integration->capture_draft_transition( $values, 105 ) );
 
 		$integration->entry = (object) [

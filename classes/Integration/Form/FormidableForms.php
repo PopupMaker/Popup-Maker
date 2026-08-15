@@ -140,7 +140,8 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 
 		unset( $this->draft_transitions[ $normalized_id ] );
 
-		if ( 1 === (int) ( isset( $values['frm_saving_draft'] ) ? $values['frm_saving_draft'] : 0 ) || ! empty( $values['is_draft'] ) ) {
+		$draft_marker = isset( $values['frm_saving_draft'] ) ? $values['frm_saving_draft'] : 0;
+		if ( ! is_scalar( $draft_marker ) || 1 === (int) $draft_marker || ! empty( $values['is_draft'] ) ) {
 			return $values;
 		}
 
