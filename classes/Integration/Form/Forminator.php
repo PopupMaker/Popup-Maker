@@ -119,6 +119,10 @@ class PUM_Integration_Form_Forminator extends PUM_Abstract_Integration_Form {
 	 * @param array  $field_data_array Field data array.
 	 */
 	public function on_success( $entry, $form_id, $field_data_array ) {
+		if ( ! is_object( $entry ) && ! is_array( $entry ) ) {
+			return;
+		}
+
 		$status = is_object( $entry ) && isset( $entry->status ) ? $entry->status : ( is_array( $entry ) && isset( $entry['status'] ) ? $entry['status'] : null );
 		if ( null !== $status && 'active' !== $status ) {
 			return;

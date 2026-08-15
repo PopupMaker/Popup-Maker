@@ -359,6 +359,8 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 		foreach ( [ 'draft', 'abandoned', 'spam' ] as $status ) {
 			$integration->on_success( (object) [ 'status' => $status ], 7, [] );
 		}
+		$integration->on_success( null, 7, [] );
+		$integration->on_success( 'invalid-entry', 7, [] );
 		$integration->on_success( (object) [ 'is_spam' => true ], 7, [] );
 		$integration->on_success( (object) [ 'draft_id' => 'draft-7' ], 7, [] );
 
