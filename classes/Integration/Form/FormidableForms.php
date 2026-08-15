@@ -125,13 +125,19 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	 * @return bool
 	 */
 	protected function is_successful_entry( $entry_id, $args ) {
-		if ( ! empty( $args['is_child'] ) ) {
+		if (
+			! ( is_int( $entry_id ) || ( is_string( $entry_id ) && ctype_digit( $entry_id ) ) )
+			|| (int) $entry_id < 1
+			|| ! empty( $args['is_child'] )
+		) {
 			return false;
 		}
 
-		$entry = $this->get_entry( $entry_id );
+		$entry = $this->get_entry( (int) $entry_id );
 
-		return is_object( $entry ) && empty( $entry->is_draft );
+		return is_object( $entry )
+			&& empty( $entry->is_draft )
+			&& empty( $entry->parent_item_id );
 	}
 
 	/**

@@ -340,9 +340,9 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 				return (object) [ 'is_draft' => 0 ];
 			}
 		};
-		$integration->on_success( 'entry-95', 7 );
+		$integration->on_success( 95, 7 );
 
-		$this->assertSame( 'entry-95', $observed['submission_id'] );
+		$this->assertSame( 95, $observed['submission_id'] );
 		$this->assertTrue( $observed['ajax'] );
 		$this->assertSame(
 			[
@@ -369,6 +369,9 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 			/** @var object|null */
 			public $entry;
 
+			/** @var int */
+			public $entry_loads = 0;
+
 			/**
 			 * Return a non-AJAX synthetic form.
 			 *
@@ -386,17 +389,32 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 			 * @return object|null
 			 */
 			protected function get_entry( $entry_id ) {
+				++$this->entry_loads;
 				return $this->entry;
 			}
 		};
+
+		foreach ( [ null, [], new stdClass(), 0, -1, 1.5, 'entry-100' ] as $invalid_entry_id ) {
+			$integration->on_success( $invalid_entry_id, 7, [ 'is_child' => false ] );
+		}
+		$this->assertSame( 0, $integration->entry_loads );
 
 		$integration->entry = (object) [ 'is_draft' => 1 ];
 		$integration->on_success( 101, 7, [ 'is_child' => false ] );
 		$integration->entry = (object) [ 'is_draft' => 0 ];
 		$integration->on_success( 102, 7, [ 'is_child' => true ] );
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 101,
+		];
+		$integration->on_success( 103, 7, [ 'is_child' => false ] );
 		$this->assertSame( 0, $observed );
 
-		$integration->on_success( 103, 7, [ 'is_child' => false ] );
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 0,
+		];
+		$integration->on_success( '104', 7, [ 'is_child' => false ] );
 		$this->assertSame( 1, $observed );
 	}
 
