@@ -294,6 +294,58 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Gravity Forms entry objects retain their provider entry ID.
+	 */
+	public function test_gravity_forms_object_entry_uses_scalar_id() {
+		$observed                 = null;
+		$this->observation_action = static function ( $args ) use ( &$observed ) {
+			$observed = $args;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new PUM_Integration_Form_GravityForms();
+		$integration->on_success( (object) [ 'id' => 'entry-94' ], [ 'id' => 7 ] );
+
+		$this->assertSame( 'entry-94', $observed['submission_id'] );
+	}
+
+	/**
+	 * Formidable's provider option marks submissions using its AJAX transport.
+	 */
+	public function test_formidable_ajax_option_uses_async_phases() {
+		$observed                 = null;
+		$this->observation_action = static function ( $args ) use ( &$observed ) {
+			$observed = $args;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new class() extends PUM_Integration_Form_FormidableForms {
+			/**
+			 * Return an AJAX-enabled test form.
+			 *
+			 * @param string $id Form ID.
+			 * @return object
+			 */
+			public function get_form( $id ) {
+				return (object) [ 'options' => [ 'ajax_submit' => true ] ];
+			}
+		};
+		$integration->on_success( 'entry-95', 7 );
+
+		$this->assertSame( 'entry-95', $observed['submission_id'] );
+		$this->assertTrue( $observed['ajax'] );
+		$this->assertSame(
+			[
+				'actions'  => true,
+				'tracking' => false,
+				'frontend' => false,
+			],
+			$observed['phases']
+		);
+		$this->assertNull( PUM_Integrations::$form_submission );
+	}
+
+	/**
 	 * Non-AJAX callbacks increment each Core metric exactly once.
 	 *
 	 * @runInSeparateProcess

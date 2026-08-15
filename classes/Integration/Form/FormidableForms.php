@@ -98,6 +98,12 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 		}
 
 		$popup_id = $this->get_popup_id();
+		$form     = $this->get_form( intval( $form_id ) );
+		$is_ajax  = is_object( $form )
+			&& isset( $form->options )
+			&& is_array( $form->options )
+			&& isset( $form->options['ajax_submit'] )
+			&& true === $form->options['ajax_submit'];
 
 		pum_integrated_form_submission(
 			[
@@ -105,6 +111,7 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 				'form_provider' => $this->key,
 				'form_id'       => $form_id,
 				'submission_id' => is_scalar( $entry_id ) ? $entry_id : null,
+				'ajax'          => $is_ajax,
 			]
 		);
 	}
