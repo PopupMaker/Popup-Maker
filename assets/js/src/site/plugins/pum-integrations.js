@@ -14,6 +14,30 @@
 		return x;
 	}
 
+	function generateSubmissionId() {
+		if ( window.crypto && 'function' === typeof window.crypto.randomUUID ) {
+			return window.crypto.randomUUID();
+		}
+
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+			/[xy]/g,
+			( character ) => {
+				const random = Math.floor( Math.random() * 16 );
+				const value = 'x' === character ? random : ( random % 4 ) + 8;
+
+				return value.toString( 16 );
+			}
+		);
+	}
+
+	function validSubmissionId( submissionId ) {
+		return (
+			( 'string' === typeof submissionId ||
+				'number' === typeof submissionId ) &&
+			'' !== String( submissionId )
+		);
+	}
+
 	$.extend( window.PUM.integrations, {
 		init() {
 			if ( pumVars && 'undefined' !== typeof pumVars.form_submission ) {
@@ -43,6 +67,10 @@
 		 *     @type {string} formProvider Such as gravityforms or ninjaforms
 		 *     @type {string|number} formId Usually an integer ID number such as 1
 		 *     @type {number} formInstanceId Not all form plugins support this.
+		 *     @type {string|number} submissionId Stable submission or provider entry ID.
+		 *     @type {number} sourcePostId Optional post/page ID where the form was submitted.
+		 *     @type {string} sourceUrl URL where the form was submitted.
+		 *     @type {Object} context Extension-owned submission context.
 		 * }
 		 */
 		formSubmission( form, args ) {
@@ -54,12 +82,51 @@
 					formProvider: null,
 					formId: null,
 					formInstanceId: null,
+					submissionId: null,
+					sourcePostId: null,
+					sourceUrl: window.location.href,
+					context: {},
 					formKey: null,
 					ajax: true, // Allows detecting submissions that may have already been counted.
 					tracked: false,
 				},
 				args
 			);
+
+			args.submissionId = validSubmissionId( args.submissionId )
+				? args.submissionId
+				: generateSubmissionId();
+			args.context =
+				args.context &&
+				'object' === typeof args.context &&
+				! Array.isArray( args.context )
+					? args.context
+					: {};
+			const canonicalSubmissionId = args.submissionId;
+
+			/**
+			 * Filters normalized form submission arguments before success handlers run.
+			 *
+			 * Extensions can append context without coupling to individual providers.
+			 *
+			 * @param {Object} args Normalized submission arguments.
+			 * @param {Object} form Submitted form element or jQuery object.
+			 */
+			args = window.PUM.hooks.applyFilters(
+				'pum.integration.form.submissionArgs',
+				args,
+				form
+			);
+
+			args.submissionId = validSubmissionId( args.submissionId )
+				? args.submissionId
+				: canonicalSubmissionId;
+			args.context =
+				args.context &&
+				'object' === typeof args.context &&
+				! Array.isArray( args.context )
+					? args.context
+					: {};
 
 			// Generate unique formKey identifier.
 			args.formKey =
@@ -87,6 +154,10 @@
 			 *     @type {string} formProvider Such as gravityforms or ninjaforms
 			 *     @type {string|number} formId Usually an integer ID number such as 1
 			 *     @type {number} formInstanceId Not all form plugins support this.
+			 *     @type {string|number} submissionId Stable submission or provider entry ID.
+			 *     @type {number} sourcePostId Optional post/page ID where the form was submitted.
+			 *     @type {string} sourceUrl URL where the form was submitted.
+			 *     @type {Object} context Extension-owned submission context.
 			 *     @type {string} formKey Concatenation of provider, ID & Instance ID.
 			 *     @type {number} popupId The ID of the popup the form was in.
 			 *     @type {Object} popup Usable jQuery object for the popup.

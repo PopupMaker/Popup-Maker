@@ -534,7 +534,10 @@ class PUM_Integrations {
 					'form_provider'    => 'formProvider',
 					'form_id'          => 'formId',
 					'form_instance_id' => 'formInstanceId',
+					'submission_id'    => 'submissionId',
 					'popup_id'         => 'popupId',
+					'source_post_id'   => 'sourcePostId',
+					'source_url'       => 'sourceUrl',
 				]
 			);
 		}

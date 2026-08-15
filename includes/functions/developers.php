@@ -44,12 +44,20 @@ function pum_trigger_popup_form_success( $popup_id = null, $settings = [] ) {
  *      @type string $form_provider Key indicating which form provider this form belongs to.
  *      @type string|int $form_id Form ID, usually numeric, but can be hash based.
  *      @type int $form_instance_id Optional form instance ID.
+ *      @type string|int $submission_id Stable submission or provider entry ID. Generated when omitted.
  *      @type int $popup_id Optional popup ID.
+ *      @type int $source_post_id Optional post/page ID where the form was submitted.
+ *      @type string $source_url Optional URL where the form was submitted.
+ *      @type array $context Optional extension-owned submission context.
  *      @type bool $ajax If the submission was processed via AJAX. Generally gonna be false outside of JavaScript.
  *      @type bool $tracked Whether the submission has been handled by tracking code or not. Prevents duplicates.
  * }
  */
 function pum_integrated_form_submission( $args = [] ) {
+	$source_url     = wp_get_raw_referer();
+	$source_url     = $source_url ? esc_url_raw( $source_url ) : null;
+	$source_post_id = $source_url ? url_to_postid( $source_url ) : null;
+
 	$args = wp_parse_args(
 		$args,
 		[
@@ -57,12 +65,36 @@ function pum_integrated_form_submission( $args = [] ) {
 			'form_provider'    => null,
 			'form_id'          => null,
 			'form_instance_id' => null,
+			'submission_id'    => null,
+			'source_post_id'   => $source_post_id ? $source_post_id : null,
+			'source_url'       => $source_url,
+			'context'          => [],
 			'ajax'             => false,
 			'tracked'          => false,
 		]
 	);
 
+	if ( ! isset( $args['submission_id'] ) || ( ! is_string( $args['submission_id'] ) && ! is_int( $args['submission_id'] ) ) || '' === (string) $args['submission_id'] ) {
+		$args['submission_id'] = wp_generate_uuid4();
+	}
+
+	$source_post_id         = ! empty( $args['source_post_id'] ) ? absint( $args['source_post_id'] ) : 0;
+	$args['source_post_id'] = $source_post_id ? $source_post_id : null;
+	$args['source_url']     = ! empty( $args['source_url'] ) && is_string( $args['source_url'] ) ? esc_url_raw( $args['source_url'] ) : null;
+	$args['context']        = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : [];
+
+	$submission_id = $args['submission_id'];
+
 	$args = apply_filters( 'pum_integrated_form_submission_args', $args );
+
+	if ( ! isset( $args['submission_id'] ) || ( ! is_string( $args['submission_id'] ) && ! is_int( $args['submission_id'] ) ) || '' === (string) $args['submission_id'] ) {
+		$args['submission_id'] = $submission_id;
+	}
+
+	$source_post_id         = ! empty( $args['source_post_id'] ) ? absint( $args['source_post_id'] ) : 0;
+	$args['source_post_id'] = $source_post_id ? $source_post_id : null;
+	$args['source_url']     = ! empty( $args['source_url'] ) && is_string( $args['source_url'] ) ? esc_url_raw( $args['source_url'] ) : null;
+	$args['context']        = isset( $args['context'] ) && is_array( $args['context'] ) ? $args['context'] : [];
 
 	PUM_Integrations::$form_submission = $args;
 
