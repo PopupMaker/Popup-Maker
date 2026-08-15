@@ -541,9 +541,16 @@ class PUM_Integrations {
 				]
 			);
 
-			// remap_keys intentionally skips empty values, but null is meaningful here.
-			if ( array_key_exists( 'source_url', self::$form_submission ) ) {
-				$vars['form_submission']['sourceUrl'] = self::$form_submission['source_url'];
+			// remap_keys intentionally skips empty values, but these values are meaningful.
+			$preserved_keys = [
+				'submission_id' => 'submissionId',
+				'source_url'    => 'sourceUrl',
+			];
+
+			foreach ( $preserved_keys as $php_key => $js_key ) {
+				if ( array_key_exists( $php_key, self::$form_submission ) ) {
+					$vars['form_submission'][ $js_key ] = self::$form_submission[ $php_key ];
+				}
 			}
 		}
 
