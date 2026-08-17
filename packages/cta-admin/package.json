@@ -39,21 +39,21 @@
 		"@popup-maker/use-query-params": "workspace:*",
 		"@popup-maker/utils": "workspace:*",
 		"@wordpress/components": "^38.0.0",
-		"@wordpress/data": "^10.52.0",
-		"@wordpress/dom-ready": "^4.52.0",
-		"@wordpress/element": "^8.4.0",
-		"@wordpress/hooks": "^4.52.0",
-		"@wordpress/html-entities": "^4.52.0",
-		"@wordpress/icons": "^15.3.0",
+		"@wordpress/data": "^10.53.0",
+		"@wordpress/dom-ready": "^4.53.0",
+		"@wordpress/element": "^8.5.0",
+		"@wordpress/hooks": "^4.53.0",
+		"@wordpress/html-entities": "^4.53.0",
+		"@wordpress/icons": "^15.4.0",
 		"clsx": "^2.1.1",
 		"react-router-dom": "7.18.2"
 	},
 	"devDependencies": {
 		"@jest/globals": "^30.4.1",
 		"@popup-maker/types": "workspace:*",
-		"@testing-library/jest-dom": "^7.0.0",
+		"@testing-library/jest-dom": "^7.0.1",
 		"@testing-library/react": "^16.2.0",
-		"@testing-library/user-event": "^14.6.3"
+		"@testing-library/user-event": "^14.6.4"
 	},
 	"scripts": {
 		"prepack": "pnpm run build:tsc && pnpm run build:types",
