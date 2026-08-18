@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Security**
+
+-   Hardened object-search label handling across admin and API paths with additional validation and escaping safeguards.
+
 **Fixes**
 
 -   Fixed the Popup Maker admin toolbar controls not opening or closing popups, checking conditions, or resetting cookies—a regression introduced in 1.24.0.

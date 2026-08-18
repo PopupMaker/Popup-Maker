@@ -159,6 +159,44 @@ class REST_ObjectSearch_Test extends WP_UnitTestCase {
 		$this->assertGreaterThanOrEqual( 1, $data['total_count'], 'Should include the specified post.' );
 	}
 
+	/**
+	 * Test object labels are escaped after all result filters run.
+	 */
+	public function test_search_objects_escapes_filtered_labels() {
+		wp_set_current_user( $this->admin_user );
+
+		add_filter(
+			'popup_maker/pre_object_search',
+			function () {
+				return [
+					'items'       => [
+						[
+							'id'   => 1,
+							'text' => '<img src=x onerror=alert(document.domain)>',
+						],
+						[
+							'id'   => 2,
+							'text' => '&lt;svg onload=alert(document.domain)&gt;',
+						],
+					],
+					'total_count' => 2,
+				];
+			}
+		);
+
+		$request = new WP_REST_Request( 'GET', '/popup-maker/v2/object-search' );
+		$request->set_param( 'object_type', 'post_type' );
+
+		$response = $this->controller->search_objects( $request );
+		$data     = $response->get_data();
+
+		$this->assertSame( '&lt;img src=x onerror=alert(document.domain)&gt;', $data['items'][0]['text'] );
+		$this->assertSame( '&lt;svg onload=alert(document.domain)&gt;', $data['items'][1]['text'] );
+
+		// Clean up.
+		remove_all_filters( 'popup_maker/pre_object_search' );
+	}
+
 	// ─── Taxonomy search ────────────────────────────────────────────────
 
 	/**

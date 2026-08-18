@@ -43,14 +43,21 @@
 									};
 								},
 								processResults: function ( data, params ) {
-									// parse the results into the format expected by Select2
-									// since we are using custom formatting functions we do not need to
-									// alter the remote JSON data, except to indicate that infinite
-									// scrolling can be used
+									// Decode server-escaped labels before Select2 safely renders them as text.
 									params.page = params.page || 1;
 
 									return {
-										results: data.items,
+										results: $.map(
+											data.items,
+											function ( item ) {
+												item.text =
+													select2.decodeObjectText(
+														item.text
+													);
+
+												return item;
+											}
+										),
 										pagination: {
 											more:
 												params.page * 10 <
@@ -61,9 +68,6 @@
 								cache: true,
 							},
 							cache: true,
-							escapeMarkup: function ( markup ) {
-								return markup;
-							}, // let our custom formatter work
 							maximumInputLength: 20,
 							closeOnSelect: ! options.multiple,
 							templateResult: PUM_Admin.select2.formatObject,
@@ -115,6 +119,10 @@
 							dataType: 'json',
 							success: function ( data ) {
 								$.each( data.items, function ( key, item ) {
+									item.text = select2.decodeObjectText(
+										item.text
+									);
+
 									// Add any option that doesn't already exist
 									if (
 										! $this.find(
@@ -122,11 +130,9 @@
 										).length
 									) {
 										$this.prepend(
-											'<option value="' +
-												item.id +
-												'">' +
-												item.text +
-												'</option>'
+											$( '<option>' )
+												.val( item.id )
+												.text( item.text )
 										);
 									}
 								} );
@@ -150,6 +156,12 @@
 		},
 		formatObjectSelection: function ( object ) {
 			return object.text || object.text;
+		},
+		decodeObjectText: function ( text ) {
+			var textarea = document.createElement( 'textarea' );
+			textarea.innerHTML = text;
+
+			return textarea.value;
 		},
 	};
 
