@@ -398,8 +398,10 @@ jobs:
 
       - name: Configure Plugin Check environment
         run: |
-          jq -n --arg plugin "$GITHUB_WORKSPACE/popup-maker" '{
-            core: null,
+          jq -n \
+            --arg core "WordPress/WordPress#$WP_VERSION" \
+            --arg plugin "$GITHUB_WORKSPACE/popup-maker" '{
+            core: $core,
             testsEnvironment: false,
             port: 8888,
             mappings: {"wp-content/plugins/popup-maker": $plugin}
