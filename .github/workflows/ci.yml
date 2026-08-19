@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  WP_VERSION: 7.0
+  WP_VERSION: '7.0'
   PLUGIN_CHECK_VERSION: 2.0.0
 
 # Cancels all previous workflow runs for the same branch that have not yet completed.
