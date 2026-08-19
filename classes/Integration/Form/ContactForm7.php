@@ -102,10 +102,6 @@ class PUM_Integration_Form_ContactForm7 extends PUM_Abstract_Integration_Form {
 
 		$popup_id = $this->get_popup_id();
 
-		if ( $popup_id ) {
-			$this->increase_conversion( $popup_id );
-		}
-
 		pum_integrated_form_submission(
 			[
 				'popup_id'      => $popup_id,
