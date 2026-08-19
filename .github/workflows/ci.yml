@@ -408,7 +408,8 @@ jobs:
       - name: Start WordPress and install Plugin Check
         run: |
           pnpm dlx @wordpress/env@11.8.0 start --config "$GITHUB_WORKSPACE/plugin-check.wp-env.json" --update
-          pnpm dlx @wordpress/env@11.8.0 run cli --config "$GITHUB_WORKSPACE/plugin-check.wp-env.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
+          pnpm dlx @wordpress/env@11.8.0 run cli --config "$GITHUB_WORKSPACE/plugin-check.wp-env.json" wp plugin delete plugin-check || true
+          pnpm dlx @wordpress/env@11.8.0 run cli --config "$GITHUB_WORKSPACE/plugin-check.wp-env.json" wp plugin install "https://downloads.wordpress.org/plugin/plugin-check.${PLUGIN_CHECK_VERSION}.zip" --activate --force
 
       - name: Scan assembled plugin
         run: |
