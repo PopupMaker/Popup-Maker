@@ -1,0 +1,23 @@
+name: Sync published release to WordPress changelog
+
+on:
+  release:
+    types: [published, edited]
+  workflow_dispatch:
+    inputs:
+      release_id:
+        description: GitHub release database ID to retry.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  changelog:
+    name: Sync review-required WordPress draft
+    uses: PopupMaker/release-changelog-site-config/.github/workflows/sync-release.yml@v1
+    with:
+      product-key: core
+      release-id: ${{ github.event.release.id || inputs.release_id }}
+    secrets: inherit
