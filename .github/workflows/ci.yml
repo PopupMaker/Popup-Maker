@@ -407,12 +407,12 @@ jobs:
 
       - name: Start WordPress and install Plugin Check
         run: |
-          pnpm exec wp-env start --config "$RUNNER_TEMP/plugin-check.wp-env.json" --update
-          pnpm exec wp-env run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
+          pnpm dlx @wordpress/env@11.8.0 start --config "$RUNNER_TEMP/plugin-check.wp-env.json" --update
+          pnpm dlx @wordpress/env@11.8.0 run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
 
       - name: Scan assembled plugin
         run: |
-          pnpm exec wp-env run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin check popup-maker \
+          pnpm dlx @wordpress/env@11.8.0 run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin check popup-maker \
             --exclude-checks=plugin_review_phpcs \
             --ignore-warnings \
             --exclude-directories=vendor-prefixed \
@@ -435,7 +435,7 @@ jobs:
 
       - name: Stop Plugin Check environment
         if: always()
-        run: pnpm exec wp-env stop --config "$RUNNER_TEMP/plugin-check.wp-env.json" || true
+        run: pnpm dlx @wordpress/env@11.8.0 stop --config "$RUNNER_TEMP/plugin-check.wp-env.json" || true
 
   # ============================================================================
   # Security Scanning - NPM Dependencies
