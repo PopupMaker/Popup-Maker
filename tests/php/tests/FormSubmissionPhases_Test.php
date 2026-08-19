@@ -26,6 +26,7 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 		unset( $_REQUEST['pum_form_popup_id'] );
 		unset( $_REQUEST['_wp_http_referer'] );
 		unset( $_REQUEST['action'] );
+		unset( $_REQUEST['node_id'] );
 		unset( $_POST['gform_ajax'] );
 
 		if ( $this->observation_action ) {
@@ -39,6 +40,120 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 		}
 
 		parent::tearDown();
+	}
+
+	/**
+	 * Beaver Builder's native success hooks dispatch each module once.
+	 */
+	public function test_beaver_builder_native_success_hooks_dispatch_once() {
+		if ( ! class_exists( 'PUM_Integration_Form_BeaverBuilder' ) ) {
+			require_once PUM_PATH . 'classes/Integration/Form/BeaverBuilder.php';
+		}
+
+		$observed                 = [];
+		$actions                  = 0;
+		$this->observation_action = static function ( $args ) use ( &$observed ) {
+			if ( 'beaverbuilder' === $args['form_provider'] ) {
+				$observed[] = $args;
+			}
+		};
+		$this->runner_action      = static function ( $args ) use ( &$actions ) {
+			if ( 'beaverbuilder' === $args['form_provider'] ) {
+				++$actions;
+			}
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+		add_action( 'pum_integrated_form_submission_actions', $this->runner_action );
+
+		$integration = new PUM_Integration_Form_BeaverBuilder();
+		$this->assertSame( 10, has_action( 'fl_module_contact_form_after_send', [ $integration, 'on_contact_success' ] ) );
+		$this->assertSame( 10, has_action( 'fl_builder_subscribe_form_submission_complete', [ $integration, 'on_subscribe_success' ] ) );
+		$this->assertSame( 10, has_action( 'fl_builder_login_form_submission_complete', [ $integration, 'on_login_success' ] ) );
+
+		$_REQUEST['node_id'] = 'contact-node';
+		$integration->on_contact_success( null, null, null, null, null, false );
+		$integration->on_contact_success( null, null, null, null, null, true );
+		$_REQUEST['node_id'] = 'subscribe-node';
+		$integration->on_subscribe_success( [], null, 'person@example.test', 'Person', 1, 2 );
+		$_REQUEST['node_id'] = 'login-node';
+		$integration->on_login_success( null, null, 'person', 1, 2 );
+
+		$this->assertSame( [ 'contact_contact-node', 'subscribe_subscribe-node', 'login_login-node' ], wp_list_pluck( $observed, 'form_id' ) );
+		$this->assertSame( 3, $actions );
+	}
+
+	/**
+	 * Bricks dispatches only a final successful response with native identity.
+	 */
+	public function test_bricks_native_response_dispatches_one_valid_success() {
+		if ( ! class_exists( 'PUM_Integration_Form_BricksBuilder' ) ) {
+			require_once PUM_PATH . 'classes/Integration/Form/BricksBuilder.php';
+		}
+
+		$observed                 = [];
+		$actions                  = 0;
+		$this->observation_action = static function ( $args ) use ( &$observed ) {
+			if ( 'bricksbuilder' === $args['form_provider'] ) {
+				$observed[] = $args;
+			}
+		};
+		$this->runner_action      = static function ( $args ) use ( &$actions ) {
+			if ( 'bricksbuilder' === $args['form_provider'] ) {
+				++$actions;
+			}
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+		add_action( 'pum_integrated_form_submission_actions', $this->runner_action );
+
+		$form        = new class() {
+			/** @return array<string,string> */
+			public function get_fields() {
+				return [ 'formId' => 'Bricks-42' ];
+			}
+		};
+		$integration = new PUM_Integration_Form_BricksBuilder();
+		$this->assertSame( 10, has_filter( 'bricks/form/response', [ $integration, 'on_response' ] ) );
+
+		$error   = [
+			'type'    => 'error',
+			'message' => 'Nope',
+		];
+		$success = [
+			'type'    => 'success',
+			'message' => 'Sent',
+		];
+		$this->assertSame( $error, $integration->on_response( $error, $form ) );
+		$this->assertSame( $success, $integration->on_response( $success, new stdClass() ) );
+		$this->assertSame( $success, $integration->on_response( $success, $form ) );
+
+		$this->assertCount( 1, $observed );
+		$this->assertSame( 'bricks-42', $observed[0]['form_id'] );
+		$this->assertSame( 1, $actions );
+	}
+
+	/**
+	 * MC4WP dispatches only its accepted server-side subscription hook.
+	 */
+	public function test_mc4wp_accepted_subscription_dispatches_once() {
+		if ( ! class_exists( 'PUM_Integration_Form_MC4WP' ) ) {
+			require_once PUM_PATH . 'classes/Integration/Form/MC4WP.php';
+		}
+
+		$observed                 = [];
+		$this->observation_action = static function ( $args ) use ( &$observed ) {
+			if ( 'mc4wp' === $args['form_provider'] ) {
+				$observed[] = $args;
+			}
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new PUM_Integration_Form_MC4WP();
+		$this->assertSame( 10, has_action( 'mc4wp_form_subscribed', [ $integration, 'on_subscribed' ] ) );
+		$integration->on_subscribed( (object) [ 'ID' => null ], 'invalid@example.test', [], [] );
+		$integration->on_subscribed( (object) [ 'ID' => 23 ], 'accepted@example.test', [], [] );
+
+		$this->assertCount( 1, $observed );
+		$this->assertSame( 23, $observed[0]['form_id'] );
 	}
 
 	/**
