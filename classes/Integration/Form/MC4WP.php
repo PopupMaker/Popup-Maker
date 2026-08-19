@@ -9,6 +9,13 @@
 class PUM_Integration_Form_MC4WP extends PUM_Abstract_Integration_Form {
 
 	/**
+	 * Register the provider's server-authoritative accepted-subscription hook.
+	 */
+	public function __construct() {
+		add_action( 'mc4wp_form_subscribed', [ $this, 'on_subscribed' ], 10, 4 );
+	}
+
+	/**
 	 * Unique key identifier for this provider.
 	 *
 	 * @var string
@@ -71,6 +78,32 @@ class PUM_Integration_Form_MC4WP extends PUM_Abstract_Integration_Form {
 		}
 
 		return $form_selectlist;
+	}
+
+	/**
+	 * Normalize a subscription only after Mailchimp accepted it.
+	 *
+	 * API errors and blocked duplicate attempts do not fire this hook.
+	 *
+	 * @param mixed $form  Submitted MC4WP form.
+	 * @param mixed $email Accepted subscriber email.
+	 * @param mixed $data  Submitted merge fields.
+	 * @param mixed $map   Subscriber map keyed by list ID.
+	 * @return void
+	 */
+	public function on_subscribed( $form, $email, $data, $map ) {
+		$form_id = is_object( $form ) && isset( $form->ID ) && is_scalar( $form->ID ) ? absint( $form->ID ) : 0;
+		if ( 0 === $form_id ) {
+			return;
+		}
+
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $this->get_popup_id(),
+				'form_provider' => $this->key,
+				'form_id'       => $form_id,
+			]
+		);
 	}
 
 	/**

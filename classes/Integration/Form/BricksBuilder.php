@@ -17,12 +17,54 @@ class PUM_Integration_Form_BricksBuilder extends PUM_Abstract_Integration_Form {
 	 * Constructor - Set up cache invalidation hooks.
 	 */
 	public function __construct() {
+		add_filter( 'bricks/form/response', [ $this, 'on_response' ], 10, 2 );
+
 		// Clear cache when Bricks content is updated.
 		add_action( 'updated_post_meta', [ $this, 'maybe_clear_cache' ], 10, 4 );
 		add_action( 'added_post_meta', [ $this, 'maybe_clear_cache' ], 10, 4 );
 		add_action( 'deleted_post_meta', [ $this, 'maybe_clear_cache' ], 10, 4 );
 		add_action( 'wp_trash_post', [ $this, 'clear_forms_cache' ] );
 		add_action( 'untrash_post', [ $this, 'clear_forms_cache' ] );
+	}
+
+	/**
+	 * Normalize the final successful Bricks response.
+	 *
+	 * Bricks applies this filter after validation and configured form actions.
+	 * Failed responses remain untouched and never become normalized receipts.
+	 *
+	 * @param mixed $response Native response.
+	 * @param mixed $form     Native form runtime.
+	 * @return mixed
+	 */
+	public function on_response( $response, $form ) {
+		if (
+			! is_array( $response ) ||
+			'success' !== ( $response['type'] ?? null ) ||
+			! is_object( $form ) ||
+			! method_exists( $form, 'get_fields' )
+		) {
+			return $response;
+		}
+
+		$fields  = $form->get_fields();
+		$form_id = is_array( $fields ) && isset( $fields['formId'] ) && is_scalar( $fields['formId'] )
+			? sanitize_key( (string) $fields['formId'] )
+			: '';
+
+		if ( '' === $form_id ) {
+			return $response;
+		}
+
+		pum_integrated_form_submission(
+			[
+				'popup_id'      => $this->get_popup_id(),
+				'form_provider' => $this->key,
+				'form_id'       => $form_id,
+			]
+		);
+
+		return $response;
 	}
 
 	/**
