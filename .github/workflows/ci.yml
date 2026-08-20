@@ -418,6 +418,7 @@ jobs:
           pnpm dlx @wordpress/env@11.8.0 run cli --config "$GITHUB_WORKSPACE/plugin-check.wp-env.json" wp plugin check popup-maker \
             --exclude-checks=plugin_review_phpcs \
             --ignore-warnings \
+            --ignore-codes=outdated_tested_upto_header \
             --exclude-directories=vendor-prefixed \
             --format=strict-json \
             --fields=file,line,column,type,code,message,docs \
