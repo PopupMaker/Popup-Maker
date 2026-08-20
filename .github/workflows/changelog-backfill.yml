@@ -25,10 +25,13 @@ permissions:
 jobs:
   backfill:
     name: Review or run Core changelog backfill
-    uses: PopupMaker/release-changelog-site-config/.github/workflows/backfill-releases.yml@v1
+    uses: PopupMaker/release-changelog-site-config/.github/workflows/backfill-releases.yml@d13f1c71cd6b85aa67410a0dbccc6730a4188f8b
     with:
       product-key: core
       max-releases: ${{ fromJSON(inputs.max_releases) }}
       since: ${{ inputs.since }}
       dry-run: ${{ inputs.dry_run }}
-    secrets: inherit
+    secrets:
+      WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
+      WORDPRESS_USERNAME: ${{ secrets.WORDPRESS_USERNAME }}
+      WORDPRESS_APPLICATION_PASSWORD: ${{ secrets.WORDPRESS_APPLICATION_PASSWORD }}

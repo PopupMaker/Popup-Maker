@@ -16,8 +16,11 @@ permissions:
 jobs:
   changelog:
     name: Sync review-required WordPress draft
-    uses: PopupMaker/release-changelog-site-config/.github/workflows/sync-release.yml@v1
+    uses: PopupMaker/release-changelog-site-config/.github/workflows/sync-release.yml@d13f1c71cd6b85aa67410a0dbccc6730a4188f8b
     with:
       product-key: core
       release-id: ${{ github.event.release.id || inputs.release_id }}
-    secrets: inherit
+    secrets:
+      WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
+      WORDPRESS_USERNAME: ${{ secrets.WORDPRESS_USERNAME }}
+      WORDPRESS_APPLICATION_PASSWORD: ${{ secrets.WORDPRESS_APPLICATION_PASSWORD }}
