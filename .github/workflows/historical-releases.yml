@@ -30,7 +30,7 @@ jobs:
   historical-releases:
     permissions:
       contents: write
-    uses: code-atlantic/release-changelog-action/.github/workflows/historical-releases.yml@cf2b5b2c2caea2fb4a3b5724ac19dae0d2aab84d
+    uses: code-atlantic/release-changelog-action/.github/workflows/historical-releases.yml@9251815003d91e62c204c4583b815dc4d271a505
     with:
       expected-repository: PopupMaker/Popup-Maker
       mode: ${{ inputs.mode }}
