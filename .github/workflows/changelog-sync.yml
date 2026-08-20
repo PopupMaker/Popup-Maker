@@ -16,9 +16,10 @@ permissions:
 jobs:
   changelog:
     name: Sync review-required WordPress draft
-    uses: PopupMaker/release-changelog-site-config/.github/workflows/sync-release.yml@d13f1c71cd6b85aa67410a0dbccc6730a4188f8b
+    uses: code-atlantic/release-changelog-action/.github/workflows/sync-release.yml@01b0cade8431187b9dcaf7ada42484a6ba34085f
     with:
       product-key: core
+      expected-repository: PopupMaker/Popup-Maker
       release-id: ${{ github.event.release.id || inputs.release_id }}
     secrets:
       WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
