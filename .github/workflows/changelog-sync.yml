@@ -1,0 +1,27 @@
+name: Sync published release to WordPress changelog
+
+on:
+  release:
+    types: [published, edited]
+  workflow_dispatch:
+    inputs:
+      release_id:
+        description: GitHub release database ID to retry.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  changelog:
+    name: Sync review-required WordPress draft
+    uses: code-atlantic/release-changelog-action/.github/workflows/sync-release.yml@7af898299ba0704f385b236569ead17850388437
+    with:
+      product-key: core
+      expected-repository: PopupMaker/Popup-Maker
+      release-id: ${{ format('{0}', github.event.release.id || inputs.release_id) }}
+    secrets:
+      WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
+      WORDPRESS_USERNAME: ${{ secrets.WORDPRESS_USERNAME }}
+      WORDPRESS_APPLICATION_PASSWORD: ${{ secrets.WORDPRESS_APPLICATION_PASSWORD }}
