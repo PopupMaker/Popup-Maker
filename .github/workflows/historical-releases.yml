@@ -1,0 +1,40 @@
+name: Historical GitHub releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Inventory first; draft and publish modes write GitHub Releases.
+        required: true
+        default: inventory
+        type: choice
+        options:
+          - inventory
+          - drafts
+          - publish
+      include_prereleases:
+        description: Also generate releases for beta and RC tags.
+        required: true
+        default: false
+        type: boolean
+      confirm_publish:
+        description: Type PUBLISH HISTORICAL RELEASES only for reviewed publish runs.
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  historical-releases:
+    permissions:
+      contents: write
+    uses: code-atlantic/release-changelog-action/.github/workflows/historical-releases.yml@cf2b5b2c2caea2fb4a3b5724ac19dae0d2aab84d
+    with:
+      expected-repository: PopupMaker/Popup-Maker
+      mode: ${{ inputs.mode }}
+      source-file-path: readme.txt
+      include-prereleases: ${{ inputs.include_prereleases }}
+      max-releases: 100
+      confirm-publish: ${{ inputs.confirm_publish }}

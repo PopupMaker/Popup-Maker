@@ -25,7 +25,7 @@ permissions:
 jobs:
   backfill:
     name: Review or run Core changelog backfill
-    uses: code-atlantic/release-changelog-action/.github/workflows/backfill-releases.yml@e21a0260c19a4723ffe1145014a916d3c48936e2
+    uses: code-atlantic/release-changelog-action/.github/workflows/backfill-releases.yml@cf2b5b2c2caea2fb4a3b5724ac19dae0d2aab84d
     with:
       product-key: core
       expected-repository: PopupMaker/Popup-Maker
