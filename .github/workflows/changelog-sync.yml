@@ -20,7 +20,7 @@ jobs:
     with:
       product-key: core
       expected-repository: PopupMaker/Popup-Maker
-      release-id: ${{ github.event.release.id || inputs.release_id }}
+      release-id: ${{ format('{0}', github.event.release.id || inputs.release_id) }}
     secrets:
       WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
       WORDPRESS_USERNAME: ${{ secrets.WORDPRESS_USERNAME }}
