@@ -486,6 +486,12 @@ DO NOT FORGET:
 
 ## Workflow Notes
 
+### Release changelogs
+
+- For any release-note, `CHANGELOG.md`, `readme.txt`, or GitHub release work, follow `.agents/skills/release-changelog-authoring/SKILL.md` and its format reference.
+- Keep existing tags immutable. Corrections to historical GitHub release descriptions do not authorize changes to tagged files, commits, tags, or assets.
+- Any WordPress changelog migration or sync must be limited to the `ca_release` post type.
+
 ### Package Management Considerations
 - When adding new packages, we have to update webpack config, tsconfigs, dependency extraction plugin package list AND Assets.php appropriately
 
