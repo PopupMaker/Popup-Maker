@@ -34,6 +34,7 @@
 		"@popup-maker/core-data": "workspace:*",
 		"@popup-maker/i18n": "workspace:*",
 		"@popup-maker/icons": "workspace:*",
+		"@popup-maker/registry": "workspace:*",
 		"@wordpress/a11y": "^4.29.0",
 		"@wordpress/api-fetch": "^7.43.0",
 		"@wordpress/base-styles": "^6.5.0",

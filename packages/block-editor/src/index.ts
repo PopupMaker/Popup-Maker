@@ -2,6 +2,8 @@ import './block-extensions';
 import './formats';
 import './plugins';
 
+export * from './content-tokens';
+
 import {
 	callToActionStore,
 	popupStore,
@@ -42,7 +44,6 @@ declare global {
 
 /* Broken @wordpress/data type overrides */
 declare module '@wordpress/data' {
-	// eslint-disable-next-line @typescript-eslint/no-shadow
 	function createRegistry(
 		storeConfigs?: Object,
 		parent?: Object | null
