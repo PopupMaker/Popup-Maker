@@ -31,7 +31,7 @@
 	"wpScript": true,
 	"sideEffects": false,
 	"dependencies": {
-		"@wordpress/i18n": "^6.25.0"
+		"@wordpress/i18n": "^6.26.0"
 	},
 	"scripts": {
 		"prepack": "pnpm run build:tsc && pnpm run build:types",
