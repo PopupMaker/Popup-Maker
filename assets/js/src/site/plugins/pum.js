@@ -520,10 +520,20 @@
 				// TODO: Move this to its own event binding to keep this method clean and simple.
 				// This prevents animations from failing due to browser race conditions & styling queues.
 				.queue( function () {
-					var $container = $popup.popmake( 'getContainer' );
+					var el = this,
+						$container = $popup.popmake( 'getContainer' );
 					$popup.css( { display: 'block', opacity: 0 } );
 					$container.css( { display: 'block', opacity: 0 } );
-					$( this ).dequeue();
+
+					// Wait a frame so the browser paints the opacity:0 state
+					// before the animation starts. Using requestAnimationFrame
+					// instead of a synchronous forced reflow (offsetHeight)
+					// avoids one popup's unpainted style changes interleaving
+					// with another popup's open() call in the same tick, e.g.
+					// two Auto Open triggers with the same delay.
+					window.requestAnimationFrame( function () {
+						$( el ).dequeue();
+					} );
 				} )
 				.popmake( 'animate', settings.animation_type, function () {
 					/**
@@ -582,10 +592,6 @@
 				height: '',
 				width: '',
 			} );
-
-			// Force browser to drop any cached values
-			$popup[ 0 ].offsetHeight;
-			$container[ 0 ].offsetHeight;
 
 			return this;
 		},
