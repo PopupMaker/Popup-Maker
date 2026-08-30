@@ -872,12 +872,18 @@
 
 			if ( $popup.is( ':hidden' ) ) {
 				opacity.overlay = $popup.css( 'opacity' );
-				$popup.css( { opacity: 0 } ).show( 0 );
+				// Use a plain display write rather than .show(0): jQuery's
+				// show/hide are fx-queued and resolve on the next
+				// requestAnimationFrame tick even at duration 0, which left
+				// a pending queue entry on $popup that raced with the
+				// open() animation flow when multiple popups opened in the
+				// same tick.
+				$popup.css( { opacity: 0, display: 'block' } );
 			}
 
 			if ( $container.is( ':hidden' ) ) {
 				opacity.container = $container.css( 'opacity' );
-				$container.css( { opacity: 0 } ).show( 0 );
+				$container.css( { opacity: 0, display: 'block' } );
 			}
 
 			if ( settings.position_fixed ) {
@@ -940,10 +946,10 @@
 			}
 
 			if ( opacity.overlay ) {
-				$popup.css( { opacity: opacity.overlay } ).hide( 0 );
+				$popup.css( { opacity: opacity.overlay, display: 'none' } );
 			}
 			if ( opacity.container ) {
-				$container.css( { opacity: opacity.container } ).hide( 0 );
+				$container.css( { opacity: opacity.container, display: 'none' } );
 			}
 			return this;
 		},
