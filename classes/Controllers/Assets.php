@@ -625,7 +625,7 @@ class Assets extends Controller {
 					}
 				}
 
-				if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) && ! isset( $this->localized_packages[ $package ] ) && 'admin_print_scripts' !== current_filter() ) {
+				if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) && ! isset( $this->localized_packages[ $package ] ) ) {
 					$localized_vars = is_callable( $package_data['vars'] ) ?
 					call_user_func( $package_data['vars'] ) :
 					$package_data['vars'];
