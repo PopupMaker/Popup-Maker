@@ -29,12 +29,12 @@
     "@popup-maker/i18n": "workspace:*",
     "@popup-maker/utils": "workspace:*",
     "@wordpress/components": "^38.0.0",
-    "@wordpress/compose": "^8.5.0",
-    "@wordpress/core-data": "^7.52.0",
-    "@wordpress/data": "^10.52.0",
-    "@wordpress/element": "^8.4.0",
-    "@wordpress/hooks": "^4.52.0",
-    "@wordpress/html-entities": "^4.52.0",
+    "@wordpress/compose": "^8.7.0",
+    "@wordpress/core-data": "^7.54.0",
+    "@wordpress/data": "^10.54.0",
+    "@wordpress/element": "^8.6.0",
+    "@wordpress/hooks": "^4.54.0",
+    "@wordpress/html-entities": "^4.54.0",
     "classnames": "^2.5.1"
   },
   "scripts": {
