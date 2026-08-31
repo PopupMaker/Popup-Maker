@@ -81,9 +81,6 @@ class PUM_Admin_Settings {
 					echo esc_html( $notice['message'] );
 					?>
 					</strong></p>
-					<button type="button" class="notice-dismiss">
-						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
-					</button>
 				</div>
 				<?php
 			}
