@@ -13,6 +13,9 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: read
+
 # Cancel in-progress runs for the same branch
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
