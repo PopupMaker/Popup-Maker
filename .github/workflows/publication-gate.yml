@@ -25,6 +25,15 @@ jobs:
                   fetch-depth: 0
                   persist-credentials: false
 
+            - name: Reject symlinked publication files
+              run: |
+                  if [ -L readme.txt ] ||
+                    [ -L .wordpress-org ] ||
+                    { [ -d .wordpress-org ] && find .wordpress-org -type l -print -quit | grep -q .; }; then
+                    echo 'Symlinks are not allowed in publication files.'
+                    exit 1
+                  fi
+
             - name: Classify publication
               id: publication
               env:
@@ -44,7 +53,9 @@ jobs:
 
                     echo "type=release" >> "${GITHUB_OUTPUT}"
                     echo "version=${BASH_REMATCH[1]}" >> "${GITHUB_OUTPUT}"
-                  elif [ -n "${CHANGED_FILES}" ] && ! echo "${CHANGED_FILES}" | grep -Ev '^(readme\.txt|\.wordpress-org/)' >/dev/null; then
+                  elif [ "${HEAD_REPOSITORY}" = "${REPOSITORY}" ] &&
+                    [ -n "${CHANGED_FILES}" ] &&
+                    ! echo "${CHANGED_FILES}" | grep -Ev '^(readme\.txt|\.wordpress-org/)' >/dev/null; then
                     echo "type=readme-assets" >> "${GITHUB_OUTPUT}"
                   else
                     echo "type=none" >> "${GITHUB_OUTPUT}"

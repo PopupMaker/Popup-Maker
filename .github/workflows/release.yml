@@ -187,6 +187,16 @@ jobs:
               with:
                   ref: ${{ needs.authorize.outputs.merge_sha }}
                   fetch-depth: 0
+                  persist-credentials: false
+
+            - name: Reject symlinked publication files
+              run: |
+                  if [ -L readme.txt ] ||
+                    [ -L .wordpress-org ] ||
+                    { [ -d .wordpress-org ] && find .wordpress-org -type l -print -quit | grep -q .; }; then
+                    echo 'Symlinks are not allowed in publication files.'
+                    exit 1
+                  fi
 
             - name: Validate release version
               env:
@@ -312,6 +322,7 @@ jobs:
               uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
               with:
                   ref: ${{ needs.authorize.outputs.merge_sha }}
+                  persist-credentials: false
 
             - name: Download canonical release package
               uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
@@ -341,6 +352,16 @@ jobs:
                       WordPress.WP.I18n.MissingArgDomain
                       missing_direct_file_access_protection
                   ignore-warnings: true
+
+            - name: Reject symlinked deployment files
+              run: |
+                  if [ -L .wordpress-org ] ||
+                    { [ -d .wordpress-org ] && find .wordpress-org -type l -print -quit | grep -q .; } ||
+                    [ -L "${BUILD_DIR}" ] ||
+                    { [ -d "${BUILD_DIR}" ] && find "${BUILD_DIR}" -type l -print -quit | grep -q .; }; then
+                    echo 'Symlinks are not allowed in deployment files.'
+                    exit 1
+                  fi
 
             - name: Deploy to WordPress.org
               uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # stable
@@ -476,7 +497,8 @@ jobs:
             needs.wordpress-org.result == 'success' &&
             needs.edd-webhook.result == 'success' &&
             needs.google-drive-upload.result == 'success' &&
-            needs.changelog.result == 'success'
+            needs.changelog.result == 'success' &&
+            needs.back-sync.result == 'success'
         runs-on: ubuntu-latest
         steps:
             - name: Send success notification
@@ -520,7 +542,8 @@ jobs:
              needs.wordpress-org.result == 'failure' ||
              needs.edd-webhook.result == 'failure' ||
              needs.google-drive-upload.result == 'failure' ||
-             needs.changelog.result == 'failure')
+             needs.changelog.result == 'failure' ||
+             needs.back-sync.result == 'failure')
         runs-on: ubuntu-latest
         steps:
             - name: Send failure notification

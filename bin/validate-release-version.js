@@ -31,6 +31,44 @@ function compareVersions( left, right ) {
 	return 0;
 }
 
+/**
+ * Check whether a heading contains a real YYYY-MM-DD calendar date.
+ *
+ * @param {string} contents File contents.
+ * @param {RegExp} pattern  Heading pattern with year, month, and day captures.
+ * @return {boolean} Whether the heading contains a valid date.
+ */
+function hasValidDatedHeading( contents, pattern ) {
+	const match = contents.match( pattern );
+
+	if ( ! match ) {
+		return false;
+	}
+
+	const year = Number( match[ 1 ] );
+	const month = Number( match[ 2 ] );
+	const day = Number( match[ 3 ] );
+	const leapYear = 0 === year % 400 || ( 0 === year % 4 && 0 !== year % 100 );
+	const daysInMonth = [
+		31,
+		leapYear ? 29 : 28,
+		31,
+		30,
+		31,
+		30,
+		31,
+		31,
+		30,
+		31,
+		30,
+		31,
+	];
+
+	return (
+		month >= 1 && month <= 12 && day >= 1 && day <= daysInMonth[ month - 1 ]
+	);
+}
+
 function validateReleaseVersion( {
 	projectRoot = process.cwd(),
 	version,
@@ -90,22 +128,22 @@ function validateReleaseVersion( {
 	}
 
 	const escapedVersion = version.replace( /\./g, '\\.' );
-	const datedHeading = `\\d{4}-\\d{2}-\\d{2}`;
+	const datedHeading = `(\\d{4})-(\\d{2})-(\\d{2})`;
 
 	if (
-		! new RegExp(
-			`^## v${ escapedVersion } - ${ datedHeading }$`,
-			'm'
-		).test( changelogContents )
+		! hasValidDatedHeading(
+			changelogContents,
+			new RegExp( `^## v${ escapedVersion } - ${ datedHeading }$`, 'm' )
+		)
 	) {
 		throw new Error( `CHANGELOG.md has no dated v${ version } entry.` );
 	}
 
 	if (
-		! new RegExp(
-			`^= ${ escapedVersion } - ${ datedHeading } =$`,
-			'm'
-		).test( readmeContents )
+		! hasValidDatedHeading(
+			readmeContents,
+			new RegExp( `^= ${ escapedVersion } - ${ datedHeading } =$`, 'm' )
+		)
 	) {
 		throw new Error(
 			`readme.txt has no dated ${ version } changelog entry.`

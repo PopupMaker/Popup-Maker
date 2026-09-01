@@ -130,12 +130,22 @@ jobs:
               with:
                   ref: ${{ needs.authorize.outputs.merge_sha }}
                   fetch-depth: 0
+                  persist-credentials: false
 
             - name: Refuse stale readme or assets
               run: |
                   git fetch --no-tags origin master
                   if ! git diff --quiet HEAD FETCH_HEAD -- readme.txt .wordpress-org; then
                     echo 'A newer readme or asset change exists on master. Refusing to publish stale files.'
+                    exit 1
+                  fi
+
+            - name: Reject symlinked publication files
+              run: |
+                  if [ -L readme.txt ] ||
+                    [ -L .wordpress-org ] ||
+                    { [ -d .wordpress-org ] && find .wordpress-org -type l -print -quit | grep -q .; }; then
+                    echo 'Symlinks are not allowed in publication files.'
                     exit 1
                   fi
 

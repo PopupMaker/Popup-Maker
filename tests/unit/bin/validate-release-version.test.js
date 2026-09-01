@@ -70,6 +70,28 @@ describe( 'release version validation', () => {
 		).toThrow( 'must be newer' );
 	} );
 
+	test( 'rejects an impossible CHANGELOG.md date', () => {
+		fs.writeFileSync(
+			path.join( projectRoot, 'CHANGELOG.md' ),
+			'## v1.25.0 - 2026-99-99\n'
+		);
+
+		expect( () =>
+			validateReleaseVersion( { projectRoot, version: '1.25.0' } )
+		).toThrow( 'CHANGELOG.md has no dated v1.25.0 entry' );
+	} );
+
+	test( 'rejects an impossible readme.txt date', () => {
+		fs.writeFileSync(
+			path.join( projectRoot, 'readme.txt' ),
+			'Stable tag: 1.25.0\n\n= 1.25.0 - 2026-02-30 =\n'
+		);
+
+		expect( () =>
+			validateReleaseVersion( { projectRoot, version: '1.25.0' } )
+		).toThrow( 'readme.txt has no dated 1.25.0 changelog entry' );
+	} );
+
 	test( 'compares semantic version parts numerically', () => {
 		expect( compareVersions( '1.25.0', '1.24.9' ) ).toBeGreaterThan( 0 );
 		expect( compareVersions( '2.0.0', '1.99.99' ) ).toBeGreaterThan( 0 );

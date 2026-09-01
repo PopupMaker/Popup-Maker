@@ -8,7 +8,7 @@ Popup Maker uses reviewed pull requests as the only production publication gate.
 2. Update the plugin versions and dated changelogs.
 3. Open the PR against `master` with `pnpm run prepare-release finish`.
 4. Review the candidate ZIP and required checks in the PR.
-5. Approve and merge the PR.
+5. Authorize and merge the PR. Authorization may come from a current maintainer approval or from an authorized maintainer performing the merge.
 
 The merged PR is re-authorized before any external write. It must:
 
@@ -31,11 +31,11 @@ After those checks pass, `release.yml` builds one canonical ZIP and uses that sa
 
 It also attempts to open a `master` to `develop` back-sync PR. A failed downstream step is visible and can be retried by manually running the workflow with the original merged PR number.
 
-Direct tags, direct pushes to `master`, and unapproved PRs do not publish a plugin release.
+Direct tags and direct pushes to `master` do not publish a plugin release. A merged release PR publishes only when authorized by a current maintainer approval or an authorized maintainer merge.
 
 ## WordPress.org readme and assets
 
-A PR containing only `readme.txt` and/or files below `.wordpress-org/` may be opened against `master`. After it is approved and merged, `deploy-readme-assets.yml` re-checks the approval and exact file list, then syncs only those files to WordPress.org.
+A same-repository PR containing only `readme.txt` and/or files below `.wordpress-org/` may be opened against `master`. After a current maintainer approves it or an authorized maintainer merges it, `deploy-readme-assets.yml` re-checks the authorization and exact file list, then syncs only those files to WordPress.org.
 
 A mixed code/readme PR never enters this narrow path. Release PRs deploy their readme and assets with the full canonical package.
 

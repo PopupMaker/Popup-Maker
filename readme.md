@@ -59,15 +59,16 @@ pnpm run prepare-release start --dry-run
 -   🌿 Creates a `release/X.Y.Z` branch for review
 -   📝 Updates versions in all files and changelog
 -   🔨 Builds release assets
--   🚀 Opens the release PR; approval and merge perform publication
+-   🚀 Opens the release PR; maintainer authorization and merge perform publication
 
 See `bin/README.md` for complete documentation.
 
 ## Deployment
 
-This plugin is hosted on WordPress.org SVN. An approved and merged `release/X.Y.Z`
-PR publishes the canonical GitHub Actions artifact to GitHub Releases, EDD,
-Google Drive, and WordPress.org. Approved readme/assets-only PRs use a separate
+This plugin is hosted on WordPress.org SVN. A merged `release/X.Y.Z` PR authorized
+by a current maintainer approval or an authorized maintainer merge publishes the
+canonical GitHub Actions artifact to GitHub Releases, EDD, Google Drive, and
+WordPress.org. Authorized same-repository readme/assets-only PRs use a separate
 narrow SVN sync. Direct pushes to `master` do not publish.
 
 ## Contributing
