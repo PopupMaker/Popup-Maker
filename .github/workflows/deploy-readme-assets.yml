@@ -106,7 +106,11 @@ jobs:
                       });
                       const isAllowedPath = (filename) =>
                         filename === 'readme.txt' || filename.startsWith('.wordpress-org/');
-                      const allowed = files.length > 0 && files.every((file) =>
+                      const removesReadme = files.some((file) =>
+                        (file.filename === 'readme.txt' && file.status === 'removed') ||
+                        (file.status === 'renamed' && file.previous_filename === 'readme.txt')
+                      );
+                      const allowed = files.length > 0 && !removesReadme && files.every((file) =>
                         isAllowedPath(file.filename) &&
                         (file.status !== 'renamed' || isAllowedPath(file.previous_filename || ''))
                       );
@@ -142,6 +146,10 @@ jobs:
 
             - name: Reject symlinked publication files
               run: |
+                  if [ ! -f readme.txt ]; then
+                    echo 'readme.txt is required for a WordPress.org update.'
+                    exit 1
+                  fi
                   if [ -L readme.txt ] ||
                     [ -L .wordpress-org ] ||
                     { [ -d .wordpress-org ] && find .wordpress-org -type l -print -quit | grep -q .; }; then

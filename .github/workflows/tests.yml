@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main, master, develop]
   workflow_dispatch:
+    inputs:
+      back_sync:
+        description: Run the full test suite for a release back-sync merge.
+        required: false
+        default: false
+        type: boolean
 
 # Cancel in-progress runs for the same branch
 concurrency:
@@ -151,11 +157,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: detect-changes
     if: |
-      needs.detect-changes.outputs.has_php_unit_tests == 'true' &&
-      (needs.detect-changes.outputs.php == 'true' ||
-       needs.detect-changes.outputs.php_tests == 'true' ||
-       needs.detect-changes.outputs.php_deps == 'true' ||
-       needs.detect-changes.outputs.ci == 'true')
+      inputs.back_sync == true ||
+      (needs.detect-changes.outputs.has_php_unit_tests == 'true' &&
+       (needs.detect-changes.outputs.php == 'true' ||
+        needs.detect-changes.outputs.php_tests == 'true' ||
+        needs.detect-changes.outputs.php_deps == 'true' ||
+        needs.detect-changes.outputs.ci == 'true'))
 
     services:
       mysql:
@@ -223,12 +230,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: detect-changes
     if: |
-      needs.detect-changes.outputs.has_php_integration_tests == 'true' &&
-      (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') &&
-      (needs.detect-changes.outputs.php == 'true' ||
-       needs.detect-changes.outputs.php_tests == 'true' ||
-       needs.detect-changes.outputs.php_deps == 'true' ||
-       needs.detect-changes.outputs.ci == 'true')
+      inputs.back_sync == true ||
+      (needs.detect-changes.outputs.has_php_integration_tests == 'true' &&
+       (github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') &&
+       (needs.detect-changes.outputs.php == 'true' ||
+        needs.detect-changes.outputs.php_tests == 'true' ||
+        needs.detect-changes.outputs.php_deps == 'true' ||
+        needs.detect-changes.outputs.ci == 'true'))
 
     services:
       mysql:
@@ -291,11 +299,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: detect-changes
     if: |
-      needs.detect-changes.outputs.has_js_tests == 'true' &&
-      (needs.detect-changes.outputs.js == 'true' ||
-       needs.detect-changes.outputs.js_tests == 'true' ||
-       needs.detect-changes.outputs.npm_deps == 'true' ||
-       needs.detect-changes.outputs.ci == 'true')
+      inputs.back_sync == true ||
+      (needs.detect-changes.outputs.has_js_tests == 'true' &&
+       (needs.detect-changes.outputs.js == 'true' ||
+        needs.detect-changes.outputs.js_tests == 'true' ||
+        needs.detect-changes.outputs.npm_deps == 'true' ||
+        needs.detect-changes.outputs.ci == 'true'))
 
     steps:
       - name: Checkout

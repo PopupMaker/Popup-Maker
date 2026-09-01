@@ -29,7 +29,7 @@ After those checks pass, `release.yml` builds one canonical ZIP and uses that sa
 -   the review-required visual changelog draft; and
 -   Slack status.
 
-It also attempts to open a `master` to `develop` back-sync PR. A failed downstream step is visible and can be retried by manually running the workflow with the original merged PR number.
+It also opens or reuses a `master` to `develop` back-sync PR, tests that PR's proposed merge, and waits for those tests before reporting success. A failed downstream step is visible and can be retried by manually running the workflow with the original merged PR number.
 
 Direct tags and direct pushes to `master` do not publish a plugin release. A merged release PR publishes only when authorized by a current maintainer approval or an authorized maintainer merge.
 

@@ -445,12 +445,12 @@ jobs:
             WORDPRESS_APPLICATION_PASSWORD: ${{ secrets.WORDPRESS_APPLICATION_PASSWORD }}
 
     back-sync:
-        name: Open master back-sync PR
+        name: Open and validate master back-sync PR
         needs: [authorize, github-release]
         runs-on: ubuntu-latest
         permissions:
             actions: write
-            contents: read
+            contents: write
             pull-requests: write
 
         steps:
@@ -461,22 +461,66 @@ jobs:
                   REPO: ${{ github.repository }}
                   VERSION: ${{ needs.authorize.outputs.version }}
               run: |
-                  EXISTING=$(gh pr list --repo "${REPO}" --base develop --head master --state open --json url --jq '.[0].url // ""')
-                  if [ -n "${EXISTING}" ]; then
-                    echo "Back-sync PR already open: ${EXISTING}"
-                    exit 0
+                  PR_NUMBER=$(gh pr list --repo "${REPO}" --base develop --head master --state open --json number --jq '.[0].number // ""')
+                  if [ -n "${PR_NUMBER}" ]; then
+                    PR_URL=$(gh pr view "${PR_NUMBER}" --repo "${REPO}" --json url --jq '.url')
+                    echo "Back-sync PR already open: ${PR_URL}"
+                  else
+                    PR_URL=$(gh pr create \
+                      --repo "${REPO}" \
+                      --base develop \
+                      --head master \
+                      --title "Back-sync release ${VERSION} to develop" \
+                      --body "Carries the approved ${VERSION} release metadata and release merge back to develop.")
+                    PR_NUMBER=${PR_URL##*/}
+                    echo "Back-sync PR opened: ${PR_URL}"
                   fi
 
-                  PR_URL=$(gh pr create \
-                    --repo "${REPO}" \
-                    --base develop \
-                    --head master \
-                    --title "Back-sync release ${VERSION} to develop" \
-                    --body "Carries the approved ${VERSION} release metadata and release merge back to develop.")
+                  MERGE_SHA=""
+                  for _ in {1..30}; do
+                    MERGE_SHA=$(gh api "repos/${REPO}/git/ref/pull/${PR_NUMBER}/merge" --jq '.object.sha' 2>/dev/null || true)
+                    [ -n "${MERGE_SHA}" ] && break
+                    sleep 2
+                  done
+                  if [ -z "${MERGE_SHA}" ]; then
+                    echo "Back-sync PR #${PR_NUMBER} has no mergeable test commit."
+                    exit 1
+                  fi
 
-                  echo "Back-sync PR opened: ${PR_URL}"
-                  gh workflow run ci.yml --repo "${REPO}" --ref master
-                  gh workflow run tests.yml --repo "${REPO}" --ref master
+                  VALIDATION_BRANCH="back-sync-validation/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+                  cleanup() {
+                    gh api --method DELETE "repos/${REPO}/git/refs/heads/${VALIDATION_BRANCH}" >/dev/null 2>&1 || true
+                  }
+                  trap cleanup EXIT
+
+                  gh api --method POST "repos/${REPO}/git/refs" \
+                    -f ref="refs/heads/${VALIDATION_BRANCH}" \
+                    -f sha="${MERGE_SHA}" >/dev/null
+                  gh workflow run tests.yml \
+                    --repo "${REPO}" \
+                    --ref "${VALIDATION_BRANCH}" \
+                    -f back_sync=true
+
+                  TEST_RUN_ID=""
+                  for _ in {1..30}; do
+                    TEST_RUN_ID=$(gh run list \
+                      --repo "${REPO}" \
+                      --workflow tests.yml \
+                      --branch "${VALIDATION_BRANCH}" \
+                      --event workflow_dispatch \
+                      --limit 1 \
+                      --json databaseId \
+                      --jq '.[0].databaseId // ""')
+                    [ -n "${TEST_RUN_ID}" ] && break
+                    sleep 2
+                  done
+                  if [ -z "${TEST_RUN_ID}" ]; then
+                    echo 'The back-sync validation workflow did not start.'
+                    exit 1
+                  fi
+
+                  echo "Waiting for back-sync validation run ${TEST_RUN_ID}."
+                  gh run watch "${TEST_RUN_ID}" --repo "${REPO}" --exit-status
 
     slack-success:
         name: Slack success notification
