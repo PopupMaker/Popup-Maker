@@ -112,6 +112,18 @@ jobs:
                       }
 
                       const version = branchMatch[1];
+                      const { data: masterBranch } = await github.rest.repos.getBranch({
+                        owner,
+                        repo,
+                        branch: 'master',
+                      });
+                      if (masterBranch.commit.sha !== pull.merge_commit_sha) {
+                        core.setFailed(
+                          `Release ${version} is stale; master has changed since PR #${number} merged.`
+                        );
+                        return;
+                      }
+
                       const { data: masterPackageFile } = await github.rest.repos.getContent({
                         owner,
                         repo,

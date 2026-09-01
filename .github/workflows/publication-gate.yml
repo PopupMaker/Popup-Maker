@@ -3,7 +3,7 @@ name: Publication Gate
 on:
     pull_request:
         branches: [master]
-        types: [opened, synchronize, reopened, ready_for_review]
+        types: [opened, synchronize, reopened, ready_for_review, edited]
 
 permissions:
     contents: read
@@ -21,8 +21,9 @@ jobs:
             - name: Checkout proposed merge
               uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
               with:
-                  ref: ${{ github.event.pull_request.head.sha }}
+                  ref: refs/pull/${{ github.event.pull_request.number }}/merge
                   fetch-depth: 0
+                  persist-credentials: false
 
             - name: Classify publication
               id: publication
