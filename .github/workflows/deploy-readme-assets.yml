@@ -1,28 +1,134 @@
-name: Sync readme/assets to WordPress.org
+name: Sync approved readme/assets PR to WordPress.org
 
 on:
-    push:
-        branches:
-            - master
-        paths:
-            - readme.txt
+    pull_request_target:
+        branches: [master]
+        types: [closed]
     workflow_dispatch:
+        inputs:
+            pull_request_number:
+                description: Merged readme/assets PR number to retry.
+                required: true
+                type: number
+
+permissions:
+    contents: read
+    pull-requests: read
+
+concurrency:
+    group: wordpress-org-readme-assets-${{ github.event.pull_request.number || inputs.pull_request_number }}
+    cancel-in-progress: false
 
 jobs:
-    update:
-        name: Update WordPress.org readme & assets
+    authorize:
+        name: Authorize approved readme/assets PR
         runs-on: ubuntu-latest
-        # Only run against the protected master branch. A manual dispatch on any
-        # other ref must not be able to sync unreviewed content — or a malicious
-        # branch copy of this workflow — using the WordPress.org SVN credentials.
-        if: github.ref == 'refs/heads/master'
+        outputs:
+            should_sync: ${{ steps.authorize.outputs.should_sync }}
+            merge_sha: ${{ steps.authorize.outputs.merge_sha }}
+            pull_request_number: ${{ steps.authorize.outputs.pull_request_number }}
 
         steps:
-            - uses: actions/checkout@v6
+            - name: Verify merged PR, approval, and exact file scope
+              id: authorize
+              uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
               with:
-                  ref: master
+                  script: |
+                      const owner = context.repo.owner;
+                      const repo = context.repo.repo;
+                      const number = context.eventName === 'workflow_dispatch'
+                        ? Number('${{ inputs.pull_request_number }}')
+                        : context.payload.pull_request.number;
+                      const { data: pull } = await github.rest.pulls.get({ owner, repo, pull_number: number });
 
-            - uses: 10up/action-wordpress-plugin-asset-update@stable
+                      core.setOutput('should_sync', 'false');
+                      core.setOutput('pull_request_number', String(number));
+
+                      if (!pull.merged || pull.base.ref !== 'master') {
+                        core.info('PR is not merged into master; nothing will be synced.');
+                        return;
+                      }
+                      if (pull.head.repo?.full_name !== `${owner}/${repo}`) {
+                        core.setFailed('Publication PRs must come from this repository.');
+                        return;
+                      }
+
+                      const reviews = await github.paginate(github.rest.pulls.listReviews, {
+                        owner,
+                        repo,
+                        pull_number: number,
+                        per_page: 100,
+                      });
+                      const latestByReviewer = new Map();
+                      for (const review of reviews) {
+                        if (
+                          review.user?.login &&
+                          ['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED'].includes(review.state)
+                        ) {
+                          latestByReviewer.set(review.user.login, review.state);
+                        }
+                      }
+                      const approvedReviewers = [...latestByReviewer.entries()]
+                        .filter(([, state]) => state === 'APPROVED')
+                        .map(([login]) => login);
+                      let authorizedApproval = false;
+                      for (const username of approvedReviewers) {
+                        const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                          owner,
+                          repo,
+                          username,
+                        });
+                        if (['admin', 'maintain', 'write'].includes(permission.permission)) {
+                          authorizedApproval = true;
+                          break;
+                        }
+                      }
+                      if (!authorizedApproval && pull.merged_by?.login) {
+                        const { data: mergerPermission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                          owner,
+                          repo,
+                          username: pull.merged_by.login,
+                        });
+                        authorizedApproval = ['admin', 'maintain', 'write'].includes(
+                          mergerPermission.permission
+                        );
+                      }
+                      if (!authorizedApproval) {
+                        core.setFailed('The PR was not approved or merged by an authorized maintainer.');
+                        return;
+                      }
+
+                      const files = await github.paginate(github.rest.pulls.listFiles, {
+                        owner,
+                        repo,
+                        pull_number: number,
+                        per_page: 100,
+                      });
+                      const allowed = files.length > 0 && files.every(({ filename }) =>
+                        filename === 'readme.txt' || filename.startsWith('.wordpress-org/')
+                      );
+                      if (!allowed) {
+                        core.info('PR is not readme/assets-only; the narrow SVN sync will not run.');
+                        return;
+                      }
+
+                      core.setOutput('merge_sha', pull.merge_commit_sha);
+                      core.setOutput('should_sync', 'true');
+
+    update:
+        name: Update WordPress.org readme and assets
+        needs: authorize
+        if: needs.authorize.outputs.should_sync == 'true'
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout approved merge
+              uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+              with:
+                  ref: ${{ needs.authorize.outputs.merge_sha }}
+
+            - name: Sync readme and assets
+              uses: 10up/action-wordpress-plugin-asset-update@2480306f6f693672726d08b5917ea114cb2825f7 # stable
               env:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}

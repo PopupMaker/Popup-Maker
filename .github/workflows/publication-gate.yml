@@ -1,0 +1,140 @@
+name: Publication Gate
+
+on:
+    pull_request:
+        branches: [master]
+        types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+    contents: read
+
+concurrency:
+    group: publication-gate-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+jobs:
+    publication-gate:
+        name: Publication Gate
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout proposed merge
+              uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+                  fetch-depth: 0
+
+            - name: Classify publication
+              id: publication
+              env:
+                  BASE_SHA: ${{ github.event.pull_request.base.sha }}
+                  HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+                  HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+                  REPOSITORY: ${{ github.repository }}
+              run: |
+                  CHANGED_FILES=$(git diff --name-only "${BASE_SHA}" "HEAD")
+                  echo "${CHANGED_FILES}"
+
+                  if [[ "${HEAD_BRANCH}" =~ ^release/([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+                    if [ "${HEAD_REPOSITORY}" != "${REPOSITORY}" ]; then
+                      echo "Release branches must come from this repository."
+                      exit 1
+                    fi
+
+                    echo "type=release" >> "${GITHUB_OUTPUT}"
+                    echo "version=${BASH_REMATCH[1]}" >> "${GITHUB_OUTPUT}"
+                  elif [ -n "${CHANGED_FILES}" ] && ! echo "${CHANGED_FILES}" | grep -Ev '^(readme\.txt|\.wordpress-org/)' >/dev/null; then
+                    echo "type=readme-assets" >> "${GITHUB_OUTPUT}"
+                  else
+                    echo "type=none" >> "${GITHUB_OUTPUT}"
+                  fi
+
+            - name: Set up PHP
+              if: steps.publication.outputs.type == 'release'
+              uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+              with:
+                  php-version: '8.0'
+                  tools: composer:v2
+                  coverage: none
+
+            - name: Set up pnpm
+              if: steps.publication.outputs.type == 'release'
+              uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+            - name: Set up Node.js
+              if: steps.publication.outputs.type == 'release'
+              uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+              with:
+                  node-version: '24'
+                  cache: pnpm
+
+            - name: Validate release version
+              if: steps.publication.outputs.type == 'release'
+              env:
+                  BASE_SHA: ${{ github.event.pull_request.base.sha }}
+                  VERSION: ${{ steps.publication.outputs.version }}
+              run: |
+                  PREVIOUS_VERSION=$(git show "${BASE_SHA}:package.json" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")
+                  node bin/validate-release-version.js \
+                    --version "${VERSION}" \
+                    --previous-version "${PREVIOUS_VERSION}"
+
+            - name: Install release dependencies
+              if: steps.publication.outputs.type == 'release'
+              run: |
+                  composer config --global --unset github-oauth.github.com || true
+                  composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+                  pnpm install --frozen-lockfile
+
+            - name: Build and verify release candidate
+              if: steps.publication.outputs.type == 'release'
+              env:
+                  VERSION: ${{ steps.publication.outputs.version }}
+              run: |
+                  pnpm run build:production
+                  node bin/build-release.js --zip-name "popup-maker_${VERSION}.zip" --keep-build
+                  node bin/verify-release-artifact.js "popup-maker_${VERSION}.zip"
+
+            - name: Run WordPress Plugin Check
+              if: steps.publication.outputs.type == 'release'
+              uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1
+              with:
+                  build-dir: ./popup-maker
+                  slug: popup-maker
+                  exclude-checks: plugin_review_phpcs
+                  exclude-directories: vendor-prefixed
+                  exclude-files: |
+                      classes/Extension/Updater.php
+                      includes/legacy/deprecated-classes.php
+                  ignore-codes: |
+                      WordPress.WP.I18n.MissingArgDomain
+                      missing_direct_file_access_protection
+                  ignore-warnings: true
+
+            - name: Upload release candidate
+              if: steps.publication.outputs.type == 'release'
+              uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+              with:
+                  name: popup-maker-${{ steps.publication.outputs.version }}-pr-${{ github.event.pull_request.number }}
+                  path: popup-maker_${{ steps.publication.outputs.version }}.zip
+                  retention-days: 30
+
+            - name: Explain publication path
+              env:
+                  PUBLICATION_TYPE: ${{ steps.publication.outputs.type }}
+                  VERSION: ${{ steps.publication.outputs.version }}
+              run: |
+                  case "${PUBLICATION_TYPE}" in
+                    release)
+                      echo "## Full release ${VERSION}" >> "${GITHUB_STEP_SUMMARY}"
+                      echo "Merging this approved release PR will run the full release pipeline." >> "${GITHUB_STEP_SUMMARY}"
+                      ;;
+                    readme-assets)
+                      echo "## WordPress.org readme/assets update" >> "${GITHUB_STEP_SUMMARY}"
+                      echo "Merging this approved PR will sync only readme.txt and .wordpress-org assets." >> "${GITHUB_STEP_SUMMARY}"
+                      ;;
+                    *)
+                      echo "## No publication" >> "${GITHUB_STEP_SUMMARY}"
+                      echo "Merging this PR will not update WordPress.org or create a release." >> "${GITHUB_STEP_SUMMARY}"
+                      ;;
+                  esac

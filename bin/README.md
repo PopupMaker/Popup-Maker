@@ -2,12 +2,12 @@
 
 This directory contains tools for managing WordPress plugin releases:
 
-- **prepare-release.js** - Automates the complete release workflow with git flow
-- **build-release.js** - Unified build script for creating release packages
+-   **prepare-release.js** - Prepares and opens a reviewed release PR
+-   **build-release.js** - Unified build script for creating release packages
 
 ## Features
 
--   **Unified Process**: Single script handles the entire release workflow
+-   **Reviewed Publication**: A PR approval and merge is the release gate
 -   **Configurable**: Supports multiple configuration options and flags
 -   **Cross-Plugin**: Can be copied and used across all your plugins
 -   **Smart Detection**: Automatically reads plugin name and version from `package.json`
@@ -19,50 +19,50 @@ This directory contains tools for managing WordPress plugin releases:
 
 ### Quick Start
 
-The **prepare-release.js** script automates the complete release workflow including version management, changelog updates, and git flow integration.
+The **prepare-release.js** script prepares a release branch, package, and PR. It never merges, tags, or publishes directly.
 
 ```bash
 # Patch release (1.21.4 → 1.21.5)
-node bin/prepare-release.js
+pnpm run prepare-release start
 
 # Minor release (1.21.4 → 1.22.0)
-node bin/prepare-release.js --minor
+pnpm run prepare-release start -- --minor
 
 # Major release (1.21.4 → 2.0.0)
-node bin/prepare-release.js --major
+pnpm run prepare-release start -- --major
 
 # Specific version
-node bin/prepare-release.js 2.1.0
+pnpm run prepare-release start -- 2.1.0
 
 # Test without changes
-node bin/prepare-release.js --dry-run
+pnpm run prepare-release start -- --dry-run
 
 # See all options
-node bin/prepare-release.js --help
+pnpm run prepare-release -- --help
 ```
 
 ### What It Does
 
-1. ✅ Validates git status and git flow availability
-2. 🌿 Creates git flow release branch
+1. ✅ Validates git status and release inputs
+2. 🌿 Creates `release/X.Y.Z`
 3. 📝 Updates versions in all files (via `update-versions.js`)
 4. 📋 Updates changelog (via `update-changelog.js`)
-5. 📦 Updates `package-lock.json`
+5. 📦 Updates `pnpm-lock.yaml`
 6. 🔨 Builds release assets (`pnpm run release`)
 7. 💾 Commits changes with standardized message
-8. 🏁 Finishes git flow release with tag
-9. 🚀 Offers to push changes
+8. 🚀 Pushes the branch and opens its PR to `master`
+9. 🛑 Leaves approval, merge, tagging, and publication to GitHub
 
 ### Options
 
-- `[version]` - Specific version number (e.g., `1.21.5`)
-- `--major` - Increment major version (X+1.0.0)
-- `--minor` - Increment minor version (X.Y+1.0)
-- `--patch` - Increment patch version (X.Y.Z+1) [default]
-- `--dry-run` - Show what would be done without making changes
-- `--no-build` - Skip the release build step
-- `--auto` - Skip all confirmations (dangerous!)
-- `--help` - Show detailed help
+-   `[version]` - Specific version number (e.g., `1.21.5`)
+-   `--major` - Increment major version (X+1.0.0)
+-   `--minor` - Increment minor version (X.Y+1.0)
+-   `--patch` - Increment patch version (X.Y.Z+1) [default]
+-   `--dry-run` - Show what would be done without making changes
+-   `--skip-build` - Skip the release build step
+-   `--auto` - Skip local confirmations; PR approval is still required
+-   `--help` - Show detailed help
 
 ## Build Release Script
 
@@ -209,10 +209,11 @@ By default, the script creates zip files with the format: `{plugin-name}_{versio
 You can customize this for special cases:
 
 **Use Cases for Custom Zip Names:**
-- **Beta/RC releases**: `--zip-name my-plugin-v1.2.0-beta1.zip`
-- **Client-specific builds**: `--zip-name my-plugin-client-custom.zip`
-- **Distribution channels**: `--zip-name my-plugin-wordpress-org.zip`
-- **Build variants**: `--zip-name my-plugin-lite-v1.0.0.zip`
+
+-   **Beta/RC releases**: `--zip-name my-plugin-v1.2.0-beta1.zip`
+-   **Client-specific builds**: `--zip-name my-plugin-client-custom.zip`
+-   **Distribution channels**: `--zip-name my-plugin-wordpress-org.zip`
+-   **Build variants**: `--zip-name my-plugin-lite-v1.0.0.zip`
 
 ## Example Workflows
 
@@ -294,14 +295,5 @@ If you have existing release scripts, you can gradually migrate:
 }
 ```
 
-### Git Hooks
-
-Add to your `package.json` for automatic tagging:
-
-```json
-{
-	"scripts": {
-		"release": "node bin/build-release.js && git tag v$npm_package_version && git push --tags"
-	}
-}
-```
+Do not add local tag or push hooks. Production tags are created only after an
+approved `release/X.Y.Z` PR is merged.
