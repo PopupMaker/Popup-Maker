@@ -201,7 +201,9 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y subversion
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
+        run: |
+          composer config --global --unset github-oauth.github.com || true
+          composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
@@ -268,7 +270,9 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y subversion
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
+        run: |
+          composer config --global --unset github-oauth.github.com || true
+          composer install --prefer-dist --no-progress
 
       - name: Install WordPress test suite
         run: |
@@ -365,7 +369,9 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-8.2-
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
+        run: |
+          composer config --global --unset github-oauth.github.com || true
+          composer install --prefer-dist --no-progress
 
       - name: Install pnpm dependencies
         run: pnpm install --frozen-lockfile

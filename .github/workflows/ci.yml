@@ -156,7 +156,9 @@ jobs:
 
       - name: Install composer dependencies
         if: steps.changed-files.outputs.any_changed == 'true'
-        run: composer install --no-interaction --optimize-autoloader --ignore-platform-reqs
+        run: |
+          composer config --global --unset github-oauth.github.com || true
+          composer install --no-interaction --optimize-autoloader --ignore-platform-reqs
 
       - name: Run PHPCS on changed files
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -490,7 +492,9 @@ jobs:
           tools: composer
 
       - name: Install composer dependencies
-        run: composer install --no-interaction --ignore-platform-reqs
+        run: |
+          composer config --global --unset github-oauth.github.com || true
+          composer install --no-interaction --ignore-platform-reqs
 
       - name: Run composer audit
         continue-on-error: true
@@ -528,7 +532,9 @@ jobs:
           coverage: xdebug
 
       - name: Install composer dependencies
-        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
+        run: |
+          composer config --global --unset github-oauth.github.com || true
+          composer install --prefer-dist --no-progress --ignore-platform-reqs
 
       - name: Install WordPress test environment
         run: bash bin/install-wp-tests.sh wordpress_test root 'password' mysql
