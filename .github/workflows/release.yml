@@ -1,451 +1,656 @@
-name: Release
+name: Publish approved release PR
 
 on:
-  push:
-    tags:
-      - '[0-9]+\.[0-9]+\.[0-9]+'
-      - '[0-9]+\.[0-9]+\.[0-9]+-*'
+    pull_request_target:
+        branches: [master]
+        types: [closed]
+    workflow_dispatch:
+        inputs:
+            pull_request_number:
+                description: Merged release PR number to retry.
+                required: true
+                type: number
+
+permissions:
+    contents: read
+    pull-requests: read
+
+concurrency:
+    group: popup-maker-publication
+    cancel-in-progress: false
 
 env:
-  PLUGIN_SLUG: popup-maker
-  PLUGIN_NAME: Popup Maker
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    PLUGIN_SLUG: popup-maker
+    PLUGIN_NAME: Popup Maker
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  # ============================================================================
-  # BUILD RELEASE PACKAGE
-  # ============================================================================
-  build:
-    name: Build Release Package
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.info.outputs.version }}
-      is_test: ${{ steps.info.outputs.is_test }}
-      is_prerelease: ${{ steps.info.outputs.is_prerelease }}
-      zip_name: ${{ steps.package.outputs.name }}
-      changelog_content: ${{ steps.changelog.outputs.content }}
+    authorize:
+        name: Authorize approved release PR
+        if: >-
+            github.event_name == 'workflow_dispatch' ||
+            (github.event.pull_request.merged == true &&
+             startsWith(github.event.pull_request.head.ref, 'release/'))
+        runs-on: ubuntu-latest
+        outputs:
+            merge_sha: ${{ steps.authorize.outputs.merge_sha }}
+            base_sha: ${{ steps.authorize.outputs.base_sha }}
+            pull_request_number: ${{ steps.authorize.outputs.pull_request_number }}
+            version: ${{ steps.authorize.outputs.version }}
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 1
+        steps:
+            - name: Verify merged PR, approval, branch, and tag
+              id: authorize
+              uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+              with:
+                  script: |
+                      const owner = context.repo.owner;
+                      const repo = context.repo.repo;
+                      const number = context.eventName === 'workflow_dispatch'
+                        ? Number('${{ inputs.pull_request_number }}')
+                        : context.payload.pull_request.number;
+                      const { data: pull } = await github.rest.pulls.get({ owner, repo, pull_number: number });
 
-      - name: Extract release information
-        id: info
+                      if (!pull.merged || pull.base.ref !== 'master') {
+                        core.setFailed('The release PR must be merged into master.');
+                        return;
+                      }
+                      if (pull.head.repo?.full_name !== `${owner}/${repo}`) {
+                        core.setFailed('Release PRs must come from this repository.');
+                        return;
+                      }
+
+                      const branchMatch = pull.head.ref.match(/^release\/(\d+\.\d+\.\d+)$/);
+                      if (!branchMatch) {
+                        core.setFailed('The merged branch must be named release/X.Y.Z.');
+                        return;
+                      }
+
+                      const reviews = await github.paginate(github.rest.pulls.listReviews, {
+                        owner,
+                        repo,
+                        pull_number: number,
+                        per_page: 100,
+                      });
+                      const latestByReviewer = new Map();
+                      for (const review of reviews) {
+                        if (
+                          review.user?.login &&
+                          ['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED'].includes(review.state)
+                        ) {
+                          latestByReviewer.set(review.user.login, review.state);
+                        }
+                      }
+                      const approvedReviewers = [...latestByReviewer.entries()]
+                        .filter(([, state]) => state === 'APPROVED')
+                        .map(([login]) => login);
+                      let authorizedApproval = false;
+                      for (const username of approvedReviewers) {
+                        const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                          owner,
+                          repo,
+                          username,
+                        });
+                        if (['admin', 'maintain', 'write'].includes(permission.permission)) {
+                          authorizedApproval = true;
+                          break;
+                        }
+                      }
+                      if (!authorizedApproval && pull.merged_by?.login) {
+                        const { data: mergerPermission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                          owner,
+                          repo,
+                          username: pull.merged_by.login,
+                        });
+                        authorizedApproval = ['admin', 'maintain', 'write'].includes(
+                          mergerPermission.permission
+                        );
+                      }
+                      if (!authorizedApproval) {
+                        core.setFailed('The release PR was not approved or merged by an authorized maintainer.');
+                        return;
+                      }
+
+                      const version = branchMatch[1];
+                      const { data: masterBranch } = await github.rest.repos.getBranch({
+                        owner,
+                        repo,
+                        branch: 'master',
+                      });
+                      if (masterBranch.commit.sha !== pull.merge_commit_sha) {
+                        core.setFailed(
+                          `Release ${version} is stale; master has changed since PR #${number} merged.`
+                        );
+                        return;
+                      }
+
+                      const { data: masterPackageFile } = await github.rest.repos.getContent({
+                        owner,
+                        repo,
+                        path: 'package.json',
+                        ref: 'master',
+                      });
+                      if (Array.isArray(masterPackageFile) || masterPackageFile.type !== 'file') {
+                        core.setFailed('Could not read package.json from master.');
+                        return;
+                      }
+                      const masterPackage = JSON.parse(
+                        Buffer.from(masterPackageFile.content, 'base64').toString('utf8')
+                      );
+                      if (masterPackage.version !== version) {
+                        core.setFailed(
+                          `Release ${version} is stale; master currently declares ${masterPackage.version}.`
+                        );
+                        return;
+                      }
+
+                      let existingTagCommit = '';
+                      try {
+                        const { data: ref } = await github.rest.git.getRef({
+                          owner,
+                          repo,
+                          ref: `tags/${version}`,
+                        });
+                        existingTagCommit = ref.object.sha;
+                        if (ref.object.type === 'tag') {
+                          const { data: tag } = await github.rest.git.getTag({
+                            owner,
+                            repo,
+                            tag_sha: ref.object.sha,
+                          });
+                          existingTagCommit = tag.object.sha;
+                        }
+                      } catch (error) {
+                        if (error.status !== 404) throw error;
+                      }
+                      if (existingTagCommit && existingTagCommit !== pull.merge_commit_sha) {
+                        core.setFailed(`Tag ${version} already points to another commit.`);
+                        return;
+                      }
+
+                      core.setOutput('merge_sha', pull.merge_commit_sha);
+                      core.setOutput('base_sha', pull.base.sha);
+                      core.setOutput('pull_request_number', String(number));
+                      core.setOutput('version', version);
+
+    build:
+        name: Build canonical release package
+        needs: authorize
+        runs-on: ubuntu-latest
+        outputs:
+            zip_name: ${{ steps.package.outputs.name }}
+            changelog_content: ${{ steps.changelog.outputs.content }}
+
+        steps:
+            - name: Checkout approved merge
+              uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+              with:
+                  ref: ${{ needs.authorize.outputs.merge_sha }}
+                  fetch-depth: 0
+                  persist-credentials: false
+
+            - name: Reject symlinked publication files
+              run: |
+                  if [ -L readme.txt ] ||
+                    [ -L .wordpress-org ] ||
+                    { [ -d .wordpress-org ] && find .wordpress-org -type l -print -quit | grep -q .; }; then
+                    echo 'Symlinks are not allowed in publication files.'
+                    exit 1
+                  fi
+
+            - name: Validate release version
+              env:
+                  BASE_SHA: ${{ needs.authorize.outputs.base_sha }}
+                  VERSION: ${{ needs.authorize.outputs.version }}
+              run: |
+                  PREVIOUS_VERSION=$(git show "${BASE_SHA}:package.json" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version")
+                  node bin/validate-release-version.js \
+                    --version "${VERSION}" \
+                    --previous-version "${PREVIOUS_VERSION}"
+
+            - name: Extract changelog
+              id: changelog
+              env:
+                  VERSION: ${{ needs.authorize.outputs.version }}
+              run: |
+                  CHANGELOG=$(node bin/extract-changelog.js "${VERSION}")
+                  if [ -z "${CHANGELOG}" ]; then
+                    echo "No changelog content found for ${VERSION}."
+                    exit 1
+                  fi
+                  {
+                    echo 'content<<EOF'
+                    echo "${CHANGELOG}"
+                    echo 'EOF'
+                  } >> "${GITHUB_OUTPUT}"
+
+            - name: Set up PHP
+              uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+              with:
+                  php-version: '8.0'
+                  tools: composer:v2
+                  coverage: none
+
+            - name: Set up pnpm
+              uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+            - name: Set up Node.js
+              uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+              with:
+                  node-version: '24'
+                  cache: pnpm
+
+            - name: Install dependencies
+              run: |
+                  composer config --global --unset github-oauth.github.com || true
+                  composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+                  pnpm install --frozen-lockfile
+
+            - name: Build production assets
+              run: pnpm run build:production
+
+            - name: Create and verify release package
+              id: package
+              env:
+                  VERSION: ${{ needs.authorize.outputs.version }}
+              run: |
+                  ZIP_NAME="${PLUGIN_SLUG}_${VERSION}.zip"
+                  node bin/build-release.js --zip-name "${ZIP_NAME}" --keep-build
+                  node bin/verify-release-artifact.js "${ZIP_NAME}"
+                  echo "name=${ZIP_NAME}" >> "${GITHUB_OUTPUT}"
+
+            - name: Run WordPress Plugin Check
+              uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1
+              with:
+                  build-dir: ./popup-maker
+                  slug: popup-maker
+                  exclude-checks: plugin_review_phpcs
+                  exclude-directories: vendor-prefixed
+                  exclude-files: |
+                      classes/Extension/Updater.php
+                      includes/legacy/deprecated-classes.php
+                  ignore-codes: |
+                      WordPress.WP.I18n.MissingArgDomain
+                      missing_direct_file_access_protection
+                  ignore-warnings: true
+
+            - name: Upload canonical release package
+              uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+              with:
+                  name: ${{ env.PLUGIN_SLUG }}-${{ needs.authorize.outputs.version }}
+                  path: ${{ steps.package.outputs.name }}
+                  retention-days: 30
+
+    github-release:
+        name: Create GitHub tag and release
+        needs: [authorize, build]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        outputs:
+            release_id: ${{ steps.release.outputs.id }}
+            release_url: ${{ steps.release.outputs.url }}
+
+        steps:
+            - name: Download canonical release package
+              uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+              with:
+                  name: ${{ env.PLUGIN_SLUG }}-${{ needs.authorize.outputs.version }}
+
+            - name: Create or verify release
+              id: release
+              uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+              with:
+                  tag_name: ${{ needs.authorize.outputs.version }}
+                  target_commitish: ${{ needs.authorize.outputs.merge_sha }}
+                  name: ${{ env.PLUGIN_NAME }} ${{ needs.authorize.outputs.version }}
+                  body: ${{ needs.build.outputs.changelog_content }}
+                  files: ${{ needs.build.outputs.zip_name }}
+                  draft: false
+                  prerelease: false
+                  make_latest: true
+
+    wordpress-org:
+        name: Deploy canonical package to WordPress.org
+        needs: [authorize, build, github-release]
+        runs-on: ubuntu-latest
         env:
-          TAG: ${{ github.ref_name }}
-        run: |
-          VERSION="${TAG}"
-          IS_TEST="false"
-          IS_PRERELEASE="false"
+            BUILD_DIR: ${{ github.workspace }}/.wordpress-org-build/popup-maker
 
-          if [[ "$VERSION" =~ -test$ ]]; then
-            IS_TEST="true"
-            VERSION="${VERSION%-test}"
-          elif [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
-            IS_PRERELEASE="true"
-          fi
+        steps:
+            - name: Checkout approved merge
+              uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+              with:
+                  ref: ${{ needs.authorize.outputs.merge_sha }}
+                  persist-credentials: false
 
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          echo "is_test=${IS_TEST}" >> $GITHUB_OUTPUT
-          echo "is_prerelease=${IS_PRERELEASE}" >> $GITHUB_OUTPUT
+            - name: Download canonical release package
+              uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+              with:
+                  name: ${{ env.PLUGIN_SLUG }}-${{ needs.authorize.outputs.version }}
 
-          echo "📦 Plugin: ${{ env.PLUGIN_NAME }}"
-          echo "🏷️ Version: ${VERSION}"
-          echo "🧪 Test: ${IS_TEST}"
-          echo "🔖 Pre-release: ${IS_PRERELEASE}"
+            - name: Verify and extract canonical release package
+              env:
+                  ZIP_NAME: ${{ needs.build.outputs.zip_name }}
+              run: |
+                  node bin/verify-release-artifact.js "${ZIP_NAME}"
+                  mkdir -p "$(dirname "${BUILD_DIR}")"
+                  unzip -o "${ZIP_NAME}" -d "$(dirname "${BUILD_DIR}")"
+                  test -f "${BUILD_DIR}/popup-maker.php"
 
-      - name: Extract changelog
-        id: changelog
-        env:
-          VERSION: ${{ steps.info.outputs.version }}
-        run: |
-          CHANGELOG=""
+            - name: Run WordPress Plugin Check
+              uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1
+              with:
+                  build-dir: ${{ env.BUILD_DIR }}
+                  slug: popup-maker
+                  exclude-checks: plugin_review_phpcs
+                  exclude-directories: vendor-prefixed
+                  exclude-files: |
+                      classes/Extension/Updater.php
+                      includes/legacy/deprecated-classes.php
+                  ignore-codes: |
+                      WordPress.WP.I18n.MissingArgDomain
+                      missing_direct_file_access_protection
+                  ignore-warnings: true
 
-          if [ -f "bin/extract-changelog.js" ]; then
-            CHANGELOG=$(node bin/extract-changelog.js "$VERSION" 2>/dev/null || echo "")
-          fi
+            - name: Reject symlinked deployment files
+              run: |
+                  if [ -L .wordpress-org ] ||
+                    { [ -d .wordpress-org ] && find .wordpress-org -type l -print -quit | grep -q .; } ||
+                    [ -L "${BUILD_DIR}" ] ||
+                    { [ -d "${BUILD_DIR}" ] && find "${BUILD_DIR}" -type l -print -quit | grep -q .; }; then
+                    echo 'Symlinks are not allowed in deployment files.'
+                    exit 1
+                  fi
 
-          if [ -z "$CHANGELOG" ] && [ -f "CHANGELOG.md" ]; then
-            CHANGELOG=$(sed -n "/^## \[*v*${VERSION}[]\) -]*/,/^## /p" CHANGELOG.md | sed '1d;$d' | awk 'NF {p=1} p')
-          fi
+            - name: Deploy to WordPress.org
+              uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # stable
+              env:
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  SLUG: ${{ env.PLUGIN_SLUG }}
+                  VERSION: ${{ needs.authorize.outputs.version }}
+                  BUILD_DIR: ${{ env.BUILD_DIR }}
+                  ASSETS_DIR: .wordpress-org
 
-          if [ -z "$CHANGELOG" ]; then
-            CHANGELOG="Release ${VERSION}"
-          fi
+    edd-webhook:
+        name: Notify EDD Store
+        needs: [authorize, build, github-release]
+        runs-on: ubuntu-latest
 
-          {
-            echo 'content<<EOF'
-            echo "$CHANGELOG"
-            echo 'EOF'
-          } >> $GITHUB_OUTPUT
+        steps:
+            - name: Resolve release asset
+              id: asset
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  PACKAGE_NAME: ${{ needs.build.outputs.zip_name }}
+                  RELEASE_ID: ${{ needs.github-release.outputs.release_id }}
+                  REPO: ${{ github.repository }}
+              run: |
+                  ASSET_URL=$(gh api "repos/${REPO}/releases/${RELEASE_ID}" \
+                    --jq ".assets[] | select(.name == \"${PACKAGE_NAME}\") | .url")
+                  test -n "${ASSET_URL}"
+                  echo "asset_url=${ASSET_URL}" >> "${GITHUB_OUTPUT}"
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+            - name: Sync release to EDD
+              uses: code-atlantic/edd-release-sync@33d9c1b6afba496eb16992fd0661c291ad0565f9 # v0.2.0
+              with:
+                  edd_id: ${{ vars.EDD_PRODUCT_ID }}
+                  version: ${{ needs.authorize.outputs.version }}
+                  release_url: ${{ needs.github-release.outputs.release_url }}
+                  download_url: https://github.com/${{ github.repository }}/releases/download/${{ needs.authorize.outputs.version }}/${{ needs.build.outputs.zip_name }}
+                  asset_api_url: ${{ steps.asset.outputs.asset_url }}
+                  webhook_url: ${{ vars.EDD_WEBHOOK_URL }}
+                  webhook_token: ${{ secrets.EDD_WEBHOOK_TOKEN }}
+                  plugin_slug: ${{ env.PLUGIN_SLUG }}
+                  is_prerelease: false
+                  test_mode: false
+
+    google-drive-upload:
+        name: Upload to Google Drive
+        needs: [authorize, build, github-release]
+        runs-on: ubuntu-latest
+        outputs:
+            download_link: ${{ steps.upload.outputs.download_link }}
+
+        steps:
+            - name: Download canonical release package
+              uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+              with:
+                  name: ${{ env.PLUGIN_SLUG }}-${{ needs.authorize.outputs.version }}
+
+            - name: Upload to Google Drive
+              id: upload
+              uses: code-atlantic/sync-release-to-google-drive@b579fe06183c2b49a73a9de4dd25ffc158e9ba87 # v0.3.1
+              with:
+                  filename: ${{ needs.build.outputs.zip_name }}
+                  credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
+                  folder_id: ${{ vars.GOOGLE_DRIVE_FOLDER_ID }}
+                  overwrite: 'true'
+                  sharing: anyone
+                  link_discoverable: false
+
+    changelog:
+        name: Create review-required WordPress changelog draft
+        needs: [github-release]
+        uses: code-atlantic/release-changelog-action/.github/workflows/sync-release.yml@3c44b56d2677a434fc85e5610989bb194cf08571
         with:
-          php-version: '8.0'
-          tools: composer:v2
-          coverage: none
+            product-key: core
+            expected-repository: PopupMaker/Popup-Maker
+            release-id: ${{ format('{0}', needs.github-release.outputs.release_id) }}
+        secrets:
+            WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
+            WORDPRESS_ACCESS_TOKEN: ${{ secrets.WORDPRESS_ACCESS_TOKEN }}
+            WORDPRESS_USERNAME: ${{ secrets.WORDPRESS_USERNAME }}
+            WORDPRESS_APPLICATION_PASSWORD: ${{ secrets.WORDPRESS_APPLICATION_PASSWORD }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+    back-sync:
+        name: Open and validate master back-sync PR
+        needs: [authorize, github-release]
+        runs-on: ubuntu-latest
+        permissions:
+            actions: write
+            contents: write
+            pull-requests: write
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24'
-          cache: 'pnpm'
+        steps:
+            - name: Open or reuse master to develop PR
+              id: back_sync
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  REPO: ${{ github.repository }}
+                  VERSION: ${{ needs.authorize.outputs.version }}
+              run: |
+                  PR_NUMBER=$(gh pr list --repo "${REPO}" --base develop --head master --state open --json number --jq '.[0].number // ""')
+                  if [ -n "${PR_NUMBER}" ]; then
+                    PR_URL=$(gh pr view "${PR_NUMBER}" --repo "${REPO}" --json url --jq '.url')
+                    echo "Back-sync PR already open: ${PR_URL}"
+                  else
+                    PR_URL=$(gh pr create \
+                      --repo "${REPO}" \
+                      --base develop \
+                      --head master \
+                      --title "Back-sync release ${VERSION} to develop" \
+                      --body "Carries the approved ${VERSION} release metadata and release merge back to develop.")
+                    PR_NUMBER=${PR_URL##*/}
+                    echo "Back-sync PR opened: ${PR_URL}"
+                  fi
 
-      - name: Install dependencies
-        run: |
-          # Strauss 0.22.4 embeds an older Composer token validator that rejects
-          # GitHub Actions' generated token format. All release dependencies are
-          # public, so remove only the runner-injected Composer OAuth entry.
-          composer config --global --unset github-oauth.github.com || true
-          composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-          pnpm install --frozen-lockfile
+                  MERGE_SHA=""
+                  for _ in {1..30}; do
+                    MERGE_SHA=$(gh api "repos/${REPO}/git/ref/pull/${PR_NUMBER}/merge" --jq '.object.sha' 2>/dev/null || true)
+                    [ -n "${MERGE_SHA}" ] && break
+                    sleep 2
+                  done
+                  if [ -z "${MERGE_SHA}" ]; then
+                    echo "Back-sync PR #${PR_NUMBER} has no mergeable test commit."
+                    exit 1
+                  fi
 
-      - name: Build production assets
-        run: pnpm run build:production
+                  VALIDATION_BRANCH="back-sync-validation/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+                  cleanup() {
+                    gh api --method DELETE "repos/${REPO}/git/refs/heads/${VALIDATION_BRANCH}" >/dev/null 2>&1 || true
+                  }
+                  trap cleanup EXIT
 
-      - name: Create release package
-        id: package
-        env:
-          VERSION: ${{ steps.info.outputs.version }}
-        run: |
-          ZIP_NAME="${{ env.PLUGIN_SLUG }}_${VERSION}.zip"
+                  gh api --method POST "repos/${REPO}/git/refs" \
+                    -f ref="refs/heads/${VALIDATION_BRANCH}" \
+                    -f sha="${MERGE_SHA}" >/dev/null
+                  gh workflow run tests.yml \
+                    --repo "${REPO}" \
+                    --ref "${VALIDATION_BRANCH}" \
+                    -f back_sync=true
 
-          if [ -f "bin/build-release.js" ]; then
-            node bin/build-release.js --zip-name "${ZIP_NAME}" --keep-build
-          else
-            pnpm run release -- --keep-build
-          fi
+                  TEST_RUN_ID=""
+                  for _ in {1..30}; do
+                    TEST_RUN_ID=$(gh run list \
+                      --repo "${REPO}" \
+                      --workflow tests.yml \
+                      --branch "${VALIDATION_BRANCH}" \
+                      --event workflow_dispatch \
+                      --limit 1 \
+                      --json databaseId \
+                      --jq '.[0].databaseId // ""')
+                    [ -n "${TEST_RUN_ID}" ] && break
+                    sleep 2
+                  done
+                  if [ -z "${TEST_RUN_ID}" ]; then
+                    echo 'The back-sync validation workflow did not start.'
+                    exit 1
+                  fi
 
-          if [ ! -f "${ZIP_NAME}" ]; then
-            echo "❌ Package not found: ${ZIP_NAME}"
-            exit 1
-          fi
+                  echo "Waiting for back-sync validation run ${TEST_RUN_ID}."
+                  gh run watch "${TEST_RUN_ID}" --repo "${REPO}" --exit-status
 
-          FILE_SIZE=$(ls -lh "${ZIP_NAME}" | awk '{print $5}')
-          echo "✅ Package created: ${ZIP_NAME} (${FILE_SIZE})"
-          echo "name=${ZIP_NAME}" >> $GITHUB_OUTPUT
+    slack-success:
+        name: Slack success notification
+        needs:
+            [
+                authorize,
+                build,
+                github-release,
+                wordpress-org,
+                edd-webhook,
+                google-drive-upload,
+                changelog,
+                back-sync,
+            ]
+        if: >-
+            always() &&
+            needs.github-release.result == 'success' &&
+            needs.wordpress-org.result == 'success' &&
+            needs.edd-webhook.result == 'success' &&
+            needs.google-drive-upload.result == 'success' &&
+            needs.changelog.result == 'success' &&
+            needs.back-sync.result == 'success'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Send success notification
+              env:
+                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+                  VERSION: ${{ needs.authorize.outputs.version }}
+                  RELEASE_URL: ${{ needs.github-release.outputs.release_url }}
+                  DRIVE_URL: ${{ needs.google-drive-upload.outputs.download_link }}
+              run: |
+                  if [ -z "${SLACK_WEBHOOK_URL}" ]; then
+                    exit 0
+                  fi
+                  PAYLOAD=$(jq -n \
+                    --arg version "${VERSION}" \
+                    --arg release_url "${RELEASE_URL}" \
+                    --arg drive_url "${DRIVE_URL}" \
+                    '{text: ("🚀 *Popup Maker " + $version + " released*\n\n✅ GitHub release\n✅ WordPress.org\n✅ EDD\n✅ Google Drive\n✅ Changelog draft\n\n<" + $release_url + "|View release>" + (if $drive_url != "" then " · <" + $drive_url + "|Download ZIP>" else "" end)), username: "Release Bot", icon_emoji: ":package:"}')
+                  curl -sS --fail -X POST "${SLACK_WEBHOOK_URL}" \
+                    -H 'Content-Type: application/json' \
+                    -d "${PAYLOAD}"
 
-      - name: Run WordPress Plugin Check
-        uses: wordpress/plugin-check-action@v1
-        with:
-          build-dir: ./popup-maker
-          slug: popup-maker
-          exclude-checks: plugin_review_phpcs
-          exclude-directories: vendor-prefixed
-          exclude-files: |
-            classes/Extension/Updater.php
-            includes/legacy/deprecated-classes.php
-          ignore-codes: |
-            WordPress.WP.I18n.MissingArgDomain
-            missing_direct_file_access_protection
-          ignore-warnings: true
+    slack-failure:
+        name: Slack failure notification
+        needs:
+            [
+                authorize,
+                build,
+                github-release,
+                wordpress-org,
+                edd-webhook,
+                google-drive-upload,
+                changelog,
+                back-sync,
+            ]
+        if: >-
+            always() &&
+            needs.authorize.result != 'skipped' &&
+            (needs.authorize.result == 'failure' ||
+             needs.build.result == 'failure' ||
+             needs.github-release.result == 'failure' ||
+             needs.wordpress-org.result == 'failure' ||
+             needs.edd-webhook.result == 'failure' ||
+             needs.google-drive-upload.result == 'failure' ||
+             needs.changelog.result == 'failure' ||
+             needs.back-sync.result == 'failure')
+        runs-on: ubuntu-latest
+        steps:
+            - name: Send failure notification
+              env:
+                  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+                  VERSION: ${{ needs.authorize.outputs.version }}
+                  RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+              run: |
+                  if [ -z "${SLACK_WEBHOOK_URL}" ]; then
+                    exit 0
+                  fi
+                  PAYLOAD=$(jq -n \
+                    --arg version "${VERSION:-unknown}" \
+                    --arg run_url "${RUN_URL}" \
+                    '{text: ("🚨 *Popup Maker " + $version + " release needs attention*\n\n<" + $run_url + "|View failed workflow>"), username: "Release Bot", icon_emoji: ":package:"}')
+                  curl -sS --fail -X POST "${SLACK_WEBHOOK_URL}" \
+                    -H 'Content-Type: application/json' \
+                    -d "${PAYLOAD}"
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ env.PLUGIN_SLUG }}-${{ steps.info.outputs.version }}
-          path: ${{ steps.package.outputs.name }}
-          retention-days: 30
+    summary:
+        name: Release summary
+        needs:
+            [
+                authorize,
+                build,
+                github-release,
+                wordpress-org,
+                edd-webhook,
+                google-drive-upload,
+                changelog,
+                back-sync,
+                slack-success,
+                slack-failure,
+            ]
+        if: always() && needs.authorize.result != 'skipped'
+        runs-on: ubuntu-latest
 
-  # ============================================================================
-  # CREATE GITHUB RELEASE
-  # ============================================================================
-  github-release:
-    name: Create GitHub Release
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      contents: write
-    outputs:
-      release_url: ${{ steps.set_url.outputs.release_url }}
-      release_id: ${{ steps.release.outputs.id }}
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: ${{ env.PLUGIN_SLUG }}-${{ needs.build.outputs.version }}
-
-      - name: Create GitHub Release
-        id: release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ env.PLUGIN_NAME }} ${{ needs.build.outputs.version }}
-          body: |
-            ${{ needs.build.outputs.changelog_content }}
-          files: ${{ needs.build.outputs.zip_name }}
-          draft: ${{ needs.build.outputs.is_test == 'true' }}
-          prerelease: ${{ needs.build.outputs.is_prerelease == 'true' }}
-
-      - name: Set release URL
-        id: set_url
-        env:
-          TAG: ${{ github.ref_name }}
-          REPO: ${{ github.repository }}
-        run: |
-          RELEASE_URL="https://github.com/${REPO}/releases/tag/${TAG}"
-          echo "release_url=${RELEASE_URL}" >> $GITHUB_OUTPUT
-
-  # ============================================================================
-  # NOTIFY EDD STORE
-  # ============================================================================
-  edd-webhook:
-    name: Notify EDD Store
-    runs-on: ubuntu-latest
-    needs: [build, github-release]
-    if: |
-      always() &&
-      needs.build.result == 'success' &&
-      needs.github-release.result == 'success'
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Get release asset API URL
-        id: get_asset
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PACKAGE_NAME: ${{ needs.build.outputs.zip_name }}
-          RELEASE_ID: ${{ needs.github-release.outputs.release_id }}
-          REPO: ${{ github.repository }}
-        run: |
-          # Use release ID (works for draft + published releases).
-          ASSET_URL=$(gh api "repos/${REPO}/releases/${RELEASE_ID}" \
-            --jq ".assets[] | select(.name == \"${PACKAGE_NAME}\") | .url")
-
-          if [ -z "$ASSET_URL" ] || [ "$ASSET_URL" == "null" ]; then
-            echo "⚠️ Could not find asset URL for ${PACKAGE_NAME}"
-            echo "asset_url=" >> $GITHUB_OUTPUT
-          else
-            echo "asset_url=${ASSET_URL}" >> $GITHUB_OUTPUT
-            echo "✅ Asset API URL: ${ASSET_URL}"
-          fi
-
-      - name: Sync release to EDD
-        uses: code-atlantic/edd-release-sync@v0.2.0
-        with:
-          edd_id: ${{ vars.EDD_PRODUCT_ID }}
-          version: ${{ needs.build.outputs.version }}
-          release_url: ${{ needs.github-release.outputs.release_url }}
-          download_url: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ needs.build.outputs.zip_name }}
-          asset_api_url: ${{ steps.get_asset.outputs.asset_url }}
-          webhook_url: ${{ vars.EDD_WEBHOOK_URL }}
-          webhook_token: ${{ secrets.EDD_WEBHOOK_TOKEN }}
-          plugin_slug: ${{ env.PLUGIN_SLUG }}
-          is_prerelease: ${{ needs.build.outputs.is_prerelease }}
-          test_mode: ${{ needs.build.outputs.is_test }}
-
-  # ============================================================================
-  # UPLOAD TO GOOGLE DRIVE
-  # ============================================================================
-  google-drive-upload:
-    name: Upload to Google Drive
-    runs-on: ubuntu-latest
-    needs: [build, github-release]
-    if: needs.build.result == 'success' && needs.github-release.result == 'success'
-    outputs:
-      file_id: ${{ steps.upload.outputs.file_id }}
-      web_view_link: ${{ steps.upload.outputs.web_view_link }}
-      download_link: ${{ steps.upload.outputs.download_link }}
-      updated: ${{ steps.upload.outputs.updated }}
-      skipped: ${{ steps.upload.outputs.skipped }}
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: ${{ env.PLUGIN_SLUG }}-${{ needs.build.outputs.version }}
-
-      - name: Upload to Google Drive
-        id: upload
-        uses: code-atlantic/sync-release-to-google-drive@v0.3.1
-        with:
-          filename: ${{ needs.build.outputs.zip_name }}
-          credentials: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
-          folder_id: ${{ vars.GOOGLE_DRIVE_FOLDER_ID }}
-          overwrite: 'true'
-          sharing: anyone
-          link_discoverable: false
-
-  # ============================================================================
-  # SLACK NOTIFICATION (runs after EDD + GDrive)
-  # ============================================================================
-  slack-notification-success:
-    name: Slack Success Notification
-    runs-on: ubuntu-latest
-    needs: [build, github-release, edd-webhook, google-drive-upload]
-    if: |
-      always() &&
-      needs.build.result == 'success' &&
-      needs.github-release.result == 'success'
-
-    steps:
-      - name: Send success notification
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-          PLUGIN_NAME: ${{ env.PLUGIN_NAME }}
-          VERSION: ${{ needs.build.outputs.version }}
-          IS_TEST: ${{ needs.build.outputs.is_test }}
-          RELEASE_URL: ${{ needs.github-release.outputs.release_url }}
-          CHANGELOG: ${{ needs.build.outputs.changelog_content }}
-          DRIVE_DOWNLOAD_URL: ${{ needs.google-drive-upload.outputs.download_link }}
-          EDD_RESULT: ${{ needs.edd-webhook.result }}
-          GDRIVE_RESULT: ${{ needs.google-drive-upload.result }}
-          REPO: ${{ github.repository }}
-        run: |
-          if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "⚠️ No Slack webhook configured"
-            exit 0
-          fi
-
-          EMOJI="🚀"
-          [ "$IS_TEST" == "true" ] && EMOJI="🧪"
-
-          EDD_STATUS="✅"
-          [ "$EDD_RESULT" != "success" ] && EDD_STATUS="⚠️"
-          GDRIVE_STATUS="✅"
-          [ "$GDRIVE_RESULT" != "success" ] && GDRIVE_STATUS="⚠️"
-
-          # Convert Markdown to Slack mrkdwn.
-          CONVERTED=$(echo "$CHANGELOG" \
-            | sed 's/\*\*\([^*]*\)\*\*/*\1*/g' \
-            | sed 's/\[\([^]]*\)\](\([^)]*\))/<\2|\1>/g')
-
-          # Truncate to 10 lines. If longer, add "view full" note.
-          TOTAL_LINES=$(echo "$CONVERTED" | wc -l)
-          TRUNCATED=$(echo "$CONVERTED" | head -10)
-          WAS_TRUNCATED="false"
-          [ "$TOTAL_LINES" -gt 10 ] && WAS_TRUNCATED="true"
-
-          CHANGELOG_URL="https://github.com/${REPO}/blob/master/CHANGELOG.md"
-
-          # Use jq for safe JSON — all newlines handled inside jq template.
-          PAYLOAD=$(jq -n \
-            --arg emoji "$EMOJI" \
-            --arg plugin "$PLUGIN_NAME" \
-            --arg version "$VERSION" \
-            --arg changelog "$TRUNCATED" \
-            --argjson more "$WAS_TRUNCATED" \
-            --arg release_url "$RELEASE_URL" \
-            --arg changelog_url "$CHANGELOG_URL" \
-            --arg drive_url "$DRIVE_DOWNLOAD_URL" \
-            --arg edd_status "$EDD_STATUS" \
-            --arg gdrive_status "$GDRIVE_STATUS" \
-            --argjson is_test "$( [ "$IS_TEST" == "true" ] && echo true || echo false )" \
-            '{
-              text: (
-                "\($emoji) *\($plugin) \($version)*\n\n"
-                + "\($changelog)\n"
-                + (if $more then "_<\($changelog_url)|…see full changelog>_\n" else "" end)
-                + "\n*Downloads:*\n"
-                + "📖 <\($release_url)|GitHub Release>\n"
-                + (if $drive_url != "" then "⬇️ <\($drive_url)|Download Zip (shareable)>\n" else "" end)
-                + "📋 <\($changelog_url)|Changelog>\n"
-                + "\n*Status:* EDD \($edd_status) | GDrive \($gdrive_status)"
-                + (if $is_test then "\n_🧪 Test release — not published to WordPress.org_" else "" end)
-              ),
-              username: "Release Bot",
-              icon_emoji: ":package:"
-            }')
-
-          curl -s -X POST "$SLACK_WEBHOOK_URL" \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD" \
-            --fail --show-error
-
-          echo "✅ Slack sent"
-
-  slack-notification-failure:
-    name: Slack Failure Notification
-    runs-on: ubuntu-latest
-    needs: [build, github-release, edd-webhook, google-drive-upload]
-    if: |
-      always() &&
-      needs.build.result == 'success' &&
-      (needs.github-release.result == 'failure' || needs.edd-webhook.result == 'failure' || needs.google-drive-upload.result == 'failure')
-
-    steps:
-      - name: Send failure notification
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-          PLUGIN_NAME: ${{ env.PLUGIN_NAME }}
-          VERSION: ${{ needs.build.outputs.version }}
-          GH_RESULT: ${{ needs.github-release.result }}
-          EDD_RESULT: ${{ needs.edd-webhook.result }}
-          GDRIVE_RESULT: ${{ needs.google-drive-upload.result }}
-          RUN_ID: ${{ github.run_id }}
-          REPO: ${{ github.repository }}
-        run: |
-          if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            exit 0
-          fi
-
-          GH_STATUS="✅"
-          [ "$GH_RESULT" != "success" ] && GH_STATUS="❌"
-          EDD_STATUS="✅"
-          [ "$EDD_RESULT" != "success" ] && EDD_STATUS="❌"
-          GDRIVE_STATUS="✅"
-          [ "$GDRIVE_RESULT" != "success" ] && GDRIVE_STATUS="❌"
-
-          MESSAGE="*🚨 RELEASE FAILURE: ${PLUGIN_NAME} ${VERSION}*\n\n"
-          MESSAGE="${MESSAGE}• *GitHub:* ${GH_STATUS}\n"
-          MESSAGE="${MESSAGE}• *EDD:* ${EDD_STATUS}\n"
-          MESSAGE="${MESSAGE}• *Drive:* ${GDRIVE_STATUS}\n\n"
-          MESSAGE="${MESSAGE}🔍 <https://github.com/${REPO}/actions/runs/${RUN_ID}|View Workflow>"
-
-          curl -X POST \
-            --data-urlencode "payload={\"text\": \"${MESSAGE}\", \"username\": \"Release Bot\", \"icon_emoji\": \":package:\"}" \
-            "$SLACK_WEBHOOK_URL" \
-            --fail --silent --show-error
-
-  # ============================================================================
-  # RELEASE SUMMARY
-  # ============================================================================
-  summary:
-    name: Release Summary
-    runs-on: ubuntu-latest
-    needs: [build, github-release, edd-webhook, google-drive-upload, slack-notification-success, slack-notification-failure]
-    if: always()
-
-    steps:
-      - name: Generate summary
-        env:
-          VERSION: ${{ needs.build.outputs.version }}
-          IS_TEST: ${{ needs.build.outputs.is_test }}
-          IS_PRERELEASE: ${{ needs.build.outputs.is_prerelease }}
-          RELEASE_URL: ${{ needs.github-release.outputs.release_url }}
-          BUILD_RESULT: ${{ needs.build.result }}
-          GH_RESULT: ${{ needs.github-release.result }}
-          EDD_RESULT: ${{ needs.edd-webhook.result }}
-          GDRIVE_RESULT: ${{ needs.google-drive-upload.result }}
-          SLACK_OK: ${{ needs.slack-notification-success.result }}
-          SLACK_FAIL: ${{ needs.slack-notification-failure.result }}
-        run: |
-          TYPE="🚀 Stable"
-          [ "$IS_TEST" == "true" ] && TYPE="🧪 Test Lane"
-          [ "$IS_PRERELEASE" == "true" ] && TYPE="🔶 Pre-release"
-
-          echo "# Release Summary: ${{ env.PLUGIN_NAME }} ${VERSION}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Type:** ${TYPE}" >> $GITHUB_STEP_SUMMARY
-          echo "**Release:** ${RELEASE_URL}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          [ "$BUILD_RESULT" == "success" ] && echo "✅ **Build**: Package created" >> $GITHUB_STEP_SUMMARY || echo "❌ **Build**: Failed" >> $GITHUB_STEP_SUMMARY
-          [ "$GH_RESULT" == "success" ] && echo "✅ **GitHub Release**: Created" >> $GITHUB_STEP_SUMMARY || echo "❌ **GitHub Release**: Failed" >> $GITHUB_STEP_SUMMARY
-          [ "$EDD_RESULT" == "success" ] && echo "✅ **EDD Webhook**: Delivered" >> $GITHUB_STEP_SUMMARY || echo "⚠️ **EDD Webhook**: ${EDD_RESULT}" >> $GITHUB_STEP_SUMMARY
-          [ "$GDRIVE_RESULT" == "success" ] && echo "✅ **Google Drive**: Uploaded" >> $GITHUB_STEP_SUMMARY || echo "⚠️ **Google Drive**: ${GDRIVE_RESULT}" >> $GITHUB_STEP_SUMMARY
-          [ "$SLACK_OK" == "success" ] && echo "✅ **Slack**: Notified" >> $GITHUB_STEP_SUMMARY || [ "$SLACK_FAIL" == "success" ] && echo "⚠️ **Slack**: Failure notice sent" >> $GITHUB_STEP_SUMMARY || echo "⚠️ **Slack**: ${SLACK_OK}" >> $GITHUB_STEP_SUMMARY
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "*WordPress.org deploy triggers separately on merge to master.*" >> $GITHUB_STEP_SUMMARY
+        steps:
+            - name: Write release summary
+              env:
+                  VERSION: ${{ needs.authorize.outputs.version }}
+                  PR_NUMBER: ${{ needs.authorize.outputs.pull_request_number }}
+                  RELEASE_URL: ${{ needs.github-release.outputs.release_url }}
+                  BUILD_RESULT: ${{ needs.build.result }}
+                  GITHUB_RESULT: ${{ needs.github-release.result }}
+                  WORDPRESS_RESULT: ${{ needs.wordpress-org.result }}
+                  EDD_RESULT: ${{ needs.edd-webhook.result }}
+                  DRIVE_RESULT: ${{ needs.google-drive-upload.result }}
+                  CHANGELOG_RESULT: ${{ needs.changelog.result }}
+                  BACK_SYNC_RESULT: ${{ needs.back-sync.result }}
+              run: |
+                  {
+                    echo "# Popup Maker ${VERSION}"
+                    echo "Approved release PR: #${PR_NUMBER}"
+                    echo "Release: ${RELEASE_URL}"
+                    echo ""
+                    echo "| Step | Result |"
+                    echo "| --- | --- |"
+                    echo "| Build | ${BUILD_RESULT} |"
+                    echo "| GitHub | ${GITHUB_RESULT} |"
+                    echo "| WordPress.org | ${WORDPRESS_RESULT} |"
+                    echo "| EDD | ${EDD_RESULT} |"
+                    echo "| Google Drive | ${DRIVE_RESULT} |"
+                    echo "| Changelog draft | ${CHANGELOG_RESULT} |"
+                    echo "| Back-sync PR | ${BACK_SYNC_RESULT} |"
+                  } >> "${GITHUB_STEP_SUMMARY}"

@@ -37,35 +37,39 @@ Then, move on to our [Setting up your local environment](https://github.com/Popu
 
 ### Release Preparation
 
-The `bin/prepare-release.js` script automates the complete release workflow:
+The `bin/prepare-release.js` script prepares a reviewed release PR:
 
 ```bash
 # Patch release (1.21.4 → 1.21.5)
-node bin/prepare-release.js
+pnpm run prepare-release start
 
 # Minor release (1.21.4 → 1.22.0)
-node bin/prepare-release.js --minor
+pnpm run prepare-release start --minor
 
 # Specific version
-node bin/prepare-release.js 2.1.0
+pnpm run prepare-release start -- 2.1.0
 
 # Test without changes
-node bin/prepare-release.js --dry-run
+pnpm run prepare-release start --dry-run
 ```
 
 **Features:**
-- 🔄 Automatic version increments or specific versions
-- 🌿 Git flow integration (release branches and tags)
-- 📝 Updates versions in all files and changelog
-- 🔨 Builds release assets
-- 🚀 Interactive push options
+
+-   🔄 Automatic version increments or specific versions
+-   🌿 Creates a `release/X.Y.Z` branch for review
+-   📝 Updates versions in all files and changelog
+-   🔨 Builds release assets
+-   🚀 Opens the release PR; maintainer authorization and merge perform publication
 
 See `bin/README.md` for complete documentation.
 
 ## Deployment
 
-This is a WordPress plugin that is hosted on the WordPress.org SVN repo.
-There is not currently any automated deployment. Instead, once a release is published on GitHub, that release is manually uploaded to the SVN.
+This plugin is hosted on WordPress.org SVN. A merged `release/X.Y.Z` PR authorized
+by a current maintainer approval or an authorized maintainer merge publishes the
+canonical GitHub Actions artifact to GitHub Releases, EDD, Google Drive, and
+WordPress.org. Authorized same-repository readme/assets-only PRs use a separate
+narrow SVN sync. Direct pushes to `master` do not publish.
 
 ## Contributing
 
