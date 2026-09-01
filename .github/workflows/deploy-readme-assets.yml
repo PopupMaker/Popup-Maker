@@ -16,7 +16,7 @@ permissions:
     pull-requests: read
 
 concurrency:
-    group: wordpress-org-readme-assets-${{ github.event.pull_request.number || inputs.pull_request_number }}
+    group: popup-maker-publication
     cancel-in-progress: false
 
 jobs:
@@ -104,8 +104,11 @@ jobs:
                         pull_number: number,
                         per_page: 100,
                       });
-                      const allowed = files.length > 0 && files.every(({ filename }) =>
-                        filename === 'readme.txt' || filename.startsWith('.wordpress-org/')
+                      const isAllowedPath = (filename) =>
+                        filename === 'readme.txt' || filename.startsWith('.wordpress-org/');
+                      const allowed = files.length > 0 && files.every((file) =>
+                        isAllowedPath(file.filename) &&
+                        (file.status !== 'renamed' || isAllowedPath(file.previous_filename || ''))
                       );
                       if (!allowed) {
                         core.info('PR is not readme/assets-only; the narrow SVN sync will not run.');
@@ -126,6 +129,15 @@ jobs:
               uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
               with:
                   ref: ${{ needs.authorize.outputs.merge_sha }}
+                  fetch-depth: 0
+
+            - name: Refuse stale readme or assets
+              run: |
+                  git fetch --no-tags origin master
+                  if ! git diff --quiet HEAD FETCH_HEAD -- readme.txt .wordpress-org; then
+                    echo 'A newer readme or asset change exists on master. Refusing to publish stale files.'
+                    exit 1
+                  fi
 
             - name: Sync readme and assets
               uses: 10up/action-wordpress-plugin-asset-update@2480306f6f693672726d08b5917ea114cb2825f7 # stable

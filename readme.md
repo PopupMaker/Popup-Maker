@@ -44,13 +44,13 @@ The `bin/prepare-release.js` script prepares a reviewed release PR:
 pnpm run prepare-release start
 
 # Minor release (1.21.4 → 1.22.0)
-pnpm run prepare-release start -- --minor
+pnpm run prepare-release start --minor
 
 # Specific version
 pnpm run prepare-release start -- 2.1.0
 
 # Test without changes
-pnpm run prepare-release start -- --dry-run
+pnpm run prepare-release start --dry-run
 ```
 
 **Features:**

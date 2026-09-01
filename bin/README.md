@@ -26,19 +26,19 @@ The **prepare-release.js** script prepares a release branch, package, and PR. It
 pnpm run prepare-release start
 
 # Minor release (1.21.4 → 1.22.0)
-pnpm run prepare-release start -- --minor
+pnpm run prepare-release start --minor
 
 # Major release (1.21.4 → 2.0.0)
-pnpm run prepare-release start -- --major
+pnpm run prepare-release start --major
 
 # Specific version
-pnpm run prepare-release start -- 2.1.0
+pnpm run prepare-release start 2.1.0
 
 # Test without changes
-pnpm run prepare-release start -- --dry-run
+pnpm run prepare-release start --dry-run
 
 # See all options
-pnpm run prepare-release -- --help
+pnpm run prepare-release --help
 ```
 
 ### What It Does

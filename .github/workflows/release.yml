@@ -16,7 +16,7 @@ permissions:
     pull-requests: read
 
 concurrency:
-    group: popup-maker-release-${{ github.event.pull_request.number || inputs.pull_request_number }}
+    group: popup-maker-publication
     cancel-in-progress: false
 
 env:
@@ -112,6 +112,26 @@ jobs:
                       }
 
                       const version = branchMatch[1];
+                      const { data: masterPackageFile } = await github.rest.repos.getContent({
+                        owner,
+                        repo,
+                        path: 'package.json',
+                        ref: 'master',
+                      });
+                      if (Array.isArray(masterPackageFile) || masterPackageFile.type !== 'file') {
+                        core.setFailed('Could not read package.json from master.');
+                        return;
+                      }
+                      const masterPackage = JSON.parse(
+                        Buffer.from(masterPackageFile.content, 'base64').toString('utf8')
+                      );
+                      if (masterPackage.version !== version) {
+                        core.setFailed(
+                          `Release ${version} is stale; master currently declares ${masterPackage.version}.`
+                        );
+                        return;
+                      }
+
                       let existingTagCommit = '';
                       try {
                         const { data: ref } = await github.rest.git.getRef({
@@ -396,13 +416,13 @@ jobs:
         needs: [authorize, github-release]
         runs-on: ubuntu-latest
         permissions:
+            actions: write
             contents: read
             pull-requests: write
 
         steps:
             - name: Open or reuse master to develop PR
               id: back_sync
-              continue-on-error: true
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   REPO: ${{ github.repository }}
@@ -414,12 +434,16 @@ jobs:
                     exit 0
                   fi
 
-                  gh pr create \
+                  PR_URL=$(gh pr create \
                     --repo "${REPO}" \
                     --base develop \
                     --head master \
                     --title "Back-sync release ${VERSION} to develop" \
-                    --body "Carries the approved ${VERSION} release metadata and release merge back to develop."
+                    --body "Carries the approved ${VERSION} release metadata and release merge back to develop.")
+
+                  echo "Back-sync PR opened: ${PR_URL}"
+                  gh workflow run ci.yml --repo "${REPO}" --ref master
+                  gh workflow run tests.yml --repo "${REPO}" --ref master
 
     slack-success:
         name: Slack success notification
