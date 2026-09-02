@@ -238,6 +238,12 @@ function getReleasePullRequestDisposition( pullRequest ) {
 	}
 }
 
+/**
+ * Select the authoritative release PR when a branch has PR history.
+ *
+ * @param {Array<{state: string}>} pullRequests Release PR candidates.
+ * @return {Object|null} The selected release PR, if one exists.
+ */
 function selectReleasePullRequest( pullRequests ) {
 	if ( ! Array.isArray( pullRequests ) ) {
 		return null;
