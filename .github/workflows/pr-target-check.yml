@@ -2,9 +2,13 @@ name: PR target check
 
 on:
     pull_request_target:
-        types: [opened, edited]
+        types: [opened, edited, synchronize]
         branches:
             - master
+
+permissions:
+    contents: read
+    pull-requests: write
 
 jobs:
     redirect:
@@ -15,7 +19,51 @@ jobs:
           !(github.event.pull_request.head.repo.full_name == github.repository &&
             startsWith(github.event.pull_request.head.ref, 'release/'))
         steps:
+            - name: Check for an authorized readme/assets PR
+              id: target
+              uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+              with:
+                  result-encoding: string
+                  script: |
+                      const pull = context.payload.pull_request;
+                      if (pull.head.repo?.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
+                        return 'retarget';
+                      }
+
+                      let permission = '';
+                      try {
+                        const response = await github.rest.repos.getCollaboratorPermissionLevel({
+                          ...context.repo,
+                          username: pull.user.login,
+                        });
+                        permission = response.data.permission;
+                      } catch (error) {
+                        if (error.status !== 404) throw error;
+                      }
+                      if (!['admin', 'maintain', 'write'].includes(permission)) {
+                        return 'retarget';
+                      }
+
+                      const files = await github.paginate(github.rest.pulls.listFiles, {
+                        ...context.repo,
+                        pull_number: pull.number,
+                        per_page: 100,
+                      });
+                      const isAllowedPath = (filename) =>
+                        filename === 'readme.txt' || filename.startsWith('.wordpress-org/');
+                      const removesReadme = files.some((file) =>
+                        (file.filename === 'readme.txt' && file.status === 'removed') ||
+                        (file.status === 'renamed' && file.previous_filename === 'readme.txt')
+                      );
+                      const readmeAssetsOnly = files.length > 0 && !removesReadme && files.every((file) =>
+                        isAllowedPath(file.filename) &&
+                        (file.status !== 'renamed' || isAllowedPath(file.previous_filename || ''))
+                      );
+
+                      return readmeAssetsOnly ? 'allow' : 'retarget';
+
             - name: Retarget to develop
+              if: steps.target.outputs.result == 'retarget'
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   PR_NUMBER: ${{ github.event.pull_request.number }}

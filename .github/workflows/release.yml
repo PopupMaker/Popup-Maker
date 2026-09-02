@@ -4,12 +4,8 @@ on:
     pull_request_target:
         branches: [master]
         types: [closed]
-    workflow_dispatch:
-        inputs:
-            pull_request_number:
-                description: Merged release PR number to retry.
-                required: true
-                type: number
+    repository_dispatch:
+        types: [retry_approved_release_pr]
 
 permissions:
     contents: read
@@ -28,7 +24,7 @@ jobs:
     authorize:
         name: Authorize approved release PR
         if: >-
-            github.event_name == 'workflow_dispatch' ||
+            github.event_name == 'repository_dispatch' ||
             (github.event.pull_request.merged == true &&
              startsWith(github.event.pull_request.head.ref, 'release/'))
         runs-on: ubuntu-latest
@@ -42,13 +38,19 @@ jobs:
             - name: Verify merged PR, approval, branch, and tag
               id: authorize
               uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+              env:
+                  RETRY_PULL_REQUEST_NUMBER: ${{ github.event.client_payload.pull_request_number }}
               with:
                   script: |
                       const owner = context.repo.owner;
                       const repo = context.repo.repo;
-                      const number = context.eventName === 'workflow_dispatch'
-                        ? Number('${{ inputs.pull_request_number }}')
+                      const number = context.eventName === 'repository_dispatch'
+                        ? Number(process.env.RETRY_PULL_REQUEST_NUMBER)
                         : context.payload.pull_request.number;
+                      if (!Number.isSafeInteger(number) || number < 1) {
+                        core.setFailed('A valid merged release PR number is required.');
+                        return;
+                      }
                       const { data: pull } = await github.rest.pulls.get({ owner, repo, pull_number: number });
 
                       if (!pull.merged || pull.base.ref !== 'master') {
@@ -496,13 +498,26 @@ jobs:
                   gh api --method POST "repos/${REPO}/git/refs" \
                     -f ref="refs/heads/${VALIDATION_BRANCH}" \
                     -f sha="${MERGE_SHA}" >/dev/null
+                  gh workflow run ci.yml \
+                    --repo "${REPO}" \
+                    --ref "${VALIDATION_BRANCH}" \
+                    -f back_sync=true
                   gh workflow run tests.yml \
                     --repo "${REPO}" \
                     --ref "${VALIDATION_BRANCH}" \
                     -f back_sync=true
 
+                  CI_RUN_ID=""
                   TEST_RUN_ID=""
                   for _ in {1..30}; do
+                    CI_RUN_ID=$(gh run list \
+                      --repo "${REPO}" \
+                      --workflow ci.yml \
+                      --branch "${VALIDATION_BRANCH}" \
+                      --event workflow_dispatch \
+                      --limit 1 \
+                      --json databaseId \
+                      --jq '.[0].databaseId // ""')
                     TEST_RUN_ID=$(gh run list \
                       --repo "${REPO}" \
                       --workflow tests.yml \
@@ -511,16 +526,22 @@ jobs:
                       --limit 1 \
                       --json databaseId \
                       --jq '.[0].databaseId // ""')
-                    [ -n "${TEST_RUN_ID}" ] && break
+                    [ -n "${CI_RUN_ID}" ] && [ -n "${TEST_RUN_ID}" ] && break
                     sleep 2
                   done
-                  if [ -z "${TEST_RUN_ID}" ]; then
-                    echo 'The back-sync validation workflow did not start.'
+                  if [ -z "${CI_RUN_ID}" ] || [ -z "${TEST_RUN_ID}" ]; then
+                    echo 'The back-sync validation workflows did not start.'
                     exit 1
                   fi
 
-                  echo "Waiting for back-sync validation run ${TEST_RUN_ID}."
-                  gh run watch "${TEST_RUN_ID}" --repo "${REPO}" --exit-status
+                  echo "Waiting for back-sync CI run ${CI_RUN_ID} and test run ${TEST_RUN_ID}."
+                  VALIDATION_FAILED=0
+                  gh run watch "${CI_RUN_ID}" --repo "${REPO}" --exit-status || VALIDATION_FAILED=1
+                  gh run watch "${TEST_RUN_ID}" --repo "${REPO}" --exit-status || VALIDATION_FAILED=1
+                  if [ "${VALIDATION_FAILED}" -ne 0 ]; then
+                    echo 'Back-sync validation failed.'
+                    exit 1
+                  fi
 
     slack-success:
         name: Slack success notification

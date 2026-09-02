@@ -29,15 +29,31 @@ After those checks pass, `release.yml` builds one canonical ZIP and uses that sa
 -   the review-required visual changelog draft; and
 -   Slack status.
 
-It also opens or reuses a `master` to `develop` back-sync PR, tests that PR's proposed merge, and waits for those tests before reporting success. A failed downstream step is visible and can be retried by manually running the workflow with the original merged PR number.
+It also opens or reuses a `master` to `develop` back-sync PR, runs both code-quality and test workflows against that PR's proposed merge, and waits for both before reporting success.
+
+A failed release can be retried through the default-branch-only repository dispatch event with the original merged PR number:
+
+```bash
+gh api --method POST repos/PopupMaker/Popup-Maker/dispatches \
+  -f event_type=retry_approved_release_pr \
+  -F 'client_payload[pull_request_number]=123'
+```
 
 Direct tags and direct pushes to `master` do not publish a plugin release. A merged release PR publishes only when authorized by a current maintainer approval or an authorized maintainer merge.
 
 ## WordPress.org readme and assets
 
-A same-repository PR containing only `readme.txt` and/or files below `.wordpress-org/` may be opened against `master`. After a current maintainer approves it or an authorized maintainer merges it, `deploy-readme-assets.yml` re-checks the authorization and exact file list, then syncs only those files to WordPress.org.
+A same-repository PR containing only `readme.txt` and/or files below `.wordpress-org/` may be opened against `master`. After a current maintainer approves it or an authorized maintainer merges it, `deploy-readme-assets.yml` re-checks the authorization, exact file list, and stable tag before syncing only those files to WordPress.org.
 
 A mixed code/readme PR never enters this narrow path. Release PRs deploy their readme and assets with the full canonical package.
+
+Retry an approved readme/assets sync through its default-branch-only repository dispatch event:
+
+```bash
+gh api --method POST repos/PopupMaker/Popup-Maker/dispatches \
+  -f event_type=retry_approved_readme_assets_pr \
+  -F 'client_payload[pull_request_number]=123'
+```
 
 ## PR publication preview
 
@@ -47,7 +63,7 @@ A mixed code/readme PR never enters this narrow path. Release PRs deploy their r
 -   readme/assets-only update; or
 -   no publication.
 
-Release PRs also build and verify a downloadable candidate ZIP before approval.
+Release PRs also build and verify a downloadable candidate ZIP before approval. Readme/assets PRs must keep the stable tag aligned with the canonical package version.
 
 ## Development builds
 

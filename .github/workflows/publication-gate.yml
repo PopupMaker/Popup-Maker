@@ -61,6 +61,21 @@ jobs:
                     echo "type=none" >> "${GITHUB_OUTPUT}"
                   fi
 
+            - name: Validate readme stable tag
+              if: steps.publication.outputs.type == 'readme-assets'
+              run: |
+                  node <<'NODE'
+                  const fs = require('fs');
+                  const packageVersion = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+                  const stableTag = fs.readFileSync('readme.txt', 'utf8')
+                    .match(/^Stable tag:\s*([^\s]+)\s*$/m)?.[1];
+                  if (stableTag !== packageVersion) {
+                    throw new Error(
+                      `readme.txt Stable tag ${stableTag || '(missing)'} does not match package.json ${packageVersion}.`
+                    );
+                  }
+                  NODE
+
             - name: Set up PHP
               if: steps.publication.outputs.type == 'release'
               uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
