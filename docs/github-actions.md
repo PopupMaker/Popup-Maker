@@ -29,7 +29,7 @@ After those checks pass, `release.yml` builds one canonical ZIP and uses that sa
 -   the review-required visual changelog draft; and
 -   Slack status.
 
-It also opens or reuses a `master` to `develop` back-sync PR, runs both code-quality and test workflows against that PR's proposed merge, and waits for both before reporting success.
+It also opens or reuses a `master` to `develop` back-sync PR, runs both code-quality and test workflows against that PR's proposed merge, and waits for both before reporting success. Code-quality validation uses the trusted workflow definition from `master` and checks out the proposed merge SHA as data.
 
 A failed release can be retried through the default-branch-only repository dispatch event with the original merged PR number:
 

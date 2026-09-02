@@ -238,6 +238,23 @@ function getReleasePullRequestDisposition( pullRequest ) {
 	}
 }
 
+function selectReleasePullRequest( pullRequests ) {
+	if ( ! Array.isArray( pullRequests ) ) {
+		return null;
+	}
+
+	return (
+		pullRequests.find(
+			( pullRequest ) => pullRequest.state === 'MERGED'
+		) ||
+		pullRequests.find( ( pullRequest ) => pullRequest.state === 'OPEN' ) ||
+		pullRequests.find(
+			( pullRequest ) => pullRequest.state === 'CLOSED'
+		) ||
+		null
+	);
+}
+
 // Check git status.
 function checkGitStatus() {
 	const status = execCommand( 'git status --porcelain', { silent: true } );
@@ -423,12 +440,14 @@ async function stageFinish() {
 		return;
 	}
 
-	const existingPullRequest = execCommand(
-		'gh pr view --json number,state,baseRefName,url',
+	const existingPullRequests = execCommand(
+		`gh pr list --head release/${ version } --base master --state all --limit 100 --json number,state,baseRefName,url`,
 		{ silent: true, allowFailure: true }
 	);
-	if ( existingPullRequest ) {
-		const pullRequest = JSON.parse( existingPullRequest );
+	if ( existingPullRequests ) {
+		const pullRequest = selectReleasePullRequest(
+			JSON.parse( existingPullRequests )
+		);
 		const disposition = getReleasePullRequestDisposition( pullRequest );
 
 		if ( disposition === 'reuse' ) {
@@ -515,6 +534,7 @@ if ( require.main === module ) {
 
 module.exports = {
 	getReleasePullRequestDisposition,
+	selectReleasePullRequest,
 };
 
 /* eslint-enable no-console */

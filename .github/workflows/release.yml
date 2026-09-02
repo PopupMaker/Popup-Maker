@@ -498,10 +498,13 @@ jobs:
                   gh api --method POST "repos/${REPO}/git/refs" \
                     -f ref="refs/heads/${VALIDATION_BRANCH}" \
                     -f sha="${MERGE_SHA}" >/dev/null
+                  VALIDATION_ID="back-sync-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
                   gh workflow run ci.yml \
                     --repo "${REPO}" \
-                    --ref "${VALIDATION_BRANCH}" \
-                    -f back_sync=true
+                    --ref master \
+                    -f back_sync=true \
+                    -f checkout_ref="${MERGE_SHA}" \
+                    -f validation_id="${VALIDATION_ID}"
                   gh workflow run tests.yml \
                     --repo "${REPO}" \
                     --ref "${VALIDATION_BRANCH}" \
@@ -513,11 +516,12 @@ jobs:
                     CI_RUN_ID=$(gh run list \
                       --repo "${REPO}" \
                       --workflow ci.yml \
-                      --branch "${VALIDATION_BRANCH}" \
+                      --branch master \
                       --event workflow_dispatch \
-                      --limit 1 \
-                      --json databaseId \
-                      --jq '.[0].databaseId // ""')
+                      --limit 20 \
+                      --json databaseId,displayTitle \
+                      --jq ".[] | select(.displayTitle == \"CI - Code Quality (${VALIDATION_ID})\") | .databaseId" \
+                      | head -n 1)
                     TEST_RUN_ID=$(gh run list \
                       --repo "${REPO}" \
                       --workflow tests.yml \

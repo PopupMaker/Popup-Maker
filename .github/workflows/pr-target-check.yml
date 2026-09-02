@@ -2,7 +2,7 @@ name: PR target check
 
 on:
     pull_request_target:
-        types: [opened, edited, synchronize]
+        types: [opened, reopened, edited, synchronize]
         branches:
             - master
 

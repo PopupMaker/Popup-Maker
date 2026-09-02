@@ -1,5 +1,6 @@
 const {
 	getReleasePullRequestDisposition,
+	selectReleasePullRequest,
 } = require( '../../../bin/prepare-release' );
 
 describe( 'release PR disposition', () => {
@@ -23,5 +24,15 @@ describe( 'release PR disposition', () => {
 				baseRefName: 'develop',
 			} )
 		).toBe( 'create' );
+	} );
+
+	test( 'selects the master PR safely when a branch has multiple PRs', () => {
+		expect(
+			selectReleasePullRequest( [
+				{ number: 10, state: 'CLOSED' },
+				{ number: 11, state: 'MERGED' },
+				{ number: 12, state: 'OPEN' },
+			] )
+		).toEqual( { number: 11, state: 'MERGED' } );
 	} );
 } );

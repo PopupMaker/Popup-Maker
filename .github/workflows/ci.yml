@@ -1,5 +1,7 @@
 name: CI - Code Quality
 
+run-name: CI - Code Quality (${{ inputs.validation_id || github.ref_name }})
+
 on:
   pull_request:
   workflow_dispatch:
@@ -9,6 +11,17 @@ on:
         required: false
         default: false
         type: boolean
+      checkout_ref:
+        description: Commit to validate while using the trusted workflow from master.
+        required: false
+        type: string
+      validation_id:
+        description: Correlation ID for a release back-sync validation run.
+        required: false
+        type: string
+
+permissions:
+  contents: read
 
 env:
   WP_VERSION: '7.1'
@@ -16,7 +29,7 @@ env:
 
 # Cancels all previous workflow runs for the same branch that have not yet completed.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.validation_id || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -52,6 +65,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
           fetch-depth: 0
 
       - name: Detect file changes
@@ -119,6 +133,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
           fetch-depth: 0
 
       # NOTE: Using `files:` (not files_yaml) → outputs are just `any_changed`
@@ -201,6 +216,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
           fetch-depth: 0
 
       # NOTE: Using `files:` (not files_yaml) → outputs are just `any_changed`
@@ -302,6 +318,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -363,6 +381,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
           fetch-depth: 0
 
       - name: Setup PHP
@@ -461,6 +480,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -490,6 +511,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -529,6 +552,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.checkout_ref || github.sha }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
