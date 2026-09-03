@@ -289,8 +289,6 @@ For the latest updates and release information:
 
 **Improvements**
 
--   Added one dismissible dashboard announcement when a supported page builder is active, with a direct link to the builder guide.
--   Rebuilt the Help & Support screen locally with direct links to Popup Maker guides, documentation, community, extensions, developer resources, and support.
 -   Improved Beaver Builder support so Popup Maker popups open in Beaver Builder's editor and authorized popup previews are no longer redirected away.
 -   Improved compatibility with PHP 8.3, 8.4, and 8.5.
 
@@ -303,16 +301,14 @@ For the latest updates and release information:
 -   Reduced redundant popup, Call to Action, and form lookups in bulk actions, feature announcements, form selectors, and Elementor form discovery.
 -   Popup and form selectors now load only the records they need and avoid priming unused metadata and taxonomy caches.
 -   Settings CSS previews now load on demand and recover more reliably from incomplete or failed preview responses.
--   Removed the proprietary remote community-notice request from wp-admin; failed WordPress.org translation lookups are now briefly cached to prevent repeated requests.
+-   Failed WordPress.org translation lookups are now briefly cached to prevent repeated requests.
 
 **Fixes**
 
--   Updated in-plugin review prompts to ask for honest feedback and link directly to the WordPress.org review form without preselecting a rating.
 -   Fixed Settings and Tools success notices whose dismiss buttons appeared but did not respond.
--   Restored Popup Maker and add-on icon styling on the WordPress 7.1 Plugins screen.
+-   Restored Popup Maker and add-on icons after undocumented changes to the Plugins screen in WordPress 7.1.
 -   Restored localized package variables in wp-admin so the block editor and other admin tools initialize correctly.
 -   Fixed a race that could leave popups hidden or skip their animation when multiple Auto Open triggers fired together.
--   Prevented failed add-on information requests from overriding WordPress's normal plugin-details response.
 -   Prevented malformed batched analytics requests from partially recording popup events.
 -   Restored WPBakery Page Builder editing for popups when the block editor is enabled in Popup Maker.
 -   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
