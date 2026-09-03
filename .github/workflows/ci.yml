@@ -658,6 +658,7 @@ jobs:
                 npm-security,
                 php-security,
                 plugin-check,
+                translation-guardrails,
             ]
         if: always()
         steps:
@@ -670,6 +671,7 @@ jobs:
                   NPM_SEC_RESULT: ${{ needs.npm-security.result }}
                   PHP_SEC_RESULT: ${{ needs.php-security.result }}
                   PLUGIN_CHECK_RESULT: ${{ needs.plugin-check.result }}
+                  TRANSLATION_GUARDRAILS_RESULT: ${{ needs.translation-guardrails.result }}
               run: |
                   echo "=== CI Results Summary ==="
                   echo ""
@@ -703,6 +705,7 @@ jobs:
                   check_result "pnpm Security Audit" "$NPM_SEC_RESULT"
                   check_result "Composer Security Audit" "$PHP_SEC_RESULT"
                   check_result "WordPress Plugin Check Delta" "$PLUGIN_CHECK_RESULT"
+                  check_result "Translation Spend Guardrails" "$TRANSLATION_GUARDRAILS_RESULT"
 
                   echo ""
                   if [ "$failed" -eq 1 ]; then
