@@ -531,9 +531,14 @@
 					// avoids one popup's unpainted style changes interleaving
 					// with another popup's open() call in the same tick, e.g.
 					// two Auto Open triggers with the same delay.
-					window.requestAnimationFrame( function () {
-						$( el ).dequeue();
-					} );
+					var openAnimationFrame = window.requestAnimationFrame(
+						function () {
+							$popup.removeData( 'pumOpenAnimationFrame' );
+							$( el ).dequeue();
+						}
+					);
+
+					$popup.data( 'pumOpenAnimationFrame', openAnimationFrame );
 				} )
 				.popmake( 'animate', settings.animation_type, function () {
 					/**
@@ -709,6 +714,14 @@
 					return this;
 				}
 
+				var openAnimationFrame = $popup.data( 'pumOpenAnimationFrame' );
+
+				// Cancel a paint-boundary open that has not started animating yet.
+				if ( openAnimationFrame !== undefined ) {
+					window.cancelAnimationFrame( openAnimationFrame );
+					$popup.removeData( 'pumOpenAnimationFrame' ).clearQueue();
+				}
+
 				$container.fadeOut( 'fast', function () {
 					if ( $popup.is( ':visible' ) ) {
 						$popup.fadeOut( 'fast' );
@@ -878,12 +891,18 @@
 				// a pending queue entry on $popup that raced with the
 				// open() animation flow when multiple popups opened in the
 				// same tick.
-				$popup.css( { opacity: 0, display: 'block' } );
+				$popup.css( {
+					opacity: 0,
+					display: 'block',
+				} );
 			}
 
 			if ( $container.is( ':hidden' ) ) {
 				opacity.container = $container.css( 'opacity' );
-				$container.css( { opacity: 0, display: 'block' } );
+				$container.css( {
+					opacity: 0,
+					display: 'block',
+				} );
 			}
 
 			if ( settings.position_fixed ) {
@@ -946,10 +965,16 @@
 			}
 
 			if ( opacity.overlay ) {
-				$popup.css( { opacity: opacity.overlay, display: 'none' } );
+				$popup.css( {
+					opacity: opacity.overlay,
+					display: 'none',
+				} );
 			}
 			if ( opacity.container ) {
-				$container.css( { opacity: opacity.container, display: 'none' } );
+				$container.css( {
+					opacity: opacity.container,
+					display: 'none',
+				} );
 			}
 			return this;
 		},
