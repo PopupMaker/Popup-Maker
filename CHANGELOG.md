@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.25.0 - 2026-09-03
+
 **Features**
 
 -   Added complete Brizy support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
@@ -14,6 +16,7 @@
 
 **Improvements**
 
+-   Added one dismissible dashboard announcement when a supported page builder is active, with a direct link to the builder guide.
 -   Improved Beaver Builder support so Popup Maker popups open in Beaver Builder's editor and authorized popup previews are no longer redirected away.
 -   Improved compatibility with PHP 8.3, 8.4, and 8.5.
 
@@ -30,6 +33,10 @@
 
 **Fixes**
 
+-   Updated in-plugin review prompts to ask for honest feedback and link directly to the WordPress.org review form without preselecting a rating.
+-   Restored Popup Maker and add-on icon styling on the WordPress 7.1 Plugins screen.
+-   Restored localized package variables in wp-admin so the block editor and other admin tools initialize correctly.
+-   Fixed a race that could leave popups hidden or skip their animation when multiple Auto Open triggers fired together.
 -   Restored WPBakery Page Builder editing for popups when the block editor is enabled in Popup Maker.
 -   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
 -   Prevented Astra Custom Layouts rendered inside popups from corrupting the pending WordPress main loop.

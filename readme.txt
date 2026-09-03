@@ -5,9 +5,9 @@ Plugin URI: https://wppopupmaker.com/?utm_campaign=readme&utm_medium=referral&ut
 Donate link:
 Tags:  marketing, popup, popups, optin, conversion
 Requires at least: 6.7
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.24.0
+Stable tag: 1.25.0
 License: GPLv2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -274,6 +274,45 @@ For the latest updates and release information:
 * Join our [community](https://wppopupmaker.com/community/) for important release announcements and discussions
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
+
+= 1.25.0 - 2026-09-03 =
+
+**Features**
+
+-   Added complete Brizy support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
+-   Added complete Bricks support for building Popup Maker popups, including editor previews, frontend styling, and interactive elements.
+-   Added complete Divi support for building Popup Maker popups, including Visual Builder editing, frontend styling, and interactive modules.
+-   Added complete Elementor support for building Popup Maker popups, including editor previews, frontend styling, and interactive widgets.
+-   Added complete SiteOrigin Page Builder support for building Popup Maker popups, including its Live Editor and properly styled frontend layouts.
+-   Added complete Visual Composer support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
+-   Added complete Etch support for building Popup Maker popups, including its visual editor, selected popup theme, sizing, positioning, and overlay.
+
+**Improvements**
+
+-   Added one dismissible dashboard announcement when a supported page builder is active, with a direct link to the builder guide.
+-   Improved Beaver Builder support so Popup Maker popups open in Beaver Builder's editor and authorized popup previews are no longer redirected away.
+-   Improved compatibility with PHP 8.3, 8.4, and 8.5.
+
+**Performance**
+
+-   Reduced unnecessary PHP work on frontend requests by deferring admin-only systems and unavailable integrations until they are needed.
+-   Popup Maker admin screens and the block editor now use lightweight popup choices instead of loading complete popup models for selector controls.
+-   The block editor now reads Popup Maker's local editor styles directly instead of making internal HTTP requests during page load.
+-   Improved the Subscribers screen and privacy tools with native count queries, batch-loaded popup titles, indexed email lookups, and faster creation-date sorting on large subscriber tables.
+-   Reduced redundant popup, Call to Action, and form lookups in bulk actions, feature announcements, form selectors, and Elementor form discovery.
+-   Popup and form selectors now load only the records they need and avoid priming unused metadata and taxonomy caches.
+-   Settings CSS previews now load on demand and recover more reliably from incomplete or failed preview responses.
+-   Removed the proprietary remote community-notice request from wp-admin; failed WordPress.org translation lookups are now briefly cached to prevent repeated requests.
+
+**Fixes**
+
+-   Updated in-plugin review prompts to ask for honest feedback and link directly to the WordPress.org review form without preselecting a rating.
+-   Restored Popup Maker and add-on icon styling on the WordPress 7.1 Plugins screen.
+-   Restored localized package variables in wp-admin so the block editor and other admin tools initialize correctly.
+-   Fixed a race that could leave popups hidden or skip their animation when multiple Auto Open triggers fired together.
+-   Restored WPBakery Page Builder editing for popups when the block editor is enabled in Popup Maker.
+-   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
+-   Prevented Astra Custom Layouts rendered inside popups from corrupting the pending WordPress main loop.
 
 = 1.24.0 - 2026-08-03 =
 
