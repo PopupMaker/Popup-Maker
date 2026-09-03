@@ -221,6 +221,46 @@ function getCurrentBranch() {
 	return branch.trim();
 }
 
+function getReleasePullRequestDisposition( pullRequest ) {
+	if ( ! pullRequest || pullRequest.baseRefName !== 'master' ) {
+		return 'create';
+	}
+
+	switch ( pullRequest.state ) {
+		case 'OPEN':
+			return 'reuse';
+		case 'CLOSED':
+			return 'reopen';
+		case 'MERGED':
+			return 'merged';
+		default:
+			return 'create';
+	}
+}
+
+/**
+ * Select the authoritative release PR when a branch has PR history.
+ *
+ * @param {Array<{state: string}>} pullRequests Release PR candidates.
+ * @return {Object|null} The selected release PR, if one exists.
+ */
+function selectReleasePullRequest( pullRequests ) {
+	if ( ! Array.isArray( pullRequests ) ) {
+		return null;
+	}
+
+	return (
+		pullRequests.find(
+			( pullRequest ) => pullRequest.state === 'MERGED'
+		) ||
+		pullRequests.find( ( pullRequest ) => pullRequest.state === 'OPEN' ) ||
+		pullRequests.find(
+			( pullRequest ) => pullRequest.state === 'CLOSED'
+		) ||
+		null
+	);
+}
+
 // Check git status.
 function checkGitStatus() {
 	const status = execCommand( 'git status --porcelain', { silent: true } );
@@ -406,13 +446,32 @@ async function stageFinish() {
 		return;
 	}
 
-	const existingPullRequest = execCommand(
-		'gh pr view --json url --jq .url',
+	const existingPullRequests = execCommand(
+		`gh pr list --head release/${ version } --base master --state all --limit 100 --json number,state,baseRefName,url`,
 		{ silent: true, allowFailure: true }
 	);
-	if ( existingPullRequest ) {
-		success( `Release PR already exists: ${ existingPullRequest.trim() }` );
-		return;
+	if ( existingPullRequests ) {
+		const pullRequest = selectReleasePullRequest(
+			JSON.parse( existingPullRequests )
+		);
+		const disposition = getReleasePullRequestDisposition( pullRequest );
+
+		if ( disposition === 'reuse' ) {
+			success( `Release PR already exists: ${ pullRequest.url }` );
+			return;
+		}
+
+		if ( disposition === 'reopen' ) {
+			log( `Reopening release PR #${ pullRequest.number }`, 'cyan' );
+			execCommand( `gh pr reopen ${ pullRequest.number }` );
+			success( `Release PR reopened: ${ pullRequest.url }` );
+			return;
+		}
+
+		if ( disposition === 'merged' ) {
+			error( `Release PR already merged: ${ pullRequest.url }` );
+			process.exit( 1 );
+		}
 	}
 
 	const pullRequestUrl = execCommand(
@@ -467,16 +526,21 @@ async function main() {
 	}
 }
 
-// Handle Ctrl+C gracefully.
-process.on( 'SIGINT', () => {
-	console.log( '' );
-	warn( 'Release process interrupted by user' );
-	process.exit( 130 );
-} );
-
 // Run the script.
 if ( require.main === module ) {
+	// Handle Ctrl+C gracefully.
+	process.on( 'SIGINT', () => {
+		console.log( '' );
+		warn( 'Release process interrupted by user' );
+		process.exit( 130 );
+	} );
+
 	main();
 }
+
+module.exports = {
+	getReleasePullRequestDisposition,
+	selectReleasePullRequest,
+};
 
 /* eslint-enable no-console */
