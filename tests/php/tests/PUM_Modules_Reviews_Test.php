@@ -465,7 +465,7 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$this->assertSame( 'core', $context['product'] );
 		$this->assertSame( [ 'core' ], array_keys( $destinations ) );
 		$this->assertSame( 'Leave a review', $destinations['core']['label'] );
-		$this->assertSame( 'https://wppopupmaker.com/leave-a-review/', $destinations['core']['url'] );
+		$this->assertSame( 'https://wppopupmaker.com/leave-a-review/?utm_source=popup-maker&utm_medium=plugin&utm_campaign=review-request', $destinations['core']['url'] );
 		$this->assertSame( 'am_now_core', $destinations['core']['reason'] );
 	}
 
