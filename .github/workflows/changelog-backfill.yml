@@ -1,0 +1,39 @@
+name: Backfill published releases to WordPress changelog
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_releases:
+        description: Maximum recent published releases to inventory or sync (1-100).
+        required: true
+        default: '25'
+        type: string
+      since:
+        description: Optional inclusive UTC date (YYYY-MM-DD).
+        required: false
+        default: ''
+        type: string
+      dry_run:
+        description: Inventory only; make no WordPress writes.
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  backfill:
+    name: Review or run Core changelog backfill
+    uses: code-atlantic/release-changelog-action/.github/workflows/backfill-releases.yml@3c44b56d2677a434fc85e5610989bb194cf08571
+    with:
+      product-key: core
+      expected-repository: PopupMaker/Popup-Maker
+      max-releases: ${{ fromJSON(inputs.max_releases) }}
+      since: ${{ inputs.since }}
+      dry-run: ${{ inputs.dry_run }}
+    secrets:
+      WORDPRESS_URL: ${{ secrets.WORDPRESS_URL }}
+      WORDPRESS_ACCESS_TOKEN: ${{ secrets.WORDPRESS_ACCESS_TOKEN }}
+      WORDPRESS_USERNAME: ${{ secrets.WORDPRESS_USERNAME }}
+      WORDPRESS_APPLICATION_PASSWORD: ${{ secrets.WORDPRESS_APPLICATION_PASSWORD }}
