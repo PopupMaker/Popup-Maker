@@ -64,9 +64,6 @@ class PUM_Admin_Tools {
 				?>
 				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
 					<p><strong><?php esc_html( $notice['message'] ); ?></strong></p>
-					<button type="button" class="notice-dismiss">
-						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'popup-maker' ); ?></span>
-					</button>
 				</div>
 				<?php
 			}
