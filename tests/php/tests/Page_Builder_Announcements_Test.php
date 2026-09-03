@@ -1,0 +1,123 @@
+<?php
+/**
+ * Page builder announcement tests.
+ *
+ * @package Popup_Maker
+ */
+
+use PopupMaker\Services\Notifications\PageBuilderAnnouncements;
+
+/**
+ * Verify builder-aware admin announcements.
+ */
+class Page_Builder_Announcements_Test extends WP_UnitTestCase {
+
+	/** @return void */
+	public function tearDown(): void {
+		wp_set_current_user( 0 );
+
+		parent::tearDown();
+	}
+
+	/** @return void */
+	public function test_announcement_requires_popup_edit_access() {
+		$provider = $this->make_provider(
+			[
+				[
+					'slug'  => 'elementor',
+					'label' => 'Elementor',
+				],
+			]
+		);
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'subscriber' ] ) );
+
+		$this->assertSame( [], $provider->register_announcement( [] ) );
+	}
+
+	/** @return void */
+	public function test_announcement_is_omitted_without_an_available_builder() {
+		$provider = $this->make_provider( [] );
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		$this->assertSame( [], $provider->register_announcement( [] ) );
+	}
+
+	/** @return void */
+	public function test_single_builder_announcement_names_the_builder() {
+		$provider = $this->make_provider(
+			[
+				[
+					'slug'  => 'elementor',
+					'label' => 'Elementor',
+				],
+			]
+		);
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$alerts = $provider->register_announcement( [] );
+
+		$this->assertCount( 1, $alerts );
+		$this->assertSame( 'pm_feat_page_builder_support_2026_elementor', $alerts[0]['code'] );
+		$this->assertStringContainsString( 'Elementor', $alerts[0]['title'] );
+		$this->assertStringContainsString( '<strong>Elementor</strong>', $alerts[0]['message'] );
+		$this->assertSame( 'feature', $alerts[0]['category'] );
+		$this->assertTrue( $alerts[0]['dismissible'] );
+	}
+
+	/** @return void */
+	public function test_multiple_builders_share_one_scoped_announcement() {
+		$provider = $this->make_provider(
+			[
+				[
+					'slug'  => 'elementor',
+					'label' => 'Elementor',
+				],
+				[
+					'slug'  => 'bricks',
+					'label' => 'Bricks',
+				],
+			]
+		);
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$alerts = $provider->register_announcement( [] );
+
+		$this->assertCount( 1, $alerts );
+		$this->assertSame( 'pm_feat_page_builder_support_2026_elementor_bricks', $alerts[0]['code'] );
+		$this->assertStringContainsString( 'Elementor', $alerts[0]['message'] );
+		$this->assertStringContainsString( 'Bricks', $alerts[0]['message'] );
+		$this->assertCount( 2, $alerts[0]['actions'] );
+	}
+
+	/**
+	 * Create a provider with deterministic builder details.
+	 *
+	 * @param array<int,array{slug:string,label:string}> $builders Builder details.
+	 *
+	 * @return PageBuilderAnnouncements
+	 */
+	private function make_provider( $builders ) {
+		return new class( \PopupMaker\plugin(), $builders ) extends PageBuilderAnnouncements {
+
+			/** @var array<int,array{slug:string,label:string}> */
+			private $test_builders;
+
+			/**
+			 * @param \PopupMaker\Plugin\Core                    $container Plugin container.
+			 * @param array<int,array{slug:string,label:string}> $builders  Builder details.
+			 */
+			public function __construct( $container, $builders ) {
+				parent::__construct( $container );
+
+				$this->test_builders = $builders;
+			}
+
+			/** @return array<int,array{slug:string,label:string}> */
+			protected function get_available_builders() {
+				return $this->test_builders;
+			}
+		};
+	}
+}

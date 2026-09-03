@@ -184,6 +184,18 @@ class Builders extends Controller {
 	}
 
 	/**
+	 * Get the available builder adapters.
+	 *
+	 * Only builders that passed runtime detection and their adapter's
+	 * availability check are returned. Inactive adapters are not autoloaded.
+	 *
+	 * @return PageBuilder[]
+	 */
+	public function get_available_builders() {
+		return array_values( $this->builders );
+	}
+
+	/**
 	 * Register the shared pipeline once a builder is available.
 	 *
 	 * @return void
