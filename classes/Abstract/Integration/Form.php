@@ -78,15 +78,16 @@ abstract class PUM_Abstract_Integration_Form extends PUM_Abstract_Integration im
 	}
 
 	/**
-	 * Returns whether or not we should process any form submissions
+	 * Returns whether or not we should normalize a form submission.
+	 *
+	 * Transport no longer suppresses normalized dispatch. AJAX and REST
+	 * requests use submission phases to disable tracking and frontend effects
+	 * independently while action runners remain available.
 	 *
 	 * @return bool True if we should process the form submission
 	 * @since 1.13.0
 	 */
 	public function should_process_submission() {
-		if ( wp_doing_ajax() || defined( 'REST_REQUEST' ) ) {
-			return false;
-		}
 		return true;
 	}
 }
