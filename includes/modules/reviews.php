@@ -22,7 +22,8 @@ class PUM_Modules_Reviews {
 	 *
 	 * @var string
 	 */
-	const CORE_REVIEW_URL = 'https://wppopupmaker.com/leave-a-review/?utm_source=popup-maker&utm_medium=plugin&utm_campaign=review-request';
+	// Future first-party destination: https://wppopupmaker.com/leave-a-review/.
+	const CORE_REVIEW_URL = 'https://wordpress.org/support/plugin/popup-maker/reviews/#new-post';
 
 	/**
 	 * Review API endpoint.
