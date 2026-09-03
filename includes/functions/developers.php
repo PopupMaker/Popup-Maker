@@ -110,6 +110,8 @@ function pum_get_integrated_form_submission_phases( $args = [] ) {
  *      @type string|int $form_id Form ID, usually numeric, but can be hash based.
  *      @type int $form_instance_id Optional form instance ID.
  *      @type string|int $submission_id Stable submission or provider entry ID. Generated when omitted.
+ *      @type string|int $native_entry_id Optional authoritative provider entry ID.
+ *      @type array $fields Optional server-observed submitted field values.
  *      @type int $popup_id Optional popup ID.
  *      @type int $source_post_id Optional post/page ID where the form was submitted.
  *      @type string $source_url Optional URL where the form was submitted.
@@ -133,6 +135,8 @@ function pum_integrated_form_submission( $args = [] ) {
 			'form_id'          => null,
 			'form_instance_id' => null,
 			'submission_id'    => null,
+			'native_entry_id'  => null,
+			'fields'           => [],
 			'source_post_id'   => null,
 			'source_url'       => $source_url,
 			'context'          => [],
@@ -145,6 +149,8 @@ function pum_integrated_form_submission( $args = [] ) {
 	if ( ! isset( $args['submission_id'] ) || ( ! is_string( $args['submission_id'] ) && ! is_int( $args['submission_id'] ) ) || '' === (string) $args['submission_id'] ) {
 		$args['submission_id'] = wp_generate_uuid4();
 	}
+	$args['native_entry_id'] = isset( $args['native_entry_id'] ) && ( is_string( $args['native_entry_id'] ) || is_int( $args['native_entry_id'] ) ) && '' !== (string) $args['native_entry_id'] ? $args['native_entry_id'] : null;
+	$args['fields']          = isset( $args['fields'] ) && is_array( $args['fields'] ) ? $args['fields'] : [];
 
 	$source_post_id         = is_scalar( $args['source_post_id'] ) && ! is_bool( $args['source_post_id'] ) && is_numeric( $args['source_post_id'] ) ? absint( $args['source_post_id'] ) : 0;
 	$args['source_post_id'] = $source_post_id ? $source_post_id : null;
@@ -157,6 +163,8 @@ function pum_integrated_form_submission( $args = [] ) {
 	}
 
 	$submission_id                = $args['submission_id'];
+	$native_entry_id              = $args['native_entry_id'];
+	$fields                       = $args['fields'];
 	$source_post_id_before_filter = $args['source_post_id'];
 
 	$args = apply_filters( 'pum_integrated_form_submission_args', $args );
@@ -164,6 +172,10 @@ function pum_integrated_form_submission( $args = [] ) {
 	if ( ! isset( $args['submission_id'] ) || ( ! is_string( $args['submission_id'] ) && ! is_int( $args['submission_id'] ) ) || '' === (string) $args['submission_id'] ) {
 		$args['submission_id'] = $submission_id;
 	}
+	if ( ! isset( $args['native_entry_id'] ) || ( ! is_string( $args['native_entry_id'] ) && ! is_int( $args['native_entry_id'] ) ) || '' === (string) $args['native_entry_id'] ) {
+		$args['native_entry_id'] = $native_entry_id;
+	}
+	$args['fields'] = isset( $args['fields'] ) && is_array( $args['fields'] ) ? $args['fields'] : $fields;
 
 	$filtered_source_post_id       = isset( $args['source_post_id'] ) ? $args['source_post_id'] : null;
 	$filter_changed_source_post_id = $filtered_source_post_id !== $source_post_id_before_filter;
