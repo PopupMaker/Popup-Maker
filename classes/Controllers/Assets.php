@@ -44,7 +44,8 @@ class Assets extends Controller {
 		add_action( 'enqueue_block_editor_assets', [ $this, 'register_scripts' ], 1 );
 
 		add_action( 'wp_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
-		add_action( 'admin_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
+		// Run after normal-priority package filters have registered their final vars.
+		add_action( 'admin_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 20 );
 
 		// Add a hook to fix old handles that might be enqueueed and not loaded, load their replacements.
 		add_action( 'wp_enqueue_scripts', [ $this, 'fix_old_handles' ], 1 );
