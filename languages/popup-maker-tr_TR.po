@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
-"PO-Revision-Date: 2026-08-06 02:05+0000\n"
+"POT-Creation-Date: 2026-08-11T10:11:21+00:00\n"
+"PO-Revision-Date: 2026-08-11 10:11+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: tr-TR\n"
@@ -215,7 +215,7 @@ msgstr ""
 #: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
 #: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:303
 msgid "Learn more"
 msgstr "Daha fazla bilgi edinin"
 
@@ -257,7 +257,7 @@ msgstr "ms"
 #: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
 #: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
 #: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
-#: templates/popup.php:59 dist/packages/admin-bar.js:1
+#: includes/functions/popups/template.php:82 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
 #: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
@@ -2884,16 +2884,29 @@ msgstr "Easy Modal v2'den İçe Aktar"
 msgid "Debug logging is disabled."
 msgstr "Hata ayıklama günlüğü devre dışı."
 
-#: classes/Analytics.php:335
+#: classes/Analytics.php:266
+msgid "Invalid analytics events payload."
+msgstr "Geçersiz analiz etkinlikleri yükü."
+
+#: classes/Analytics.php:320 classes/Analytics.php:327
+#: classes/Analytics.php:333
+msgid "Invalid analytics event parameters."
+msgstr "Geçersiz analiz etkinliği parametreleri."
+
+#: classes/Analytics.php:398
 msgid "Event Type"
 msgstr "Etkinlik Türü"
 
-#: classes/Analytics.php:340
+#: classes/Analytics.php:403
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:52
 msgid "Popup ID"
 msgstr "Açılır Pencere Kimliği"
 
-#: classes/Analytics.php:347
+#: classes/Analytics.php:410
+msgid "Analytics events (JSON or array)"
+msgstr "Analiz etkinlikleri (JSON veya dizi)"
+
+#: classes/Analytics.php:414
 msgid "Event metadata (JSON or array)"
 msgstr "Etkinlik meta verileri (JSON veya dizi)"
 
@@ -4223,6 +4236,7 @@ msgstr "Gelişmiş Analitik’i keşfedin"
 #: classes/Services/Notifications/FeatureAnnouncements.php:457
 #: classes/Services/Notifications/FeatureAnnouncements.php:484
 #: classes/Services/Notifications/FeatureAnnouncements.php:512
+#: classes/Telemetry.php:296
 msgid "Not now"
 msgstr "Şimdi değil"
 
@@ -4945,26 +4959,29 @@ msgstr "Tablette Devre Dışı:"
 msgid "Event: %s"
 msgstr "Etkinlik: %s"
 
-#: classes/Telemetry.php:264
-msgid "Help us make Popup Maker better"
-msgstr "Popup Maker'ı daha iyi hale getirmemize yardımcı olun"
+#: classes/Telemetry.php:278
+msgid "The countdown to 50 billion popup views is on"
+msgstr "50 milyar açılır pencere görüntülenmesine geri sayım başladı"
 
-#: classes/Telemetry.php:267
+#: classes/Telemetry.php:281
 msgid ""
-"Help us prioritize the features that matter most by sharing anonymous usage "
-"stats. No visitor data or popup content is ever collected."
+"We're closing in on an estimated 50 billion popup views! Enable usage "
+"tracking to include your site's views in a more accurate estimate, show us "
+"which features matter most, and help us build even better ones. The more "
+"sites that join in, the sooner we can reach—and celebrate—the milestone "
+"together. No visitor data or popup content is collected."
 msgstr ""
-"Anonim kullanım istatistiklerini paylaşarak en çok önem taşıyan özelliklere "
-"öncelik vermemize yardımcı olun. Hiçbir ziyaretçi verisi veya açılır pencere "
-"içeriği asla toplanmaz."
+"Tahmini 50 milyar açılır pencere görüntülemesine yaklaşıyoruz! Sitenizin "
+"görüntülemelerini daha doğru bir tahmine dahil etmek, hangi özelliklerin "
+"sizin için en önemli olduğunu bize göstermek ve daha da iyi özellikler "
+"geliştirmemize yardımcı olmak için kullanım takibini etkinleştirin. Katılan "
+"site sayısı arttıkça, bu kilometre taşına birlikte ulaşmamız ve bunu "
+"birlikte kutlamamız daha da yakın olacak. Ziyaretçi verisi veya açılır "
+"pencere içeriği toplanmaz."
 
-#: classes/Telemetry.php:276
-msgid "Allow"
-msgstr "İzin ver"
-
-#: classes/Telemetry.php:282
-msgid "Do not allow"
-msgstr "İzin verme"
+#: classes/Telemetry.php:290
+msgid "Count my popup views"
+msgstr "Açılır pencere görüntülemelerimi say"
 
 #. translators: 1. Trigger name.
 #: classes/Triggers.php:94
