@@ -18,11 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Modules_Reviews {
 
 	/**
-	 * Core review destination.
+	 * Core review landing page.
 	 *
 	 * @var string
 	 */
-	const CORE_REVIEW_URL = 'https://wordpress.org/support/plugin/popup-maker/reviews/#new-post';
+	const CORE_REVIEW_URL = 'https://wppopupmaker.com/leave-a-review/';
 
 	/**
 	 * Review API endpoint.
@@ -129,7 +129,7 @@ class PUM_Modules_Reviews {
 		$legacy_entry = self::normalize_review_destinations(
 			[
 				'core' => [
-					'label'   => __( 'Leave a 5-star review', 'popup-maker' ),
+					'label'   => __( 'Leave a review', 'popup-maker' ),
 					'url'     => $legacy_link,
 					'reason'  => 'am_now_core',
 					'primary' => true,
@@ -143,7 +143,7 @@ class PUM_Modules_Reviews {
 
 		$destinations = [
 			'core' => [
-				'label'   => __( 'Leave a 5-star review', 'popup-maker' ),
+				'label'   => __( 'Leave a review', 'popup-maker' ),
 				'url'     => $core_url,
 				'reason'  => 'am_now_core',
 				'primary' => true,
@@ -897,7 +897,7 @@ class PUM_Modules_Reviews {
 		if ( ! isset( self::$triggers_cache ) ) {
 			$product_context = self::get_product_context();
 			/* translators: 1: Popup Maker product name, 2: amount of time. */
-			$time_message = __( 'You\'ve been using %1$s for %2$s. If it has helped you engage visitors, grow your audience, or generate meaningful conversions, would you take a moment to leave us a 5-star review?', 'popup-maker' );
+			$time_message = __( 'You\'ve been using %1$s for %2$s. If it has helped you engage visitors, grow your audience, or generate meaningful conversions, would you take a moment to leave us an honest review?', 'popup-maker' );
 			$triggers     = [
 				'time_installed' => [
 					'triggers' => [
@@ -934,7 +934,7 @@ class PUM_Modules_Reviews {
 
 			$pri = 10;
 			/* translators: 1: Popup Maker product name, 2: number of popup views. */
-			$open_message     = __( '%1$s has now delivered %2$s popup views on your site. If those popups have helped you achieve meaningful results, would you take a moment to leave us a 5-star review?', 'popup-maker' );
+			$open_message     = __( '%1$s has now delivered %2$s popup views on your site. If those popups have helped you achieve meaningful results, would you take a moment to leave us an honest review?', 'popup-maker' );
 			$total_open_count = max( 0, (int) get_option( 'pum_total_open_count', 0 ) );
 
 			foreach ( self::open_count_thresholds( $total_open_count ) as $num ) {

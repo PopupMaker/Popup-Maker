@@ -456,20 +456,21 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Core supplies only its WordPress.org review destination.
+	 * Core supplies only its first-party review destination.
 	 */
-	public function test_core_owns_only_its_wordpress_org_destination() {
+	public function test_core_owns_only_its_first_party_review_destination() {
 		$context      = PUM_Modules_Reviews::get_product_context();
 		$destinations = PUM_Modules_Reviews::get_review_destinations();
 
 		$this->assertSame( 'core', $context['product'] );
 		$this->assertSame( [ 'core' ], array_keys( $destinations ) );
-		$this->assertSame( 'Leave a 5-star review', $destinations['core']['label'] );
+		$this->assertSame( 'Leave a review', $destinations['core']['label'] );
+		$this->assertSame( 'https://wppopupmaker.com/leave-a-review/', $destinations['core']['url'] );
 		$this->assertSame( 'am_now_core', $destinations['core']['reason'] );
 	}
 
 	/**
-	 * Review messaging connects five-star requests to meaningful outcomes.
+	 * Review messaging connects honest review requests to meaningful outcomes.
 	 */
 	public function test_review_messaging_is_outcome_oriented() {
 		$alerts        = PUM_Modules_Reviews::review_alert( [] );
@@ -480,7 +481,9 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Is Popup Maker helping you grow?', $alert['title'] );
 		$this->assertStringContainsString( 'meaningful conversions', $time_trigger['message'] );
 		$this->assertStringContainsString( 'meaningful results', $usage_trigger['message'] );
-		$this->assertStringContainsString( 'Leave a 5-star review', $alert['html'] );
+		$this->assertStringContainsString( 'honest review', $time_trigger['message'] );
+		$this->assertStringContainsString( 'honest review', $usage_trigger['message'] );
+		$this->assertStringContainsString( 'Leave a review', $alert['html'] );
 	}
 
 	/**
