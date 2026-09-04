@@ -172,6 +172,13 @@ abstract class PUM_Abstract_Model_Post {
 	protected $valid = true;
 
 	/**
+	 * Extension-added post properties not declared by WP_Post.
+	 *
+	 * @var array<string, mixed>
+	 */
+	protected $extra_post_properties = [];
+
+	/**
 	 * Get things going
 	 *
 	 * @param WP_Post|int $post
@@ -196,10 +203,15 @@ abstract class PUM_Abstract_Model_Post {
 			return;
 		}
 
-		$this->post = $post;
+		$this->post                  = $post;
+		$this->extra_post_properties = [];
 
 		foreach ( get_object_vars( $post ) as $key => $value ) {
-			$this->$key = $value;
+			if ( property_exists( $this, $key ) ) {
+				$this->$key = $value;
+			} else {
+				$this->extra_post_properties[ $key ] = $value;
+			}
 		}
 	}
 
@@ -242,26 +254,58 @@ abstract class PUM_Abstract_Model_Post {
 	 *
 	 * @return mixed|WP_Error
 	 */
-	public function __get( $key ) {
+	public function &__get( $key ) {
+		if ( array_key_exists( $key, $this->extra_post_properties ) ) {
+			return $this->extra_post_properties[ $key ];
+		}
 
 		if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( [ $this, 'get_' . $key ] );
+			$value = call_user_func( [ $this, 'get_' . $key ] );
 		} else {
-			$meta = $this->get_meta( $key );
+			$value = $this->get_meta( $key );
 
-			if ( $meta ) {
-				return $meta;
+			if ( ! $value ) {
+				$value = new WP_Error(
+					'post-invalid-property',
+					sprintf(
+						/* translators: %s is the property name. */
+						__( 'Can\'t get property %s', 'default' ),
+						$key
+					)
+				);
 			}
-
-			return new WP_Error(
-				'post-invalid-property',
-				sprintf(
-					/* translators: %s is the property name. */
-					__( 'Can\'t get property %s', 'default' ),
-					$key
-				)
-			);
 		}
+
+		return $value;
+	}
+
+	/**
+	 * Store an extension-added post property without creating a dynamic property.
+	 *
+	 * @param string $key Property name.
+	 * @param mixed  $value Property value.
+	 */
+	public function __set( $key, $value ) {
+		$this->extra_post_properties[ $key ] = $value;
+	}
+
+	/**
+	 * Check whether an extension-added post property is set.
+	 *
+	 * @param string $key Property name.
+	 * @return bool
+	 */
+	public function __isset( $key ) {
+		return isset( $this->extra_post_properties[ $key ] );
+	}
+
+	/**
+	 * Remove an extension-added post property.
+	 *
+	 * @param string $key Property name.
+	 */
+	public function __unset( $key ) {
+		unset( $this->extra_post_properties[ $key ] );
 	}
 
 	/**
@@ -347,8 +391,9 @@ abstract class PUM_Abstract_Model_Post {
 	 */
 	public function to_array() {
 		$post = get_object_vars( $this );
+		unset( $post['extra_post_properties'] );
 
-		return $post;
+		return array_merge( $post, $this->extra_post_properties );
 	}
 
 	/**

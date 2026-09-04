@@ -309,9 +309,8 @@ export class AdminBar {
 					return;
 				}
 
-				const [ action, rawPopupId ] = href
-					.split( '__' )[ 1 ]
-					.split( '--' );
+				const actionParts = href.split( '__' )[ 1 ].split( '--' );
+				const rawPopupId = actionParts[ 1 ];
 
 				// Require a strictly numeric popup ID before handing it to PUM APIs.
 				if ( ! /^\d+$/.test( rawPopupId ?? '' ) ) {
@@ -319,6 +318,7 @@ export class AdminBar {
 				}
 
 				const popupId = rawPopupId;
+				const action = actionParts[ 0 ];
 
 				switch ( action ) {
 					case 'open':

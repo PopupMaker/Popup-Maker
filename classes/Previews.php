@@ -1,160 +1,130 @@
 <?php
 /**
- * Manage popup prevews.
+ * Legacy popup preview API.
  *
  * @package PopupMaker
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Class PUM_Previews
+ * Backward-compatible facade for the popup preview controller.
  *
- * This class sets up the necessary changes to allow admins & editors to preview popups on the front end.
+ * @deprecated 1.25.0 Use the Previews controller from PopupMaker\plugin().
  */
 class PUM_Previews {
 
 	/**
-	 * Initiator method.
+	 * Initialize preview hooks.
+	 *
+	 * @deprecated 1.25.0 Preview hooks are initialized by the plugin container.
+	 *
+	 * @return void
 	 */
 	public static function init() {
-		add_action( 'template_redirect', [ __CLASS__, 'force_load_preview' ] );
-		add_filter( 'pum_popup_is_loadable', [ __CLASS__, 'is_loadable' ], 1000, 2 );
-		add_filter( 'pum_popup_data_attr', [ __CLASS__, 'data_attr' ], 1000, 2 );
-		add_filter( 'pum_popup_get_public_settings', [ __CLASS__, 'get_public_settings' ], 1000, 2 );
+		_deprecated_function( __METHOD__, '1.25.0', 'PopupMaker\Controllers\Previews::init()' );
+
+		$controller = static::controller();
+
+		if ( $controller ) {
+			$controller->init();
+		}
 	}
 
 	/**
-	 * Get popup id for previewing.
+	 * Get the popup ID for a core editor preview.
+	 *
+	 * @deprecated 1.25.0 Use PopupMaker\Controllers\Previews::get_popup_preview().
 	 *
 	 * @return false|int
 	 */
 	public static function get_popup_preview() {
-		static $preview_id;
+		_deprecated_function( __METHOD__, '1.25.0', 'PopupMaker\Controllers\Previews::get_popup_preview()' );
 
-		if ( isset( $preview_id ) ) {
-			return $preview_id;
-		}
+		$controller = static::controller();
 
-		$preview_id = false;
-
-		if (
-			! isset( $_GET['popup_preview'] ) ||
-			! isset( $_GET['popup'] ) ||
-			// Overridden as wp_verify_nonce is already safe: https://github.com/WordPress/WordPress-Coding-Standards/issues/869#issuecomment-611782416.
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			! wp_verify_nonce( $_GET['popup_preview'], 'popup-preview' )
-		) {
-			return false;
-		}
-
-		$popup_id = sanitize_text_field( wp_unslash( $_GET['popup'] ) );
-
-		if ( is_numeric( $_GET['popup'] ) && absint( $_GET['popup'] ) > 0 ) {
-			$preview_id = absint( $_GET['popup'] );
-		} else {
-			$post       = get_page_by_path( $popup_id, OBJECT, 'popup' );
-			$preview_id = $post->ID;
-		}
-
-		return $preview_id;
+		return $controller ? $controller->get_popup_preview() : false;
 	}
 
 	/**
-	 * Sets the Popup Post Type public arg to true for content editors.
+	 * Force the current core editor preview popup to load.
 	 *
-	 * This enables them to use the built in preview links.
+	 * @deprecated 1.25.0 Use PopupMaker\Controllers\Previews::force_load_preview().
 	 *
-	 * @param int $popup_id Popup ID.
-	 *
-	 * @return bool
-	 */
-	private static function is_previewing_popup( $popup_id = 0 ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			return false;
-		}
-
-		$preview_id = static::get_popup_preview();
-
-		return $popup_id === $preview_id && current_user_can( 'edit_post', $preview_id );
-	}
-
-	/**
-	 * Force popup to load no matter its status if its supposed to be previewed.
+	 * @return void
 	 */
 	public static function force_load_preview() {
-		$preview_id = static::get_popup_preview();
+		_deprecated_function( __METHOD__, '1.25.0', 'PopupMaker\Controllers\Previews::force_load_preview()' );
 
-		// The preview nonce is shared across block-editor screens; require edit
-		// access to this specific popup before force-loading draft/private content.
-		if ( ! $preview_id || ! current_user_can( 'edit_post', $preview_id ) ) {
-			return;
-		}
+		$controller = static::controller();
 
-		$popup = pum_get_popup( $preview_id );
-
-		if ( $popup->is_valid() && $preview_id === $popup->ID ) {
-			PUM_Site_Popups::preload_popup( $popup );
+		if ( $controller ) {
+			$controller->force_load_preview();
 		}
 	}
 
 	/**
-	 * For popup previews this will force only the correct popup to load.
+	 * Filter popup loadability during a preview.
 	 *
-	 * @param bool $loadable Is popup loadable.
+	 * @deprecated 1.25.0 Use PopupMaker\Controllers\Previews::is_loadable().
+	 *
+	 * @param bool $loadable Whether the popup is loadable.
 	 * @param int  $popup_id Popup ID.
 	 *
 	 * @return bool
 	 */
 	public static function is_loadable( $loadable, $popup_id ) {
-		return self::is_previewing_popup( $popup_id ) ? true : $loadable;
+		_deprecated_function( __METHOD__, '1.25.0', 'PopupMaker\Controllers\Previews::is_loadable()' );
+
+		$controller = static::controller();
+
+		return $controller ? $controller->is_loadable( $loadable, $popup_id ) : $loadable;
 	}
 
 	/**
-	 * On popup previews add an admin debug trigger.
+	 * Filter legacy popup data attributes during a preview.
 	 *
-	 * @deprecated 1.16.10 Use get_public_settings instead.
+	 * @deprecated 1.25.0 Use PopupMaker\Controllers\Previews::data_attr().
 	 *
-	 * @param array $data_attr Array of popup data attributes.
+	 * @param array $data_attr Popup data attributes.
 	 * @param int   $popup_id Popup ID.
 	 *
 	 * @return mixed
 	 */
 	public static function data_attr( $data_attr, $popup_id ) {
-		if ( ! self::is_previewing_popup( $popup_id ) ) {
-			return $data_attr;
-		}
+		_deprecated_function( __METHOD__, '1.25.0', 'PopupMaker\Controllers\Previews::data_attr()' );
 
-		$data_attr['triggers'] = [
-			[
-				'type' => 'admin_debug',
-			],
-		];
+		$controller = static::controller();
 
-		return $data_attr;
+		return $controller ? $controller->data_attr( $data_attr, $popup_id ) : $data_attr;
 	}
 
 	/**
-	 * On popup previews add an admin debug trigger.
+	 * Filter popup public settings during a preview.
 	 *
-	 * @param array           $settings Array of settigs.
-	 * @param PUM_Model_Popup $popup Popup model object.
+	 * @deprecated 1.25.0 Use PopupMaker\Controllers\Previews::get_public_settings().
+	 *
+	 * @param array           $settings Popup public settings.
+	 * @param PUM_Model_Popup $popup Popup model.
 	 *
 	 * @return array
 	 */
 	public static function get_public_settings( $settings, $popup ) {
-		if ( ! self::is_previewing_popup( $popup->ID ) ) {
-			return $settings;
-		}
+		_deprecated_function( __METHOD__, '1.25.0', 'PopupMaker\Controllers\Previews::get_public_settings()' );
 
-		$settings['triggers'] = [
-			[
-				'type' => 'admin_debug',
-			],
-		];
+		$controller = static::controller();
 
-		return $settings;
+		return $controller ? $controller->get_public_settings( $settings, $popup ) : $settings;
+	}
+
+	/**
+	 * Get the modern preview controller.
+	 *
+	 * @return PopupMaker\Controllers\Previews|null
+	 */
+	private static function controller() {
+		$controller = PopupMaker\plugin()->get_controller( 'Previews' );
+
+		return $controller instanceof PopupMaker\Controllers\Previews ? $controller : null;
 	}
 }

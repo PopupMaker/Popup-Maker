@@ -91,12 +91,12 @@ final class NF_PUM_Actions_OpenPopup extends NF_Abstracts_Action {
 			],
 		];
 
-		$popups = pum_get_all_popups();
+		$popups = PUM_Helpers::popup_selectlist();
 
-		foreach ( $popups as $popup ) {
+		foreach ( $popups as $popup_id => $popup_title ) {
 			$popup_list[] = [
-				'value' => $popup->ID,
-				'label' => $popup->post_title,
+				'value' => (int) $popup_id,
+				'label' => $popup_title,
 			];
 		}
 

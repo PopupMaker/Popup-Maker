@@ -51,10 +51,13 @@ class PUM_Integration_Form_KaliForms extends PUM_Abstract_Integration_Form {
 	public function get_forms() {
 		$forms = get_posts(
 			[
-				'post_type'      => 'kaliforms_forms',
-				'posts_per_page' => -1,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
+				'post_type'              => 'kaliforms_forms',
+				'posts_per_page'         => -1,
+				'orderby'                => 'title',
+				'order'                  => 'ASC',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			]
 		);
 
