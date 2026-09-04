@@ -34,11 +34,11 @@ class PageBuilderAnnouncements extends Service implements Provider {
 	 * @var array<string,string>
 	 */
 	const BUILDER_GUIDE_URLS = [
-		'elementor'       => 'https://wppopupmaker.com/page-builder-integrations/elementor-page-builder/',
-		'bricks'          => 'https://wppopupmaker.com/page-builder-integrations/bricks-builder/',
+		'elementor'       => 'https://wppopupmaker.com/page-builder-integrations/elementor/',
+		'bricks'          => 'https://wppopupmaker.com/page-builder-integrations/bricks/',
 		'divi'            => 'https://wppopupmaker.com/page-builder-integrations/divi/',
 		'beaver-builder'  => 'https://wppopupmaker.com/page-builder-integrations/beaver-builder/',
-		'siteorigin'      => 'https://wppopupmaker.com/page-builder-integrations/siteorigin-page-builder/',
+		'siteorigin'      => 'https://wppopupmaker.com/page-builder-integrations/siteorigin/',
 		'brizy'           => 'https://wppopupmaker.com/page-builder-integrations/brizy/',
 		'visual-composer' => 'https://wppopupmaker.com/page-builder-integrations/visual-composer/',
 		'etch'            => 'https://wppopupmaker.com/page-builder-integrations/etch/',

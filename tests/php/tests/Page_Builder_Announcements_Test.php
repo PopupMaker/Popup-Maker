@@ -65,9 +65,39 @@ class Page_Builder_Announcements_Test extends WP_UnitTestCase {
 		$this->assertSame( 'feature', $alerts[0]['category'] );
 		$this->assertTrue( $alerts[0]['dismissible'] );
 		$this->assertStringStartsWith(
-			'https://wppopupmaker.com/page-builder-integrations/elementor-page-builder/',
+			'https://wppopupmaker.com/page-builder-integrations/elementor/',
 			$alerts[0]['actions'][0]['href']
 		);
+	}
+
+	/** @return void */
+	public function test_single_builder_announcements_use_the_published_guides() {
+		$guide_urls = [
+			'elementor'       => 'https://wppopupmaker.com/page-builder-integrations/elementor/',
+			'bricks'          => 'https://wppopupmaker.com/page-builder-integrations/bricks/',
+			'divi'            => 'https://wppopupmaker.com/page-builder-integrations/divi/',
+			'beaver-builder'  => 'https://wppopupmaker.com/page-builder-integrations/beaver-builder/',
+			'siteorigin'      => 'https://wppopupmaker.com/page-builder-integrations/siteorigin/',
+			'brizy'           => 'https://wppopupmaker.com/page-builder-integrations/brizy/',
+			'visual-composer' => 'https://wppopupmaker.com/page-builder-integrations/visual-composer/',
+			'etch'            => 'https://wppopupmaker.com/page-builder-integrations/etch/',
+		];
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+
+		foreach ( $guide_urls as $slug => $guide_url ) {
+			$provider = $this->make_provider(
+				[
+					[
+						'slug'  => $slug,
+						'label' => ucfirst( $slug ),
+					],
+				]
+			);
+			$alerts   = $provider->register_announcement( [] );
+
+			$this->assertStringStartsWith( $guide_url, $alerts[0]['actions'][0]['href'] );
+		}
 	}
 
 	/** @return void */
