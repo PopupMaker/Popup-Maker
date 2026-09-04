@@ -29,6 +29,22 @@ class PageBuilderAnnouncements extends Service implements Provider {
 	const GUIDE_URL = 'https://wppopupmaker.com/integrations/page-builder-integrations/';
 
 	/**
+	 * Dedicated guides used when only one supported builder is active.
+	 *
+	 * @var array<string,string>
+	 */
+	const BUILDER_GUIDE_URLS = [
+		'elementor'       => 'https://wppopupmaker.com/page-builder-integrations/elementor-page-builder/',
+		'bricks'          => 'https://wppopupmaker.com/page-builder-integrations/bricks-builder/',
+		'divi'            => 'https://wppopupmaker.com/page-builder-integrations/divi/',
+		'beaver-builder'  => 'https://wppopupmaker.com/page-builder-integrations/beaver-builder/',
+		'siteorigin'      => 'https://wppopupmaker.com/page-builder-integrations/siteorigin-page-builder/',
+		'brizy'           => 'https://wppopupmaker.com/page-builder-integrations/brizy/',
+		'visual-composer' => 'https://wppopupmaker.com/page-builder-integrations/visual-composer/',
+		'etch'            => 'https://wppopupmaker.com/page-builder-integrations/etch/',
+	];
+
+	/**
 	 * Hook into the alert list.
 	 *
 	 * @return void
@@ -61,8 +77,12 @@ class PageBuilderAnnouncements extends Service implements Provider {
 		$labels = wp_list_pluck( $builders, 'label' );
 		$slugs  = wp_list_pluck( $builders, 'slug' );
 		$names  = wp_sprintf_l( '%l', $labels );
+		$url    = self::GUIDE_URL;
 
 		if ( 1 === count( $builders ) ) {
+			$slug = $slugs[0];
+			$url  = self::BUILDER_GUIDE_URLS[ $slug ] ?? self::GUIDE_URL;
+
 			/* translators: %s: page builder name. */
 			$title   = sprintf( __( 'Full Popup Maker support for %s is here', 'popup-maker' ), $names );
 			$message = sprintf(
@@ -100,7 +120,7 @@ class PageBuilderAnnouncements extends Service implements Provider {
 							'utm_medium'   => 'notification',
 							'utm_campaign' => 'page-builder-support',
 						],
-						self::GUIDE_URL
+						$url
 					),
 					'primary'  => true,
 					'external' => true,

@@ -64,6 +64,10 @@ class Page_Builder_Announcements_Test extends WP_UnitTestCase {
 		$this->assertStringContainsString( '<strong>Elementor</strong>', $alerts[0]['message'] );
 		$this->assertSame( 'feature', $alerts[0]['category'] );
 		$this->assertTrue( $alerts[0]['dismissible'] );
+		$this->assertStringStartsWith(
+			'https://wppopupmaker.com/page-builder-integrations/elementor-page-builder/',
+			$alerts[0]['actions'][0]['href']
+		);
 	}
 
 	/** @return void */
@@ -89,6 +93,24 @@ class Page_Builder_Announcements_Test extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Elementor', $alerts[0]['message'] );
 		$this->assertStringContainsString( 'Bricks', $alerts[0]['message'] );
 		$this->assertCount( 2, $alerts[0]['actions'] );
+		$this->assertStringStartsWith( PageBuilderAnnouncements::GUIDE_URL, $alerts[0]['actions'][0]['href'] );
+	}
+
+	/** @return void */
+	public function test_unknown_single_builder_falls_back_to_the_hub() {
+		$provider = $this->make_provider(
+			[
+				[
+					'slug'  => 'future-builder',
+					'label' => 'Future Builder',
+				],
+			]
+		);
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$alerts = $provider->register_announcement( [] );
+
+		$this->assertStringStartsWith( PageBuilderAnnouncements::GUIDE_URL, $alerts[0]['actions'][0]['href'] );
 	}
 
 	/**
