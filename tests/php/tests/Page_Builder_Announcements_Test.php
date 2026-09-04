@@ -96,7 +96,10 @@ class Page_Builder_Announcements_Test extends WP_UnitTestCase {
 			);
 			$alerts   = $provider->register_announcement( [] );
 
-			$this->assertStringStartsWith( $guide_url, $alerts[0]['actions'][0]['href'] );
+			$this->assertSame(
+				$guide_url . '?utm_source=plugin&utm_medium=notification&utm_campaign=page-builder-support&utm_content=' . $slug,
+				$alerts[0]['actions'][0]['href']
+			);
 		}
 	}
 
@@ -124,6 +127,7 @@ class Page_Builder_Announcements_Test extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Bricks', $alerts[0]['message'] );
 		$this->assertCount( 2, $alerts[0]['actions'] );
 		$this->assertStringStartsWith( PageBuilderAnnouncements::GUIDE_URL, $alerts[0]['actions'][0]['href'] );
+		$this->assertStringContainsString( 'utm_content=multiple-builders', $alerts[0]['actions'][0]['href'] );
 	}
 
 	/** @return void */
@@ -141,6 +145,7 @@ class Page_Builder_Announcements_Test extends WP_UnitTestCase {
 		$alerts = $provider->register_announcement( [] );
 
 		$this->assertStringStartsWith( PageBuilderAnnouncements::GUIDE_URL, $alerts[0]['actions'][0]['href'] );
+		$this->assertStringContainsString( 'utm_content=future-builder', $alerts[0]['actions'][0]['href'] );
 	}
 
 	/**

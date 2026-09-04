@@ -74,14 +74,16 @@ class PageBuilderAnnouncements extends Service implements Provider {
 			return $alerts;
 		}
 
-		$labels = wp_list_pluck( $builders, 'label' );
-		$slugs  = wp_list_pluck( $builders, 'slug' );
-		$names  = wp_sprintf_l( '%l', $labels );
-		$url    = self::GUIDE_URL;
+		$labels      = wp_list_pluck( $builders, 'label' );
+		$slugs       = wp_list_pluck( $builders, 'slug' );
+		$names       = wp_sprintf_l( '%l', $labels );
+		$url         = self::GUIDE_URL;
+		$utm_content = 'multiple-builders';
 
 		if ( 1 === count( $builders ) ) {
-			$slug = $slugs[0];
-			$url  = self::BUILDER_GUIDE_URLS[ $slug ] ?? self::GUIDE_URL;
+			$slug        = $slugs[0];
+			$url         = self::BUILDER_GUIDE_URLS[ $slug ] ?? self::GUIDE_URL;
+			$utm_content = $slug;
 
 			/* translators: %s: page builder name. */
 			$title   = sprintf( __( 'Full Popup Maker support for %s is here', 'popup-maker' ), $names );
@@ -119,6 +121,7 @@ class PageBuilderAnnouncements extends Service implements Provider {
 							'utm_source'   => 'plugin',
 							'utm_medium'   => 'notification',
 							'utm_campaign' => 'page-builder-support',
+							'utm_content'  => $utm_content,
 						],
 						$url
 					),
