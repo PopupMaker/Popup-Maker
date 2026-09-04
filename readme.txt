@@ -275,7 +275,7 @@ For the latest updates and release information:
 * Visit our [changelog](https://wppopupmaker.com/changelog/) for detailed version history
 * View our [complete development changelog](https://github.com/PopupMaker/Popup-Maker/blob/master/CHANGELOG.md)
 
-= 1.25.0 - 2026-09-03 =
+= 1.25.0 - 2026-09-04 =
 
 **Features**
 
