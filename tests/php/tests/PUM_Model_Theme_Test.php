@@ -308,6 +308,34 @@ class PUM_Model_Theme_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Single-value metadata filters may return settings arrays directly.
+	 *
+	 * @return void
+	 */
+	public function test_get_settings_preserves_associative_metadata_override() {
+		$theme_id = self::factory()->post->create( [ 'post_type' => 'popup_theme' ] );
+
+		$metadata_filter = function ( $value, $object_id, $meta_key ) use ( $theme_id ) {
+			if ( $theme_id === $object_id && 'popup_theme_settings' === $meta_key ) {
+				return [ 'container_padding' => 40 ];
+			}
+
+			return $value;
+		};
+
+		add_filter( 'get_post_metadata', $metadata_filter, 10, 3 );
+
+		try {
+			$theme = new PUM_Model_Theme( $theme_id );
+
+			$this->assertSame( 40, $theme->get_setting( 'container_padding' ) );
+			$this->assertSame( [ 'container_padding' => 40 ], $theme->settings );
+		} finally {
+			remove_filter( 'get_post_metadata', $metadata_filter, 10 );
+		}
+	}
+
+	/**
 	 * WordPress metadata defaults are preserved when no settings row exists.
 	 *
 	 * @return void
