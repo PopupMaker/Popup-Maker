@@ -22,7 +22,7 @@
 		"code-atlantic/coding-standards": "1.1.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "v1.2.1",
 		"phpstan/phpstan": "^2.0.3",
-		"szepeviktor/phpstan-wordpress": "2.0.3",
+		"szepeviktor/phpstan-wordpress": "2.0.4",
 		"phpstan/extension-installer": "^1.4.3",
 		"phpunit/phpunit": "^9.6",
 		"mockery/mockery": "^1.6.12",
