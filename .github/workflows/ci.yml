@@ -464,7 +464,7 @@ jobs:
       - name: Start WordPress and install Plugin Check
         run: |
           wp-env start --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" --update
-          wp-env run cli --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
+          wp-env run cli --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" wp plugin install "https://downloads.wordpress.org/plugin/plugin-check.${PLUGIN_CHECK_VERSION}.zip" --activate --force
 
       - name: Scan assembled plugin
         run: |
