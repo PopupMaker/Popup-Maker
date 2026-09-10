@@ -44,15 +44,6 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	public $primary_key = 'ID';
 
 	/**
-	 * Initialize the database and continue any pending security scrub.
-	 */
-	public function __construct() {
-		parent::__construct();
-
-		$this->maybe_scrub_unsafe_name_fields();
-	}
-
-	/**
 	 * Get columns and formats
 	 */
 	public function get_columns() {
@@ -93,21 +84,36 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 	/**
 	 * Continue the one-time scrub of unsafe stored subscriber names.
+	 *
+	 * @return bool|null True when complete, false when another batch is needed, or null on failure.
 	 */
-	private function maybe_scrub_unsafe_name_fields() {
+	public function run_name_scrub_batch() {
 		$cursor = get_option( self::NAME_SCRUB_OPTION, 0 );
 
 		if ( 'complete' === $cursor ) {
-			return;
+			return true;
 		}
 
 		$result = $this->scrub_unsafe_name_fields( absint( $cursor ), self::NAME_SCRUB_BATCH_SIZE );
 
 		if ( false === $result ) {
-			return;
+			return null;
 		}
 
-		update_option( self::NAME_SCRUB_OPTION, $result['complete'] ? 'complete' : $result['last_id'], false );
+		$complete = $result['complete'];
+
+		update_option( self::NAME_SCRUB_OPTION, $complete ? 'complete' : $result['last_id'], false );
+
+		return $complete;
+	}
+
+	/**
+	 * Check whether the stored subscriber name scrub is complete.
+	 *
+	 * @return bool True when the scrub is complete.
+	 */
+	public function is_name_scrub_complete() {
+		return 'complete' === get_option( self::NAME_SCRUB_OPTION );
 	}
 
 	/**

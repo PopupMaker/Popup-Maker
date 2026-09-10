@@ -89,9 +89,9 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test the automatic scrub records completion after reaching the final batch.
+	 * Test a scrub batch records completion after reaching the final batch.
 	 */
-	public function test_automatic_name_scrub_records_completion() {
+	public function test_name_scrub_batch_records_completion() {
 		$this->db->create_table();
 
 		$id = $this->db->insert(
@@ -102,10 +102,22 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 		);
 
 		delete_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION );
-		new PUM_DB_Subscribers();
+		$complete = $this->db->run_name_scrub_batch();
 
+		$this->assertTrue( $complete );
 		$this->assertSame( 'complete', get_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION ) );
 		$this->assertSame( 'Stored Name', $this->db->get( $id )->name );
+	}
+
+	/**
+	 * Test scrub completion reflects the persistent migration flag.
+	 */
+	public function test_name_scrub_completion_status() {
+		update_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION, 123 );
+		$this->assertFalse( $this->db->is_name_scrub_complete() );
+
+		update_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION, 'complete' );
+		$this->assertTrue( $this->db->is_name_scrub_complete() );
 	}
 
 	/**
