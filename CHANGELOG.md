@@ -4,6 +4,10 @@
 
 ## v1.25.0 - 2026-09-04
 
+**Security**
+
+-   Hardened subscriber submissions and administration against stored cross-site scripting, including cleanup of legacy subscriber names.
+
 **Features**
 
 -   Added complete Brizy support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
