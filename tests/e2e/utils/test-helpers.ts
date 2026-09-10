@@ -11,7 +11,7 @@ import { Page, expect } from '@playwright/test';
  * Test configuration and constants
  */
 export const TEST_CONFIG = {
-	baseUrl: process.env.WP_BASE_URL || 'http://localhost:8889',
+	baseUrl: process.env.WP_BASE_URL || 'http://localhost:8880',
 	adminUser: {
 		username: process.env.WP_ADMIN_USERNAME || 'admin',
 		password: process.env.WP_ADMIN_PASSWORD || 'password',

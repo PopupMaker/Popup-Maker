@@ -758,7 +758,7 @@ class PUM_Modules_Reviews {
 		$group = self::get_trigger_group();
 		$code  = self::get_trigger_code();
 
-		if ( ! $group || ! $code ) {
+		if ( false === $group || false === $code ) {
 			return false;
 		}
 

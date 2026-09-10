@@ -250,6 +250,36 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Zero-valued extension trigger keys remain selectable and actionable.
+	 */
+	public function test_zero_valued_trigger_keys_remain_actionable() {
+		$add_zero_trigger = static function ( $triggers ) {
+			$triggers[0] = [
+				'triggers' => [
+					0 => [
+						'message'    => 'Zero-valued trigger',
+						'conditions' => [ true ],
+						'pri'        => 999,
+					],
+				],
+				'pri'      => 999,
+			];
+
+			return $triggers;
+		};
+		add_filter( 'pum_reviews_triggers', $add_zero_trigger );
+		PUM_Modules_Reviews::reset_runtime_cache();
+
+		$this->assertSame( 0, PUM_Modules_Reviews::get_trigger_group() );
+		$this->assertSame( 0, PUM_Modules_Reviews::get_trigger_code() );
+		$this->assertSame( 'Zero-valued trigger', PUM_Modules_Reviews::get_current_trigger( 'message' ) );
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core', 0, 0 ) );
+
+		remove_filter( 'pum_reviews_triggers', $add_zero_trigger );
+		PUM_Modules_Reviews::reset_runtime_cache();
+	}
+
+	/**
 	 * Extension trigger keys retain valid punctuation and capitalization.
 	 */
 	public function test_filtered_trigger_keys_are_resolved_without_rewriting() {
