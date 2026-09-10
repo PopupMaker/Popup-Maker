@@ -343,7 +343,10 @@ class PUM_Admin_Popups_Test extends WP_UnitTestCase {
 	 * JSON strings are decoded in meta.
 	 */
 	public function test_sanitize_meta_json_decoded() {
-		$obj  = (object) [ 'type' => 'click_open', 'settings' => [ 'delay' => 0 ] ];
+		$obj  = (object) [
+			'type'     => 'click_open',
+			'settings' => [ 'delay' => 0 ],
+		];
 		$json = wp_json_encode( $obj );
 
 		$input  = [ 0 => addslashes( $json ) ];
@@ -472,9 +475,18 @@ class PUM_Admin_Popups_Test extends WP_UnitTestCase {
 	 * Multiple popups are processed correctly.
 	 */
 	public function test_handle_bulk_actions_multiple_popups() {
-		$pub1   = $this->factory->post->create( [ 'post_type' => 'popup', 'post_status' => 'publish' ] );
-		$pub2   = $this->factory->post->create( [ 'post_type' => 'popup', 'post_status' => 'publish' ] );
-		$draft1 = $this->factory->post->create( [ 'post_type' => 'popup', 'post_status' => 'draft' ] );
+		$pub1   = $this->factory->post->create( [
+			'post_type'   => 'popup',
+			'post_status' => 'publish',
+		] );
+		$pub2   = $this->factory->post->create( [
+			'post_type'   => 'popup',
+			'post_status' => 'publish',
+		] );
+		$draft1 = $this->factory->post->create( [
+			'post_type'   => 'popup',
+			'post_status' => 'draft',
+		] );
 
 		$url    = 'https://example.com/wp-admin/edit.php?post_type=popup';
 		$result = PUM_Admin_Popups::handle_bulk_actions( $url, 'pum_enable', [ $pub1, $pub2, $draft1 ] );
@@ -715,7 +727,10 @@ class PUM_Admin_Popups_Test extends WP_UnitTestCase {
 	 * Existing bulk actions are preserved.
 	 */
 	public function test_register_bulk_actions_preserves_existing() {
-		$existing = [ 'edit' => 'Edit', 'trash' => 'Move to Trash' ];
+		$existing = [
+			'edit'  => 'Edit',
+			'trash' => 'Move to Trash',
+		];
 		$result   = PUM_Admin_Popups::register_bulk_actions( $existing );
 
 		$this->assertArrayHasKey( 'edit', $result, 'Existing actions should be preserved.' );

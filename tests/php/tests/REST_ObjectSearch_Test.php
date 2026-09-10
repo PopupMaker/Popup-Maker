@@ -285,7 +285,12 @@ class REST_ObjectSearch_Test extends WP_UnitTestCase {
 			'popup_maker/pre_object_search',
 			function () {
 				return [
-					'items'       => [ [ 'id' => 1, 'text' => 'Filtered Item' ] ],
+					'items'       => [
+						[
+							'id'   => 1,
+							'text' => 'Filtered Item',
+						],
+					],
 					'total_count' => 1,
 				];
 			}
@@ -313,7 +318,10 @@ class REST_ObjectSearch_Test extends WP_UnitTestCase {
 		add_filter(
 			'popup_maker/object_search',
 			function ( $results ) {
-				$results['items'][]     = [ 'id' => 999, 'text' => 'Added by Filter' ];
+				$results['items'][]      = [
+					'id'   => 999,
+					'text' => 'Added by Filter',
+				];
 				$results['total_count'] += 1;
 				return $results;
 			}
@@ -345,8 +353,14 @@ class REST_ObjectSearch_Test extends WP_UnitTestCase {
 				return [
 					// Use string keys to simulate deduplication leftovers.
 					'items'       => [
-						5 => [ 'id' => 5, 'text' => 'A' ],
-						9 => [ 'id' => 9, 'text' => 'B' ],
+						5 => [
+							'id'   => 5,
+							'text' => 'A',
+						],
+						9 => [
+							'id'   => 9,
+							'text' => 'B',
+						],
 					],
 					'total_count' => 2,
 				];

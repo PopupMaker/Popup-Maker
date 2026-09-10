@@ -241,7 +241,7 @@ class Logging_Service_Test extends WP_UnitTestCase {
 	 * @return object Mock container with expected methods.
 	 */
 	private function create_mock_container() {
-		$container = new class {
+		$container = new class() {
 			/**
 			 * Mock get method.
 			 *
