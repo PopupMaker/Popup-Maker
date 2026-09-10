@@ -250,7 +250,7 @@ class PUM_Admin_Themes {
 			return false;
 		}
 
-		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || isset( $_REQUEST['bulk_edit'] ) ) {
+		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || wp_doing_ajax() || isset( $_REQUEST['bulk_edit'] ) ) {
 			return false;
 		}
 
