@@ -8,7 +8,8 @@
 			"@popup-maker/components": [ "../components/src" ],
 			"@popup-maker/core-data": [ "../core-data/src" ],
 			"@popup-maker/i18n": [ "../i18n/src" ],
-			"@popup-maker/icons": [ "../icons/src" ]
+			"@popup-maker/icons": [ "../icons/src" ],
+			"@popup-maker/registry": [ "../registry/src" ]
 		}
 	},
 	"include": [ "./src/**/*" ],
@@ -25,6 +26,9 @@
 		},
 		{
 			"path": "../icons"
+		},
+		{
+			"path": "../registry"
 		}
 	]
 }

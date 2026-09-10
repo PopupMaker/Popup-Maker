@@ -323,6 +323,9 @@ importers:
       '@popup-maker/icons':
         specifier: workspace:*
         version: link:../icons
+      '@popup-maker/registry':
+        specifier: workspace:*
+        version: link:../registry
       '@wordpress/a11y':
         specifier: ^4.52.0
         version: 4.52.0

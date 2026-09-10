@@ -2,6 +2,8 @@ import './block-extensions';
 import './formats';
 import './plugins';
 
+export * from './content-tokens';
+
 import {
 	callToActionStore,
 	popupStore,
