@@ -7,6 +7,7 @@
 **Security**
 
 -   Hardened subscriber submissions and administration against stored cross-site scripting, including cleanup of legacy subscriber names.
+-   Hardened object-search label handling across admin and API paths with additional validation and escaping safeguards.
 
 **Features**
 
@@ -36,6 +37,7 @@
 
 **Fixes**
 
+-   Fixed the Popup Maker admin toolbar controls not opening or closing popups, checking conditions, or resetting cookies—a regression introduced in 1.24.0.
 -   Fixed Settings and Tools success notices whose dismiss buttons appeared but did not respond.
 -   Restored Popup Maker and add-on icons after undocumented changes to the Plugins screen in WordPress 7.1.
 -   Restored localized package variables in wp-admin so the block editor and other admin tools initialize correctly.
