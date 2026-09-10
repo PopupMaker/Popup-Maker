@@ -130,7 +130,7 @@ class PUM_Modules_Reviews {
 		$legacy_entry = self::normalize_review_destinations(
 			[
 				'core' => [
-					'label'   => __( 'Leave a review', 'popup-maker' ),
+					'label'   => __( 'Ok, you deserve it', 'popup-maker' ),
 					'url'     => $legacy_link,
 					'reason'  => 'am_now_core',
 					'primary' => true,
@@ -144,7 +144,7 @@ class PUM_Modules_Reviews {
 
 		$destinations = [
 			'core' => [
-				'label'   => __( 'Leave a review', 'popup-maker' ),
+				'label'   => __( 'Ok, you deserve it', 'popup-maker' ),
 				'url'     => $core_url,
 				'reason'  => 'am_now_core',
 				'primary' => true,
@@ -896,28 +896,27 @@ class PUM_Modules_Reviews {
 	 */
 	public static function triggers( $group = null, $code = null ) {
 		if ( ! isset( self::$triggers_cache ) ) {
-			$product_context = self::get_product_context();
-			/* translators: 1: Popup Maker product name, 2: amount of time. */
-			$time_message = __( 'You\'ve been using %1$s for %2$s. If it has helped you engage visitors, grow your audience, or generate meaningful conversions, would you take a moment to leave us an honest review?', 'popup-maker' );
+			/* translators: %s: amount of time. */
+			$time_message = __( 'Hi there! You\'ve been using Popup Maker on your site for %s - I hope it\'s been helpful. If you\'re enjoying my plugin, would you mind rating it 5-stars to help spread the word?', 'popup-maker' );
 			$triggers     = [
 				'time_installed' => [
 					'triggers' => [
 						'one_week'     => [
-							'message'    => sprintf( $time_message, $product_context['name'], __( '1 week', 'popup-maker' ) ),
+							'message'    => sprintf( $time_message, __( '1 week', 'popup-maker' ) ),
 							'conditions' => [
 								strtotime( self::installed_on() . ' +1 week' ) < time(),
 							],
 							'pri'        => 10,
 						],
 						'one_month'    => [
-							'message'    => sprintf( $time_message, $product_context['name'], __( '1 month', 'popup-maker' ) ),
+							'message'    => sprintf( $time_message, __( '1 month', 'popup-maker' ) ),
 							'conditions' => [
 								strtotime( self::installed_on() . ' +1 month' ) < time(),
 							],
 							'pri'        => 20,
 						],
 						'three_months' => [
-							'message'    => sprintf( $time_message, $product_context['name'], __( '3 months', 'popup-maker' ) ),
+							'message'    => sprintf( $time_message, __( '3 months', 'popup-maker' ) ),
 							'conditions' => [
 								strtotime( self::installed_on() . ' +3 months' ) < time(),
 							],
@@ -934,13 +933,13 @@ class PUM_Modules_Reviews {
 			];
 
 			$pri = 10;
-			/* translators: 1: Popup Maker product name, 2: number of popup views. */
-			$open_message     = __( '%1$s has now delivered %2$s popup views on your site. If those popups have helped you achieve meaningful results, would you take a moment to leave us an honest review?', 'popup-maker' );
+			/* translators: %s: number of popup views. */
+			$open_message     = __( 'Hi there! You\'ve recently hit %s popup views on your site – that’s awesome!! If you\'d like to celebrate this milestone, rate Popup Maker 5-stars to help spread the word!', 'popup-maker' );
 			$total_open_count = max( 0, (int) get_option( 'pum_total_open_count', 0 ) );
 
 			foreach ( self::open_count_thresholds( $total_open_count ) as $num ) {
 				$triggers['open_count']['triggers'][ $num . '_opens' ] = [
-					'message'    => sprintf( $open_message, $product_context['name'], number_format_i18n( $num ) ),
+					'message'    => sprintf( $open_message, number_format_i18n( $num ) ),
 					'conditions' => [
 						$total_open_count >= $num,
 					],
@@ -1005,12 +1004,12 @@ class PUM_Modules_Reviews {
 			<?php endforeach; ?>
 			<li>
 				<a href="#" class="pum-dismiss" data-reason="maybe_later">
-					<?php esc_html_e( 'Remind me later', 'popup-maker' ); ?>
+					<?php esc_html_e( 'Nope, maybe later', 'popup-maker' ); ?>
 				</a>
 			</li>
 			<li>
 				<a href="#" class="pum-dismiss" data-reason="already_did">
-					<?php esc_html_e( 'I’ve already left a review', 'popup-maker' ); ?>
+					<?php esc_html_e( 'I already did', 'popup-maker' ); ?>
 				</a>
 			</li>
 		</ul>
@@ -1037,7 +1036,6 @@ class PUM_Modules_Reviews {
 		add_action( 'wp_footer', [ __CLASS__, 'print_review_request_vars' ] );
 
 		$trigger         = self::get_current_trigger();
-		$product_context = self::get_product_context();
 		$destinations    = self::get_review_destinations();
 		$allowed_actions = array_merge( [ 'maybe_later', 'already_did' ], wp_list_pluck( $destinations, 'reason' ) );
 
@@ -1045,9 +1043,8 @@ class PUM_Modules_Reviews {
 
 		$alerts[] = [
 			'code'            => 'review_request',
-			/* translators: %s: Popup Maker product name. */
-			'title'           => '⭐ ' . sprintf( __( 'Is %s helping you grow?', 'popup-maker' ), $product_context['name'] ),
-			'message'         => '<strong>' . esc_html( $trigger['message'] ) . '</strong>',
+			'title'           => '⭐ ' . __( 'Love Popup Maker? Leave a 5-star review!', 'popup-maker' ),
+			'message'         => '<strong>' . esc_html( $trigger['message'] ) . '<br />~ danieliser</strong>',
 			'html'            => $html,
 			'type'            => 'success',
 			'category'        => 'recommendation',
