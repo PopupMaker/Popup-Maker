@@ -1,6 +1,6 @@
 jest.mock( '@wordpress/element', () => ( {
-	useSyncExternalStore: jest.fn(
-		( subscribe: any, getSnapshot: () => any ) => getSnapshot()
+	useSyncExternalStore: jest.fn( ( subscribe: any, getSnapshot: () => any ) =>
+		getSnapshot()
 	),
 } ) );
 
@@ -56,10 +56,12 @@ describe( 'createRegistry', () => {
 			expect( registry.getItems()[ 0 ].label ).toBe( 'Updated' );
 		} );
 
-		it( 'allows same id in different groups', () => {
+		it( 'moves an existing id when its group changes', () => {
 			registry.register( { id: 'item-1', group: 'a' } );
 			registry.register( { id: 'item-1', group: 'b' } );
-			expect( registry.getItems() ).toHaveLength( 2 );
+			expect( registry.getItems() ).toEqual( [
+				expect.objectContaining( { id: 'item-1', group: 'b' } ),
+			] );
 		} );
 	} );
 

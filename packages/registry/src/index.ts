@@ -57,10 +57,8 @@ export function createRegistry< T extends PopupMaker.RegistryItem >(
 			priority: item.priority ?? defaultPriority,
 		} as T;
 
-		// Using the unique id, group and priority, check if the item already exists.
-		const existingItem = items.find(
-			( { id, group } ) => id === newItem.id && group === newItem.group
-		);
+		// IDs are stable registry identities, even when an item changes groups.
+		const existingItem = items.find( ( { id } ) => id === newItem.id );
 
 		// If the item already exists, replace it.
 		if ( existingItem ) {
