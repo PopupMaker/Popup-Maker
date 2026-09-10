@@ -231,18 +231,17 @@ class PUM_CF7_Integration {
 			],
 		];
 
-		$popups = get_posts(
+		$popups = PUM_Helpers::popup_selectlist(
 			[
-				'post_type'      => 'popup',
-				'post_status'    => [ 'publish' ],
-				'posts_per_page' => - 1,
+				'orderby' => 'date',
+				'order'   => 'DESC',
 			]
 		);
 
-		foreach ( $popups as $popup ) {
+		foreach ( $popups as $popup_id => $popup_title ) {
 			$popup_list[] = [
-				'value' => $popup->ID,
-				'label' => $popup->post_title,
+				'value' => (int) $popup_id,
+				'label' => $popup_title,
 			];
 		}
 

@@ -126,6 +126,8 @@ class PUM_Admin_Popups {
 		$count   = 0;
 		$skipped = 0;
 
+		self::prime_bulk_action_caches( $post_ids );
+
 		foreach ( $post_ids as $post_id ) {
 			// Check user can edit this popup.
 			if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -158,6 +160,44 @@ class PUM_Admin_Popups {
 		);
 
 		return $redirect_url;
+	}
+
+	/**
+	 * Prime popup objects used by a bulk state change.
+	 *
+	 * @param int[] $post_ids Selected post IDs.
+	 * @return void
+	 */
+	private static function prime_bulk_action_caches( $post_ids ) {
+		$popup_ids = wp_parse_id_list( $post_ids );
+
+		if ( empty( $popup_ids ) ) {
+			return;
+		}
+
+		$cached_posts       = wp_cache_get_multiple( $popup_ids, 'posts' );
+		$uncached_popup_ids = [];
+
+		foreach ( $popup_ids as $popup_id ) {
+			if ( ! array_key_exists( $popup_id, $cached_posts ) || false === $cached_posts[ $popup_id ] ) {
+				$uncached_popup_ids[] = $popup_id;
+			}
+		}
+
+		if ( empty( $uncached_popup_ids ) ) {
+			return;
+		}
+
+		\PopupMaker\plugin( 'popups' )->query_posts(
+			[
+				'post_status'            => array_keys( get_post_stati() ),
+				'post__in'               => $uncached_popup_ids,
+				'posts_per_page'         => count( $uncached_popup_ids ),
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			]
+		);
 	}
 
 	/**
@@ -1651,7 +1691,7 @@ class PUM_Admin_Popups {
 	/**
 	 * Prepends Popup ID to the action row on All Popups
 	 *
-	 * @param array         $actions The row actions.
+	 * @param array $actions The row actions.
 	 * @param $post The post
 	 *
 	 * @return array The new actions.

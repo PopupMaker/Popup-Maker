@@ -9,7 +9,6 @@ import {
 	InspectorControls,
 	// @ts-ignore - Experimental components
 	AlignmentControl,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	// __experimentalGetElementClassName as getElementClassName,
 	// @ts-expect-error
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
@@ -67,7 +66,7 @@ import { displayShortcut, isKeyboardEvent, ENTER } from '@wordpress/keycodes';
 import {
 	linkOff,
 	megaphone,
-	edit,
+	pencil,
 	chevronDown,
 	check,
 	chevronUp,
@@ -614,15 +613,15 @@ function ButtonEdit( props: ButtonEditProps ) {
 						isActive
 					/>
 				) }
-				</BlockControls>
-				{ showPopover && (
-					<Popover
-						placement="bottom"
-						onClose={ () => {
-							setIsExplicitlyEditing( false );
-							richTextRef.current?.focus?.();
-						} }
-						anchor={ popoverAnchor }
+			</BlockControls>
+			{ showPopover && (
+				<Popover
+					placement="bottom"
+					onClose={ () => {
+						setIsExplicitlyEditing( false );
+						richTextRef.current?.focus?.();
+					} }
+					anchor={ popoverAnchor }
 					focusOnMount={ isEditingCTA ? 'firstElement' : false }
 					__unstableSlotName="__unstable-block-tools-after"
 					shift
@@ -784,7 +783,7 @@ function ButtonEdit( props: ButtonEditProps ) {
 											{ __( 'Preview', 'popup-maker' ) }
 										</Button>
 										<Button
-											icon={ edit }
+											icon={ pencil }
 											variant="tertiary"
 											style={ {
 												borderRadius: '6px',

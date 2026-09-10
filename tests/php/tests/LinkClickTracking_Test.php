@@ -88,6 +88,81 @@ class LinkClickTracking_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * A cached missing option is invalidated when the counter is first created.
+	 */
+	public function test_track_link_click_after_missing_site_count_was_cached() {
+		$this->service->reset_site_count();
+		$this->assertSame( 0, $this->service->get_site_count() );
+
+		$this->service->track_link_click(
+			$this->popup_id,
+			[
+				'eventData' => [
+					'type' => 'link_click',
+				],
+			]
+		);
+
+		$this->assertSame( 1, $this->service->get_site_count() );
+	}
+
+	/**
+	 * A failed site-counter upsert is reported and suppresses the success action.
+	 */
+	public function test_site_counter_database_failure_is_reported_without_success_action() {
+		global $wpdb;
+
+		$args = [
+			'eventData' => [
+				'type' => 'link_click',
+				'url'  => 'https://example.com',
+			],
+		];
+
+		add_post_meta( $this->popup_id, LinkClickTracking::POPUP_META_KEY, 0, true );
+
+		$query_filter             = static function ( $query ) {
+			if ( false !== strpos( $query, 'INSERT INTO' ) && false !== strpos( $query, LinkClickTracking::SITE_COUNT_KEY ) ) {
+				return 'SELECT * FROM pum_missing_analytics_counter_table';
+			}
+
+			return $query;
+		};
+		$failure                  = null;
+		$error_action             = static function ( $error, $popup_id, $context ) use ( &$failure ) {
+			$failure = compact( 'error', 'popup_id', 'context' );
+		};
+		$success_fired            = false;
+		$success_action           = static function () use ( &$success_fired ) {
+			$success_fired = true;
+		};
+		$previous_suppress_errors = $wpdb->suppress_errors( true );
+
+		add_filter( 'query', $query_filter );
+		add_action( 'popup_maker/analytics_counter_failed', $error_action, 10, 3 );
+		add_action( 'popup_maker/link_click_tracked', $success_action );
+
+		try {
+			$this->service->track_link_click( $this->popup_id, $args );
+		} finally {
+			remove_filter( 'query', $query_filter );
+			remove_action( 'popup_maker/analytics_counter_failed', $error_action );
+			remove_action( 'popup_maker/link_click_tracked', $success_action );
+			$wpdb->suppress_errors( $previous_suppress_errors );
+		}
+
+		$this->assertIsArray( $failure );
+		$this->assertWPError( $failure['error'] );
+		$this->assertSame( 'pum_analytics_counter_database_error', $failure['error']->get_error_code() );
+		$this->assertSame( LinkClickTracking::SITE_COUNT_KEY, $failure['error']->get_error_data()['counter_key'] );
+		$this->assertSame( $this->popup_id, $failure['popup_id'] );
+		$this->assertSame( $args['eventData'], $failure['context'] );
+		$this->assertFalse( $success_fired );
+		$this->assertSame( 1, $this->service->get_popup_count( $this->popup_id ) );
+		$this->assertSame( 0, $this->service->get_site_count() );
+	}
+
+	/**
 	 * Test track_link_click increments multiple times.
 	 */
 	public function test_track_link_click_multiple_increments() {
@@ -102,6 +177,31 @@ class LinkClickTracking_Test extends WP_UnitTestCase {
 		$this->service->track_link_click( $this->popup_id, $args );
 
 		$this->assertEquals( 2, $this->service->get_site_count(), 'Site count should be 2 after two clicks.' );
+	}
+
+	/**
+	 * Test steady-state counter increments avoid existence queries.
+	 */
+	public function test_existing_counters_use_four_queries() {
+		global $wpdb;
+
+		add_option( LinkClickTracking::SITE_COUNT_KEY, 0, '', false );
+		delete_post_meta( $this->popup_id, LinkClickTracking::POPUP_META_KEY );
+		add_post_meta( $this->popup_id, LinkClickTracking::POPUP_META_KEY, 0, true );
+		wp_cache_delete( LinkClickTracking::SITE_COUNT_KEY, 'options' );
+		wp_cache_delete( $this->popup_id, 'post_meta' );
+
+		$site_method  = new ReflectionMethod( $this->service, 'increment_site_count' );
+		$popup_method = new ReflectionMethod( $this->service, 'increment_popup_count' );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$site_method->setAccessible( true );
+			$popup_method->setAccessible( true );
+		}
+		$query_count = $wpdb->num_queries;
+
+		$this->assertSame( 1, $site_method->invoke( $this->service ) );
+		$this->assertSame( 1, $popup_method->invoke( $this->service, $this->popup_id ) );
+		$this->assertSame( 4, $wpdb->num_queries - $query_count );
 	}
 
 	/**
@@ -181,13 +281,13 @@ class LinkClickTracking_Test extends WP_UnitTestCase {
 	 * Test track_link_click fires the tracked action.
 	 */
 	public function test_track_link_click_fires_action() {
-		$fired_popup_id  = null;
+		$fired_popup_id   = null;
 		$fired_event_data = null;
 
 		add_action(
 			'popup_maker/link_click_tracked',
 			function ( $popup_id, $event_data ) use ( &$fired_popup_id, &$fired_event_data ) {
-				$fired_popup_id  = $popup_id;
+				$fired_popup_id   = $popup_id;
 				$fired_event_data = $event_data;
 			},
 			10,

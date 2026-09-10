@@ -13,6 +13,7 @@ export namespace PopupMaker {
 	}
 
 	// Add this type alias for better type inference
+	// eslint-disable-next-line @typescript-eslint/no-shadow
 	export type TextDomain = keyof TextDomains;
 }
 

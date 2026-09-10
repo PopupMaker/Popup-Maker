@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
+	"phpVersion": "8.5",
+	"plugins": [],
+	"testsEnvironment": false,
+	"port": 8894,
+	"mappings": {
+		"wp-content/plugins/popup-maker": "."
+	},
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"WP_DEBUG_DISPLAY": false,
+		"SCRIPT_DEBUG": false,
+		"WP_ENVIRONMENT_TYPE": "development"
+	}
+}

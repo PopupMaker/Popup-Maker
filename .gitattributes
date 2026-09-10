@@ -21,6 +21,7 @@
 *.woff binary
 *.pyc binary
 *.pdf binary
+*.mo binary
 *.jpeg binary
 *.gif binary
 *.ico binary

@@ -303,24 +303,22 @@ export class AdminBar {
 				event.preventDefault();
 				event.stopPropagation();
 
-				const $action = $( event.currentTarget );
-				const href = $action.is( 'a' )
-					? $action.attr( 'href' )
-					: $action.children( 'a.ab-item' ).first().attr( 'href' );
+				const href = $( event.currentTarget ).attr( 'href' );
 
 				if ( ! href ) {
 					return;
 				}
 
-				const match = href.match(
-					/^#pum-toolbar-action__(open|close|check-conditions|reset-cookies)--(\d+)$/
-				);
+				const actionParts = href.split( '__' )[ 1 ].split( '--' );
+				const rawPopupId = actionParts[ 1 ];
 
-				if ( ! match ) {
+				// Require a strictly numeric popup ID before handing it to PUM APIs.
+				if ( ! /^\d+$/.test( rawPopupId ?? '' ) ) {
 					return;
 				}
 
-				const [ , action, popupId ] = match;
+				const popupId = rawPopupId;
+				const action = actionParts[ 0 ];
 
 				switch ( action ) {
 					case 'open':

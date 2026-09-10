@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"rootDir": "src",
 		"outDir": "build",
-		"declarationDir": "build-types"
+		"declarationDir": "build-types",
+		"moduleResolution": "bundler"
 	},
 	"include": [ "./src/**/*" ]
 }

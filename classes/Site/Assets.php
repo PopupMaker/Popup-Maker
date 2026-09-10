@@ -186,7 +186,6 @@ class PUM_Site_Assets {
 		self::$scripts_registered = true;
 
 		wp_register_script( 'mobile-detect', self::$js_url . 'vendor/mobile-detect.min.js', null, '1.3.3', true );
-		wp_register_script( 'iframe-resizer', self::$js_url . 'vendor/iframeResizer.min.js', [ 'jquery' ], '4.3.1', false );
 
 		if ( PUM_AssetCache::enabled() && false !== self::$cache_url ) {
 			$cached = get_option( 'pum-has-cached-js' );

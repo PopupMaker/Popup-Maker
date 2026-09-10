@@ -53,10 +53,7 @@ export const NotificationPanel = ( {
 				role="dialog"
 				aria-modal={ isOpen ? 'true' : 'false' }
 				aria-hidden={ isOpen ? undefined : 'true' }
-				aria-label={ __(
-					'Popup Maker notifications',
-					'popup-maker'
-				) }
+				aria-label={ __( 'Popup Maker notifications', 'popup-maker' ) }
 				/*
 				 * `inert` removes focusable children from the tab order.
 				 * The panel is always mounted (CSS-transformed off-screen
@@ -108,6 +105,7 @@ export const NotificationPanel = ( {
 						<NotificationItem
 							key={ notification.code }
 							notification={ notification }
+							isVisible={ isOpen }
 						/>
 					) ) }
 				</div>

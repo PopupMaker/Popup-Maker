@@ -17,7 +17,9 @@ class PUM_Utils_Options_Test extends WP_UnitTestCase {
 		parent::setUp();
 		// Clear static cache via reflection.
 		$ref = new ReflectionProperty( 'PUM_Utils_Options', 'data' );
-		$ref->setAccessible( true );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$ref->setAccessible( true );
+		}
 		$ref->setValue( null, null );
 		// Clean up the option entirely.
 		delete_option( 'popmake_settings' );
@@ -28,7 +30,9 @@ class PUM_Utils_Options_Test extends WP_UnitTestCase {
 	 */
 	public function tearDown(): void {
 		$ref = new ReflectionProperty( 'PUM_Utils_Options', 'data' );
-		$ref->setAccessible( true );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$ref->setAccessible( true );
+		}
 		$ref->setValue( null, null );
 		delete_option( 'popmake_settings' );
 		parent::tearDown();

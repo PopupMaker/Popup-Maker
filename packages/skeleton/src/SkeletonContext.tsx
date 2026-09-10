@@ -27,6 +27,12 @@ export interface SkeletonProviderProps {
 
 /**
  * Supplies loading state to skeleton primitives and composed placeholders.
+ * @param root0
+ * @param root0.isLoading
+ * @param root0.variant
+ * @param root0.loadingKeys
+ * @param root0.className
+ * @param root0.children
  */
 export const SkeletonProvider: React.FC< SkeletonProviderProps > = ( {
 	isLoading,
@@ -65,6 +71,7 @@ export const useSkeleton = (): SkeletonContextValue => {
 
 /**
  * True when the provider is loading and the section key is not opted out.
+ * @param sectionKey
  */
 export const useSkeletonSection = ( sectionKey: string ): boolean => {
 	const { isLoading, loadingKeys } = useSkeleton();

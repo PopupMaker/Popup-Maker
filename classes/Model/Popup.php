@@ -97,6 +97,100 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	public $settings = null;
 
 	/**
+	 * Whether the current settings were loaded from WordPress metadata.
+	 *
+	 * @var bool
+	 */
+	private $settings_loaded_from_meta = false;
+
+	/**
+	 * Hash of the popup settings entry in the WordPress metadata cache.
+	 *
+	 * @var string
+	 */
+	private $settings_meta_cache_hash = '';
+
+	/**
+	 * Last filtered settings value loaded from WordPress metadata.
+	 *
+	 * @var mixed
+	 */
+	private $settings_loaded_value;
+
+	/**
+	 * Hash the current popup settings metadata cache state.
+	 *
+	 * @return string
+	 */
+	private function get_settings_meta_cache_hash() {
+		$meta_cache = wp_cache_get( $this->ID, 'post_meta' );
+
+		if ( ! is_array( $meta_cache ) ) {
+			update_meta_cache( 'post', [ $this->ID ] );
+			$meta_cache = wp_cache_get( $this->ID, 'post_meta' );
+		}
+
+		$cache_data = [
+			'loaded'   => is_array( $meta_cache ),
+			'settings' => is_array( $meta_cache ) && isset( $meta_cache['popup_settings'] ) ? $meta_cache['popup_settings'] : null,
+		];
+
+		return hash( 'sha256', maybe_serialize( $cache_data ) );
+	}
+
+	/**
+	 * Resolve popup settings with the same precedence as WordPress metadata.
+	 *
+	 * @return array{settings: mixed, from_metadata: bool}
+	 */
+	private function get_settings_metadata() {
+		if ( $this->mock ) {
+			return [
+				'settings'      => false,
+				'from_metadata' => false,
+			];
+		}
+
+		if ( __CLASS__ !== get_class( $this ) ) {
+			return [
+				'settings'      => $this->get_meta( 'popup_settings' ),
+				'from_metadata' => false,
+			];
+		}
+
+		$settings = apply_filters( 'get_post_metadata', null, $this->ID, 'popup_settings', true, 'post' );
+
+		if ( null !== $settings ) {
+			if ( is_array( $settings ) ) {
+				$settings = isset( $settings[0] ) ? $settings[0] : null;
+			}
+
+			return [
+				'settings'      => $settings,
+				'from_metadata' => false,
+			];
+		}
+
+		$meta_cache = wp_cache_get( $this->ID, 'post_meta' );
+
+		if ( ! is_array( $meta_cache ) ) {
+			update_meta_cache( 'post', [ $this->ID ] );
+			$meta_cache = wp_cache_get( $this->ID, 'post_meta' );
+		}
+
+		if ( is_array( $meta_cache ) && isset( $meta_cache['popup_settings'][0] ) ) {
+			$settings = maybe_unserialize( $meta_cache['popup_settings'][0] );
+		} else {
+			$settings = get_metadata_default( 'post', $this->ID, 'popup_settings', true );
+		}
+
+		return [
+			'settings'      => $settings,
+			'from_metadata' => true,
+		];
+	}
+
+	/**
 	 * Used to hackishly insert title for generated popups not stored in DB. (Shortcodes).
 	 *
 	 * @var string
@@ -165,16 +259,25 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 * @return array
 	 */
 	public function get_settings() {
+		if ( isset( $this->settings ) && $this->settings_loaded_from_meta && $this->settings === $this->settings_loaded_value && $this->settings_meta_cache_hash !== $this->get_settings_meta_cache_hash() ) {
+			$this->settings = null;
+		}
+
 		if ( ! isset( $this->settings ) ) {
 			// This hack is here to allow creating popups on the fly without saved meta.
-			$settings = isset( $this->settings ) ? $this->settings : $this->get_meta( 'popup_settings' );
+			$settings_metadata         = $this->get_settings_metadata();
+			$settings                  = $settings_metadata['settings'];
+			$settings_loaded_from_meta = $settings_metadata['from_metadata'];
 
 			if ( ! is_array( $settings ) ) {
 				$settings = [];
 			}
 
 			// Review: the above should be removed and replaced with a hooked filter here to supply defaults when $settings === false.
-			$this->settings = apply_filters( 'pum_popup_settings', $settings, $this->ID );
+			$this->settings                  = apply_filters( 'pum_popup_settings', $settings, $this->ID );
+			$this->settings_loaded_from_meta = $settings_loaded_from_meta;
+			$this->settings_loaded_value     = $this->settings;
+			$this->settings_meta_cache_hash  = $this->get_settings_meta_cache_hash();
 		}
 
 		return $this->settings;
@@ -308,10 +411,14 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			);
 		}
 
-		// Keep the in-memory cache consistent with what we just persisted.
-		$this->settings = $settings;
+		$updated = $this->update_meta( 'popup_settings', $settings );
 
-		return $this->update_meta( 'popup_settings', $settings );
+		// Re-read the normalized stored value and refresh its cache provenance.
+		$this->settings                  = null;
+		$this->settings_loaded_from_meta = false;
+		$this->get_settings();
+
+		return $updated;
 	}
 
 	/**

@@ -1,21 +1,47 @@
+import { createRequire } from 'node:module';
 /** @type { import('@storybook/react-webpack5').StorybookConfig } */
-import path from 'path';
+import { dirname, join } from 'path';
+
+const require = createRequire( import.meta.url );
 
 const config = {
 	stories: [ '../packages/*/src/**/*.stories.@(js|jsx|ts|tsx)' ],
+
 	addons: [
-		'@storybook/addon-webpack5-compiler-babel',
-		'@storybook/addon-essentials',
-		'@storybook/preset-scss',
-		'@storybook/addon-styling-webpack',
+		getAbsolutePath( '@storybook/addon-webpack5-compiler-babel' ),
+		{
+			name: getAbsolutePath( '@storybook/addon-styling-webpack' ),
+			options: {
+				rules: [
+					{
+						test: /\.s[ac]ss$/i,
+						use: [
+							'style-loader',
+							'css-loader',
+							{
+								loader: 'sass-loader',
+								options: {
+									implementation: import.meta.resolve(
+										'sass'
+									),
+								},
+							},
+						],
+					},
+				],
+			},
+		},
+		getAbsolutePath( '@storybook/addon-docs' ),
 	],
+
 	framework: {
-		name: '@storybook/react-webpack5',
+		name: getAbsolutePath( '@storybook/react-webpack5' ),
 		options: {},
-	},
-	docs: {
-		autodocs: true,
 	},
 };
 
 export default config;
+
+function getAbsolutePath( value ) {
+	return dirname( require.resolve( join( value, 'package.json' ) ) );
+}

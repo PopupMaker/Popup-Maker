@@ -16,6 +16,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 	/**
+	 * Popup titles keyed by popup ID for the current page.
+	 *
+	 * @var array<int,string>
+	 */
+	private $popup_titles = [];
+
+	/**
+	 * Whether popup titles were loaded for the current page.
+	 *
+	 * @var bool
+	 */
+	private $popup_titles_loaded = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * The child class should call this constructor from its own constructor to override
@@ -75,6 +89,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$this->items = PUM_DB_Subscribers::instance()->query( $query_args, 'ARRAY_A' );
+		$this->load_popup_titles( $this->items );
 
 		$total_subscribers = PUM_DB_Subscribers::instance()->total_rows( $query_args );
 
@@ -85,6 +100,44 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 				'total_pages' => ceil( $total_subscribers / $limit ),
 			]
 		);
+	}
+
+	/**
+	 * Load the popup titles needed by the current subscriber page in one query.
+	 *
+	 * @param array<int,array<string,mixed>> $items Subscriber rows.
+	 * @return void
+	 */
+	private function load_popup_titles( $items ) {
+		$this->popup_titles        = [];
+		$this->popup_titles_loaded = true;
+
+		$popup_ids          = [];
+		$resolved_popup_ids = [];
+
+		foreach ( $items as $item ) {
+			$popup_id          = isset( $item['popup_id'] ) ? absint( $item['popup_id'] ) : 0;
+			$resolved_popup_id = pum_get_popup_id( $popup_id );
+
+			if ( $popup_id > 0 && $resolved_popup_id > 0 ) {
+				$popup_ids[]                     = $resolved_popup_id;
+				$resolved_popup_ids[ $popup_id ] = $resolved_popup_id;
+			}
+		}
+
+		$popup_ids = array_values( array_unique( $popup_ids ) );
+
+		if ( empty( $popup_ids ) ) {
+			return;
+		}
+
+		$resolved_popup_titles = \PopupMaker\plugin( 'popups' )->get_title_choices( $popup_ids );
+
+		foreach ( $resolved_popup_ids as $popup_id => $resolved_popup_id ) {
+			if ( isset( $resolved_popup_titles[ $resolved_popup_id ] ) ) {
+				$this->popup_titles[ $popup_id ] = $resolved_popup_titles[ $resolved_popup_id ];
+			}
+		}
 	}
 
 
@@ -302,6 +355,16 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	 **************************************************************************/
 	public function column_popup_id( $item ) {
 		$popup_id = $item['popup_id'] > 0 ? absint( $item['popup_id'] ) : null;
+
+		if ( $this->popup_titles_loaded ) {
+			if ( $popup_id && isset( $this->popup_titles[ $popup_id ] ) ) {
+				$url = admin_url( "post.php?post={$popup_id}&action=edit" );
+
+				return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', $this->popup_titles[ $popup_id ], __( 'ID', 'popup-maker' ), $url, $item['popup_id'] );
+			}
+
+			return __( 'N/A', 'popup-maker' );
+		}
 
 		$popup = pum_get_popup( $popup_id );
 

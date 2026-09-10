@@ -22,7 +22,7 @@ import {
 	useState,
 } from '@wordpress/element';
 import { __ } from '@popup-maker/i18n';
-import { edit, globe, keyboardReturn, link } from '@wordpress/icons';
+import { globe, keyboardReturn, link, pencil } from '@wordpress/icons';
 
 import { urlSearchStore } from '@popup-maker/core-data';
 
@@ -347,7 +347,7 @@ const URLControl = (
 						</span>
 						<Button
 							aria-label={ __( 'Edit', 'popup-maker' ) }
-							icon={ edit }
+							icon={ pencil }
 							onClick={ () => {
 								setState( {
 									...state,

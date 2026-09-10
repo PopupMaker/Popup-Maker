@@ -40,9 +40,20 @@ abstract class Repository extends Service {
 	/**
 	 * Cache of instantiated items indexed by post ID.
 	 *
-	 * @var array<int, TPost>
+	 * @var array<int|string, TPost>
 	 */
 	protected $items_by_id = [];
+
+	/**
+	 * Get the cache key for an item ID.
+	 *
+	 * @param int|numeric-string $item_id Item ID.
+	 *
+	 * @return int|string
+	 */
+	protected function get_item_cache_key( $item_id ) {
+		return (int) $item_id;
+	}
 
 	/**
 	 * Initialize the service.
@@ -70,7 +81,7 @@ abstract class Repository extends Service {
 	 * @return void
 	 */
 	protected function cache_item( $item ) {
-		$this->items_by_id[ $item->ID ] = $item;
+		$this->items_by_id[ $this->get_item_cache_key( $item->ID ) ] = $item;
 	}
 
 	/**
@@ -88,21 +99,10 @@ abstract class Repository extends Service {
 	 * @return TPost[] Array of instantiated model objects matching the query.
 	 */
 	public function query( $args = [] ) {
-		$query_args = wp_parse_args( $args, [
-			'post_type'      => $this->post_type,
-			'posts_per_page' => - 1,
-		] );
-
-		$query_results = new \WP_Query( $query_args );
-
 		/** @var TPost[] $items */
 		$items = [];
 
-		foreach ( $query_results->posts as $post ) {
-			if ( ! $post instanceof \WP_Post ) {
-				continue;
-			}
-
+		foreach ( $this->query_posts( $args ) as $post ) {
 			$item = $this->instantiate_model_from_post( $post );
 
 			if ( ! $item ) {
@@ -119,6 +119,66 @@ abstract class Repository extends Service {
 	}
 
 	/**
+	 * Query repository records as WordPress post objects without model hydration.
+	 *
+	 * @param array<string,mixed> $args WP_Query arguments.
+	 * @return \WP_Post[] Matching post objects.
+	 */
+	public function query_posts( $args = [] ) {
+		$args = is_array( $args ) ? $args : [];
+		unset( $args['post_type'], $args['fields'] );
+
+		$query_args = wp_parse_args(
+			$args,
+			[
+				'posts_per_page' => -1,
+			]
+		);
+
+		$query_args['post_type'] = $this->post_type;
+		$query_args['fields']    = 'all';
+
+		$query = new \WP_Query( $query_args );
+
+		return array_values(
+			array_filter(
+				$query->posts,
+				static function ( $post ) {
+					return $post instanceof \WP_Post;
+				}
+			)
+		);
+	}
+
+	/**
+	 * Query repository record IDs without post-object or model hydration.
+	 *
+	 * @param array<string,mixed> $args WP_Query arguments.
+	 * @return int[] Matching post IDs.
+	 */
+	public function query_ids( $args = [] ) {
+		$args = is_array( $args ) ? $args : [];
+		unset( $args['post_type'], $args['fields'] );
+
+		$query_args = wp_parse_args(
+			$args,
+			[
+				'posts_per_page'         => -1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			]
+		);
+
+		$query_args['post_type'] = $this->post_type;
+		$query_args['fields']    = 'ids';
+
+		$query = new \WP_Query( $query_args );
+
+		return wp_parse_id_list( $query->posts );
+	}
+
+	/**
 	 * Get item by ID.
 	 *
 	 * @param int|numeric-string $item_id Item ID to retrieve.
@@ -126,11 +186,12 @@ abstract class Repository extends Service {
 	 */
 	public function get_by_id( $item_id = 0 ) {
 		// Convert to integer for consistent handling.
-		$item_id = (int) $item_id;
+		$item_id   = (int) $item_id;
+		$cache_key = $this->get_item_cache_key( $item_id );
 
 		// If item is cached, get the object.
-		if ( isset( $this->items_by_id[ $item_id ] ) ) {
-			return $this->items_by_id[ $item_id ];
+		if ( isset( $this->items_by_id[ $cache_key ] ) ) {
+			return $this->items_by_id[ $cache_key ];
 		}
 
 		// Query for a post by ID.

@@ -1,4 +1,7 @@
+/* eslint-disable no-console */
+
 const fs = require( 'fs' );
+const { stripDeveloperSections } = require( './changelog-utils' );
 
 // Read the current version number from package.json
 const newVersion = process.argv[ 2 ];
@@ -17,7 +20,7 @@ const isVerbose =
 const changelogFilePath = 'CHANGELOG.md';
 const readmeFilePath = 'readme.txt';
 
-let changelogContent = fs.readFileSync( changelogFilePath, 'utf8' );
+const changelogContent = fs.readFileSync( changelogFilePath, 'utf8' );
 
 // Extract unreleased changes using string manipulation for reliability
 const unreleasedStart = changelogContent.indexOf( '## Unreleased' );
@@ -60,6 +63,9 @@ if ( isVerbose ) {
 
 // Use the original formatting for files (preserve structure)
 const formattedFileChanges = unreleasedChangesText;
+const formattedUserChanges =
+	stripDeveloperSections( unreleasedChangesText ) ||
+	'-   No user-facing changes.';
 
 // Update CHANGELOG.md with new version using string manipulation
 const beforeUnreleased = changelogContent.substring( 0, unreleasedStart );
@@ -90,7 +96,7 @@ const usesVPrefix = firstVersionEntry.includes( '= v' );
 const versionPrefix = usesVPrefix ? 'v' : '';
 
 // Create the new version entry
-const newVersionEntry = `= ${ versionPrefix }${ newVersion } - ${ releaseDate } =\n\n${ formattedFileChanges }\n\n`;
+const newVersionEntry = `= ${ versionPrefix }${ newVersion } - ${ releaseDate } =\n\n${ formattedUserChanges }\n\n`;
 
 // Insert the new version entry before the first existing version
 const newChangelog = readmeContent.replace(
@@ -109,3 +115,5 @@ fs.writeFileSync( readmeFilePath, newChangelog.trim(), 'utf8' );
 console.log(
 	`Changelog updated successfully with ${ changeCount } change(s).`
 );
+
+/* eslint-enable no-console */

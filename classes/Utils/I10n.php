@@ -34,35 +34,35 @@ class PUM_Utils_I10n {
 	public static function translation_status() {
 		$translations = get_transient( 'pum_alerts_translation_status' );
 
-		if ( ! $translations ) {
+		if ( false === $translations ) {
 			$response = wp_remote_get( 'https://api.wordpress.org/translations/plugins/1.0/?slug=popup-maker&version=' . Popup_Maker::$VER );
 
 			// Check for WP_Error from wp_remote_get().
 			if ( is_wp_error( $response ) ) {
-				return [];
+				return self::cache_empty_translation_status();
 			}
 
 			// Validate HTTP response code.
 			$response_code = wp_remote_retrieve_response_code( $response );
 			if ( 200 !== $response_code ) {
-				return [];
+				return self::cache_empty_translation_status();
 			}
 
 			// Get response body safely.
 			$response_body_raw = wp_remote_retrieve_body( $response );
 			if ( empty( $response_body_raw ) ) {
-				return [];
+				return self::cache_empty_translation_status();
 			}
 
 			// Safely decode JSON.
 			$response_body = json_decode( $response_body_raw, true );
 			if ( null === $response_body || ! is_array( $response_body ) ) {
-				return [];
+				return self::cache_empty_translation_status();
 			}
 
 			// Ensure translations key exists and is array.
 			if ( ! isset( $response_body['translations'] ) || ! is_array( $response_body['translations'] ) ) {
-				return [];
+				return self::cache_empty_translation_status();
 			}
 
 			$translations = $response_body['translations'];
@@ -85,6 +85,17 @@ class PUM_Utils_I10n {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Cache an empty response briefly after an upstream failure.
+	 *
+	 * @return array{}
+	 */
+	private static function cache_empty_translation_status() {
+		set_transient( 'pum_alerts_translation_status', [], HOUR_IN_SECONDS );
+
+		return [];
 	}
 
 

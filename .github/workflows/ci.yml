@@ -42,9 +42,10 @@ jobs:
       css: ${{ steps.changes.outputs.css_any_changed }}
       npm_deps: ${{ steps.changes.outputs.npm_deps_any_changed }}
       php_deps: ${{ steps.changes.outputs.php_deps_any_changed }}
+      translation_workflow: ${{ steps.changes.outputs.translation_workflow_any_changed }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -92,6 +93,60 @@ jobs:
             php_deps:
               - 'composer.json'
               - 'composer.lock'
+            translation_workflow:
+              - '.github/workflows/translate.yml'
+              - '.gitattributes'
+              - 'bin/verify-translation-guardrails.js'
+              - 'bin/configure-translation-scope.sh'
+              - 'bin/verify-translation-catalogs.sh'
+              - 'bin/prepare-translation-catalogs.sh'
+              - 'bin/test-translation-preflight.sh'
+              - 'bin/test-translation-scope.sh'
+              - 'languages/**'
+
+  translation-guardrails:
+    name: Translation Spend Guardrails
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: ${{ github.event_name == 'pull_request' && needs.detect-changes.outputs.translation_workflow == 'true' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Install Gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Verify translation spend guardrails
+        run: node bin/verify-translation-guardrails.js
+
+      - name: Verify translation preparation script
+        run: bash -n bin/prepare-translation-catalogs.sh
+
+      - name: Verify translation scope script
+        run: bash -n bin/configure-translation-scope.sh
+
+      - name: Test translation preflight accounting
+        run: bash bin/test-translation-preflight.sh
+
+      - name: Test translation scope selection
+        run: bash bin/test-translation-scope.sh
+
+      - name: Verify translation catalogs
+        run: |
+          if [[ -d languages ]]; then
+            PO_COUNT=$(find languages -maxdepth 1 -name '*.po' -print | wc -l | tr -d ' ')
+          else
+            PO_COUNT=0
+          fi
+          if [[ "$PO_COUNT" -eq 28 ]]; then
+            bash bin/verify-translation-catalogs.sh \
+              languages \
+              28 \
+              'es_ES,pt_BR,fr_FR,de_DE,ja_JP,ru_RU,it_IT,nl_NL,pl_PL,tr_TR,id_ID,zh_CN,ar_AR,sv_SE,ko_KR,vi_VN,fa_IR,cs_CZ,pt_PT,hu_HU,es_MX,da_DK,zh_TW,he_IL,th_TH,ro_RO,el_GR,hi_IN'
+          else
+            echo "Catalog set is not fully primed yet ($PO_COUNT/28); exact-set validation will run after translation."
+          fi
 
   # ============================================================================
   # PHP Code Quality - PHPCS & PHPStan
@@ -111,7 +166,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -191,7 +246,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -228,12 +283,12 @@ jobs:
             build/**
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -293,15 +348,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -353,7 +408,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -365,12 +420,12 @@ jobs:
           coverage: none
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: pnpm
 
       - name: Install dependencies
@@ -399,19 +454,21 @@ jobs:
         run: |
           jq -n --arg plugin "$GITHUB_WORKSPACE/popup-maker" '{
             core: null,
-            testsEnvironment: false,
             port: 8888,
             mappings: {"wp-content/plugins/popup-maker": $plugin}
-          }' > "$RUNNER_TEMP/plugin-check.wp-env.json"
+          }' > "$GITHUB_WORKSPACE/.wp-env.plugin-check.json"
+
+      - name: Install wp-env
+        run: pnpm add --global @wordpress/env@11.12.0
 
       - name: Start WordPress and install Plugin Check
         run: |
-          pnpm exec wp-env start --config "$RUNNER_TEMP/plugin-check.wp-env.json" --update
-          pnpm exec wp-env run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
+          wp-env start --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" --update
+          wp-env run cli --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" wp plugin install plugin-check --version="$PLUGIN_CHECK_VERSION" --activate --force
 
       - name: Scan assembled plugin
         run: |
-          pnpm exec wp-env run cli --config "$RUNNER_TEMP/plugin-check.wp-env.json" wp plugin check popup-maker \
+          wp-env run cli --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" wp plugin check popup-maker \
             --exclude-checks=plugin_review_phpcs \
             --ignore-warnings \
             --exclude-directories=vendor-prefixed \
@@ -434,7 +491,7 @@ jobs:
 
       - name: Stop Plugin Check environment
         if: always()
-        run: pnpm exec wp-env stop --config "$RUNNER_TEMP/plugin-check.wp-env.json" || true
+        run: wp-env stop --config "$GITHUB_WORKSPACE/.wp-env.plugin-check.json" || true
 
   # ============================================================================
   # Security Scanning - NPM Dependencies
@@ -447,15 +504,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install pnpm dependencies
@@ -476,7 +533,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -513,7 +570,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

@@ -30,7 +30,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Determine flags
               id: flags
@@ -110,7 +110,7 @@ jobs:
 
             - name: Setup pnpm
               if: steps.download.outputs.found != 'true'
-              uses: pnpm/action-setup@v4
+              uses: pnpm/action-setup@v5
 
             - name: Setup Node.js
               if: steps.download.outputs.found != 'true'
@@ -122,8 +122,6 @@ jobs:
             - name: Install dependencies
               if: steps.download.outputs.found != 'true'
               run: |
-                  # Strauss 0.22.4 cannot parse the runner-injected OAuth token.
-                  composer config --global --unset github-oauth.github.com || true
                   composer install --no-dev --optimize-autoloader --no-interaction --no-progress
                   pnpm install --frozen-lockfile
 
@@ -155,6 +153,10 @@ jobs:
 
                   echo "✅ Built into ${{ env.BUILD_DIR }}"
                   ls -la "${{ env.BUILD_DIR }}"
+
+            # Keep mixed code/readme pushes from deploying the release ZIP's stale readme.
+            - name: Use current readme
+              run: cp readme.txt "${{ env.BUILD_DIR }}/readme.txt"
 
             - name: Run WordPress Plugin Check
               uses: wordpress/plugin-check-action@v1

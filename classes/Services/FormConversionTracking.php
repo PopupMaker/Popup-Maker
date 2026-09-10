@@ -11,6 +11,7 @@
 namespace PopupMaker\Services;
 
 use PopupMaker\Base\Service;
+use PopupMaker\Utils\AnalyticsCounter;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -63,6 +64,7 @@ class FormConversionTracking extends Service {
 	 *     @type string|null $form_id       Form ID from the provider.
 	 *     @type bool        $tracked       Whether already tracked by other systems.
 	 * }
+	 * @return void
 	 */
 	public function track_form_conversion( $args ) {
 		// Defensive validation for third-party hook callers.
@@ -92,11 +94,21 @@ class FormConversionTracking extends Service {
 			return;
 		}
 
-		// Increment site-wide form conversion count.
-		$this->increment_site_count();
-
 		// Increment per-popup count.
-		$this->increment_popup_count( $popup_id );
+		$popup_count = $this->increment_popup_count( $popup_id );
+
+		if ( is_wp_error( $popup_count ) ) {
+			AnalyticsCounter::report_failure( $popup_count, $popup_id, $args );
+			return;
+		}
+
+		// Increment site-wide form conversion count.
+		$site_count = $this->increment_site_count();
+
+		if ( is_wp_error( $site_count ) ) {
+			AnalyticsCounter::report_failure( $site_count, $popup_id, $args );
+			return;
+		}
 
 		/**
 		 * Fires after a form conversion is tracked (non-AJAX).
@@ -118,6 +130,7 @@ class FormConversionTracking extends Service {
 	 *
 	 * @param int   $popup_id Popup ID from analytics beacon.
 	 * @param array $args     Additional arguments from beacon.
+	 * @return void
 	 */
 	public function track_ajax_conversion( $popup_id, $args = [] ) {
 		// Defensive validation for third-party hook callers.
@@ -156,11 +169,21 @@ class FormConversionTracking extends Service {
 			return;
 		}
 
-		// Increment site-wide form conversion count.
-		$this->increment_site_count();
-
 		// Increment per-popup count.
-		$this->increment_popup_count( $popup_id );
+		$popup_count = $this->increment_popup_count( $popup_id );
+
+		if ( is_wp_error( $popup_count ) ) {
+			AnalyticsCounter::report_failure( $popup_count, $popup_id, $event_data );
+			return;
+		}
+
+		// Increment site-wide form conversion count.
+		$site_count = $this->increment_site_count();
+
+		if ( is_wp_error( $site_count ) ) {
+			AnalyticsCounter::report_failure( $site_count, $popup_id, $event_data );
+			return;
+		}
 
 		/**
 		 * Fires after an AJAX form conversion is tracked.
@@ -181,39 +204,10 @@ class FormConversionTracking extends Service {
 	 *
 	 * @since 1.22.0
 	 *
-	 * @return int New count after increment.
+	 * @return int|\WP_Error New count or an explicit failure.
 	 */
 	protected function increment_site_count() {
-		global $wpdb;
-
-		// Check if option exists; if not, create it with autoload disabled.
-		$exists = $wpdb->get_var(
-			$wpdb->prepare(
-				'SELECT option_id FROM %i WHERE option_name = %s LIMIT 1',
-				$wpdb->options,
-				self::SITE_COUNT_KEY
-			)
-		);
-
-		if ( ! $exists ) {
-			// Initialize with autoload=no (analytical data doesn't need to load on every request).
-			add_option( self::SITE_COUNT_KEY, 0, '', false );
-		}
-
-		// Atomic increment (prevents race condition).
-		$wpdb->query(
-			$wpdb->prepare(
-				'UPDATE %i SET option_value = option_value + 1 WHERE option_name = %s',
-				$wpdb->options,
-				self::SITE_COUNT_KEY
-			)
-		);
-
-		// Clear cache since we bypassed WordPress's caching layer.
-		wp_cache_delete( self::SITE_COUNT_KEY, 'options' );
-
-		// Return updated count.
-		return (int) get_option( self::SITE_COUNT_KEY, 0 );
+		return AnalyticsCounter::increment_option( self::SITE_COUNT_KEY );
 	}
 
 	/**
@@ -225,40 +219,10 @@ class FormConversionTracking extends Service {
 	 * @since 1.22.0
 	 *
 	 * @param int $popup_id Popup post ID.
-	 * @return int New count after increment.
+	 * @return int|\WP_Error New count or an explicit retryable failure.
 	 */
 	protected function increment_popup_count( $popup_id ) {
-		global $wpdb;
-
-		// Check if meta exists; if not, create it.
-		$exists = $wpdb->get_var(
-			$wpdb->prepare(
-				'SELECT meta_id FROM %i WHERE post_id = %d AND meta_key = %s LIMIT 1',
-				$wpdb->postmeta,
-				$popup_id,
-				self::POPUP_META_KEY
-			)
-		);
-
-		if ( ! $exists ) {
-			add_post_meta( $popup_id, self::POPUP_META_KEY, 0, true );
-		}
-
-		// Atomic increment (prevents race condition).
-		$wpdb->query(
-			$wpdb->prepare(
-				'UPDATE %i SET meta_value = meta_value + 1 WHERE post_id = %d AND meta_key = %s',
-				$wpdb->postmeta,
-				$popup_id,
-				self::POPUP_META_KEY
-			)
-		);
-
-		// Clear cache since we bypassed WordPress's caching layer.
-		wp_cache_delete( $popup_id, 'post_meta' );
-
-		// Return updated count.
-		return (int) get_post_meta( $popup_id, self::POPUP_META_KEY, true );
+		return AnalyticsCounter::increment_post_meta( $popup_id, self::POPUP_META_KEY );
 	}
 
 	/**

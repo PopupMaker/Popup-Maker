@@ -23,8 +23,67 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	/** @var array */
 	public $settings;
 
+	/** @var array|null */
+	private $stored_settings;
+
+	/** @var bool|null */
+	private $settings_meta_exists;
+
+	/** @var string|null */
+	private $settings_meta_cache_hash;
+
 	/** @var bool */
 	public $doing_passive_migration = false;
+
+	/**
+	 * Hash the popup theme settings entry in the WordPress metadata cache.
+	 *
+	 * @param array<string,mixed>|false $meta_cache Current WordPress metadata cache.
+	 *
+	 * @return string
+	 */
+	private function get_settings_meta_cache_hash( $meta_cache ) {
+		$cache_data = [
+			'loaded'   => is_array( $meta_cache ),
+			'settings' => is_array( $meta_cache ) && isset( $meta_cache['popup_theme_settings'] ) ? $meta_cache['popup_theme_settings'] : null,
+		];
+
+		return hash( 'sha256', maybe_serialize( $cache_data ) );
+	}
+
+	/**
+	 * Read stored theme settings without retaining dynamic metadata overrides.
+	 *
+	 * WordPress stores raw metadata in the object cache after applying write-time
+	 * normalization. Reading that cache directly lets get_settings() reapply the
+	 * get_post_metadata short-circuit on every call while caching only storage.
+	 *
+	 * @param array<string,mixed>|false $meta_cache Current WordPress metadata cache.
+	 *
+	 * @return array{exists: bool, settings: array|null, cache_hash: string}
+	 */
+	private function get_stored_settings( $meta_cache ) {
+		if ( ! is_array( $meta_cache ) ) {
+			$updated_cache = update_meta_cache( 'post', [ $this->ID ] );
+			$meta_cache    = isset( $updated_cache[ $this->ID ] ) && is_array( $updated_cache[ $this->ID ] ) ? $updated_cache[ $this->ID ] : [];
+		}
+
+		if ( ! isset( $meta_cache['popup_theme_settings'][0] ) ) {
+			return [
+				'exists'     => false,
+				'settings'   => null,
+				'cache_hash' => $this->get_settings_meta_cache_hash( $meta_cache ),
+			];
+		}
+
+		$settings = maybe_unserialize( $meta_cache['popup_theme_settings'][0] );
+
+		return [
+			'exists'     => true,
+			'settings'   => is_array( $settings ) ? $settings : null,
+			'cache_hash' => $this->get_settings_meta_cache_hash( $meta_cache ),
+		];
+	}
 
 	/**
 	 * The current model version.
@@ -54,11 +113,47 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * @return array
 	 */
 	public function get_settings() {
-		$this->settings = $this->get_meta( 'popup_theme_settings' );
+		if ( __CLASS__ !== get_class( $this ) ) {
+			// Extension subclasses may remap or override metadata resolution.
+			$this->settings = $this->get_meta( 'popup_theme_settings' );
+			$this->settings = is_array( $this->settings ) ? $this->settings : [];
 
-		if ( ! is_array( $this->settings ) ) {
-			$this->settings = [];
+			return apply_filters( 'pum_theme_settings', $this->settings, $this->ID );
 		}
+
+		$metadata_value = apply_filters( 'get_post_metadata', null, $this->ID, 'popup_theme_settings', true, 'post' );
+
+		if ( null !== $metadata_value ) {
+			if ( is_array( $metadata_value ) ) {
+				$metadata_value = isset( $metadata_value[0] ) ? $metadata_value[0] : null;
+			}
+
+			$this->settings = is_array( $metadata_value ) ? $metadata_value : [];
+
+			return apply_filters( 'pum_theme_settings', $this->settings, $this->ID );
+		}
+
+		$meta_cache = wp_cache_get( $this->ID, 'post_meta' );
+
+		if ( ! isset( $this->stored_settings ) || ! is_array( $meta_cache ) || $this->settings_meta_cache_hash !== $this->get_settings_meta_cache_hash( $meta_cache ) ) {
+			$stored_settings                = $this->get_stored_settings( $meta_cache );
+			$this->stored_settings          = $stored_settings['settings'];
+			$this->settings_meta_exists     = $stored_settings['exists'];
+			$this->settings_meta_cache_hash = $stored_settings['cache_hash'];
+
+			if ( ! is_array( $this->stored_settings ) ) {
+				$this->stored_settings = [];
+			}
+		}
+
+		if ( false === $this->settings_meta_exists ) {
+			$this->settings = get_metadata_default( 'post', $this->ID, 'popup_theme_settings', true );
+			$this->settings = is_array( $this->settings ) ? $this->settings : [];
+
+			return apply_filters( 'pum_theme_settings', $this->settings, $this->ID );
+		}
+
+		$this->settings = $this->stored_settings;
 
 		return apply_filters( 'pum_theme_settings', $this->settings, $this->ID );
 	}

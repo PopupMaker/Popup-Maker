@@ -34,11 +34,11 @@
 		"@popup-maker/icons": "workspace:*",
 		"@popup-maker/types": "workspace:*",
 		"@popup-maker/use-query-params": "workspace:*",
-		"@wordpress/components": "^30.2.0",
-		"@wordpress/compose": "^7.29.0",
-		"@wordpress/element": "^6.29.0",
-		"@wordpress/hooks": "^4.29.0",
-		"@wordpress/icons": "^10.29.0",
+		"@wordpress/components": "^38.0.0",
+		"@wordpress/compose": "^8.5.0",
+		"@wordpress/element": "^8.4.0",
+		"@wordpress/hooks": "^4.52.0",
+		"@wordpress/icons": "^15.3.0",
 		"clsx": "^2.1.1"
 	},
 	"devDependencies": {
