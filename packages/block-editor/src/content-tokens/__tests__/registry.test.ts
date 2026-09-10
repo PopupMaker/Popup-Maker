@@ -5,8 +5,8 @@ import {
 	isContentTokenAvailable,
 	registerContentToken,
 	registerContentTokenGroup,
-} from './registry';
-import type { ContentTokenContext, ContentTokenDefinition } from './types';
+} from '../registry';
+import type { ContentTokenContext, ContentTokenDefinition } from '../types';
 
 const context: ContentTokenContext = {
 	surface: 'block-editor-rich-text',
