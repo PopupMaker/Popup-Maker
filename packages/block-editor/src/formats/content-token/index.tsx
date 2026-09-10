@@ -4,19 +4,18 @@ import {
 	RichTextToolbarButton,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { Button, Dropdown, SearchControl } from '@wordpress/components';
+import {
+	Button,
+	Dropdown,
+	Popover,
+	SearchControl,
+} from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { store as editorStore } from '@wordpress/editor';
-import { useMemo, useState } from '@wordpress/element';
+import { useLayoutEffect, useMemo, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import {
-	applyFormat,
-	getActiveFormat,
-	insert,
-	insertObject,
-	registerFormatType,
-	type RichTextValue,
-} from '@wordpress/rich-text';
+import { linkOff, pencil } from '@wordpress/icons';
+import { registerFormatType, type RichTextValue } from '@wordpress/rich-text';
 import {
 	contentTokenGroups,
 	contentTokens,
@@ -28,9 +27,14 @@ import type {
 	ContentTokenDefinition,
 	ContentTokenGroup,
 } from '../../content-tokens';
-
-const ATOMIC_FORMAT = 'popup-maker/content-token';
-const EDITABLE_FORMAT = 'popup-maker/editable-content-token';
+import {
+	applyContentToken,
+	ATOMIC_FORMAT,
+	EDITABLE_FORMAT,
+	getContentTokenSelection,
+	removeContentToken,
+	unlinkContentToken,
+} from './operations';
 
 interface FormatEditProps {
 	isActive: boolean;
@@ -38,6 +42,8 @@ interface FormatEditProps {
 	activeObjectAttributes?: Record< string, string >;
 	value: RichTextValue;
 	onChange: ( value: RichTextValue ) => void;
+	onFocus?: () => void;
+	contentRef?: { current: HTMLElement | null };
 }
 
 interface PickerProps {
@@ -47,20 +53,6 @@ interface PickerProps {
 	onInsert: ( token: ContentTokenDefinition ) => void;
 	onClose: () => void;
 }
-
-const escapeText = ( value: string ): string =>
-	value.replace(
-		/[&<>"']/g,
-		( character ) =>
-			( {
-				'&': '&amp;',
-				'<': '&lt;',
-				'>': '&gt;',
-				'"': '&quot;',
-				"'": '&#039;',
-			} )[ character ] ?? character
-	);
-
 const humanize = ( value: string ) =>
 	value
 		.replace( /[-_]+/g, ' ' )
@@ -169,50 +161,83 @@ const ContentTokenPicker = ( {
 	);
 };
 
-const hasFormat = (
-	formats: Array< { type?: string } > | undefined,
-	type: string
-) => !! formats?.some( ( format ) => format.type === type );
+interface PanelProps {
+	token?: ContentTokenDefinition;
+	tokens: ContentTokenDefinition[];
+	groups: ContentTokenGroup[];
+	onApply: ( token: ContentTokenDefinition ) => void;
+	onRemove: () => void;
+	onClose: () => void;
+}
 
-const activeFormatRange = (
-	value: RichTextValue,
-	type: string
-): { start: number; end: number } | null => {
-	const formats = value.formats as Array< Array< { type?: string } > >;
-	if ( ! formats?.length ) {
-		return null;
+const ContentTokenPanel = ( {
+	token,
+	tokens,
+	groups,
+	onApply,
+	onRemove,
+	onClose,
+}: PanelProps ) => {
+	const [ isChoosing, setIsChoosing ] = useState( ! token );
+
+	if ( isChoosing || ! token ) {
+		return (
+			<ContentTokenPicker
+				tokens={ tokens }
+				groups={ groups }
+				selectedId={ token?.id }
+				onInsert={ onApply }
+				onClose={ onClose }
+			/>
+		);
 	}
 
-	let index = Math.min( value.start ?? 0, formats.length - 1 );
-	if ( ! hasFormat( formats[ index ], type ) && index > 0 ) {
-		index--;
-	}
-	if ( ! hasFormat( formats[ index ], type ) ) {
-		return null;
-	}
-
-	let start = index;
-	let end = index + 1;
-	while ( start > 0 && hasFormat( formats[ start - 1 ], type ) ) {
-		start--;
-	}
-	while ( end < formats.length && hasFormat( formats[ end ], type ) ) {
-		end++;
-	}
-
-	return { start, end };
+	return (
+		<div className="pum-content-token-inspector">
+			<div className="pum-content-token-inspector__summary">
+				<strong>{ token.label }</strong>
+				<span>
+					{ token.description ||
+						token.type ||
+						humanize( token.group ?? 'general' ) }
+				</span>
+			</div>
+			<div className="pum-content-token-inspector__actions">
+				<Button
+					icon={ pencil }
+					label={ __( 'Change dynamic value', 'popup-maker' ) }
+					showTooltip
+					onClick={ () => setIsChoosing( true ) }
+				/>
+				<Button
+					icon={ linkOff }
+					label={ __( 'Remove dynamic value', 'popup-maker' ) }
+					showTooltip
+					onClick={ onRemove }
+				/>
+			</div>
+		</div>
+	);
 };
 
 const ContentTokenEdit = ( {
 	isActive,
 	isObjectActive,
-	activeObjectAttributes,
 	value,
 	onChange,
+	onFocus,
+	contentRef,
 }: FormatEditProps ) => {
 	const tokens = contentTokens.useItems();
 	const groups = contentTokenGroups.useItems();
-	const context = useSelect( ( select ) => {
+	const [ tokenAnchor, setTokenAnchor ] = useState< HTMLElement | null >(
+		null
+	);
+	const [ clickedTokenId, setClickedTokenId ] = useState< string | null >(
+		null
+	);
+	const autoOpenedSelection = useRef< string | null >( null );
+	const editorContext = useSelect( ( select ) => {
 		const blockEditor = select( blockEditorStore );
 		const editor = select( editorStore );
 		return {
@@ -222,87 +247,167 @@ const ContentTokenEdit = ( {
 			blockName: blockEditor.getSelectedBlock()?.name,
 		} as ContentTokenContext;
 	}, [] );
-	const editableFormat = getActiveFormat( value, EDITABLE_FORMAT ) as
-		| { attributes?: Record< string, string > }
-		| undefined;
-	const selectedId =
-		activeObjectAttributes?.valueId ?? editableFormat?.attributes?.valueId;
+	const context = {
+		...editorContext,
+		attributeName:
+			contentRef?.current?.getAttribute(
+				'data-wp-block-attribute-key'
+			) ?? undefined,
+	};
+	const selection = getContentTokenSelection( value );
+	const selectedId = clickedTokenId ?? selection?.valueId;
+	const selectedToken = tokens.find( ( token ) => token.id === selectedId );
 	const available = tokens.filter( ( token ) =>
 		isContentTokenAvailable( token, context )
 	);
+	const preview = selectedToken
+		? getContentTokenPreview( selectedToken, context )
+		: undefined;
+
+	useLayoutEffect( () => {
+		if ( ! isObjectActive || ! selectedId ) {
+			autoOpenedSelection.current = null;
+			return;
+		}
+
+		const selectionKey = `${ selectedId }:${ value.start }:${ value.end }`;
+		if ( autoOpenedSelection.current === selectionKey ) {
+			return;
+		}
+
+		const token = Array.from(
+			contentRef?.current?.querySelectorAll< HTMLElement >(
+				'.pum-content-token'
+			) ?? []
+		).find(
+			( item ) =>
+				( item.getAttribute( 'data-pum-token' ) ??
+					item.getAttribute( 'value' ) ) === selectedId
+		);
+		if ( token ) {
+			autoOpenedSelection.current = selectionKey;
+			setClickedTokenId( selectedId );
+			setTokenAnchor( token );
+		}
+	}, [ contentRef, isObjectActive, selectedId, value.end, value.start ] );
+
+	useLayoutEffect( () => {
+		const editableContent = contentRef?.current;
+		if ( ! editableContent ) {
+			return;
+		}
+
+		const handleClick = ( event: MouseEvent ) => {
+			const target = event.target as HTMLElement;
+			const token = target.closest(
+				'.pum-content-token, .pum-content-token-editable'
+			) as HTMLElement | null;
+			if ( ! token || ! editableContent.contains( token ) ) {
+				return;
+			}
+
+			const valueId =
+				token.getAttribute( 'data-pum-token' ) ??
+				token.getAttribute( 'value' );
+			if ( valueId ) {
+				setClickedTokenId( valueId );
+				setTokenAnchor( token );
+			}
+		};
+
+		editableContent.addEventListener( 'click', handleClick );
+		return () =>
+			editableContent.removeEventListener( 'click', handleClick );
+	}, [ contentRef ] );
+
+	const closeDirectPopover = () => {
+		setTokenAnchor( null );
+		setClickedTokenId( null );
+	};
+
+	const focusEditor = () => {
+		window.requestAnimationFrame( () => onFocus?.() );
+	};
+
+	const applyToken = ( token: ContentTokenDefinition ) => {
+		onChange(
+			applyContentToken(
+				value,
+				token.id,
+				token.interaction ?? 'atomic',
+				getContentTokenPreview( token, context ),
+				selection
+			)
+		);
+		closeDirectPopover();
+		focusEditor();
+	};
+
+	const removeToken = () => {
+		if ( ! selection ) {
+			return;
+		}
+		onChange(
+			selection.kind === 'atomic'
+				? removeContentToken( value, selection )
+				: unlinkContentToken(
+						value,
+						selection,
+						preview ?? selectedToken?.label ?? ''
+				  )
+		);
+		closeDirectPopover();
+		focusEditor();
+	};
+
+	const panel = ( onClose: () => void ) => (
+		<ContentTokenPanel
+			token={ selectedToken }
+			tokens={ available }
+			groups={ groups }
+			onApply={ applyToken }
+			onRemove={ removeToken }
+			onClose={ onClose }
+		/>
+	);
 
 	return ! available.length && ! selectedId ? null : (
-		<Dropdown
-			className="pum-content-token-picker__dropdown"
-			popoverProps={ { placement: 'bottom-start' } }
-			renderToggle={ ( { isOpen, onToggle } ) => (
-				<RichTextToolbarButton
-					icon="editor-code"
-					title={ __( 'Insert dynamic value', 'popup-maker' ) }
-					isActive={
-						isActive ||
-						isObjectActive ||
-						!! editableFormat ||
-						isOpen
-					}
-					onClick={ onToggle }
-				/>
-			) }
-			renderContent={ ( { onClose } ) => (
-				<ContentTokenPicker
-					tokens={ available }
-					groups={ groups }
-					selectedId={ selectedId }
-					onClose={ onClose }
-					onInsert={ ( token ) => {
-						const range = editableFormat
-							? activeFormatRange( value, EDITABLE_FORMAT )
-							: null;
-						const scoped = range
-							? { ...value, start: range.start, end: range.end }
-							: value;
-						const preview = getContentTokenPreview(
-							token,
-							context
-						);
-
-						if ( 'editable' === token.interaction ) {
-							const start = scoped.start ?? scoped.text.length;
-							const inserted = insert(
-								scoped,
-								preview,
-								start,
-								scoped.end ?? start
-							);
-							onChange(
-								applyFormat(
-									inserted,
-									{
-										type: EDITABLE_FORMAT,
-										attributes: { valueId: token.id },
-									} as unknown as Parameters<
-										typeof applyFormat
-									>[ 1 ],
-									start,
-									start + preview.length
-								)
-							);
-							return;
+		<>
+			<Dropdown
+				className="pum-content-token-picker__dropdown"
+				popoverProps={ { placement: 'bottom-start' } }
+				renderToggle={ ( { isOpen, onToggle } ) => (
+					<RichTextToolbarButton
+						icon="editor-code"
+						title={
+							selectedToken
+								? __( 'Edit dynamic value', 'popup-maker' )
+								: __( 'Insert dynamic value', 'popup-maker' )
 						}
-
-						onChange(
-							insertObject( scoped, {
-								type: ATOMIC_FORMAT,
-								attributes: { valueId: token.id },
-								innerHTML: escapeText( preview ),
-							} as unknown as Parameters<
-								typeof insertObject
-							>[ 1 ] )
-						);
-					} }
-				/>
+						isActive={
+							isActive || isObjectActive || !! selection || isOpen
+						}
+						onClick={ () => {
+							closeDirectPopover();
+							onToggle();
+						} }
+					/>
+				) }
+				renderContent={ ( { onClose } ) => panel( onClose ) }
+			/>
+			{ tokenAnchor && selectedToken && (
+				<Popover
+					className="pum-content-token-inspector__popover"
+					anchor={ tokenAnchor }
+					position="bottom center"
+					offset={ 8 }
+					focusOnMount={ false }
+					onClose={ closeDirectPopover }
+				>
+					{ panel( closeDirectPopover ) }
+				</Popover>
 			) }
-		/>
+		</>
 	);
 };
 
@@ -318,10 +423,10 @@ export const registerContentTokenFormats = (): void => {
 
 	registerFormatType( ATOMIC_FORMAT, {
 		title: __( 'Dynamic value', 'popup-maker' ),
-		tagName: 'data',
+		tagName: 'span',
 		className: 'pum-content-token',
+		attributes: { valueId: 'data-pum-token' },
 		contentEditable: false,
-		attributes: { valueId: 'value' },
 		edit: ContentTokenEdit,
 	} as unknown as Parameters< typeof registerFormatType >[ 1 ] );
 };
