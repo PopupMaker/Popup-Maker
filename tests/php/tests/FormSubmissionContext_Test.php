@@ -67,6 +67,14 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 		$this->assertNull( $submission['source_post_id'] );
 		$this->assertNull( $submission['source_url'] );
 		$this->assertSame( [], $submission['context'] );
+		$this->assertSame(
+			[
+				'actions'  => true,
+				'tracking' => true,
+				'frontend' => true,
+			],
+			$submission['phases']
+		);
 	}
 
 	/**
@@ -292,6 +300,11 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 			'source_post_id'   => 78,
 			'source_url'       => 'https://example.com/guide/',
 			'context'          => [ 'example_extension' => [ 'campaign_id' => 90 ] ],
+			'phases'           => [
+				'actions'  => true,
+				'tracking' => true,
+				'frontend' => true,
+			],
 		];
 
 		$vars       = PUM_Integrations::pum_vars();
@@ -305,6 +318,7 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 		$this->assertSame( 78, $submission['sourcePostId'] );
 		$this->assertSame( 'https://example.com/guide/', $submission['sourceUrl'] );
 		$this->assertSame( 90, $submission['context']['example_extension']['campaign_id'] );
+		$this->assertSame( true, $submission['phases']['frontend'] );
 	}
 
 	/**

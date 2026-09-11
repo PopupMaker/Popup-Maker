@@ -9,6 +9,8 @@
 	window.PUM.integrations = window.PUM.integrations || {};
 	const PUM = window.PUM;
 	const pumVars = window.pum_vars;
+	const seenNativeSubmissionKeys = [];
+	const maxSeenNativeSubmissions = 100;
 
 	function filterNull( x ) {
 		return x;
@@ -38,6 +40,53 @@
 		return 'string' === typeof submissionId && '' !== submissionId;
 	}
 
+	function normalizePhases( phases ) {
+		phases =
+			phases && 'object' === typeof phases && ! Array.isArray( phases )
+				? phases
+				: {};
+
+		return {
+			actions:
+				'undefined' === typeof phases.actions
+					? true
+					: Boolean( phases.actions ),
+			tracking:
+				'undefined' === typeof phases.tracking
+					? true
+					: Boolean( phases.tracking ),
+			frontend:
+				'undefined' === typeof phases.frontend
+					? true
+					: Boolean( phases.frontend ),
+		};
+	}
+
+	function canonicalSubmissionKeyPart( value ) {
+		return null === value || 'undefined' === typeof value
+			? null
+			: String( value );
+	}
+
+	function duplicateNativeSubmission( args ) {
+		const key = JSON.stringify( [
+			canonicalSubmissionKeyPart( args.formProvider ),
+			canonicalSubmissionKeyPart( args.formId ),
+			canonicalSubmissionKeyPart( args.submissionId ),
+		] );
+		const duplicate = -1 !== seenNativeSubmissionKeys.indexOf( key );
+
+		if ( ! duplicate ) {
+			seenNativeSubmissionKeys.push( key );
+
+			if ( seenNativeSubmissionKeys.length > maxSeenNativeSubmissions ) {
+				seenNativeSubmissionKeys.shift();
+			}
+		}
+
+		return duplicate;
+	}
+
 	$.extend( window.PUM.integrations, {
 		init() {
 			if ( pumVars && 'undefined' !== typeof pumVars.form_submission ) {
@@ -45,6 +94,14 @@
 
 				// Declare these are not AJAX submissions.
 				submission.ajax = false;
+				submission.tracked = Boolean(
+					submission.tracked ||
+						( submission.phases && submission.phases.tracking )
+				);
+				submission.phases = $.extend( {}, submission.phases, {
+					actions: false,
+					tracking: false,
+				} );
 
 				// Initialize the popup var based on passed popup ID.
 				submission.popup =
@@ -71,6 +128,7 @@
 		 *     @type {number} sourcePostId Optional post/page ID where the form was submitted.
 		 *     @type {string} sourceUrl URL where the form was submitted.
 		 *     @type {Object} context Extension-owned submission context.
+		 *     @type {Object} phases Authorized actions, tracking, and frontend phases.
 		 * }
 		 */
 		formSubmission( form, args ) {
@@ -86,6 +144,7 @@
 					sourcePostId: null,
 					sourceUrl: window.location.href,
 					context: {},
+					phases: {},
 					formKey: null,
 					ajax: true, // Allows detecting submissions that may have already been counted.
 					tracked: false,
@@ -93,9 +152,13 @@
 				args
 			);
 
-			args.submissionId = validSubmissionId( args.submissionId )
-				? args.submissionId
-				: generateSubmissionId();
+			let generatedSubmissionId = ! validSubmissionId(
+				args.submissionId
+			);
+
+			args.submissionId = generatedSubmissionId
+				? generateSubmissionId()
+				: args.submissionId;
 			args.context =
 				args.context &&
 				'object' === typeof args.context &&
@@ -121,6 +184,12 @@
 			args.submissionId = validSubmissionId( args.submissionId )
 				? args.submissionId
 				: canonicalSubmissionId;
+			if (
+				generatedSubmissionId &&
+				String( args.submissionId ) !== String( canonicalSubmissionId )
+			) {
+				generatedSubmissionId = false;
+			}
 			args.context =
 				args.context &&
 				'object' === typeof args.context &&
@@ -135,15 +204,49 @@
 					.filter( filterNull )
 					.join( '_' );
 
+			/**
+			 * Filters authorized browser processing phases.
+			 *
+			 * @param {Object} phases Authorized processing phases.
+			 * @param {Object} args   Normalized submission arguments.
+			 * @param {Object} form   Submitted form element or jQuery object.
+			 */
+			args.phases = normalizePhases(
+				window.PUM.hooks.applyFilters(
+					'pum.integration.form.phases',
+					normalizePhases( args.phases ),
+					args,
+					form
+				)
+			);
+
+			if ( args.tracked ) {
+				args.phases.tracking = false;
+			}
+
+			if (
+				! generatedSubmissionId &&
+				duplicateNativeSubmission( args )
+			) {
+				args.phases = {
+					actions: false,
+					tracking: false,
+					frontend: false,
+				};
+			}
+
 			if ( args.popup && args.popup.length ) {
 				args.popupId = PUM.getSetting( args.popup, 'id' );
-				args.popup.trigger( 'pumConversion' );
+				if ( args.phases.frontend ) {
+					args.popup.trigger( 'pumConversion' );
+				}
 				// Should this be here. It is the only thing not replicated by a new form trigger & cookie.
 				// $popup.trigger('pumFormSuccess');
 			}
 
 			/**
-			 * This hook fires after any integrated form is submitted successfully.
+			 * Observes every normalized integrated form success, even when optional
+			 * browser effects are suppressed.
 			 *
 			 * It does not matter if the form is in a popup or not.
 			 *
@@ -158,16 +261,51 @@
 			 *     @type {number} sourcePostId Optional post/page ID where the form was submitted.
 			 *     @type {string} sourceUrl URL where the form was submitted.
 			 *     @type {Object} context Extension-owned submission context.
+			 *     @type {Object} phases Authorized actions, tracking, and frontend phases.
 			 *     @type {string} formKey Concatenation of provider, ID & Instance ID.
 			 *     @type {number} popupId The ID of the popup the form was in.
 			 *     @type {Object} popup Usable jQuery object for the popup.
 			 * }
 			 */
 			window.PUM.hooks.doAction(
-				'pum.integration.form.success',
+				'pum.integration.form.observed',
 				form,
 				args
 			);
+
+			if ( args.phases.frontend ) {
+				/**
+				 * Fires provider-confirmed frontend success effects.
+				 *
+				 * Existing cookie, trigger, and popup behavior remains attached to
+				 * this compatibility hook.
+				 *
+				 * @param {Object} form Submitted form element or jQuery object.
+				 * @param {Object} args Normalized submission arguments.
+				 */
+				window.PUM.hooks.doAction(
+					'pum.integration.form.success',
+					form,
+					args
+				);
+			}
+
+			if ( args.phases.actions ) {
+				/**
+				 * Fires when browser action runners are authorized.
+				 *
+				 * Observation consumers should use
+				 * `pum.integration.form.observed`, which always fires.
+				 *
+				 * @param {Object} form Submitted form element or jQuery object.
+				 * @param {Object} args Normalized submission arguments.
+				 */
+				window.PUM.hooks.doAction(
+					'pum.integration.form.actions',
+					form,
+					args
+				);
+			}
 		},
 		checkFormKeyMatches(
 			formIdentifier,
