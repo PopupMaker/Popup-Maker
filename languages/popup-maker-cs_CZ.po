@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
-"PO-Revision-Date: 2026-08-06 02:05+0000\n"
+"POT-Creation-Date: 2026-08-11T10:11:21+00:00\n"
+"PO-Revision-Date: 2026-08-11 10:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: cs-CZ\n"
@@ -220,7 +220,7 @@ msgstr ""
 #: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
 #: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:303
 msgid "Learn more"
 msgstr "Zjistit více"
 
@@ -262,7 +262,7 @@ msgstr "ms"
 #: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
 #: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
 #: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
-#: templates/popup.php:59 dist/packages/admin-bar.js:1
+#: includes/functions/popups/template.php:82 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
 #: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
@@ -2883,16 +2883,29 @@ msgstr "Importovat z Easy Modal v2"
 msgid "Debug logging is disabled."
 msgstr "Ladicí protokolování je vypnuto."
 
-#: classes/Analytics.php:335
+#: classes/Analytics.php:266
+msgid "Invalid analytics events payload."
+msgstr "Neplatná datová sada událostí analytiky."
+
+#: classes/Analytics.php:320 classes/Analytics.php:327
+#: classes/Analytics.php:333
+msgid "Invalid analytics event parameters."
+msgstr "Neplatné parametry události analytiky."
+
+#: classes/Analytics.php:398
 msgid "Event Type"
 msgstr "Typ události"
 
-#: classes/Analytics.php:340
+#: classes/Analytics.php:403
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:52
 msgid "Popup ID"
 msgstr "ID vyskakovacího okna"
 
-#: classes/Analytics.php:347
+#: classes/Analytics.php:410
+msgid "Analytics events (JSON or array)"
+msgstr "Události analytiky (JSON nebo pole)"
+
+#: classes/Analytics.php:414
 msgid "Event metadata (JSON or array)"
 msgstr "Metadata události (JSON nebo pole)"
 
@@ -4223,6 +4236,7 @@ msgstr "Prozkoumat pokročilou analytiku"
 #: classes/Services/Notifications/FeatureAnnouncements.php:457
 #: classes/Services/Notifications/FeatureAnnouncements.php:484
 #: classes/Services/Notifications/FeatureAnnouncements.php:512
+#: classes/Telemetry.php:296
 msgid "Not now"
 msgstr "Teď ne"
 
@@ -4936,26 +4950,28 @@ msgstr "Na tabletu zakázáno:"
 msgid "Event: %s"
 msgstr "Událost: %s"
 
-#: classes/Telemetry.php:264
-msgid "Help us make Popup Maker better"
-msgstr "Pomozte nám vylepšit Popup Maker"
+#: classes/Telemetry.php:278
+msgid "The countdown to 50 billion popup views is on"
+msgstr "Odpočítávání do 50 miliard zobrazení vyskakovacích oken je spuštěno"
 
-#: classes/Telemetry.php:267
+#: classes/Telemetry.php:281
 msgid ""
-"Help us prioritize the features that matter most by sharing anonymous usage "
-"stats. No visitor data or popup content is ever collected."
+"We're closing in on an estimated 50 billion popup views! Enable usage "
+"tracking to include your site's views in a more accurate estimate, show us "
+"which features matter most, and help us build even better ones. The more "
+"sites that join in, the sooner we can reach—and celebrate—the milestone "
+"together. No visitor data or popup content is collected."
 msgstr ""
-"Pomozte nám upřednostnit funkce, na kterých záleží nejvíce, sdílením "
-"anonymních statistik používání. Žádná data o návštěvnících ani obsah "
-"vyskakovacích oken se nikdy neshromažďují."
+"Blížíme se k odhadovaným 50 miliardám zobrazení vyskakovacích oken! Povolte "
+"sledování používání, aby se zobrazení vašeho webu započítala do přesnějšího "
+"odhadu, ukažte nám, které funkce jsou nejdůležitější, a pomozte nám vytvářet "
+"ještě lepší. Čím více webů se zapojí, tím dříve můžeme tohoto milníku "
+"společně dosáhnout — a oslavit ho. Neshromažďují se žádná data o "
+"návštěvnících ani obsah vyskakovacích oken."
 
-#: classes/Telemetry.php:276
-msgid "Allow"
-msgstr "Povolit"
-
-#: classes/Telemetry.php:282
-msgid "Do not allow"
-msgstr "Nepovolit"
+#: classes/Telemetry.php:290
+msgid "Count my popup views"
+msgstr "Počítat zobrazení mých vyskakovacích oken"
 
 #. translators: 1. Trigger name.
 #: classes/Triggers.php:94

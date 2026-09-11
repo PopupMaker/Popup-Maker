@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
+"POT-Creation-Date: 2026-08-11T10:11:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: popup-maker\n"
@@ -223,7 +223,7 @@ msgstr ""
 #: classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
 #: classes/Shortcode/CallToAction.php:121
-#: classes/Telemetry.php:289
+#: classes/Telemetry.php:303
 msgid "Learn more"
 msgstr ""
 
@@ -270,7 +270,7 @@ msgstr ""
 #: classes/Admin/Themes.php:379
 #: classes/Shortcode/Popup.php:61
 #: classes/Shortcode/Popup.php:85
-#: templates/popup.php:59
+#: includes/functions/popups/template.php:82
 #: dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
 #: dist/packages/admin-notifications.js:2
@@ -2895,16 +2895,30 @@ msgstr ""
 msgid "Debug logging is disabled."
 msgstr ""
 
-#: classes/Analytics.php:335
+#: classes/Analytics.php:266
+msgid "Invalid analytics events payload."
+msgstr ""
+
+#: classes/Analytics.php:320
+#: classes/Analytics.php:327
+#: classes/Analytics.php:333
+msgid "Invalid analytics event parameters."
+msgstr ""
+
+#: classes/Analytics.php:398
 msgid "Event Type"
 msgstr ""
 
-#: classes/Analytics.php:340
+#: classes/Analytics.php:403
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:52
 msgid "Popup ID"
 msgstr ""
 
-#: classes/Analytics.php:347
+#: classes/Analytics.php:410
+msgid "Analytics events (JSON or array)"
+msgstr ""
+
+#: classes/Analytics.php:414
 msgid "Event metadata (JSON or array)"
 msgstr ""
 
@@ -4049,6 +4063,7 @@ msgstr ""
 #: classes/Services/Notifications/FeatureAnnouncements.php:457
 #: classes/Services/Notifications/FeatureAnnouncements.php:484
 #: classes/Services/Notifications/FeatureAnnouncements.php:512
+#: classes/Telemetry.php:296
 msgid "Not now"
 msgstr ""
 
@@ -4680,20 +4695,16 @@ msgstr ""
 msgid "Event: %s"
 msgstr ""
 
-#: classes/Telemetry.php:264
-msgid "Help us make Popup Maker better"
+#: classes/Telemetry.php:278
+msgid "The countdown to 50 billion popup views is on"
 msgstr ""
 
-#: classes/Telemetry.php:267
-msgid "Help us prioritize the features that matter most by sharing anonymous usage stats. No visitor data or popup content is ever collected."
+#: classes/Telemetry.php:281
+msgid "We're closing in on an estimated 50 billion popup views! Enable usage tracking to include your site's views in a more accurate estimate, show us which features matter most, and help us build even better ones. The more sites that join in, the sooner we can reach—and celebrate—the milestone together. No visitor data or popup content is collected."
 msgstr ""
 
-#: classes/Telemetry.php:276
-msgid "Allow"
-msgstr ""
-
-#: classes/Telemetry.php:282
-msgid "Do not allow"
+#: classes/Telemetry.php:290
+msgid "Count my popup views"
 msgstr ""
 
 #. translators: 1. Trigger name.

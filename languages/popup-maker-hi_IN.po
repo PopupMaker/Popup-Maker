@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
-"PO-Revision-Date: 2026-08-06 02:06+0000\n"
+"POT-Creation-Date: 2026-08-11T10:11:21+00:00\n"
+"PO-Revision-Date: 2026-08-11 10:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hi-IN\n"
@@ -213,7 +213,7 @@ msgstr ""
 #: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
 #: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:303
 msgid "Learn more"
 msgstr "और जानें"
 
@@ -254,7 +254,7 @@ msgstr "ms"
 #: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
 #: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
 #: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
-#: templates/popup.php:59 dist/packages/admin-bar.js:1
+#: includes/functions/popups/template.php:82 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
 #: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
@@ -2820,16 +2820,29 @@ msgstr "Easy Modal v2 से आयात करें"
 msgid "Debug logging is disabled."
 msgstr "डिबग लॉगिंग अक्षम है।"
 
-#: classes/Analytics.php:335
+#: classes/Analytics.php:266
+msgid "Invalid analytics events payload."
+msgstr "अमान्य analytics इवेंट्स payload."
+
+#: classes/Analytics.php:320 classes/Analytics.php:327
+#: classes/Analytics.php:333
+msgid "Invalid analytics event parameters."
+msgstr "अमान्य analytics इवेंट पैरामीटर."
+
+#: classes/Analytics.php:398
 msgid "Event Type"
 msgstr "इवेंट प्रकार"
 
-#: classes/Analytics.php:340
+#: classes/Analytics.php:403
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:52
 msgid "Popup ID"
 msgstr "पॉपअप आईडी"
 
-#: classes/Analytics.php:347
+#: classes/Analytics.php:410
+msgid "Analytics events (JSON or array)"
+msgstr "analytics इवेंट्स (JSON या array)"
+
+#: classes/Analytics.php:414
 msgid "Event metadata (JSON or array)"
 msgstr "इवेंट मेटाडेटा (JSON या array)"
 
@@ -4129,6 +4142,7 @@ msgstr "Advanced Analytics देखें"
 #: classes/Services/Notifications/FeatureAnnouncements.php:457
 #: classes/Services/Notifications/FeatureAnnouncements.php:484
 #: classes/Services/Notifications/FeatureAnnouncements.php:512
+#: classes/Telemetry.php:296
 msgid "Not now"
 msgstr "अभी नहीं"
 
@@ -4832,25 +4846,27 @@ msgstr "टैबलेट पर निष्क्रिय:"
 msgid "Event: %s"
 msgstr "इवेंट: %s"
 
-#: classes/Telemetry.php:264
-msgid "Help us make Popup Maker better"
-msgstr "Popup Maker को बेहतर बनाने में हमारी मदद करें"
+#: classes/Telemetry.php:278
+msgid "The countdown to 50 billion popup views is on"
+msgstr "50 अरब popup views की उलटी गिनती शुरू हो गई है"
 
-#: classes/Telemetry.php:267
+#: classes/Telemetry.php:281
 msgid ""
-"Help us prioritize the features that matter most by sharing anonymous usage "
-"stats. No visitor data or popup content is ever collected."
+"We're closing in on an estimated 50 billion popup views! Enable usage "
+"tracking to include your site's views in a more accurate estimate, show us "
+"which features matter most, and help us build even better ones. The more "
+"sites that join in, the sooner we can reach—and celebrate—the milestone "
+"together. No visitor data or popup content is collected."
 msgstr ""
-"गुमनाम उपयोग आँकड़े साझा करके उन सुविधाओं को प्राथमिकता देने में हमारी मदद करें जो सबसे "
-"अधिक महत्वपूर्ण हैं। कोई विज़िटर डेटा या पॉपअप सामग्री कभी एकत्र नहीं की जाती।"
+"हम अनुमानित 50 अरब popup views के करीब पहुँच रहे हैं! अपनी साइट के views को अधिक "
+"सटीक अनुमान में शामिल करने, हमें यह दिखाने के लिए कि कौन-सी सुविधाएँ सबसे अधिक महत्वपूर्ण "
+"हैं, और हमें और भी बेहतर सुविधाएँ बनाने में मदद करने के लिए usage tracking सक्षम करें। "
+"जितनी अधिक साइटें इसमें शामिल होंगी, उतनी ही जल्दी हम इस उपलब्धि तक पहुँच सकेंगे—और इसे "
+"साथ मिलकर मना सकेंगे। कोई visitor data या popup content एकत्र नहीं किया जाता।"
 
-#: classes/Telemetry.php:276
-msgid "Allow"
-msgstr "अनुमति दें"
-
-#: classes/Telemetry.php:282
-msgid "Do not allow"
-msgstr "अनुमति न दें"
+#: classes/Telemetry.php:290
+msgid "Count my popup views"
+msgstr "मेरे popup views गिनें"
 
 #. translators: 1. Trigger name.
 #: classes/Triggers.php:94

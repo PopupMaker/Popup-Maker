@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
-"PO-Revision-Date: 2026-08-06 02:05+0000\n"
+"POT-Creation-Date: 2026-08-11T10:11:21+00:00\n"
+"PO-Revision-Date: 2026-08-11 10:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ar\n"
@@ -224,7 +224,7 @@ msgstr ""
 #: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
 #: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:303
 msgid "Learn more"
 msgstr "اعرف المزيد"
 
@@ -266,7 +266,7 @@ msgstr "مللي ثانية"
 #: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
 #: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
 #: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
-#: templates/popup.php:59 dist/packages/admin-bar.js:1
+#: includes/functions/popups/template.php:82 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
 #: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
@@ -2862,16 +2862,29 @@ msgstr "الاستيراد من Easy Modal v2"
 msgid "Debug logging is disabled."
 msgstr "تم تعطيل تسجيل التصحيح."
 
-#: classes/Analytics.php:335
+#: classes/Analytics.php:266
+msgid "Invalid analytics events payload."
+msgstr "حمولة أحداث التحليلات غير صالحة."
+
+#: classes/Analytics.php:320 classes/Analytics.php:327
+#: classes/Analytics.php:333
+msgid "Invalid analytics event parameters."
+msgstr "معلمات أحداث التحليلات غير صالحة."
+
+#: classes/Analytics.php:398
 msgid "Event Type"
 msgstr "نوع الحدث"
 
-#: classes/Analytics.php:340
+#: classes/Analytics.php:403
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:52
 msgid "Popup ID"
 msgstr "معرّف النافذة المنبثقة"
 
-#: classes/Analytics.php:347
+#: classes/Analytics.php:410
+msgid "Analytics events (JSON or array)"
+msgstr "أحداث التحليلات (JSON أو مصفوفة)"
+
+#: classes/Analytics.php:414
 msgid "Event metadata (JSON or array)"
 msgstr "بيانات وصفية للحدث (JSON أو مصفوفة)"
 
@@ -4185,6 +4198,7 @@ msgstr "استكشف التحليلات المتقدمة"
 #: classes/Services/Notifications/FeatureAnnouncements.php:457
 #: classes/Services/Notifications/FeatureAnnouncements.php:484
 #: classes/Services/Notifications/FeatureAnnouncements.php:512
+#: classes/Telemetry.php:296
 msgid "Not now"
 msgstr "ليس الآن"
 
@@ -4900,25 +4914,26 @@ msgstr "معطل على الجهاز اللوحي:"
 msgid "Event: %s"
 msgstr "الحدث: %s"
 
-#: classes/Telemetry.php:264
-msgid "Help us make Popup Maker better"
-msgstr "ساعدنا في جعل Popup Maker أفضل"
+#: classes/Telemetry.php:278
+msgid "The countdown to 50 billion popup views is on"
+msgstr "العد التنازلي حتى 50 مليار مشاهدة للنوافذ المنبثقة قد بدأ"
 
-#: classes/Telemetry.php:267
+#: classes/Telemetry.php:281
 msgid ""
-"Help us prioritize the features that matter most by sharing anonymous usage "
-"stats. No visitor data or popup content is ever collected."
+"We're closing in on an estimated 50 billion popup views! Enable usage "
+"tracking to include your site's views in a more accurate estimate, show us "
+"which features matter most, and help us build even better ones. The more "
+"sites that join in, the sooner we can reach—and celebrate—the milestone "
+"together. No visitor data or popup content is collected."
 msgstr ""
-"ساعدنا في تحديد أولويات الميزات الأكثر أهمية من خلال مشاركة إحصاءات استخدام "
-"مجهولة. لا يتم جمع أي بيانات عن الزائرين أو محتوى النوافذ المنبثقة مطلقًا."
+"نقترب من تقدير يبلغ 50 مليار مشاهدة للنوافذ المنبثقة! فعِّل تتبع الاستخدام "
+"لإدراج مشاهدات موقعك في تقدير أكثر دقة، وأرِنا الميزات الأكثر أهمية، وساعدنا "
+"على بناء ميزات أفضل. كلما انضمّت مواقع أكثر، وصلنا إلى هذا الإنجاز واحتفلنا "
+"به معًا في وقت أقرب. لا يتم جمع أي بيانات عن الزوار أو محتوى النوافذ المنبثقة."
 
-#: classes/Telemetry.php:276
-msgid "Allow"
-msgstr "السماح"
-
-#: classes/Telemetry.php:282
-msgid "Do not allow"
-msgstr "عدم السماح"
+#: classes/Telemetry.php:290
+msgid "Count my popup views"
+msgstr "احسب مشاهدات النوافذ المنبثقة الخاصة بي"
 
 #. translators: 1. Trigger name.
 #: classes/Triggers.php:94
