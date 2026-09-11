@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 /**
  * Replaces version numbers in files.
  *
@@ -31,9 +33,9 @@ const dryRun = argv[ 'dry-run' ];
 
 let replaceType = 'all';
 
-if ( argv[ 'plugin' ] ) {
+if ( argv.plugin ) {
 	replaceType = 'plugin';
-} else if ( argv[ 'docblock' ] ) {
+} else if ( argv.docblock ) {
 	replaceType = 'docblock';
 }
 
@@ -109,12 +111,12 @@ const commentPatterns = [
 /**
  * Update version in specified files with the given patterns.
  *
- * @param {string} filePath - Path to the file.
- * @param {string} newVersion - The new version number.
- * @param {boolean} dryRun - Indicate if this is a dry run.
- * @param {Array} patterns - Array of regex patterns to match and replace.
+ * @param {string}  filePath   - Path to the file.
+ * @param {string}  newVersion - The new version number.
+ * @param {boolean} isDryRun   - Indicate if this is a dry run.
+ * @param {Array}   patterns   - Array of regex patterns to match and replace.
  */
-function updateVersionInFile( filePath, newVersion, dryRun, patterns ) {
+function updateVersionInFile( filePath, newVersion, isDryRun, patterns ) {
 	if ( fs.existsSync( filePath ) ) {
 		const contents = fs.readFileSync( filePath, 'utf8' );
 		let newContents = contents;
@@ -127,7 +129,7 @@ function updateVersionInFile( filePath, newVersion, dryRun, patterns ) {
 		} );
 
 		if ( newContents !== contents ) {
-			if ( dryRun ) {
+			if ( isDryRun ) {
 				console.log( `${ filePath }:` );
 				console.log( newContents );
 			} else {
@@ -140,11 +142,16 @@ function updateVersionInFile( filePath, newVersion, dryRun, patterns ) {
 }
 
 if ( replaceType === 'all' || replaceType === 'plugin' ) {
-	const pluginSlug = path.basename( process.cwd() );
-	const pluginFile = process.cwd() + '/' + pluginSlug + '.php';
+	const packageJsonFile = path.join( process.cwd(), 'package.json' );
+	const packageName = fs.existsSync( packageJsonFile )
+		? JSON.parse( fs.readFileSync( packageJsonFile, 'utf8' ) ).name
+		: '';
+	const pluginSlug = packageName
+		? path.basename( packageName )
+		: path.basename( process.cwd() ).toLowerCase();
+	const pluginFile = path.join( process.cwd(), `${ pluginSlug }.php` );
 	const boostrapFile = process.cwd() + '/bootstrap.php';
 	const readmeFile = process.cwd() + '/readme.txt';
-	const packageJsonFile = process.cwd() + '/' + 'package.json';
 	const composerJsonFile = process.cwd() + '/' + 'composer.json';
 
 	if ( fs.existsSync( pluginFile ) ) {
@@ -196,3 +203,5 @@ if (
 		}
 	} );
 }
+
+/* eslint-enable no-console */

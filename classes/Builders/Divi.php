@@ -26,6 +26,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class Divi extends PageBuilder {
 
+	/** @var string */
+	public $key = 'divi';
+
+	/** @var string */
+	protected $label = 'Divi';
+
 	/**
 	 * Whether Divi is active as either a theme or a plugin.
 	 *

@@ -124,8 +124,8 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 		$metadata_value = apply_filters( 'get_post_metadata', null, $this->ID, 'popup_theme_settings', true, 'post' );
 
 		if ( null !== $metadata_value ) {
-			if ( is_array( $metadata_value ) ) {
-				$metadata_value = isset( $metadata_value[0] ) ? $metadata_value[0] : null;
+			if ( is_array( $metadata_value ) && [ 0 ] === array_keys( $metadata_value ) && is_array( $metadata_value[0] ) ) {
+				$metadata_value = $metadata_value[0];
 			}
 
 			$this->settings = is_array( $metadata_value ) ? $metadata_value : [];

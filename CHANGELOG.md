@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v1.25.0 - 2026-09-10
+
+**Security**
+
+-   Hardened subscriber submissions and administration against stored cross-site scripting, including cleanup of legacy subscriber names.
+-   Hardened object-search label handling across admin and API paths with additional validation and escaping safeguards.
+
 **Features**
 
 -   Added complete Brizy support for building Popup Maker popups, including visual editing, frontend styling, and interactive elements.
@@ -26,10 +33,16 @@
 -   Reduced redundant popup, Call to Action, and form lookups in bulk actions, feature announcements, form selectors, and Elementor form discovery.
 -   Popup and form selectors now load only the records they need and avoid priming unused metadata and taxonomy caches.
 -   Settings CSS previews now load on demand and recover more reliably from incomplete or failed preview responses.
--   Removed the proprietary remote community-notice request from wp-admin; failed WordPress.org translation lookups are now briefly cached to prevent repeated requests.
+-   Failed WordPress.org translation lookups are now briefly cached to prevent repeated requests.
 
 **Fixes**
 
+-   Fixed the Popup Maker admin toolbar controls not opening or closing popups, checking conditions, or resetting cookies—a regression introduced in 1.24.0.
+-   Fixed Settings and Tools success notices whose dismiss buttons appeared but did not respond.
+-   Restored Popup Maker and add-on icons after undocumented changes to the Plugins screen in WordPress 7.1.
+-   Restored localized package variables in wp-admin so the block editor and other admin tools initialize correctly.
+-   Fixed a race that could leave popups hidden or skip their animation when multiple Auto Open triggers fired together.
+-   Prevented malformed batched analytics requests from partially recording popup events.
 -   Restored WPBakery Page Builder editing for popups when the block editor is enabled in Popup Maker.
 -   Added a compatibility safeguard for Jetpack synced forms that pass object-valued field attributes into string escaping.
 -   Prevented Astra Custom Layouts rendered inside popups from corrupting the pending WordPress main loop.

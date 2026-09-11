@@ -22,6 +22,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class Etch extends PageBuilder {
 
+	/** @var string */
+	public $key = 'etch';
+
+	/** @var string */
+	protected $label = 'Etch';
+
 	/**
 	 * Marker confirming that Etch successfully saved this document.
 	 *

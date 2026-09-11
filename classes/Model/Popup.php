@@ -161,8 +161,8 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 		$settings = apply_filters( 'get_post_metadata', null, $this->ID, 'popup_settings', true, 'post' );
 
 		if ( null !== $settings ) {
-			if ( is_array( $settings ) ) {
-				$settings = isset( $settings[0] ) ? $settings[0] : null;
+			if ( is_array( $settings ) && [ 0 ] === array_keys( $settings ) && is_array( $settings[0] ) ) {
+				$settings = $settings[0];
 			}
 
 			return [

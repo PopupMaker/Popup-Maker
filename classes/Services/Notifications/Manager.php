@@ -2,8 +2,8 @@
 /**
  * Notifications service — parent orchestrator.
  *
- * Owns the core notification providers (WhatsNew, FeatureAnnouncements)
- * and exposes a filter that lets addons (Pro, Pro+, integrations) plug
+ * Owns the core notification providers and exposes a filter that lets addons
+ * (Pro, Pro+, integrations) plug
  * in their own providers without touching core code.
  *
  * @package   PopupMaker
@@ -167,6 +167,7 @@ class Manager extends Service {
 	protected function resolve_providers() {
 		$core = [
 			new WhatsNew( $this->container ),
+			new PageBuilderAnnouncements( $this->container ),
 			new FeatureAnnouncements( $this->container ),
 		];
 

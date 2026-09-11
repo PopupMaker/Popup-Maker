@@ -174,6 +174,7 @@ class ObjectSearch extends WP_REST_Controller {
 		 * @param array  $request     The full request parameters.
 		 */
 		$results = apply_filters( 'popup_maker/object_search', $results, $object_type, $request->get_params() );
+		$results = \PUM_Helpers::escape_object_search_results( $results );
 
 		// Take out keys which were only used to deduplicate.
 		$results['items'] = array_values( $results['items'] );

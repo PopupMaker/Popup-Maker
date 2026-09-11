@@ -18,6 +18,28 @@ class PUM_Admin_Subscribers_Table_Test extends WP_UnitTestCase {
 	private $subscriber_ids = [];
 
 	/**
+	 * Test stored subscriber values are escaped before list-table rendering.
+	 */
+	public function test_subscriber_values_are_escaped_for_output() {
+		$table   = new PUM_Admin_Subscribers_Table( [ 'screen' => 'edit-popup' ] );
+		$payload = '<div class="contextual-help-tabs"><a href="&lt;img src=x onerror=alert(document.domain)&gt;">marker</a></div>';
+		$item    = [
+			'ID'      => 123,
+			'user_id' => 0,
+			'name'    => $payload,
+			'fname'   => $payload,
+		];
+
+		$name_output  = $table->column_name( $item );
+		$fname_output = $table->column_default( $item, 'fname' );
+
+		$this->assertStringNotContainsString( '<div', $name_output );
+		$this->assertStringNotContainsString( '<div', $fname_output );
+		$this->assertStringContainsString( '&lt;div', $name_output );
+		$this->assertStringContainsString( '&lt;div', $fname_output );
+	}
+
+	/**
 	 * Remove subscriber fixtures from the custom table.
 	 */
 	public function tearDown(): void {

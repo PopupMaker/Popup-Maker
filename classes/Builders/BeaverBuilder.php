@@ -26,6 +26,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class BeaverBuilder extends PageBuilder {
 
+	/** @var string */
+	public $key = 'beaver-builder';
+
+	/** @var string */
+	protected $label = 'Beaver Builder';
+
 	/**
 	 * Whether Beaver's native Popup Maker integration is active.
 	 *

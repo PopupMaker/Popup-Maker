@@ -55,6 +55,72 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the stored name scrub removes HTML from existing subscriber rows.
+	 */
+	public function test_scrub_unsafe_name_fields() {
+		$this->db->create_table();
+
+		$payload = '<div class="contextual-help-tabs"><a href="&lt;img src=x onerror=alert(document.domain)&gt;">marker</a></div>';
+		$safe_id = $this->db->insert(
+			[
+				'email' => 'safe-subscriber@example.com',
+				'name'  => 'Safe Subscriber',
+			]
+		);
+		$id      = $this->db->insert(
+			[
+				'email' => 'stored-xss@example.com',
+				'name'  => $payload,
+				'fname' => $payload,
+				'lname' => $payload,
+			]
+		);
+
+		$result = $this->db->scrub_unsafe_name_fields();
+		$row    = $this->db->get( $id );
+
+		$this->assertSame( 1, $result['processed'] );
+		$this->assertSame( 1, $result['updated'] );
+		$this->assertTrue( $result['complete'] );
+		$this->assertSame( 'Safe Subscriber', $this->db->get( $safe_id )->name );
+		$this->assertSame( 'marker', $row->name );
+		$this->assertSame( 'marker', $row->fname );
+		$this->assertSame( 'marker', $row->lname );
+	}
+
+	/**
+	 * Test a scrub batch records completion after reaching the final batch.
+	 */
+	public function test_name_scrub_batch_records_completion() {
+		$this->db->create_table();
+
+		$id = $this->db->insert(
+			[
+				'email' => 'automatic-stored-xss@example.com',
+				'name'  => '<strong>Stored Name</strong>',
+			]
+		);
+
+		delete_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION );
+		$complete = $this->db->run_name_scrub_batch();
+
+		$this->assertTrue( $complete );
+		$this->assertSame( 'complete', get_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION ) );
+		$this->assertSame( 'Stored Name', $this->db->get( $id )->name );
+	}
+
+	/**
+	 * Test scrub completion reflects the persistent migration flag.
+	 */
+	public function test_name_scrub_completion_status() {
+		update_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION, 123 );
+		$this->assertFalse( $this->db->is_name_scrub_complete() );
+
+		update_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION, 'complete' );
+		$this->assertTrue( $this->db->is_name_scrub_complete() );
+	}
+
+	/**
 	 * Test get_columns returns all expected columns.
 	 */
 	public function test_get_columns_returns_expected_keys() {

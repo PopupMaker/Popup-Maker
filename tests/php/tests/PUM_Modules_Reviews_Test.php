@@ -250,6 +250,36 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Zero-valued extension trigger keys remain selectable and actionable.
+	 */
+	public function test_zero_valued_trigger_keys_remain_actionable() {
+		$add_zero_trigger = static function ( $triggers ) {
+			$triggers[0] = [
+				'triggers' => [
+					0 => [
+						'message'    => 'Zero-valued trigger',
+						'conditions' => [ true ],
+						'pri'        => 999,
+					],
+				],
+				'pri'      => 999,
+			];
+
+			return $triggers;
+		};
+		add_filter( 'pum_reviews_triggers', $add_zero_trigger );
+		PUM_Modules_Reviews::reset_runtime_cache();
+
+		$this->assertSame( 0, PUM_Modules_Reviews::get_trigger_group() );
+		$this->assertSame( 0, PUM_Modules_Reviews::get_trigger_code() );
+		$this->assertSame( 'Zero-valued trigger', PUM_Modules_Reviews::get_current_trigger( 'message' ) );
+		$this->assertTrue( PUM_Modules_Reviews::record_action( 'shown_core', 0, 0 ) );
+
+		remove_filter( 'pum_reviews_triggers', $add_zero_trigger );
+		PUM_Modules_Reviews::reset_runtime_cache();
+	}
+
+	/**
 	 * Extension trigger keys retain valid punctuation and capitalization.
 	 */
 	public function test_filtered_trigger_keys_are_resolved_without_rewriting() {
@@ -456,20 +486,21 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Core supplies only its WordPress.org review destination.
+	 * Core supplies only its first-party review destination.
 	 */
-	public function test_core_owns_only_its_wordpress_org_destination() {
+	public function test_core_owns_only_its_first_party_review_destination() {
 		$context      = PUM_Modules_Reviews::get_product_context();
 		$destinations = PUM_Modules_Reviews::get_review_destinations();
 
 		$this->assertSame( 'core', $context['product'] );
 		$this->assertSame( [ 'core' ], array_keys( $destinations ) );
-		$this->assertSame( 'Leave a 5-star review', $destinations['core']['label'] );
+		$this->assertSame( 'Leave a review', $destinations['core']['label'] );
+		$this->assertSame( 'https://wordpress.org/support/plugin/popup-maker/reviews/#new-post', $destinations['core']['url'] );
 		$this->assertSame( 'am_now_core', $destinations['core']['reason'] );
 	}
 
 	/**
-	 * Review messaging connects five-star requests to meaningful outcomes.
+	 * Review messaging connects honest review requests to meaningful outcomes.
 	 */
 	public function test_review_messaging_is_outcome_oriented() {
 		$alerts        = PUM_Modules_Reviews::review_alert( [] );
@@ -480,7 +511,9 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Is Popup Maker helping you grow?', $alert['title'] );
 		$this->assertStringContainsString( 'meaningful conversions', $time_trigger['message'] );
 		$this->assertStringContainsString( 'meaningful results', $usage_trigger['message'] );
-		$this->assertStringContainsString( 'Leave a 5-star review', $alert['html'] );
+		$this->assertStringContainsString( 'honest review', $time_trigger['message'] );
+		$this->assertStringContainsString( 'honest review', $usage_trigger['message'] );
+		$this->assertStringContainsString( 'Leave a review', $alert['html'] );
 	}
 
 	/**

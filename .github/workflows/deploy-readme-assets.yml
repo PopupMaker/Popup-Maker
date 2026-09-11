@@ -1,57 +1,180 @@
-name: Sync readme/assets to WordPress.org
+name: Sync approved readme/assets PR to WordPress.org
 
 on:
-    push:
-        branches:
-            - master
-        paths:
-            - 'readme.txt'
-            - '.wordpress-org/**'
-    workflow_dispatch:
+    pull_request_target:
+        branches: [master]
+        types: [closed]
+    repository_dispatch:
+        types: [retry_approved_readme_assets_pr]
+
+permissions:
+    contents: read
+    pull-requests: read
+
+concurrency:
+    group: popup-maker-publication
+    cancel-in-progress: false
 
 jobs:
-    update:
-        name: Update WordPress.org readme & assets
+    authorize:
+        name: Authorize approved readme/assets PR
         runs-on: ubuntu-latest
-        # Only run against the protected master branch. A manual dispatch on any
-        # other ref must not be able to sync unreviewed content — or a malicious
-        # branch copy of this workflow — using the WordPress.org SVN credentials.
-        if: github.ref == 'refs/heads/master'
+        outputs:
+            should_sync: ${{ steps.authorize.outputs.should_sync }}
+            merge_sha: ${{ steps.authorize.outputs.merge_sha }}
+            pull_request_number: ${{ steps.authorize.outputs.pull_request_number }}
 
         steps:
-            - uses: actions/checkout@v7
-              with:
-                  ref: master
-                  fetch-depth: 2
-
-            - name: Check for readme/assets-only update
-              id: changes
+            - name: Verify merged PR, approval, and exact file scope
+              id: authorize
+              uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
               env:
-                  BEFORE: ${{ github.event.before }}
-                  AFTER: ${{ github.sha }}
+                  RETRY_PULL_REQUEST_NUMBER: ${{ github.event.client_payload.pull_request_number }}
+              with:
+                  script: |
+                      const owner = context.repo.owner;
+                      const repo = context.repo.repo;
+                      const number = context.eventName === 'repository_dispatch'
+                        ? Number(process.env.RETRY_PULL_REQUEST_NUMBER)
+                        : context.payload.pull_request.number;
+                      if (!Number.isSafeInteger(number) || number < 1) {
+                        core.setFailed('A valid merged readme/assets PR number is required.');
+                        return;
+                      }
+                      const { data: pull } = await github.rest.pulls.get({ owner, repo, pull_number: number });
+
+                      core.setOutput('should_sync', 'false');
+                      core.setOutput('pull_request_number', String(number));
+
+                      if (!pull.merged || pull.base.ref !== 'master') {
+                        core.info('PR is not merged into master; nothing will be synced.');
+                        return;
+                      }
+                      if (pull.head.repo?.full_name !== `${owner}/${repo}`) {
+                        core.setFailed('Publication PRs must come from this repository.');
+                        return;
+                      }
+
+                      const reviews = await github.paginate(github.rest.pulls.listReviews, {
+                        owner,
+                        repo,
+                        pull_number: number,
+                        per_page: 100,
+                      });
+                      const latestByReviewer = new Map();
+                      for (const review of reviews) {
+                        if (
+                          review.user?.login &&
+                          ['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED'].includes(review.state)
+                        ) {
+                          latestByReviewer.set(review.user.login, review.state);
+                        }
+                      }
+                      const approvedReviewers = [...latestByReviewer.entries()]
+                        .filter(([, state]) => state === 'APPROVED')
+                        .map(([login]) => login);
+                      let authorizedApproval = false;
+                      for (const username of approvedReviewers) {
+                        const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                          owner,
+                          repo,
+                          username,
+                        });
+                        if (['admin', 'maintain', 'write'].includes(permission.permission)) {
+                          authorizedApproval = true;
+                          break;
+                        }
+                      }
+                      if (!authorizedApproval && pull.merged_by?.login) {
+                        const { data: mergerPermission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                          owner,
+                          repo,
+                          username: pull.merged_by.login,
+                        });
+                        authorizedApproval = ['admin', 'maintain', 'write'].includes(
+                          mergerPermission.permission
+                        );
+                      }
+                      if (!authorizedApproval) {
+                        core.setFailed('The PR was not approved or merged by an authorized maintainer.');
+                        return;
+                      }
+
+                      const files = await github.paginate(github.rest.pulls.listFiles, {
+                        owner,
+                        repo,
+                        pull_number: number,
+                        per_page: 100,
+                      });
+                      const isAllowedPath = (filename) =>
+                        filename === 'readme.txt' || filename.startsWith('.wordpress-org/');
+                      const removesReadme = files.some((file) =>
+                        (file.filename === 'readme.txt' && file.status === 'removed') ||
+                        (file.status === 'renamed' && file.previous_filename === 'readme.txt')
+                      );
+                      const allowed = files.length > 0 && !removesReadme && files.every((file) =>
+                        isAllowedPath(file.filename) &&
+                        (file.status !== 'renamed' || isAllowedPath(file.previous_filename || ''))
+                      );
+                      if (!allowed) {
+                        core.info('PR is not readme/assets-only; the narrow SVN sync will not run.');
+                        return;
+                      }
+
+                      core.setOutput('merge_sha', pull.merge_commit_sha);
+                      core.setOutput('should_sync', 'true');
+
+    update:
+        name: Update WordPress.org readme and assets
+        needs: authorize
+        if: needs.authorize.outputs.should_sync == 'true'
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout approved merge
+              uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+              with:
+                  ref: ${{ needs.authorize.outputs.merge_sha }}
+                  fetch-depth: 0
+                  persist-credentials: false
+
+            - name: Refuse stale readme or assets
               run: |
-                  # Manual dispatches are explicitly requesting this narrow sync.
-                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-                    echo "sync=true" >> "$GITHUB_OUTPUT"
-                    exit 0
+                  git fetch --no-tags origin master
+                  if ! git diff --quiet HEAD FETCH_HEAD -- readme.txt .wordpress-org; then
+                    echo 'A newer readme or asset change exists on master. Refusing to publish stale files.'
+                    exit 1
                   fi
 
-                  if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-                    BEFORE="${AFTER}^"
+            - name: Validate the stable tag
+              run: |
+                  node <<'NODE'
+                  const fs = require('fs');
+                  const packageVersion = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+                  const stableTag = fs.readFileSync('readme.txt', 'utf8')
+                    .match(/^Stable tag:\s*([^\s]+)\s*$/m)?.[1];
+                  if (stableTag !== packageVersion) {
+                    throw new Error(
+                      `readme.txt Stable tag ${stableTag || '(missing)'} does not match package.json ${packageVersion}.`
+                    );
+                  }
+                  NODE
+
+            - name: Reject symlinked publication files
+              run: |
+                  if [ ! -f readme.txt ]; then
+                    echo 'readme.txt is required for a WordPress.org update.'
+                    exit 1
+                  fi
+                  if [ -L readme.txt ] ||
+                    [ -L .wordpress-org ] ||
+                    { [ -d .wordpress-org ] && find .wordpress-org -type l -print -quit | grep -q .; }; then
+                    echo 'Symlinks are not allowed in publication files.'
+                    exit 1
                   fi
 
-                  CHANGED_FILES=$(git diff --name-only "$BEFORE" "$AFTER")
-                  echo "$CHANGED_FILES"
-
-                  if [ -n "$CHANGED_FILES" ] && ! echo "$CHANGED_FILES" | grep -Ev '^(readme\.txt|\.wordpress-org/)' >/dev/null; then
-                    echo "sync=true" >> "$GITHUB_OUTPUT"
-                  else
-                    echo "sync=false" >> "$GITHUB_OUTPUT"
-                    echo "A code-bearing commit will be handled by the full WordPress.org deploy."
-                  fi
-
-            - uses: 10up/action-wordpress-plugin-asset-update@stable
-              if: steps.changes.outputs.sync == 'true'
+            - name: Sync readme and assets
+              uses: 10up/action-wordpress-plugin-asset-update@2480306f6f693672726d08b5917ea114cb2825f7 # stable
               env:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}

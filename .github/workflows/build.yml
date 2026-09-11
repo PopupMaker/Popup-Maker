@@ -132,6 +132,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          composer config --global --unset github-oauth.github.com || true
           composer install --no-interaction --no-progress
           pnpm install --frozen-lockfile
 
@@ -302,6 +303,7 @@ jobs:
 
       - name: Install production dependencies
         run: |
+          composer config --global --unset github-oauth.github.com || true
           composer install --no-dev --optimize-autoloader --no-interaction --no-progress
           pnpm install --frozen-lockfile
 
