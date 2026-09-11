@@ -13,6 +13,15 @@ require_once dirname( __DIR__ ) . '/fixtures/class-pum-test-deferred-notificatio
 class Notification_Manager_Loader_Test extends WP_UnitTestCase {
 
 	/**
+	 * Restore the notification preference after each test.
+	 */
+	public function tearDown(): void {
+		pum_delete_option( 'disable_notifications' );
+
+		parent::tearDown();
+	}
+
+	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 *
@@ -130,5 +139,55 @@ class Notification_Manager_Loader_Test extends WP_UnitTestCase {
 			$deferred || $booted_prop->getValue( $manager ),
 			'Core should register the real manager for deferred boot on frontend requests.'
 		);
+	}
+
+	/**
+	 * Disabled assistive notifications are omitted from the REST panel.
+	 */
+	public function test_disabled_assistive_notifications_return_an_empty_panel() {
+		pum_update_option( 'disable_notifications', true );
+
+		add_filter(
+			'pum_alert_list',
+			static function ( $alerts ) {
+				$alerts[] = [
+					'code'    => 'test_assistive_notification',
+					'message' => 'Test notification.',
+					'type'    => 'info',
+				];
+
+				return $alerts;
+			}
+		);
+
+		$controller = new \PopupMaker\RestAPI\Notifications();
+		$response   = $controller->get_items( new WP_REST_Request( 'GET' ) );
+
+		$this->assertSame( [], $response->get_data() );
+		$this->assertSame( '0', $response->get_headers()['X-PM-Notifications-Count'] );
+	}
+
+	/**
+	 * Disabled assistive notifications do not render dashboard indicators.
+	 */
+	public function test_disabled_assistive_notifications_hide_dashboard_indicators() {
+		global $menu;
+
+		pum_update_option( 'disable_notifications', true );
+
+		$controller = new \PopupMaker\Controllers\Admin\ToolbarNotifications( \PopupMaker\plugin() );
+		$menu       = [
+			[ 'Popups', 'edit_posts', 'edit.php?post_type=popup' ],
+		];
+
+		$controller->inject_sidebar_marker();
+
+		ob_start();
+		$controller->print_styles();
+		$controller->print_marker_bootstrap();
+		$output = ob_get_clean();
+
+		$this->assertSame( 'Popups', $menu[0][0] );
+		$this->assertSame( '', $output );
 	}
 }

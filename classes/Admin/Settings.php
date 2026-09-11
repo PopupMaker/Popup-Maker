@@ -635,6 +635,11 @@ class PUM_Admin_Settings {
 								'type'  => 'checkbox',
 								'label' => __( 'Disable Popup Maker occasionally showing random tips to improve your popups.', 'popup-maker' ),
 							],
+							'disable_notifications'      => [
+								'type'  => 'checkbox',
+								'label' => __( 'Disable Popup Maker assistive notifications', 'popup-maker' ),
+								'desc'  => __( 'Popup Maker uses subtle dashboard notifications to highlight new features, optimization opportunities, split-test results, and issues that may affect conversions. Disable them if you prefer a quieter dashboard. Critical error and warning notices will still appear.', 'popup-maker' ),
+							],
 							'complete_uninstall'         => [
 								'type'     => 'checkbox',
 								'label'    => __( 'Delete all Popup Maker data on deactivation', 'popup-maker' ),
