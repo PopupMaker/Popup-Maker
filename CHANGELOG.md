@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed popup themes advertising an autosave endpoint through the standard WordPress REST namespace that WordPress itself does not provide, which could mislead editors and third-party tools.
+-   Fixed duplicate REST route handlers being registered when the REST API is initialized more than once in a single request.
+
 ## v1.25.0 - 2026-09-10
 
 **Security**
