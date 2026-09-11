@@ -35,10 +35,10 @@
 		"@popup-maker/types": "workspace:*",
 		"@popup-maker/use-query-params": "workspace:*",
 		"@wordpress/components": "^38.0.0",
-		"@wordpress/compose": "^8.5.0",
-		"@wordpress/element": "^8.4.0",
-		"@wordpress/hooks": "^4.52.0",
-		"@wordpress/icons": "^15.3.0",
+		"@wordpress/compose": "^8.7.0",
+		"@wordpress/element": "^8.6.0",
+		"@wordpress/hooks": "^4.54.0",
+		"@wordpress/icons": "^15.5.0",
 		"clsx": "^2.1.1"
 	},
 	"devDependencies": {

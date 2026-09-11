@@ -40,7 +40,7 @@
 	],
 	"dependencies": {
 		"@wordpress/components": "^38.0.0",
-		"@wordpress/element": "^8.4.0"
+		"@wordpress/element": "^8.6.0"
 	},
 	"peerDependencies": {
 		"react": "^18.3.1"
