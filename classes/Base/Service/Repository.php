@@ -75,6 +75,21 @@ abstract class Repository extends Service {
 	abstract public function instantiate_model_from_post( $post );
 
 	/**
+	 * Resolve the model to use for a queried post.
+	 *
+	 * Defaults to fresh instantiation. Repositories that maintain a canonical
+	 * request-local model override this so a query reuses the instance callers
+	 * already hold instead of replacing it.
+	 *
+	 * @param \WP_Post $post Post object.
+	 *
+	 * @return TPost|null
+	 */
+	protected function resolve_model_from_post( $post ) {
+		return $this->instantiate_model_from_post( $post );
+	}
+
+	/**
 	 * Cache an item in internal storage.
 	 *
 	 * @param TPost $item Item to cache by ID for fast retrieval.
@@ -103,7 +118,7 @@ abstract class Repository extends Service {
 		$items = [];
 
 		foreach ( $this->query_posts( $args ) as $post ) {
-			$item = $this->instantiate_model_from_post( $post );
+			$item = $this->resolve_model_from_post( $post );
 
 			if ( ! $item ) {
 				continue;

@@ -43,12 +43,7 @@ class PUM_Model_Theme extends PUM_Abstract_Model_Post {
 	 * @return string
 	 */
 	private function get_settings_meta_cache_hash( $meta_cache ) {
-		$cache_data = [
-			'loaded'   => is_array( $meta_cache ),
-			'settings' => is_array( $meta_cache ) && isset( $meta_cache['popup_theme_settings'] ) ? $meta_cache['popup_theme_settings'] : null,
-		];
-
-		return hash( 'sha256', maybe_serialize( $cache_data ) );
+		return $this->hash_meta_cache_entry( $meta_cache, 'popup_theme_settings' );
 	}
 
 	/**

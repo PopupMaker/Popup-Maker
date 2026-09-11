@@ -318,6 +318,28 @@ abstract class PUM_Abstract_Model_Post {
 	}
 
 	/**
+	 * Hash one metadata entry's state in the WordPress object cache.
+	 *
+	 * Models that cache resolved settings use this to detect when WordPress
+	 * repopulated or evicted the underlying metadata cache, so cached settings
+	 * are re-resolved instead of served stale. Shared by the popup and theme
+	 * models, which differ only in the meta key they watch.
+	 *
+	 * @param array<string,mixed>|false $meta_cache Current metadata cache entry.
+	 * @param string                    $meta_key   Metadata key to hash.
+	 *
+	 * @return string
+	 */
+	protected function hash_meta_cache_entry( $meta_cache, $meta_key ) {
+		$cache_data = [
+			'loaded'   => is_array( $meta_cache ),
+			'settings' => is_array( $meta_cache ) && isset( $meta_cache[ $meta_key ] ) ? $meta_cache[ $meta_key ] : null,
+		];
+
+		return hash( 'sha256', maybe_serialize( $cache_data ) );
+	}
+
+	/**
 	 * @param      $key
 	 * @param bool $single
 	 *

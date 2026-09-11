@@ -121,13 +121,89 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	}
 
 	/**
+	 * Resolve a popup model through the canonical repository.
+	 *
+	 * This legacy repository no longer owns popup model storage. It delegates to
+	 * `PopupMaker\Services\Repository\Popups`, the single request-local cache
+	 * shared by frontend, admin, AJAX and modern services, so `pum()->popups`
+	 * hands back the same object as every other API.
+	 *
+	 * Subclasses that override the model class keep the legacy hydration path,
+	 * since the canonical repository only produces `PUM_Model_Popup` instances.
+	 *
+	 * @param int|WP_Post $id Post ID or object.
+	 *
+	 * @return WP_Post|PUM_Abstract_Model_Post
+	 */
+	protected function get_model( $id ) {
+		if ( 'PUM_Model_Popup' !== $this->model ) {
+			return parent::get_model( $id );
+		}
+
+		$post_id = is_a( $id, 'WP_Post' ) ? $id->ID : $id;
+
+		if ( ! is_numeric( $post_id ) ) {
+			return parent::get_model( $id );
+		}
+
+		$canonical = $this->canonical_repository();
+
+		if ( ! $canonical ) {
+			return parent::get_model( $id );
+		}
+
+		$popup = $canonical->get_canonical_item( $post_id );
+
+		return $popup instanceof PUM_Model_Popup ? $popup : parent::get_model( $id );
+	}
+
+	/**
+	 * Get the canonical popup repository when the container is available.
+	 *
+	 * @return \PopupMaker\Services\Repository\Popups|null
+	 */
+	private function canonical_repository() {
+		if ( ! function_exists( '\PopupMaker\plugin' ) ) {
+			return null;
+		}
+
+		$repository = \PopupMaker\plugin()->get( 'popups' );
+
+		return $repository instanceof \PopupMaker\Services\Repository\Popups ? $repository : null;
+	}
+
+	/**
 	 * Discard a cached popup model.
+	 *
+	 * Clears the legacy query/object caches and the canonical model cache so a
+	 * single call still fully invalidates the popup for this request.
 	 *
 	 * @param int|numeric-string $item_id Popup ID.
 	 *
 	 * @return void
 	 */
 	public function forget_item( $item_id ) {
+		$this->forget_local_item( $item_id );
+
+		$canonical = $this->canonical_repository();
+
+		if ( $canonical ) {
+			$canonical->forget_item( $item_id );
+		}
+	}
+
+	/**
+	 * Discard only this repository's local caches for a popup.
+	 *
+	 * Used when the canonical model must survive — for example a metadata write
+	 * that refreshes settings in place — while stale legacy query results still
+	 * need clearing.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return void
+	 */
+	public function forget_local_item( $item_id ) {
 		unset( $this->cache['objects'][ (int) $item_id ] );
 	}
 

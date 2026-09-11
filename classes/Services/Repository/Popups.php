@@ -80,6 +80,148 @@ class Popups extends Repository {
 	}
 
 	/**
+	 * Get the canonical popup model for this request.
+	 *
+	 * This is the single fetch/cache boundary that frontend, admin, AJAX, REST,
+	 * modern services and legacy helpers all resolve through. Callers that hold
+	 * a popup ID should prefer this over hydrating their own model, so every
+	 * consumer observes the same object for the same popup within a request.
+	 *
+	 * The cached model is validated against the current `WP_Post` before it is
+	 * returned, so a model whose underlying post changed (directly or via a
+	 * third party clearing the post cache) is discarded rather than served
+	 * stale.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return Popup|null Canonical model, or null when no such popup exists.
+	 */
+	public function get_canonical_item( $item_id ) {
+		$item_id = (int) $item_id;
+
+		if ( $item_id <= 0 ) {
+			return null;
+		}
+
+		$cached = $this->get_cached_item( $item_id );
+
+		if ( null !== $cached ) {
+			return $cached;
+		}
+
+		return $this->get_by_id( $item_id );
+	}
+
+	/**
+	 * Get an already-cached popup model without falling back to a query.
+	 *
+	 * Answers "has this popup been hydrated for this site during this request?"
+	 * rather than "fetch it", so callers that only want a previously resolved
+	 * model do not implicitly trigger hydration. A cached model whose stored
+	 * post no longer matches the current post is evicted and reported as a miss.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return Popup|null Cached model, or null when not cached for this site.
+	 */
+	public function get_cached_item( $item_id ) {
+		$item_id = (int) $item_id;
+
+		if ( $item_id <= 0 ) {
+			return null;
+		}
+
+		$cache_key = $this->get_item_cache_key( $item_id );
+
+		if ( ! isset( $this->items_by_id[ $cache_key ] ) ) {
+			return null;
+		}
+
+		$cached = $this->items_by_id[ $cache_key ];
+
+		if ( $this->cached_item_is_fresh( $cached, $item_id ) ) {
+			return $cached;
+		}
+
+		$this->forget_item( $item_id );
+
+		return null;
+	}
+
+	/**
+	 * Instantiate a model, reusing the canonical instance when one is cached.
+	 *
+	 * `query()` hydrates a model for every matched post. Without this, a query
+	 * would discard and replace models other callers already hold, breaking
+	 * object identity and paying for a second construction per popup.
+	 *
+	 * @param \WP_Post $post Post object.
+	 *
+	 * @return Popup|null
+	 */
+	protected function resolve_model_from_post( $post ) {
+		if ( ! $post instanceof \WP_Post ) {
+			return null;
+		}
+
+		$cached = $this->get_cached_item( $post->ID );
+
+		if ( $cached instanceof Popup ) {
+			return $cached;
+		}
+
+		return $this->instantiate_model_from_post( $post );
+	}
+
+	/**
+	 * Refresh a cached popup's settings after its metadata changed.
+	 *
+	 * Keeps object identity stable for callers that already hold the model —
+	 * the settings are cleared so the next read re-resolves them — and falls
+	 * back to eviction when the popup is not currently cached.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return void
+	 */
+	public function refresh_item_settings( $item_id ) {
+		$cached = $this->get_cached_item( $item_id );
+
+		if ( $cached instanceof Popup ) {
+			$cached->settings = null;
+
+			return;
+		}
+
+		$this->forget_item( $item_id );
+	}
+
+	/**
+	 * Determine whether a cached popup still matches its stored post.
+	 *
+	 * Mirrors the frontend controller's historical freshness check so moving the
+	 * cache boundary down does not weaken staleness protection for any caller.
+	 *
+	 * @param Popup              $item    Cached popup model.
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	protected function cached_item_is_fresh( $item, $item_id ) {
+		if ( ! $item instanceof Popup || ! isset( $item->post ) || ! $item->post instanceof \WP_Post ) {
+			return false;
+		}
+
+		$current_post = get_post( (int) $item_id );
+
+		if ( ! $current_post instanceof \WP_Post || $current_post->post_type !== $this->post_type ) {
+			return false;
+		}
+
+		return get_object_vars( $current_post ) === get_object_vars( $item->post );
+	}
+
+	/**
 	 * Replace the cached popup model for the current site.
 	 *
 	 * This public operation intentionally delegates to the protected cache hook

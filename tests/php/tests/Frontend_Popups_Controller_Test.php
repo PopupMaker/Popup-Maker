@@ -345,7 +345,12 @@ class Frontend_Popups_Controller_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Native settings writes evict modern models not cached by the controller.
+	 * Native settings writes refresh modern models not cached by the controller.
+	 *
+	 * Previously each repository hydrated its own model, so a settings write was
+	 * observable only by discarding the old instance. With one canonical model
+	 * per request the instance is reused and refreshed in place, so a reference
+	 * held across the write reports the new value rather than a stale one.
 	 *
 	 * @return void
 	 */
@@ -368,12 +373,14 @@ class Frontend_Popups_Controller_Test extends WP_UnitTestCase {
 
 		$updated = $repository->get_by_id( $popup_id );
 
-		$this->assertNotSame( $original, $updated );
+		$this->assertSame( $original, $updated );
 		$this->assertSame( 400, $updated->get_setting( 'animation_speed' ) );
+		// The previously held reference must not report the pre-write value.
+		$this->assertSame( 400, $original->get_setting( 'animation_speed' ) );
 	}
 
 	/**
-	 * Native settings writes evict legacy models not cached by the controller.
+	 * Native settings writes refresh legacy models not cached by the controller.
 	 *
 	 * @return void
 	 */
@@ -395,8 +402,10 @@ class Frontend_Popups_Controller_Test extends WP_UnitTestCase {
 
 		$updated = pum_get_popup( $popup_id );
 
-		$this->assertNotSame( $original, $updated );
+		// pum()->popups and pum_get_popup() now share one canonical model.
+		$this->assertSame( $original, $updated );
 		$this->assertSame( 400, $updated->get_setting( 'animation_speed' ) );
+		$this->assertSame( 400, $original->get_setting( 'animation_speed' ) );
 	}
 
 	/**

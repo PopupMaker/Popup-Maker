@@ -148,9 +148,9 @@ class Popup_Model_Cache_Bench extends WP_UnitTestCase {
 	/**
 	 * Record a result row.
 	 *
-	 * @param string               $label   Scenario label.
-	 * @param array<string,int>    $metrics Metrics.
-	 * @param array<string,mixed>  $extra   Extra fields.
+	 * @param string              $label   Scenario label.
+	 * @param array<string,int>   $metrics Metrics.
+	 * @param array<string,mixed> $extra   Extra fields.
 	 * @return void
 	 */
 	private function row( $label, $metrics, $extra = [] ) {
@@ -172,6 +172,7 @@ class Popup_Model_Cache_Bench extends WP_UnitTestCase {
 	private function emit() {
 		$count = count( $this->ids );
 
+		// phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- CLI diagnostic output, not a filesystem write.
 		fwrite( STDERR, "\n# BENCH popup_count={$count}\n" );
 
 		foreach ( $this->rows as $row ) {
@@ -179,6 +180,7 @@ class Popup_Model_Cache_Bench extends WP_UnitTestCase {
 		}
 
 		fwrite( STDERR, "# END BENCH\n" );
+		// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
 	}
 
 	/**

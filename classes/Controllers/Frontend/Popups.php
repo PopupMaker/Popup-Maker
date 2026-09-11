@@ -30,13 +30,6 @@ class Popups extends Controller {
 	private $popups;
 
 	/**
-	 * All popup models queried for this request.
-	 *
-	 * @var array<string,Popup>
-	 */
-	private $queried_popups = [];
-
-	/**
 	 * Enqueued popup ids.
 	 *
 	 * @var int[]
@@ -119,15 +112,14 @@ class Popups extends Controller {
 		] );
 
 		foreach ( $popups as $popup ) {
-			$queried_popup = $this->get_queried_popup( $popup->ID );
+			// query() already cached each model canonically; re-resolve through
+			// the canonical boundary so a stale entry is refreshed once here
+			// rather than rediscovered by every later caller.
+			$canonical = $popup_repository->get_canonical_item( $popup->ID );
 
-			if ( pum_is_popup( $queried_popup ) ) {
-				$popup = $queried_popup;
-			} else {
-				$this->cache_queried_popup( $popup );
+			if ( pum_is_popup( $canonical ) ) {
+				$popup = $canonical;
 			}
-
-			$popup_repository->replace_cached_item( $popup );
 
 			set_current_popup( $popup );
 
@@ -142,31 +134,26 @@ class Popups extends Controller {
 	/**
 	 * Get a popup model already queried during frontend preloading.
 	 *
+	 * Retained as the frontend-facing name for the canonical fetch boundary.
+	 * The popup repository owns the storage and the freshness check, so this
+	 * returns the same object any other caller would receive this request.
+	 *
 	 * @param int $popup_id Popup ID.
 	 *
 	 * @return Popup|null
 	 */
 	public function get_queried_popup( $popup_id ) {
-		$cache_key = $this->popup_cache_key( $popup_id );
-		$popup     = isset( $this->queried_popups[ $cache_key ] ) ? $this->queried_popups[ $cache_key ] : null;
-
-		if ( ! pum_is_popup( $popup ) ) {
+		if ( ! is_numeric( $popup_id ) ) {
 			return null;
 		}
 
-		$current_post = get_post( $popup_id );
+		$popup = $this->container->get( 'popups' )->get_cached_item( $popup_id );
 
-		if ( ! $current_post instanceof \WP_Post || 'popup' !== $current_post->post_type || get_object_vars( $current_post ) !== get_object_vars( $popup->post ) ) {
-			$this->invalidate_queried_popup( $popup_id );
-
-			return null;
-		}
-
-		return $popup;
+		return pum_is_popup( $popup ) ? $popup : null;
 	}
 
 	/**
-	 * Cache a popup model as the canonical frontend instance for this request.
+	 * Cache a popup model as the canonical instance for this request.
 	 *
 	 * @param Popup $popup Popup model.
 	 *
@@ -174,7 +161,7 @@ class Popups extends Controller {
 	 */
 	public function cache_queried_popup( $popup ) {
 		if ( pum_is_popup( $popup ) ) {
-			$this->queried_popups[ $this->popup_cache_key( $popup->ID ) ] = $popup;
+			$this->container->get( 'popups' )->replace_cached_item( $popup );
 		}
 	}
 
@@ -191,7 +178,6 @@ class Popups extends Controller {
 			return;
 		}
 
-		unset( $this->queried_popups[ $this->popup_cache_key( $post_id ) ] );
 		$this->container->get( 'popups' )->forget_item( $post_id );
 		pum()->popups->forget_item( $post_id );
 	}
@@ -210,29 +196,11 @@ class Popups extends Controller {
 			return;
 		}
 
-		$popup = $this->get_queried_popup( $object_id );
+		// Clear the legacy query caches without disturbing the canonical model,
+		// then let the repository refresh it in place or evict it.
+		pum()->popups->forget_local_item( $object_id );
 
-		$popup_repository = $this->container->get( 'popups' );
-
-		pum()->popups->forget_item( $object_id );
-
-		if ( pum_is_popup( $popup ) ) {
-			$popup->settings = null;
-			$popup_repository->replace_cached_item( $popup );
-		} else {
-			$popup_repository->forget_item( $object_id );
-		}
-	}
-
-	/**
-	 * Get the site-specific cache key for a popup.
-	 *
-	 * @param int $popup_id Popup ID.
-	 *
-	 * @return string
-	 */
-	private function popup_cache_key( $popup_id ) {
-		return get_current_blog_id() . ':' . (int) $popup_id;
+		$this->container->get( 'popups' )->refresh_item_settings( $object_id );
 	}
 
 	/**
