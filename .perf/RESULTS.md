@@ -1,7 +1,8 @@
 # Canonical popup model cache — before/after
 
-Baseline: develop `21e59a1d`. Both columns measured with the same harness on the
-same machine and the same database.
+Baseline: develop `21e59a1d`, measured in a **separate clean worktree** with its
+own `composer install` (symlinking `vendor/` between worktrees makes PHPUnit
+silently load the other checkout's code). "After" measured on this branch.
 
 Reproduce:
 
@@ -11,79 +12,77 @@ PUM_BENCH_POPUPS=<n> vendor/bin/phpunit -c tests/php/phpunit.xml \
   --filter Popup_Model_Cache_Bench
 ```
 
-Query counts, hydration counts and distinct-object counts are **deterministic**
-— repeated runs give identical values. `elapsed_ms` and `mem_delta_kb` are
-single samples and are **noisy**; they are directional support, not a claim.
+Query counts, hydration counts and distinct-object counts are **deterministic**.
+`elapsed_ms` and `mem_delta_kb` are single samples and are **noisy**.
 
-## Model hydrations (object constructions)
+## Fixture correctness (this invalidated an earlier draft of this file)
+
+Popups must be seeded with `data_version` meta. Real popups always carry it. A
+popup without it makes `PUM_Model_Popup::setup()` run
+`update_meta( 'data_version', … )` during a *read* request — a SELECT + UPDATE
+per popup — and those writes invalidate the per-post meta cache that `WP_Query`
+had just primed in bulk, forcing a second, per-popup meta fetch on readback.
+
+With an unseeded fixture the same pass measured 30 queries at n=10 and 150 at
+n=50. That was an artifact of the fixture, not plugin behavior. Seeded, the
+numbers below are flat. The `data_version` write path is worth a look as its own
+issue, but it is **not** what this PR is about and is not counted as a win here.
+
+## SQL queries — unchanged, and correctly so
+
+| scenario | n | before | after |
+|----------|---|--------|-------|
+| D query + readback | 1 | 2 | 2 |
+| D query + readback | 10 | 3 | 3 |
+| D query + readback | 50 | 3 | 3 |
+
+Three queries regardless of popup count: one posts query, one term query, one
+bulk postmeta prime for all IDs. **Readback issues zero queries** at every size.
+The plugin already hydrates by querying all popups once and priming meta in
+bulk; this PR does not change that and does not need to.
+
+## Model hydrations (object constructions) — the actual win
 
 | scenario | n | before | after | change |
 |----------|---|--------|-------|--------|
 | C cross-API, one popup | any | 2 | **1** | −50% |
-| D query + readback | 1 | 2 | **1** | −50% |
 | D query + readback | 10 | 20 | **10** | −50% |
 | D query + readback | 50 | 100 | **50** | −50% |
-| A cold single | any | 1 | 1 | — |
-| B warm ×10 | any | 0 | 0 | — |
 
-Exactly one model per popup per request, at every scale.
+Before, the repository `query()` hydrated a model for every popup, and the
+readback through `pum_get_popup()` hydrated a *second* one because it consulted
+a different cache. Now there is exactly one model per popup per request.
 
 ## Object identity
 
 | scenario | before | after |
 |----------|--------|-------|
 | C: `pum_get_popup()` vs modern repo vs `pum()->popups` | **2 distinct** | **1 shared** |
-| D: distinct objects on readback | 10 of 10 | 10 of 10 (all canonical) |
 
 Before, a mutation applied through one API was invisible through another, and a
-reference held across a settings write kept reporting the pre-write value. Both
-are fixed.
+reference held across a settings write kept reporting the pre-write value.
 
-## SQL queries
+## Memory (noisy, single sample)
 
-| scenario | n | before | after |
-|----------|---|--------|-------|
-| D query + readback | 0 | 2 | 2 |
-| D query + readback | 1 | 2 | 2 |
-| D query + readback | 10 | 30 | 30 |
-| D query + readback | 50 | 150 | 150 |
+| n | before | after |
+|---|--------|-------|
+| 10 | 90.8 KB | 58.8 KB |
+| 50 | 456.1 KB | 292.4 KB |
 
-**Unchanged, deliberately.** The remaining per-popup queries come from
-`WP_Query` and WordPress metadata priming, not from model hydration. This change
-removes duplicate *object construction*, not duplicate SQL. Reducing the query
-count is a separate piece of work and is not claimed here.
-
-## Memory and time (noisy, single sample)
-
-| n | metric | before | after |
-|---|--------|--------|-------|
-| 10 | mem_delta_kb | 83.0 | 51.0 |
-| 50 | mem_delta_kb | 409.8 | 246.0 |
-| 10 | elapsed_ms | 1.94 | 2.42 |
-| 50 | elapsed_ms | 7.65 | 7.74 |
-
-Memory drops roughly 40% at 50 popups, consistent with halving live model count.
-Elapsed time is flat to marginally worse within sample noise — the freshness
-check on the canonical read costs a `get_post()` lookup (object-cache backed, not
-SQL). At these magnitudes the timing signal is not meaningful; the durable wins
-are hydration count, memory, and identity.
+Roughly −36%, consistent with halving live model count.
 
 ## Staleness
 
-Scenario E (`stale_after_meta_write`) reports `is_fresh: yes` before and after at
-every popup count. Additionally, with shared identity the *previously held*
-reference now also reports the fresh value, where before it kept the stale one.
+Scenario E reports `is_fresh: yes` before and after at every count. With shared
+identity the previously held reference now also reports the fresh value.
 
-## Correctness coverage
+## Honest summary
 
-`Canonical_Popup_Cache_Test` (11 tests) covers:
+This change buys **object-graph efficiency and correctness**, not fewer queries:
 
-- shared identity across all four public fetch APIs
-- mutation propagation between APIs
-- no stale read after a direct meta write, including via a held reference
-- post update and hard delete clear the cached model
-- multisite partitioning of canonical models
-- legacy getter: object returned for unknown IDs, current-popup fallback
-- `query()` reuses models callers already hold
-- frontend preload leaves one shared model per popup
-- extension repository subclasses keep their own model class
+- half the model constructions per request
+- one shared model per popup instead of two divergent ones
+- ~36% less incremental memory on the popup pass
+- a fixed stale-read through a held reference
+
+Query count was already optimal and is untouched.

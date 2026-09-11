@@ -84,6 +84,12 @@ class Popup_Model_Cache_Bench extends WP_UnitTestCase {
 				]
 			);
 
+			// Real popups always carry data_version. Without it, model setup()
+			// performs a SELECT + UPDATE per popup during a read request, which
+			// then invalidates the bulk meta cache primed by WP_Query and forces
+			// per-popup meta refetches. Seeding it keeps the fixture honest.
+			update_post_meta( $id, 'data_version', 3 );
+
 			$this->ids[] = (int) $id;
 		}
 	}
