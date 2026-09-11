@@ -7,15 +7,8 @@
 	const $ = window.jQuery;
 
 	$( document ).on(
-		'wsf-submit-success wsf-save-success',
-		function (
-			event,
-			formObject,
-			formId,
-			formInstanceId,
-			formEl,
-			formCanvasEl
-		) {
+		'wsf-submit-success',
+		function ( event, formObject, formId, formInstanceId, formEl ) {
 			// All the magic happens here.
 			window.PUM.integrations.formSubmission( $( formEl ), {
 				formProvider,
