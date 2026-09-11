@@ -23,14 +23,30 @@ function pum_get_popup( $popup_id = null ) {
 	}
 
 	/** @var int $popup_id filtered $popup_id */
-	$popup_id = pum_get_popup_id( $popup_id );
+	$popup_id         = pum_get_popup_id( $popup_id );
+	$popup_controller = null;
+
+	if ( ! is_admin() ) {
+		$popup_controller = \PopupMaker\plugin()->get_controller( 'Frontend\\Popups' );
+		$queried_popup    = $popup_controller ? $popup_controller->get_queried_popup( $popup_id ) : null;
+
+		if ( pum_is_popup( $queried_popup ) ) {
+			return $queried_popup;
+		}
+	}
 
 	try {
-		return pum()->popups->get_item( $popup_id );
+		$popup = pum()->popups->get_item( $popup_id );
 	} catch ( InvalidArgumentException $e ) {
 		// Return empty object
-		return new PUM_Model_Popup( $popup_id );
+		$popup = new PUM_Model_Popup( $popup_id );
 	}
+
+	if ( ! is_admin() && $popup_controller && pum_is_popup( $popup ) ) {
+		$popup_controller->cache_queried_popup( $popup );
+	}
+
+	return $popup;
 }
 
 /**

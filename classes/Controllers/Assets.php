@@ -28,6 +28,13 @@ class Assets extends Controller {
 	private $should_print_global_vars = false;
 
 	/**
+	 * Packages whose variables have already been localized this request.
+	 *
+	 * @var array<string,bool>
+	 */
+	private $localized_packages = [];
+
+	/**
 	 * Initialize the assets controller.
 	 */
 	public function init() {
@@ -37,7 +44,8 @@ class Assets extends Controller {
 		add_action( 'enqueue_block_editor_assets', [ $this, 'register_scripts' ], 1 );
 
 		add_action( 'wp_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
-		add_action( 'admin_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 1 );
+		// Run after normal-priority package filters have registered their final vars.
+		add_action( 'admin_print_scripts', [ $this, 'autoload_styles_for_scripts' ], 20 );
 
 		// Add a hook to fix old handles that might be enqueueed and not loaded, load their replacements.
 		add_action( 'wp_enqueue_scripts', [ $this, 'fix_old_handles' ], 1 );
@@ -58,7 +66,7 @@ class Assets extends Controller {
 		}
 
 		$packages = [
-			'addons-page'          => [
+			'addons-page'         => [
 				'bundled' => false,
 				'handle'  => 'popup-maker-addons-page',
 				'styles'  => true,
@@ -95,20 +103,23 @@ class Assets extends Controller {
 				'styles'   => true,
 				'deps'     => [],
 				'varsName' => 'popupMakerBlockEditor',
-				'vars'     => [
-					'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
-					'popups'                     => pum_get_all_popups(),
-					'homeUrl'                    => home_url(),
-					'previewNonce'               => wp_create_nonce( 'popup-preview' ),
-					'popupTriggerExcludedBlocks' => apply_filters(
-						'pum_block_editor_popup_trigger_excluded_blocks',
-						[
-							'core/nextpage',
-							'popup-maker/call-to-action',
-							'popup-maker/call-to-actions',
-						]
-					),
-				],
+				'vars'     => function () {
+					return [
+						'cta_types'                  => $this->container->get( 'cta_types' )->get_as_array(),
+						// Preserve the original models for extensions that filter these variables.
+						'popups'                     => false !== has_filter( 'popup_maker/block-editor_localized_vars' ) ? \pum_get_all_popups() : $this->get_block_editor_popup_choices(),
+						'homeUrl'                    => home_url(),
+						'previewNonce'               => wp_create_nonce( 'popup-preview' ),
+						'popupTriggerExcludedBlocks' => apply_filters(
+							'pum_block_editor_popup_trigger_excluded_blocks',
+							[
+								'core/nextpage',
+								'popup-maker/call-to-action',
+								'popup-maker/call-to-actions',
+							]
+						),
+					];
+				},
 			],
 			'block-library'       => [
 				'bundled'      => false,
@@ -123,6 +134,13 @@ class Assets extends Controller {
 					];
 				},
 			],
+			'builder-preview'     => [
+				'bundled'   => false,
+				'handle'    => 'popup-maker-builder-preview',
+				'styles'    => true,
+				'deps'      => [ 'popup-maker-site' ],
+				'styleDeps' => [ 'popup-maker-site' ],
+			],
 			'components'          => [
 				'bundled'  => false,
 				'handle'   => 'popup-maker-components',
@@ -130,7 +148,8 @@ class Assets extends Controller {
 				'varsName' => 'popupMakerComponents',
 				'vars'     => function () {
 					return [
-						'popups' => \pum_get_all_popups(),
+						// Preserve the original models for extensions that filter these variables.
+						'popups' => false !== has_filter( 'popup_maker/components_localized_vars' ) ? \pum_get_all_popups() : $this->get_popup_choices(),
 					];
 				},
 			],
@@ -263,6 +282,24 @@ class Assets extends Controller {
 		return $packages;
 	}
 
+	/**
+	 * Adapt the shared popup title map for block editor select controls.
+	 *
+	 * @return array<int,array{ID:int,post_title:string}>
+	 */
+	private function get_block_editor_popup_choices() {
+		$choices = [];
+
+		foreach ( \PUM_Helpers::popup_selectlist( [ 'post_status' => [ 'publish', 'private' ] ] ) as $popup_id => $post_title ) {
+			$choices[] = [
+				'ID'         => (int) $popup_id,
+				'post_title' => (string) $post_title,
+			];
+		}
+
+		return $choices;
+	}
+
 		/**
 		 * Register all package scripts & styles.
 		 */
@@ -330,7 +367,9 @@ class Assets extends Controller {
 
 			if ( isset( $package_data['styles'] ) && $package_data['styles'] && file_exists( $css_path ) ) {
 				$css_file = $this->container->get_url( "$path/$package{$rtl}.css" );
-				$css_deps = [ 'wp-components', 'wp-block-editor', 'dashicons' ];
+				$css_deps = isset( $package_data['styleDeps'] )
+					? (array) $package_data['styleDeps']
+					: [ 'wp-components', 'wp-block-editor', 'dashicons' ];
 
 				if ( $bundled ) {
 					pum_register_style( $handle, $css_file, $css_deps, $meta['version'] );
@@ -425,9 +464,9 @@ class Assets extends Controller {
 		$vars = apply_filters(
 			'popup_maker/layout_vars',
 			[
-				'navTabs'            => [],
-				'supportMenuItems'   => [],
-				'showSupport'        => true,
+				'navTabs'          => [],
+				'supportMenuItems' => [],
+				'showSupport'      => true,
 			]
 		);
 
@@ -587,7 +626,7 @@ class Assets extends Controller {
 					}
 				}
 
-				if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) ) {
+				if ( isset( $package_data['varsName'] ) && ! empty( $package_data['vars'] ) && ! isset( $this->localized_packages[ $package ] ) ) {
 					$localized_vars = is_callable( $package_data['vars'] ) ?
 					call_user_func( $package_data['vars'] ) :
 					$package_data['vars'];
@@ -600,9 +639,29 @@ class Assets extends Controller {
 						// Though pum_* asset functions pass through to wp_* automatically when disabled, admin packages should never be bundled.
 						wp_localize_script( $handle, $package_data['varsName'], $localized_vars );
 					}
+
+					$this->localized_packages[ $package ] = true;
 				}
 			}
 		}
+	}
+
+	/**
+	 * Get the minimal popup data consumed by PopupSelectControl.
+	 *
+	 * @return array<int,array{ID:int,post_title:string}>
+	 */
+	private function get_popup_choices() {
+		$choices = [];
+
+		foreach ( \PUM_Helpers::popup_selectlist( [ 'post_status' => [ 'publish', 'private' ] ] ) as $popup_id => $popup_title ) {
+			$choices[] = [
+				'ID'         => (int) $popup_id,
+				'post_title' => (string) $popup_title,
+			];
+		}
+
+		return $choices;
 	}
 
 	/**

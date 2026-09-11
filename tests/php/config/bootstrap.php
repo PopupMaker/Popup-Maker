@@ -32,5 +32,36 @@ function _manually_load_plugin() {
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
+/**
+ * Run the suite against the Bricks theme when it is installed.
+ *
+ * Bricks ships as a theme, so its APIs only exist when WordPress boots it. Set
+ * PUM_TEST_THEME=bricks to exercise the Bricks provider against the real theme;
+ * the Bricks tests skip themselves otherwise.
+ *
+ * The theme cannot simply be required by hand: Bricks resolves its own includes
+ * from `get_template_directory()`, which the WordPress test suite points at its
+ * fixture theme directory.
+ *
+ * @param string $template Current template directory name.
+ *
+ * @return string Filtered template directory name.
+ */
+function _pum_test_theme( $template ) {
+	$theme = getenv( 'PUM_TEST_THEME' );
+
+	if ( ! $theme ) {
+		return $template;
+	}
+
+	$theme = basename( $theme );
+
+	return defined( 'WP_CONTENT_DIR' ) && is_dir( WP_CONTENT_DIR . '/themes/' . $theme )
+		? $theme
+		: $template;
+}
+tests_add_filter( 'pre_option_template', '_pum_test_theme' );
+tests_add_filter( 'pre_option_stylesheet', '_pum_test_theme' );
+
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';

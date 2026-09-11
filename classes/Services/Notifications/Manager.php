@@ -2,8 +2,8 @@
 /**
  * Notifications service — parent orchestrator.
  *
- * Owns the core notification providers (WhatsNew, FeatureAnnouncements)
- * and exposes a filter that lets addons (Pro, Pro+, integrations) plug
+ * Owns the core notification providers and exposes a filter that lets addons
+ * (Pro, Pro+, integrations) plug
  * in their own providers without touching core code.
  *
  * @package   PopupMaker
@@ -67,6 +67,7 @@ class Manager extends Service {
 		if ( $this->booted ) {
 			return;
 		}
+
 		$this->booted = true;
 
 		$this->providers = $this->resolve_providers();
@@ -79,6 +80,72 @@ class Manager extends Service {
 	}
 
 	/**
+	 * Boot notifications immediately in wp-admin or defer them to relevant frontend hooks.
+	 *
+	 * @return void
+	 */
+	public function register_lazy_boot() {
+		if ( is_admin() ) {
+			$this->init();
+			return;
+		}
+
+		foreach ( $this->get_deferred_boot_hooks() as $hook ) {
+			if ( did_action( $hook ) || did_filter( $hook ) ) {
+				// The event already fired earlier in this request — e.g. an
+				// upgrade dispatches popup_maker/update_version during
+				// plugins_loaded, before this registration runs on init.
+				$this->init();
+				return;
+			}
+
+			add_filter( $hook, [ $this, 'boot_on_demand' ], PHP_INT_MIN );
+		}
+	}
+
+	/**
+	 * Get hooks that can trigger lazy notification boot on frontend requests.
+	 *
+	 * Extensions (Pro, Pro+, legacy) can append their own trigger hooks via the
+	 * `popup_maker/notifications/deferred_boot_hooks` filter. Any consumer that
+	 * calls get_providers() boots the manager regardless, so this filter is an
+	 * optimization and not a correctness requirement.
+	 *
+	 * @return string[]
+	 */
+	protected function get_deferred_boot_hooks() {
+		$defaults = [
+			'popup_maker/update_version',
+			'pum_alert_list',
+			'pum_alert_dismissed',
+			'save_post_popup',
+			'save_post_pum_cta',
+			'deleted_post',
+			'trashed_post',
+			'untrashed_post',
+			'update_option_pum_form_conversion_count',
+			'update_option_pum_total_conversion_count',
+			'update_option_pum_bypass_adblockers',
+			'activated_plugin',
+			'deactivated_plugin',
+		];
+
+		return apply_filters( 'popup_maker/notifications/deferred_boot_hooks', $defaults );
+	}
+
+	/**
+	 * Boot notification providers when a frontend request reaches a relevant hook.
+	 *
+	 * @param mixed $value Current filter value, if any.
+	 * @return mixed
+	 */
+	public function boot_on_demand( $value = null ) {
+		$this->init();
+
+		return $value;
+	}
+
+	/**
 	 * Currently booted providers.
 	 *
 	 * Useful for debugging and for addons that want to swap or decorate
@@ -87,6 +154,8 @@ class Manager extends Service {
 	 * @return array<int,Provider>
 	 */
 	public function get_providers() {
+		$this->init();
+
 		return $this->providers;
 	}
 
@@ -98,6 +167,7 @@ class Manager extends Service {
 	protected function resolve_providers() {
 		$core = [
 			new WhatsNew( $this->container ),
+			new PageBuilderAnnouncements( $this->container ),
 			new FeatureAnnouncements( $this->container ),
 		];
 

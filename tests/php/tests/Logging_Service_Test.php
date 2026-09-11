@@ -241,7 +241,7 @@ class Logging_Service_Test extends WP_UnitTestCase {
 	 * @return object Mock container with expected methods.
 	 */
 	private function create_mock_container() {
-		$container = new class {
+		$container = new class() {
 			/**
 			 * Mock get method.
 			 *
@@ -603,7 +603,9 @@ class Logging_Service_Test extends WP_UnitTestCase {
 		while ( $reflection ) {
 			if ( $reflection->hasProperty( $property ) ) {
 				$prop = $reflection->getProperty( $property );
-				$prop->setAccessible( true );
+				if ( PHP_VERSION_ID < 80100 ) {
+					$prop->setAccessible( true );
+				}
 				$prop->setValue( $object, $value );
 				return;
 			}

@@ -52,11 +52,14 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 		// Query all HappyForms posts.
 		$form_posts = get_posts(
 			[
-				'post_type'      => 'happyform',
-				'posts_per_page' => -1,
-				'post_status'    => 'publish',
-				'orderby'        => 'title',
-				'order'          => 'ASC',
+				'post_type'              => 'happyform',
+				'posts_per_page'         => -1,
+				'post_status'            => 'publish',
+				'orderby'                => 'title',
+				'order'                  => 'ASC',
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			]
 		);
 

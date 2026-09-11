@@ -17,6 +17,7 @@ const packages = {
 	'admin-notifications': 'packages/admin-notifications',
 	'block-editor': 'packages/block-editor',
 	'block-library': 'packages/block-library',
+	'builder-preview': 'packages/builder-preview',
 	components: 'packages/components',
 	'core-data': 'packages/core-data',
 	'cta-admin': 'packages/cta-admin',

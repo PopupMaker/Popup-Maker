@@ -63,6 +63,43 @@ function pum_popup_classes( $popup_id = null, $element = 'overlay' ) {
 }
 
 /**
+ * Render close button attributes.
+ *
+ * @param null|int $popup_id Popup ID.
+ */
+function pum_popup_close_button_attributes( $popup_id = null ) {
+	$popup = pum_get_popup( $popup_id );
+
+	if ( ! pum_is_popup( $popup ) ) {
+		return;
+	}
+
+	$attributes = apply_filters(
+		'pum_popup_close_button_attributes',
+		[
+			'type'       => 'button',
+			'class'      => implode( ' ', $popup->get_classes( 'close' ) ),
+			'aria-label' => __( 'Close', 'popup-maker' ),
+		],
+		$popup
+	);
+
+	if ( ! is_array( $attributes ) ) {
+		return;
+	}
+
+	foreach ( $attributes as $name => $value ) {
+		$name = preg_replace( '/[^a-zA-Z0-9:_-]/', '', (string) $name );
+
+		if ( ! $name || null === $value || false === $value || ( true !== $value && ! is_scalar( $value ) ) ) {
+			continue;
+		}
+
+		printf( ' %s="%s"', esc_attr( $name ), esc_attr( true === $value ? $name : $value ) );
+	}
+}
+
+/**
  * Render the popups data attribute.
  *
  * @param null|int $popup_id Popup ID.

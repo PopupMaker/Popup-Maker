@@ -42,7 +42,6 @@ declare global {
 
 /* Broken @wordpress/data type overrides */
 declare module '@wordpress/data' {
-	// eslint-disable-next-line @typescript-eslint/no-shadow
 	function createRegistry(
 		storeConfigs?: Object,
 		parent?: Object | null

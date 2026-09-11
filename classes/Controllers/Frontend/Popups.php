@@ -30,6 +30,13 @@ class Popups extends Controller {
 	private $popups;
 
 	/**
+	 * All popup models queried for this request.
+	 *
+	 * @var array<string,Popup>
+	 */
+	private $queried_popups = [];
+
+	/**
 	 * Enqueued popup ids.
 	 *
 	 * @var int[]
@@ -88,6 +95,10 @@ class Popups extends Controller {
 		 * - No later than `wp_enqueue_scripts:15` as some content processing may have already occurred.
 		 */
 		add_action( 'wp_enqueue_scripts', [ $this, 'preload_popups' ], 11 );
+		add_action( 'clean_post_cache', [ $this, 'invalidate_queried_popup' ], PHP_INT_MIN, 2 );
+		add_action( 'added_post_meta', [ $this, 'invalidate_queried_popup_settings' ], PHP_INT_MIN, 3 );
+		add_action( 'updated_post_meta', [ $this, 'invalidate_queried_popup_settings' ], PHP_INT_MIN, 3 );
+		add_action( 'deleted_post_meta', [ $this, 'invalidate_queried_popup_settings' ], PHP_INT_MIN, 3 );
 
 		// Check content for popup triggers used, enqueue if enabled.
 		add_filter( 'the_content', [ $this, 'check_content_for_popups' ] );
@@ -102,11 +113,22 @@ class Popups extends Controller {
 	 * @return void
 	 */
 	public function preload_popups() {
-		$popups = $this->container->get( 'popups' )->query( [
+		$popup_repository = $this->container->get( 'popups' );
+		$popups           = $popup_repository->query( [
 			'post_status' => [ 'publish', 'private' ],
 		] );
 
 		foreach ( $popups as $popup ) {
+			$queried_popup = $this->get_queried_popup( $popup->ID );
+
+			if ( pum_is_popup( $queried_popup ) ) {
+				$popup = $queried_popup;
+			} else {
+				$this->cache_queried_popup( $popup );
+			}
+
+			$popup_repository->replace_cached_item( $popup );
+
 			set_current_popup( $popup );
 
 			if ( pum_is_popup_loadable( $popup->ID ) ) {
@@ -115,6 +137,102 @@ class Popups extends Controller {
 		}
 
 		set_current_popup( null );
+	}
+
+	/**
+	 * Get a popup model already queried during frontend preloading.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return Popup|null
+	 */
+	public function get_queried_popup( $popup_id ) {
+		$cache_key = $this->popup_cache_key( $popup_id );
+		$popup     = isset( $this->queried_popups[ $cache_key ] ) ? $this->queried_popups[ $cache_key ] : null;
+
+		if ( ! pum_is_popup( $popup ) ) {
+			return null;
+		}
+
+		$current_post = get_post( $popup_id );
+
+		if ( ! $current_post instanceof \WP_Post || 'popup' !== $current_post->post_type || get_object_vars( $current_post ) !== get_object_vars( $popup->post ) ) {
+			$this->invalidate_queried_popup( $popup_id );
+
+			return null;
+		}
+
+		return $popup;
+	}
+
+	/**
+	 * Cache a popup model as the canonical frontend instance for this request.
+	 *
+	 * @param Popup $popup Popup model.
+	 *
+	 * @return void
+	 */
+	public function cache_queried_popup( $popup ) {
+		if ( pum_is_popup( $popup ) ) {
+			$this->queried_popups[ $this->popup_cache_key( $popup->ID ) ] = $popup;
+		}
+	}
+
+	/**
+	 * Discard a canonical popup after WordPress changes its native post data.
+	 *
+	 * @param int      $post_id Post ID.
+	 * @param \WP_Post $post    Post object before its cache was cleared.
+	 *
+	 * @return void
+	 */
+	public function invalidate_queried_popup( $post_id, $post = null ) {
+		if ( ! is_numeric( $post_id ) || ( $post instanceof \WP_Post && 'popup' !== $post->post_type ) ) {
+			return;
+		}
+
+		unset( $this->queried_popups[ $this->popup_cache_key( $post_id ) ] );
+		$this->container->get( 'popups' )->forget_item( $post_id );
+		pum()->popups->forget_item( $post_id );
+	}
+
+	/**
+	 * Refresh settings on a canonical popup after native WordPress meta changes.
+	 *
+	 * @param int    $meta_id   Meta ID.
+	 * @param int    $object_id Post ID.
+	 * @param string $meta_key  Meta key.
+	 *
+	 * @return void
+	 */
+	public function invalidate_queried_popup_settings( $meta_id, $object_id, $meta_key ) {
+		if ( ! is_numeric( $object_id ) || 'popup_settings' !== $meta_key ) {
+			return;
+		}
+
+		$popup = $this->get_queried_popup( $object_id );
+
+		$popup_repository = $this->container->get( 'popups' );
+
+		pum()->popups->forget_item( $object_id );
+
+		if ( pum_is_popup( $popup ) ) {
+			$popup->settings = null;
+			$popup_repository->replace_cached_item( $popup );
+		} else {
+			$popup_repository->forget_item( $object_id );
+		}
+	}
+
+	/**
+	 * Get the site-specific cache key for a popup.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return string
+	 */
+	private function popup_cache_key( $popup_id ) {
+		return get_current_blog_id() . ':' . (int) $popup_id;
 	}
 
 	/**

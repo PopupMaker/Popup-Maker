@@ -23,7 +23,10 @@ class PUM_Admin_Ajax {
 	public static function init() {
 		add_action( 'wp_ajax_pum_object_search', [ __CLASS__, 'object_search' ] );
 		add_action( 'wp_ajax_pum_process_batch_request', [ __CLASS__, 'process_batch_request' ] );
+		add_action( 'wp_ajax_pum_scrub_subscriber_names', [ 'PUM_Admin_Subscribers', 'scrub_subscriber_names' ] );
 		add_action( 'wp_ajax_pum_save_enabled_state', [ __CLASS__, 'save_popup_enabled_state' ] );
+		add_action( 'wp_ajax_pum_get_css_styles', [ 'PUM_Admin_Settings', 'ajax_get_css_styles' ] );
+		add_action( 'wp_ajax_pum_do_shortcode', [ 'PUM_Admin_Shortcode_UI', 'do_shortcode' ] );
 	}
 
 	/**
@@ -270,14 +273,12 @@ class PUM_Admin_Ajax {
 		 * @param array  $request     The full request parameters.
 		 */
 		$results = apply_filters( 'popup_maker/object_search', $results, $object_type, $_REQUEST );
+		$results = PUM_Helpers::escape_object_search_results( $results );
 
 		// Take out keys which were only used to deduplicate.
 		$results['items'] = array_values( $results['items'] );
 
-		// Ignoring this as it is a JSON response and all sanitization methods break it.
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo PUM_Utils_Array::safe_json_encode( $results );
-		die();
+		wp_send_json( $results );
 	}
 
 

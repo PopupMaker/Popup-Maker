@@ -27,6 +27,17 @@ class PUM_Admin_Subscribers {
 	 * Render settings page with tabs.
 	 */
 	public static function page() {
+		$subscribers = PUM_DB_Subscribers::instance();
+
+		if ( ! $subscribers->is_name_scrub_complete() ) {
+			$subscribers->run_name_scrub_batch();
+
+			if ( ! $subscribers->is_name_scrub_complete() ) {
+				self::render_name_scrub_notice();
+				return;
+			}
+		}
+
 		self::list_table()->prepare_items(); ?>
 
 		<div class="wrap">
@@ -52,6 +63,66 @@ class PUM_Admin_Subscribers {
 		</div>
 
 		<?php
+	}
+
+	/**
+	 * Render a blocking notice while stored subscriber names are sanitized.
+	 */
+	private static function render_name_scrub_notice() {
+		$refresh_url = admin_url( 'edit.php?page=pum-subscribers&post_type=popup' );
+		$nonce       = wp_create_nonce( 'pum_scrub_subscriber_names' );
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Subscribers', 'popup-maker' ); ?></h1>
+			<div class="notice notice-warning">
+				<p><strong><?php esc_html_e( 'Subscriber security cleanup in progress', 'popup-maker' ); ?></strong></p>
+				<p><?php esc_html_e( 'Subscriber records are temporarily hidden while stored names are sanitized. This page will refresh automatically when the cleanup is complete.', 'popup-maker' ); ?></p>
+				<p><a class="button button-primary" href="<?php echo esc_url( $refresh_url ); ?>"><?php esc_html_e( 'Refresh now', 'popup-maker' ); ?></a></p>
+			</div>
+		</div>
+		<script>
+			jQuery( function( $ ) {
+				function runBatch() {
+					$.post( window.ajaxurl, {
+						action: 'pum_scrub_subscriber_names',
+						nonce: '<?php echo esc_js( $nonce ); ?>'
+					} ).done( function( response ) {
+						if ( ! response.success ) {
+							return;
+						}
+
+						if ( response.data.complete ) {
+							window.location.reload();
+							return;
+						}
+
+						runBatch();
+					} );
+				}
+
+				runBatch();
+			} );
+		</script>
+		<?php
+	}
+
+	/**
+	 * Scrub one batch of stored subscriber names.
+	 */
+	public static function scrub_subscriber_names() {
+		check_ajax_referer( 'pum_scrub_subscriber_names', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [], 403 );
+		}
+
+		$complete = PUM_DB_Subscribers::instance()->run_name_scrub_batch();
+
+		if ( null === $complete ) {
+			wp_send_json_error( [], 500 );
+		}
+
+		wp_send_json_success( [ 'complete' => $complete ] );
 	}
 
 	/**

@@ -5,7 +5,6 @@
  * @package Popup_Maker
  */
 
-
 /**
  * Test methods within our PUM_Utils_Array class.
  */
@@ -220,7 +219,7 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	public function test_from_object() {
 		$obj        = new stdClass();
 		$obj->name  = 'test';
-		$obj->child = new stdClass();
+		$obj->child        = new stdClass();
 		$obj->child->value = 42;
 
 		$returned = PUM_Utils_Array::from_object( $obj );
@@ -467,7 +466,10 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests remove_keys_starting_with with false (falsy) as strings param.
 	 */
 	public function test_remove_keys_starting_with_false() {
-		$test     = [ 'a' => 1, 'b' => 2 ];
+		$test     = [
+			'a' => 1,
+			'b' => 2,
+		];
 		$returned = PUM_Utils_Array::remove_keys_starting_with( $test, false );
 		$this->assertCount( 2, $returned );
 	}
@@ -855,7 +857,10 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests move_item with 0 move and same key returns true (no-op).
 	 */
 	public function test_move_item_zero_same_key_noop() {
-		$arr    = [ 'a' => 1, 'b' => 2 ];
+		$arr    = [
+			'a' => 1,
+			'b' => 2,
+		];
 		$result = PUM_Utils_Array::move_item( $arr, 'a', 0 );
 		$this->assertTrue( $result );
 	}
@@ -873,7 +878,10 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests move_item with non-existent key2 returns false.
 	 */
 	public function test_move_item_invalid_key2() {
-		$arr    = [ 'a' => 1, 'b' => 2 ];
+		$arr    = [
+			'a' => 1,
+			'b' => 2,
+		];
 		$result = PUM_Utils_Array::move_item( $arr, 'a', 'before', 'z' );
 		$this->assertFalse( $result );
 	}
@@ -932,7 +940,10 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests from_object with plain array.
 	 */
 	public function test_from_object_plain_array() {
-		$input    = [ 'a' => 1, 'b' => 2 ];
+		$input    = [
+			'a' => 1,
+			'b' => 2,
+		];
 		$returned = PUM_Utils_Array::from_object( $input );
 		$this->assertSame( $input, $returned );
 	}
@@ -951,7 +962,10 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests fix_json_boolean_values does not affect numeric strings.
 	 */
 	public function test_fix_json_boolean_values_numeric_strings() {
-		$input    = [ 'count' => '5', 'flag' => 'true' ];
+		$input    = [
+			'count' => '5',
+			'flag'  => 'true',
+		];
 		$returned = PUM_Utils_Array::fix_json_boolean_values( $input );
 		$this->assertSame( '5', $returned['count'] );
 		$this->assertTrue( $returned['flag'] );
@@ -1063,7 +1077,10 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests make_safe_for_json_encode preserves booleans in arrays.
 	 */
 	public function test_make_safe_for_json_encode_preserves_booleans() {
-		$input  = [ 'flag' => true, 'text' => '&lt;div&gt;' ];
+		$input  = [
+			'flag' => true,
+			'text' => '&lt;div&gt;',
+		];
 		$result = PUM_Utils_Array::make_safe_for_json_encode( $input );
 		$this->assertTrue( $result['flag'] );
 		$this->assertSame( '<div>', $result['text'] );
@@ -1092,7 +1109,10 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests utf8_encode_recursive with nested array.
 	 */
 	public function test_utf8_encode_recursive_array() {
-		$input  = [ 'a' => 'hello', 'b' => [ 'c' => 'world' ] ];
+		$input  = [
+			'a' => 'hello',
+			'b' => [ 'c' => 'world' ],
+		];
 		$result = PUM_Utils_Array::utf8_encode_recursive( $input );
 		$this->assertIsArray( $result );
 		$this->assertIsString( $result['a'] );
@@ -1135,10 +1155,27 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests maybe_json_attr with encode flag escapes HTML.
 	 */
 	public function test_maybe_json_attr_encoded() {
-		$result = PUM_Utils_Array::maybe_json_attr( [ 'key' => 'val' ], true );
+		$result = PUM_Utils_Array::maybe_json_attr(
+			[
+				'single_quote' => "'",
+				'double_quote' => '"',
+			],
+			true
+		);
 		$this->assertIsString( $result );
-		// Should have escaped characters.
+		$this->assertStringContainsString( '&#039;', $result );
 		$this->assertStringContainsString( '&quot;', $result );
+	}
+
+	/**
+	 * Tests maybe_json_attr handles invalid UTF-8 consistently when encoded.
+	 */
+	public function test_maybe_json_attr_encoded_invalid_utf8() {
+		$result = PUM_Utils_Array::maybe_json_attr( [ 'value' => "\xC3\x28" ], true );
+
+		$this->assertIsString( $result );
+		$this->assertStringContainsString( '&quot;', $result );
+		$this->assertStringContainsString( '?(', $result );
 	}
 
 	/**
@@ -1195,7 +1232,10 @@ class PUM_Utils_ArrayTest extends WP_UnitTestCase {
 	 * Tests remove_keys removing all keys results in empty array.
 	 */
 	public function test_remove_keys_all() {
-		$test     = [ 'a' => 1, 'b' => 2 ];
+		$test     = [
+			'a' => 1,
+			'b' => 2,
+		];
 		$returned = PUM_Utils_Array::remove_keys( $test, [ 'a', 'b' ] );
 		$this->assertEmpty( $returned );
 	}

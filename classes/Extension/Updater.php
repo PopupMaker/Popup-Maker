@@ -403,7 +403,7 @@ class PUM_Extension_Updater {
 	 * @param mixed  $_data Plugin data.
 	 * @param string $_action The type of information being requested from the Plugin Installation API.
 	 * @param object $_args Plugin API arguments.
-	 * @return object $_data
+	 * @return false|object|WP_Error $_data
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
 
@@ -412,6 +412,10 @@ class PUM_Extension_Updater {
 		}
 
 		if ( ! isset( $_args->slug ) || ( $_args->slug !== $this->slug ) ) {
+			return $_data;
+		}
+
+		if ( is_wp_error( $_data ) ) {
 			return $_data;
 		}
 
@@ -440,6 +444,12 @@ class PUM_Extension_Updater {
 			}
 		} else {
 			$_data = $edd_api_request_transient;
+		}
+
+		// A valid plugin information response must be an object with a name.
+		// Returning false allows WordPress to use its normal Plugin API fallback.
+		if ( ! is_object( $_data ) || empty( $_data->name ) ) {
+			return false;
 		}
 
 		// Convert sections into an associative array, since we're getting an object, but Core expects an array.

@@ -343,7 +343,10 @@ class PUM_Admin_Popups_Test extends WP_UnitTestCase {
 	 * JSON strings are decoded in meta.
 	 */
 	public function test_sanitize_meta_json_decoded() {
-		$obj  = (object) [ 'type' => 'click_open', 'settings' => [ 'delay' => 0 ] ];
+		$obj  = (object) [
+			'type'     => 'click_open',
+			'settings' => [ 'delay' => 0 ],
+		];
 		$json = wp_json_encode( $obj );
 
 		$input  = [ 0 => addslashes( $json ) ];
@@ -472,15 +475,123 @@ class PUM_Admin_Popups_Test extends WP_UnitTestCase {
 	 * Multiple popups are processed correctly.
 	 */
 	public function test_handle_bulk_actions_multiple_popups() {
-		$pub1   = $this->factory->post->create( [ 'post_type' => 'popup', 'post_status' => 'publish' ] );
-		$pub2   = $this->factory->post->create( [ 'post_type' => 'popup', 'post_status' => 'publish' ] );
-		$draft1 = $this->factory->post->create( [ 'post_type' => 'popup', 'post_status' => 'draft' ] );
+		$pub1   = $this->factory->post->create( [
+			'post_type'   => 'popup',
+			'post_status' => 'publish',
+		] );
+		$pub2   = $this->factory->post->create( [
+			'post_type'   => 'popup',
+			'post_status' => 'publish',
+		] );
+		$draft1 = $this->factory->post->create( [
+			'post_type'   => 'popup',
+			'post_status' => 'draft',
+		] );
 
 		$url    = 'https://example.com/wp-admin/edit.php?post_type=popup';
 		$result = PUM_Admin_Popups::handle_bulk_actions( $url, 'pum_enable', [ $pub1, $pub2, $draft1 ] );
 
 		$this->assertStringContainsString( 'pum_bulk_count=2', $result, 'Two published popups should be enabled.' );
 		$this->assertStringContainsString( 'pum_bulk_skipped=1', $result, 'One draft should be skipped.' );
+	}
+
+	/**
+	 * Bulk actions prime selected popup objects before per-popup processing.
+	 */
+	public function test_handle_bulk_actions_primes_selected_popup_objects() {
+		global $wpdb;
+
+		$popup_ids = [];
+
+		for ( $i = 0; $i < 20; ++$i ) {
+			$popup_id = $this->factory->post->create(
+				[
+					'post_type'   => 'popup',
+					'post_status' => 'publish',
+				]
+			);
+
+			update_post_meta( $popup_id, 'enabled', 0 );
+			update_post_meta( $popup_id, 'data_version', 3 );
+			$popup_ids[] = $popup_id;
+			clean_post_cache( $popup_id );
+		}
+
+		$start_queries = $wpdb->num_queries;
+		$result        = PUM_Admin_Popups::handle_bulk_actions(
+			'https://example.com/wp-admin/edit.php?post_type=popup',
+			'pum_enable',
+			$popup_ids
+		);
+
+		$this->assertLessThanOrEqual( 62, $wpdb->num_queries - $start_queries );
+		$this->assertStringContainsString( 'pum_bulk_count=20', $result );
+
+		foreach ( $popup_ids as $popup_id ) {
+			$this->assertSame( '1', get_post_meta( $popup_id, 'enabled', true ) );
+		}
+	}
+
+	/**
+	 * Bulk cache priming avoids a database query when every popup is cached.
+	 */
+	public function test_bulk_cache_priming_skips_cached_posts() {
+		global $wpdb;
+
+		$popup_ids = $this->factory->post->create_many(
+			3,
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+			]
+		);
+
+		foreach ( $popup_ids as $popup_id ) {
+			$this->assertInstanceOf( WP_Post::class, get_post( $popup_id ) );
+		}
+
+		$prime_method = new ReflectionMethod( PUM_Admin_Popups::class, 'prime_bulk_action_caches' );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$prime_method->setAccessible( true );
+		}
+
+		$start_queries = $wpdb->num_queries;
+		$prime_method->invoke( null, $popup_ids );
+
+		$this->assertSame( 0, $wpdb->num_queries - $start_queries );
+	}
+
+	/**
+	 * Bulk cache priming queries cold popup objects through the repository.
+	 */
+	public function test_bulk_cache_priming_uses_repository_query() {
+		global $wpdb;
+
+		$popup_ids = $this->factory->post->create_many(
+			3,
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+			]
+		);
+
+		foreach ( $popup_ids as $popup_id ) {
+			clean_post_cache( $popup_id );
+		}
+
+		$prime_method = new ReflectionMethod( PUM_Admin_Popups::class, 'prime_bulk_action_caches' );
+		if ( PHP_VERSION_ID < 80100 ) {
+			$prime_method->setAccessible( true );
+		}
+
+		$start_queries = $wpdb->num_queries;
+		$prime_method->invoke( null, $popup_ids );
+
+		$this->assertLessThanOrEqual( 2, $wpdb->num_queries - $start_queries );
+
+		foreach ( $popup_ids as $popup_id ) {
+			$this->assertInstanceOf( WP_Post::class, get_post( $popup_id ) );
+		}
 	}
 
 	/**
@@ -616,7 +727,10 @@ class PUM_Admin_Popups_Test extends WP_UnitTestCase {
 	 * Existing bulk actions are preserved.
 	 */
 	public function test_register_bulk_actions_preserves_existing() {
-		$existing = [ 'edit' => 'Edit', 'trash' => 'Move to Trash' ];
+		$existing = [
+			'edit'  => 'Edit',
+			'trash' => 'Move to Trash',
+		];
 		$result   = PUM_Admin_Popups::register_bulk_actions( $existing );
 
 		$this->assertArrayHasKey( 'edit', $result, 'Existing actions should be preserved.' );

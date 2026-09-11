@@ -520,10 +520,25 @@
 				// TODO: Move this to its own event binding to keep this method clean and simple.
 				// This prevents animations from failing due to browser race conditions & styling queues.
 				.queue( function () {
-					var $container = $popup.popmake( 'getContainer' );
+					var el = this,
+						$container = $popup.popmake( 'getContainer' );
 					$popup.css( { display: 'block', opacity: 0 } );
 					$container.css( { display: 'block', opacity: 0 } );
-					$( this ).dequeue();
+
+					// Wait a frame so the browser paints the opacity:0 state
+					// before the animation starts. Using requestAnimationFrame
+					// instead of a synchronous forced reflow (offsetHeight)
+					// avoids one popup's unpainted style changes interleaving
+					// with another popup's open() call in the same tick, e.g.
+					// two Auto Open triggers with the same delay.
+					var openAnimationFrame = window.requestAnimationFrame(
+						function () {
+							$popup.removeData( 'pumOpenAnimationFrame' );
+							$( el ).dequeue();
+						}
+					);
+
+					$popup.data( 'pumOpenAnimationFrame', openAnimationFrame );
 				} )
 				.popmake( 'animate', settings.animation_type, function () {
 					/**
@@ -582,10 +597,6 @@
 				height: '',
 				width: '',
 			} );
-
-			// Force browser to drop any cached values
-			$popup[ 0 ].offsetHeight;
-			$container[ 0 ].offsetHeight;
 
 			return this;
 		},
@@ -701,6 +712,14 @@
 						.trigger( 'pumClosePrevented' );
 
 					return this;
+				}
+
+				var openAnimationFrame = $popup.data( 'pumOpenAnimationFrame' );
+
+				// Cancel a paint-boundary open that has not started animating yet.
+				if ( openAnimationFrame !== undefined ) {
+					window.cancelAnimationFrame( openAnimationFrame );
+					$popup.removeData( 'pumOpenAnimationFrame' ).clearQueue();
 				}
 
 				$container.fadeOut( 'fast', function () {
@@ -866,12 +885,24 @@
 
 			if ( $popup.is( ':hidden' ) ) {
 				opacity.overlay = $popup.css( 'opacity' );
-				$popup.css( { opacity: 0 } ).show( 0 );
+				// Use a plain display write rather than .show(0): jQuery's
+				// show/hide are fx-queued and resolve on the next
+				// requestAnimationFrame tick even at duration 0, which left
+				// a pending queue entry on $popup that raced with the
+				// open() animation flow when multiple popups opened in the
+				// same tick.
+				$popup.css( {
+					opacity: 0,
+					display: 'block',
+				} );
 			}
 
 			if ( $container.is( ':hidden' ) ) {
 				opacity.container = $container.css( 'opacity' );
-				$container.css( { opacity: 0 } ).show( 0 );
+				$container.css( {
+					opacity: 0,
+					display: 'block',
+				} );
 			}
 
 			if ( settings.position_fixed ) {
@@ -934,10 +965,16 @@
 			}
 
 			if ( opacity.overlay ) {
-				$popup.css( { opacity: opacity.overlay } ).hide( 0 );
+				$popup.css( {
+					opacity: opacity.overlay,
+					display: 'none',
+				} );
 			}
 			if ( opacity.container ) {
-				$container.css( { opacity: opacity.container } ).hide( 0 );
+				$container.css( {
+					opacity: opacity.container,
+					display: 'none',
+				} );
 			}
 			return this;
 		},

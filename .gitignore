@@ -16,6 +16,11 @@ project.properties
 
 # Languages folder (built at release).
 /languages/*
+!/languages/index.php
+!/languages/*.pot
+!/languages/*.po
+!/languages/*.mo
+!/languages/*.json
 
 # Testing
 .phpunit.result.cache

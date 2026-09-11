@@ -5,6 +5,9 @@ export interface SkeletonShimmerProps {
 
 /**
  * Wraps skeleton layout blocks that share the shimmer surface styles.
+ * @param root0
+ * @param root0.className
+ * @param root0.children
  */
 export const SkeletonShimmer: React.FC< SkeletonShimmerProps > = ( {
 	className,

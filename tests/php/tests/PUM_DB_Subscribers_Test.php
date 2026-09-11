@@ -51,7 +51,73 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	 * Test version is set.
 	 */
 	public function test_version_is_set() {
-		$this->assertSame( 20200917, $this->db->version );
+		$this->assertSame( 20260810, $this->db->version );
+	}
+
+	/**
+	 * Test the stored name scrub removes HTML from existing subscriber rows.
+	 */
+	public function test_scrub_unsafe_name_fields() {
+		$this->db->create_table();
+
+		$payload = '<div class="contextual-help-tabs"><a href="&lt;img src=x onerror=alert(document.domain)&gt;">marker</a></div>';
+		$safe_id = $this->db->insert(
+			[
+				'email' => 'safe-subscriber@example.com',
+				'name'  => 'Safe Subscriber',
+			]
+		);
+		$id      = $this->db->insert(
+			[
+				'email' => 'stored-xss@example.com',
+				'name'  => $payload,
+				'fname' => $payload,
+				'lname' => $payload,
+			]
+		);
+
+		$result = $this->db->scrub_unsafe_name_fields();
+		$row    = $this->db->get( $id );
+
+		$this->assertSame( 1, $result['processed'] );
+		$this->assertSame( 1, $result['updated'] );
+		$this->assertTrue( $result['complete'] );
+		$this->assertSame( 'Safe Subscriber', $this->db->get( $safe_id )->name );
+		$this->assertSame( 'marker', $row->name );
+		$this->assertSame( 'marker', $row->fname );
+		$this->assertSame( 'marker', $row->lname );
+	}
+
+	/**
+	 * Test a scrub batch records completion after reaching the final batch.
+	 */
+	public function test_name_scrub_batch_records_completion() {
+		$this->db->create_table();
+
+		$id = $this->db->insert(
+			[
+				'email' => 'automatic-stored-xss@example.com',
+				'name'  => '<strong>Stored Name</strong>',
+			]
+		);
+
+		delete_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION );
+		$complete = $this->db->run_name_scrub_batch();
+
+		$this->assertTrue( $complete );
+		$this->assertSame( 'complete', get_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION ) );
+		$this->assertSame( 'Stored Name', $this->db->get( $id )->name );
+	}
+
+	/**
+	 * Test scrub completion reflects the persistent migration flag.
+	 */
+	public function test_name_scrub_completion_status() {
+		update_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION, 123 );
+		$this->assertFalse( $this->db->is_name_scrub_complete() );
+
+		update_option( PUM_DB_Subscribers::NAME_SCRUB_OPTION, 'complete' );
+		$this->assertTrue( $this->db->is_name_scrub_complete() );
 	}
 
 	/**
@@ -85,8 +151,8 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	 * Test get_columns format specifiers are valid.
 	 */
 	public function test_get_columns_format_specifiers() {
-		$columns        = $this->db->get_columns();
-		$valid_formats  = [ '%d', '%s', '%f' ];
+		$columns       = $this->db->get_columns();
+		$valid_formats = [ '%d', '%s', '%f' ];
 
 		foreach ( $columns as $col => $format ) {
 			$this->assertContains( $format, $valid_formats, "Invalid format for column $col: $format" );
@@ -207,6 +273,30 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 		$this->db->create_table();
 		$version = get_option( 'pum_subscribers_db_version' );
 		$this->assertNotFalse( $version );
+	}
+
+	/**
+	 * Test create_table adds the sortable created-date index.
+	 */
+	public function test_create_table_adds_created_index() {
+		global $wpdb;
+
+		if ( ! $wpdb->has_cap( 'identifier_placeholders' ) ) {
+			$this->markTestSkipped( 'Index inspection requires WordPress 6.2 or later.' );
+		}
+
+		$this->db->create_table();
+
+		$index = $wpdb->get_row(
+			$wpdb->prepare(
+				'SHOW INDEX FROM %i WHERE Key_name = %s',
+				$this->db->table_name(),
+				'created'
+			)
+		);
+
+		$this->assertNotNull( $index );
+		$this->assertSame( 'created', $index->Column_name );
 	}
 
 	// ─── insert() ──────────────────────────────────────────────────────
@@ -545,12 +635,39 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_query_with_search() {
 		$this->db->create_table();
 
-		$this->db->insert( [ 'email' => 'alice@example.com', 'name' => 'Alice' ] );
-		$this->db->insert( [ 'email' => 'bob@example.com', 'name' => 'Bob' ] );
+		$this->db->insert( [
+			'email' => 'alice@example.com',
+			'name'  => 'Alice',
+		] );
+		$this->db->insert( [
+			'email' => 'bob@example.com',
+			'name'  => 'Bob',
+		] );
 
 		$results = $this->db->query( [ 's' => 'alice' ] );
 		$this->assertCount( 1, $results );
 		$this->assertSame( 'Alice', $results[0]->name );
+	}
+
+	/**
+	 * Test query with an exact indexed-column filter.
+	 */
+	public function test_query_with_exact_where_filter() {
+		$this->db->create_table();
+
+		$this->db->insert( [
+			'email' => 'person@example.com',
+			'name'  => 'Exact',
+		] );
+		$this->db->insert( [
+			'email' => 'person@example.com.invalid',
+			'name'  => 'Partial',
+		] );
+
+		$results = $this->db->query( [ 'where' => [ 'email' => 'person@example.com' ] ] );
+
+		$this->assertCount( 1, $results );
+		$this->assertSame( 'Exact', $results[0]->name );
 	}
 
 	/**
@@ -559,8 +676,14 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_query_with_orderby() {
 		$this->db->create_table();
 
-		$this->db->insert( [ 'email' => 'a@example.com', 'name' => 'Alpha' ] );
-		$this->db->insert( [ 'email' => 'b@example.com', 'name' => 'Beta' ] );
+		$this->db->insert( [
+			'email' => 'a@example.com',
+			'name'  => 'Alpha',
+		] );
+		$this->db->insert( [
+			'email' => 'b@example.com',
+			'name'  => 'Beta',
+		] );
 
 		$results = $this->db->query( [
 			'orderby' => 'name',
@@ -577,7 +700,10 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_query_with_specific_fields() {
 		$this->db->create_table();
 
-		$this->db->insert( [ 'email' => 'fields@example.com', 'name' => 'Field Test' ] );
+		$this->db->insert( [
+			'email' => 'fields@example.com',
+			'name'  => 'Field Test',
+		] );
 
 		$results = $this->db->query( [ 'fields' => 'email, name' ] );
 		$this->assertCount( 1, $results );
@@ -591,9 +717,18 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_query_with_pagination() {
 		$this->db->create_table();
 
-		$this->db->insert( [ 'email' => 'p1@example.com', 'name' => 'Page1A' ] );
-		$this->db->insert( [ 'email' => 'p2@example.com', 'name' => 'Page1B' ] );
-		$this->db->insert( [ 'email' => 'p3@example.com', 'name' => 'Page2A' ] );
+		$this->db->insert( [
+			'email' => 'p1@example.com',
+			'name'  => 'Page1A',
+		] );
+		$this->db->insert( [
+			'email' => 'p2@example.com',
+			'name'  => 'Page1B',
+		] );
+		$this->db->insert( [
+			'email' => 'p3@example.com',
+			'name'  => 'Page2A',
+		] );
 
 		$results = $this->db->query( [
 			'limit' => 2,
@@ -627,12 +762,21 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_query_numeric_search() {
 		$this->db->create_table();
 
-		$id1 = $this->db->insert( [ 'email' => 'num1@example.com', 'popup_id' => 42 ] );
-		$this->db->insert( [ 'email' => 'num2@example.com', 'popup_id' => 99 ] );
+		$id1         = $this->db->insert( [
+			'email'    => 'num1@example.com',
+			'popup_id' => 0,
+		] );
+		$id2         = $this->db->insert( [
+			'email'    => 'num2@example.com',
+			'popup_id' => 0,
+		] );
+		$search_value = max( (int) $id1, (int) $id2 ) + 1000;
+		$this->db->update( $id1, [ 'popup_id' => $search_value ] );
 
-		$results = $this->db->query( [ 's' => '42' ] );
+		$results = $this->db->query( [ 's' => (string) $search_value ] );
 		// Numeric search should match popup_id, user_id, and ID columns.
-		$this->assertGreaterThanOrEqual( 1, count( $results ) );
+		$this->assertCount( 1, $results );
+		$this->assertSame( (string) $id1, (string) $results[0]->ID );
 	}
 
 	// ─── total_rows() ──────────────────────────────────────────────────
@@ -656,10 +800,43 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_total_rows_with_search() {
 		$this->db->create_table();
 
-		$this->db->insert( [ 'email' => 'alice@test.com', 'name' => 'Alice' ] );
-		$this->db->insert( [ 'email' => 'bob@test.com', 'name' => 'Bob' ] );
+		$this->db->insert( [
+			'email' => 'alice@test.com',
+			'name'  => 'Alice',
+		] );
+		$this->db->insert( [
+			'email' => 'bob@test.com',
+			'name'  => 'Bob',
+		] );
 
 		$count = $this->db->total_rows( [ 's' => 'alice' ] );
+		$this->assertSame( 1, $count );
+	}
+
+	/**
+	 * Test total_rows delegates counting to the database.
+	 */
+	public function test_total_rows_uses_count_query() {
+		global $wpdb;
+
+		$this->db->create_table();
+		$this->db->insert( [ 'email' => 'count@example.com' ] );
+
+		$this->assertSame( 1, $this->db->total_rows( [] ) );
+		$this->assertStringContainsString( 'SELECT COUNT(*)', $wpdb->last_query );
+	}
+
+	/**
+	 * Test total_rows applies exact filters without pagination limits.
+	 */
+	public function test_total_rows_with_exact_where_filter() {
+		$this->db->create_table();
+
+		$this->db->insert( [ 'email' => 'match@example.com' ] );
+		$this->db->insert( [ 'email' => 'match@example.com.invalid' ] );
+
+		$count = $this->db->total_rows( [ 'where' => [ 'email' => 'match@example.com' ] ] );
+
 		$this->assertSame( 1, $count );
 	}
 
@@ -769,7 +946,10 @@ class PUM_DB_Subscribers_Test extends WP_UnitTestCase {
 	public function test_insert_serializes_arrays() {
 		$this->db->create_table();
 
-		$consent_data = [ 'gdpr' => true, 'terms' => 'accepted' ];
+		$consent_data = [
+			'gdpr'  => true,
+			'terms' => 'accepted',
+		];
 
 		$id  = $this->db->insert( [
 			'email'        => 'serial@test.com',

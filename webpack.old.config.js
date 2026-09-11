@@ -2,6 +2,7 @@ const path = require( 'path' );
 const CustomTemplatedPathPlugin = require( '@popup-maker/custom-templated-path-webpack-plugin' );
 const DependencyExtractionWebpackPlugin = require( '@popup-maker/dependency-extraction-webpack-plugin' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const ReadableCssAssetsWebpackPlugin = require( './custom-tools/readable-css-assets-webpack-plugin' );
 // const UnminifiedWebpackPlugin = require( 'unminified-webpack-plugin' );
 
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
@@ -106,7 +107,8 @@ const config = {
 		maxAge: isProduction ? 1000 * 60 * 60 * 24 * 7 : 1000 * 60 * 60 * 24,
 		compression: 'gzip',
 		name: `popup-maker-legacy-${ NODE_ENV }`,
-		version: require( path.resolve( process.cwd(), 'package.json' ) ).version,
+		version: require( path.resolve( process.cwd(), 'package.json' ) )
+			.version,
 	},
 	optimization: {
 		...defaultConfig.optimization,
@@ -124,10 +126,6 @@ const config = {
 				{
 					from: './node_modules/mobile-detect/mobile-detect.min.js',
 					to: path.join( distPath, 'vendor', 'mobile-detect.min.js' ),
-				},
-				{
-					from: './node_modules/iframe-resizer/js/iframeResizer.min.js',
-					to: path.join( distPath, 'vendor', 'iframeResizer.min.js' ),
 				},
 			],
 		} ),
@@ -149,11 +147,8 @@ const config = {
 			// combineAssets: true,
 			// combinedOutputFile: '../plugin-assets.php',
 		} ),
+		new ReadableCssAssetsWebpackPlugin(),
 	],
-	optimization: {
-		...defaultConfig.optimization,
-		minimize: NODE_ENV !== 'development',
-	},
 };
 
 module.exports = config;

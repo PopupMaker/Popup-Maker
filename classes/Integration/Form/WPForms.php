@@ -36,7 +36,15 @@ class PUM_Integration_Form_WPForms extends PUM_Abstract_Integration_Form {
 	 * @return array|bool|null|WP_Post[]
 	 */
 	public function get_forms() {
-		return wpforms()->form->get( null, [ 'posts_per_page' => -1 ] );
+		return wpforms()->form->get(
+			null,
+			[
+				'posts_per_page'         => -1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			]
+		);
 	}
 
 	/**

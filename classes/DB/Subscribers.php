@@ -19,6 +19,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 	/**
+	 * Option used to track the stored subscriber name scrub.
+	 */
+	const NAME_SCRUB_OPTION = 'pum_subscriber_name_scrub_20260910';
+
+	/**
+	 * Number of unsafe subscriber rows to scrub per request.
+	 */
+	const NAME_SCRUB_BATCH_SIZE = 100;
+
+	/**
 	 * The name of our database table
 	 */
 	public $table_name = 'pum_subscribers';
@@ -26,7 +36,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	/**
 	 * The version of our database table
 	 */
-	public $version = 20200917;
+	public $version = 20260810;
 
 	/**
 	 * The name of the primary column
@@ -73,6 +83,129 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	}
 
 	/**
+	 * Continue the one-time scrub of unsafe stored subscriber names.
+	 *
+	 * @return bool|null True when complete, false when another batch is needed, or null on failure.
+	 */
+	public function run_name_scrub_batch() {
+		$cursor = get_option( self::NAME_SCRUB_OPTION, 0 );
+
+		if ( 'complete' === $cursor ) {
+			return true;
+		}
+
+		$result = $this->scrub_unsafe_name_fields( absint( $cursor ), self::NAME_SCRUB_BATCH_SIZE );
+
+		if ( false === $result ) {
+			return null;
+		}
+
+		$complete = $result['complete'];
+
+		update_option( self::NAME_SCRUB_OPTION, $complete ? 'complete' : $result['last_id'], false );
+
+		return $complete;
+	}
+
+	/**
+	 * Check whether the stored subscriber name scrub is complete.
+	 *
+	 * @return bool True when the scrub is complete.
+	 */
+	public function is_name_scrub_complete() {
+		return 'complete' === get_option( self::NAME_SCRUB_OPTION );
+	}
+
+	/**
+	 * Scrub one batch of stored HTML from subscriber name fields.
+	 *
+	 * @param int $after_id Only inspect rows after this subscriber ID.
+	 * @param int $limit    Maximum number of suspicious rows to process.
+	 *
+	 * @return array{processed:int,updated:int,last_id:int,complete:bool}|false Batch result, or false on failure.
+	 */
+	public function scrub_unsafe_name_fields( $after_id = 0, $limit = 100 ) {
+		global $wpdb;
+
+		$after_id = absint( $after_id );
+		$limit    = max( 1, absint( $limit ) );
+		$pattern  = '%' . $wpdb->esc_like( '<' ) . '%';
+
+		if ( $this->wp_version >= 6.2 ) {
+			$rows = $wpdb->get_results(
+				$wpdb->prepare(
+					'SELECT ID, name, fname, lname FROM %i WHERE ID > %d AND (name LIKE %s OR fname LIKE %s OR lname LIKE %s) ORDER BY ID ASC LIMIT %d',
+					$this->table_name(),
+					$after_id,
+					$pattern,
+					$pattern,
+					$pattern,
+					$limit
+				),
+				ARRAY_A
+			);
+		} else {
+			$rows = $wpdb->get_results(
+				$wpdb->prepare(
+					// Ignored because the table name is an internal identifier and WordPress <=6.2 does not support %i.
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT ID, name, fname, lname FROM {$this->table_name()} WHERE ID > %d AND (name LIKE %s OR fname LIKE %s OR lname LIKE %s) ORDER BY ID ASC LIMIT %d",
+					$after_id,
+					$pattern,
+					$pattern,
+					$pattern,
+					$limit
+				),
+				ARRAY_A
+			);
+		}
+
+		if ( ! is_array( $rows ) ) {
+			return false;
+		}
+
+		$updated = 0;
+		$last_id = $after_id;
+
+		foreach ( $rows as $row ) {
+			$data = [];
+
+			foreach ( [ 'name', 'fname', 'lname' ] as $field ) {
+				$sanitized = sanitize_text_field( $row[ $field ] );
+
+				if ( $sanitized !== $row[ $field ] ) {
+					$data[ $field ] = $sanitized;
+				}
+			}
+
+			if ( ! empty( $data ) ) {
+				$result = $wpdb->update(
+					$this->table_name(),
+					$data,
+					[ 'ID' => absint( $row['ID'] ) ],
+					null,
+					[ '%d' ]
+				);
+
+				if ( false === $result ) {
+					return false;
+				}
+
+				$updated += $result;
+			}
+
+			$last_id = absint( $row['ID'] );
+		}
+
+		return [
+			'processed' => count( $rows ),
+			'updated'   => $updated,
+			'last_id'   => $last_id,
+			'complete'  => count( $rows ) < $limit,
+		];
+	}
+
+	/**
 	 * Create the table
 	 */
 	public function create_table() {
@@ -112,7 +245,8 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		  KEY email (email),
 		  KEY user_id (user_id),
 		  KEY popup_id (popup_id),
-		  KEY email_hash (email_hash)
+		  KEY email_hash (email_hash),
+		  KEY created (created)
 		) $charset_collate;";
 
 		$results = dbDelta( $sql );
@@ -154,6 +288,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 				'limit'   => null,
 				'offset'  => null,
 				's'       => null,
+				'where'   => [],
 				'orderby' => null,
 				'order'   => null,
 			]
@@ -179,28 +314,7 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 		// Set up $values array for wpdb::prepare
 		$values = [];
 
-		// Define an empty WHERE clause to start from.
-		$where = 'WHERE 1=1';
-
-		// Build search query.
-		if ( $args['s'] && ! empty( $args['s'] ) ) {
-			$search = wp_unslash( trim( $args['s'] ) );
-
-			$search_where = [];
-
-			foreach ( $columns as $key => $type ) {
-				if ( in_array( $key, $fields, true ) ) {
-					if ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) {
-						$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
-						$search_where[] = "`$key` LIKE '%s'";
-					}
-				}
-			}
-
-			if ( ! empty( $search_where ) ) {
-				$where .= ' AND (' . join( ' OR ', $search_where ) . ')';
-			}
-		}
+		$where = $this->prepare_where_clause( $args, $fields, $values );
 
 		$query .= " $where";
 
@@ -246,17 +360,71 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 	}
 
 	/**
+	 * Build the shared WHERE clause for row and count queries.
+	 *
+	 * @param array<string,mixed> $args Query arguments.
+	 * @param string[]            $fields Selected fields.
+	 * @param array<int,mixed>    $values Prepared-query values.
+	 * @return string
+	 */
+	protected function prepare_where_clause( $args, $fields, &$values ) {
+		global $wpdb;
+
+		$columns = $this->get_columns();
+		$where   = 'WHERE 1=1';
+
+		foreach ( (array) $args['where'] as $column => $value ) {
+			if ( ! isset( $columns[ $column ] ) || ! is_scalar( $value ) ) {
+				continue;
+			}
+
+			$where   .= " AND `$column` = {$columns[$column]}";
+			$values[] = $value;
+		}
+
+		if ( $args['s'] && ! empty( $args['s'] ) ) {
+			$search       = wp_unslash( trim( $args['s'] ) );
+			$search_where = [];
+
+			foreach ( $columns as $key => $type ) {
+				if ( in_array( $key, $fields, true ) && ( '%s' === $type || ( '%d' === $type && is_numeric( $search ) ) ) ) {
+					$values[]       = '%' . $wpdb->esc_like( $search ) . '%';
+					$search_where[] = "`$key` LIKE '%s'";
+				}
+			}
+
+			if ( ! empty( $search_where ) ) {
+				$where .= ' AND (' . join( ' OR ', $search_where ) . ')';
+			}
+		}
+
+		return $where;
+	}
+
+	/**
 	 * @param $args
 	 *
 	 * @return int
 	 */
 	public function total_rows( $args ) {
-		$args['limit']  = null;
-		$args['offset'] = null;
-		$args['page']   = null;
+		global $wpdb;
 
-		$results = $this->query( $args );
+		$args = wp_parse_args(
+			$args,
+			[
+				'fields' => '*',
+				's'      => null,
+				'where'  => [],
+			]
+		);
 
-		return $results ? count( $results ) : 0;
+		$fields = '*' === $args['fields'] ? array_keys( $this->get_columns() ) : array_map( 'trim', explode( ',', $args['fields'] ) );
+		$values = [];
+		$where  = $this->prepare_where_clause( $args, $fields, $values );
+		$query  = "SELECT COUNT(*) FROM %i $where";
+		$values = array_merge( [ $this->table_name() ], $values );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return (int) $wpdb->get_var( $wpdb->prepare( $query, $values ) );
 	}
 }

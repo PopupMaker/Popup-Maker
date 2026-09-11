@@ -32,6 +32,13 @@ class FeatureAnnouncements extends Service implements Provider {
 	const EXIT_INTENT_MIN_CONVERSIONS = 10;
 
 	/**
+	 * Maximum popup metadata records to prime per exit-intent scan step.
+	 *
+	 * @var int
+	 */
+	const EXIT_INTENT_META_BATCH_SIZE = 20;
+
+	/**
 	 * Minimum total conversions before advanced analytics becomes relevant.
 	 *
 	 * @var int
@@ -532,11 +539,9 @@ class FeatureAnnouncements extends Service implements Provider {
 	 * @return bool
 	 */
 	public function has_published_popup() {
-		$popups = get_posts( [
-			'post_type'      => 'popup',
+		$popups = $this->container->get( 'popups' )->query_ids( [
 			'post_status'    => 'publish',
 			'posts_per_page' => 1,
-			'fields'         => 'ids',
 			'no_found_rows'  => true,
 		] );
 
@@ -556,11 +561,9 @@ class FeatureAnnouncements extends Service implements Provider {
 			return false;
 		}
 
-		$popups = get_posts( [
-			'post_type'      => 'popup',
+		$popups = $this->container->get( 'popups' )->query_ids( [
 			'post_status'    => 'publish',
 			'posts_per_page' => 2,
-			'fields'         => 'ids',
 			'no_found_rows'  => true,
 		] );
 
@@ -707,7 +710,8 @@ class FeatureAnnouncements extends Service implements Provider {
 
 	/**
 	 * True when the site has crossed the form conversion floor AND no
-	 * popup is using an exit-intent trigger yet.
+	 * popup is using an exit-intent trigger yet. Existing trigger data may come
+	 * from Pro or the retired standalone Exit Intent extension.
 	 *
 	 * @return bool
 	 */
@@ -763,31 +767,35 @@ class FeatureAnnouncements extends Service implements Provider {
 	/**
 	 * True when any published popup has at least one exit-intent trigger.
 	 *
+	 * Both Pro and the retired standalone extension persist the same
+	 * `exit_intent` trigger type, so stored legacy triggers remain relevant.
+	 *
 	 * @return bool
 	 */
 	protected function any_popup_uses_exit_intent() {
-		$popups = get_posts( [
-			'post_type'      => 'popup',
+		$popups = $this->container->get( 'popups' )->query_ids( [
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
 		] );
 
 		if ( empty( $popups ) ) {
 			return false;
 		}
 
-		foreach ( $popups as $popup_id ) {
-			$triggers = get_post_meta( (int) $popup_id, 'popup_triggers', true );
+		foreach ( array_chunk( wp_parse_id_list( $popups ), self::EXIT_INTENT_META_BATCH_SIZE ) as $popup_ids ) {
+			update_meta_cache( 'post', $popup_ids );
 
-			if ( ! is_array( $triggers ) ) {
-				continue;
-			}
+			foreach ( $popup_ids as $popup_id ) {
+				$triggers = get_post_meta( $popup_id, 'popup_triggers', true );
 
-			foreach ( $triggers as $trigger ) {
-				if ( isset( $trigger['type'] ) && 'exit_intent' === $trigger['type'] ) {
-					return true;
+				if ( ! is_array( $triggers ) ) {
+					continue;
+				}
+
+				foreach ( $triggers as $trigger ) {
+					if ( isset( $trigger['type'] ) && 'exit_intent' === $trigger['type'] ) {
+						return true;
+					}
 				}
 			}
 		}
@@ -879,7 +887,7 @@ class FeatureAnnouncements extends Service implements Provider {
 	 *
 	 * Memoized for the lifetime of the request — both the condition
 	 * check and the message builder call this, and the underlying
-	 * get_posts() scan is the most expensive thing in this class.
+	 * popup repository scan is the most expensive thing in this class.
 	 *
 	 * @return array{total:int,disabled:int,stale:int}
 	 */
@@ -888,11 +896,11 @@ class FeatureAnnouncements extends Service implements Provider {
 			return $this->scheduling_stats_cache;
 		}
 
-		$popups = get_posts( [
-			'post_type'      => 'popup',
-			'post_status'    => [ 'publish', 'draft' ],
-			'posts_per_page' => -1,
-			'no_found_rows'  => true,
+		$popups = $this->container->get( 'popups' )->query_posts( [
+			'post_status'            => [ 'publish', 'draft' ],
+			'posts_per_page'         => -1,
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
 		] );
 
 		$stale_threshold = time() - ( self::SCHEDULING_STALE_DAYS * DAY_IN_SECONDS );

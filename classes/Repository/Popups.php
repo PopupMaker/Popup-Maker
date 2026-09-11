@@ -21,6 +21,17 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	protected $model = 'PUM_Model_Popup';
 
 	/**
+	 * Include the current site in cached popup model hashes.
+	 *
+	 * @param WP_Post $post Post object.
+	 *
+	 * @return string
+	 */
+	protected function get_post_hash( $post ) {
+		return md5( get_current_blog_id() . ':' . parent::get_post_hash( $post ) );
+	}
+
+	/**
 	 * @return string
 	 */
 	protected function get_post_type() {
@@ -107,6 +118,17 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	 */
 	public function get_items( $args = [] ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		return parent::get_items( $args );
+	}
+
+	/**
+	 * Discard a cached popup model.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return void
+	 */
+	public function forget_item( $item_id ) {
+		unset( $this->cache['objects'][ (int) $item_id ] );
 	}
 
 	/**

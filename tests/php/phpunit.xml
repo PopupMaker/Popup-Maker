@@ -3,6 +3,7 @@
 	bootstrap="config/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
+	convertDeprecationsToExceptions="true"
 	>
 	<testsuites>
 		<testsuite name="general">

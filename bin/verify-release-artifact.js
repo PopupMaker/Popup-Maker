@@ -9,6 +9,10 @@ const pluginRoot = 'popup-maker';
 const requiredPaths = [
 	'popup-maker.php',
 	'readme.txt',
+	'dist/assets/site.css',
+	'dist/assets/site-readable.css',
+	'dist/assets/site-rtl.css',
+	'dist/assets/site-rtl-readable.css',
 	'vendor-prefixed/autoload.php',
 ];
 

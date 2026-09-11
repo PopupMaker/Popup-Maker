@@ -10,7 +10,7 @@ type LocalizedPopup = {
 	post_title: string;
 };
 
-const { popups = [] } = window.popupMakerBlockEditor as {
+const { popups = [] } = window.popupMakerBlockEditor as unknown as {
 	popups?: LocalizedPopup[];
 };
 

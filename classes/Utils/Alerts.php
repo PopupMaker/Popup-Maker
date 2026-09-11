@@ -31,8 +31,8 @@ class PUM_Utils_Alerts {
 	/**
 	 * Gets a count of current alerts.
 	 *
-	 * Panel-eligible alerts are excluded — they render in the React
-	 * notifications panel instead of the legacy admin notice.
+	 * Alerts explicitly requesting the inline surface are counted even when
+	 * they also render in the React notifications panel.
 	 *
 	 * @return int
 	 */
@@ -40,7 +40,7 @@ class PUM_Utils_Alerts {
 		$alerts = array_filter(
 			self::get_alerts(),
 			static function ( $alert ) {
-				return ! self::is_panel_eligible( $alert );
+				return self::is_inline_eligible( $alert );
 			}
 		);
 
@@ -76,6 +76,19 @@ class PUM_Utils_Alerts {
 	}
 
 	/**
+	 * Whether an alert should render in the legacy inline alerts block.
+	 *
+	 * Blocking alerts remain inline by default. Panel alerts may opt into both
+	 * surfaces when immediate visibility is important.
+	 *
+	 * @param array<string,mixed> $alert Alert definition.
+	 * @return bool
+	 */
+	public static function is_inline_eligible( $alert ) {
+		return ! self::is_panel_eligible( $alert ) || ! empty( $alert['display_inline'] );
+	}
+
+	/**
 	 * Append alert count to Popup Maker menu item.
 	 *
 	 * @return void
@@ -102,6 +115,8 @@ class PUM_Utils_Alerts {
 	 *     @type int    $priority         Optional. Alert priority.
 	 *     @type mixed  $dismissible      Optional. Dismissible setting.
 	 *     @type bool   $global           Optional. Global alert.
+	 *     @type bool   $display_inline   Optional. Also render in the inline alerts block.
+	 *     @type string $dismiss_action   Optional. Provider action used by the corner close.
 	 *     @type array  $actions          Optional. Alert actions.
 	 * }
 	 *
@@ -449,13 +464,13 @@ class PUM_Utils_Alerts {
 
 		$alerts = $global_only ? self::get_global_alerts() : self::get_alerts();
 
-		// Drop alerts that are now surfaced in the React notifications
-		// panel so they don't double-render here.
+		// Keep blocking alerts and panel alerts that explicitly request the
+		// inline surface.
 		$alerts = array_values(
 			array_filter(
 				$alerts,
 				static function ( $alert ) {
-					return ! self::is_panel_eligible( $alert );
+					return self::is_inline_eligible( $alert );
 				}
 			)
 		);
@@ -489,12 +504,13 @@ class PUM_Utils_Alerts {
 			add_filter( 'safe_style_css', [ __CLASS__, 'allow_inline_styles' ] );
 
 			foreach ( $alerts as $alert ) {
-				$expires     = 1 === $alert['dismissible'] ? '' : (string) $alert['dismissible'];
-				$dismiss_url = add_query_arg(
+				$expires      = 1 === $alert['dismissible'] ? '' : (string) $alert['dismissible'];
+				$close_action = ! empty( $alert['dismiss_action'] ) ? sanitize_key( (string) $alert['dismiss_action'] ) : 'dismiss';
+				$dismiss_url  = add_query_arg(
 					[
 						'nonce'             => $nonce,
 						'code'              => $alert['code'],
-						'pum_dismiss_alert' => 'dismiss',
+						'pum_dismiss_alert' => $close_action,
 						'expires'           => $expires,
 					]
 				);
@@ -553,7 +569,7 @@ class PUM_Utils_Alerts {
 
 					<?php if ( $alert['dismissible'] ) : ?>
 
-						<a href="<?php echo esc_url( $dismiss_url ); ?>" data-action="dismiss" class="button dismiss pum-dismiss">
+						<a href="<?php echo esc_url( $dismiss_url ); ?>" data-action="<?php echo esc_attr( $close_action ); ?>" class="button dismiss pum-dismiss">
 							<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this item.', 'popup-maker' ); ?></span> <span class="dashicons dashicons-no-alt"></span>
 						</a>
 
@@ -644,14 +660,15 @@ class PUM_Utils_Alerts {
 			$alerts[] = wp_parse_args(
 				$alert,
 				[
-					'code'        => 'default',
-					'priority'    => 10,
-					'message'     => '',
-					'type'        => 'info',
-					'html'        => '',
-					'dismissible' => true,
-					'global'      => false,
-					'category'    => 'announcement',
+					'code'           => 'default',
+					'priority'       => 10,
+					'message'        => '',
+					'type'           => 'info',
+					'html'           => '',
+					'dismissible'    => true,
+					'global'         => false,
+					'category'       => 'announcement',
+					'display_inline' => false,
 				]
 			);
 		}

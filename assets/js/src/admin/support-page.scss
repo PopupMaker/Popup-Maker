@@ -2,32 +2,84 @@
  * Copyright (c) 2019, Code Atlantic LLC
  ******************************************************************************/
 
-$wpblue: #20252b;
+.pum-support-page {
+	max-width: 1100px;
 
-.popmake-support-links {
-	list-style: none;
-
-	li {
-		margin-bottom: 10px;
+	&__intro {
+		font-size: 16px;
+		margin-bottom: 24px;
 	}
 
-	a {
-		color: $wpblue;
-		font-size: 1.25em;
-		text-decoration: none;
-		text-transform: uppercase;
+	&__resources {
+		display: grid;
+		gap: 16px;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	}
 
-		span {
-			margin-left: 10px;
+	&__contact {
+		align-items: center;
+		background: #fff;
+		border-left: 4px solid #2271b1;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+		display: flex;
+		gap: 24px;
+		justify-content: space-between;
+		margin-top: 24px;
+		padding: 24px;
+
+		h2 {
+			margin-top: 0;
 		}
 
-		img {
-			max-height: 24px;
-			max-width: 24px;
-			min-height: 24px;
-			min-width: 24px;
-			position: relative;
-			top: 6px;
+		p {
+			margin-bottom: 0;
 		}
+	}
+}
+
+.pum-support-card {
+	align-items: flex-start;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	color: #1d2327;
+	display: flex;
+	gap: 16px;
+	padding: 20px;
+	text-decoration: none;
+
+	&:focus,
+	&:hover {
+		border-color: #2271b1;
+		box-shadow: 0 0 0 1px #2271b1;
+		color: #135e96;
+	}
+
+	.dashicons {
+		font-size: 32px;
+		height: 32px;
+		width: 32px;
+	}
+
+	strong,
+	strong + span {
+		display: block;
+	}
+
+	strong {
+		font-size: 16px;
+		margin-bottom: 6px;
+	}
+
+	strong + span {
+		color: #50575e;
+		line-height: 1.5;
+	}
+}
+
+@media screen and (max-width: 782px) {
+	.pum-support-page__contact {
+		align-items: stretch;
+		flex-direction: column;
 	}
 }

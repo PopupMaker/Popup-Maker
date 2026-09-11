@@ -608,7 +608,7 @@ class PUM_Utils_Array {
 			if ( false === $json ) {
 				return false;
 			}
-			return $encode ? htmlspecialchars( $json ) : $json;
+			return $encode ? htmlspecialchars( $json, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8' ) : $json;
 		}
 
 		return $value;

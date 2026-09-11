@@ -66,8 +66,9 @@ class PUM_Admin_Shortcode_UI {
 		add_filter( 'mce_buttons', [ __CLASS__, 'mce_buttons' ] );
 		add_filter( 'mce_external_plugins', [ __CLASS__, 'mce_external_plugins' ] );
 
-		// Add core site styles for form previews.
-		add_editor_style( Popup_Maker::$URL . 'dist/assets/site.css' );
+		// Load plugin editor styles without registering remote theme styles.
+		add_filter( 'mce_css', [ __CLASS__, 'mce_css' ] );
+		add_filter( 'block_editor_settings_all', [ __CLASS__, 'block_editor_settings' ], 10, 2 );
 
 		// Process live previews.
 		add_action( 'wp_ajax_pum_do_shortcode', [ __CLASS__, 'do_shortcode' ] );
@@ -99,9 +100,6 @@ class PUM_Admin_Shortcode_UI {
 	 * Enqueues needed assets.
 	 */
 	public static function enqueue_scripts() {
-		// Register editor styles.
-		add_editor_style( PUM_Admin_Assets::$css_url . 'admin-editor-styles.css' );
-
 		wp_enqueue_style( 'pum-admin-shortcode-ui' );
 		wp_enqueue_script( 'pum-admin-shortcode-ui' );
 		wp_localize_script(
@@ -121,6 +119,83 @@ class PUM_Admin_Shortcode_UI {
 				]
 			)
 		);
+	}
+
+	/**
+	 * Add Popup Maker styles to TinyMCE and Classic blocks.
+	 *
+	 * @param string $stylesheets Comma-separated stylesheet URLs.
+	 * @return string
+	 */
+	public static function mce_css( $stylesheets = '' ) {
+		$stylesheets = is_string( $stylesheets ) ? array_filter( array_map( 'trim', explode( ',', $stylesheets ) ) ) : [];
+
+		foreach ( self::editor_stylesheets() as $stylesheet ) {
+			$stylesheets[] = $stylesheet['url'];
+		}
+
+		return implode( ',', array_unique( $stylesheets ) );
+	}
+
+	/**
+	 * Add Popup Maker styles to the block editor from local files.
+	 *
+	 * WordPress fetches absolute URLs registered through add_editor_style()
+	 * over HTTP while rendering the editor. Reading plugin-owned files directly
+	 * avoids that request while retaining the same CSS in editor settings.
+	 *
+	 * @param array $settings Block editor settings.
+	 * @param mixed $context Block editor context.
+	 * @return array
+	 */
+	public static function block_editor_settings( $settings, $context = null ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+		if ( ! is_array( $settings ) ) {
+			return $settings;
+		}
+
+		if ( ! isset( $settings['styles'] ) || ! is_array( $settings['styles'] ) ) {
+			$settings['styles'] = [];
+		}
+
+		foreach ( self::editor_stylesheets() as $stylesheet ) {
+			if ( ! is_readable( $stylesheet['path'] ) ) {
+				continue;
+			}
+
+			$css = file_get_contents( $stylesheet['path'] );
+
+			if ( ! is_string( $css ) || '' === $css ) {
+				continue;
+			}
+
+			$settings['styles'][] = [
+				'css'            => $css,
+				'__unstableType' => 'theme',
+				'isGlobalStyles' => false,
+			];
+		}
+
+		return $settings;
+	}
+
+	/**
+	 * Get Popup Maker editor stylesheet paths and URLs.
+	 *
+	 * @return array<int,array{path:string,url:string}>
+	 */
+	private static function editor_stylesheets() {
+		$suffix = is_rtl() ? '-rtl' : '';
+
+		return [
+			[
+				'path' => Popup_Maker::$DIR . "dist/assets/site{$suffix}.css",
+				'url'  => Popup_Maker::$URL . "dist/assets/site{$suffix}.css",
+			],
+			[
+				'path' => Popup_Maker::$DIR . "dist/assets/admin-editor-styles{$suffix}.css",
+				'url'  => Popup_Maker::$URL . "dist/assets/admin-editor-styles{$suffix}.css",
+			],
+		];
 	}
 
 	/**

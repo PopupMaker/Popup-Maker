@@ -16,6 +16,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 
 	/**
+	 * Popup titles keyed by popup ID for the current page.
+	 *
+	 * @var array<int,string>
+	 */
+	private $popup_titles = [];
+
+	/**
+	 * Whether popup titles were loaded for the current page.
+	 *
+	 * @var bool
+	 */
+	private $popup_titles_loaded = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * The child class should call this constructor from its own constructor to override
@@ -75,6 +89,7 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$this->items = PUM_DB_Subscribers::instance()->query( $query_args, 'ARRAY_A' );
+		$this->load_popup_titles( $this->items );
 
 		$total_subscribers = PUM_DB_Subscribers::instance()->total_rows( $query_args );
 
@@ -85,6 +100,44 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 				'total_pages' => ceil( $total_subscribers / $limit ),
 			]
 		);
+	}
+
+	/**
+	 * Load the popup titles needed by the current subscriber page in one query.
+	 *
+	 * @param array<int,array<string,mixed>> $items Subscriber rows.
+	 * @return void
+	 */
+	private function load_popup_titles( $items ) {
+		$this->popup_titles        = [];
+		$this->popup_titles_loaded = true;
+
+		$popup_ids          = [];
+		$resolved_popup_ids = [];
+
+		foreach ( $items as $item ) {
+			$popup_id          = isset( $item['popup_id'] ) ? absint( $item['popup_id'] ) : 0;
+			$resolved_popup_id = pum_get_popup_id( $popup_id );
+
+			if ( $popup_id > 0 && $resolved_popup_id > 0 ) {
+				$popup_ids[]                     = $resolved_popup_id;
+				$resolved_popup_ids[ $popup_id ] = $resolved_popup_id;
+			}
+		}
+
+		$popup_ids = array_values( array_unique( $popup_ids ) );
+
+		if ( empty( $popup_ids ) ) {
+			return;
+		}
+
+		$resolved_popup_titles = \PopupMaker\plugin( 'popups' )->get_title_choices( $popup_ids );
+
+		foreach ( $resolved_popup_ids as $popup_id => $resolved_popup_id ) {
+			if ( isset( $resolved_popup_titles[ $resolved_popup_id ] ) ) {
+				$this->popup_titles[ $popup_id ] = $resolved_popup_titles[ $resolved_popup_id ];
+			}
+		}
 	}
 
 
@@ -162,9 +215,9 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'created':
-				return date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item[ $column_name ] ) );
+				return esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $item[ $column_name ] ) ) );
 			default:
-				return $item[ $column_name ];
+				return esc_html( $item[ $column_name ] );
 		}
 	}
 
@@ -180,15 +233,15 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	protected function column_cb( $item ) {
 		$label = sprintf(
 			'<label class="screen-reader-text" for="subscriber_%d">%s</label>',
-			$item['ID'],
-			sprintf(
+			absint( $item['ID'] ),
+			esc_html( sprintf(
 				/* translators: %s is the name of the subscriber. */
 				__( 'Select %s', 'popup-maker' ),
 				$item['name']
-			)
+			) )
 		);
 
-		$input = sprintf( '<input type="checkbox" name="%1$s[]" id="subscriber_%2$d" value="%2$d" />', $this->_args['singular'], $item['ID'] );
+		$input = sprintf( '<input type="checkbox" name="%1$s[]" id="subscriber_%2$d" value="%2$d" />', esc_attr( $this->_args['singular'] ), absint( $item['ID'] ) );
 
 		return sprintf( '%s%s', $label, $input );
 	}
@@ -239,14 +292,14 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 		// Build row actions
 		$actions = [
 			// 'edit'   => sprintf( '<a href="%s">Edit</a>', $edit_url ),
-			'delete' => sprintf( '<a href="%s">Delete</a>', $delete_url ),
+			'delete' => sprintf( '<a href="%s">Delete</a>', esc_url( $delete_url ) ),
 		];
 
 		// Return the title contents
 		return sprintf(
 			'%1$s <span style="color:silver">(id:%2$s)</span>%3$s', /*$1%s*/
-			$item['email'], /*$2%s*/
-			$item['ID'], /*$3%s*/
+			esc_html( $item['email'] ), /*$2%s*/
+			absint( $item['ID'] ), /*$3%s*/
 			$this->row_actions( $actions )
 		);
 	}
@@ -276,9 +329,9 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 			$url = admin_url( "user-edit.php?user_id=$user_id" );
 
 			// Return the title contents
-			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', $item['name'], __( 'User ID', 'popup-maker' ), $url, $item['user_id'] );
+			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', esc_html( $item['name'] ), esc_html__( 'User ID', 'popup-maker' ), esc_url( $url ), absint( $item['user_id'] ) );
 		} else {
-			return $item['name'];
+			return esc_html( $item['name'] );
 		}
 	}
 
@@ -303,15 +356,25 @@ class PUM_Admin_Subscribers_Table extends PUM_ListTable {
 	public function column_popup_id( $item ) {
 		$popup_id = $item['popup_id'] > 0 ? absint( $item['popup_id'] ) : null;
 
+		if ( $this->popup_titles_loaded ) {
+			if ( $popup_id && isset( $this->popup_titles[ $popup_id ] ) ) {
+				$url = admin_url( "post.php?post={$popup_id}&action=edit" );
+
+				return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', esc_html( $this->popup_titles[ $popup_id ] ), esc_html__( 'ID', 'popup-maker' ), esc_url( $url ), absint( $item['popup_id'] ) );
+			}
+
+			return esc_html__( 'N/A', 'popup-maker' );
+		}
+
 		$popup = pum_get_popup( $popup_id );
 
 		if ( $popup_id && pum_is_popup( $popup ) ) {
 			$url = admin_url( "post.php?post={$popup_id}&action=edit" );
 
 			// Return the title contents
-			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', $popup->post_title, __( 'ID', 'popup-maker' ), $url, $item['popup_id'] );
+			return sprintf( '%s<br/><small style="color:silver">(%s: <a href="%s">#%s</a>)</small>', esc_html( $popup->post_title ), esc_html__( 'ID', 'popup-maker' ), esc_url( $url ), absint( $item['popup_id'] ) );
 		} else {
-			return __( 'N/A', 'popup-maker' );
+			return esc_html__( 'N/A', 'popup-maker' );
 		}
 	}
 

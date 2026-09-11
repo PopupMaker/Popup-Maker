@@ -92,36 +92,100 @@ Styles for our log viewers
 Styles for welcome screen
 ************/
 .pum-welcome-wrapper {
-	margin: 0;
-	padding: 10px;
 	background-color: #fff;
+	box-sizing: border-box;
+	margin: 16px 8px;
+	padding: 22px;
 
 	@media only screen and (min-width: 600px) {
-		max-width: 500px;
-		margin: 40px auto 0;
-		padding: 40px 30px;
+		margin: 28px auto 0;
+		max-width: 680px;
+		padding: 30px;
 	}
 
-	ul {
-		list-style: disc;
-		padding-left: 20px;
+	h1 {
+		margin: 0 0 10px;
+	}
+
+	h2 {
+		font-size: 18px;
+		margin: 20px 0 12px;
+	}
+
+	p {
+		margin: 0 0 16px;
+	}
+
+	.pum-welcome-intro {
+		font-size: 16px;
+		line-height: 1.55;
+	}
+
+	.pum-welcome-trust {
+		color: #3c434a;
+		font-weight: 600;
+	}
+
+	.pum-welcome-goals {
+		display: grid;
+		gap: 12px;
+		list-style: none;
+		margin: 0 0 18px;
+		padding: 0;
+
+		@media only screen and (min-width: 782px) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		li {
+			align-items: center;
+			background: #f6f7f7;
+			border: 1px solid #dcdcde;
+			border-radius: 4px;
+			display: grid;
+			gap: 10px;
+			grid-template-columns: 32px minmax(0, 1fr);
+			margin: 0;
+			padding: 12px;
+		}
+
+		.dashicons {
+			align-items: center;
+			background: #3858e9;
+			border-radius: 50%;
+			color: #fff;
+			display: flex;
+			height: 32px;
+			justify-content: center;
+			width: 32px;
+		}
 	}
 
 	.pum-welcome-signature {
-		margin-top: 20px;
-		font-style: italic;
-		display: flex;
 		align-items: center;
+		display: flex;
+		font-style: italic;
+		margin-top: 12px;
 
 		img {
 			margin-right: 10px;
-			width: 60px;
+			width: 52px;
 			border-radius: 100px;
+		}
+
+		p {
+			margin: 0;
 		}
 	}
 
 	.pum-welcome-cta {
-		margin-top: 30px;
+		margin-top: 20px;
+
+		.button-primary {
+			font-size: 14px;
+			height: auto;
+			padding: 3px 14px;
+		}
 	}
 }
 
@@ -273,7 +337,7 @@ Styles for toggle buttons
 
 	label {
 		display: block;
-		font-weight: bold;
+		font-weight: 700;
 		font-size: 1.1em;
 	}
 
@@ -303,7 +367,7 @@ Styles for toggle buttons
 	top: 7px;
 	margin-left: 5px;
 
-	@media only screen and (min-width: 0px) and (max-width: 783px) {
+	@media only screen and (min-width: 0) and (max-width: 783px) {
 		display: none !important;
 	}
 }

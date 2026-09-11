@@ -52,7 +52,7 @@ describe( 'StatusFilter', () => {
 		} );
 
 		expect(
-			screen.getByRole( 'group', { name: 'Status' } )
+			screen.getByRole( 'radiogroup', { name: 'Status' } )
 		).toBeInTheDocument();
 	} );
 

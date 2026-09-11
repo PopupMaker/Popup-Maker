@@ -96,9 +96,11 @@ class CallToActions extends Repository {
 		}
 
 		$items = $this->query( [
-			'meta_key'       => 'cta_uuid', // phpcs:ignore WordPress.DB.SlowDBQuery
-			'meta_value'     => $uuid, // phpcs:ignore WordPress.DB.SlowDBQuery
-			'posts_per_page' => 1,
+			'meta_key'              => 'cta_uuid', // phpcs:ignore WordPress.DB.SlowDBQuery
+			'meta_value'            => $uuid, // phpcs:ignore WordPress.DB.SlowDBQuery
+			'posts_per_page'        => 1,
+			'no_found_rows'         => true,
+			'update_post_term_cache' => false,
 		] );
 
 		$item = ! empty( $items ) ? $items[0] : null;

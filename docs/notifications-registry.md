@@ -23,7 +23,9 @@ Two dismissal paths from the panel:
 1. **Corner X** (`action: ''`) — permanent. Requires `dismissible: true` on the alert.
 2. **Declared "Not now" button** (`action: 'dismiss'` + `expires: '30 days'`) — snooze per the action's `expires` field.
 
-After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so providers can run post-dismissal logic (e.g. `WhatsNew::on_dismiss` clears its slot and records `last_seen`).
+After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so providers can run post-dismissal logic (e.g. `WhatsNew::on_dismiss` records that user's `last_seen` release).
+
+Dismissal scope is deliberately not configurable per message: standard notification dismissals are always per user. A custom action may change site state when that is the action's actual purpose (for example, enabling telemetry), but clicking Dismiss or the corner X must not suppress a message for other users.
 
 ## Registry
 
@@ -32,7 +34,6 @@ After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so pro
 | Code | Source | Category | Type | Destination | Notes |
 |---|---|---|---|---|---|
 | `translation_request_<version>` | `classes/Utils/Alerts.php:244` | — | `info` | Legacy widget | Locale-specific translation nag. Version-suffixed so a new release re-prompts. |
-| `pum_notice_<id>` | `classes/Admin/Notices.php:53` | `announcement` | `success` | Panel | Remote-fetched notices feed (from `pum_plugin_notices` transient). IDs come from the server payload. Supports custom `disable_notices` action to turn off the whole feed. |
 | `php_<future_version>_<plugin_version>` | `classes/Admin/Notices.php:325` | `warning` | `error` (global) | Legacy widget | Upcoming PHP min-req nag. Version-suffixed so it re-fires on each plugin release while the server hasn't been upgraded. Non-dismissible for `manage_options` users. |
 | `wp_<future_version>_<plugin_version>` | `classes/Admin/Notices.php:340` | `warning` | `error` (global) | Legacy widget | Upcoming WordPress min-req nag. Same re-fire pattern as the PHP nag. |
 | `pum_telemetry_notice` | `classes/Telemetry.php:260` | — | `info` | Legacy widget | Opt-in prompt for anonymous usage telemetry. Suppressed in Pro via `Pro\Controllers\Admin\Telemetry::remove_telemetry_alert`. |
@@ -42,7 +43,7 @@ After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so pro
 | `pum_tip_alert` | `classes/Admin/Onboarding.php:56` | — | `info` | Legacy widget | Rotating onboarding tips for new users (first N admin sessions). |
 | `pum_writeable_notice` | `classes/AssetCache.php:705` | — | `warning` | Legacy widget | Filesystem can't write asset cache. Stays on legacy widget (warning → not panel-eligible). |
 
-**Removed on this branch (2026):** `whats_new_1_8_0` (2018-era, inert), `integration_alerts` + `<integration>_integration_available` (BuddyPress addon unmaintained), `pum_bfcm_2024` (expired), `pum_block_editor_migration` (shipped).
+**Removed on this branch (2026):** `pum_notice_<id>` (remote community-notice feed), `whats_new_1_8_0` (2018-era, inert), `integration_alerts` + `<integration>_integration_available` (BuddyPress addon unmaintained), `pum_bfcm_2024` (expired), `pum_block_editor_migration` (shipped).
 
 ### Admin Notifications Panel plugin (this plugin)
 
@@ -50,7 +51,7 @@ After successful dismissal, the REST endpoint fires `pum_alert_dismissed` so pro
 
 | Code | Category | Dismissible | Notes |
 |---|---|---|---|
-| `pm_whats_new_release_<major>_<minor>` | `feature` | Yes (permanent) | Auto-generated release announcement. One slot at a time. Code is version-suffixed so each major.minor gets its own dismissal record. On dismiss, clears the slot option and writes `pum_whats_new_last_seen`. Parses highlights from readme.txt between `last_seen` and `latest`. |
+| `pm_whats_new_release_<major>_<minor>` | `feature` | Yes (permanent, per user) | Auto-generated release announcement. One shared release slot remains available until the next release so every eligible user can see it. The version-suffixed code and `pum_whats_new_last_seen` user meta keep dismissal and catch-up copy user-specific. Parses highlights from readme.txt between each user's `last_seen` and `latest`. |
 
 Actions:
 - **View changelog** — iframe to WP plugin-information screen (install_plugins cap) or public `/changelog/` link (fallback).
@@ -73,6 +74,12 @@ Shared helpers (in `FeatureAnnouncements`):
 - `doc_url( $path, $campaign )` — `wppopupmaker.com/docs/<path>/` with UTM.
 - `feature_url( $slug, $campaign )` — `wppopupmaker.com/features/<slug>/` with UTM. Supports nested slugs (`popup-triggers/exit-intent-triggers`).
 - `upgrade_url( $campaign )` — wraps `\PopupMaker\get_upgrade_link()` → `wppopupmaker.com/pricing/` with UTM. Kept for future pricing-direct CTAs; current upsells route to feature pages instead.
+
+#### PageBuilderAnnouncements provider (`classes/Services/Notifications/PageBuilderAnnouncements.php`)
+
+| Code | Category | Condition | Destination | Notes |
+|---|---|---|---|---|
+| `pm_feat_page_builder_support_2026_<builder-slugs>` | `feature` | At least one bundled page builder adapter passed runtime detection and its availability check | `/integrations/page-builder-integrations/` | Consolidates every active supported builder into one announcement with permanent per-user dismissal. The stable builder slug suffix scopes dismissal to the detected set, so installing another supported builder can surface the new capability without loading inactive adapters. |
 
 ### Pro / Pro+ / extensions
 
@@ -117,7 +124,8 @@ wp eval 'update_user_meta( get_current_user_id(), "_pum_dismissed_alerts", [] );
 
 # Reset WhatsNew state:
 wp option delete pum_whats_new_slot
-wp option delete pum_whats_new_last_seen
+wp user meta delete <user-id> pum_whats_new_last_seen
+wp option delete pum_whats_new_last_seen # Legacy pre-per-user fallback.
 
 # Flush FeatureAnnouncements transient cache (locale-scoped, 12h TTL).
 # `wp cache flush` won't touch these — they live in the options table.
