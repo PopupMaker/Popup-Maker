@@ -20,6 +20,13 @@ use function PopupMaker\get_data_version;
 class PostTypes extends Controller {
 
 	/**
+	 * REST alias registrar.
+	 *
+	 * @var \PopupMaker\RestAPI\Alias\Registrar|null
+	 */
+	protected $rest_alias_registrar = null;
+
+	/**
 	 * Init controller.
 	 *
 	 * @return void
@@ -134,77 +141,28 @@ class PostTypes extends Controller {
 	 * @return void
 	 */
 	public function register_standard_rest_routes() {
-		$rest_bases = [
-			$this->get_type_key( 'popup' )       => 'popups',
-			$this->get_type_key( 'popup_theme' ) => 'popup-themes',
-		];
+		$this->get_rest_alias_registrar()->register();
+	}
 
-		foreach ( $rest_bases as $post_type => $rest_base ) {
-			$post_type_object = get_post_type_object( $post_type );
-
-			if ( ! $post_type_object || ! $post_type_object->show_in_rest || 'wp/v2' === $post_type_object->rest_namespace ) {
-				continue;
-			}
-
-			$controller = new class( $post_type, $rest_base ) extends \WP_REST_Posts_Controller {
-
-				/**
-				 * Set up a standard WordPress route for a Popup Maker post type.
-				 *
-				 * @param string $post_type Post type key.
-				 * @param string $rest_base REST collection base.
-				 */
-				public function __construct( $post_type, $rest_base ) {
-					parent::__construct( $post_type );
-
-					$this->namespace = 'wp/v2';
-					$this->rest_base = $rest_base;
-				}
-			};
-
-			$controller->register_routes();
-
-			$original_rest_base          = $post_type_object->rest_base;
-			$post_type_object->rest_base = $rest_base;
-
-			if ( post_type_supports( $post_type, 'revisions' ) && class_exists( '\\WP_REST_Revisions_Controller' ) ) {
-				$revisions = new class( $post_type ) extends \WP_REST_Revisions_Controller {
-
-					/**
-					 * Set up standard WordPress revision routes for a Popup Maker post type.
-					 *
-					 * @param string $post_type Parent post type key.
-					 */
-					public function __construct( $post_type ) {
-						parent::__construct( $post_type );
-
-						$this->namespace = 'wp/v2';
-					}
-				};
-
-				$revisions->register_routes();
-			}
-
-			if ( class_exists( '\\WP_REST_Autosaves_Controller' ) ) {
-				$autosaves = new class( $post_type ) extends \WP_REST_Autosaves_Controller {
-
-					/**
-					 * Set up standard WordPress autosave routes for a Popup Maker post type.
-					 *
-					 * @param string $post_type Parent post type key.
-					 */
-					public function __construct( $post_type ) {
-						parent::__construct( $post_type );
-
-						$this->namespace = 'wp/v2';
-					}
-				};
-
-				$autosaves->register_routes();
-			}
-
-			$post_type_object->rest_base = $original_rest_base;
+	/**
+	 * Get the REST alias registrar.
+	 *
+	 * Held on the controller so repeated `rest_api_init` calls reuse the same
+	 * registrar and cannot append duplicate route handlers.
+	 *
+	 * @return \PopupMaker\RestAPI\Alias\Registrar
+	 */
+	protected function get_rest_alias_registrar() {
+		if ( null === $this->rest_alias_registrar ) {
+			$this->rest_alias_registrar = new \PopupMaker\RestAPI\Alias\Registrar(
+				[
+					$this->get_type_key( 'popup' )       => 'popups',
+					$this->get_type_key( 'popup_theme' ) => 'popup-themes',
+				]
+			);
 		}
+
+		return $this->rest_alias_registrar;
 	}
 
 	/**
