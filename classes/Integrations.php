@@ -534,9 +534,24 @@ class PUM_Integrations {
 					'form_provider'    => 'formProvider',
 					'form_id'          => 'formId',
 					'form_instance_id' => 'formInstanceId',
+					'submission_id'    => 'submissionId',
 					'popup_id'         => 'popupId',
+					'source_post_id'   => 'sourcePostId',
+					'source_url'       => 'sourceUrl',
 				]
 			);
+
+			// remap_keys intentionally skips empty values, but these values are meaningful.
+			$preserved_keys = [
+				'submission_id' => 'submissionId',
+				'source_url'    => 'sourceUrl',
+			];
+
+			foreach ( $preserved_keys as $php_key => $js_key ) {
+				if ( array_key_exists( $php_key, self::$form_submission ) ) {
+					$vars['form_submission'][ $js_key ] = self::$form_submission[ $php_key ];
+				}
+			}
 		}
 
 		return $vars;
