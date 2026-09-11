@@ -16,18 +16,28 @@ PHP integrations use snake-cased keys:
 
 ```php
 pum_integrated_form_submission( [
-	'form_provider'  => 'example',
-	'form_id'        => 12,
-	'submission_id'  => 'entry-456',
-	'source_post_id' => 78,
-	'source_url'     => 'https://example.com/guide/',
-	'context'        => [
+	'form_provider'   => 'example',
+	'form_id'         => 12,
+	'submission_id'   => 'entry-456',
+	'native_entry_id' => 'entry-456',
+	'fields'          => [
+		'email' => 'person@example.test',
+	],
+	'source_post_id'  => 78,
+	'source_url'      => 'https://example.com/guide/',
+	'context'         => [
 		'my_extension' => [
 			'campaign_id' => 90,
 		],
 	],
 ] );
 ```
+
+`native_entry_id` identifies the provider-owned persisted entry when the
+provider supplies one. `fields` contains the server-observed submitted values
+available to PHP observation and action consumers. Providers must dispatch
+these values through the existing normalized success call; features must not
+add parallel provider hooks.
 
 ## Processing phases
 
@@ -136,6 +146,12 @@ Context and source values are descriptive metadata, not proof of identity or
 authorization. Consumers must validate untrusted values before privileged
 operations and apply their own privacy and retention policies before storing
 submission data.
+
+Submitted `fields`, `raw_fields`, and `native_entry_id` are server-only. Popup
+Maker removes them from localized non-AJAX frontend replay data so submitted
+PII and provider-admin identity are not exposed in page source. The existing
+`submissionId` remains available to the browser for provider-native
+cross-runtime deduplication.
 
 ## Public extension points
 
