@@ -85,7 +85,13 @@ class PUM_Utils_Alerts {
 	 * @return bool
 	 */
 	public static function is_inline_eligible( $alert ) {
-		return ! self::is_panel_eligible( $alert ) || ! empty( $alert['display_inline'] );
+		$panel_eligible = self::is_panel_eligible( $alert );
+
+		if ( $panel_eligible && pum_get_option( 'disable_notifications', false ) ) {
+			return false;
+		}
+
+		return ! $panel_eligible || ! empty( $alert['display_inline'] );
 	}
 
 	/**
