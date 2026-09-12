@@ -10,9 +10,10 @@ type LocalizedPopup = {
 	post_title: string;
 };
 
-const { popups = [] } = window.popupMakerBlockEditor as unknown as {
-	popups?: LocalizedPopup[];
-};
+const { popups = [] } =
+	( window.popupMakerBlockEditor as unknown as {
+		popups?: LocalizedPopup[];
+	} ) || {};
 
 const getPopupById = ( popupId: number | string = 0 ) => {
 	popupId = parseInt( String( popupId ) ) || 0;
