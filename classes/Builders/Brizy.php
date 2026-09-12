@@ -19,6 +19,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class Brizy extends PageBuilder {
 
+	/** @var string */
+	public $key = 'brizy';
+
+	/** @var string */
+	protected $label = 'Brizy';
+
 	/**
 	 * Popup documents already given to Brizy's asset manager.
 	 *

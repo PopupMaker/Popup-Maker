@@ -35,6 +35,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class Bricks extends PageBuilder {
 
+	/** @var string */
+	public $key = 'bricks';
+
+	/** @var string */
+	protected $label = 'Bricks';
+
 	/**
 	 * CSS generated for popup documents and awaiting emission.
 	 *

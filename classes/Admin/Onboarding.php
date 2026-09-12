@@ -448,30 +448,26 @@ class PUM_Admin_Onboarding {
 		?>
 		<div class="pum-welcome-wrapper">
 			<div>
-				<h1>Welcome to Popup Maker!</h1>
+				<h1><?php esc_html_e( 'Welcome to Popup Maker', 'popup-maker' ); ?></h1>
 			</div>
 			<div>
-				<p>Popup Maker was created to help us create effective popups on our own WordPress sites to boost our conversions. Now, over 4 years later, the plugin is installed on <strong>over 600,000 websites and has over 3,900 5-star reviews</strong>.</p>
-				<p>There are a lot of ways you can use Popup Maker within your site including:</p>
-				<ul>
-					<li>Adding an auto-opening announcement popup</li>
-					<li>Growing your email list with opt-in or lead magnet popups</li>
-					<li>Increase order size by recommending products in a WooCommerce cross-sell popup</li>
-					<li>Adding a content upgrade to your blog posts</li>
-					<li>Greet a visitor from ProductHunt</li>
-					<li>Reduce cart abandonment on your WooCommerce checkout page</li>
-					<li>Adding post-sale WooCommerce surveys</li>
-					<li>Using scroll-triggered popups to ask a site visitor if they have any questions</li>
-					<li>And much more!</li>
+				<p class="pum-welcome-intro"><?php esc_html_e( 'You’re a few minutes away from publishing your first popup. Popup Maker helps you grow your email list, share announcements, promote offers, and guide visitors to the next step.', 'popup-maker' ); ?></p>
+				<p class="pum-welcome-trust"><?php esc_html_e( 'Trusted on 700,000+ active WordPress installations, with 4,200+ five-star ratings.', 'popup-maker' ); ?></p>
+				<h2><?php esc_html_e( 'Start with one goal:', 'popup-maker' ); ?></h2>
+				<ul class="pum-welcome-goals">
+					<li><span class="dashicons dashicons-email-alt" aria-hidden="true"></span><span><?php esc_html_e( 'Grow your email list or deliver a lead magnet.', 'popup-maker' ); ?></span></li>
+					<li><span class="dashicons dashicons-megaphone" aria-hidden="true"></span><span><?php esc_html_e( 'Share an announcement or limited-time offer.', 'popup-maker' ); ?></span></li>
+					<li><span class="dashicons dashicons-cart" aria-hidden="true"></span><span><?php esc_html_e( 'Recover an abandoned cart or recommend a product.', 'popup-maker' ); ?></span></li>
+					<li><span class="dashicons dashicons-layout" aria-hidden="true"></span><span><?php esc_html_e( 'Create a targeted message using your preferred page builder.', 'popup-maker' ); ?></span></li>
 				</ul>
-				<p>Feel free to reach out if we can help with anything. We look forward to helping you increase your site’s conversions!</p>
+				<p><?php esc_html_e( 'Start simple—you can add targeting, triggers, and advanced features anytime. If you need help, the Popup Maker team is here.', 'popup-maker' ); ?></p>
 				<div class="pum-welcome-signature">
-					<img src="<?php echo esc_url( $gravatar_url ); ?>" alt="Daniel Iser, founder of Popup Maker">
-					<p>~ Daniel and the Popup Maker team</p>
+					<img src="<?php echo esc_url( $gravatar_url ); ?>" alt="<?php esc_attr_e( 'Daniel Iser, founder of Popup Maker', 'popup-maker' ); ?>">
+					<p><?php esc_html_e( '~ Daniel and the Popup Maker team', 'popup-maker' ); ?></p>
 				</div>
 			</div>
 			<div class="pum-welcome-cta">
-				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>">Create your first popup!</a>
+				<a class="button button-primary" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=popup' ) ); ?>"><?php esc_html_e( 'Create your first popup', 'popup-maker' ); ?></a>
 			</div>
 		</div>
 		<?php

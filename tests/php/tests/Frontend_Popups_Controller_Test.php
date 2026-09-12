@@ -578,6 +578,38 @@ class Frontend_Popups_Controller_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Single-value metadata filters may return settings arrays directly.
+	 *
+	 * @return void
+	 */
+	public function test_metadata_short_circuit_preserves_associative_settings_array() {
+		$popup_id = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+			]
+		);
+
+		$metadata_filter = function ( $value, $object_id, $meta_key ) use ( $popup_id ) {
+			if ( $popup_id === $object_id && 'popup_settings' === $meta_key ) {
+				return [ 'animation_speed' => 400 ];
+			}
+
+			return $value;
+		};
+
+		add_filter( 'get_post_metadata', $metadata_filter, 10, 3 );
+
+		try {
+			$popup = pum_get_popup( $popup_id );
+
+			$this->assertSame( 400, $popup->get_setting( 'animation_speed' ) );
+		} finally {
+			remove_filter( 'get_post_metadata', $metadata_filter, 10 );
+		}
+	}
+
+	/**
 	 * Metadata short-circuits do not invoke defaults or become stored provenance.
 	 *
 	 * @return void

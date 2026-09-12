@@ -19,6 +19,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PUM_DB_Subscribers extends PUM_Abstract_Database {
 
 	/**
+	 * Option used to track the stored subscriber name scrub.
+	 */
+	const NAME_SCRUB_OPTION = 'pum_subscriber_name_scrub_20260910';
+
+	/**
+	 * Number of unsafe subscriber rows to scrub per request.
+	 */
+	const NAME_SCRUB_BATCH_SIZE = 100;
+
+	/**
 	 * The name of our database table
 	 */
 	public $table_name = 'pum_subscribers';
@@ -69,6 +79,129 @@ class PUM_DB_Subscribers extends PUM_Abstract_Database {
 			'consent_args' => '',
 			'consent'      => 'no',
 			'created'      => current_time( 'mysql', 0 ),
+		];
+	}
+
+	/**
+	 * Continue the one-time scrub of unsafe stored subscriber names.
+	 *
+	 * @return bool|null True when complete, false when another batch is needed, or null on failure.
+	 */
+	public function run_name_scrub_batch() {
+		$cursor = get_option( self::NAME_SCRUB_OPTION, 0 );
+
+		if ( 'complete' === $cursor ) {
+			return true;
+		}
+
+		$result = $this->scrub_unsafe_name_fields( absint( $cursor ), self::NAME_SCRUB_BATCH_SIZE );
+
+		if ( false === $result ) {
+			return null;
+		}
+
+		$complete = $result['complete'];
+
+		update_option( self::NAME_SCRUB_OPTION, $complete ? 'complete' : $result['last_id'], false );
+
+		return $complete;
+	}
+
+	/**
+	 * Check whether the stored subscriber name scrub is complete.
+	 *
+	 * @return bool True when the scrub is complete.
+	 */
+	public function is_name_scrub_complete() {
+		return 'complete' === get_option( self::NAME_SCRUB_OPTION );
+	}
+
+	/**
+	 * Scrub one batch of stored HTML from subscriber name fields.
+	 *
+	 * @param int $after_id Only inspect rows after this subscriber ID.
+	 * @param int $limit    Maximum number of suspicious rows to process.
+	 *
+	 * @return array{processed:int,updated:int,last_id:int,complete:bool}|false Batch result, or false on failure.
+	 */
+	public function scrub_unsafe_name_fields( $after_id = 0, $limit = 100 ) {
+		global $wpdb;
+
+		$after_id = absint( $after_id );
+		$limit    = max( 1, absint( $limit ) );
+		$pattern  = '%' . $wpdb->esc_like( '<' ) . '%';
+
+		if ( $this->wp_version >= 6.2 ) {
+			$rows = $wpdb->get_results(
+				$wpdb->prepare(
+					'SELECT ID, name, fname, lname FROM %i WHERE ID > %d AND (name LIKE %s OR fname LIKE %s OR lname LIKE %s) ORDER BY ID ASC LIMIT %d',
+					$this->table_name(),
+					$after_id,
+					$pattern,
+					$pattern,
+					$pattern,
+					$limit
+				),
+				ARRAY_A
+			);
+		} else {
+			$rows = $wpdb->get_results(
+				$wpdb->prepare(
+					// Ignored because the table name is an internal identifier and WordPress <=6.2 does not support %i.
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT ID, name, fname, lname FROM {$this->table_name()} WHERE ID > %d AND (name LIKE %s OR fname LIKE %s OR lname LIKE %s) ORDER BY ID ASC LIMIT %d",
+					$after_id,
+					$pattern,
+					$pattern,
+					$pattern,
+					$limit
+				),
+				ARRAY_A
+			);
+		}
+
+		if ( ! is_array( $rows ) ) {
+			return false;
+		}
+
+		$updated = 0;
+		$last_id = $after_id;
+
+		foreach ( $rows as $row ) {
+			$data = [];
+
+			foreach ( [ 'name', 'fname', 'lname' ] as $field ) {
+				$sanitized = sanitize_text_field( $row[ $field ] );
+
+				if ( $sanitized !== $row[ $field ] ) {
+					$data[ $field ] = $sanitized;
+				}
+			}
+
+			if ( ! empty( $data ) ) {
+				$result = $wpdb->update(
+					$this->table_name(),
+					$data,
+					[ 'ID' => absint( $row['ID'] ) ],
+					null,
+					[ '%d' ]
+				);
+
+				if ( false === $result ) {
+					return false;
+				}
+
+				$updated += $result;
+			}
+
+			$last_id = absint( $row['ID'] );
+		}
+
+		return [
+			'processed' => count( $rows ),
+			'updated'   => $updated,
+			'last_id'   => $last_id,
+			'complete'  => count( $rows ) < $limit,
 		];
 	}
 

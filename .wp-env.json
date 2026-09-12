@@ -9,7 +9,6 @@
 	"port": 8880,
 	"phpmyadminPort": 9000,
 	"mappings": {
-		"wp-content/plugins/popup-maker": ".",
 		"wp-content/mu-plugins": "./tests/mu-plugins"
 	},
 	"config": {

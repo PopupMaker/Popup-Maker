@@ -348,6 +348,28 @@ class PUM_Helpers {
 	}
 
 	/**
+	 * Escape object search labels before they are returned to a client.
+	 *
+	 * @param array<string,mixed> $results Object search results.
+	 * @return array<string,mixed>
+	 */
+	public static function escape_object_search_results( $results ) {
+		if ( empty( $results['items'] ) || ! is_array( $results['items'] ) ) {
+			return $results;
+		}
+
+		foreach ( $results['items'] as $key => $item ) {
+			if ( ! is_array( $item ) || ! isset( $item['text'] ) || ! is_scalar( $item['text'] ) ) {
+				continue;
+			}
+
+			$results['items'][ $key ]['text'] = esc_html( (string) $item['text'] );
+		}
+
+		return $results;
+	}
+
+	/**
 	 * Get popup themes for selectlist options.
 	 *
 	 * @return array<int,string> Theme ID => title mapping

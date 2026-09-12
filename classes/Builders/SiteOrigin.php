@@ -23,6 +23,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class SiteOrigin extends PageBuilder {
 
+	/** @var string */
+	public $key = 'siteorigin';
+
+	/** @var string */
+	protected $label = 'SiteOrigin Page Builder';
+
 	/**
 	 * Whether popup support existed before this provider injected it.
 	 *

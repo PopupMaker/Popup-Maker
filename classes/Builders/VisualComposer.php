@@ -19,6 +19,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class VisualComposer extends PageBuilder {
 
+	/** @var string */
+	public $key = 'visual-composer';
+
+	/** @var string */
+	protected $label = 'Visual Composer';
+
 	/**
 	 * Popup documents already given to Visual Composer's asset queue.
 	 *

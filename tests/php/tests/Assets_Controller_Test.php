@@ -245,7 +245,7 @@ class Assets_Controller_Test extends WP_UnitTestCase {
 			add_filter( 'popup_maker/components_localized_vars', $filter );
 		};
 
-		$this->assertSame( 1, has_action( 'admin_print_scripts', [ $assets, 'autoload_styles_for_scripts' ] ) );
+		$this->assertSame( 20, has_action( 'admin_print_scripts', [ $assets, 'autoload_styles_for_scripts' ] ) );
 		$this->assertSame( 1, has_action( 'wp_print_scripts', [ $assets, 'autoload_styles_for_scripts' ] ) );
 
 		add_action( 'admin_print_scripts', $register_filter, 10 );

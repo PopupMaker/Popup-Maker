@@ -183,21 +183,34 @@ class PUM_Newsletters {
 	 * @param array $values
 	 */
 	public static function record_submission( $values = [] ) {
+		$values   = wp_parse_args( $values );
+		$defaults = [
+			'uuid'         => self::uuid(),
+			'user_id'      => get_current_user_id(),
+			'popup_id'     => 0,
+			'email_hash'   => '',
+			'email'        => '',
+			'name'         => '',
+			'fname'        => '',
+			'lname'        => '',
+			'consent'      => 'no',
+			'consent_args' => '',
+		];
+
 		$data = wp_parse_args(
-			$values,
-			[
-				'uuid'         => self::uuid(),
-				'user_id'      => get_current_user_id(),
-				'popup_id'     => 0,
-				'email_hash'   => '',
-				'email'        => '',
-				'name'         => '',
-				'fname'        => '',
-				'lname'        => '',
-				'consent'      => 'no',
-				'consent_args' => '',
-			]
+			array_intersect_key( $values, $defaults ),
+			$defaults
 		);
+
+		$data['uuid']       = sanitize_text_field( $data['uuid'] );
+		$data['user_id']    = get_current_user_id();
+		$data['popup_id']   = absint( $data['popup_id'] );
+		$data['email']      = sanitize_email( $data['email'] );
+		$data['email_hash'] = md5( $data['email'] );
+		$data['name']       = sanitize_text_field( $data['name'] );
+		$data['fname']      = sanitize_text_field( $data['fname'] );
+		$data['lname']      = sanitize_text_field( $data['lname'] );
+		$data['consent']    = 'yes' === $data['consent'] ? 'yes' : 'no';
 
 		$subscriber_id = PUM_DB_Subscribers::instance()->insert( $data );
 
@@ -229,6 +242,42 @@ class PUM_Newsletters {
 	 * @return array
 	 */
 	public static function sanitization( $values = [] ) {
+		$values = wp_parse_args( $values );
+
+		// Normalize storage-bound keys before sanitizing them. The database layer
+		// treats column names case-insensitively, so mixed-case variants must not
+		// bypass the sanitization applied to their canonical keys.
+		$subscriber_keys = [
+			'uuid',
+			'user_id',
+			'popup_id',
+			'email_hash',
+			'email',
+			'name',
+			'fname',
+			'lname',
+			'consent',
+			'consent_args',
+		];
+
+		foreach ( array_keys( $values ) as $key ) {
+			if ( ! is_string( $key ) ) {
+				continue;
+			}
+
+			$normalized_key = strtolower( $key );
+
+			if ( $key === $normalized_key || ! in_array( $normalized_key, $subscriber_keys, true ) ) {
+				continue;
+			}
+
+			if ( ! array_key_exists( $normalized_key, $values ) ) {
+				$values[ $normalized_key ] = $values[ $key ];
+			}
+
+			unset( $values[ $key ] );
+		}
+
 		$values = wp_parse_args(
 			$values,
 			[

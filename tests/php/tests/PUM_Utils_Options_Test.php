@@ -256,7 +256,10 @@ class PUM_Utils_Options_Test extends WP_UnitTestCase {
 	 * Test update with array value.
 	 */
 	public function test_update_with_array_value() {
-		PUM_Utils_Options::update( 'nested', [ 'a' => 1, 'b' => 2 ] );
+		PUM_Utils_Options::update( 'nested', [
+			'a' => 1,
+			'b' => 2,
+		] );
 		$result = PUM_Utils_Options::get( 'nested' );
 		$this->assertIsArray( $result );
 		$this->assertSame( 1, $result['a'] );

@@ -21,6 +21,20 @@ defined( 'ABSPATH' ) || exit;
 abstract class PageBuilder {
 
 	/**
+	 * Stable builder identifier.
+	 *
+	 * @var string
+	 */
+	public $key = '';
+
+	/**
+	 * Builder display label.
+	 *
+	 * @var string
+	 */
+	protected $label = '';
+
+	/**
 	 * Plugin container.
 	 *
 	 * @var \PopupMaker\Plugin\Core
@@ -34,6 +48,15 @@ abstract class PageBuilder {
 	 */
 	public function __construct( $container ) {
 		$this->container = $container;
+	}
+
+	/**
+	 * Builder display label.
+	 *
+	 * @return string
+	 */
+	public function label() {
+		return $this->label;
 	}
 
 	/**

@@ -7,14 +7,13 @@
  * Stage 1 - Prepare release:
  *   node bin/prepare-release.js start [version] [options]
  *
- * Stage 2 - Finish release:
+ * Stage 2 - Open release PR:
  *   node bin/prepare-release.js finish [options]
  *
  * Flags:
  *   --major, --minor, --patch    Version increment type (start only)
  *   --skip-tests                 Bypass CI checks (start only)
  *   --skip-build                 Skip build step (start only)
- *   --test                       Create test tag (finish only)
  *   --auto                       Skip confirmations
  *   --dry-run                    Show what would happen without changes
  */
@@ -87,10 +86,9 @@ ${ colorize( 'cyan', 'STAGE 1 - START:' ) }
   node bin/prepare-release.js start --dry-run           # Preview only
 
 ${ colorize( 'cyan', 'STAGE 2 - FINISH:' ) }
-  Merge to master, tag, merge back to develop, push.
+  Push the release branch and open its reviewed PR to master.
 
-  node bin/prepare-release.js finish                    # Create stable tag
-  node bin/prepare-release.js finish --test             # Create -test tag
+  node bin/prepare-release.js finish                    # Open release PR
   node bin/prepare-release.js finish --auto             # No prompts
   node bin/prepare-release.js finish --dry-run          # Preview only
 
@@ -101,9 +99,9 @@ ${ colorize( 'cyan', 'AUTO MODE:' ) }
   - Otherwise           → shows help
 
 ${ colorize( 'cyan', 'WORKFLOW:' ) }
-  1. npm run prepare-release start         # Prepare on release branch
+  1. pnpm run prepare-release start        # Prepare on release branch
   2. [Review zip in release/ folder]
-  3. npm run prepare-release finish        # Merge, tag, push
+  3. pnpm run prepare-release finish       # Push and open release PR
 ` );
 	process.exit( 0 );
 }
@@ -217,8 +215,50 @@ function prompt( question ) {
 
 // Get current branch.
 function getCurrentBranch() {
-	const branch = execCommand( 'git rev-parse --abbrev-ref HEAD', { silent: true } );
+	const branch = execCommand( 'git rev-parse --abbrev-ref HEAD', {
+		silent: true,
+	} );
 	return branch.trim();
+}
+
+function getReleasePullRequestDisposition( pullRequest ) {
+	if ( ! pullRequest || pullRequest.baseRefName !== 'master' ) {
+		return 'create';
+	}
+
+	switch ( pullRequest.state ) {
+		case 'OPEN':
+			return 'reuse';
+		case 'CLOSED':
+			return 'reopen';
+		case 'MERGED':
+			return 'merged';
+		default:
+			return 'create';
+	}
+}
+
+/**
+ * Select the authoritative release PR when a branch has PR history.
+ *
+ * @param {Array<{state: string}>} pullRequests Release PR candidates.
+ * @return {Object|null} The selected release PR, if one exists.
+ */
+function selectReleasePullRequest( pullRequests ) {
+	if ( ! Array.isArray( pullRequests ) ) {
+		return null;
+	}
+
+	return (
+		pullRequests.find(
+			( pullRequest ) => pullRequest.state === 'MERGED'
+		) ||
+		pullRequests.find( ( pullRequest ) => pullRequest.state === 'OPEN' ) ||
+		pullRequests.find(
+			( pullRequest ) => pullRequest.state === 'CLOSED'
+		) ||
+		null
+	);
 }
 
 // Check git status.
@@ -236,10 +276,7 @@ function checkGitStatus() {
 
 // Stage 1: START
 async function stageStart( targetVersion ) {
-	log(
-		colorize( 'bold', '🚀 Starting Release Preparation' ),
-		'magenta'
-	);
+	log( colorize( 'bold', '🚀 Starting Release Preparation' ), 'magenta' );
 	console.log( '' );
 
 	checkProjectRoot();
@@ -279,9 +316,12 @@ async function stageStart( targetVersion ) {
 
 		const checks = [
 			{ name: 'PHPCS Lint', cmd: 'composer run lint --quiet' },
-			{ name: 'ESLint', cmd: 'npx eslint ./packages/**/src/*.ts* --no-ignore --quiet' },
-			{ name: 'Unit Tests', cmd: 'npm run test:unit' },
-			{ name: 'Security Audit', cmd: 'npm audit --audit-level=high' },
+			{
+				name: 'ESLint',
+				cmd: 'pnpm exec eslint ./packages/**/src/*.ts* --no-ignore --quiet',
+			},
+			{ name: 'Unit Tests', cmd: 'pnpm run test:unit' },
+			{ name: 'Security Audit', cmd: 'pnpm audit --audit-level=high' },
 		];
 
 		for ( const check of checks ) {
@@ -309,15 +349,15 @@ async function stageStart( targetVersion ) {
 	execCommand( `node bin/update-changelog.js ${ targetVersion }` );
 	success( 'Changelog updated' );
 
-	// Update package-lock.json.
-	log( 'Updating package-lock.json', 'cyan' );
-	execCommand( 'npm install --package-lock-only' );
-	success( 'Package lock updated' );
+	// Update pnpm-lock.yaml.
+	log( 'Updating pnpm-lock.yaml', 'cyan' );
+	execCommand( 'pnpm install --lockfile-only' );
+	success( 'pnpm lockfile updated' );
 
 	// Build release (unless --skip-build).
 	if ( ! argv[ 'skip-build' ] ) {
 		log( 'Building release assets', 'cyan' );
-		execCommand( 'npm run build:production' );
+		execCommand( 'pnpm run build:production' );
 		execCommand( 'node bin/build-release.js' );
 		success( 'Release assets built' );
 	} else {
@@ -333,43 +373,48 @@ async function stageStart( targetVersion ) {
 	success( `Committed release preparation` );
 
 	console.log( '' );
-	success( `✅ Release ${ targetVersion } prepared on branch release/${ targetVersion }` );
+	success(
+		`✅ Release ${ targetVersion } prepared on branch release/${ targetVersion }`
+	);
 	console.log( '' );
 	log( 'Next steps:', 'cyan' );
 	info( '  • Inspect the release zip in release/' );
 	info( '  • Update readme.txt if needed' );
 	info( '  • Commit any additional changes' );
-	info( `  • Ship it:  npm run prepare-release finish` );
-	info( `  • Test it:  npm run prepare-release finish -- --test` );
+	info( `  • Open the release PR: pnpm run prepare-release finish` );
 }
 
 // Stage 2: FINISH
 async function stageFinish() {
-	log(
-		colorize( 'bold', '🚀 Finishing Release' ),
-		'magenta'
-	);
+	log( colorize( 'bold', '🚀 Finishing Release' ), 'magenta' );
 	console.log( '' );
 
 	checkProjectRoot();
 	checkGitStatus();
 
 	const currentBranch = getCurrentBranch();
-	const releaseMatch = currentBranch.match( /^release\/(.+)$/ );
+	const releaseMatch = currentBranch.match( /^release\/(\d+\.\d+\.\d+)$/ );
 
 	if ( ! releaseMatch ) {
-		error( `Must be on release/* branch. Currently on: ${ currentBranch }` );
+		error(
+			`Must be on release/* branch. Currently on: ${ currentBranch }`
+		);
 		process.exit( 1 );
 	}
 
 	const version = releaseMatch[ 1 ];
-	const isTest = argv.test;
-	const tagSuffix = isTest ? '-test' : '';
-	const tag = `${ version }${ tagSuffix }`;
-
 	log( `Version: ${ version }`, 'yellow' );
-	log( `Tag:     ${ tag }`, 'green' );
 	console.log( '' );
+	execCommand(
+		`node bin/validate-release-version.js --version ${ version }`
+	);
+
+	if ( argv.test ) {
+		error(
+			'Direct test tags are disabled. Use the release PR artifact for testing.'
+		);
+		process.exit( 1 );
+	}
 
 	if ( dryRun ) {
 		warn( 'DRY RUN MODE - No changes will be made' );
@@ -377,7 +422,9 @@ async function stageFinish() {
 	}
 
 	// Confirmation.
-	const confirmed = await prompt( `Create ${ isTest ? 'test' : 'stable' } release ${ tag }?` );
+	const confirmed = await prompt(
+		`Push release/${ version } and open its PR to master?`
+	);
 	if ( ! confirmed ) {
 		info( 'Release cancelled by user' );
 		process.exit( 0 );
@@ -385,56 +432,54 @@ async function stageFinish() {
 
 	console.log( '' );
 
-	if ( isTest ) {
-		// Test mode: tag from release branch, push tag only. No merge.
-		log( `Creating test tag from release branch: ${ tag }`, 'cyan' );
-		execCommand( `git tag ${ tag }` );
-		success( `Tag created: ${ tag }` );
+	log( `Pushing release/${ version }`, 'cyan' );
+	execCommand( `git push --set-upstream origin release/${ version }` );
 
-		log( 'Pushing test tag to remote', 'cyan' );
-		execCommand( `git push origin ${ tag }` );
-		success( 'Test tag pushed' );
-	} else {
-		// Stable release: full merge flow.
-		log( 'Merging to master branch', 'cyan' );
-		execCommand( 'git checkout master' );
-		execCommand( `git merge --no-ff release/${ version } -m "Merge release ${ version }"` );
-		success( 'Merged to master' );
-
-		// Create tag on master.
-		log( `Creating tag: ${ tag }`, 'cyan' );
-		execCommand( `git tag ${ tag }` );
-		success( `Tag created: ${ tag }` );
-
-		// Merge back to develop.
-		log( 'Merging back to develop branch', 'cyan' );
-		execCommand( 'git checkout develop' );
-		execCommand( `git merge --no-ff master -m "Merge release ${ version } back to develop"` );
-		success( 'Merged back to develop' );
-
-		// Delete release branch.
-		log( `Deleting release branch: release/${ version }`, 'cyan' );
-		execCommand( `git branch -d release/${ version }` );
-		success( 'Release branch deleted' );
-
-		// Push everything.
-		log( 'Pushing to remote', 'cyan' );
-		execCommand( 'git push origin master develop --tags' );
-		success( 'Pushed to remote' );
+	const hasGitHubCli = execCommand( 'command -v gh', {
+		silent: true,
+		allowFailure: true,
+	} );
+	if ( ! hasGitHubCli ) {
+		warn(
+			'GitHub CLI is unavailable. Open a PR from the release branch to master.'
+		);
+		return;
 	}
 
-	console.log( '' );
-	if ( isTest ) {
-		log( `🧪 Test tag ${ tag } pushed. GitHub Actions will dry-run the release pipeline.`, 'cyan' );
-		console.log( '' );
-		info( 'Next steps:' );
-		info( '  1. Watch GitHub Actions for pipeline results' );
-		info( '  2. Verify draft release, SVN dry-run, Slack notification' );
-		info( '  3. Clean up test tag: git tag -d ' + tag + ' && git push origin :refs/tags/' + tag );
-		info( '  4. Ship for real: npm run prepare-release finish' );
-	} else {
-		log( `🚀 Release ${ tag } shipped! GitHub Actions will handle the rest.`, 'cyan' );
+	const existingPullRequests = execCommand(
+		`gh pr list --head release/${ version } --base master --state all --limit 100 --json number,state,baseRefName,url`,
+		{ silent: true, allowFailure: true }
+	);
+	if ( existingPullRequests ) {
+		const pullRequest = selectReleasePullRequest(
+			JSON.parse( existingPullRequests )
+		);
+		const disposition = getReleasePullRequestDisposition( pullRequest );
+
+		if ( disposition === 'reuse' ) {
+			success( `Release PR already exists: ${ pullRequest.url }` );
+			return;
+		}
+
+		if ( disposition === 'reopen' ) {
+			log( `Reopening release PR #${ pullRequest.number }`, 'cyan' );
+			execCommand( `gh pr reopen ${ pullRequest.number }` );
+			success( `Release PR reopened: ${ pullRequest.url }` );
+			return;
+		}
+
+		if ( disposition === 'merged' ) {
+			error( `Release PR already merged: ${ pullRequest.url }` );
+			process.exit( 1 );
+		}
 	}
+
+	const pullRequestUrl = execCommand(
+		`gh pr create --base master --head release/${ version } --title "Release ${ version }" --body "Approve and merge this PR to publish Popup Maker ${ version } through GitHub, EDD, Google Drive, WordPress.org, the visual changelog draft, and Slack."`,
+		{ silent: true }
+	);
+	success( `Release PR opened: ${ pullRequestUrl.trim() }` );
+	info( 'Nothing publishes until the PR is approved and merged.' );
 }
 
 // Auto-detect command based on branch.
@@ -452,8 +497,8 @@ async function autoDetect() {
 		await stageStart( targetVersion );
 	} else {
 		error( 'Unknown state. Please specify start or finish:' );
-		info( '  npm run prepare-release start    # Prepare new release' );
-		info( '  npm run prepare-release finish   # Finish release' );
+		info( '  pnpm run prepare-release start   # Prepare new release' );
+		info( '  pnpm run prepare-release finish  # Open release PR' );
 		process.exit( 1 );
 	}
 }
@@ -481,14 +526,21 @@ async function main() {
 	}
 }
 
-// Handle Ctrl+C gracefully.
-process.on( 'SIGINT', () => {
-	console.log( '' );
-	warn( 'Release process interrupted by user' );
-	process.exit( 130 );
-} );
-
 // Run the script.
 if ( require.main === module ) {
+	// Handle Ctrl+C gracefully.
+	process.on( 'SIGINT', () => {
+		console.log( '' );
+		warn( 'Release process interrupted by user' );
+		process.exit( 130 );
+	} );
+
 	main();
 }
+
+module.exports = {
+	getReleasePullRequestDisposition,
+	selectReleasePullRequest,
+};
+
+/* eslint-enable no-console */

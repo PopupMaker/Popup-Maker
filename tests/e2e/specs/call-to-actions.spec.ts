@@ -4,7 +4,7 @@ import { test, expect, Page } from '@playwright/test';
  * URL to your WordPress site and the path to your plugin's CTA editor page.
  * Update these to match your local environment.
  */
-const BASE_URL = 'http://localhost:8889';
+const BASE_URL = process.env.WP_BASE_URL || 'http://localhost:8880';
 const CTA_EDITOR_PATH =
 	'/wp-admin/edit.php?post_type=popup&page=popup-maker-call-to-actions';
 
@@ -48,7 +48,7 @@ test.describe( 'Call to Actions E2E Tests', () => {
 			).toBeVisible();
 		} );
 
-		test( 'Should display Call to Actions header text', async ( {
+		test( 'Should display Calls to Action header text', async ( {
 			page,
 		} ) => {
 			// The Call to Actions header might be in .call-to-action-list
@@ -59,7 +59,7 @@ test.describe( 'Call to Actions E2E Tests', () => {
 			const headerText = await page.textContent(
 				'.call-to-action-list h1, .call-to-action-list h2, .call-to-action-list h3'
 			);
-			expect( headerText ).toMatch( /Call to Actions/i );
+			expect( headerText ).toMatch( /Calls to Action/i );
 		} );
 
 		test( 'Should display a list of existing Call to Actions (if any)', async ( {
@@ -100,7 +100,7 @@ test.describe( 'Call to Actions E2E Tests', () => {
 
 			// Check text content.
 			const headerText = await modalHeader.textContent();
-			expect( headerText ).toContain( 'Edit Call to Action' );
+			expect( headerText ).toContain( 'New Call to Action' );
 		} );
 	} );
 
