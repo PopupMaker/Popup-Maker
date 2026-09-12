@@ -23,30 +23,39 @@ function pum_get_popup( $popup_id = null ) {
 	}
 
 	/** @var int $popup_id filtered $popup_id */
-	$popup_id         = pum_get_popup_id( $popup_id );
-	$popup_controller = null;
+	$popup_id = pum_get_popup_id( $popup_id );
 
-	if ( ! is_admin() ) {
-		$popup_controller = \PopupMaker\plugin()->get_controller( 'Frontend\\Popups' );
-		$queried_popup    = $popup_controller ? $popup_controller->get_queried_popup( $popup_id ) : null;
+	$legacy_repository = pum()->popups;
 
-		if ( pum_is_popup( $queried_popup ) ) {
-			return $queried_popup;
+	/**
+	 * When an extension has replaced the legacy repository with one that builds
+	 * a custom model class, defer to it so helper lookups keep returning that
+	 * class. Its get_model() still routes core popups through the canonical
+	 * cache, so identity is preserved for the default case.
+	 */
+	if ( $legacy_repository instanceof PUM_Repository_Popups && ! $legacy_repository->uses_core_model() ) {
+		try {
+			$popup = $legacy_repository->get_item( $popup_id );
+
+			if ( pum_is_popup( $popup ) ) {
+				return $popup;
+			}
+		} catch ( InvalidArgumentException $e ) {
+			return new PUM_Model_Popup( $popup_id );
 		}
 	}
 
-	try {
-		$popup = pum()->popups->get_item( $popup_id );
-	} catch ( InvalidArgumentException $e ) {
-		// Return empty object
-		$popup = new PUM_Model_Popup( $popup_id );
+	// Resolve through the canonical fetch/cache boundary so frontend, admin and
+	// AJAX callers all share one popup model per request.
+	$popup = \PopupMaker\plugin()->get( 'popups' )->get_canonical_item( $popup_id );
+
+	if ( pum_is_popup( $popup ) ) {
+		return $popup;
 	}
 
-	if ( ! is_admin() && $popup_controller && pum_is_popup( $popup ) ) {
-		$popup_controller->cache_queried_popup( $popup );
-	}
-
-	return $popup;
+	// Preserve the historical contract: always hand back a popup object, even
+	// for IDs that do not resolve to a stored popup.
+	return new PUM_Model_Popup( $popup_id );
 }
 
 /**

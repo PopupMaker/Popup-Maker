@@ -75,6 +75,21 @@ abstract class Repository extends Service {
 	abstract public function instantiate_model_from_post( $post );
 
 	/**
+	 * Resolve the model to use for a queried post.
+	 *
+	 * Defaults to fresh instantiation. Repositories that maintain a canonical
+	 * request-local model override this so a query reuses the instance callers
+	 * already hold instead of replacing it.
+	 *
+	 * @param \WP_Post $post Post object.
+	 *
+	 * @return TPost|null
+	 */
+	protected function resolve_model_from_post( $post ) {
+		return $this->instantiate_model_from_post( $post );
+	}
+
+	/**
 	 * Cache an item in internal storage.
 	 *
 	 * @param TPost $item Item to cache by ID for fast retrieval.
@@ -103,7 +118,7 @@ abstract class Repository extends Service {
 		$items = [];
 
 		foreach ( $this->query_posts( $args ) as $post ) {
-			$item = $this->instantiate_model_from_post( $post );
+			$item = $this->resolve_model_from_post( $post );
 
 			if ( ! $item ) {
 				continue;
@@ -186,12 +201,13 @@ abstract class Repository extends Service {
 	 */
 	public function get_by_id( $item_id = 0 ) {
 		// Convert to integer for consistent handling.
-		$item_id   = (int) $item_id;
-		$cache_key = $this->get_item_cache_key( $item_id );
+		$item_id = (int) $item_id;
 
-		// If item is cached, get the object.
-		if ( isset( $this->items_by_id[ $cache_key ] ) ) {
-			return $this->items_by_id[ $cache_key ];
+		// Return a validated cache hit when one exists.
+		$cached = $this->get_cached_item( $item_id );
+
+		if ( null !== $cached ) {
+			return $cached;
 		}
 
 		// Query for a post by ID.
@@ -210,6 +226,69 @@ abstract class Repository extends Service {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get an already-cached model without falling back to a query.
+	 *
+	 * Answers "has this item been hydrated during this request?" rather than
+	 * "fetch it". A cached model that fails {@see self::cached_item_is_fresh()}
+	 * is evicted and reported as a miss, so no caller can be served stale data
+	 * regardless of which request context invalidation hooks were registered in.
+	 *
+	 * @param int|numeric-string $item_id Item ID.
+	 *
+	 * @return TPost|null Cached model, or null when not cached or stale.
+	 */
+	public function get_cached_item( $item_id ) {
+		$item_id = (int) $item_id;
+
+		if ( $item_id <= 0 ) {
+			return null;
+		}
+
+		$cache_key = $this->get_item_cache_key( $item_id );
+
+		if ( ! isset( $this->items_by_id[ $cache_key ] ) ) {
+			return null;
+		}
+
+		$cached = $this->items_by_id[ $cache_key ];
+
+		if ( $this->cached_item_is_fresh( $cached, $item_id ) ) {
+			return $cached;
+		}
+
+		$this->forget_item( $item_id );
+
+		return null;
+	}
+
+	/**
+	 * Determine whether a cached model still matches its stored post.
+	 *
+	 * The base implementation trusts the cache. Repositories that must survive
+	 * direct writes, or requests where invalidation hooks are not registered,
+	 * override this to compare against the current post.
+	 *
+	 * @param TPost              $item    Cached model.
+	 * @param int|numeric-string $item_id Item ID.
+	 *
+	 * @return bool
+	 */
+	protected function cached_item_is_fresh( $item, $item_id ) {
+		return true;
+	}
+
+	/**
+	 * Discard a cached model.
+	 *
+	 * @param int|numeric-string $item_id Item ID.
+	 *
+	 * @return void
+	 */
+	public function forget_item( $item_id ) {
+		unset( $this->items_by_id[ $this->get_item_cache_key( $item_id ) ] );
 	}
 
 	/**
@@ -244,7 +323,10 @@ abstract class Repository extends Service {
 		if ( $query->have_posts() ) {
 			$post = $query->posts[0];
 			if ( $post instanceof \WP_Post ) {
-				$item = $this->instantiate_model_from_post( $post );
+				// Resolve through the same path as query() so a lookup by slug or
+				// meta reuses the model callers already hold instead of replacing
+				// it with a second instance.
+				$item = $this->resolve_model_from_post( $post );
 				if ( $item ) {
 					$this->cache_item( $item );
 				}

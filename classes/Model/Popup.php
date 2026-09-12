@@ -130,12 +130,7 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 			$meta_cache = wp_cache_get( $this->ID, 'post_meta' );
 		}
 
-		$cache_data = [
-			'loaded'   => is_array( $meta_cache ),
-			'settings' => is_array( $meta_cache ) && isset( $meta_cache['popup_settings'] ) ? $meta_cache['popup_settings'] : null,
-		];
-
-		return hash( 'sha256', maybe_serialize( $cache_data ) );
+		return $this->hash_meta_cache_entry( $meta_cache, 'popup_settings' );
 	}
 
 	/**

@@ -32,6 +32,14 @@ class Popups extends Repository {
 	protected $post_type_key = 'popup';
 
 	/**
+	 * Fingerprints of the stored posts backing cached models, keyed like the
+	 * model cache.
+	 *
+	 * @var array<int|string,string>
+	 */
+	protected $stored_post_hashes = [];
+
+	/**
 	 * Partition cached popup models by site.
 	 *
 	 * @param int|numeric-string $item_id Popup ID.
@@ -77,6 +85,223 @@ class Popups extends Repository {
 	 */
 	protected function cache_item( $item ) {
 		parent::cache_item( $item );
+
+		if ( $item instanceof Popup && $item->ID ) {
+			$stored_post = get_post( (int) $item->ID );
+
+			if ( $stored_post instanceof \WP_Post ) {
+				$this->stored_post_hashes[ $this->get_item_cache_key( $item->ID ) ] = $this->hash_stored_post( $stored_post );
+			}
+		}
+	}
+
+	/**
+	 * Drop the cached model and its stored-post fingerprint.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return void
+	 */
+	public function forget_item( $item_id ) {
+		unset( $this->stored_post_hashes[ $this->get_item_cache_key( $item_id ) ] );
+
+		parent::forget_item( $item_id );
+	}
+
+	/**
+	 * Get the canonical popup model for this request.
+	 *
+	 * This is the single fetch/cache boundary that frontend, admin, AJAX, REST,
+	 * modern services and legacy helpers all resolve through. Callers that hold
+	 * a popup ID should prefer this over hydrating their own model, so every
+	 * consumer observes the same object for the same popup within a request.
+	 *
+	 * The cached model is validated against the current `WP_Post` before it is
+	 * returned, so a model whose underlying post changed (directly or via a
+	 * third party clearing the post cache) is discarded rather than served
+	 * stale.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return Popup|null Canonical model, or null when no such popup exists.
+	 */
+	public function get_canonical_item( $item_id ) {
+		// get_by_id() performs the validated cache lookup itself, so this is a
+		// named alias that documents intent at the call site rather than a
+		// second fetch path.
+		return $this->get_by_id( $item_id );
+	}
+
+	/**
+	 * Get the canonical popup model for an already-loaded post object.
+	 *
+	 * Used by callers that hold a `WP_Post` which may carry values injected by
+	 * `posts_results` / `the_posts` filters — multilingual plugins and similar
+	 * integrations. Reducing such a post to an ID and reloading would silently
+	 * discard those values, so when no canonical model is cached yet the model
+	 * is built from the supplied post rather than from a fresh database read.
+	 *
+	 * @param \WP_Post $post Post object, potentially filtered.
+	 *
+	 * @return Popup|null
+	 */
+	public function get_canonical_item_for_post( $post ) {
+		if ( ! $post instanceof \WP_Post || $post->post_type !== $this->post_type ) {
+			return null;
+		}
+
+		$cached = $this->get_cached_item( $post->ID );
+
+		if ( $cached instanceof Popup ) {
+			/**
+			 * Absorb the supplied post into the model already in play.
+			 *
+			 * Without this, whether a caller sees filtered values would depend on
+			 * lookup order: anything that touched the popup by ID earlier in the
+			 * request (frontend preloading does exactly that) would leave an
+			 * unfiltered model cached, and a later filtered query would silently
+			 * return database values. Refreshing in place keeps object identity —
+			 * the promise this repository exists to make — while adopting the
+			 * filtered post.
+			 */
+			if ( $this->post_differs( $cached, $post ) ) {
+				$cached->setup( $post );
+			}
+
+			return $cached;
+		}
+
+		$item = $this->instantiate_model_from_post( $post );
+
+		if ( $item ) {
+			$this->cache_item( $item );
+		}
+
+		return $item;
+	}
+
+	/**
+	 * Whether a supplied post carries different values than a cached model.
+	 *
+	 * @param Popup    $cached Cached model.
+	 * @param \WP_Post $post   Supplied post.
+	 *
+	 * @return bool
+	 */
+	protected function post_differs( $cached, $post ) {
+		if ( ! isset( $cached->post ) || ! $cached->post instanceof \WP_Post ) {
+			return true;
+		}
+
+		return get_object_vars( $cached->post ) !== get_object_vars( $post );
+	}
+
+	/**
+	 * Instantiate a model, reusing the canonical instance when one is cached.
+	 *
+	 * `query()` hydrates a model for every matched post. Without this, a query
+	 * would discard and replace models other callers already hold, breaking
+	 * object identity and paying for a second construction per popup.
+	 *
+	 * @param \WP_Post $post Post object.
+	 *
+	 * @return Popup|null
+	 */
+	protected function resolve_model_from_post( $post ) {
+		if ( ! $post instanceof \WP_Post ) {
+			return null;
+		}
+
+		$cached = $this->get_cached_item( $post->ID );
+
+		if ( $cached instanceof Popup ) {
+			return $cached;
+		}
+
+		return $this->instantiate_model_from_post( $post );
+	}
+
+	/**
+	 * Refresh a cached popup's settings after its metadata changed.
+	 *
+	 * Keeps object identity stable for callers that already hold the model —
+	 * the settings are cleared so the next read re-resolves them — and falls
+	 * back to eviction when the popup is not currently cached.
+	 *
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return void
+	 */
+	public function refresh_item_settings( $item_id ) {
+		$cached = $this->get_cached_item( $item_id );
+
+		if ( $cached instanceof Popup ) {
+			$cached->settings = null;
+
+			return;
+		}
+
+		$this->forget_item( $item_id );
+	}
+
+	/**
+	 * Determine whether a cached popup still matches its stored post.
+	 *
+	 * Mirrors the frontend controller's historical freshness check so moving the
+	 * cache boundary down does not weaken staleness protection for any caller.
+	 *
+	 * @param Popup              $item    Cached popup model.
+	 * @param int|numeric-string $item_id Popup ID.
+	 *
+	 * @return bool
+	 */
+	protected function cached_item_is_fresh( $item, $item_id ) {
+		if ( ! $item instanceof Popup || ! isset( $item->post ) || ! $item->post instanceof \WP_Post ) {
+			return false;
+		}
+
+		$item_id      = (int) $item_id;
+		$current_post = get_post( $item_id );
+
+		// Deleted, or no longer a popup.
+		if ( ! $current_post instanceof \WP_Post || $current_post->post_type !== $this->post_type ) {
+			return false;
+		}
+
+		$recorded = isset( $this->stored_post_hashes[ $this->get_item_cache_key( $item_id ) ] )
+			? $this->stored_post_hashes[ $this->get_item_cache_key( $item_id ) ]
+			: null;
+
+		// No fingerprint recorded (model cached by a caller that bypassed
+		// cache_item()); fall back to comparing the model's own post.
+		if ( null === $recorded ) {
+			return get_object_vars( $current_post ) === get_object_vars( $item->post );
+		}
+
+		/**
+		 * Compare against the stored-post fingerprint taken when the model was
+		 * cached, not against the model's own `WP_Post`.
+		 *
+		 * A model may legitimately hold a post whose title or content was
+		 * altered by a `posts_results` / `the_posts` filter — multilingual
+		 * plugins do exactly this. Comparing the model's post directly would
+		 * treat those models as stale on every read. The fingerprint tracks what
+		 * the database actually held, so filter output is preserved while a real
+		 * write is still detected, including one inside the same second where
+		 * `post_modified_gmt` does not change.
+		 */
+		return $recorded === $this->hash_stored_post( $current_post );
+	}
+
+	/**
+	 * Fingerprint the stored post backing a cached model.
+	 *
+	 * @param \WP_Post $post Post object as stored by WordPress.
+	 *
+	 * @return string
+	 */
+	protected function hash_stored_post( $post ) {
+		return md5( (string) wp_json_encode( get_object_vars( $post ) ) );
 	}
 
 	/**
@@ -302,17 +527,6 @@ class Popups extends Repository {
 		$filtered = apply_filters( 'popup_maker/popup_title_choices', $title_choices );
 
 		return is_array( $filtered ) ? $filtered : $title_choices;
-	}
-
-	/**
-	 * Discard a cached popup model for the current site.
-	 *
-	 * @param int|numeric-string $item_id Popup ID.
-	 *
-	 * @return void
-	 */
-	public function forget_item( $item_id ) {
-		unset( $this->items_by_id[ $this->get_item_cache_key( $item_id ) ] );
 	}
 
 	/**

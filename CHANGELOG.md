@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Improvements**
+
+-   Improved popup loading efficiency by building each popup only once per page load instead of twice, reducing memory use on sites with many popups.
+-   Fixed popup settings changes not being reflected everywhere on the same page load, which could cause a popup to use outdated settings.
+
 ## v1.25.0 - 2026-09-10
 
 **Security**
