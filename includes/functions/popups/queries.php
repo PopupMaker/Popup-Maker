@@ -25,6 +25,26 @@ function pum_get_popup( $popup_id = null ) {
 	/** @var int $popup_id filtered $popup_id */
 	$popup_id = pum_get_popup_id( $popup_id );
 
+	$legacy_repository = pum()->popups;
+
+	/**
+	 * When an extension has replaced the legacy repository with one that builds
+	 * a custom model class, defer to it so helper lookups keep returning that
+	 * class. Its get_model() still routes core popups through the canonical
+	 * cache, so identity is preserved for the default case.
+	 */
+	if ( $legacy_repository instanceof PUM_Repository_Popups && ! $legacy_repository->uses_core_model() ) {
+		try {
+			$popup = $legacy_repository->get_item( $popup_id );
+
+			if ( pum_is_popup( $popup ) ) {
+				return $popup;
+			}
+		} catch ( InvalidArgumentException $e ) {
+			return new PUM_Model_Popup( $popup_id );
+		}
+	}
+
 	// Resolve through the canonical fetch/cache boundary so frontend, admin and
 	// AJAX callers all share one popup model per request.
 	$popup = \PopupMaker\plugin()->get( 'popups' )->get_canonical_item( $popup_id );

@@ -12,6 +12,8 @@
 
 require_once __DIR__ . '/fixtures/class-canonical-cache-subclass-popup.php';
 require_once __DIR__ . '/fixtures/class-canonical-cache-subclass-repository.php';
+require_once __DIR__ . '/fixtures/class-canonical-cache-legacy-subclass-popup.php';
+require_once __DIR__ . '/fixtures/class-canonical-cache-legacy-subclass-repository.php';
 
 /**
  * Canonical popup cache tests.
@@ -246,5 +248,168 @@ class Canonical_Popup_Cache_Test extends WP_UnitTestCase {
 		$item = $repository->get_by_id( $popup_id );
 
 		$this->assertInstanceOf( 'Canonical_Cache_Subclass_Popup', $item );
+	}
+
+	/**
+	 * Regression: get_by_id() must not serve a stale model when invalidation
+	 * hooks are absent, as in wp-admin and admin-AJAX.
+	 *
+	 * @return void
+	 */
+	public function test_get_by_id_validates_without_invalidation_hooks() {
+		$popup_id = $this->make_popup();
+		$repo     = \PopupMaker\plugin()->get( 'popups' );
+
+		$controller = \PopupMaker\plugin()->get_controller( 'Frontend\\Popups' );
+		remove_action( 'clean_post_cache', [ $controller, 'invalidate_queried_popup' ], PHP_INT_MIN );
+
+		try {
+			$repo->get_by_id( $popup_id );
+
+			wp_update_post(
+				[
+					'ID'         => $popup_id,
+					'post_title' => 'Updated without hooks',
+				]
+			);
+
+			$this->assertSame( 'Updated without hooks', $repo->get_by_id( $popup_id )->post_title );
+		} finally {
+			add_action( 'clean_post_cache', [ $controller, 'invalidate_queried_popup' ], PHP_INT_MIN, 2 );
+		}
+	}
+
+	/**
+	 * Regression: a deleted popup must not be returned from cache.
+	 *
+	 * @return void
+	 */
+	public function test_get_by_id_returns_null_for_deleted_popup_without_hooks() {
+		$popup_id = $this->make_popup();
+		$repo     = \PopupMaker\plugin()->get( 'popups' );
+
+		$controller = \PopupMaker\plugin()->get_controller( 'Frontend\\Popups' );
+		remove_action( 'clean_post_cache', [ $controller, 'invalidate_queried_popup' ], PHP_INT_MIN );
+
+		try {
+			$repo->get_by_id( $popup_id );
+
+			wp_delete_post( $popup_id, true );
+
+			$this->assertNull( $repo->get_by_id( $popup_id ) );
+		} finally {
+			add_action( 'clean_post_cache', [ $controller, 'invalidate_queried_popup' ], PHP_INT_MIN, 2 );
+		}
+	}
+
+	/**
+	 * Regression: get_by_field() reuses the canonical model.
+	 *
+	 * @return void
+	 */
+	public function test_get_by_field_reuses_canonical_model() {
+		$popup_id = $this->make_popup();
+		$slug     = get_post_field( 'post_name', $popup_id );
+
+		$held = pum_get_popup( $popup_id );
+		$repo = \PopupMaker\plugin()->get( 'popups' );
+
+		$this->assertSame( $held, $repo->get_by_field( 'post_name', $slug ) );
+		$this->assertSame( $held, $repo->get_canonical_item( $popup_id ) );
+	}
+
+	/**
+	 * Regression: values injected by the_posts filters survive legacy hydration.
+	 *
+	 * @return void
+	 */
+	public function test_legacy_query_preserves_filtered_post_values() {
+		$popup_id = $this->make_popup();
+
+		$filter = static function ( $posts ) {
+			foreach ( $posts as $post ) {
+				if ( 'popup' === $post->post_type ) {
+					$post->post_title = 'Translated title';
+				}
+			}
+
+			return $posts;
+		};
+
+		add_filter( 'the_posts', $filter );
+
+		try {
+			$popups = pum_get_popups( [ 'post__in' => [ $popup_id ] ] );
+		} finally {
+			remove_filter( 'the_posts', $filter );
+		}
+
+		$matched = null;
+		foreach ( $popups as $popup ) {
+			if ( (int) $popup->ID === $popup_id ) {
+				$matched = $popup;
+				break;
+			}
+		}
+
+		$this->assertInstanceOf( 'PUM_Model_Popup', $matched );
+		$this->assertSame( 'Translated title', $matched->post_title );
+	}
+
+	/**
+	 * Regression: a cached model holding filtered values is not thrashed.
+	 *
+	 * @return void
+	 */
+	public function test_filtered_model_survives_repeated_reads() {
+		$popup_id = $this->make_popup();
+		$repo     = \PopupMaker\plugin()->get( 'popups' );
+
+		$post = get_post( $popup_id );
+		$this->assertInstanceOf( 'WP_Post', $post );
+
+		$filtered             = clone $post;
+		$filtered->post_title = 'Filtered title';
+
+		$model = $repo->get_canonical_item_for_post( $filtered );
+		$this->assertSame( 'Filtered title', $model->post_title );
+
+		// Repeated reads must return the same filtered model, not rebuild it
+		// from the unfiltered database row.
+		$this->assertSame( $model, $repo->get_canonical_item( $popup_id ) );
+		$this->assertSame( 'Filtered title', $repo->get_canonical_item( $popup_id )->post_title );
+	}
+
+	/**
+	 * Regression: pum_get_popup() honours a custom legacy model class.
+	 *
+	 * @return void
+	 */
+	public function test_helper_preserves_custom_legacy_model() {
+		$popup_id = $this->make_popup();
+		$original = pum()->popups;
+
+		pum()->popups = new Canonical_Cache_Legacy_Subclass_Repository();
+
+		try {
+			$this->assertInstanceOf( 'Canonical_Cache_Legacy_Subclass_Popup', pum_get_popup( $popup_id ) );
+		} finally {
+			pum()->popups = $original;
+		}
+	}
+
+	/**
+	 * The default repository still yields the canonical core model.
+	 *
+	 * @return void
+	 */
+	public function test_helper_uses_canonical_model_by_default() {
+		$popup_id = $this->make_popup();
+
+		$this->assertTrue( pum()->popups->uses_core_model() );
+		$this->assertSame(
+			\PopupMaker\plugin()->get( 'popups' )->get_canonical_item( $popup_id ),
+			pum_get_popup( $popup_id )
+		);
 	}
 }

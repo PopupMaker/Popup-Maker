@@ -3,15 +3,15 @@
  * Deterministic popup model fetch/cache benchmark.
  *
  * Not a correctness test — it emits SQL query counts, model hydration counts,
- * and object-identity facts for the canonical-cache refactor. Excluded from the
- * default suite via the `bench` group; run explicitly with:
+ * and object-identity facts for the canonical-cache refactor. It lives in
+ * tests/php/tests/benchmarks, which the default `general` suite excludes, so it
+ * never runs during `composer tests`. Run it explicitly with:
  *
- *   vendor/bin/phpunit -c tests/php/phpunit.xml --group bench
+ *   vendor/bin/phpunit -c tests/php/phpunit.xml --testsuite bench
  *
  * Set PUM_BENCH_POPUPS to change the eligible popup count (default 10).
  *
  * @package PopupMaker
- * @group bench
  */
 
 /**
@@ -297,6 +297,13 @@ class Popup_Model_Cache_Bench extends WP_UnitTestCase {
 		);
 
 		// E: stale-read safety after a direct meta write.
+		//
+		// Note on scope: settings freshness is defended at the model layer by
+		// PUM_Model_Popup::get_settings(), which re-reads when the metadata cache
+		// hash changes. This scenario therefore measures the end-to-end guarantee
+		// a caller sees, not the repository's own freshness check. Repository
+		// freshness (post updates and deletes) is covered by
+		// Canonical_Popup_Cache_Test.
 		$this->flush_caches();
 		$before = pum_get_popup( $target );
 		$before->get_setting( 'bench_idx' );
@@ -313,17 +320,27 @@ class Popup_Model_Cache_Bench extends WP_UnitTestCase {
 		$this->start();
 		$after    = pum_get_popup( $target );
 		$observed = $after->get_setting( 'bench_idx' );
+		$is_fresh = 9999 === $observed;
 		$this->row(
 			'E:stale_after_meta_write',
 			$this->stop(),
 			[
 				'observed_value' => $observed,
-				'is_fresh'       => 9999 === $observed ? 'yes' : 'NO-STALE',
+				'expected_value' => 9999,
+				'result'         => $is_fresh ? 'FRESH' : 'STALE-READ-DETECTED',
 			]
 		);
 
 		$this->emit();
 
 		$this->assertNotEmpty( $this->rows );
+
+		// Scenario E measures staleness protection, so a stale read must fail the
+		// run rather than be reported as a passing data point.
+		$this->assertSame(
+			9999,
+			$observed,
+			'Scenario E read a stale popup setting: the canonical cache served a value written before the meta update.'
+		);
 	}
 }

@@ -8,6 +8,13 @@
 	<testsuites>
 		<testsuite name="general">
 			<directory suffix=".php">./tests/</directory>
+			<!-- Benchmarks are opt-in: they seed posts and emit diagnostic rows to
+				 STDERR, so they do not belong in ordinary runs. Run them with the
+				 "bench" testsuite instead. -->
+			<exclude>./tests/benchmarks</exclude>
+		</testsuite>
+		<testsuite name="bench">
+			<directory suffix=".php">./tests/benchmarks</directory>
 		</testsuite>
 	</testsuites>
 	<coverage processUncoveredFiles="false">

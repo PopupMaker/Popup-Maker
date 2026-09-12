@@ -121,6 +121,20 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	}
 
 	/**
+	 * Whether this repository builds the core popup model.
+	 *
+	 * Extensions may subclass this repository with a custom `$model`. Callers
+	 * use this to decide whether the canonical repository (which only produces
+	 * `PUM_Model_Popup`) can satisfy a lookup, or whether the legacy hydration
+	 * path must be used to preserve the extension's model class.
+	 *
+	 * @return bool
+	 */
+	public function uses_core_model() {
+		return 'PUM_Model_Popup' === $this->model;
+	}
+
+	/**
 	 * Resolve a popup model through the canonical repository.
 	 *
 	 * This legacy repository no longer owns popup model storage. It delegates to
@@ -136,13 +150,7 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 	 * @return WP_Post|PUM_Abstract_Model_Post
 	 */
 	protected function get_model( $id ) {
-		if ( 'PUM_Model_Popup' !== $this->model ) {
-			return parent::get_model( $id );
-		}
-
-		$post_id = is_a( $id, 'WP_Post' ) ? $id->ID : $id;
-
-		if ( ! is_numeric( $post_id ) ) {
+		if ( ! $this->uses_core_model() ) {
 			return parent::get_model( $id );
 		}
 
@@ -152,7 +160,12 @@ class PUM_Repository_Popups extends PUM_Abstract_Repository_Posts {
 			return parent::get_model( $id );
 		}
 
-		$popup = $canonical->get_canonical_item( $post_id );
+		// Preserve a supplied post object so values injected by posts_results /
+		// the_posts filters survive; reducing it to an ID would reload the
+		// unfiltered row.
+		$popup = $id instanceof WP_Post
+			? $canonical->get_canonical_item_for_post( $id )
+			: ( is_numeric( $id ) ? $canonical->get_canonical_item( $id ) : null );
 
 		return $popup instanceof PUM_Model_Popup ? $popup : parent::get_model( $id );
 	}

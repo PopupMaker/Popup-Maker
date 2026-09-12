@@ -9,7 +9,7 @@ Reproduce:
 ```bash
 export WP_TESTS_DIR="$TMPDIR/wordpress-tests-lib"
 PUM_BENCH_POPUPS=<n> vendor/bin/phpunit -c tests/php/phpunit.xml \
-  --filter Popup_Model_Cache_Bench
+  --testsuite bench
 ```
 
 Query counts, hydration counts and distinct-object counts are **deterministic**.
@@ -66,10 +66,10 @@ reference held across a settings write kept reporting the pre-write value.
 
 | n | before | after |
 |---|--------|-------|
-| 10 | 90.8 KB | 58.8 KB |
-| 50 | 456.1 KB | 292.4 KB |
+| 10 | 90.8 KB | 60.0 KB |
+| 50 | 456.1 KB | 299.2 KB |
 
-Roughly −36%, consistent with halving live model count.
+Roughly −34%, consistent with halving live model count.
 
 ## Staleness
 
