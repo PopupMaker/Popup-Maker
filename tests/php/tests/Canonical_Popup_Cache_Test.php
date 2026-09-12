@@ -261,7 +261,13 @@ class Canonical_Popup_Cache_Test extends WP_UnitTestCase {
 		$repo     = \PopupMaker\plugin()->get( 'popups' );
 
 		$controller = \PopupMaker\plugin()->get_controller( 'Frontend\\Popups' );
-		remove_action( 'clean_post_cache', [ $controller, 'invalidate_queried_popup' ], PHP_INT_MIN );
+
+		// Assert the detach succeeded: if the callback were still attached it
+		// would clear the cache itself, and this test would pass without ever
+		// exercising the repository's freshness validation.
+		$this->assertTrue(
+			remove_action( 'clean_post_cache', [ $controller, 'invalidate_queried_popup' ], PHP_INT_MIN )
+		);
 
 		try {
 			$repo->get_by_id( $popup_id );
@@ -289,7 +295,13 @@ class Canonical_Popup_Cache_Test extends WP_UnitTestCase {
 		$repo     = \PopupMaker\plugin()->get( 'popups' );
 
 		$controller = \PopupMaker\plugin()->get_controller( 'Frontend\\Popups' );
-		remove_action( 'clean_post_cache', [ $controller, 'invalidate_queried_popup' ], PHP_INT_MIN );
+
+		// Assert the detach succeeded: if the callback were still attached it
+		// would clear the cache itself, and this test would pass without ever
+		// exercising the repository's freshness validation.
+		$this->assertTrue(
+			remove_action( 'clean_post_cache', [ $controller, 'invalidate_queried_popup' ], PHP_INT_MIN )
+		);
 
 		try {
 			$repo->get_by_id( $popup_id );
@@ -411,5 +423,78 @@ class Canonical_Popup_Cache_Test extends WP_UnitTestCase {
 			\PopupMaker\plugin()->get( 'popups' )->get_canonical_item( $popup_id ),
 			pum_get_popup( $popup_id )
 		);
+	}
+
+	/**
+	 * Regression: filtered values are adopted regardless of lookup order.
+	 *
+	 * Anything that touches a popup by ID earlier in the request — frontend
+	 * preloading does — used to leave an unfiltered model cached, so a later
+	 * filtered query silently returned database values.
+	 *
+	 * @return void
+	 */
+	public function test_filtered_post_adopted_after_id_lookup() {
+		$popup_id = $this->make_popup();
+		$repo     = \PopupMaker\plugin()->get( 'popups' );
+
+		// Fill the cache with an unfiltered model first.
+		$held = $repo->get_by_id( $popup_id );
+		$this->assertSame( get_post( $popup_id )->post_title, $held->post_title );
+
+		$filtered             = clone get_post( $popup_id );
+		$filtered->post_title = 'Translated title';
+
+		$model = $repo->get_canonical_item_for_post( $filtered );
+
+		// Same object (identity preserved) carrying the filtered value.
+		$this->assertSame( $held, $model );
+		$this->assertSame( 'Translated title', $model->post_title );
+		$this->assertSame( 'Translated title', $repo->get_canonical_item( $popup_id )->post_title );
+	}
+
+	/**
+	 * Regression: a filtered legacy query after a helper lookup keeps filters.
+	 *
+	 * @return void
+	 */
+	public function test_filtered_query_after_helper_lookup() {
+		$popup_id = $this->make_popup();
+
+		// Something touches the popup by ID early in the request.
+		$held = pum_get_popup( $popup_id );
+
+		$filter = static function ( $posts ) {
+			foreach ( $posts as $post ) {
+				if ( 'popup' === $post->post_type ) {
+					$post->post_title = 'Translated title';
+				}
+			}
+
+			return $posts;
+		};
+
+		add_filter( 'the_posts', $filter );
+
+		try {
+			$popups = pum_get_popups( [ 'post__in' => [ $popup_id ] ] );
+		} finally {
+			remove_filter( 'the_posts', $filter );
+		}
+
+		$matched = null;
+		foreach ( $popups as $popup ) {
+			if ( (int) $popup->ID === $popup_id ) {
+				$matched = $popup;
+				break;
+			}
+		}
+
+		$this->assertSame( $held, $matched );
+		$this->assertSame( 'Translated title', $matched->post_title );
+
+		// Refreshing in place must not discard resolved settings or provenance.
+		$this->assertIsArray( $held->get_settings() );
+		$this->assertSame( 3, (int) $held->data_version );
 	}
 }

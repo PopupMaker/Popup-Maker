@@ -153,6 +153,21 @@ class Popups extends Repository {
 		$cached = $this->get_cached_item( $post->ID );
 
 		if ( $cached instanceof Popup ) {
+			/**
+			 * Absorb the supplied post into the model already in play.
+			 *
+			 * Without this, whether a caller sees filtered values would depend on
+			 * lookup order: anything that touched the popup by ID earlier in the
+			 * request (frontend preloading does exactly that) would leave an
+			 * unfiltered model cached, and a later filtered query would silently
+			 * return database values. Refreshing in place keeps object identity —
+			 * the promise this repository exists to make — while adopting the
+			 * filtered post.
+			 */
+			if ( $this->post_differs( $cached, $post ) ) {
+				$cached->setup( $post );
+			}
+
 			return $cached;
 		}
 
@@ -163,6 +178,22 @@ class Popups extends Repository {
 		}
 
 		return $item;
+	}
+
+	/**
+	 * Whether a supplied post carries different values than a cached model.
+	 *
+	 * @param Popup    $cached Cached model.
+	 * @param \WP_Post $post   Supplied post.
+	 *
+	 * @return bool
+	 */
+	protected function post_differs( $cached, $post ) {
+		if ( ! isset( $cached->post ) || ! $cached->post instanceof \WP_Post ) {
+			return true;
+		}
+
+		return get_object_vars( $cached->post ) !== get_object_vars( $post );
 	}
 
 	/**
