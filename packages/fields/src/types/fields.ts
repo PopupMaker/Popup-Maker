@@ -20,10 +20,12 @@ export interface FieldBaseProps {
 	value?: any;
 	name?: string;
 	label?: string;
+	heading?: string;
 	className?: string;
 	default?: any;
 	required?: boolean;
 	help?: string | React.ReactElement;
+	description?: string;
 	priority?: number;
 	dependencies?: { [ key: string ]: string | boolean | number };
 }
@@ -42,6 +44,7 @@ export interface InputFieldProps< V extends string | number = string | number >
 
 export interface SelectFieldBaseProps extends FieldBaseProps {
 	options: Options | OptGroups;
+	optionDescriptions?: StringObject;
 	multiple?: boolean;
 	searchable?: boolean;
 }
@@ -49,7 +52,6 @@ export interface SelectFieldBaseProps extends FieldBaseProps {
 export interface CheckboxFieldProps extends FieldBaseProps {
 	type: 'checkbox';
 	value?: boolean;
-	heading?: string;
 }
 
 export interface HexColorFieldProps extends FieldBaseProps {

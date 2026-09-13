@@ -71,7 +71,11 @@ export const useTabErrors = (
 		( select ) => {
 			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
 			const tabFields = getTabFields( tabName );
-			const fieldIds = new Set( tabFields.map( ( f ) => f.id ) );
+			const fieldIds = new Set(
+				tabFields.flatMap(
+					( field ) => field.errorFieldIds ?? [ field.id ]
+				)
+			);
 
 			return notices.filter( ( notice ) => {
 				if (
