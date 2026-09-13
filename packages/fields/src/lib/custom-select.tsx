@@ -14,6 +14,7 @@ interface CustomEntityOption {
 
 const CustomSelectField = ( {
 	label,
+	help,
 	value,
 	onChange,
 	entityType,
@@ -56,14 +57,14 @@ const CustomSelectField = ( {
 				}
 
 				const response = await fetchFromWPApi< {
-					items: Array< { id: string; text: string } >;
+					items: Array< { id: string | number; text: string } >;
 					total_count: number;
 				} >( apiUrl );
 
 				// Map API response
 				const allOptions: CustomEntityOption[] = response.items.map(
 					( item ) => ( {
-						id: item.id,
+						id: item.id.toString(),
 						text: item.text,
 					} )
 				);
@@ -71,9 +72,9 @@ const CustomSelectField = ( {
 				// Extract prefill data from the same response if we have selected values
 				let prefillData: CustomEntityOption[] = [];
 				if ( value ) {
-					const includeIds = Array.isArray( value )
-						? value
-						: [ value ];
+					const includeIds = (
+						Array.isArray( value ) ? value : [ value ]
+					).map( ( item ) => item.toString() );
 					prefillData = allOptions.filter( ( item ) =>
 						includeIds.includes( item.id )
 					);
@@ -83,8 +84,8 @@ const CustomSelectField = ( {
 					prefill: prefillData,
 					suggestions: allOptions,
 				} );
-			} catch ( error ) {
-				// Silently fail and set empty data
+			} catch {
+				// Silently fail and set empty data.
 				setApiData( { prefill: [], suggestions: [] } );
 			} finally {
 				setIsLoading( false );
@@ -107,12 +108,14 @@ const CustomSelectField = ( {
 		return findInList( apiData.prefill );
 	};
 
-	const values = ( () => {
+	const values: string[] = ( () => {
 		if ( ! value ) {
 			return [];
 		}
 
-		return typeof value === 'string' ? [ value ] : value;
+		return ( Array.isArray( value ) ? value : [ value ] ).map( ( item ) =>
+			item.toString()
+		);
 	} )();
 
 	const getTokenValue = ( token: string | { value: string } ) => {
@@ -191,6 +194,9 @@ const CustomSelectField = ( {
 						: undefined
 				}
 			/>
+			{ help && (
+				<p className="components-base-control__help">{ help }</p>
+			) }
 		</div>
 	);
 };
