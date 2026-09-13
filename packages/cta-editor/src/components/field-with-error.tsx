@@ -3,6 +3,7 @@ import { Field } from '@popup-maker/fields';
 import { URLControl } from '@popup-maker/components';
 import { FieldWrapper } from './field-wrapper';
 import { useFieldError } from '../hooks';
+import { getFieldDefault } from '../registries/fields/field-visibility';
 
 import type { FieldProps } from '@popup-maker/fields';
 
@@ -40,21 +41,29 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 		onChange( newValue );
 	};
 
+	const { heading: _heading, ...controlField } = field;
+	const effectiveValue = value ?? getFieldDefault( field );
+	const fieldControl =
+		field.type === 'url' ? (
+			<URLControl
+				{ ...controlField }
+				value={ effectiveValue }
+				onChange={ ( urlValue ) => handleChange( urlValue.url ) }
+			/>
+		) : (
+			<Field
+				{ ...controlField }
+				value={ effectiveValue }
+				onChange={ handleChange }
+			/>
+		);
 	return (
 		<FieldWrapper
 			fieldId={ fieldId }
-			title={ field.label ?? '' }
+			title={ field.heading ?? field.label ?? '' }
 			error={ error }
 		>
-			{ field.type === 'url' ? (
-				<URLControl
-					{ ...field }
-					value={ value }
-					onChange={ ( urlValue ) => handleChange( urlValue.url ) }
-				/>
-			) : (
-				<Field { ...field } value={ value } onChange={ handleChange } />
-			) }
+			{ fieldControl }
 		</FieldWrapper>
 	);
 };

@@ -1,4 +1,5 @@
 import { SelectControl } from '@wordpress/components';
+import { __ } from '@popup-maker/i18n';
 
 import { parseFieldOptions } from './utils';
 
@@ -55,6 +56,7 @@ const OptGroups = ( { optGroups }: { optGroups: OptGroupsProp } ) => (
 const SelectField = ( {
 	value,
 	onChange,
+	optionDescriptions,
 	...fieldProps
 }:
 	| WithOnChange< SelectFieldProps >
@@ -62,28 +64,46 @@ const SelectField = ( {
 	const { multiple = false } = fieldProps;
 
 	const options = fieldProps.options ?? {};
+	const selectedValue = Array.isArray( value )
+		? ''
+		: String( value ?? fieldProps.default ?? '' );
+	const selectedDescription = optionDescriptions?.[ selectedValue ];
+	let controlValue = value;
+
+	if ( ! multiple ) {
+		controlValue = selectedValue;
+	} else if ( typeof value === 'string' ) {
+		// Correct older string type values (here for sanity).
+		controlValue = value.split( ',' );
+	}
 
 	return (
-		// @ts-ignore
-		<SelectControl
-			{ ...fieldProps }
-			multiple={ multiple }
-			value={
-				// Correct older string typ values (here for sanity).
-				multiple && typeof value === 'string'
-					? value.split( ',' )
-					: value
-			}
-			onChange={ onChange }
-			__next40pxDefaultSize
-			__nextHasNoMarginBottom
-		>
-			{ hasOptGroups( options ) ? (
-				<OptGroups optGroups={ options } />
-			) : (
-				<Options options={ options } />
+		<>
+			{ /* @ts-ignore */ }
+			<SelectControl
+				{ ...fieldProps }
+				multiple={ multiple }
+				value={ controlValue }
+				onChange={ onChange }
+				__next40pxDefaultSize
+				__nextHasNoMarginBottom
+			>
+				{ hasOptGroups( options ) ? (
+					<OptGroups optGroups={ options } />
+				) : (
+					<Options options={ options } />
+				) }
+			</SelectControl>
+			{ selectedDescription && (
+				<p
+					className="components-base-control__help pum-field__selected-help"
+					aria-live="polite"
+				>
+					<strong>{ __( 'Selected:', 'popup-maker' ) }</strong>{ ' ' }
+					{ selectedDescription }
+				</p>
 			) }
-		</SelectControl>
+		</>
 	);
 };
 

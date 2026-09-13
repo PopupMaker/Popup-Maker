@@ -23,7 +23,9 @@ export const oldFieldDefaults = {
 	label: '',
 	placeholder: '',
 	desc: null,
+	description: null,
 	dynamic_desc: null,
+	heading: null,
 	content: '',
 	size: 'regular',
 	classes: [],
@@ -70,6 +72,7 @@ export const parseOldArgsToProps = (
 			'id',
 			'name',
 			'label',
+			'heading',
 			'value',
 			'required',
 			'dependencies'
@@ -97,8 +100,8 @@ export const parseOldArgsToProps = (
 	// Dynamic Descriptions
 	if ( args.dynamic_desc ) {
 		fieldProps.help = <>{ args.dynamic_desc }</>;
-	} else if ( args.desc ) {
-		fieldProps.help = args.desc;
+	} else if ( args.desc || args.description ) {
+		fieldProps.help = args.desc || args.description;
 	}
 
 	//* Dependencies
@@ -172,6 +175,7 @@ export const parseOldArgsToProps = (
 			if ( fieldProps.type === args.type || 'select2' === args.type ) {
 				// Handle options migration for optgroups.
 				fieldProps.options = parseFieldOptions( args.options ?? [] );
+				fieldProps.optionDescriptions = args.optionDescriptions ?? {};
 				fieldProps.searchable = 'select2' === args.type;
 				fieldProps.multiple =
 					fieldProps.type === 'multiselect' || args.multiple;
@@ -454,7 +458,14 @@ export const parseFieldProps = (
 	if ( isOldFieldType( props ) ) {
 		fieldProps = parseOldArgsToProps( props as OldFieldProps );
 	} else {
-		fieldProps = props as FieldProps;
+		const { description, ...normalizedProps } = props as FieldProps;
+
+		fieldProps = {
+			...normalizedProps,
+			...( normalizedProps.help === undefined && description !== undefined
+				? { help: description }
+				: {} ),
+		} as FieldProps;
 	}
 
 	// Ensure prop completeness.

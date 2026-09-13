@@ -26,6 +26,7 @@ interface ObjectOption {
 
 const ObjectSelectField = ( {
 	label,
+	help,
 	value,
 	onChange,
 	entityKind = 'postType',
@@ -235,7 +236,7 @@ const ObjectSelectField = ( {
 					prefill: prefillData,
 					suggestions: allOptions,
 				} );
-			} catch ( error ) {
+			} catch {
 				// Silently fail and set empty data - API fallback failed.
 				setApiData( { prefill: [], suggestions: [] } );
 			}
@@ -362,6 +363,9 @@ const ObjectSelectField = ( {
 						: undefined
 				}
 			/>
+			{ help && (
+				<p className="components-base-control__help">{ help }</p>
+			) }
 		</div>
 	);
 };
