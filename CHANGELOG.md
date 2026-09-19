@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Improvements**
+
+-   Expanded Call to Action field schemas with default-aware conditional visibility, contextual option help, grouped validation, and safer custom-select value handling for add-on editors.
+
 ## v1.25.0 - 2026-09-10
 
 **Security**
