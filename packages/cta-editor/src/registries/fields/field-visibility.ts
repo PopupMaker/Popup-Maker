@@ -46,6 +46,7 @@ export const normalizeFieldDefault = (
 		( [
 			'select',
 			'select2',
+			'customselect',
 			'objectselect',
 			'postselect',
 			'taxonomyselect',
@@ -55,6 +56,10 @@ export const normalizeFieldDefault = (
 			Boolean( field.multiple ) );
 
 	if ( isMultiple && ! Array.isArray( defaultValue ) ) {
+		if ( null === defaultValue || typeof defaultValue === 'undefined' ) {
+			return [];
+		}
+
 		if ( 'string' === typeof defaultValue ) {
 			return '' === defaultValue ? [] : defaultValue.split( ',' );
 		}

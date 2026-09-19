@@ -232,4 +232,31 @@ describe( 'custom CTA field visibility', () => {
 			).toEqual( [ 12 ] );
 		}
 	);
+
+	it.each( [ 'objectselect', 'postselect', 'taxonomyselect', 'userselect' ] )(
+		'keeps an absent multiple %s default empty',
+		( type ) => {
+			expect(
+				normalizeFieldDefault( undefined, {
+					type,
+					multiple: true,
+				} as FieldProps )
+			).toEqual( [] );
+		}
+	);
+
+	it.each( [
+		[ 12, [ 12 ] ],
+		[ '', [] ],
+	] )(
+		'normalizes a multiple custom select default %p',
+		( value, expected ) => {
+			expect(
+				normalizeFieldDefault( value, {
+					type: 'customselect',
+					multiple: true,
+				} as FieldProps )
+			).toEqual( expected );
+		}
+	);
 } );
