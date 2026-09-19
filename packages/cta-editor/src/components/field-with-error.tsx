@@ -3,7 +3,10 @@ import { Field } from '@popup-maker/fields';
 import { URLControl } from '@popup-maker/components';
 import { FieldWrapper } from './field-wrapper';
 import { useFieldError } from '../hooks';
-import { getFieldDefault } from '../registries/fields/field-visibility';
+import {
+	getFieldDefault,
+	normalizeFieldDefault,
+} from '../registries/fields/field-visibility';
 
 import type { FieldProps } from '@popup-maker/fields';
 
@@ -42,7 +45,8 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 	};
 
 	const { heading: _heading, help, description, ...controlField } = field;
-	const effectiveValue = value ?? getFieldDefault( field );
+	const effectiveValue =
+		value ?? normalizeFieldDefault( getFieldDefault( field ), field );
 	const fieldHelp = help ?? description;
 	const fieldControl =
 		field.type === 'url' ? (

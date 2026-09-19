@@ -22,6 +22,33 @@ export const getFieldDefault = ( field: FieldProps ): unknown => {
 	return ( field as FieldProps & Pick< OldFieldBase, 'std' > ).std;
 };
 
+/** Normalize legacy checkbox defaults before the generic field sees them. */
+export const normalizeFieldDefault = (
+	defaultValue: unknown,
+	field: FieldProps
+): unknown => {
+	if ( 'checkbox' !== field.type ) {
+		return defaultValue;
+	}
+
+	if ( Array.isArray( defaultValue ) ) {
+		return defaultValue.length === 1 && String( defaultValue[ 0 ] ) === '1';
+	}
+
+	if ( 'string' === typeof defaultValue ) {
+		return (
+			[ 'true', 'yes', '1' ].includes( defaultValue ) ||
+			parseInt( defaultValue, 10 ) > 0
+		);
+	}
+
+	if ( 'number' === typeof defaultValue ) {
+		return defaultValue > 0;
+	}
+
+	return Boolean( defaultValue );
+};
+
 /**
  * Collect declared field defaults so dependency checks match the values that
  * controls display before a new CTA has persisted any settings.

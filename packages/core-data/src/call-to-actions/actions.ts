@@ -289,18 +289,21 @@ const entityActions = {
 	 * @param {PartialEditableCta} callToAction The entity to update.
 	 * @param {boolean}            validate     An optional validation function.
 	 * @param {boolean}            withNotices  Whether to show notices.
+	 * @param {boolean}            prepare      Whether to run save preparation.
 	 * @return {Promise<CallToAction<'edit'> | false>} The updated entity or false if validation fails.
 	 */
 	updateCallToAction:
 		(
 			callToAction: PartialEditableCta,
 			validate: boolean = true,
-			withNotices: boolean = true
+			withNotices: boolean = true,
+			prepare: boolean = true
 		): ThunkAction< CallToAction< 'edit' > | false > =>
 		async ( { select, dispatch, registry } ) => {
 			const action = 'updateCallToAction';
-			const preparedCallToAction =
-				prepareCallToActionForSave( callToAction );
+			const preparedCallToAction = prepare
+				? prepareCallToActionForSave( callToAction )
+				: callToAction;
 
 			try {
 				dispatch( {
@@ -772,7 +775,8 @@ const editorActions = {
 				const result = await dispatch.updateCallToAction(
 					preparedCallToAction,
 					false,
-					withNotices
+					withNotices,
+					false
 				);
 
 				if ( result ) {

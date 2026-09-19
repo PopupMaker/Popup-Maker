@@ -3,6 +3,7 @@ import { describe, expect, it } from '@jest/globals';
 import {
 	getFieldDefaults,
 	getMissingFieldDefaults,
+	normalizeFieldDefault,
 	shouldHideField,
 } from '../field-visibility';
 
@@ -113,4 +114,26 @@ describe( 'custom CTA field visibility', () => {
 			)
 		).toBe( false );
 	} );
+
+	it.each( [ '0', 'false', 'no', 0, false ] )(
+		'normalizes the legacy false checkbox default %p',
+		( value ) => {
+			expect(
+				normalizeFieldDefault( value, {
+					type: 'checkbox',
+				} as FieldProps )
+			).toBe( false );
+		}
+	);
+
+	it.each( [ '1', 'yes', 'true', 1, true ] )(
+		'normalizes the legacy true checkbox default %p',
+		( value ) => {
+			expect(
+				normalizeFieldDefault( value, {
+					type: 'checkbox',
+				} as FieldProps )
+			).toBe( true );
+		}
+	);
 } );
