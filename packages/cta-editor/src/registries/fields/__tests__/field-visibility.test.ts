@@ -83,6 +83,17 @@ describe( 'custom CTA field visibility', () => {
 		} );
 	} );
 
+	it( 'treats null defaults as undeclared', () => {
+		const fields = {
+			general: {
+				modern: { type: 'text', default: null },
+				legacy: { type: 'select', std: null },
+			},
+		} as unknown as Record< string, Record< string, FieldProps > >;
+
+		expect( getFieldDefaults( fields ) ).toEqual( {} );
+	} );
+
 	it( 'returns every declared default missing from editable settings', () => {
 		expect(
 			getMissingFieldDefaults(
