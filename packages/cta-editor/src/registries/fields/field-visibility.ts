@@ -68,7 +68,10 @@ export const getFieldDefaults = (
 				const defaultValue = getFieldDefault( field );
 
 				if ( typeof defaultValue !== 'undefined' ) {
-					defaults[ fieldId ] = defaultValue;
+					defaults[ fieldId ] = normalizeFieldDefault(
+						defaultValue,
+						field
+					);
 				}
 			} );
 

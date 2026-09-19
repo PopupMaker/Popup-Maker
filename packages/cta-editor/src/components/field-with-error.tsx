@@ -8,7 +8,7 @@ import {
 	normalizeFieldDefault,
 } from '../registries/fields/field-visibility';
 
-import type { FieldProps } from '@popup-maker/fields';
+import type { FieldProps, OldFieldBase } from '@popup-maker/fields';
 
 interface FieldWithErrorProps {
 	fieldId: string;
@@ -44,10 +44,16 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 		onChange( newValue );
 	};
 
-	const { heading: _heading, help, description, ...controlField } = field;
+	const {
+		heading: _heading,
+		help,
+		description,
+		desc,
+		...controlField
+	} = field as FieldProps & Pick< OldFieldBase, 'desc' >;
 	const effectiveValue =
 		value ?? normalizeFieldDefault( getFieldDefault( field ), field );
-	const fieldHelp = help ?? description;
+	const fieldHelp = help ?? description ?? desc;
 	const fieldControl =
 		field.type === 'url' ? (
 			<>

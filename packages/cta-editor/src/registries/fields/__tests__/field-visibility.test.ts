@@ -136,4 +136,19 @@ describe( 'custom CTA field visibility', () => {
 			).toBe( true );
 		}
 	);
+
+	it( 'collects normalized checkbox defaults for dependency checks', () => {
+		const fields = {
+			general: {
+				allowStacking: {
+					type: 'checkbox',
+					std: '0',
+				},
+			},
+		} as unknown as Record< string, Record< string, FieldProps > >;
+
+		expect( getFieldDefaults( fields ) ).toEqual( {
+			allowStacking: false,
+		} );
+	} );
 } );
