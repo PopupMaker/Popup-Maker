@@ -152,14 +152,15 @@ describe( 'custom CTA field visibility', () => {
 		} );
 	} );
 
-	it.each( [ [ '0', 0 ], [ '12', 12 ], [ '1.5', 1.5 ] ] )(
-		'normalizes the legacy number default %p',
-		( value, expected ) => {
-			expect(
-				normalizeFieldDefault( value, {
-					type: 'number',
-				} as FieldProps )
-			).toBe( expected );
-		}
-	);
+	it.each( [
+		[ '0', 0 ],
+		[ '12', 12 ],
+		[ '1.5', 1.5 ],
+	] )( 'normalizes the legacy number default %p', ( value, expected ) => {
+		expect(
+			normalizeFieldDefault( value, {
+				type: 'number',
+			} as FieldProps )
+		).toBe( expected );
+	} );
 } );
