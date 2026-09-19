@@ -97,4 +97,20 @@ describe( 'custom CTA field visibility', () => {
 			allowStacking: false,
 		} );
 	} );
+
+	it( 'treats persisted null values as missing defaults', () => {
+		expect(
+			getMissingFieldDefaults(
+				{ discountSource: null },
+				{ discountSource: 'existing' }
+			)
+		).toEqual( { discountSource: 'existing' } );
+		expect(
+			shouldHideField(
+				dependentField,
+				{ discountSource: null },
+				{ discountSource: 'existing' }
+			)
+		).toBe( false );
+	} );
 } );

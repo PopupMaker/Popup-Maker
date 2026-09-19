@@ -1,4 +1,4 @@
-import { Fragment, useEffect } from '@wordpress/element';
+import { Fragment } from '@wordpress/element';
 import { addFilter } from '@wordpress/hooks';
 
 import { FieldWithError } from '../../components';
@@ -11,32 +11,7 @@ import {
 	shouldHideField,
 } from './field-visibility';
 
-import type { FieldDefaults } from './field-visibility';
-
 const { cta_types: callToActions } = window.popupMakerCtaEditor;
-
-const FieldDefaultsInitializer = ( {
-	settings,
-	fieldDefaults,
-	updateSettings,
-}: {
-	settings: CallToAction[ 'settings' ];
-	fieldDefaults: FieldDefaults;
-	updateSettings: ( settings: Partial< CallToAction[ 'settings' ] > ) => void;
-} ): null => {
-	useEffect( () => {
-		const missingDefaults = getMissingFieldDefaults(
-			settings,
-			fieldDefaults
-		);
-
-		if ( Object.keys( missingDefaults ).length > 0 ) {
-			updateSettings( missingDefaults );
-		}
-	}, [ fieldDefaults, settings, updateSettings ] );
-
-	return null;
-};
 
 const getCtaFields = (
 	key: string
@@ -53,6 +28,33 @@ const getCtaFields = (
 };
 
 export const initCustomFields = () => {
+	// Materialize displayed defaults only when saving. This keeps dependency
+	// checks and persistence aligned without marking an untouched editor dirty.
+	addFilter(
+		'popupMaker.callToAction.prepareForSave',
+		'popup-maker/custom-field-defaults',
+		( callToAction: CallToAction ) => {
+			const settings = callToAction.settings ?? {};
+			const defaults = getFieldDefaults( getCtaFields( settings.type ) );
+			const missingDefaults = getMissingFieldDefaults(
+				settings,
+				defaults
+			);
+
+			if ( Object.keys( missingDefaults ).length === 0 ) {
+				return callToAction;
+			}
+
+			return {
+				...callToAction,
+				settings: {
+					...settings,
+					...missingDefaults,
+				},
+			};
+		}
+	);
+
 	// Initialize custom fields by adding them to the tab fields filter
 	addFilter(
 		'popupMaker.callToActionEditor.tabFields',
@@ -122,35 +124,7 @@ export const initCustomFields = () => {
 				{ ...fields }
 			);
 
-			// BaseEditor mounts General first even when this CTA type declares only
-			// add-on tabs. Ensure that mounted tab can seed every declared default.
-			if ( ! result.general ) {
-				result.general = [];
-			}
-
-			// TabPanel mounts only the active tab. Add the initializer to every
-			// tab so declared defaults are seeded even when all custom fields live
-			// outside the initially active tab.
-			return Object.fromEntries(
-				Object.entries( result ).map( ( [ tab, tabFields ] ) => [
-					tab,
-					[
-						{
-							id: '__popupMakerCtaFieldDefaults',
-							priority: Number.MIN_SAFE_INTEGER,
-							component: (
-								<FieldDefaultsInitializer
-									key={ `cta-field-defaults-${ tab }` }
-									settings={ settings }
-									fieldDefaults={ fieldDefaults }
-									updateSettings={ updateSettings }
-								/>
-							),
-						},
-						...tabFields,
-					],
-				] )
-			);
+			return result;
 		}
 	);
 };

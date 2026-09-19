@@ -4,6 +4,7 @@ import { compare as jsonpatchCompare } from 'fast-json-patch';
 import { __, sprintf } from '@popup-maker/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 import { decodeEntities } from '@wordpress/html-entities';
+import { applyFilters } from '@wordpress/hooks';
 
 import { ACTION_TYPES, NOTICE_CONTEXT } from './constants';
 
@@ -34,6 +35,12 @@ const {
 	CHANGE_ACTION_STATUS,
 	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
+
+/** Apply editor-provided normalization immediately before validation and I/O. */
+const prepareCallToActionForSave = < T extends Partial< EditableCta > >(
+	callToAction: T
+): T =>
+	applyFilters( 'popupMaker.callToAction.prepareForSave', callToAction ) as T;
 
 /**
  * Helper function to handle field-specific validation errors using WordPress notices
@@ -134,9 +141,9 @@ const entityActions = {
 	/**
 	 * Create a new entity record. Values sent to the server immediately.
 	 *
-	 * @param {Editable} callToAction The entity to create.
-	 * @param {boolean}  validate     An optional validation function.
-	 * @param {boolean}  withNotices  Whether to show notices.
+	 * @param {Partial<EditableCta>} callToAction The entity to create.
+	 * @param {boolean}              validate     An optional validation function.
+	 * @param {boolean}              withNotices  Whether to show notices.
 	 * @return {Promise<CallToAction< 'edit' > | false>} The created entity or false if validation fails.
 	 */
 	createCallToAction:
@@ -157,7 +164,8 @@ const entityActions = {
 					},
 				} );
 
-				const { id, ...newCta } = callToAction;
+				const { id, ...rawCta } = callToAction;
+				const newCta = prepareCallToActionForSave( rawCta );
 
 				if ( validate ) {
 					const validation = validateCallToAction( newCta );
@@ -281,7 +289,7 @@ const entityActions = {
 	 * @param {PartialEditableCta} callToAction The entity to update.
 	 * @param {boolean}            validate     An optional validation function.
 	 * @param {boolean}            withNotices  Whether to show notices.
-	 * @return {Promise<T | boolean>} The updated entity or false if validation fails.
+	 * @return {Promise<CallToAction<'edit'> | false>} The updated entity or false if validation fails.
 	 */
 	updateCallToAction:
 		(
@@ -291,6 +299,8 @@ const entityActions = {
 		): ThunkAction< CallToAction< 'edit' > | false > =>
 		async ( { select, dispatch, registry } ) => {
 			const action = 'updateCallToAction';
+			const preparedCallToAction =
+				prepareCallToActionForSave( callToAction );
 
 			try {
 				dispatch( {
@@ -302,7 +312,8 @@ const entityActions = {
 				} );
 
 				if ( validate ) {
-					const validation = validateCallToAction( callToAction );
+					const validation =
+						validateCallToAction( preparedCallToAction );
 
 					if ( true !== validation ) {
 						dispatch( {
@@ -328,7 +339,7 @@ const entityActions = {
 				}
 
 				const canonicalCallToAction = await select.getCallToAction(
-					callToAction.id
+					preparedCallToAction.id
 				);
 
 				if ( ! canonicalCallToAction ) {
@@ -366,7 +377,7 @@ const entityActions = {
 					`ctas/${ canonicalCallToAction.id }`,
 					{
 						method: 'POST',
-						data: callToAction,
+						data: preparedCallToAction,
 					}
 				);
 
@@ -726,10 +737,12 @@ const editorActions = {
 
 					return false;
 				}
+				const preparedCallToAction =
+					prepareCallToActionForSave( editedCallToAction );
 
-				if ( editedCallToAction && validate ) {
+				if ( preparedCallToAction && validate ) {
 					const validation =
-						validateCallToAction( editedCallToAction );
+						validateCallToAction( preparedCallToAction );
 
 					if ( true !== validation ) {
 						registry.batch( async () => {
@@ -757,7 +770,7 @@ const editorActions = {
 				}
 
 				const result = await dispatch.updateCallToAction(
-					editedCallToAction,
+					preparedCallToAction,
 					false,
 					withNotices
 				);
@@ -1023,7 +1036,7 @@ const editorActions = {
 	 * Opens the editor immediately. If the entity isn't in the store yet it is
 	 * resolved in the background while consumers render a loading state.
 	 *
-	 * @param {EditorId} editorId The editor ID.
+	 * @param {CtaEditorId} editorId The editor ID.
 	 * @return {Promise<void>}
 	 */
 	changeEditorId:
@@ -1284,9 +1297,9 @@ const resolutionActions = {
 	/**
 	 * Change status of a dispatch action request.
 	 *
-	 * @param {CallToActionsStore[ 'ActionNames' ]} actionName Action name to change status of.
-	 * @param {Statuses}                            status     New status.
-	 * @param {string|undefined}                    message    Optional error message.
+	 * @param {string}           actionName Action name to change status of.
+	 * @param {DispatchStatus}   status     New status.
+	 * @param {string|undefined} message    Optional error message.
 	 * @return {Object} Action object.
 	 */
 	changeActionStatus:

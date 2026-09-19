@@ -63,7 +63,10 @@ export const getMissingFieldDefaults = (
 	const missingDefaults: Partial< CallToAction[ 'settings' ] > = {};
 
 	Object.entries( fieldDefaults ).forEach( ( [ fieldId, defaultValue ] ) => {
-		if ( typeof settings[ fieldId ] === 'undefined' ) {
+		if (
+			settings[ fieldId ] === null ||
+			typeof settings[ fieldId ] === 'undefined'
+		) {
 			( missingDefaults as Record< string, unknown > )[ fieldId ] =
 				defaultValue;
 		}
@@ -92,7 +95,8 @@ export const shouldHideField = (
 		let dependencyValue = settings[ key ];
 
 		if (
-			typeof dependencyValue === 'undefined' &&
+			( dependencyValue === null ||
+				typeof dependencyValue === 'undefined' ) &&
 			Object.prototype.hasOwnProperty.call( fieldDefaults, key )
 		) {
 			dependencyValue = fieldDefaults[ key ];
