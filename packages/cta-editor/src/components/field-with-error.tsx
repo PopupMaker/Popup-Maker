@@ -44,16 +44,13 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 		onChange( newValue );
 	};
 
-	const {
-		heading: _heading,
-		help,
-		description,
-		desc,
-		...controlField
-	} = field as FieldProps & Pick< OldFieldBase, 'desc' >;
+	const legacyDescription = (
+		field as FieldProps & Pick< OldFieldBase, 'desc' >
+	 ).desc;
+	const { heading: _heading, help, description, ...controlField } = field;
 	const effectiveValue =
 		value ?? normalizeFieldDefault( getFieldDefault( field ), field );
-	const fieldHelp = help ?? description ?? desc;
+	const fieldHelp = help ?? description ?? legacyDescription;
 	const fieldControl =
 		field.type === 'url' ? (
 			<>
