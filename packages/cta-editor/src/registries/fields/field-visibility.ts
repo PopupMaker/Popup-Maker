@@ -34,7 +34,10 @@ export const normalizeFieldDefault = (
 	}
 
 	if (
-		[ 'multicheck', 'multiselect' ].includes( field.type ) &&
+		( [ 'multicheck', 'multiselect' ].includes( field.type ) ||
+			( [ 'select', 'select2' ].includes( field.type ) &&
+				'multiple' in field &&
+				Boolean( field.multiple ) ) ) &&
 		'string' === typeof defaultValue
 	) {
 		return '' === defaultValue ? [] : defaultValue.split( ',' );

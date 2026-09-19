@@ -301,11 +301,12 @@ const entityActions = {
 		): ThunkAction< CallToAction< 'edit' > | false > =>
 		async ( { select, dispatch, registry } ) => {
 			const action = 'updateCallToAction';
-			const preparedCallToAction = prepare
-				? prepareCallToActionForSave( callToAction )
-				: callToAction;
 
 			try {
+				const preparedCallToAction = prepare
+					? prepareCallToActionForSave( callToAction )
+					: callToAction;
+
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
 					payload: {

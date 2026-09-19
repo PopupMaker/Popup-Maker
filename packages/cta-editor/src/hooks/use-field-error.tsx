@@ -12,7 +12,8 @@ import useFields from './use-fields';
  * @return {Object} Object containing error message and clearError function.
  */
 export const useFieldError = (
-	fieldId: string
+	fieldId: string,
+	errorFieldIds: string[] = []
 ): {
 	error: string | null;
 	clearError: () => void;
@@ -26,23 +27,27 @@ export const useFieldError = (
 	const error = useSelect(
 		( select ) => {
 			const notices = select( noticesStore ).getNotices( NOTICE_CONTEXT );
-			const fieldNotice = notices.find(
-				( notice ) =>
-					notice.id === `field-error-${ ctaId || 'new' }-${ fieldId }`
+			const noticeIds = [ fieldId, ...errorFieldIds ].map(
+				( id ) => `field-error-${ ctaId || 'new' }-${ id }`
+			);
+			const fieldNotice = notices.find( ( notice ) =>
+				noticeIds.includes( notice.id )
 			);
 			return fieldNotice?.content || null;
 		},
-		[ ctaId, fieldId ]
+		[ ctaId, fieldId, errorFieldIds ]
 	);
 
 	const clearError = useCallback( () => {
 		if ( ctaId !== undefined ) {
-			removeNotice(
-				`field-error-${ ctaId || 'new' }-${ fieldId }`,
-				NOTICE_CONTEXT
+			[ fieldId, ...errorFieldIds ].forEach( ( id ) =>
+				removeNotice(
+					`field-error-${ ctaId || 'new' }-${ id }`,
+					NOTICE_CONTEXT
+				)
 			);
 		}
-	}, [ ctaId, fieldId, removeNotice ] );
+	}, [ ctaId, fieldId, errorFieldIds, removeNotice ] );
 
 	return { error, clearError };
 };

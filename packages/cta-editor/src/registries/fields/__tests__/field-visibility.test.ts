@@ -182,4 +182,16 @@ describe( 'custom CTA field visibility', () => {
 			).toEqual( expected );
 		}
 	);
+
+	it.each( [ 'select', 'select2' ] )(
+		'normalizes a legacy multiple %s default',
+		( type ) => {
+			expect(
+				normalizeFieldDefault( 'basic,premium', {
+					type,
+					multiple: true,
+				} as FieldProps )
+			).toEqual( [ 'basic', 'premium' ] );
+		}
+	);
 } );

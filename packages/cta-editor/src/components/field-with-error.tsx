@@ -12,7 +12,7 @@ import type { FieldProps, OldFieldBase } from '@popup-maker/fields';
 
 interface FieldWithErrorProps {
 	fieldId: string;
-	field: FieldProps;
+	field: FieldProps & { errorFieldIds?: string[] };
 	value: any;
 	onChange: ( value: any ) => void;
 }
@@ -33,7 +33,10 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 	value,
 	onChange,
 } ) => {
-	const { error, clearError } = useFieldError( fieldId );
+	const { error, clearError } = useFieldError(
+		fieldId,
+		field.errorFieldIds ?? []
+	);
 
 	// Clear field error when value changes
 	const handleChange = ( newValue: any ) => {
