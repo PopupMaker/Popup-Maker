@@ -42,24 +42,24 @@ export const normalizeFieldDefault = (
 	}
 
 	const isMultiple =
-		( [ 'multicheck', 'multiselect' ].includes( field.type ) ||
-			( [
-				'select',
-				'select2',
-				'objectselect',
-				'postselect',
-				'taxonomyselect',
-				'userselect',
-			].includes( field.type ) &&
-				'multiple' in field &&
-				Boolean( field.multiple ) ) );
+		[ 'multicheck', 'multiselect' ].includes( field.type ) ||
+		( [
+			'select',
+			'select2',
+			'objectselect',
+			'postselect',
+			'taxonomyselect',
+			'userselect',
+		].includes( field.type ) &&
+			'multiple' in field &&
+			Boolean( field.multiple ) );
 
 	if ( isMultiple && ! Array.isArray( defaultValue ) ) {
-		return 'string' === typeof defaultValue
-			? '' === defaultValue
-				? []
-				: defaultValue.split( ',' )
-			: [ defaultValue ];
+		if ( 'string' === typeof defaultValue ) {
+			return '' === defaultValue ? [] : defaultValue.split( ',' );
+		}
+
+		return [ defaultValue ];
 	}
 
 	if ( 'checkbox' !== field.type ) {

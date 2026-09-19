@@ -221,17 +221,15 @@ describe( 'custom CTA field visibility', () => {
 		}
 	);
 
-	it.each( [
-		'objectselect',
-		'postselect',
-		'taxonomyselect',
-		'userselect',
-	] )( 'normalizes a legacy multiple %s scalar default', ( type ) => {
-		expect(
-			normalizeFieldDefault( 12, {
-				type,
-				multiple: true,
-			} as FieldProps )
-		).toEqual( [ 12 ] );
-	} );
+	it.each( [ 'objectselect', 'postselect', 'taxonomyselect', 'userselect' ] )(
+		'normalizes a legacy multiple %s scalar default',
+		( type ) => {
+			expect(
+				normalizeFieldDefault( 12, {
+					type,
+					multiple: true,
+				} as FieldProps )
+			).toEqual( [ 12 ] );
+		}
+	);
 } );
