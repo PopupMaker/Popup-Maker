@@ -33,7 +33,10 @@ export const normalizeFieldDefault = (
 			: parseInt( defaultValue, 10 );
 	}
 
-	if ( 'multicheck' === field.type && 'string' === typeof defaultValue ) {
+	if (
+		[ 'multicheck', 'multiselect' ].includes( field.type ) &&
+		'string' === typeof defaultValue
+	) {
 		return '' === defaultValue ? [] : defaultValue.split( ',' );
 	}
 

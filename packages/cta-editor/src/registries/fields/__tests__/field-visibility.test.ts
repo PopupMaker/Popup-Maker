@@ -167,11 +167,19 @@ describe( 'custom CTA field visibility', () => {
 	it.each( [
 		[ 'basic,premium', [ 'basic', 'premium' ] ],
 		[ '', [] ],
-	] )( 'normalizes the legacy multicheck default %p', ( value, expected ) => {
-		expect(
-			normalizeFieldDefault( value, {
-				type: 'multicheck',
-			} as FieldProps )
-		).toEqual( expected );
-	} );
+	] )(
+		'normalizes the legacy multi-option default %p',
+		( value, expected ) => {
+			expect(
+				normalizeFieldDefault( value, {
+					type: 'multicheck',
+				} as FieldProps )
+			).toEqual( expected );
+			expect(
+				normalizeFieldDefault( value, {
+					type: 'multiselect',
+				} as FieldProps )
+			).toEqual( expected );
+		}
+	);
 } );

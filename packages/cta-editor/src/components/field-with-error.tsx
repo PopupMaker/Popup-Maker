@@ -51,6 +51,11 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 	const effectiveValue =
 		value ?? normalizeFieldDefault( getFieldDefault( field ), field );
 	const fieldHelp = help ?? description ?? legacyDescription;
+	const needsExternalHelp = [
+		'multicheck',
+		'rangeslider',
+		'tokenselect',
+	].includes( field.type );
 	const fieldControl =
 		field.type === 'url' ? (
 			<>
@@ -66,13 +71,20 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 				) }
 			</>
 		) : (
-			<Field
-				{ ...controlField }
-				help={ fieldHelp }
-				description={ description }
-				value={ effectiveValue }
-				onChange={ handleChange }
-			/>
+			<>
+				<Field
+					{ ...controlField }
+					help={ fieldHelp }
+					description={ description }
+					value={ effectiveValue }
+					onChange={ handleChange }
+				/>
+				{ needsExternalHelp && fieldHelp && (
+					<p className="components-base-control__help">
+						{ fieldHelp }
+					</p>
+				) }
+			</>
 		);
 	return (
 		<FieldWrapper
