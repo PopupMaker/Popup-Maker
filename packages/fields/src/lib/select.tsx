@@ -67,7 +67,14 @@ const SelectField = ( {
 	const selectedValue = Array.isArray( value )
 		? ''
 		: String( value ?? fieldProps.default ?? '' );
-	const selectedDescription = optionDescriptions?.[ selectedValue ];
+	const selectedValues = Array.isArray( value )
+		? value.map( String )
+		: [ selectedValue ];
+	const selectedDescriptions = selectedValues
+		.map( ( selected ) => optionDescriptions?.[ selected ] )
+		.filter( ( description ): description is string =>
+			Boolean( description )
+		);
 	let controlValue = value;
 
 	if ( ! multiple ) {
@@ -94,13 +101,13 @@ const SelectField = ( {
 					<Options options={ options } />
 				) }
 			</SelectControl>
-			{ selectedDescription && (
+			{ selectedDescriptions.length > 0 && (
 				<p
 					className="components-base-control__help pum-field__selected-help"
 					aria-live="polite"
 				>
 					<strong>{ __( 'Selected:', 'popup-maker' ) }</strong>{ ' ' }
-					{ selectedDescription }
+					{ selectedDescriptions.join( ' ' ) }
 				</p>
 			) }
 		</>

@@ -74,9 +74,7 @@ export const initCustomFields = () => {
 			}
 
 			const fieldDefaults = getFieldDefaults( extraFields );
-			let shouldInitializeDefaults = true;
-
-			return Object.entries( extraFields ).reduce(
+			const result = Object.entries( extraFields ).reduce(
 				( acc, [ tab, tabFields ] ) => {
 					if ( ! acc[ tab ] ) {
 						acc[ tab ] = [];
@@ -86,22 +84,6 @@ export const initCustomFields = () => {
 						( entry ): entry is [ string, FieldProps ] =>
 							Boolean( entry[ 1 ]?.type )
 					);
-
-					if ( shouldInitializeDefaults && entries.length > 0 ) {
-						acc[ tab ].push( {
-							id: '__popupMakerCtaFieldDefaults',
-							priority: Number.MIN_SAFE_INTEGER,
-							component: (
-								<FieldDefaultsInitializer
-									key="cta-field-defaults"
-									settings={ settings }
-									fieldDefaults={ fieldDefaults }
-									updateSettings={ updateSettings }
-								/>
-							),
-						} );
-						shouldInitializeDefaults = false;
-					}
 
 					const customFields = entries.map(
 						( [ fieldId, field ] ) => {
@@ -138,6 +120,30 @@ export const initCustomFields = () => {
 					return acc;
 				},
 				{ ...fields }
+			);
+
+			// TabPanel mounts only the active tab. Add the initializer to every
+			// tab so declared defaults are seeded even when all custom fields live
+			// outside the initially active tab.
+			return Object.fromEntries(
+				Object.entries( result ).map( ( [ tab, tabFields ] ) => [
+					tab,
+					[
+						{
+							id: '__popupMakerCtaFieldDefaults',
+							priority: Number.MIN_SAFE_INTEGER,
+							component: (
+								<FieldDefaultsInitializer
+									key={ `cta-field-defaults-${ tab }` }
+									settings={ settings }
+									fieldDefaults={ fieldDefaults }
+									updateSettings={ updateSettings }
+								/>
+							),
+						},
+						...tabFields,
+					],
+				] )
 			);
 		}
 	);
