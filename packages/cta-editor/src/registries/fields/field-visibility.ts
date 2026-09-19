@@ -1,14 +1,20 @@
 import type { FieldProps, OldFieldBase } from '@popup-maker/fields';
 import type { CallToAction } from '@popup-maker/core-data';
 
-type FieldDefaults = Record< string, any >;
+export type FieldDefaults = Record< string, unknown >;
+
+const isFieldDefinition = ( field: unknown ): field is FieldProps =>
+	typeof field === 'object' &&
+	field !== null &&
+	'type' in field &&
+	typeof field.type === 'string';
 
 /**
  * Read defaults from both current field props and legacy PHP field definitions.
  *
  * @param field Field definition to inspect.
  */
-export const getFieldDefault = ( field: FieldProps ): any => {
+export const getFieldDefault = ( field: FieldProps ): unknown => {
 	if ( typeof field.default !== 'undefined' ) {
 		return field.default;
 	}
@@ -23,11 +29,15 @@ export const getFieldDefault = ( field: FieldProps ): any => {
  * @param fields Fields grouped by editor tab.
  */
 export const getFieldDefaults = (
-	fields: Record< string, Record< string, FieldProps > >
+	fields: Record< string, Record< string, unknown > >
 ): FieldDefaults =>
 	Object.values( fields ).reduce< FieldDefaults >(
 		( defaults, tabFields ) => {
 			Object.entries( tabFields ).forEach( ( [ fieldId, field ] ) => {
+				if ( ! isFieldDefinition( field ) ) {
+					return;
+				}
+
 				const defaultValue = getFieldDefault( field );
 
 				if ( typeof defaultValue !== 'undefined' ) {
@@ -39,6 +49,28 @@ export const getFieldDefaults = (
 		},
 		{}
 	);
+
+/**
+ * Return defaults that have not yet been written to the editable CTA settings.
+ *
+ * @param settings      Current CTA settings.
+ * @param fieldDefaults Declared defaults keyed by field ID.
+ */
+export const getMissingFieldDefaults = (
+	settings: CallToAction[ 'settings' ],
+	fieldDefaults: FieldDefaults
+): Partial< CallToAction[ 'settings' ] > => {
+	const missingDefaults: Partial< CallToAction[ 'settings' ] > = {};
+
+	Object.entries( fieldDefaults ).forEach( ( [ fieldId, defaultValue ] ) => {
+		if ( typeof settings[ fieldId ] === 'undefined' ) {
+			( missingDefaults as Record< string, unknown > )[ fieldId ] =
+				defaultValue;
+		}
+	} );
+
+	return missingDefaults;
+};
 
 /**
  * Determine whether a field's dependencies are unmet.

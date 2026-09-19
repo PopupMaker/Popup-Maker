@@ -41,18 +41,28 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 		onChange( newValue );
 	};
 
-	const { heading: _heading, ...controlField } = field;
+	const { heading: _heading, help, description, ...controlField } = field;
 	const effectiveValue = value ?? getFieldDefault( field );
+	const fieldHelp = help ?? description;
 	const fieldControl =
 		field.type === 'url' ? (
-			<URLControl
-				{ ...controlField }
-				value={ effectiveValue }
-				onChange={ ( urlValue ) => handleChange( urlValue.url ) }
-			/>
+			<>
+				<URLControl
+					{ ...controlField }
+					value={ effectiveValue }
+					onChange={ ( urlValue ) => handleChange( urlValue.url ) }
+				/>
+				{ fieldHelp && (
+					<p className="components-base-control__help">
+						{ fieldHelp }
+					</p>
+				) }
+			</>
 		) : (
 			<Field
 				{ ...controlField }
+				help={ help }
+				description={ description }
 				value={ effectiveValue }
 				onChange={ handleChange }
 			/>

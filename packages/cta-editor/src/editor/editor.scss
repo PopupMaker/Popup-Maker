@@ -111,13 +111,13 @@ $gap4: $gap * 4;
 			flex: 1 0 150px;
 
 			.components-tab-panel__tabs-item {
+				&.is-active {
+					background-color: #f0f0f0;
+				}
+
 				&.error {
 					background-color: #f4a2a2;
 					border-left: 4px solid #cc1818;
-				}
-
-				&.is-active {
-					background-color: #f0f0f0;
 				}
 			}
 		}

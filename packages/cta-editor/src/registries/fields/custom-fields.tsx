@@ -1,13 +1,42 @@
-import { Fragment } from '@wordpress/element';
+import { Fragment, useEffect } from '@wordpress/element';
 import { addFilter } from '@wordpress/hooks';
 
 import { FieldWithError } from '../../components';
 
 import type { FieldProps } from '@popup-maker/fields';
 import type { CallToAction } from '@popup-maker/core-data';
-import { getFieldDefaults, shouldHideField } from './field-visibility';
+import {
+	getFieldDefaults,
+	getMissingFieldDefaults,
+	shouldHideField,
+} from './field-visibility';
+
+import type { FieldDefaults } from './field-visibility';
 
 const { cta_types: callToActions } = window.popupMakerCtaEditor;
+
+const FieldDefaultsInitializer = ( {
+	settings,
+	fieldDefaults,
+	updateSettings,
+}: {
+	settings: CallToAction[ 'settings' ];
+	fieldDefaults: FieldDefaults;
+	updateSettings: ( settings: Partial< CallToAction[ 'settings' ] > ) => void;
+} ): null => {
+	useEffect( () => {
+		const missingDefaults = getMissingFieldDefaults(
+			settings,
+			fieldDefaults
+		);
+
+		if ( Object.keys( missingDefaults ).length > 0 ) {
+			updateSettings( missingDefaults );
+		}
+	}, [ fieldDefaults, settings, updateSettings ] );
+
+	return null;
+};
 
 const getCtaFields = (
 	key: string
@@ -45,6 +74,7 @@ export const initCustomFields = () => {
 			}
 
 			const fieldDefaults = getFieldDefaults( extraFields );
+			let shouldInitializeDefaults = true;
 
 			return Object.entries( extraFields ).reduce(
 				( acc, [ tab, tabFields ] ) => {
@@ -56,6 +86,23 @@ export const initCustomFields = () => {
 						( entry ): entry is [ string, FieldProps ] =>
 							Boolean( entry[ 1 ]?.type )
 					);
+
+					if ( shouldInitializeDefaults && entries.length > 0 ) {
+						acc[ tab ].push( {
+							id: '__popupMakerCtaFieldDefaults',
+							priority: Number.MIN_SAFE_INTEGER,
+							component: (
+								<FieldDefaultsInitializer
+									key="cta-field-defaults"
+									settings={ settings }
+									fieldDefaults={ fieldDefaults }
+									updateSettings={ updateSettings }
+								/>
+							),
+						} );
+						shouldInitializeDefaults = false;
+					}
+
 					const customFields = entries.map(
 						( [ fieldId, field ] ) => {
 							return {

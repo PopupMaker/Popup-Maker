@@ -131,7 +131,7 @@ export interface UserSelectFieldProps
 export interface CustomSelectFieldProps extends FieldBaseProps {
 	type: 'customselect';
 	placeholder?: string;
-	value?: string | string[];
+	value?: string | number | Array< string | number >;
 	multiple?: boolean;
 	entityType: string;
 	apiEndpoint?: string;

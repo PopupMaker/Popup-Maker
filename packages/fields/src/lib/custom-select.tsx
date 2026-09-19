@@ -30,6 +30,8 @@ const CustomSelectField = ( {
 		suggestions: [],
 	} );
 	const [ isLoading, setIsLoading ] = useState( false );
+	const hasValue =
+		value !== null && typeof value !== 'undefined' && value !== '';
 
 	const updateQueryText = useDebounce( ( text: string ) => {
 		setQueryText( text );
@@ -44,7 +46,7 @@ const CustomSelectField = ( {
 				let apiUrl = `${ apiEndpoint }?object_type=custom_entity&entity_type=${ entityType }`;
 
 				// Include selected values for prefill
-				if ( value ) {
+				if ( hasValue ) {
 					const includeIds = Array.isArray( value )
 						? value
 						: [ value ];
@@ -71,7 +73,7 @@ const CustomSelectField = ( {
 
 				// Extract prefill data from the same response if we have selected values
 				let prefillData: CustomEntityOption[] = [];
-				if ( value ) {
+				if ( hasValue ) {
 					const includeIds = (
 						Array.isArray( value ) ? value : [ value ]
 					).map( ( item ) => item.toString() );
@@ -93,7 +95,7 @@ const CustomSelectField = ( {
 		};
 
 		fetchApiData();
-	}, [ value, queryText, entityType, apiEndpoint ] );
+	}, [ value, queryText, entityType, apiEndpoint, hasValue ] );
 
 	const findSuggestion = ( id: string ) => {
 		const findInList = ( list: CustomEntityOption[] ) => {
@@ -109,7 +111,7 @@ const CustomSelectField = ( {
 	};
 
 	const values: string[] = ( () => {
-		if ( ! value ) {
+		if ( ! hasValue ) {
 			return [];
 		}
 

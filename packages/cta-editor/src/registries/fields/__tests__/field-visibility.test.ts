@@ -1,6 +1,10 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { getFieldDefaults, shouldHideField } from '../field-visibility';
+import {
+	getFieldDefaults,
+	getMissingFieldDefaults,
+	shouldHideField,
+} from '../field-visibility';
 
 import type { FieldProps } from '@popup-maker/fields';
 import type { CallToAction } from '@popup-maker/core-data';
@@ -59,5 +63,38 @@ describe( 'custom CTA field visibility', () => {
 				{ discountSource: 'existing' }
 			)
 		).toBe( true );
+	} );
+
+	it( 'ignores invalid placeholder entries when collecting defaults', () => {
+		const fields = {
+			general: {
+				missing: null,
+				disabled: false,
+				discountSource: {
+					type: 'select',
+					default: 'existing',
+				},
+			},
+		};
+
+		expect( getFieldDefaults( fields ) ).toEqual( {
+			discountSource: 'existing',
+		} );
+	} );
+
+	it( 'returns every declared default missing from editable settings', () => {
+		expect(
+			getMissingFieldDefaults(
+				{ type: 'link', existingValue: 'saved' },
+				{
+					existingValue: 'default',
+					discountSource: 'existing',
+					allowStacking: false,
+				}
+			)
+		).toEqual( {
+			discountSource: 'existing',
+			allowStacking: false,
+		} );
 	} );
 } );
