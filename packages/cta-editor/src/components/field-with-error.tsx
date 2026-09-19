@@ -71,7 +71,7 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 		) : (
 			<Field
 				{ ...controlField }
-				help={ help }
+				help={ fieldHelp }
 				description={ description }
 				value={ effectiveValue }
 				onChange={ handleChange }

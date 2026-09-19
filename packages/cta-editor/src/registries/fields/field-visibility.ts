@@ -27,6 +27,12 @@ export const normalizeFieldDefault = (
 	defaultValue: unknown,
 	field: FieldProps
 ): unknown => {
+	if ( 'number' === field.type && 'string' === typeof defaultValue ) {
+		return defaultValue.includes( '.' )
+			? parseFloat( defaultValue )
+			: parseInt( defaultValue, 10 );
+	}
+
 	if ( 'checkbox' !== field.type ) {
 		return defaultValue;
 	}
