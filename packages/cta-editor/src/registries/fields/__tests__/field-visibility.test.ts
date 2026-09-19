@@ -176,6 +176,18 @@ describe( 'custom CTA field visibility', () => {
 	} );
 
 	it.each( [
+		[ '0', 0 ],
+		[ '12', 12 ],
+		[ '1.5', 1.5 ],
+	] )( 'normalizes the legacy range default %p', ( value, expected ) => {
+		expect(
+			normalizeFieldDefault( value, {
+				type: 'rangeslider',
+			} as FieldProps )
+		).toBe( expected );
+	} );
+
+	it.each( [
 		[ 'basic,premium', [ 'basic', 'premium' ] ],
 		[ '', [] ],
 	] )(

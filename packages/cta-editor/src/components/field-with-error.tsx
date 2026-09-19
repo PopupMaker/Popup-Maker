@@ -55,6 +55,7 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 		value ?? normalizeFieldDefault( getFieldDefault( field ), field );
 	const fieldHelp = help ?? description ?? legacyDescription;
 	const needsExternalHelp = [
+		'color',
 		'multicheck',
 		'rangeslider',
 		'tokenselect',
