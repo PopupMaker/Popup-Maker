@@ -31,19 +31,35 @@ export const normalizeFieldDefault = (
 		[ 'number', 'rangeslider' ].includes( field.type ) &&
 		'string' === typeof defaultValue
 	) {
-		return defaultValue.includes( '.' )
-			? parseFloat( defaultValue )
-			: parseInt( defaultValue, 10 );
+		if ( '' === defaultValue.trim() ) {
+			return defaultValue;
+		}
+
+		const numericDefault = Number( defaultValue );
+		return Number.isFinite( numericDefault )
+			? numericDefault
+			: defaultValue;
 	}
 
-	if (
+	const isMultiple =
 		( [ 'multicheck', 'multiselect' ].includes( field.type ) ||
-			( [ 'select', 'select2' ].includes( field.type ) &&
+			( [
+				'select',
+				'select2',
+				'objectselect',
+				'postselect',
+				'taxonomyselect',
+				'userselect',
+			].includes( field.type ) &&
 				'multiple' in field &&
-				Boolean( field.multiple ) ) ) &&
-		'string' === typeof defaultValue
-	) {
-		return '' === defaultValue ? [] : defaultValue.split( ',' );
+				Boolean( field.multiple ) ) );
+
+	if ( isMultiple && ! Array.isArray( defaultValue ) ) {
+		return 'string' === typeof defaultValue
+			? '' === defaultValue
+				? []
+				: defaultValue.split( ',' )
+			: [ defaultValue ];
 	}
 
 	if ( 'checkbox' !== field.type ) {

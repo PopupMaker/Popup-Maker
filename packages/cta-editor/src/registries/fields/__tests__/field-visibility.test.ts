@@ -167,6 +167,8 @@ describe( 'custom CTA field visibility', () => {
 		[ '0', 0 ],
 		[ '12', 12 ],
 		[ '1.5', 1.5 ],
+		[ '', '' ],
+		[ 'not-a-number', 'not-a-number' ],
 	] )( 'normalizes the legacy number default %p', ( value, expected ) => {
 		expect(
 			normalizeFieldDefault( value, {
@@ -179,6 +181,7 @@ describe( 'custom CTA field visibility', () => {
 		[ '0', 0 ],
 		[ '12', 12 ],
 		[ '1.5', 1.5 ],
+		[ '', '' ],
 	] )( 'normalizes the legacy range default %p', ( value, expected ) => {
 		expect(
 			normalizeFieldDefault( value, {
@@ -217,4 +220,18 @@ describe( 'custom CTA field visibility', () => {
 			).toEqual( [ 'basic', 'premium' ] );
 		}
 	);
+
+	it.each( [
+		'objectselect',
+		'postselect',
+		'taxonomyselect',
+		'userselect',
+	] )( 'normalizes a legacy multiple %s scalar default', ( type ) => {
+		expect(
+			normalizeFieldDefault( 12, {
+				type,
+				multiple: true,
+			} as FieldProps )
+		).toEqual( [ 12 ] );
+	} );
 } );
