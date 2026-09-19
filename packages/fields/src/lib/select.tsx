@@ -67,9 +67,12 @@ const SelectField = ( {
 	const selectedValue = Array.isArray( value )
 		? ''
 		: String( value ?? fieldProps.default ?? '' );
-	const selectedValues = Array.isArray( value )
-		? value.map( String )
-		: [ selectedValue ];
+	let selectedValues = [ selectedValue ];
+	if ( Array.isArray( value ) ) {
+		selectedValues = value.map( String );
+	} else if ( multiple && typeof value === 'string' ) {
+		selectedValues = value.split( ',' );
+	}
 	const selectedDescriptions = selectedValues
 		.map( ( selected ) => optionDescriptions?.[ selected ] )
 		.filter( ( description ): description is string =>

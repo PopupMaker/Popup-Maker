@@ -122,6 +122,12 @@ export const initCustomFields = () => {
 				{ ...fields }
 			);
 
+			// BaseEditor mounts General first even when this CTA type declares only
+			// add-on tabs. Ensure that mounted tab can seed every declared default.
+			if ( ! result.general ) {
+				result.general = [];
+			}
+
 			// TabPanel mounts only the active tab. Add the initializer to every
 			// tab so declared defaults are seeded even when all custom fields live
 			// outside the initially active tab.
