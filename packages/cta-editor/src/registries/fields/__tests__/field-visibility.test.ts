@@ -209,6 +209,18 @@ describe( 'custom CTA field visibility', () => {
 		}
 	);
 
+	it.each( [
+		[ 'basic', [ 'basic' ] ],
+		[ 'basic,premium', [ 'basic', 'premium' ] ],
+		[ '', [] ],
+	] )( 'normalizes a token select default %p', ( value, expected ) => {
+		expect(
+			normalizeFieldDefault( value, {
+				type: 'tokenselect',
+			} as FieldProps )
+		).toEqual( expected );
+	} );
+
 	it.each( [ 'select', 'select2' ] )(
 		'normalizes a legacy multiple %s default',
 		( type ) => {

@@ -56,6 +56,7 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 	const fieldHelp = help ?? description ?? legacyDescription;
 	const needsExternalHelp = [
 		'color',
+		'html',
 		'multicheck',
 		'rangeslider',
 		'tokenselect',

@@ -22,7 +22,12 @@ export const getFieldDefault = ( field: FieldProps ): unknown => {
 	return ( field as FieldProps & Pick< OldFieldBase, 'std' > ).std;
 };
 
-/** Normalize legacy checkbox defaults before the generic field sees them. */
+/**
+ * Normalize legacy defaults before the generic field sees them.
+ *
+ * @param defaultValue Default value supplied by the field schema.
+ * @param field        Field definition associated with the default.
+ */
 export const normalizeFieldDefault = (
 	defaultValue: unknown,
 	field: FieldProps
@@ -42,7 +47,7 @@ export const normalizeFieldDefault = (
 	}
 
 	const isMultiple =
-		[ 'multicheck', 'multiselect' ].includes( field.type ) ||
+		[ 'multicheck', 'multiselect', 'tokenselect' ].includes( field.type ) ||
 		( [
 			'select',
 			'select2',
