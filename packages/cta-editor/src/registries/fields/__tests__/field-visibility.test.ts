@@ -71,6 +71,7 @@ describe( 'custom CTA field visibility', () => {
 			general: {
 				missing: null,
 				disabled: false,
+				emptyType: { type: '', default: 'not-rendered' },
 				discountSource: {
 					type: 'select',
 					default: 'existing',
@@ -241,6 +242,18 @@ describe( 'custom CTA field visibility', () => {
 					type,
 				} as FieldProps )
 			).toBe( '0' );
+		}
+	);
+
+	it.each( [ 'select', 'select2', 'multiselect', 'tokenselect' ] )(
+		'normalizes %s array defaults to the control string shape',
+		( type ) => {
+			expect(
+				normalizeFieldDefault( [ 1, 2 ], {
+					type,
+					multiple: true,
+				} as FieldProps )
+			).toEqual( [ '1', '2' ] );
 		}
 	);
 

@@ -7,7 +7,8 @@ const isFieldDefinition = ( field: unknown ): field is FieldProps =>
 	typeof field === 'object' &&
 	field !== null &&
 	'type' in field &&
-	typeof field.type === 'string';
+	typeof field.type === 'string' &&
+	Boolean( field.type );
 
 /**
  * Read defaults from both current field props and legacy PHP field definitions.
@@ -70,6 +71,15 @@ export const normalizeFieldDefault = (
 		}
 
 		return [ defaultValue ];
+	}
+
+	if (
+		Array.isArray( defaultValue ) &&
+		[ 'select', 'select2', 'multiselect', 'tokenselect' ].includes(
+			field.type
+		)
+	) {
+		return defaultValue.map( String );
 	}
 
 	if (
