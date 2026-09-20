@@ -127,6 +127,26 @@ describe( 'custom CTA field visibility', () => {
 		).toBe( false );
 	} );
 
+	it.each( [
+		[ 'string', '' ],
+		[ 'boolean', false ],
+		[ 'number', 0 ],
+	] )(
+		'treats null as an implicit empty %s dependency value',
+		( _type, expected ) => {
+			expect(
+				shouldHideField(
+					{
+						type: 'text',
+						dependencies: { controller: expected },
+					} as FieldProps,
+					{ controller: null },
+					{}
+				)
+			).toBe( false );
+		}
+	);
+
 	it.each( [ '0', 'false', 'no', 0, false ] )(
 		'normalizes the legacy false checkbox default %p',
 		( value ) => {
@@ -234,7 +254,21 @@ describe( 'custom CTA field visibility', () => {
 		}
 	);
 
-	it.each( [ 'select', 'select2' ] )(
+	it.each( [
+		'color',
+		'date',
+		'email',
+		'hidden',
+		'measure',
+		'password',
+		'radio',
+		'select',
+		'select2',
+		'tel',
+		'text',
+		'textarea',
+		'url',
+	] )(
 		'normalizes a scalar %s default to the control string shape',
 		( type ) => {
 			expect(
@@ -244,6 +278,27 @@ describe( 'custom CTA field visibility', () => {
 			).toBe( '0' );
 		}
 	);
+
+	it( 'normalizes associative multicheck defaults to option-key strings', () => {
+		expect(
+			normalizeFieldDefault( [ 1, 2 ], {
+				type: 'multicheck',
+				options: { 1: 'One', 2: 'Two' },
+			} as unknown as FieldProps )
+		).toEqual( [ '1', '2' ] );
+	} );
+
+	it( 'preserves numeric multicheck defaults for numeric option arrays', () => {
+		expect(
+			normalizeFieldDefault( [ 1, 2 ], {
+				type: 'multicheck',
+				options: [
+					{ value: 1, label: 'One' },
+					{ value: 2, label: 'Two' },
+				],
+			} as FieldProps )
+		).toEqual( [ 1, 2 ] );
+	} );
 
 	it.each( [ 'select', 'select2', 'multiselect', 'tokenselect' ] )(
 		'normalizes %s array defaults to the control string shape',

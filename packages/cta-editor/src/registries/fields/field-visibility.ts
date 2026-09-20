@@ -3,6 +3,22 @@ import type { CallToAction } from '@popup-maker/core-data';
 
 export type FieldDefaults = Record< string, unknown >;
 
+const STRING_VALUE_FIELD_TYPES = [
+	'color',
+	'date',
+	'email',
+	'hidden',
+	'measure',
+	'password',
+	'radio',
+	'select',
+	'select2',
+	'tel',
+	'text',
+	'textarea',
+	'url',
+];
+
 const isFieldDefinition = ( field: unknown ): field is FieldProps =>
 	typeof field === 'object' &&
 	field !== null &&
@@ -83,7 +99,16 @@ export const normalizeFieldDefault = (
 	}
 
 	if (
-		[ 'select', 'select2' ].includes( field.type ) &&
+		Array.isArray( defaultValue ) &&
+		'multicheck' === field.type &&
+		'options' in field &&
+		! Array.isArray( field.options )
+	) {
+		return defaultValue.map( String );
+	}
+
+	if (
+		STRING_VALUE_FIELD_TYPES.includes( field.type ) &&
 		defaultValue !== null &&
 		typeof defaultValue !== 'undefined' &&
 		! Array.isArray( defaultValue )
@@ -199,7 +224,10 @@ export const shouldHideField = (
 			dependencyValue = fieldDefaults[ key ];
 		}
 
-		if ( typeof dependencyValue === 'undefined' ) {
+		if (
+			dependencyValue === null ||
+			typeof dependencyValue === 'undefined'
+		) {
 			if ( typeof value === 'string' ) {
 				return value === '';
 			}
