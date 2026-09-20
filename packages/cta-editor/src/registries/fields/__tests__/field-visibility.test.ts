@@ -325,6 +325,18 @@ describe( 'custom CTA field visibility', () => {
 	);
 
 	it.each( [ 'objectselect', 'postselect', 'taxonomyselect', 'userselect' ] )(
+		'normalizes a legacy multiple %s array to numeric IDs',
+		( type ) => {
+			expect(
+				normalizeFieldDefault( [ '12', '34' ], {
+					type,
+					multiple: true,
+				} as FieldProps )
+			).toEqual( [ 12, 34 ] );
+		}
+	);
+
+	it.each( [ 'objectselect', 'postselect', 'taxonomyselect', 'userselect' ] )(
 		'keeps an absent multiple %s default empty',
 		( type ) => {
 			expect(
@@ -337,7 +349,11 @@ describe( 'custom CTA field visibility', () => {
 	);
 
 	it.each( [
-		[ 12, [ 12 ] ],
+		[ 12, [ '12' ] ],
+		[
+			[ 12, 34 ],
+			[ '12', '34' ],
+		],
 		[ '', [] ],
 	] )(
 		'normalizes a multiple custom select default %p',

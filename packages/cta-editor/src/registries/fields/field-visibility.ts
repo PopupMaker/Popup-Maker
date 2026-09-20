@@ -19,6 +19,29 @@ const STRING_VALUE_FIELD_TYPES = [
 	'url',
 ];
 
+const OBJECT_SELECT_FIELD_TYPES = [
+	'objectselect',
+	'postselect',
+	'taxonomyselect',
+	'userselect',
+];
+
+const normalizeDefaultList = ( defaultValue: unknown ): unknown[] => {
+	if ( Array.isArray( defaultValue ) ) {
+		return defaultValue;
+	}
+
+	if ( null === defaultValue || typeof defaultValue === 'undefined' ) {
+		return [];
+	}
+
+	if ( 'string' === typeof defaultValue ) {
+		return '' === defaultValue ? [] : defaultValue.split( ',' );
+	}
+
+	return [ defaultValue ];
+};
+
 const isFieldDefinition = ( field: unknown ): field is FieldProps =>
 	typeof field === 'object' &&
 	field !== null &&
@@ -76,6 +99,24 @@ export const normalizeFieldDefault = (
 		].includes( field.type ) &&
 			'multiple' in field &&
 			Boolean( field.multiple ) );
+
+	if ( 'customselect' === field.type ) {
+		const values = normalizeDefaultList( defaultValue );
+		const stringValues = values.map( String );
+
+		return isMultiple ? stringValues : stringValues[ 0 ] ?? defaultValue;
+	}
+
+	if ( OBJECT_SELECT_FIELD_TYPES.includes( field.type ) ) {
+		const values = normalizeDefaultList( defaultValue );
+		const numericValues = values
+			.map( ( value ) => Number.parseInt( String( value ), 10 ) )
+			.filter( Number.isFinite );
+
+		return isMultiple || Array.isArray( defaultValue )
+			? numericValues
+			: numericValues[ 0 ] ?? defaultValue;
+	}
 
 	if ( isMultiple && ! Array.isArray( defaultValue ) ) {
 		if ( null === defaultValue || typeof defaultValue === 'undefined' ) {
