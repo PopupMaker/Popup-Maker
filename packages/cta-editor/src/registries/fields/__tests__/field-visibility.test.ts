@@ -233,6 +233,17 @@ describe( 'custom CTA field visibility', () => {
 		}
 	);
 
+	it.each( [ 'select', 'select2' ] )(
+		'normalizes a scalar %s default to the control string shape',
+		( type ) => {
+			expect(
+				normalizeFieldDefault( 0, {
+					type,
+				} as FieldProps )
+			).toBe( '0' );
+		}
+	);
+
 	it.each( [ 'objectselect', 'postselect', 'taxonomyselect', 'userselect' ] )(
 		'normalizes a legacy multiple %s scalar default',
 		( type ) => {

@@ -130,9 +130,12 @@ export const parseOldArgsToProps = (
 			return fieldProps;
 
 		case 'customselect':
-			// customselect is a new field type, return as-is
 			return {
 				...fieldProps,
+				multiple:
+					args.type === 'customselect'
+						? args.multiple ?? false
+						: false,
 				entityType:
 					args.type === 'customselect'
 						? args.entityType ??

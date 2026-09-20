@@ -72,6 +72,15 @@ export const normalizeFieldDefault = (
 		return [ defaultValue ];
 	}
 
+	if (
+		[ 'select', 'select2' ].includes( field.type ) &&
+		defaultValue !== null &&
+		typeof defaultValue !== 'undefined' &&
+		! Array.isArray( defaultValue )
+	) {
+		return String( defaultValue );
+	}
+
 	if ( 'checkbox' !== field.type ) {
 		return defaultValue;
 	}
