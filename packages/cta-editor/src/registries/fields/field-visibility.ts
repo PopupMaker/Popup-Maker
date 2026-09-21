@@ -118,6 +118,26 @@ export const normalizeFieldDefault = (
 			: numericValues[ 0 ] ?? defaultValue;
 	}
 
+	if ( 'multicheck' === field.type ) {
+		const values = normalizeDefaultList( defaultValue );
+
+		if ( 'options' in field && Array.isArray( field.options ) ) {
+			const optionValues = field.options.map( ( option ) =>
+				typeof option === 'string' ? option : option.value
+			);
+
+			return values.map(
+				( value ) =>
+					optionValues.find(
+						( optionValue ) =>
+							String( optionValue ) === String( value )
+					) ?? value
+			);
+		}
+
+		return values.map( String );
+	}
+
 	if ( isMultiple && ! Array.isArray( defaultValue ) ) {
 		if ( null === defaultValue || typeof defaultValue === 'undefined' ) {
 			return [];
@@ -135,15 +155,6 @@ export const normalizeFieldDefault = (
 		[ 'select', 'select2', 'multiselect', 'tokenselect' ].includes(
 			field.type
 		)
-	) {
-		return defaultValue.map( String );
-	}
-
-	if (
-		Array.isArray( defaultValue ) &&
-		'multicheck' === field.type &&
-		'options' in field &&
-		! Array.isArray( field.options )
 	) {
 		return defaultValue.map( String );
 	}

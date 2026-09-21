@@ -289,15 +289,17 @@ describe( 'custom CTA field visibility', () => {
 	} );
 
 	it( 'preserves numeric multicheck defaults for numeric option arrays', () => {
-		expect(
-			normalizeFieldDefault( [ 1, 2 ], {
-				type: 'multicheck',
-				options: [
-					{ value: 1, label: 'One' },
-					{ value: 2, label: 'Two' },
-				],
-			} as FieldProps )
-		).toEqual( [ 1, 2 ] );
+		const field = {
+			type: 'multicheck',
+			options: [
+				{ value: 1, label: 'One' },
+				{ value: 2, label: 'Two' },
+			],
+		} as FieldProps;
+
+		expect( normalizeFieldDefault( [ 1, 2 ], field ) ).toEqual( [ 1, 2 ] );
+		expect( normalizeFieldDefault( '1', field ) ).toEqual( [ 1 ] );
+		expect( normalizeFieldDefault( '1,2', field ) ).toEqual( [ 1, 2 ] );
 	} );
 
 	it.each( [ 'select', 'select2', 'multiselect', 'tokenselect' ] )(
