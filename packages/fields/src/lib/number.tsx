@@ -6,6 +6,9 @@ import {
 
 import type { NumberFieldProps, WithOnChange } from '../types';
 
+export const parseNumberControlValue = ( value: string = '0' ): number =>
+	Number.parseFloat( value );
+
 const NumberField = ( {
 	value,
 	onChange,
@@ -16,7 +19,7 @@ const NumberField = ( {
 			{ ...fieldProps }
 			value={ value }
 			onChange={ ( newValue = '0' ) =>
-				onChange( parseInt( newValue, 10 ) )
+				onChange( parseNumberControlValue( newValue ) )
 			}
 			// @ts-ignore
 			__nextHasNoMarginBottom={ true }

@@ -1,0 +1,294 @@
+import type { FieldProps, OldFieldBase } from '@popup-maker/fields';
+import type { CallToAction } from '@popup-maker/core-data';
+
+export type FieldDefaults = Record< string, unknown >;
+
+const STRING_VALUE_FIELD_TYPES = [
+	'color',
+	'date',
+	'email',
+	'hidden',
+	'measure',
+	'password',
+	'radio',
+	'select',
+	'select2',
+	'tel',
+	'text',
+	'textarea',
+	'url',
+];
+
+const OBJECT_SELECT_FIELD_TYPES = [
+	'objectselect',
+	'postselect',
+	'taxonomyselect',
+	'userselect',
+];
+
+const normalizeDefaultList = ( defaultValue: unknown ): unknown[] => {
+	if ( Array.isArray( defaultValue ) ) {
+		return defaultValue;
+	}
+
+	if ( null === defaultValue || typeof defaultValue === 'undefined' ) {
+		return [];
+	}
+
+	if ( 'string' === typeof defaultValue ) {
+		return '' === defaultValue ? [] : defaultValue.split( ',' );
+	}
+
+	return [ defaultValue ];
+};
+
+const isFieldDefinition = ( field: unknown ): field is FieldProps =>
+	typeof field === 'object' &&
+	field !== null &&
+	'type' in field &&
+	typeof field.type === 'string' &&
+	Boolean( field.type );
+
+/**
+ * Read defaults from both current field props and legacy PHP field definitions.
+ *
+ * @param field Field definition to inspect.
+ */
+export const getFieldDefault = ( field: FieldProps ): unknown => {
+	if ( typeof field.default !== 'undefined' ) {
+		return field.default;
+	}
+
+	return ( field as FieldProps & Pick< OldFieldBase, 'std' > ).std;
+};
+
+/**
+ * Normalize legacy defaults before the generic field sees them.
+ *
+ * @param defaultValue Default value supplied by the field schema.
+ * @param field        Field definition associated with the default.
+ */
+export const normalizeFieldDefault = (
+	defaultValue: unknown,
+	field: FieldProps
+): unknown => {
+	if (
+		[ 'number', 'rangeslider' ].includes( field.type ) &&
+		'string' === typeof defaultValue
+	) {
+		if ( '' === defaultValue.trim() ) {
+			return defaultValue;
+		}
+
+		const numericDefault = Number( defaultValue );
+		return Number.isFinite( numericDefault )
+			? numericDefault
+			: defaultValue;
+	}
+
+	const isMultiple =
+		[ 'multicheck', 'multiselect', 'tokenselect' ].includes( field.type ) ||
+		( [
+			'select',
+			'select2',
+			'customselect',
+			'objectselect',
+			'postselect',
+			'taxonomyselect',
+			'userselect',
+		].includes( field.type ) &&
+			'multiple' in field &&
+			Boolean( field.multiple ) );
+
+	if ( 'customselect' === field.type ) {
+		const values = normalizeDefaultList( defaultValue );
+		const stringValues = values.map( String );
+
+		return isMultiple ? stringValues : stringValues[ 0 ] ?? defaultValue;
+	}
+
+	if ( OBJECT_SELECT_FIELD_TYPES.includes( field.type ) ) {
+		const values = normalizeDefaultList( defaultValue );
+		const numericValues = values
+			.map( ( value ) => Number.parseInt( String( value ), 10 ) )
+			.filter( Number.isFinite );
+
+		return isMultiple ? numericValues : numericValues.slice( 0, 1 );
+	}
+
+	if ( 'multicheck' === field.type ) {
+		const values = normalizeDefaultList( defaultValue );
+
+		if ( 'options' in field && Array.isArray( field.options ) ) {
+			const optionValues = field.options.map( ( option ) =>
+				typeof option === 'string' ? option : option.value
+			);
+
+			return values.map(
+				( value ) =>
+					optionValues.find(
+						( optionValue ) =>
+							String( optionValue ) === String( value )
+					) ?? value
+			);
+		}
+
+		return values.map( String );
+	}
+
+	if ( isMultiple && ! Array.isArray( defaultValue ) ) {
+		if ( null === defaultValue || typeof defaultValue === 'undefined' ) {
+			return [];
+		}
+
+		if ( 'string' === typeof defaultValue ) {
+			return '' === defaultValue ? [] : defaultValue.split( ',' );
+		}
+
+		return [ defaultValue ];
+	}
+
+	if (
+		Array.isArray( defaultValue ) &&
+		[ 'select', 'select2', 'multiselect', 'tokenselect' ].includes(
+			field.type
+		)
+	) {
+		return defaultValue.map( String );
+	}
+
+	if (
+		STRING_VALUE_FIELD_TYPES.includes( field.type ) &&
+		defaultValue !== null &&
+		typeof defaultValue !== 'undefined' &&
+		! Array.isArray( defaultValue )
+	) {
+		return String( defaultValue );
+	}
+
+	if ( 'checkbox' !== field.type ) {
+		return defaultValue;
+	}
+
+	if ( Array.isArray( defaultValue ) ) {
+		return defaultValue.length === 1 && String( defaultValue[ 0 ] ) === '1';
+	}
+
+	if ( 'string' === typeof defaultValue ) {
+		return (
+			[ 'true', 'yes', '1' ].includes( defaultValue ) ||
+			parseInt( defaultValue, 10 ) > 0
+		);
+	}
+
+	if ( 'number' === typeof defaultValue ) {
+		return defaultValue > 0;
+	}
+
+	return Boolean( defaultValue );
+};
+
+/**
+ * Collect declared field defaults so dependency checks match the values that
+ * controls display before a new CTA has persisted any settings.
+ *
+ * @param fields Fields grouped by editor tab.
+ */
+export const getFieldDefaults = (
+	fields: Record< string, Record< string, unknown > >
+): FieldDefaults =>
+	Object.values( fields ).reduce< FieldDefaults >(
+		( defaults, tabFields ) => {
+			Object.entries( tabFields ).forEach( ( [ fieldId, field ] ) => {
+				if ( ! isFieldDefinition( field ) ) {
+					return;
+				}
+
+				const defaultValue = getFieldDefault( field );
+
+				if (
+					typeof defaultValue !== 'undefined' &&
+					defaultValue !== null
+				) {
+					defaults[ fieldId ] = normalizeFieldDefault(
+						defaultValue,
+						field
+					);
+				}
+			} );
+
+			return defaults;
+		},
+		{}
+	);
+
+/**
+ * Return defaults that have not yet been written to the editable CTA settings.
+ *
+ * @param settings      Current CTA settings.
+ * @param fieldDefaults Declared defaults keyed by field ID.
+ */
+export const getMissingFieldDefaults = (
+	settings: CallToAction[ 'settings' ],
+	fieldDefaults: FieldDefaults
+): Partial< CallToAction[ 'settings' ] > => {
+	const missingDefaults: Partial< CallToAction[ 'settings' ] > = {};
+
+	Object.entries( fieldDefaults ).forEach( ( [ fieldId, defaultValue ] ) => {
+		if (
+			settings[ fieldId ] === null ||
+			typeof settings[ fieldId ] === 'undefined'
+		) {
+			( missingDefaults as Record< string, unknown > )[ fieldId ] =
+				defaultValue;
+		}
+	} );
+
+	return missingDefaults;
+};
+
+/**
+ * Determine whether a field's dependencies are unmet.
+ *
+ * @param field         Field definition to evaluate.
+ * @param settings      Current CTA settings.
+ * @param fieldDefaults Declared defaults keyed by field ID.
+ */
+export const shouldHideField = (
+	field: FieldProps,
+	settings: CallToAction[ 'settings' ],
+	fieldDefaults: FieldDefaults = {}
+): boolean => {
+	if ( ! field.dependencies ) {
+		return false;
+	}
+
+	return ! Object.entries( field.dependencies ).every( ( [ key, value ] ) => {
+		let dependencyValue = settings[ key ];
+
+		if (
+			( dependencyValue === null ||
+				typeof dependencyValue === 'undefined' ) &&
+			Object.prototype.hasOwnProperty.call( fieldDefaults, key )
+		) {
+			dependencyValue = fieldDefaults[ key ];
+		}
+
+		if (
+			dependencyValue === null ||
+			typeof dependencyValue === 'undefined'
+		) {
+			if ( typeof value === 'string' ) {
+				return value === '';
+			}
+			if ( typeof value === 'boolean' ) {
+				return value === false;
+			}
+			if ( typeof value === 'number' ) {
+				return value === 0;
+			}
+		}
+
+		return value === dependencyValue;
+	} );
+};

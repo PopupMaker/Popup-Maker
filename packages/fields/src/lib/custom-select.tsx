@@ -14,6 +14,7 @@ interface CustomEntityOption {
 
 const CustomSelectField = ( {
 	label,
+	help,
 	value,
 	onChange,
 	entityType,
@@ -29,6 +30,8 @@ const CustomSelectField = ( {
 		suggestions: [],
 	} );
 	const [ isLoading, setIsLoading ] = useState( false );
+	const hasValue =
+		value !== null && typeof value !== 'undefined' && value !== '';
 
 	const updateQueryText = useDebounce( ( text: string ) => {
 		setQueryText( text );
@@ -43,7 +46,7 @@ const CustomSelectField = ( {
 				let apiUrl = `${ apiEndpoint }?object_type=custom_entity&entity_type=${ entityType }`;
 
 				// Include selected values for prefill
-				if ( value ) {
+				if ( hasValue ) {
 					const includeIds = Array.isArray( value )
 						? value
 						: [ value ];
@@ -56,24 +59,24 @@ const CustomSelectField = ( {
 				}
 
 				const response = await fetchFromWPApi< {
-					items: Array< { id: string; text: string } >;
+					items: Array< { id: string | number; text: string } >;
 					total_count: number;
 				} >( apiUrl );
 
 				// Map API response
 				const allOptions: CustomEntityOption[] = response.items.map(
 					( item ) => ( {
-						id: item.id,
+						id: item.id.toString(),
 						text: item.text,
 					} )
 				);
 
 				// Extract prefill data from the same response if we have selected values
 				let prefillData: CustomEntityOption[] = [];
-				if ( value ) {
-					const includeIds = Array.isArray( value )
-						? value
-						: [ value ];
+				if ( hasValue ) {
+					const includeIds = (
+						Array.isArray( value ) ? value : [ value ]
+					).map( ( item ) => item.toString() );
 					prefillData = allOptions.filter( ( item ) =>
 						includeIds.includes( item.id )
 					);
@@ -83,8 +86,8 @@ const CustomSelectField = ( {
 					prefill: prefillData,
 					suggestions: allOptions,
 				} );
-			} catch ( error ) {
-				// Silently fail and set empty data
+			} catch {
+				// Silently fail and set empty data.
 				setApiData( { prefill: [], suggestions: [] } );
 			} finally {
 				setIsLoading( false );
@@ -92,7 +95,7 @@ const CustomSelectField = ( {
 		};
 
 		fetchApiData();
-	}, [ value, queryText, entityType, apiEndpoint ] );
+	}, [ value, queryText, entityType, apiEndpoint, hasValue ] );
 
 	const findSuggestion = ( id: string ) => {
 		const findInList = ( list: CustomEntityOption[] ) => {
@@ -107,12 +110,14 @@ const CustomSelectField = ( {
 		return findInList( apiData.prefill );
 	};
 
-	const values = ( () => {
-		if ( ! value ) {
+	const values: string[] = ( () => {
+		if ( ! hasValue ) {
 			return [];
 		}
 
-		return typeof value === 'string' ? [ value ] : value;
+		return ( Array.isArray( value ) ? value : [ value ] ).map( ( item ) =>
+			item.toString()
+		);
 	} )();
 
 	const getTokenValue = ( token: string | { value: string } ) => {
@@ -191,6 +196,9 @@ const CustomSelectField = ( {
 						: undefined
 				}
 			/>
+			{ help && (
+				<p className="components-base-control__help">{ help }</p>
+			) }
 		</div>
 	);
 };

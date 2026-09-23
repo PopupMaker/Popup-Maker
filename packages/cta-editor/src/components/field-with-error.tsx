@@ -3,12 +3,16 @@ import { Field } from '@popup-maker/fields';
 import { URLControl } from '@popup-maker/components';
 import { FieldWrapper } from './field-wrapper';
 import { useFieldError } from '../hooks';
+import {
+	getFieldDefault,
+	normalizeFieldDefault,
+} from '../registries/fields/field-visibility';
 
-import type { FieldProps } from '@popup-maker/fields';
+import type { FieldProps, OldFieldBase } from '@popup-maker/fields';
 
 interface FieldWithErrorProps {
 	fieldId: string;
-	field: FieldProps;
+	field: FieldProps & { errorFieldIds?: string[] };
 	value: any;
 	onChange: ( value: any ) => void;
 }
@@ -29,7 +33,10 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 	value,
 	onChange,
 } ) => {
-	const { error, clearError } = useFieldError( fieldId );
+	const { error, clearError } = useFieldError(
+		fieldId,
+		field.errorFieldIds ?? []
+	);
 
 	// Clear field error when value changes
 	const handleChange = ( newValue: any ) => {
@@ -40,21 +47,57 @@ export const FieldWithError: React.FC< FieldWithErrorProps > = ( {
 		onChange( newValue );
 	};
 
+	const legacyDescription = (
+		field as FieldProps & Pick< OldFieldBase, 'desc' >
+	 ).desc;
+	const { heading: _heading, help, description, ...controlField } = field;
+	const effectiveValue =
+		value ?? normalizeFieldDefault( getFieldDefault( field ), field );
+	const fieldHelp = help ?? description ?? legacyDescription;
+	const needsExternalHelp = [
+		'color',
+		'html',
+		'multicheck',
+		'rangeslider',
+		'tokenselect',
+	].includes( field.type );
+	const fieldControl =
+		field.type === 'url' ? (
+			<>
+				<URLControl
+					{ ...controlField }
+					value={ effectiveValue }
+					onChange={ ( urlValue ) => handleChange( urlValue.url ) }
+				/>
+				{ fieldHelp && (
+					<p className="components-base-control__help">
+						{ fieldHelp }
+					</p>
+				) }
+			</>
+		) : (
+			<>
+				<Field
+					{ ...controlField }
+					help={ fieldHelp }
+					description={ description }
+					value={ effectiveValue }
+					onChange={ handleChange }
+				/>
+				{ needsExternalHelp && fieldHelp && (
+					<p className="components-base-control__help">
+						{ fieldHelp }
+					</p>
+				) }
+			</>
+		);
 	return (
 		<FieldWrapper
 			fieldId={ fieldId }
-			title={ field.label ?? '' }
+			title={ field.heading ?? field.label ?? '' }
 			error={ error }
 		>
-			{ field.type === 'url' ? (
-				<URLControl
-					{ ...field }
-					value={ value }
-					onChange={ ( urlValue ) => handleChange( urlValue.url ) }
-				/>
-			) : (
-				<Field { ...field } value={ value } onChange={ handleChange } />
-			) }
+			{ fieldControl }
 		</FieldWrapper>
 	);
 };

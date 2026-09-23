@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Developers**
+
+-   Improved Call to Action field schema support for add-ons.
+
 ## v1.25.0 - 2026-09-10
 
 **Security**

@@ -17,8 +17,10 @@ export interface OldFieldArgs {
 	classes?: string | string[];
 	dependencies?: { [ key: string ]: string | boolean | number };
 	desc?: string;
+	description?: string;
 	desc_position?: string;
 	dynamic_desc?: string;
+	heading?: string;
 	id?: string;
 	id_prefix?: string;
 	label?: string;
@@ -52,7 +54,9 @@ export interface OldFieldBase {
 	label?: string;
 	std?: any;
 	desc?: string;
+	description?: string;
 	dynamic_desc?: string;
+	heading?: string;
 	desc_position?: string;
 	class?: string;
 	classes?: string | string[];
@@ -129,6 +133,7 @@ export interface OldSelectField extends OldFieldBase {
 	multiple?: boolean;
 	as_array?: boolean;
 	options: OldSelectOptions;
+	optionDescriptions?: StringObject;
 }
 
 export interface OldSelect2Field extends Omit< OldSelectField, 'type' > {

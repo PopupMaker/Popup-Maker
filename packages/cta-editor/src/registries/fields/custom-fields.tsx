@@ -1,9 +1,15 @@
 import { Fragment } from '@wordpress/element';
 import { addFilter } from '@wordpress/hooks';
+
 import { FieldWithError } from '../../components';
 
 import type { FieldProps } from '@popup-maker/fields';
 import type { CallToAction } from '@popup-maker/core-data';
+import {
+	getFieldDefaults,
+	getMissingFieldDefaults,
+	shouldHideField,
+} from './field-visibility';
 
 const { cta_types: callToActions } = window.popupMakerCtaEditor;
 
@@ -22,6 +28,33 @@ const getCtaFields = (
 };
 
 export const initCustomFields = () => {
+	// Materialize displayed defaults only when saving. This keeps dependency
+	// checks and persistence aligned without marking an untouched editor dirty.
+	addFilter(
+		'popupMaker.callToAction.prepareForSave',
+		'popup-maker/custom-field-defaults',
+		( callToAction: CallToAction ) => {
+			const settings = callToAction.settings ?? {};
+			const defaults = getFieldDefaults( getCtaFields( settings.type ) );
+			const missingDefaults = getMissingFieldDefaults(
+				settings,
+				defaults
+			);
+
+			if ( Object.keys( missingDefaults ).length === 0 ) {
+				return callToAction;
+			}
+
+			return {
+				...callToAction,
+				settings: {
+					...settings,
+					...missingDefaults,
+				},
+			};
+		}
+	);
+
 	// Initialize custom fields by adding them to the tab fields filter
 	addFilter(
 		'popupMaker.callToActionEditor.tabFields',
@@ -42,100 +75,56 @@ export const initCustomFields = () => {
 				return fields;
 			}
 
-			return Object.entries( extraFields ).reduce(
+			const fieldDefaults = getFieldDefaults( extraFields );
+			const result = Object.entries( extraFields ).reduce(
 				( acc, [ tab, tabFields ] ) => {
 					if ( ! acc[ tab ] ) {
 						acc[ tab ] = [];
 					}
 
-					acc[ tab ] = [
-						...acc[ tab ],
-						...Object.entries( tabFields )
-							.map( ( [ fieldId, field ] ) => {
-								if ( ! field || ! field.type ) {
-									return null;
-								}
+					const entries = Object.entries( tabFields ).filter(
+						( entry ): entry is [ string, FieldProps ] =>
+							Boolean( entry[ 1 ]?.type )
+					);
 
-								const shouldHide = () => {
-									if ( ! field.dependencies ) {
-										return false;
-									}
+					const customFields = entries.map(
+						( [ fieldId, field ] ) => {
+							return {
+								...field,
+								id: fieldId,
+								priority: field.priority ?? 0,
+								component: (
+									<Fragment key={ fieldId }>
+										{ ! shouldHideField(
+											field,
+											settings,
+											fieldDefaults
+										) && (
+											<FieldWithError
+												fieldId={ fieldId }
+												field={ field }
+												value={ settings[ fieldId ] }
+												onChange={ ( value ) =>
+													updateSettings( {
+														[ fieldId ]: value,
+													} )
+												}
+											/>
+										) }
+									</Fragment>
+								),
+							};
+						}
+					);
 
-									const dependencies = field.dependencies;
-
-									return ! Object.entries(
-										dependencies
-									).every( ( [ key, value ] ) => {
-										const dependencyValue = settings[ key ];
-
-										if ( typeof value === 'string' ) {
-											if (
-												typeof dependencyValue ===
-												'undefined'
-											) {
-												return value === '';
-											}
-											return value === dependencyValue;
-										}
-
-										if ( typeof value === 'boolean' ) {
-											if (
-												typeof dependencyValue ===
-												'undefined'
-											) {
-												return value === false;
-											}
-											return value === dependencyValue;
-										}
-
-										if ( typeof value === 'number' ) {
-											if (
-												typeof dependencyValue ===
-												'undefined'
-											) {
-												return value === 0;
-											}
-											return value === dependencyValue;
-										}
-
-										return false;
-									} );
-								};
-
-								return {
-									...field,
-									id: fieldId,
-									priority: field?.priority ?? 0,
-									component: (
-										<Fragment key={ fieldId }>
-											{ ! shouldHide() && (
-												<FieldWithError
-													fieldId={ fieldId }
-													field={ field }
-													value={
-														settings[ fieldId ]
-													}
-													onChange={ ( value ) =>
-														updateSettings( {
-															[ fieldId ]: value,
-														} )
-													}
-												/>
-											) }
-										</Fragment>
-									),
-								};
-							} )
-							.filter(
-								( item ): item is NonNullable< typeof item > =>
-									item !== null
-							),
-					];
+					acc[ tab ] = [ ...acc[ tab ], ...customFields ];
 
 					return acc;
 				},
 				{ ...fields }
 			);
+
+			return result;
 		}
 	);
 };

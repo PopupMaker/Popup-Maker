@@ -8,6 +8,7 @@ import type { EditableCta } from '@popup-maker/core-data';
 export type FieldDef = {
 	component: JSX.Element;
 	id: keyof EditableCta[ 'settings' ];
+	errorFieldIds?: Array< keyof EditableCta[ 'settings' ] >;
 	priority: number;
 };
 
@@ -133,10 +134,10 @@ const useFields = () => {
 				/**
 				 * Allow external overrides via a filter with null default.
 				 *
-				 * @param {JSX.Element} component The current field component.
-				 * @param {string}      id        The field name.
-				 * @param {string}      tab       The current tab name.
-				 * @return {JSX.Element} The new field component.
+				 * @param {React.ReactElement} component The current field component.
+				 * @param {string}             id        The field name.
+				 * @param {string}             tab       The current tab name.
+				 * @return {React.ReactElement} The new field component.
 				 */
 				const component = applyFilters(
 					'popupMaker.callToActionEditor.renderField',

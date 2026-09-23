@@ -59,6 +59,7 @@ export const withModal = (
 		closeOnSave = true,
 		showDocumentationLink = true,
 		showActions = true,
+		onSave,
 		onClose,
 		// @ts-ignore It exists but is not typed.
 		onRequestClose,
@@ -193,8 +194,11 @@ export const withModal = (
 						return;
 					}
 
-					// Call the onSave callback if it exists
-					componentProps?.onSave?.( values );
+					// Read the canonical record after save preparation and persistence.
+					const savedValues = storeSelectors.getCurrentEditorValues();
+					if ( savedValues ) {
+						onSave?.( savedValues );
+					}
 
 					const hasRemainingEdits = storeSelectors.hasEdits(
 						values.id
@@ -209,7 +213,14 @@ export const withModal = (
 				}
 			},
 			// eslint-disable-next-line react-hooks/exhaustive-deps
-			[ closeOnSave, closeModal, storeSelectors, hasAnyError, values ]
+			[
+				closeOnSave,
+				closeModal,
+				storeSelectors,
+				hasAnyError,
+				onSave,
+				values,
+			]
 		);
 
 		return (
