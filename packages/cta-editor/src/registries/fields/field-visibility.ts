@@ -113,9 +113,7 @@ export const normalizeFieldDefault = (
 			.map( ( value ) => Number.parseInt( String( value ), 10 ) )
 			.filter( Number.isFinite );
 
-		return isMultiple || Array.isArray( defaultValue )
-			? numericValues
-			: numericValues[ 0 ] ?? defaultValue;
+		return isMultiple ? numericValues : numericValues.slice( 0, 1 );
 	}
 
 	if ( 'multicheck' === field.type ) {

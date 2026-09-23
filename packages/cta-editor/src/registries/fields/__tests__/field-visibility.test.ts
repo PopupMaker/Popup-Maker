@@ -315,6 +315,28 @@ describe( 'custom CTA field visibility', () => {
 	);
 
 	it.each( [ 'objectselect', 'postselect', 'taxonomyselect', 'userselect' ] )(
+		'normalizes a legacy single %s scalar default to a numeric ID list',
+		( type ) => {
+			expect(
+				normalizeFieldDefault( 12, {
+					type,
+				} as FieldProps )
+			).toEqual( [ 12 ] );
+		}
+	);
+
+	it.each( [ 'objectselect', 'postselect', 'taxonomyselect', 'userselect' ] )(
+		'keeps only the first legacy single %s default',
+		( type ) => {
+			expect(
+				normalizeFieldDefault( '12,34', {
+					type,
+				} as FieldProps )
+			).toEqual( [ 12 ] );
+		}
+	);
+
+	it.each( [ 'objectselect', 'postselect', 'taxonomyselect', 'userselect' ] )(
 		'normalizes a legacy multiple %s scalar default',
 		( type ) => {
 			expect(
