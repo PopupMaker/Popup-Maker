@@ -130,11 +130,6 @@ class PUM_Integration_Form_HTMLForms extends PUM_Abstract_Integration_Form {
 		// Get popup ID from session.
 		$popup_id = $this->get_popup_id();
 
-		// Increase conversion count if popup ID is valid.
-		if ( $popup_id ) {
-			$this->increase_conversion( $popup_id );
-		}
-
 		// Track integrated form submission.
 		pum_integrated_form_submission(
 			[

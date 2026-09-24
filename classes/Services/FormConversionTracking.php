@@ -77,6 +77,11 @@ class FormConversionTracking extends Service {
 			return;
 		}
 
+		// Normalized callers can dispatch actions without authorizing tracking.
+		if ( isset( $args['phases'] ) && ( ! is_array( $args['phases'] ) || empty( $args['phases']['tracking'] ) ) ) {
+			return;
+		}
+
 		// Only track submissions that were captured by a popup.
 		if ( empty( $args['popup_id'] ) || ! is_numeric( $args['popup_id'] ) ) {
 			return;
@@ -144,6 +149,11 @@ class FormConversionTracking extends Service {
 
 		// Only track conversions with explicit form submission metadata.
 		if ( empty( $event_data ) || ! is_array( $event_data ) ) {
+			return;
+		}
+
+		// Frontend submissions can explicitly suppress Core tracking.
+		if ( isset( $event_data['phases'] ) && ( ! is_array( $event_data['phases'] ) || empty( $event_data['phases']['tracking'] ) ) ) {
 			return;
 		}
 
