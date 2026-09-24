@@ -187,7 +187,7 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 	 * @param mixed $form_data Form data.
 	 */
 	public function on_success( $form_id, $entry_id, $form_data ) {
-		if ( ! $this->should_process_submission() ) {
+		if ( $this->is_entry_update_request() || ! $this->should_process_submission() ) {
 			return;
 		}
 
@@ -201,5 +201,23 @@ class PUM_Integration_Form_BitForm extends PUM_Abstract_Integration_Form {
 				'submission_id' => is_scalar( $entry_id ) ? $entry_id : null,
 			]
 		);
+	}
+
+	/**
+	 * Whether Bit Form is reporting a frontend entry update rather than a create.
+	 *
+	 * Bit Form 3.2.2 fires its generic submit-success action for both transports.
+	 * The dedicated update hook runs afterward, too late to prevent a conversion.
+	 *
+	 * @return bool
+	 */
+	protected function is_entry_update_request() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Provider validates the request; this only classifies its transport.
+		$action = isset( $_REQUEST['action'] ) && is_scalar( $_REQUEST['action'] )
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			? sanitize_key( wp_unslash( (string) $_REQUEST['action'] ) )
+			: '';
+
+		return in_array( $action, [ 'bitforms_entry_update', 'bitforms_update_form_entry' ], true );
 	}
 }

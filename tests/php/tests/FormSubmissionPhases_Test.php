@@ -24,6 +24,7 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 	public function tearDown(): void {
 		PUM_Integrations::$form_submission = null;
 		unset( $_REQUEST['pum_form_popup_id'] );
+		unset( $_REQUEST['action'] );
 		unset( $_POST['gform_ajax'] );
 
 		if ( $this->observation_action ) {
@@ -37,6 +38,35 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 		}
 
 		parent::tearDown();
+	}
+
+	/**
+	 * Bit Form creates emit once while entry-update transports emit nothing.
+	 */
+	public function test_bit_form_requires_a_create_success_receipt() {
+		if ( ! class_exists( 'PUM_Integration_Form_BitForm' ) ) {
+			require_once PUM_PATH . 'classes/Integration/Form/BitForm.php';
+		}
+
+		$observed                 = 0;
+		$this->observation_action = static function () use ( &$observed ) {
+			++$observed;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new PUM_Integration_Form_BitForm();
+		foreach ( [ 'bitforms_entry_update', 'bitforms_update_form_entry' ] as $action ) {
+			$_REQUEST['action'] = $action;
+			$integration->on_success( 7, 41, [ 'email' => 'updated@example.test' ] );
+		}
+		$this->assertSame( 0, $observed );
+
+		// A provider validation failure never fires bitform_submit_success.
+		unset( $_REQUEST['action'] );
+		$this->assertSame( 0, $observed );
+
+		$integration->on_success( 7, 42, [ 'email' => 'created@example.test' ] );
+		$this->assertSame( 1, $observed );
 	}
 
 	/**
