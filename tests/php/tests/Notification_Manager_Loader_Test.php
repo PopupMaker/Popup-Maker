@@ -13,6 +13,15 @@ require_once dirname( __DIR__ ) . '/fixtures/class-pum-test-deferred-notificatio
 class Notification_Manager_Loader_Test extends WP_UnitTestCase {
 
 	/**
+	 * Restore the notification preference after each test.
+	 */
+	public function tearDown(): void {
+		pum_delete_option( 'disable_notifications' );
+
+		parent::tearDown();
+	}
+
+	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 *
@@ -130,5 +139,99 @@ class Notification_Manager_Loader_Test extends WP_UnitTestCase {
 			$deferred || $booted_prop->getValue( $manager ),
 			'Core should register the real manager for deferred boot on frontend requests.'
 		);
+	}
+
+	/**
+	 * Disabled assistive notifications are omitted from the REST panel.
+	 */
+	public function test_disabled_assistive_notifications_return_an_empty_panel() {
+		global $menu;
+
+		$original_menu = $menu;
+
+		pum_update_option( 'disable_notifications', true );
+
+		$filter = static function ( $alerts ) {
+			$alerts[] = [
+				'code'           => 'test_assistive_notification',
+				'message'        => 'Test notification.',
+				'type'           => 'info',
+				'display_inline' => true,
+			];
+
+			return $alerts;
+		};
+
+		add_filter( 'pum_alert_list', $filter );
+
+		try {
+			$controller = new \PopupMaker\RestAPI\Notifications();
+			$response   = $controller->get_items( new WP_REST_Request( 'GET' ) );
+
+			$this->assertSame( [], $response->get_data() );
+			$this->assertSame( '0', $response->get_headers()['X-PM-Notifications-Count'] );
+
+			$menu = [
+				[ 'Popups', 'edit_posts', 'edit.php?post_type=popup' ],
+			];
+
+			PUM_Utils_Alerts::append_alert_count();
+
+			$this->assertSame( 'Popups', $menu[0][0] );
+		} finally {
+			remove_filter( 'pum_alert_list', $filter );
+			$menu = $original_menu;
+		}
+	}
+
+	/**
+	 * Disabled assistive notifications stay off the inline surface while
+	 * blocking and global notices remain eligible.
+	 */
+	public function test_disabled_assistive_notifications_preserve_blocking_inline_alerts() {
+		pum_update_option( 'disable_notifications', true );
+
+		$this->assertFalse(
+			PUM_Utils_Alerts::is_inline_eligible(
+				[
+					'type'           => 'success',
+					'display_inline' => true,
+				]
+			)
+		);
+		$this->assertTrue( PUM_Utils_Alerts::is_inline_eligible( [ 'type' => 'warning' ] ) );
+		$this->assertTrue( PUM_Utils_Alerts::is_inline_eligible( [ 'type' => 'error' ] ) );
+		$this->assertTrue(
+			PUM_Utils_Alerts::is_inline_eligible(
+				[
+					'type'   => 'info',
+					'global' => true,
+				]
+			)
+		);
+	}
+
+	/**
+	 * Disabled assistive notifications do not render dashboard indicators.
+	 */
+	public function test_disabled_assistive_notifications_hide_dashboard_indicators() {
+		global $menu;
+
+		pum_update_option( 'disable_notifications', true );
+
+		$controller = new \PopupMaker\Controllers\Admin\ToolbarNotifications( \PopupMaker\plugin() );
+		$menu       = [
+			[ 'Popups', 'edit_posts', 'edit.php?post_type=popup' ],
+		];
+
+		$controller->inject_sidebar_marker();
+
+		ob_start();
+		$controller->print_styles();
+		$controller->print_marker_bootstrap();
+		$output = ob_get_clean();
+
+		$this->assertSame( 'Popups', $menu[0][0] );
+		$this->assertSame( '', $output );
 	}
 }

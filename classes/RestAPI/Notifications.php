@@ -113,6 +113,13 @@ class Notifications extends WP_REST_Controller {
 	public function get_items( $request ) {
 		unset( $request );
 
+		if ( pum_get_option( 'disable_notifications', false ) ) {
+			$response = rest_ensure_response( [] );
+			$response->header( 'X-PM-Notifications-Count', '0' );
+
+			return $response;
+		}
+
 		$items = [];
 
 		foreach ( PUM_Utils_Alerts::get_alerts() as $alert ) {
