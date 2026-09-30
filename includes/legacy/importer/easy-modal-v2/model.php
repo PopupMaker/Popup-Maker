@@ -18,18 +18,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Used to mimic the EModal_Model class from Easy Modal plugin.
  *
+ * Record fields live in `$_data` and are read and written through `__get()`
+ * and `__set()`. Do not declare them as properties: a declared property
+ * bypasses the magic methods, so the loaded value never reaches `$_data`.
+ *
  * @since 1.0
+ *
+ * @property int    $id
+ * @property string $created
+ * @property string $modified
  */
 class EModal_Model {
-
-	/** @var int */
-	protected $id;
-
-	/** @var string */
-	protected $created;
-
-	/** @var string */
-	protected $modified;
 
 	protected $_class_name     = 'EModal_Model';
 	protected $_table_name     = '';
