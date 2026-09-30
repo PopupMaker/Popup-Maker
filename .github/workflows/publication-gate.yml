@@ -53,9 +53,17 @@ jobs:
 
                     echo "type=release" >> "${GITHUB_OUTPUT}"
                     echo "version=${BASH_REMATCH[1]}" >> "${GITHUB_OUTPUT}"
-                  elif [ "${HEAD_REPOSITORY}" = "${REPOSITORY}" ] &&
-                    [ -n "${CHANGED_FILES}" ] &&
-                    ! echo "${CHANGED_FILES}" | grep -Ev '^(readme\.txt|\.wordpress-org/)' >/dev/null; then
+                  elif [[ "${HEAD_BRANCH}" =~ ^wordpress-org/[a-z0-9][a-z0-9._-]*$ ]]; then
+                    if [ "${HEAD_REPOSITORY}" != "${REPOSITORY}" ]; then
+                      echo "WordPress.org publication branches must come from this repository."
+                      exit 1
+                    fi
+                    if [ -z "${CHANGED_FILES}" ] ||
+                      echo "${CHANGED_FILES}" | grep -Ev '^(readme\.txt|\.wordpress-org/)' >/dev/null; then
+                      echo "WordPress.org publication branches may only change readme.txt and .wordpress-org assets."
+                      exit 1
+                    fi
+
                     echo "type=readme-assets" >> "${GITHUB_OUTPUT}"
                   else
                     echo "type=none" >> "${GITHUB_OUTPUT}"
@@ -158,7 +166,7 @@ jobs:
                       ;;
                     readme-assets)
                       echo "## WordPress.org readme/assets update" >> "${GITHUB_STEP_SUMMARY}"
-                      echo "Merging this approved PR will sync only readme.txt and .wordpress-org assets." >> "${GITHUB_STEP_SUMMARY}"
+                      echo "Merging this approved wordpress-org/<topic> PR will sync only readme.txt and .wordpress-org assets." >> "${GITHUB_STEP_SUMMARY}"
                       ;;
                     *)
                       echo "## No publication" >> "${GITHUB_STEP_SUMMARY}"
