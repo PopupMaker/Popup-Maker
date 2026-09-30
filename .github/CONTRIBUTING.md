@@ -30,5 +30,9 @@ For further explaination and guidance, check out this great article on creating 
 ### Pull Requests
 * Ensure you stick to the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards)
 * When committing, reference your issue (if present) and include a note about the fix
-* Push the changes to your fork and submit a pull request to the 'master' branch of this repository
+* Submit normal feature, fix, and maintenance pull requests to the `develop` branch
+* The `master` branch only accepts same-repository publication pull requests:
+  * `release/X.Y.Z` runs the complete release pipeline
+  * `wordpress-org/<topic>` syncs changes limited to `readme.txt` and `.wordpress-org/` to WordPress.org
+* Example publication branches include `wordpress-org/tested-up-to-7.1` and `wordpress-org/refresh-banner`
 * We are trying to ensure that every function is documented well and follows the standards set by phpDoc going forward
