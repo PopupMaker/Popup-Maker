@@ -329,10 +329,20 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 			public function get_form( $id ) {
 				return (object) [ 'options' => [ 'ajax_submit' => true ] ];
 			}
-		};
-		$integration->on_success( 'entry-95', 7 );
 
-		$this->assertSame( 'entry-95', $observed['submission_id'] );
+			/**
+			 * Treat the synthetic entry as a submitted parent entry.
+			 *
+			 * @param int $entry_id Entry ID.
+			 * @return object
+			 */
+			protected function get_entry( $entry_id ) {
+				return (object) [ 'is_draft' => 0 ];
+			}
+		};
+		$integration->on_success( 95, 7 );
+
+		$this->assertSame( 95, $observed['submission_id'] );
 		$this->assertTrue( $observed['ajax'] );
 		$this->assertSame(
 			[
@@ -343,6 +353,148 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 			$observed['phases']
 		);
 		$this->assertNull( PUM_Integrations::$form_submission );
+	}
+
+	/**
+	 * Formidable drafts and repeater children never become conversions.
+	 */
+	public function test_formidable_requires_submitted_parent_entry() {
+		$observed                 = 0;
+		$this->observation_action = static function () use ( &$observed ) {
+			++$observed;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new class() extends PUM_Integration_Form_FormidableForms {
+			/** @var object|null */
+			public $entry;
+
+			/** @var int */
+			public $entry_loads = 0;
+
+			/**
+			 * Return a non-AJAX synthetic form.
+			 *
+			 * @param string $id Form ID.
+			 * @return object
+			 */
+			public function get_form( $id ) {
+				return (object) [ 'options' => [] ];
+			}
+
+			/**
+			 * Verify provider callback state through a controlled entry seam.
+			 *
+			 * @param int $entry_id Entry ID.
+			 * @return object|null
+			 */
+			protected function get_entry( $entry_id ) {
+				++$this->entry_loads;
+				return $this->entry;
+			}
+		};
+
+		foreach ( [ null, [], new stdClass(), 0, -1, 1.5, 'entry-100' ] as $invalid_entry_id ) {
+			$integration->on_success( $invalid_entry_id, 7, [ 'is_child' => false ] );
+		}
+		$this->assertSame( 0, $integration->entry_loads );
+
+		$integration->entry = (object) [ 'is_draft' => 1 ];
+		$integration->on_success( 101, 7, [ 'is_child' => false ] );
+		$integration->entry = (object) [ 'is_draft' => 0 ];
+		$integration->on_success( 102, 7, [ 'is_child' => true ] );
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 101,
+		];
+		$integration->on_success( 103, 7, [ 'is_child' => false ] );
+		$this->assertSame( 0, $observed );
+
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 0,
+		];
+		$integration->on_success( '104', 7, new stdClass() );
+		$this->assertSame( 1, $observed );
+	}
+
+	/**
+	 * A frontend draft becoming submitted emits once from Formidable's update path.
+	 */
+	public function test_formidable_draft_to_submitted_update_emits_once() {
+		$observed                 = 0;
+		$this->observation_action = static function () use ( &$observed ) {
+			++$observed;
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		$integration = new class() extends PUM_Integration_Form_FormidableForms {
+			/** @var object|null */
+			public $entry;
+
+			/**
+			 * Return a non-AJAX synthetic form.
+			 *
+			 * @param string $id Form ID.
+			 * @return object
+			 */
+			public function get_form( $id ) {
+				return (object) [ 'options' => [] ];
+			}
+
+			/**
+			 * Return controlled persisted entry state.
+			 *
+			 * @param int $entry_id Entry ID.
+			 * @return object|null
+			 */
+			protected function get_entry( $entry_id ) {
+				return $this->entry;
+			}
+		};
+
+		$integration->entry = (object) [
+			'is_draft'       => 1,
+			'parent_item_id' => 0,
+		];
+		$values             = [
+			'form_id'  => 7,
+			'is_draft' => 0,
+		];
+		$malformed_values   = [ 'frm_saving_draft' => new stdClass() ];
+		$this->assertSame( $malformed_values, $integration->capture_draft_transition( $malformed_values, 105 ) );
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 0,
+		];
+		$integration->on_update_success( 105, 7 );
+		$this->assertSame( 0, $observed );
+
+		$integration->entry = (object) [
+			'is_draft'       => 1,
+			'parent_item_id' => 0,
+		];
+		$this->assertSame( $values, $integration->capture_draft_transition( $values, 105 ) );
+
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 0,
+		];
+		$integration->on_update_success( 105, 7 );
+		$integration->on_update_success( 105, 7 );
+		$this->assertSame( 1, $observed );
+
+		$integration->entry = (object) [
+			'is_draft'       => 1,
+			'parent_item_id' => 0,
+		];
+		$integration->capture_draft_transition( [ 'frm_saving_draft' => 1 ], 106 );
+		$integration->entry = (object) [
+			'is_draft'       => 0,
+			'parent_item_id' => 0,
+		];
+		$integration->on_update_success( 106, 7 );
+		$this->assertSame( 1, $observed );
 	}
 
 	/**
