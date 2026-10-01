@@ -135,7 +135,6 @@ class PUM_Integration_Form_PirateForms extends PUM_Abstract_Integration_Form {
 			return;
 		}
 		$popup_id = self::get_popup_id();
-		self::increase_conversion( $popup_id );
 		pum_integrated_form_submission(
 			[
 				'popup_id'      => $popup_id,
