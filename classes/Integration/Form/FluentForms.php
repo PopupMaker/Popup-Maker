@@ -115,6 +115,7 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 				'popup_id'      => $popup_id,
 				'form_provider' => $this->key,
 				'form_id'       => $form_id,
+				'submission_id' => is_scalar( $submission_id ) ? $submission_id : null,
 			]
 		);
 	}
