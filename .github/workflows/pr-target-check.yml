@@ -13,11 +13,8 @@ permissions:
 jobs:
     redirect:
         runs-on: ubuntu-latest
-        if: >-
-          !(github.event.pull_request.head.repo.full_name == github.repository &&
-            startsWith(github.event.pull_request.head.ref, 'release/'))
         steps:
-            - name: Check for an authorized readme/assets PR
+            - name: Check for an authorized WordPress.org PR
               id: target
               uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
               with:
@@ -25,6 +22,12 @@ jobs:
                   script: |
                       const pull = context.payload.pull_request;
                       if (pull.head.repo?.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
+                        return 'retarget';
+                      }
+                      if (/^release\/[0-9]+\.[0-9]+\.[0-9]+$/.test(pull.head.ref)) {
+                        return 'allow';
+                      }
+                      if (!/^wordpress-org\/[a-z0-9][a-z0-9._-]*$/.test(pull.head.ref)) {
                         return 'retarget';
                       }
 
@@ -70,4 +73,4 @@ jobs:
                   gh pr edit "$PR_NUMBER" --repo "$REPO" --base develop
 
                   gh pr comment "$PR_NUMBER" --repo "$REPO" \
-                    --body "Heads up — this PR was retargeted to \`develop\`. Master is only updated via release merges."
+                    --body "Heads up — this PR was retargeted to \`develop\`. Master only accepts full releases from \`release/X.Y.Z\` or readme/assets-only updates from \`wordpress-org/<topic>\`."
