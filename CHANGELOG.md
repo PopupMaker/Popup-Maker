@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Loaded WPBakery Page Builder's generated styles when popup content is rendered outside the main page loop.
+
 **Developers**
 
 -   Improved Call to Action field schema support for add-ons.
