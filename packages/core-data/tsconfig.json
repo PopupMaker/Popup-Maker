@@ -5,11 +5,13 @@
 		"outDir": "build",
 		"declarationDir": "build-types",
 		"paths": {
-			"@popup-maker/i18n": [ "../i18n/src" ]
+			"@popup-maker/i18n": [ "../i18n/src" ],
+			"@popup-maker/utils": [ "../utils/src" ]
 		}
 	},
 	"include": [ "./src/**/*" ],
 	"references": [
+		{ "path": "../utils" },
 		{
 			"path": "../i18n"
 		}

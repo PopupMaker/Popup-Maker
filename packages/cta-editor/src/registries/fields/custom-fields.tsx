@@ -5,11 +5,7 @@ import { FieldWithError } from '../../components';
 
 import type { FieldProps } from '@popup-maker/fields';
 import type { CallToAction } from '@popup-maker/core-data';
-import {
-	getFieldDefaults,
-	getMissingFieldDefaults,
-	shouldHideField,
-} from './field-visibility';
+import { getFieldDefaults, shouldHideField } from './field-visibility';
 
 const { cta_types: callToActions } = window.popupMakerCtaEditor;
 
@@ -28,33 +24,6 @@ const getCtaFields = (
 };
 
 export const initCustomFields = () => {
-	// Materialize displayed defaults only when saving. This keeps dependency
-	// checks and persistence aligned without marking an untouched editor dirty.
-	addFilter(
-		'popupMaker.callToAction.prepareForSave',
-		'popup-maker/custom-field-defaults',
-		( callToAction: CallToAction ) => {
-			const settings = callToAction.settings ?? {};
-			const defaults = getFieldDefaults( getCtaFields( settings.type ) );
-			const missingDefaults = getMissingFieldDefaults(
-				settings,
-				defaults
-			);
-
-			if ( Object.keys( missingDefaults ).length === 0 ) {
-				return callToAction;
-			}
-
-			return {
-				...callToAction,
-				settings: {
-					...settings,
-					...missingDefaults,
-				},
-			};
-		}
-	);
-
 	// Initialize custom fields by adding them to the tab fields filter
 	addFilter(
 		'popupMaker.callToActionEditor.tabFields',
