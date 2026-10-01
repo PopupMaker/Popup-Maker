@@ -533,6 +533,9 @@ importers:
       '@popup-maker/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@popup-maker/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@wordpress/api-fetch':
         specifier: ^7.52.0
         version: 7.52.0
