@@ -62,6 +62,19 @@ class PUM_Admin_Settings_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * The assistive notifications preference clearly explains its scope.
+	 */
+	public function test_fields_contains_disable_notifications_setting() {
+		$field = PUM_Admin_Settings::get_field( 'disable_notifications' );
+
+		$this->assertIsArray( $field );
+		$this->assertSame( 'checkbox', $field['type'] );
+		$this->assertSame( 'Disable Popup Maker assistive notifications', $field['label'] );
+		$this->assertStringContainsString( 'quieter dashboard', $field['desc'] );
+		$this->assertStringContainsString( 'Critical error and warning notices will still appear.', $field['desc'] );
+	}
+
+	/**
 	 * The settings payload contains only the lazy viewer shell.
 	 */
 	public function test_css_viewer_does_not_embed_styles_eagerly() {
