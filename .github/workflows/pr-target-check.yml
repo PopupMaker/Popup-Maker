@@ -13,9 +13,6 @@ permissions:
 jobs:
     redirect:
         runs-on: ubuntu-latest
-        if: >-
-            !(github.event.pull_request.head.repo.full_name == github.repository &&
-              startsWith(github.event.pull_request.head.ref, 'release/'))
         steps:
             - name: Check for an authorized WordPress.org PR
               id: target
@@ -26,6 +23,9 @@ jobs:
                       const pull = context.payload.pull_request;
                       if (pull.head.repo?.full_name !== `${context.repo.owner}/${context.repo.repo}`) {
                         return 'retarget';
+                      }
+                      if (/^release\/[0-9]+\.[0-9]+\.[0-9]+$/.test(pull.head.ref)) {
+                        return 'allow';
                       }
                       if (!/^wordpress-org\/[a-z0-9][a-z0-9._-]*$/.test(pull.head.ref)) {
                         return 'retarget';

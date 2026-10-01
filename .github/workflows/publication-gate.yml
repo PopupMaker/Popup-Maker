@@ -59,7 +59,7 @@ jobs:
                       exit 1
                     fi
                     if [ -z "${CHANGED_FILES}" ] ||
-                      echo "${CHANGED_FILES}" | grep -Ev '^(readme\.txt|\.wordpress-org/)' >/dev/null; then
+                      echo "${CHANGED_FILES}" | grep -Ev '^(readme\.txt$|\.wordpress-org/)' >/dev/null; then
                       echo "WordPress.org publication branches may only change readme.txt and .wordpress-org assets."
                       exit 1
                     fi
