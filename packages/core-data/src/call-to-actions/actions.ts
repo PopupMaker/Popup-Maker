@@ -329,8 +329,9 @@ const entityActions = {
 			const action = 'updateCallToAction';
 
 			try {
-				const preparedCallToAction =
-					normalizeCallToActionDefaults( callToAction );
+				// Direct updates may be partial; only complete create/editor saves
+				// should materialize untouched defaults.
+				const preparedCallToAction = callToAction;
 
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
