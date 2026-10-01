@@ -64,6 +64,8 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 		$submission = PUM_Integrations::$form_submission;
 
 		$this->assertTrue( wp_is_uuid( $submission['submission_id'], 4 ) );
+		$this->assertNull( $submission['native_entry_id'] );
+		$this->assertSame( [], $submission['fields'] );
 		$this->assertNull( $submission['source_post_id'] );
 		$this->assertNull( $submission['source_url'] );
 		$this->assertSame( [], $submission['context'] );
@@ -235,10 +237,12 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 	 */
 	public function test_invalid_context_values_are_normalized() {
 		$this->context_filter = static function ( $args ) {
-			$args['submission_id']  = [];
-			$args['source_post_id'] = 'not-a-post';
-			$args['source_url']     = [];
-			$args['context']        = 'not-an-array';
+			$args['submission_id']   = [];
+			$args['native_entry_id'] = [];
+			$args['fields']          = 'not-an-array';
+			$args['source_post_id']  = 'not-a-post';
+			$args['source_url']      = [];
+			$args['context']         = 'not-an-array';
 
 			return $args;
 		};
@@ -249,9 +253,34 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 		$submission = PUM_Integrations::$form_submission;
 
 		$this->assertTrue( wp_is_uuid( $submission['submission_id'], 4 ) );
+		$this->assertNull( $submission['native_entry_id'] );
+		$this->assertSame( [], $submission['fields'] );
 		$this->assertNull( $submission['source_post_id'] );
 		$this->assertNull( $submission['source_url'] );
 		$this->assertSame( [], $submission['context'] );
+	}
+
+	/**
+	 * Invalid filters cannot erase authoritative provider evidence.
+	 */
+	public function test_invalid_filter_values_preserve_provider_evidence() {
+		$this->context_filter = static function ( $args ) {
+			$args['native_entry_id'] = [];
+			$args['fields']          = 'not-an-array';
+
+			return $args;
+		};
+		add_filter( 'pum_integrated_form_submission_args', $this->context_filter );
+
+		pum_integrated_form_submission(
+			[
+				'native_entry_id' => 'entry-42',
+				'fields'          => [ 'email' => 'person@example.test' ],
+			]
+		);
+
+		$this->assertSame( 'entry-42', PUM_Integrations::$form_submission['native_entry_id'] );
+		$this->assertSame( 'person@example.test', PUM_Integrations::$form_submission['fields']['email'] );
 	}
 
 	/**
@@ -296,6 +325,9 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 			'form_id'          => 4,
 			'form_instance_id' => 2,
 			'submission_id'    => 'entry-12',
+			'native_entry_id'  => 'entry-12',
+			'fields'           => [ 'email' => 'private@example.test' ],
+			'raw_fields'       => [ 'email' => 'raw-private@example.test' ],
 			'popup_id'         => 55,
 			'source_post_id'   => 78,
 			'source_url'       => 'https://example.com/guide/',
@@ -314,6 +346,11 @@ class FormSubmissionContext_Test extends WP_UnitTestCase {
 		$this->assertSame( 4, $submission['formId'] );
 		$this->assertSame( 2, $submission['formInstanceId'] );
 		$this->assertSame( 'entry-12', $submission['submissionId'] );
+		$this->assertArrayNotHasKey( 'native_entry_id', $submission );
+		$this->assertArrayNotHasKey( 'fields', $submission );
+		$this->assertArrayNotHasKey( 'raw_fields', $submission );
+		$this->assertNotContains( 'private@example.test', $submission, true );
+		$this->assertNotContains( 'raw-private@example.test', $submission, true );
 		$this->assertSame( 55, $submission['popupId'] );
 		$this->assertSame( 78, $submission['sourcePostId'] );
 		$this->assertSame( 'https://example.com/guide/', $submission['sourceUrl'] );
