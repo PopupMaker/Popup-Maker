@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
-"PO-Revision-Date: 2026-08-06 02:06+0000\n"
+"POT-Creation-Date: 2026-08-11T10:11:21+00:00\n"
+"PO-Revision-Date: 2026-08-11 10:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: el\n"
@@ -220,7 +220,7 @@ msgstr ""
 #: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
 #: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:303
 msgid "Learn more"
 msgstr "Μάθετε περισσότερα"
 
@@ -262,7 +262,7 @@ msgstr "ms"
 #: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
 #: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
 #: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
-#: templates/popup.php:59 dist/packages/admin-bar.js:1
+#: includes/functions/popups/template.php:82 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
 #: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
@@ -2934,16 +2934,29 @@ msgstr "Εισαγωγή από το Easy Modal v2"
 msgid "Debug logging is disabled."
 msgstr "Η καταγραφή αποσφαλμάτωσης είναι απενεργοποιημένη."
 
-#: classes/Analytics.php:335
+#: classes/Analytics.php:266
+msgid "Invalid analytics events payload."
+msgstr "Μη έγκυρο φορτίο συμβάντων αναλυτικών στοιχείων."
+
+#: classes/Analytics.php:320 classes/Analytics.php:327
+#: classes/Analytics.php:333
+msgid "Invalid analytics event parameters."
+msgstr "Μη έγκυρες παράμετροι συμβάντος αναλυτικών στοιχείων."
+
+#: classes/Analytics.php:398
 msgid "Event Type"
 msgstr "Τύπος συμβάντος"
 
-#: classes/Analytics.php:340
+#: classes/Analytics.php:403
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:52
 msgid "Popup ID"
 msgstr "Αναγνωριστικό αναδυόμενου παραθύρου"
 
-#: classes/Analytics.php:347
+#: classes/Analytics.php:410
+msgid "Analytics events (JSON or array)"
+msgstr "Συμβάντα αναλυτικών στοιχείων (JSON ή πίνακας)"
+
+#: classes/Analytics.php:414
 msgid "Event metadata (JSON or array)"
 msgstr "Μεταδεδομένα συμβάντος (JSON ή πίνακας)"
 
@@ -4306,6 +4319,7 @@ msgstr "Εξερευνήστε τα Προηγμένα Αναλυτικά"
 #: classes/Services/Notifications/FeatureAnnouncements.php:457
 #: classes/Services/Notifications/FeatureAnnouncements.php:484
 #: classes/Services/Notifications/FeatureAnnouncements.php:512
+#: classes/Telemetry.php:296
 msgid "Not now"
 msgstr "Όχι τώρα"
 
@@ -5045,26 +5059,31 @@ msgstr "Απενεργοποιημένο σε tablet:"
 msgid "Event: %s"
 msgstr "Συμβάν: %s"
 
-#: classes/Telemetry.php:264
-msgid "Help us make Popup Maker better"
-msgstr "Βοηθήστε μας να κάνουμε το Popup Maker καλύτερο"
-
-#: classes/Telemetry.php:267
-msgid ""
-"Help us prioritize the features that matter most by sharing anonymous usage "
-"stats. No visitor data or popup content is ever collected."
+#: classes/Telemetry.php:278
+msgid "The countdown to 50 billion popup views is on"
 msgstr ""
-"Βοηθήστε μας να ιεραρχήσουμε τις λειτουργίες που έχουν τη μεγαλύτερη "
-"σημασία, μοιράζοντας ανώνυμα στατιστικά χρήσης. Δεν συλλέγονται ποτέ "
-"δεδομένα επισκεπτών ή περιεχόμενο αναδυόμενων παραθύρων."
+"Η αντίστροφη μέτρηση για τις 50 δισεκατομμύρια προβολές αναδυόμενων "
+"παραθύρων ξεκίνησε"
 
-#: classes/Telemetry.php:276
-msgid "Allow"
-msgstr "Να επιτρέπεται"
+#: classes/Telemetry.php:281
+msgid ""
+"We're closing in on an estimated 50 billion popup views! Enable usage "
+"tracking to include your site's views in a more accurate estimate, show us "
+"which features matter most, and help us build even better ones. The more "
+"sites that join in, the sooner we can reach—and celebrate—the milestone "
+"together. No visitor data or popup content is collected."
+msgstr ""
+"Πλησιάζουμε μια εκτιμώμενη τιμή 50 δισεκατομμυρίων προβολών αναδυόμενων "
+"παραθύρων! Ενεργοποιήστε την παρακολούθηση χρήσης για να συμπεριληφθούν οι "
+"προβολές του ιστότοπού σας σε μια πιο ακριβή εκτίμηση, να μας δείξετε ποιες "
+"δυνατότητες έχουν τη μεγαλύτερη σημασία και να μας βοηθήσετε να "
+"δημιουργήσουμε ακόμα καλύτερες. Όσο περισσότεροι ιστότοποι συμμετέχουν, τόσο "
+"πιο σύντομα μπορούμε να φτάσουμε —και να γιορτάσουμε— αυτό το ορόσημο μαζί. "
+"Δεν συλλέγονται δεδομένα επισκεπτών ή περιεχόμενο αναδυόμενων παραθύρων."
 
-#: classes/Telemetry.php:282
-msgid "Do not allow"
-msgstr "Να μην επιτρέπεται"
+#: classes/Telemetry.php:290
+msgid "Count my popup views"
+msgstr "Καταμέτρησε τις προβολές των αναδυόμενων παραθύρων μου"
 
 #. translators: 1. Trigger name.
 #: classes/Triggers.php:94

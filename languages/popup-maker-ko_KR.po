@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
-"PO-Revision-Date: 2026-08-06 02:05+0000\n"
+"POT-Creation-Date: 2026-08-11T10:11:21+00:00\n"
+"PO-Revision-Date: 2026-08-11 10:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ko-KR\n"
@@ -210,7 +210,7 @@ msgstr ""
 #: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
 #: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:303
 msgid "Learn more"
 msgstr "자세히 알아보기"
 
@@ -250,7 +250,7 @@ msgstr "ms"
 #: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
 #: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
 #: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
-#: templates/popup.php:59 dist/packages/admin-bar.js:1
+#: includes/functions/popups/template.php:82 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
 #: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
@@ -2821,16 +2821,29 @@ msgstr "Easy Modal v2에서 가져오기"
 msgid "Debug logging is disabled."
 msgstr "디버그 로깅이 비활성화되었습니다."
 
-#: classes/Analytics.php:335
+#: classes/Analytics.php:266
+msgid "Invalid analytics events payload."
+msgstr "잘못된 분석 이벤트 페이로드입니다."
+
+#: classes/Analytics.php:320 classes/Analytics.php:327
+#: classes/Analytics.php:333
+msgid "Invalid analytics event parameters."
+msgstr "잘못된 분석 이벤트 매개변수입니다."
+
+#: classes/Analytics.php:398
 msgid "Event Type"
 msgstr "이벤트 유형"
 
-#: classes/Analytics.php:340
+#: classes/Analytics.php:403
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:52
 msgid "Popup ID"
 msgstr "팝업 ID"
 
-#: classes/Analytics.php:347
+#: classes/Analytics.php:410
+msgid "Analytics events (JSON or array)"
+msgstr "분석 이벤트(JSON 또는 배열)"
+
+#: classes/Analytics.php:414
 msgid "Event metadata (JSON or array)"
 msgstr "이벤트 메타데이터(JSON 또는 배열)"
 
@@ -4130,6 +4143,7 @@ msgstr "고급 분석 살펴보기"
 #: classes/Services/Notifications/FeatureAnnouncements.php:457
 #: classes/Services/Notifications/FeatureAnnouncements.php:484
 #: classes/Services/Notifications/FeatureAnnouncements.php:512
+#: classes/Telemetry.php:296
 msgid "Not now"
 msgstr "나중에"
 
@@ -4828,25 +4842,27 @@ msgstr "태블릿 비활성화:"
 msgid "Event: %s"
 msgstr "이벤트: %s"
 
-#: classes/Telemetry.php:264
-msgid "Help us make Popup Maker better"
-msgstr "Popup Maker를 더 좋게 만드는 데 도움을 주세요"
+#: classes/Telemetry.php:278
+msgid "The countdown to 50 billion popup views is on"
+msgstr "50억 번의 팝업 조회까지의 카운트다운이 시작되었습니다"
 
-#: classes/Telemetry.php:267
+#: classes/Telemetry.php:281
 msgid ""
-"Help us prioritize the features that matter most by sharing anonymous usage "
-"stats. No visitor data or popup content is ever collected."
+"We're closing in on an estimated 50 billion popup views! Enable usage "
+"tracking to include your site's views in a more accurate estimate, show us "
+"which features matter most, and help us build even better ones. The more "
+"sites that join in, the sooner we can reach—and celebrate—the milestone "
+"together. No visitor data or popup content is collected."
 msgstr ""
-"익명 사용 통계를 공유하여 가장 중요한 기능의 우선순위를 정하는 데 도움을 주세"
-"요. 방문자 데이터나 팝업 콘텐츠는 절대 수집되지 않습니다."
+"예상되는 50억 번의 팝업 조회에 가까워지고 있습니다! 사용량 추적을 활성화하여 "
+"더 정확한 추정에 사이트의 조회수를 포함하고, 어떤 기능이 가장 중요한지 알려 "
+"주며, 더 나은 기능을 만드는 데 도움을 주세요. 참여하는 사이트가 많을수록 이 "
+"이정표에 더 빨리 도달하고 함께 축하할 수 있습니다. 방문자 데이터나 팝업 콘텐"
+"츠는 수집되지 않습니다."
 
-#: classes/Telemetry.php:276
-msgid "Allow"
-msgstr "허용"
-
-#: classes/Telemetry.php:282
-msgid "Do not allow"
-msgstr "허용하지 않음"
+#: classes/Telemetry.php:290
+msgid "Count my popup views"
+msgstr "내 팝업 조회수 집계하기"
 
 #. translators: 1. Trigger name.
 #: classes/Triggers.php:94
