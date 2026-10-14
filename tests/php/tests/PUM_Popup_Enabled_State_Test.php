@@ -88,4 +88,68 @@ class PUM_Popup_Enabled_State_Test extends WP_UnitTestCase {
 			$post = $original_post;
 		}
 	}
+
+	/**
+	 * A stale native Custom Fields submission cannot undo a saved toggle.
+	 *
+	 * @dataProvider stored_enabled_states
+	 * @param string $enabled Current stored state.
+	 * @param string $stale   Previous state submitted by the editor.
+	 */
+	public function test_native_custom_fields_save_preserves_enabled_state( $enabled, $stale ) {
+		require_once ABSPATH . 'wp-admin/includes/post.php';
+		global $post;
+		$original_post = $post;
+		$original_user = get_current_user_id();
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		$id = self::factory()->post->create(
+			[
+				'post_type'   => 'popup',
+				'post_status' => 'publish',
+			]
+		);
+		update_post_meta( $id, 'enabled', $enabled );
+		$post = get_post( $id );
+
+		try {
+			$meta_id = null;
+			foreach ( has_meta( $id ) as $meta ) {
+				if ( 'enabled' === $meta['meta_key'] ) {
+					$meta_id = $meta['meta_id'];
+					break;
+				}
+			}
+			$this->assertNotNull( $meta_id );
+			$result = edit_post(
+				[
+					'post_ID'     => $id,
+					'post_type'   => 'popup',
+					'post_status' => 'publish',
+					'meta'        => [
+						$meta_id => [
+							'key'   => 'enabled',
+							'value' => $stale,
+						],
+					],
+				]
+			);
+			$this->assertSame( $id, $result );
+			$this->assertSame( $enabled, get_post_meta( $id, 'enabled', true ) );
+		} finally {
+			$post = $original_post;
+			wp_set_current_user( $original_user );
+		}
+	}
+
+	/**
+	 * Enabled and disabled values paired with their stale opposites.
+	 *
+	 * @return array<string,array{string,string}>
+	 */
+	public function stored_enabled_states() {
+		return [
+			'enabled'  => [ '1', '0' ],
+			'disabled' => [ '0', '1' ],
+		];
+	}
 }
