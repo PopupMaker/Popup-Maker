@@ -11,6 +11,14 @@
 class PUM_Popup_Enabled_State_Test extends WP_UnitTestCase {
 
 	/**
+	 * Initialize the admin hooks normally registered by the popup screen.
+	 */
+	public function setUp(): void {
+		parent::setUp();
+		PUM_Admin_Popups::init();
+	}
+
+	/**
 	 * Only the popup editor's enabled flag receives extra protection.
 	 *
 	 * @dataProvider protection_cases
