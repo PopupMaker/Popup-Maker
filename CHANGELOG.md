@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed the Popup Enabled toggle reverting after updating a popup in the classic editor when WordPress Custom Fields were present.
+
 **Developers**
 
 -   Improved Call to Action field schema support for add-ons.
