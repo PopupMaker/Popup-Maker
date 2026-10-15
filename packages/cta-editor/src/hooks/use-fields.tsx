@@ -8,7 +8,6 @@ import type { EditableCta } from '@popup-maker/core-data';
 export type FieldDef = {
 	component: JSX.Element;
 	id: keyof EditableCta[ 'settings' ];
-	errorFieldIds?: Array< keyof EditableCta[ 'settings' ] >;
 	priority: number;
 };
 

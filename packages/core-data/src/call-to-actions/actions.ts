@@ -4,7 +4,7 @@ import { compare as jsonpatchCompare } from 'fast-json-patch';
 import { __, sprintf } from '@popup-maker/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 import { decodeEntities } from '@wordpress/html-entities';
-import { applyFilters } from '@wordpress/hooks';
+import { getFieldDefaults, getMissingFieldDefaults } from '@popup-maker/utils';
 
 import { ACTION_TYPES, NOTICE_CONTEXT } from './constants';
 
@@ -36,11 +36,39 @@ const {
 	INVALIDATE_RESOLUTION,
 } = ACTION_TYPES;
 
-/** Apply editor-provided normalization immediately before validation and I/O. */
-const prepareCallToActionForSave = < T extends Partial< EditableCta > >(
+/** Persist untouched schema defaults using the same generic normalization as controls. */
+const normalizeCallToActionDefaults = < T extends Partial< EditableCta > >(
 	callToAction: T
-): T =>
-	applyFilters( 'popupMaker.callToAction.prepareForSave', callToAction ) as T;
+): T => {
+	const settings = callToAction.settings;
+	if ( ! settings || typeof window === 'undefined' ) {
+		return callToAction;
+	}
+	const editor = (
+		window as unknown as {
+			popupMakerCtaEditor?: {
+				cta_types?: Record<
+					string,
+					{
+						key: string;
+						fields?: Record< string, Record< string, unknown > >;
+					}
+				>;
+			};
+		}
+	 ).popupMakerCtaEditor;
+	const schema =
+		Object.values( editor?.cta_types ?? {} ).find(
+			( type ) => type.key === settings.type
+		)?.fields ?? {};
+	const defaults = getMissingFieldDefaults(
+		settings,
+		getFieldDefaults( schema )
+	);
+	return Object.keys( defaults ).length
+		? ( { ...callToAction, settings: { ...settings, ...defaults } } as T )
+		: callToAction;
+};
 
 /**
  * Helper function to handle field-specific validation errors using WordPress notices
@@ -165,7 +193,7 @@ const entityActions = {
 				} );
 
 				const { id, ...rawCta } = callToAction;
-				const newCta = prepareCallToActionForSave( rawCta );
+				const newCta = normalizeCallToActionDefaults( rawCta );
 
 				if ( validate ) {
 					const validation = validateCallToAction( newCta );
@@ -289,23 +317,21 @@ const entityActions = {
 	 * @param {PartialEditableCta} callToAction The entity to update.
 	 * @param {boolean}            validate     An optional validation function.
 	 * @param {boolean}            withNotices  Whether to show notices.
-	 * @param {boolean}            prepare      Whether to run save preparation.
 	 * @return {Promise<CallToAction<'edit'> | false>} The updated entity or false if validation fails.
 	 */
 	updateCallToAction:
 		(
 			callToAction: PartialEditableCta,
 			validate: boolean = true,
-			withNotices: boolean = true,
-			prepare: boolean = true
+			withNotices: boolean = true
 		): ThunkAction< CallToAction< 'edit' > | false > =>
 		async ( { select, dispatch, registry } ) => {
 			const action = 'updateCallToAction';
 
 			try {
-				const preparedCallToAction = prepare
-					? prepareCallToActionForSave( callToAction )
-					: callToAction;
+				// Direct updates may be partial; only complete create/editor saves
+				// should materialize untouched defaults.
+				const preparedCallToAction = callToAction;
 
 				dispatch( {
 					type: CHANGE_ACTION_STATUS,
@@ -742,7 +768,7 @@ const editorActions = {
 					return false;
 				}
 				const preparedCallToAction =
-					prepareCallToActionForSave( editedCallToAction );
+					normalizeCallToActionDefaults( editedCallToAction );
 
 				if ( preparedCallToAction && validate ) {
 					const validation =
@@ -776,8 +802,7 @@ const editorActions = {
 				const result = await dispatch.updateCallToAction(
 					preparedCallToAction,
 					false,
-					withNotices,
-					false
+					withNotices
 				);
 
 				if ( result ) {
