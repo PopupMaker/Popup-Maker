@@ -58,12 +58,14 @@ class Brizy extends PageBuilder {
 	}
 
 	/**
-	 * Opt popups into Brizy's supported post types for this request.
+	 * Register Brizy-specific hooks.
+	 *
+	 * Popup support itself is left to Brizy's own supported-post-types setting,
+	 * since popups are already registered public and eligible there.
 	 *
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_filter( 'brizy_supported_post_types', [ $this, 'add_popup_post_type' ] );
 		add_action( 'save_post_popup', [ $this, 'remember_saved_document' ], PHP_INT_MAX, 3 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'add_canvas_styles' ], 12 );
 	}
@@ -139,25 +141,6 @@ class Brizy extends PageBuilder {
 			'popup-maker-builder-preview',
 			'body.pum-builder-preview.brz-ed .pum-container .brz-ed-wrap-block-wrap--first{height:auto!important;}'
 		);
-	}
-
-	/**
-	 * Add popups to Brizy's runtime post type list.
-	 *
-	 * @param mixed $post_types Supported post types.
-	 *
-	 * @return mixed
-	 */
-	public function add_popup_post_type( $post_types ) {
-		if ( ! is_array( $post_types ) ) {
-			return $post_types;
-		}
-
-		if ( ! in_array( 'popup', $post_types, true ) ) {
-			$post_types[] = 'popup';
-		}
-
-		return $post_types;
 	}
 
 	/**
