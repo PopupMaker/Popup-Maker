@@ -317,6 +317,7 @@ jobs:
         needs: [authorize, build, github-release]
         runs-on: ubuntu-latest
         env:
+            CANONICAL_BUILD_DIR: ${{ github.workspace }}/.canonical-build/popup-maker
             BUILD_DIR: ${{ github.workspace }}/.wordpress-org-build/popup-maker
 
         steps:
@@ -336,9 +337,18 @@ jobs:
                   ZIP_NAME: ${{ needs.build.outputs.zip_name }}
               run: |
                   node bin/verify-release-artifact.js "${ZIP_NAME}"
-                  mkdir -p "$(dirname "${BUILD_DIR}")"
-                  unzip -o "${ZIP_NAME}" -d "$(dirname "${BUILD_DIR}")"
-                  test -f "${BUILD_DIR}/popup-maker.php"
+                  mkdir -p "$(dirname "${CANONICAL_BUILD_DIR}")"
+                  unzip -o "${ZIP_NAME}" -d "$(dirname "${CANONICAL_BUILD_DIR}")"
+                  test -f "${CANONICAL_BUILD_DIR}/popup-maker.php"
+
+            - name: Prepare and verify WordPress.org artifact
+              run: |
+                  mkdir -p "${BUILD_DIR}"
+                  rsync -a --delete \
+                    --exclude-from='.wordpress-org-excludes' \
+                    "${CANONICAL_BUILD_DIR}/" "${BUILD_DIR}/"
+                  node bin/verify-wordpress-org-artifact.js \
+                    "${BUILD_DIR}" '.wordpress-org-excludes'
 
             - name: Run WordPress Plugin Check
               uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1
@@ -480,8 +490,11 @@ jobs:
 
                   MERGE_SHA=""
                   for _ in {1..30}; do
-                    MERGE_SHA=$(gh api "repos/${REPO}/git/ref/pull/${PR_NUMBER}/merge" --jq '.object.sha' 2>/dev/null || true)
-                    [ -n "${MERGE_SHA}" ] && break
+                    MERGE_SHA=$(gh api "repos/${REPO}/git/ref/pull/${PR_NUMBER}/merge" --jq '.object.sha // empty' 2>/dev/null | tail -n 1 || true)
+                    if [[ "${MERGE_SHA}" =~ ^[0-9a-f]{40}$ ]]; then
+                      break
+                    fi
+                    MERGE_SHA=""
                     sleep 2
                   done
                   if [ -z "${MERGE_SHA}" ]; then
@@ -562,12 +575,8 @@ jobs:
             ]
         if: >-
             always() &&
-            needs.github-release.result == 'success' &&
             needs.wordpress-org.result == 'success' &&
-            needs.edd-webhook.result == 'success' &&
-            needs.google-drive-upload.result == 'success' &&
-            needs.changelog.result == 'success' &&
-            needs.back-sync.result == 'success'
+            needs.edd-webhook.result == 'success'
         runs-on: ubuntu-latest
         steps:
             - name: Send success notification
@@ -576,15 +585,39 @@ jobs:
                   VERSION: ${{ needs.authorize.outputs.version }}
                   RELEASE_URL: ${{ needs.github-release.outputs.release_url }}
                   DRIVE_URL: ${{ needs.google-drive-upload.outputs.download_link }}
+                  DRIVE_RESULT: ${{ needs.google-drive-upload.result }}
+                  CHANGELOG_RESULT: ${{ needs.changelog.result }}
+                  BACK_SYNC_RESULT: ${{ needs.back-sync.result }}
               run: |
                   if [ -z "${SLACK_WEBHOOK_URL}" ]; then
                     exit 0
+                  fi
+                  STATUS_LINES=$'✅ WordPress.org\n✅ EDD\n✅ GitHub release'
+                  FOLLOW_UP=""
+                  if [ "${DRIVE_RESULT}" = 'success' ]; then
+                    STATUS_LINES+=$'\n✅ Google Drive'
+                  else
+                    FOLLOW_UP+=$'\n• Google Drive ('"${DRIVE_RESULT}"$')'
+                  fi
+                  if [ "${CHANGELOG_RESULT}" = 'success' ]; then
+                    STATUS_LINES+=$'\n✅ Changelog draft'
+                  else
+                    FOLLOW_UP+=$'\n• Changelog draft ('"${CHANGELOG_RESULT}"$')'
+                  fi
+                  if [ "${BACK_SYNC_RESULT}" != 'success' ]; then
+                    FOLLOW_UP+=$'\n• Back-sync PR ('"${BACK_SYNC_RESULT}"$')'
+                  fi
+                  ADDENDUM=""
+                  if [ -n "${FOLLOW_UP}" ]; then
+                    ADDENDUM=$'\n\n⚠️ Follow-up needed:'"${FOLLOW_UP}"
                   fi
                   PAYLOAD=$(jq -n \
                     --arg version "${VERSION}" \
                     --arg release_url "${RELEASE_URL}" \
                     --arg drive_url "${DRIVE_URL}" \
-                    '{text: ("🚀 *Popup Maker " + $version + " released*\n\n✅ GitHub release\n✅ WordPress.org\n✅ EDD\n✅ Google Drive\n✅ Changelog draft\n\n<" + $release_url + "|View release>" + (if $drive_url != "" then " · <" + $drive_url + "|Download ZIP>" else "" end)), username: "Release Bot", icon_emoji: ":package:"}')
+                    --arg status_lines "${STATUS_LINES}" \
+                    --arg addendum "${ADDENDUM}" \
+                    '{text: ("🚀 *Popup Maker " + $version + " released*\n\n" + $status_lines + $addendum + "\n\n<" + $release_url + "|View release>" + (if $drive_url != "" then " · <" + $drive_url + "|Download ZIP>" else "" end)), username: "Release Bot", icon_emoji: ":package:"}')
                   curl -sS --fail -X POST "${SLACK_WEBHOOK_URL}" \
                     -H 'Content-Type: application/json' \
                     -d "${PAYLOAD}"
@@ -605,14 +638,8 @@ jobs:
         if: >-
             always() &&
             needs.authorize.result != 'skipped' &&
-            (needs.authorize.result == 'failure' ||
-             needs.build.result == 'failure' ||
-             needs.github-release.result == 'failure' ||
-             needs.wordpress-org.result == 'failure' ||
-             needs.edd-webhook.result == 'failure' ||
-             needs.google-drive-upload.result == 'failure' ||
-             needs.changelog.result == 'failure' ||
-             needs.back-sync.result == 'failure')
+            !(needs.wordpress-org.result == 'success' &&
+              needs.edd-webhook.result == 'success')
         runs-on: ubuntu-latest
         steps:
             - name: Send failure notification
