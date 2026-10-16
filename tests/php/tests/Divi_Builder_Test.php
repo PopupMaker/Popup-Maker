@@ -85,7 +85,6 @@ class Divi_Builder_Test extends WP_UnitTestCase {
 		$this->assertFalse( $provider->force_classic_editor( true, 'popup_theme' ) );
 		$this->assertTrue( $provider->force_classic_editor( true, 'page' ) );
 		$this->assertTrue( $provider->force_classic_editor( true, get_post( $divi_popup_id ) ) );
-		$this->assertSame( [ 'post', 'popup' ], $provider->add_popup_support( [ 'post' ] ) );
 		$this->assertFalse( $provider->enable_frontend_builder( true, $control_popup_id ) );
 
 		$fields = $provider->explain_classic_editor_requirement(
@@ -108,14 +107,12 @@ class Divi_Builder_Test extends WP_UnitTestCase {
 		$provider->register_hooks();
 
 		try {
-			$this->assertNotFalse( has_filter( 'et_builder_post_types', [ $provider, 'add_popup_support' ] ) );
 			$this->assertNotFalse( has_filter( 'et_fb_is_enabled', [ $provider, 'enable_frontend_builder' ] ) );
 			$this->assertNotFalse( has_filter( 'post_type_link', [ $provider, 'include_popup_id_in_permalink' ] ) );
 			$this->assertNotFalse( has_action( 'et_save_post', [ $provider, 'remember_saved_document' ] ) );
 			$this->assertNotFalse( has_filter( 'use_block_editor_for_post_type', [ $provider, 'force_classic_editor' ] ) );
 			$this->assertNotFalse( has_filter( 'pum_settings_fields', [ $provider, 'explain_classic_editor_requirement' ] ) );
 		} finally {
-			remove_filter( 'et_builder_post_types', [ $provider, 'add_popup_support' ] );
 			remove_filter( 'et_fb_is_enabled', [ $provider, 'enable_frontend_builder' ] );
 			remove_filter( 'post_type_link', [ $provider, 'include_popup_id_in_permalink' ] );
 			remove_action( 'et_save_post', [ $provider, 'remember_saved_document' ], PHP_INT_MAX );

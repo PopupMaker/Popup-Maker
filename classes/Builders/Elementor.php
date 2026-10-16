@@ -45,10 +45,13 @@ class Elementor extends PageBuilder {
 	/**
 	 * Register Elementor-specific hooks.
 	 *
+	 * Popup support itself is left to Elementor's own "Post Types" setting
+	 * (`elementor_cpt_support`), since popups are already registered public and
+	 * pass Elementor's own eligibility check for that setting.
+	 *
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_post_type_support( 'popup', 'elementor' );
 		add_filter( 'elementor/document/urls/wp_preview', [ $this, 'filter_preview_url' ], 10, 2 );
 		add_action( 'elementor/editor/after_save', [ $this, 'remember_saved_document' ], 10, 2 );
 		add_action( 'template_redirect', [ $this, 'disable_canvas_content_filter' ], 11 );
