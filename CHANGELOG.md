@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Fixes**
+
+-   Fixed the Popup Enabled toggle reverting after updating a popup in the classic editor when WordPress Custom Fields were present.
+
 **Developers**
 
 -   Normalized extension field defaults consistently between display and saving.
