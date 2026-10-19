@@ -527,9 +527,12 @@ class PUM_Integrations {
 		}
 
 		if ( ! empty( self::$form_submission ) ) {
+			$frontend_submission = self::$form_submission;
+			unset( $frontend_submission['fields'], $frontend_submission['raw_fields'], $frontend_submission['native_entry_id'] );
+
 			// Remap values from PHP underscore_case to JS camelCase
 			$vars['form_submission'] = PUM_Utils_Array::remap_keys(
-				self::$form_submission,
+				$frontend_submission,
 				[
 					'form_provider'    => 'formProvider',
 					'form_id'          => 'formId',

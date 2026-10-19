@@ -106,12 +106,18 @@ class PUM_Integration_Form_FluentForms extends PUM_Abstract_Integration_Form {
 			$form_id = $form->attributes->id;
 		}
 
+		$native_entry_id = is_string( $submission_id ) || is_int( $submission_id ) ? $submission_id : null;
+		$source_url      = wp_get_raw_referer();
+
 		pum_integrated_form_submission(
 			[
-				'popup_id'      => $popup_id,
-				'form_provider' => $this->key,
-				'form_id'       => $form_id,
-				'submission_id' => is_scalar( $submission_id ) ? $submission_id : null,
+				'popup_id'        => $popup_id,
+				'form_provider'   => $this->key,
+				'form_id'         => $form_id,
+				'submission_id'   => $native_entry_id,
+				'native_entry_id' => $native_entry_id,
+				'fields'          => is_array( $form_data ) ? $form_data : [],
+				'source_url'      => $source_url ? $source_url : null,
 			]
 		);
 	}

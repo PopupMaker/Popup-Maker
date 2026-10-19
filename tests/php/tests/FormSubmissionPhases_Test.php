@@ -24,6 +24,7 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 	public function tearDown(): void {
 		PUM_Integrations::$form_submission = null;
 		unset( $_REQUEST['pum_form_popup_id'] );
+		unset( $_REQUEST['_wp_http_referer'] );
 		unset( $_REQUEST['action'] );
 		unset( $_POST['gform_ajax'] );
 
@@ -220,45 +221,61 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			]
 		);
+		$source_post_id                = self::factory()->post->create();
 		$_REQUEST['pum_form_popup_id'] = $popup_id;
+		$_REQUEST['_wp_http_referer']  = get_permalink( $source_post_id );
 		$tracking_service              = new \PopupMaker\Services\FormConversionTracking( new stdClass() );
 		$tracking_service->reset_site_count();
 		$tracking_service->reset_popup_count( $popup_id );
 		$tracking_service->init();
 
-		$observed    = null;
-		$action_runs = 0;
+		$observed    = [];
+		$action_args = [];
 		add_action(
 			'pum_integrated_form_submission',
 			static function ( $args ) use ( &$observed ) {
-				$observed = $args;
+				$observed[] = $args;
 			}
 		);
 		add_action(
 			'pum_integrated_form_submission_actions',
-			static function () use ( &$action_runs ) {
-				++$action_runs;
+			static function ( $args ) use ( &$action_args ) {
+				$action_args[] = $args;
 			}
 		);
 
 		$integration = new PUM_Integration_Form_FluentForms();
 		$integration->on_success(
 			'entry-91',
-			[],
+			[
+				'email' => 'person@example.test',
+				'name'  => [
+					'first' => 'Ada',
+					'last'  => 'Lovelace',
+				],
+			],
 			(object) [ 'attributes' => (object) [ 'id' => 7 ] ]
 		);
 
-		$this->assertSame( 'entry-91', $observed['submission_id'] );
-		$this->assertTrue( $observed['ajax'] );
+		$this->assertCount( 1, $observed );
+		$this->assertCount( 1, $action_args );
+		$submission = $observed[0];
+		$this->assertSame( 'entry-91', $submission['submission_id'] );
+		$this->assertSame( 'entry-91', $submission['native_entry_id'] );
+		$this->assertSame( 'person@example.test', $submission['fields']['email'] );
+		$this->assertSame( 'Ada', $submission['fields']['name']['first'] );
+		$this->assertSame( get_permalink( $source_post_id ), $submission['source_url'] );
+		$this->assertSame( $source_post_id, $submission['source_post_id'] );
+		$this->assertSame( $submission, $action_args[0] );
+		$this->assertTrue( $submission['ajax'] );
 		$this->assertSame(
 			[
 				'actions'  => true,
 				'tracking' => false,
 				'frontend' => false,
 			],
-			$observed['phases']
+			$submission['phases']
 		);
-		$this->assertSame( 1, $action_runs );
 		$this->assertNull( PUM_Integrations::$form_submission );
 		$this->assertSame( 0, (int) get_post_meta( $popup_id, 'popup_conversion_count', true ) );
 		$this->assertSame( 0, $tracking_service->get_site_count() );
