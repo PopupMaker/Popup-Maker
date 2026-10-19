@@ -14,6 +14,13 @@
 class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form {
 
 	/**
+	 * Draft entries awaiting a successful update in the current request.
+	 *
+	 * @var array<int,bool>
+	 */
+	private $draft_transitions = [];
+
+	/**
 	 * Unique key identifier for this provider.
 	 *
 	 * @var string
@@ -21,12 +28,12 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	public $key = 'formidableforms';
 
 	/**
-	 * Only used to hook in a custom action for non AJAX based submissions.
-	 *
-	 * Could be used for other initiations as well where needed.
+	 * Register native success hooks for new and resumed submissions.
 	 */
 	public function __construct() {
-		add_action( 'frm_after_create_entry', [ $this, 'on_success' ], 1, 2 );
+		add_action( 'frm_after_create_entry', [ $this, 'on_success' ], 10, 3 );
+		add_filter( 'frm_pre_update_entry', [ $this, 'capture_draft_transition' ], 9, 2 );
+		add_action( 'frm_after_update_entry', [ $this, 'on_update_success' ], 10, 2 );
 	}
 
 	/**
@@ -88,12 +95,13 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 	/**
 	 * Hooks in a success functions specific to this provider for non AJAX submission handling.
 	 *
-	 * @param int $entry_id The ID of the entry added.
-	 * @param int $form_id The ID of the form.
+	 * @param int   $entry_id The ID of the entry added.
+	 * @param int   $form_id  The ID of the form.
+	 * @param array $args     Provider callback context.
 	 */
-	public function on_success( $entry_id, $form_id ) {
+	public function on_success( $entry_id, $form_id, $args = [] ) {
 
-		if ( ! $this->should_process_submission() ) {
+		if ( ! $this->should_process_submission() || ! $this->is_successful_entry( $entry_id, $args ) ) {
 			return;
 		}
 
@@ -114,6 +122,97 @@ class PUM_Integration_Form_FormidableForms extends PUM_Abstract_Integration_Form
 				'ajax'          => $is_ajax,
 			]
 		);
+	}
+
+	/**
+	 * Remember a frontend draft-to-submitted transition before Formidable persists it.
+	 *
+	 * @param mixed $values   Updated entry values.
+	 * @param mixed $entry_id Native entry ID.
+	 * @return mixed
+	 */
+	public function capture_draft_transition( $values, $entry_id ) {
+		$normalized_id = $this->normalize_entry_id( $entry_id );
+		$is_admin      = is_callable( [ 'FrmAppHelper', 'is_admin' ] ) && FrmAppHelper::is_admin();
+		if ( null === $normalized_id || ! is_array( $values ) || $is_admin ) {
+			return $values;
+		}
+
+		unset( $this->draft_transitions[ $normalized_id ] );
+
+		$draft_marker = isset( $values['frm_saving_draft'] ) ? $values['frm_saving_draft'] : 0;
+		if ( ! is_scalar( $draft_marker ) || 1 === (int) $draft_marker || ! empty( $values['is_draft'] ) ) {
+			return $values;
+		}
+
+		$entry = $this->get_entry( $normalized_id );
+		if ( is_object( $entry ) && ! empty( $entry->is_draft ) && empty( $entry->parent_item_id ) ) {
+			$this->draft_transitions[ $normalized_id ] = true;
+		}
+
+		return $values;
+	}
+
+	/**
+	 * Normalize a resumed draft after Formidable has persisted its submitted state.
+	 *
+	 * @param mixed $entry_id Native entry ID.
+	 * @param mixed $form_id  Native form ID.
+	 * @return void
+	 */
+	public function on_update_success( $entry_id, $form_id ) {
+		$normalized_id = $this->normalize_entry_id( $entry_id );
+		if ( null === $normalized_id || empty( $this->draft_transitions[ $normalized_id ] ) ) {
+			return;
+		}
+
+		unset( $this->draft_transitions[ $normalized_id ] );
+		$this->on_success( $normalized_id, $form_id );
+	}
+
+	/**
+	 * Confirm this is the submitted parent entry rather than a draft or repeater child.
+	 *
+	 * @param int   $entry_id The ID of the entry added.
+	 * @param mixed $args     Provider callback context.
+	 * @return bool
+	 */
+	protected function is_successful_entry( $entry_id, $args ) {
+		$entry_id = $this->normalize_entry_id( $entry_id );
+		$args     = is_array( $args ) ? $args : [];
+		if ( null === $entry_id || ! empty( $args['is_child'] ) ) {
+			return false;
+		}
+
+		$entry = $this->get_entry( $entry_id );
+
+		return is_object( $entry )
+			&& empty( $entry->is_draft )
+			&& empty( $entry->parent_item_id );
+	}
+
+	/**
+	 * Normalize a native positive-integer entry ID.
+	 *
+	 * @param mixed $entry_id Entry ID.
+	 * @return int|null
+	 */
+	private function normalize_entry_id( $entry_id ) {
+		if ( ! ( is_int( $entry_id ) || ( is_string( $entry_id ) && ctype_digit( $entry_id ) ) ) || (int) $entry_id < 1 ) {
+			return null;
+		}
+
+		return (int) $entry_id;
+	}
+
+	/**
+	 * Load the native entry for submission-state verification.
+	 *
+	 * @param int $entry_id Entry ID.
+	 * @return object|null
+	 */
+	protected function get_entry( $entry_id ) {
+		return is_callable( [ 'FrmEntry', 'getOne' ] ) ? FrmEntry::getOne( $entry_id ) : null;
 	}
 
 	/**
