@@ -494,26 +494,25 @@ class PUM_Modules_Reviews_Test extends WP_UnitTestCase {
 
 		$this->assertSame( 'core', $context['product'] );
 		$this->assertSame( [ 'core' ], array_keys( $destinations ) );
-		$this->assertSame( 'Leave a review', $destinations['core']['label'] );
+		$this->assertSame( 'Ok, you deserve it', $destinations['core']['label'] );
 		$this->assertSame( 'https://wordpress.org/support/plugin/popup-maker/reviews/#new-post', $destinations['core']['url'] );
 		$this->assertSame( 'am_now_core', $destinations['core']['reason'] );
 	}
 
 	/**
-	 * Review messaging connects honest review requests to meaningful outcomes.
+	 * Review messaging uses the previous five-star request copy.
 	 */
-	public function test_review_messaging_is_outcome_oriented() {
+	public function test_review_messaging_uses_previous_copy() {
 		$alerts        = PUM_Modules_Reviews::review_alert( [] );
 		$alert         = $alerts[0];
 		$time_trigger  = PUM_Modules_Reviews::triggers( 'time_installed', 'one_week' );
 		$usage_trigger = PUM_Modules_Reviews::triggers( 'open_count', '100_opens' );
 
-		$this->assertStringContainsString( 'Is Popup Maker helping you grow?', $alert['title'] );
-		$this->assertStringContainsString( 'meaningful conversions', $time_trigger['message'] );
-		$this->assertStringContainsString( 'meaningful results', $usage_trigger['message'] );
-		$this->assertStringContainsString( 'honest review', $time_trigger['message'] );
-		$this->assertStringContainsString( 'honest review', $usage_trigger['message'] );
-		$this->assertStringContainsString( 'Leave a review', $alert['html'] );
+		$this->assertStringContainsString( 'Love Popup Maker? Leave a 5-star review!', $alert['title'] );
+		$this->assertStringContainsString( 'rating it 5-stars', $time_trigger['message'] );
+		$this->assertStringContainsString( 'rate Popup Maker 5-stars', $usage_trigger['message'] );
+		$this->assertStringContainsString( 'Ok, you deserve it', $alert['html'] );
+		$this->assertStringContainsString( '~ danieliser', $alert['message'] );
 	}
 
 	/**
