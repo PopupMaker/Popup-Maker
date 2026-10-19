@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Popup Maker 1.24.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Popup-Maker\n"
-"POT-Creation-Date: 2026-08-06T02:04:47+00:00\n"
-"PO-Revision-Date: 2026-08-06 02:05+0000\n"
+"POT-Creation-Date: 2026-08-11T10:11:21+00:00\n"
+"PO-Revision-Date: 2026-08-11 10:11+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh-CN\n"
@@ -206,7 +206,7 @@ msgstr "很抱歉，您的浏览器与此类文件上传不兼容。请升级您
 #: classes/Admin/Extend.php:78 classes/Admin/Notices.php:67
 #: classes/Admin/Onboarding.php:68 classes/AssetCache.php:700
 #: classes/Services/Notifications/FeatureAnnouncements.php:428
-#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:289
+#: classes/Shortcode/CallToAction.php:121 classes/Telemetry.php:303
 msgid "Learn more"
 msgstr "了解更多"
 
@@ -246,7 +246,7 @@ msgstr "毫秒"
 #: classes/Admin/Popups.php:1021 classes/Admin/Templates.php:778
 #: classes/Admin/Themes.php:186 classes/Admin/Themes.php:379
 #: classes/Shortcode/Popup.php:61 classes/Shortcode/Popup.php:85
-#: templates/popup.php:59 dist/packages/admin-bar.js:1
+#: includes/functions/popups/template.php:82 dist/packages/admin-bar.js:1
 #: dist/packages/admin-notifications.js:1
 #: dist/packages/admin-notifications.js:2 dist/packages/cta-editor.js:1
 msgid "Close"
@@ -2755,16 +2755,29 @@ msgstr "从 Easy Modal v2 导入"
 msgid "Debug logging is disabled."
 msgstr "调试日志已禁用。"
 
-#: classes/Analytics.php:335
+#: classes/Analytics.php:266
+msgid "Invalid analytics events payload."
+msgstr "无效的分析事件负载。"
+
+#: classes/Analytics.php:320 classes/Analytics.php:327
+#: classes/Analytics.php:333
+msgid "Invalid analytics event parameters."
+msgstr "无效的分析事件参数。"
+
+#: classes/Analytics.php:398
 msgid "Event Type"
 msgstr "事件类型"
 
-#: classes/Analytics.php:340
+#: classes/Analytics.php:403
 #: includes/integrations/ninja-forms/Actions/OpenPopup.php:52
 msgid "Popup ID"
 msgstr "弹窗 ID"
 
-#: classes/Analytics.php:347
+#: classes/Analytics.php:410
+msgid "Analytics events (JSON or array)"
+msgstr "分析事件（JSON 或数组）"
+
+#: classes/Analytics.php:414
 msgid "Event metadata (JSON or array)"
 msgstr "事件元数据（JSON 或数组）"
 
@@ -4020,6 +4033,7 @@ msgstr "探索高级分析"
 #: classes/Services/Notifications/FeatureAnnouncements.php:457
 #: classes/Services/Notifications/FeatureAnnouncements.php:484
 #: classes/Services/Notifications/FeatureAnnouncements.php:512
+#: classes/Telemetry.php:296
 msgid "Not now"
 msgstr "暂时不了"
 
@@ -4704,25 +4718,26 @@ msgstr "平板已禁用："
 msgid "Event: %s"
 msgstr "事件：%s"
 
-#: classes/Telemetry.php:264
-msgid "Help us make Popup Maker better"
-msgstr "帮助我们让 Popup Maker 更出色"
+#: classes/Telemetry.php:278
+msgid "The countdown to 50 billion popup views is on"
+msgstr "距离 500 亿次弹出窗口查看的倒计时已经开始"
 
-#: classes/Telemetry.php:267
+#: classes/Telemetry.php:281
 msgid ""
-"Help us prioritize the features that matter most by sharing anonymous usage "
-"stats. No visitor data or popup content is ever collected."
+"We're closing in on an estimated 50 billion popup views! Enable usage "
+"tracking to include your site's views in a more accurate estimate, show us "
+"which features matter most, and help us build even better ones. The more "
+"sites that join in, the sooner we can reach—and celebrate—the milestone "
+"together. No visitor data or popup content is collected."
 msgstr ""
-"通过分享匿名使用统计，帮助我们优先开发最重要的功能。我们绝不会收集访客数据或"
-"弹窗内容。"
+"我们正接近估计的 500 亿次弹出窗口查看！启用使用情况跟踪，将您网站的查看次数纳"
+"入更准确的估算，告诉我们哪些功能最重要，并帮助我们打造更出色的功能。加入的站"
+"点越多，我们就越能更快达到——并共同庆祝——这一里程碑。不会收集访客数据或弹出窗"
+"口内容。"
 
-#: classes/Telemetry.php:276
-msgid "Allow"
-msgstr "允许"
-
-#: classes/Telemetry.php:282
-msgid "Do not allow"
-msgstr "不允许"
+#: classes/Telemetry.php:290
+msgid "Count my popup views"
+msgstr "统计我的弹出窗口查看次数"
 
 #. translators: 1. Trigger name.
 #: classes/Triggers.php:94
