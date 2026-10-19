@@ -131,10 +131,8 @@ class PUM_Integration_Form_KaliForms extends PUM_Abstract_Integration_Form {
 
 		$popup_id = $this->get_popup_id();
 
-		// popup_id comes from a forgeable public form field; only count real popups.
-		if ( $popup_id && pum_is_popup( $popup_id ) ) {
-			$this->increase_conversion( $popup_id );
-		} else {
+		// popup_id comes from a forgeable public form field; only dispatch real popups.
+		if ( ! $popup_id || ! pum_is_popup( $popup_id ) ) {
 			$popup_id = false;
 		}
 
