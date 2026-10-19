@@ -120,8 +120,8 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 	/**
 	 * Hooks in a success function specific to this provider for non-AJAX submission handling.
 	 *
-	 * @param array $submission The submission data.
-	 * @param array $form       The form data.
+	 * @param mixed $submission The submission data.
+	 * @param mixed $form       The form data.
 	 */
 	public function on_success( $submission, $form ) {
 		if ( ! $this->should_process_submission() ) {
@@ -130,7 +130,15 @@ class PUM_Integration_Form_HappyForms extends PUM_Abstract_Integration_Form {
 
 		$popup_id = $this->get_popup_id();
 
-		$form_id = isset( $form['id'] ) ? (string) $form['id'] : null;
+		if ( ! is_array( $form ) ) {
+			return;
+		}
+
+		$form_id = isset( $form['ID'] ) ? $form['ID'] : ( $form['id'] ?? null );
+		if ( ! is_scalar( $form_id ) || ! ctype_digit( (string) $form_id ) || (int) $form_id < 1 ) {
+			return;
+		}
+		$form_id = (string) $form_id;
 
 		pum_integrated_form_submission(
 			[

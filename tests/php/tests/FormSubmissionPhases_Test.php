@@ -71,6 +71,32 @@ class FormSubmissionPhases_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * HappyForms normalizes its native uppercase form ID without inventing one.
+	 */
+	public function test_happyforms_requires_a_valid_native_form_id() {
+		if ( ! class_exists( 'PUM_Integration_Form_HappyForms' ) ) {
+			require_once PUM_PATH . 'classes/Integration/Form/HappyForms.php';
+		}
+
+		$observed                 = [];
+		$this->observation_action = static function ( $args ) use ( &$observed ) {
+			if ( 'happyforms' === $args['form_provider'] ) {
+				$observed[] = $args;
+			}
+		};
+		add_action( 'pum_integrated_form_submission', $this->observation_action );
+
+		new PUM_Integration_Form_HappyForms();
+		do_action( 'happyforms_submission_success', [], [ 'ID' => 701 ], [] );
+		do_action( 'happyforms_submission_success', [], [ 'id' => 702 ], [] );
+		do_action( 'happyforms_submission_success', [], [ 'ID' => [] ], [] );
+
+		$this->assertCount( 2, $observed );
+		$this->assertSame( '701', $observed[0]['form_id'] );
+		$this->assertSame( '702', $observed[1]['form_id'] );
+	}
+
+	/**
 	 * Normal requests authorize every phase by default.
 	 */
 	public function test_normal_request_defaults_authorize_all_phases() {
