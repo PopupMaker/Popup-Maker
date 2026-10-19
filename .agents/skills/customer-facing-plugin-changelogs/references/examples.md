@@ -24,9 +24,9 @@ Use the actual integration name and shipped behavior. If the release only suppor
 
 **After — customer outcome:**
 
-> Orders completed through supported WooCommerce offers can now be attributed to the popup and CTA that led to the purchase. Enable the Ecommerce Popups integration and use a supported checkout flow; orders outside those conditions are not included.
+> See which Popup Maker popup and CTA is linked to an order in WooCommerce or Easy Digital Downloads. Filter the order list by popup or CTA, view attribution badges, and use WP-CLI to backfill existing orders.
 
-Replace the example's platform, dependency, and conditions with what the product actually ships. If attribution is owned by an add-on, keep the note in that add-on's changelog. Do not claim cross-platform or complete attribution from partial integration coverage.
+This example reflects an Ecommerce Popups release scope that includes both integrations, order-list filters, badges, and the backfill command. For another release, name only the platforms and controls verified in its shipped source and diff. If attribution is owned by an add-on, keep the note in that add-on's changelog. Do not claim cross-platform or complete attribution from partial integration coverage.
 
 ## Intentionally omitted internal notes
 
