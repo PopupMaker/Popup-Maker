@@ -232,6 +232,15 @@ class Elementor extends PageBuilder {
 
 		if ( $is_editor_canvas && method_exists( $frontend, 'get_builder_content' ) ) {
 			$rendered = $frontend->get_builder_content( $popup_id );
+
+			// A document with no saved elements yet (first time opening the
+			// editor) renders as an empty string, leaving no `.elementor-{id}`
+			// element for Elementor's preview script to attach to. Elementor's
+			// own preview class avoids this by always printing an empty wrapper
+			// for its JS to populate; mirror that here for the canvas popup.
+			if ( empty( $rendered ) ) {
+				$rendered = $this->render_empty_canvas_wrapper( $popup_id );
+			}
 		} elseif ( method_exists( $frontend, 'get_builder_content_for_display' ) ) {
 			// Elementor enqueues document CSS before the head and prints it inline
 			// when Popup Maker discovers the document after the head has passed.
@@ -244,5 +253,27 @@ class Elementor extends PageBuilder {
 		}
 
 		return is_string( $rendered ) ? $rendered : null;
+	}
+
+	/**
+	 * Render Elementor's empty document wrapper.
+	 *
+	 * Used when a canvas document has no saved elements yet. Matches the
+	 * markup Elementor's own `Preview::builder_wrapper()` prints on `the_content`
+	 * for a document being edited for the first time, so its editor JS has an
+	 * `.elementor-{id}` element to find and populate.
+	 *
+	 * @param int $popup_id Popup ID.
+	 *
+	 * @return string
+	 */
+	protected function render_empty_canvas_wrapper( $popup_id ) {
+		$document = \Elementor\Plugin::$instance->documents->get( absint( $popup_id ) );
+
+		if ( ! is_object( $document ) || ! method_exists( $document, 'get_container_attributes' ) ) {
+			return '';
+		}
+
+		return '<div ' . \Elementor\Utils::render_html_attributes( $document->get_container_attributes() ) . '></div>';
 	}
 }
