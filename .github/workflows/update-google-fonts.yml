@@ -40,7 +40,7 @@ jobs:
         run: pnpm run fonts:update
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: 'chore(fonts): refresh Google Fonts data'
           branch: chore/update-google-fonts
