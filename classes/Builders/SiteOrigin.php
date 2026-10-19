@@ -30,13 +30,6 @@ class SiteOrigin extends PageBuilder {
 	protected $label = 'SiteOrigin Page Builder';
 
 	/**
-	 * Whether popup support existed before this provider injected it.
-	 *
-	 * @var bool|null
-	 */
-	private $stored_popup_support;
-
-	/**
 	 * Whether SiteOrigin's APIs used by this provider are available.
 	 *
 	 * @return bool
@@ -48,12 +41,12 @@ class SiteOrigin extends PageBuilder {
 	/**
 	 * Keep existing SiteOrigin popup documents in its wp-admin editor.
 	 *
+	 * Popup support itself is left to SiteOrigin's own supported-post-types
+	 * setting, since popups are already registered public and eligible there.
+	 *
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_filter( 'siteorigin_panels_settings', [ $this, 'add_popup_post_type' ] );
-		add_filter( 'pre_update_option_siteorigin_panels_settings', [ $this, 'strip_injected_post_type' ], 10, 2 );
-
 		add_filter( 'use_block_editor_for_post_type', [ $this, 'use_classic_editor' ], 999, 2 );
 		add_action( 'siteorigin_panels_metabox_end', [ $this, 'override_preview_url' ] );
 	}
@@ -114,70 +107,6 @@ class SiteOrigin extends PageBuilder {
 		}
 
 		return get_post_meta( $post->ID, 'panels_data', true ) ? false : $use_block_editor;
-	}
-
-	/**
-	 * Add popups to SiteOrigin's supported post types at runtime.
-	 *
-	 * @param mixed $settings SiteOrigin settings.
-	 *
-	 * @return mixed
-	 */
-	public function add_popup_post_type( $settings ) {
-		if ( ! is_array( $settings ) ) {
-			return $settings;
-		}
-
-		$post_types = isset( $settings['post-types'] ) && is_array( $settings['post-types'] )
-			? $settings['post-types']
-			: [];
-
-		if ( null === $this->stored_popup_support ) {
-			$this->stored_popup_support = in_array( 'popup', $post_types, true );
-		}
-
-		if ( ! in_array( 'popup', $post_types, true ) ) {
-			$post_types[]           = 'popup';
-			$settings['post-types'] = $post_types;
-		}
-
-		return $settings;
-	}
-
-	/**
-	 * Keep Popup Maker's runtime injection out of SiteOrigin's stored option.
-	 *
-	 * @param mixed $value     Settings being saved.
-	 * @param mixed $old_value Settings currently stored.
-	 *
-	 * @return mixed
-	 */
-	public function strip_injected_post_type( $value, $old_value = null ) {
-		if ( ! is_array( $value ) || ! isset( $value['post-types'] ) || ! is_array( $value['post-types'] ) ) {
-			return $value;
-		}
-
-		$stored        = is_array( $old_value ) && isset( $old_value['post-types'] ) && is_array( $old_value['post-types'] )
-			? $old_value['post-types']
-			: [];
-		$owner_enabled = null !== $this->stored_popup_support
-			? $this->stored_popup_support
-			: in_array( 'popup', $stored, true );
-
-		if ( $owner_enabled ) {
-			return $value;
-		}
-
-		$value['post-types'] = array_values(
-			array_filter(
-				$value['post-types'],
-				function ( $post_type ) {
-					return 'popup' !== $post_type;
-				}
-			)
-		);
-
-		return $value;
 	}
 
 	/**
