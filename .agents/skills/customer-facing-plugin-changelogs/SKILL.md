@@ -1,21 +1,9 @@
 ---
 name: customer-facing-plugin-changelogs
-description: Write and review concise customer-facing changelog entries for WordPress plugins when preparing a release, describing shipped behavior, limits, and add-on ownership accurately.
+description: Write and review concise customer-facing changelog entries for WordPress plugins when preparing a release, describing confirmed behavior, limits, and add-on ownership accurately.
 license: MIT
-tags: [wordpress, plugins, changelog, release-notes, customer-writing]
-agents: [claude-code, codex, autojack]
-category: writing
 metadata:
-  version: "1.0.0"
-capabilities:
-  network: false
-  filesystem: readwrite
-  tools: [Bash, Read, Edit, Write]
-resources:
-  - path: references/examples.md
-    type: file
-  - path: references/checklist.md
-    type: file
+  version: "1.0.1"
 ---
 
 # Customer-Facing Plugin Changelogs
@@ -33,12 +21,12 @@ Do not use this skill to decide whether unreleased work should ship, invent rele
 ## Workflow
 
 1. **Inspect the release contract.** Read the repository's changelog, release-note parser/category conventions, and any local release instructions. Preserve headings, labels, link style, punctuation, and security advisory format. Do not create a version number or release date.
-2. **Confirm what ships.** Read the implementation, relevant tests or acceptance evidence, and the exact proposed diff or release scope. Identify the owning product, supported integrations, actual defaults, user-visible controls, and restrictions. Treat proposed, deferred, unverified, and unreleased behavior as unavailable to customers.
-3. **Separate audiences.** Put only user-relevant behavior in the customer changelog. Put implementation details, migration mechanics, internal architecture, test notes, and follow-up work in a developer or maintenance section/document that the project already supports. Do not add internal sections to a customer changelog unless its existing convention explicitly calls for them.
-4. **Lead with the outcome.** Start with what the merchant can do, see, or rely on. State conditions and practical limits in plain language. Name an add-on only when customers need it, and attribute the feature to the product that actually ships it. Core must not claim add-on functionality; an integration add-on must not claim ownership of Pro's shared workflow.
-5. **Describe choices exactly.** Distinguish defaults from optional settings. For generated coupons, distinguish grouped reporting codes from separate native coupons. State the integration-level default and whether each CTA inherits or overrides that setting, only when both controls ship. State integration-specific behavior, coupon stacking or replacement limits, and any CTA override only when verified in the shipped implementation. Explain that native checkout behavior remains controlled by its commerce platform where relevant.
+2. **Confirm what ships.** Read the implementation, relevant tests or acceptance evidence, and the exact proposed diff or release scope. Identify the owning product, supported integrations, actual defaults, user-visible controls, and restrictions. Include verified changes in the confirmed target release even while they are under an Unreleased heading. Exclude deferred, speculative, unverified, and out-of-scope behavior.
+3. **Separate audiences.** Put only user-relevant behavior in the customer changelog. Keep customer-required upgrade or migration steps and visible data changes or interruptions in the customer notes. Put internal implementation details, migration internals, architecture, test notes, and follow-up work in a developer or maintenance section/document that the project already supports. Do not add internal sections to a customer changelog unless its existing convention explicitly calls for them.
+4. **Lead with the outcome.** Start with what the merchant can do, see, or rely on. State conditions and practical limits in plain language. Name an add-on only when customers need it, and attribute the feature to the product that actually ships it. For the Popup Maker family, Core must not claim add-on functionality; an integration add-on must not claim ownership of Pro's shared workflow. Apply equivalent ownership checks to other product families.
+5. **Describe choices exactly.** Distinguish defaults from optional settings. When generated coupons are in scope, distinguish grouped reporting codes from separate native coupons only if those modes are supported. State the integration-level default and whether each CTA inherits or overrides that setting, only when both controls ship. State integration-specific behavior, coupon stacking or replacement limits, and any CTA override only when verified in the shipped implementation. Explain that native checkout behavior remains controlled by its commerce platform where relevant.
 6. **Keep fixes in release context.** Do not describe a fix to a newly introduced, unreleased feature as a bug customers experienced. Describe an improvement to an already released feature only when the prior customer behavior and shipped correction are verified. Preserve security advisories and their required detail without softening or reclassifying them.
-7. **Draft and verify.** Write concise, active-voice bullets in the repository's established category. Use the examples and checklist in the references. Check the rendered/parser input shape, product attribution, dependencies, defaults, restrictions, and claims against the source and diff. Leave terminology for new UI in plain language until the owner has tested and finalized the labels.
+7. **Draft and verify.** Write concise, active-voice bullets in the repository's established category. Use the [examples](references/examples.md) and [checklist](references/checklist.md); product-specific examples apply only when verified for the target plugin. Check the rendered/parser input shape, product attribution, dependencies, defaults, restrictions, and claims against the source and diff. Leave terminology for new UI in plain language until the owner has tested and finalized the labels.
 
 ## Writing rules
 
