@@ -91,20 +91,16 @@ class LegacyExtensionGuidance extends Service implements Provider {
 
 			$notice_variant = 'renew';
 			$title          = __( 'Review your Popup Maker Pro license', 'popup-maker' );
-			$message        = sprintf(
-				/* translators: %s: comma-separated feature names. */
-				__( 'Your installed legacy features (%s) are already included in Popup Maker Pro. The locally stored Pro license is expired; review it to keep updates and support current.', 'popup-maker' ),
-				esc_html( $features )
-			);
-			$subtitle      = __( 'Pro is active; license needs attention', 'popup-maker' );
-			$action        = [
+			$message        = __( 'Your Popup Maker Pro license has expired. Review it to keep updates and support current.', 'popup-maker' );
+			$subtitle       = __( 'Your Pro license has expired', 'popup-maker' );
+			$action         = [
 				'text'    => __( 'Review Pro license', 'popup-maker' ),
 				'type'    => 'link',
 				'action'  => '',
 				'href'    => $this->get_license_settings_url(),
 				'primary' => true,
 			];
-			$base_priority = max( 76, $base_priority );
+			$base_priority  = max( 76, $base_priority );
 		} elseif ( 'inactive' === $pro_state ) {
 			$activation_url = $this->get_pro_activation_url();
 			if ( '' === $activation_url ) {
@@ -127,25 +123,33 @@ class LegacyExtensionGuidance extends Service implements Provider {
 				'primary' => true,
 			];
 			$base_priority = max( 78, $base_priority );
-		} elseif ( $has_valid ) {
-			$notice_variant = 'consolidate';
-			$title          = __( 'Your legacy extensions are available in Popup Maker Pro', 'popup-maker' );
-			$message        = sprintf(
-				/* translators: %s: comma-separated feature names. */
-				__( 'You currently use %s through standalone legacy extensions. Popup Maker Pro combines these features in one maintained plugin when you are ready to consolidate.', 'popup-maker' ),
-				esc_html( $features )
-			);
-			$subtitle = __( 'Evergreen consolidation guidance', 'popup-maker' );
-			$action   = $this->get_pro_page_action();
 		} else {
-			$notice_variant = 'included';
-			$title          = __( 'These legacy features are included in Popup Maker Pro', 'popup-maker' );
+			$notice_variant = $has_valid ? 'consolidate' : 'included';
+			$feature_names  = array_values( array_unique( wp_list_pluck( $extensions, 'feature_name' ) ) );
+			$title          = count( $feature_names ) > 1
+				? __( 'Your installed extensions are included in Pro', 'popup-maker' )
+				: sprintf(
+					/* translators: %s: installed feature name. */
+					__( '%s is included in Pro', 'popup-maker' ),
+					esc_html( $features )
+				);
+			$other_features = array_diff( [ 'Advanced Targeting', 'Scheduling' ], $feature_names );
+			$other_features = array_merge( $other_features, [ __( 'other Pro features', 'popup-maker' ) ] );
 			$message        = sprintf(
-				/* translators: %s: comma-separated feature names. */
-				__( 'We found %s installed as legacy extensions. These features are now included in the maintained Popup Maker Pro plugin.', 'popup-maker' ),
-				esc_html( $features )
+				/* translators: 1: installed feature names, 2: additional Pro feature names. */
+				__( '%1$s is included in Popup Maker Pro with %2$s—all in one actively developed plugin.', 'popup-maker' ),
+				esc_html( $features ),
+				esc_html( $this->format_feature_names( $other_features ) )
 			);
-			$subtitle = __( 'Based on plugins installed on this site', 'popup-maker' );
+			if ( count( $feature_names ) > 1 ) {
+				$message = sprintf(
+					/* translators: 1: installed feature names, 2: additional Pro feature names. */
+					__( '%1$s are included in Popup Maker Pro with %2$s—all in one actively developed plugin.', 'popup-maker' ),
+					esc_html( $features ),
+					esc_html( $this->format_feature_names( $other_features ) )
+				);
+			}
+			$subtitle = __( 'Popup Maker Pro', 'popup-maker' );
 			$action   = $this->get_pro_page_action();
 		}
 
@@ -163,7 +167,7 @@ class LegacyExtensionGuidance extends Service implements Provider {
 			'actions'        => [
 				$action,
 				[
-					'text'   => __( 'Dismiss', 'popup-maker' ),
+					'text'   => __( 'Not now', 'popup-maker' ),
 					'type'   => 'action',
 					'action' => 'dismiss',
 				],
@@ -340,7 +344,7 @@ class LegacyExtensionGuidance extends Service implements Provider {
 	 */
 	private function get_pro_page_action() {
 		return [
-			'text'     => __( 'See what is included in Pro', 'popup-maker' ),
+			'text'     => __( 'See Pro options', 'popup-maker' ),
 			'type'     => 'link',
 			'action'   => '',
 			'href'     => \PopupMaker\generate_upgrade_url( 'legacy-extension-guidance', 'legacy-to-pro', 'notification' ),

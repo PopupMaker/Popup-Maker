@@ -36,6 +36,10 @@ class Legacy_Extension_Guidance_Test extends WP_UnitTestCase {
 		$alert = $this->guidance->build_alert( $this->extensions(), 'active', 'expired' );
 
 		$this->assertSame( 'pm_legacy_extensions_to_pro_renew_v1', $alert['code'] );
+		$this->assertSame( 'Review your Popup Maker Pro license', $alert['title'] );
+		$this->assertSame( 'Your Pro license has expired', $alert['subtitle'] );
+		$this->assertSame( 'Your Popup Maker Pro license has expired. Review it to keep updates and support current.', $alert['message'] );
+		$this->assertSame( 'Review Pro license', $alert['actions'][0]['text'] );
 		$this->assertStringContainsString( 'page=pum-settings', $alert['actions'][0]['href'] );
 		$this->assertStringNotContainsString( 'utm_', $alert['actions'][0]['href'] );
 	}
@@ -56,6 +60,9 @@ class Legacy_Extension_Guidance_Test extends WP_UnitTestCase {
 		$alert                          = $this->guidance->build_alert( $extensions, 'missing', 'missing' );
 
 		$this->assertSame( 'pm_legacy_extensions_to_pro_consolidate_v1', $alert['code'] );
+		$this->assertSame( 'Your installed extensions are included in Pro', $alert['title'] );
+		$this->assertSame( 'See Pro options', $alert['actions'][0]['text'] );
+		$this->assertSame( 'Not now', $alert['actions'][1]['text'] );
 		$this->assertStringContainsString( 'Exit Intent', $alert['message'] );
 		$this->assertStringContainsString( 'Terms &amp; Conditions', $alert['message'] );
 		$this->assertStringNotContainsString( '$', $alert['message'] );
@@ -70,6 +77,27 @@ class Legacy_Extension_Guidance_Test extends WP_UnitTestCase {
 		$this->assertSame( 72, $alert['priority'] );
 		$this->assertSame( 'dismiss', $alert['actions'][1]['action'] );
 		$this->assertArrayNotHasKey( 'expires', $alert['actions'][1] );
+	}
+
+	/** Single-feature copy stays singular and escapes extension metadata. */
+	public function test_single_feature_copy_is_singular_and_escaped() {
+		$alert = $this->guidance->build_alert( [ $this->extensions()[1] ], 'missing', 'missing' );
+
+		$this->assertSame( 'Terms &amp; Conditions is included in Pro', $alert['title'] );
+		$this->assertSame( 'Terms &amp; Conditions is included in Popup Maker Pro with Advanced Targeting, Scheduling, and other Pro features—all in one actively developed plugin.', $alert['message'] );
+	}
+
+	/** Consolidated copy does not repeat installed features as additional features. */
+	public function test_multiple_features_use_approved_copy_without_repeating_features() {
+		$extensions                    = $this->extensions();
+		$extensions[0]['feature_name'] = 'Advanced Targeting';
+		$extensions[1]['feature_name'] = 'Scheduling';
+		$alert                         = $this->guidance->build_alert( $extensions, 'missing', 'missing' );
+
+		$this->assertSame( 'Your installed extensions are included in Pro', $alert['title'] );
+		$this->assertSame( 'Advanced Targeting and Scheduling are included in Popup Maker Pro with other Pro features—all in one actively developed plugin.', $alert['message'] );
+		$this->assertSame( 'See Pro options', $alert['actions'][0]['text'] );
+		$this->assertSame( 'Not now', $alert['actions'][1]['text'] );
 	}
 
 	/** A fully deactivated installation is deliberately lower priority. */
