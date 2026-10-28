@@ -67,20 +67,8 @@ final class NF_PUM {
 	}
 
 	public function __construct() {
-		$this->register_actions();
 		add_filter( 'pum_registered_cookies', [ $this, 'register_cookies' ] );
 	}
-
-	/**
-	 * Register Actions
-	 *
-	 * Register custom form actions to integrate with popups.
-	 */
-	public function register_actions() {
-		Ninja_Forms()->actions['closepopup'] = new NF_PUM_Actions_ClosePopup();
-		Ninja_Forms()->actions['openpopup']  = new NF_PUM_Actions_OpenPopup();
-	}
-
 
 	/**
 	 * Optional. If your extension creates a new field interaction or display template...
