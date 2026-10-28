@@ -7,36 +7,7 @@
 
 // phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound, PSR2.Classes.PropertyDeclaration.Underscore
 
-if ( ! class_exists( 'NF_Abstracts_Action' ) ) {
-	/**
-	 * Minimal Ninja Forms action base used by the popup-choice provider fixture.
-	 */
-	abstract class NF_Abstracts_Action {
-
-		/**
-		 * Action settings.
-		 *
-		 * @var array<string,mixed>
-		 */
-		protected $_settings = [];
-
-		/**
-		 * Action label.
-		 *
-		 * @var string
-		 */
-		protected $_nicename = '';
-
-		/**
-		 * Initialize the action fixture.
-		 */
-		public function __construct() {}
-	}
-}
-
-require_once dirname( __DIR__, 3 ) . '/includes/integrations/class-pum-cf7.php';
 require_once dirname( __DIR__, 3 ) . '/includes/integrations/class-pum-gravity-forms.php';
-require_once dirname( __DIR__, 3 ) . '/includes/integrations/ninja-forms/Actions/OpenPopup.php';
 
 /**
  * Verify form selector queries avoid unused cache priming.
@@ -144,17 +115,8 @@ class Form_Integration_Query_Test extends WP_UnitTestCase {
 		wp_cache_flush();
 
 		$expected_date_order = [ $this->popup_ids[1], $this->popup_ids[0] ];
-		$cf7                 = PUM_CF7_Integration::get_popup_list();
 		$gravity             = PUM_Gravity_Forms_Integation::get_popup_list();
-		$ninja               = ( new NF_PUM_Actions_OpenPopup() )->get_popup_list();
 
-		$this->assertSame(
-			[
-				'value' => 0,
-				'label' => 'Select a popup',
-			],
-			$cf7[0]
-		);
 		$this->assertSame(
 			[
 				'value' => '',
@@ -162,16 +124,8 @@ class Form_Integration_Query_Test extends WP_UnitTestCase {
 			],
 			$gravity[0]
 		);
-		$this->assertSame(
-			[
-				'value' => '',
-				'label' => 'Select a popup',
-			],
-			$ninja[0]
-		);
-		$this->assertSame( $expected_date_order, array_column( array_slice( $cf7, 1 ), 'value' ) );
 		$this->assertSame( $expected_date_order, array_column( array_slice( $gravity, 1 ), 'value' ) );
-		$this->assertSame( [ 'value', 'label' ], array_keys( $cf7[1] ) );
+		$this->assertSame( [ 'value', 'label' ], array_keys( $gravity[1] ) );
 		$this->assertFalse( wp_cache_get( $this->popup_ids[0], 'posts' ) );
 		$this->assertFalse( wp_cache_get( $this->popup_ids[0], 'post_meta' ) );
 
@@ -188,7 +142,7 @@ class Form_Integration_Query_Test extends WP_UnitTestCase {
 		add_filter( 'posts_results', $title_filter );
 
 		try {
-			$filtered = PUM_CF7_Integration::get_popup_list();
+			$filtered = PUM_Gravity_Forms_Integation::get_popup_list();
 		} finally {
 			remove_filter( 'posts_results', $title_filter );
 		}
