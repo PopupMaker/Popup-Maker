@@ -18,6 +18,10 @@ concurrency:
 jobs:
     authorize:
         name: Authorize approved readme/assets PR
+        if: >-
+            github.event_name == 'repository_dispatch' ||
+            (github.event.pull_request.merged == true &&
+             startsWith(github.event.pull_request.head.ref, 'wordpress-org/'))
         runs-on: ubuntu-latest
         outputs:
             should_sync: ${{ steps.authorize.outputs.should_sync }}
@@ -52,6 +56,12 @@ jobs:
                       }
                       if (pull.head.repo?.full_name !== `${owner}/${repo}`) {
                         core.setFailed('Publication PRs must come from this repository.');
+                        return;
+                      }
+                      if (!/^wordpress-org\/[a-z0-9][a-z0-9._-]*$/.test(pull.head.ref)) {
+                        core.setFailed(
+                          'The merged branch must be named wordpress-org/<topic> using lowercase letters, numbers, dots, underscores, or hyphens.'
+                        );
                         return;
                       }
 

@@ -31,6 +31,7 @@
   "sideEffects": false,
   "dependencies": {
     "@popup-maker/i18n": "workspace:*",
+    "@popup-maker/utils": "workspace:*",
     "@wordpress/api-fetch": "^7.52.0",
     "@wordpress/core-data": "^7.52.0",
     "@wordpress/data": "^10.52.0",

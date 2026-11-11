@@ -5,10 +5,11 @@
 **Fixes**
 
 -   Loaded WPBakery Page Builder's generated styles when popup content is rendered outside the main page loop.
+-   Fixed the Popup Enabled toggle reverting after updating a popup in the classic editor when WordPress Custom Fields were present.
 
 **Developers**
 
--   Improved Call to Action field schema support for add-ons.
+-   Normalized extension field defaults consistently between display and saving.
 
 ## v1.25.0 - 2026-09-10
 

@@ -55,6 +55,7 @@ class PUM_Admin_Popups {
 		add_filter( 'post_row_actions', [ __CLASS__, 'add_id_row_actions' ], 100, 2 );
 
 		add_action( 'post_submitbox_misc_actions', [ __CLASS__, 'add_enabled_toggle_editor' ], 10, 1 );
+		add_filter( 'is_protected_meta', [ __CLASS__, 'protect_enabled_meta' ], 10, 3 );
 
 		// Bulk actions for enabling/disabling popups.
 		add_filter( 'bulk_actions-edit-popup', [ __CLASS__, 'register_bulk_actions' ] );
@@ -63,6 +64,22 @@ class PUM_Admin_Popups {
 
 		add_filter( 'mce_buttons_2', [ __CLASS__, 'add_mce_buttons' ], 10, 1 );
 		add_filter( 'tiny_mce_before_init', [ __CLASS__, 'increase_available_font_sizes' ], 10, 1 );
+	}
+
+	/**
+	 * Keep the internal enabled flag out of the popup editor's native Custom Fields.
+	 *
+	 * @param bool   $is_protected Whether the metadata is already protected.
+	 * @param string $meta_key     Metadata key.
+	 * @param string $meta_type    Metadata object type.
+	 * @return bool
+	 */
+	public static function protect_enabled_meta( $is_protected, $meta_key, $meta_type ) {
+		if ( 'post' === $meta_type && 'enabled' === $meta_key && 'popup' === get_post_type() ) {
+			return true;
+		}
+
+		return $is_protected;
 	}
 
 	/**
