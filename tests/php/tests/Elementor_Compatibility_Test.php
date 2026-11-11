@@ -23,10 +23,29 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$elementor                   = new \Elementor\Plugin();
 		$elementor->frontend         = new stdClass();
-		$elementor->preview          = new class() {
-			/** @param string $content Content to wrap. @return string */
+		$secondary_post              = $this->factory->post->create_and_get();
+		$elementor->preview          = new class( $popup_id ) {
+			/** @var int */
+			private $preview_id;
+
+			/** @var bool */
+			public $throws = false;
+
+			/** @param int $preview_id Preview document ID. */
+			public function __construct( $preview_id ) {
+				$this->preview_id = $preview_id;
+			}
+
+			/**
+			 * @param string $content Content to wrap.
+			 * @return string
+			 * @throws RuntimeException When the fixture is set to fail.
+			 */
 			public function builder_wrapper( $content ) {
-				return '<div class="elementor-foobar">' . $content . '</div>';
+				if ( $this->throws ) {
+					throw new RuntimeException( 'Preview failed.' );
+				}
+				return get_the_ID() === $this->preview_id ? '<div class="elementor-foobar">' . $content . '</div>' : $content;
 			}
 		};
 		\Elementor\Plugin::$instance = $elementor;
@@ -36,7 +55,22 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 				return true; }
 		};
 
-		$this->assertSame( '<div class="elementor-foobar"></div>', $builder->render_document( $popup_id, true ) );
+		$original_post   = $GLOBALS['post'] ?? null;
+		$GLOBALS['post'] = $secondary_post;
+		try {
+			$this->assertSame( '<div class="elementor-foobar"></div>', $builder->render_document( $popup_id, true ) );
+			$this->assertSame( $secondary_post, $GLOBALS['post'] );
+			$elementor->preview->throws = true;
+			try {
+				$builder->render_document( $popup_id, true );
+				$this->fail( 'Expected the preview exception.' );
+			} catch ( RuntimeException $exception ) {
+				$this->assertSame( 'Preview failed.', $exception->getMessage() );
+			}
+			$this->assertSame( $secondary_post, $GLOBALS['post'] );
+		} finally {
+			$GLOBALS['post'] = $original_post;
+		}
 	}
 
 	/** @return void */
