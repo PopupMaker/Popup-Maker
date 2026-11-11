@@ -19,6 +19,27 @@ class Elementor_Compatibility_Test extends WP_UnitTestCase {
 	private $original_get;
 
 	/** @return void */
+	public function test_editor_canvas_uses_elementor_preview_wrapper_for_empty_document() {
+		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$elementor                   = new \Elementor\Plugin();
+		$elementor->frontend         = new stdClass();
+		$elementor->preview          = new class() {
+			/** @param string $content Content to wrap. @return string */
+			public function builder_wrapper( $content ) {
+				return '<div class="elementor-foobar">' . $content . '</div>';
+			}
+		};
+		\Elementor\Plugin::$instance = $elementor;
+		$builder                     = new class( \PopupMaker\plugin() ) extends Elementor {
+			/** @return bool */
+			public function is_available() {
+				return true; }
+		};
+
+		$this->assertSame( '<div class="elementor-foobar"></div>', $builder->render_document( $popup_id, true ) );
+	}
+
+	/** @return void */
 	public function setUp(): void {
 		parent::setUp();
 

@@ -357,7 +357,7 @@ class Builders extends Controller {
 
 		$request = $this->get_edit_request();
 
-		if ( ! $request || ! $request['builder']->is_canvas_request() ) {
+		if ( ! $request || ! $request['builder']->requires_popup_query() ) {
 			return $query_vars;
 		}
 

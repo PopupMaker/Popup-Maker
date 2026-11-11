@@ -212,6 +212,15 @@ abstract class PageBuilder {
 	}
 
 	/**
+	 * Whether the native request needs the popup query restored.
+	 *
+	 * @return bool
+	 */
+	public function requires_popup_query() {
+		return $this->is_canvas_request();
+	}
+
+	/**
 	 * Whether this builder owns a popup document.
 	 *
 	 * @param int $popup_id Popup ID.

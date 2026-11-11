@@ -20,6 +20,9 @@ if ( ! class_exists( Plugin::class, false ) ) {
 		 */
 		public $frontend;
 
+		/** @var object|null */
+		public $preview;
+
 		/**
 		 * Active test instance.
 		 *

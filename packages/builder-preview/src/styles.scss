@@ -3,6 +3,11 @@ body.pum-builder-preview {
 	min-height: 100%;
 }
 
+// Divi's editor UI shares the popup canvas and must sit above its overlay.
+body.pum-builder-preview.et-fb .pum-overlay {
+	z-index: 1 !important;
+}
+
 html.pum-builder-owned-canvas-root.pum-overlay-disabled,
 html.pum-builder-owned-canvas-root > body.pum-overlay-disabled {
 	background: transparent !important;
