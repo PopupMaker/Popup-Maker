@@ -39,6 +39,9 @@ class WPBakery extends PageBuilder {
 	 */
 	private $emitted_documents = [];
 
+	/** @var bool Whether the head style flush has started. */
+	private $head_flush_started = false;
+
 	/**
 	 * Whether WPBakery's frontend CSS service is available.
 	 *
@@ -110,6 +113,8 @@ class WPBakery extends PageBuilder {
 	 * @return void
 	 */
 	public function flush_preloaded_assets() {
+		$this->head_flush_started = true;
+
 		foreach ( array_keys( $this->collected_documents ) as $popup_id ) {
 			echo $this->capture_document_styles( $popup_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WPBakery sanitizes its generated CSS.
 		}
@@ -128,9 +133,11 @@ class WPBakery extends PageBuilder {
 			return $content;
 		}
 
-		$popup_id = absint( $popup_id );
+		$popup_id    = absint( $popup_id );
+		$saved_owner = get_post_meta( $popup_id, \PopupMaker\Controllers\Builders::OWNER_META_KEY, true );
 
 		if (
+			( is_string( $saved_owner ) && '' !== $saved_owner && self::class !== $saved_owner ) ||
 			! $popup_id ||
 			isset( $this->emitted_documents[ $popup_id ] ) ||
 			( ! isset( $this->collected_documents[ $popup_id ] ) && ! $this->owns_document( $popup_id ) )
@@ -144,12 +151,12 @@ class WPBakery extends PageBuilder {
 	}
 
 	/**
-	 * Whether the document head has finished rendering.
+	 * Whether the head style flush has started or the head has finished.
 	 *
 	 * @return bool
 	 */
 	protected function head_has_rendered() {
-		return did_action( 'wp_head' ) && ! doing_action( 'wp_head' );
+		return $this->head_flush_started || ( did_action( 'wp_head' ) && ! doing_action( 'wp_head' ) );
 	}
 
 	/**

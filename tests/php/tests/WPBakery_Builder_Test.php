@@ -71,6 +71,47 @@ class WPBakery_Builder_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_late_styles_reject_another_saved_owner_with_stale_wpbakery_meta() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder  = $this->make_output_builder();
+
+		update_post_meta( $popup_id, '_wpb_vc_js_status', 'true' );
+		update_post_meta( $popup_id, \PopupMaker\Controllers\Builders::OWNER_META_KEY, 'OtherBuilder' );
+		$builder->head_rendered = true;
+		$builder->collect_document_assets( $popup_id );
+
+		$this->assertSame( '<p>Popup</p>', $builder->inject_late_document_styles( '<p>Popup</p>', $popup_id ) );
+		$this->assertSame( [], $builder->page_css_ids );
+	}
+
+	/** @return void */
+	public function test_popup_rendered_during_head_after_flush_receives_styles_once() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder  = $this->make_output_builder();
+
+		update_post_meta( $popup_id, '_wpb_vc_js_status', 'true' );
+		$builder->use_native_head_state = true;
+		$render                         = function () use ( $builder, $popup_id ) {
+			echo $builder->inject_late_document_styles( '<p>Popup</p>', $popup_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Capture generated styles for assertions.
+		};
+		add_action( 'wp_head', [ $builder, 'flush_preloaded_assets' ], 1000 );
+		add_action( 'wp_head', $render, 1001 );
+
+		ob_start();
+		try {
+			do_action( 'wp_head' );
+		} finally {
+			$output = ob_get_clean();
+			remove_action( 'wp_head', $render, 1001 );
+			remove_action( 'wp_head', [ $builder, 'flush_preloaded_assets' ], 1000 );
+		}
+
+		$this->assertStringContainsString( '<style>page-css-' . $popup_id, $output );
+		$this->assertSame( '<p>Popup</p>', $builder->inject_late_document_styles( '<p>Popup</p>', $popup_id ) );
+		$this->assertSame( [ $popup_id ], $builder->page_css_ids );
+	}
+
+	/** @return void */
 	public function test_builder_registers_preloaded_and_late_style_hooks() {
 		$builder = $this->make_output_builder();
 
@@ -178,6 +219,9 @@ class WPBakery_Builder_Test extends WP_UnitTestCase {
 			/** @var bool */
 			public $head_rendered = false;
 
+			/** @var bool */
+			public $use_native_head_state = false;
+
 			/** @var array<int> */
 			public $page_css_ids = [];
 
@@ -186,7 +230,7 @@ class WPBakery_Builder_Test extends WP_UnitTestCase {
 
 			/** @return bool */
 			protected function head_has_rendered() {
-				return $this->head_rendered;
+				return $this->use_native_head_state ? parent::head_has_rendered() : $this->head_rendered;
 			}
 
 			/**
