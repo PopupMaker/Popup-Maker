@@ -447,6 +447,13 @@
 				settings = $popup.popmake( 'getSettings' ),
 				$html = $( 'html' );
 
+			// Nothing to open, e.g. the popup markup is not on this page.
+			// Bail before the html scroll-lock classes are added, otherwise
+			// reposition() throws and leaves the page unable to scroll.
+			if ( ! $popup.length ) {
+				return this;
+			}
+
 			$popup.trigger( 'pumBeforeOpen' );
 
 			var preventOpen = PUM.hooks.applyFilters(
@@ -948,13 +955,15 @@
 			// offsetTop: offsetTop is measured from the offset parent and can be
 			// positive (e.g. a CSS top offset) while the rendered top is still
 			// off-screen, so the old offsetTop check missed real clipping.
-			// See issue #1227.
-			var containerRect = $container[ 0 ].getBoundingClientRect();
+			// See issue #1227. Skip when there is no container element.
+			var containerRect = $container.length
+				? $container[ 0 ].getBoundingClientRect()
+				: null;
 
 			// Admin bar is 32px high, with a 10px margin that is 42.
 			var minTop = $( 'body' ).hasClass( 'admin-bar' ) ? 42 : 10;
 
-			if ( containerRect.top < minTop ) {
+			if ( containerRect && containerRect.top < minTop ) {
 				// Shift the container down by the amount it is clipped so its top
 				// lands at minTop, working from whatever top the positioner set.
 				var currentTop = parseFloat( $container.css( 'top' ) ) || 0;
