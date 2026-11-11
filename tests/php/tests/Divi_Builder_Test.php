@@ -47,6 +47,7 @@ class Divi_Builder_Test extends WP_UnitTestCase {
 
 		$this->assertSame( $popup_id, $provider->get_requested_popup_id() );
 		$this->assertFalse( $provider->is_canvas_request() );
+		$this->assertTrue( $provider->requires_popup_query() );
 		$this->assertNull( $provider->render_document( $popup_id, false ) );
 
 		$_GET = [
@@ -56,10 +57,26 @@ class Divi_Builder_Test extends WP_UnitTestCase {
 
 		$this->assertSame( $popup_id, $provider->get_requested_popup_id() );
 		$this->assertTrue( $provider->is_canvas_request() );
+		$this->assertTrue( $provider->requires_popup_query() );
 		$this->assertSame(
 			'<div id="et-boc"><div class="et-l"><div id="et-fb-app"></div></div></div>',
 			$provider->render_document( $popup_id, true )
 		);
+	}
+
+	/** @return void */
+	public function test_activation_request_requires_nonce_for_requested_popup() {
+		$popup_id = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$provider = $this->make_provider( $popup_id );
+		$_GET     = [
+			'p'                      => (string) $popup_id,
+			'et_fb_activation_nonce' => wp_create_nonce( 'et_fb_activation_nonce_' . $popup_id ),
+		];
+		$this->assertSame( $popup_id, $provider->get_requested_popup_id() );
+		$this->assertTrue( $provider->requires_popup_query() );
+		$this->assertFalse( $provider->is_canvas_request() );
+		$_GET['p'] = (string) ( $popup_id + 1 );
+		$this->assertSame( 0, $provider->get_requested_popup_id() );
 	}
 
 	/** @return void */

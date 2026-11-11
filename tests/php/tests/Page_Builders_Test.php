@@ -61,6 +61,25 @@ class Page_Builders_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_backend_builder_query_requires_edit_permission_without_claiming_canvas() {
+		$popup_id                    = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder                     = $this->make_builder();
+		$builder->requested_popup_id = $popup_id;
+		$builder->canvas             = false;
+		$builder->restore_query      = true;
+
+		wp_set_current_user( 0 );
+		$this->assertSame( [], $this->make_controller( $builder )->allow_builder_request( [] ) );
+
+		wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+		$controller = $this->make_controller( $builder );
+		$query      = $controller->allow_builder_request( [] );
+		$this->assertSame( $popup_id, $query['p'] );
+		$this->assertSame( 'popup', $query['post_type'] );
+		$this->assertSame( 0, $controller->get_canvas_popup_id() );
+	}
+
+	/** @return void */
 	public function test_failed_early_request_resolution_can_retry_after_the_query() {
 		$popup_id   = $this->factory->post->create( [ 'post_type' => 'popup' ] );
 		$builder    = $this->make_builder();
@@ -574,6 +593,9 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			public $canvas = true;
 
 			/** @var bool */
+			public $restore_query = false;
+
+			/** @var bool */
 			public $can_edit = true;
 
 			/** @var string|null */
@@ -619,6 +641,11 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			/** @return bool */
 			public function is_canvas_request() {
 				return $this->canvas;
+			}
+
+			/** @return bool */
+			public function requires_popup_query() {
+				return $this->restore_query || $this->is_canvas_request();
 			}
 
 			/**

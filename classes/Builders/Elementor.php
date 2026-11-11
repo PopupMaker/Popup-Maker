@@ -230,7 +230,24 @@ class Elementor extends PageBuilder {
 		// secondary document before its markup is generated.
 		do_action( 'elementor/post/render', $popup_id );
 
-		if ( $is_editor_canvas && method_exists( $frontend, 'get_builder_content' ) ) {
+		if ( $is_editor_canvas && isset( \Elementor\Plugin::$instance->preview ) && method_exists( \Elementor\Plugin::$instance->preview, 'builder_wrapper' ) ) {
+			// Elementor populates its own preview wrapper, including for empty documents.
+			$had_post      = array_key_exists( 'post', $GLOBALS );
+			$previous_post = $had_post ? $GLOBALS['post'] : null;
+			// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Elementor checks the current post; restore it below.
+			$GLOBALS['post'] = get_post( $popup_id );
+
+			try {
+				$rendered = \Elementor\Plugin::$instance->preview->builder_wrapper( '' );
+			} finally {
+				if ( $had_post ) {
+					// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restore the caller's original post.
+					$GLOBALS['post'] = $previous_post;
+				} else {
+					unset( $GLOBALS['post'] );
+				}
+			}
+		} elseif ( $is_editor_canvas && method_exists( $frontend, 'get_builder_content' ) ) {
 			$rendered = $frontend->get_builder_content( $popup_id );
 		} elseif ( method_exists( $frontend, 'get_builder_content_for_display' ) ) {
 			// Elementor enqueues document CSS before the head and prints it inline
