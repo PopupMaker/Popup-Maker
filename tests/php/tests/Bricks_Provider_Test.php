@@ -333,54 +333,17 @@ class Bricks_Provider_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The injected post type is not written back to Bricks' stored settings.
-	 *
-	 * Bricks reads these settings, modifies them, and writes the whole array back
-	 * in several places, which would otherwise persist our runtime injection.
-	 *
-	 * @return void
-	 */
-	public function test_injected_post_type_is_stripped_on_write() {
-		$filtered = $this->provider->strip_injected_post_type(
-			[ 'postTypes' => [ 'page', 'popup' ] ],
-			[ 'postTypes' => [ 'page' ] ]
-		);
-
-		$this->assertSame( [ 'page' ], $filtered['postTypes'] );
-
-		$filtered_old = $this->provider->filter_global_settings( [ 'postTypes' => [ 'page' ] ] );
-		$filtered     = $this->provider->strip_injected_post_type(
-			[
-				'postTypes' => [ 'page', 'popup' ],
-				'probe'     => true,
-			],
-			$filtered_old
-		);
-
-		$this->assertSame( [ 'page' ], $filtered['postTypes'] );
-	}
-
-	/**
-	 * A post type the owner enabled themselves is preserved on write.
-	 *
-	 * @return void
-	 */
-	public function test_owner_enabled_post_type_is_preserved_on_write() {
-		$filtered = $this->provider->strip_injected_post_type(
-			[ 'postTypes' => [ 'page', 'popup' ] ],
-			[ 'postTypes' => [ 'page', 'popup' ] ]
-		);
-
-		$this->assertSame( [ 'page', 'popup' ], $filtered['postTypes'] );
-	}
-
-	/**
-	 * Bricks accepts popup registration and its native preview request.
+	 * Bricks accepts its native preview request for a popup document.
 	 *
 	 * @return void
 	 */
 	public function test_popup_post_type_is_supported_after_registration() {
-		$this->provider->register_post_type_support();
+		$option = defined( 'BRICKS_DB_GLOBAL_SETTINGS' ) ? BRICKS_DB_GLOBAL_SETTINGS : 'bricks_global_settings';
+
+		$settings              = get_option( $option, [] );
+		$settings              = is_array( $settings ) ? $settings : [];
+		$settings['postTypes'] = array_values( array_unique( array_merge( $settings['postTypes'] ?? [], [ 'popup' ] ) ) );
+		update_option( $option, $settings );
 
 		$popup_id = $this->create_bricks_popup( 'previewel' );
 		update_post_meta(

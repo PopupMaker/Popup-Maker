@@ -66,13 +66,6 @@ class Bricks extends PageBuilder {
 	private $emitted = [];
 
 	/**
-	 * Whether popup support existed before this provider injected it.
-	 *
-	 * @var bool|null
-	 */
-	private $stored_popup_support;
-
-	/**
 	 * Whether Bricks is active and exposes every API used here.
 	 *
 	 * @return bool
@@ -90,11 +83,13 @@ class Bricks extends PageBuilder {
 	/**
 	 * Register Bricks-specific hooks.
 	 *
+	 * Popup support itself is left to Bricks' own post type setting
+	 * (`Helpers::is_post_type_supported()`), since popups are already registered
+	 * public and eligible there.
+	 *
 	 * @return void
 	 */
 	public function register_hooks() {
-		$this->register_post_type_support();
-
 		add_action( 'save_post_popup', [ $this, 'remember_saved_document' ], PHP_INT_MAX, 3 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_canvas_assets' ], 20 );
 		add_filter( 'body_class', [ $this, 'filter_canvas_body_classes' ] );
@@ -256,136 +251,6 @@ class Bricks extends PageBuilder {
 		}
 
 		return $classes;
-	}
-
-	/**
-	 * Opt the popup post type into Bricks.
-	 *
-	 * Bricks only offers "Edit with Bricks" for post types present in its
-	 * `postTypes` setting (`Helpers::is_post_type_supported()`,
-	 * `helpers.php:317-334`). The setting is filtered on read rather than
-	 * written, and the injected value is stripped again on write, so Popup Maker
-	 * does not leave a permanent change in another product's stored options.
-	 *
-	 * The `public => true` gate in `Helpers::get_registered_post_types()`
-	 * already passes: popups are registered public but not publicly queryable.
-	 *
-	 * @return void
-	 */
-	public function register_post_type_support() {
-		$option = defined( 'BRICKS_DB_GLOBAL_SETTINGS' ) ? BRICKS_DB_GLOBAL_SETTINGS : 'bricks_global_settings';
-
-		add_filter( 'option_' . $option, [ $this, 'filter_global_settings' ] );
-
-		/**
-		 * Bricks has read-modify-write paths that `get_option()` these settings
-		 * and `update_option()` the whole array back — refreshing its Instagram
-		 * token, for example (`integrations/instagram/instagram.php:95-101`).
-		 * Without this, the injected post type would be written to Bricks' stored
-		 * settings and survive Popup Maker's deactivation.
-		 */
-		add_filter( 'pre_update_option_' . $option, [ $this, 'strip_injected_post_type' ], 10, 2 );
-
-		// Bricks caches the option into `Database::$global_settings` when it
-		// loads, which happens before this provider registers. Refresh that copy
-		// so the running request sees the added post type too.
-		$this->refresh_cached_settings();
-	}
-
-	/**
-	 * Add the popup post type to Bricks' supported list.
-	 *
-	 * Filtering the option leaves Bricks' stored settings untouched, so Popup
-	 * Maker never mutates another product's saved configuration.
-	 *
-	 * @param mixed $settings Stored Bricks global settings.
-	 *
-	 * @return mixed Filtered settings.
-	 */
-	public function filter_global_settings( $settings ) {
-		if ( ! is_array( $settings ) ) {
-			$settings = [];
-		}
-
-		$post_types = isset( $settings['postTypes'] ) && is_array( $settings['postTypes'] )
-			? $settings['postTypes']
-			: [];
-
-		if ( null === $this->stored_popup_support ) {
-			$this->stored_popup_support = in_array( 'popup', $post_types, true );
-		}
-
-		if ( ! in_array( 'popup', $post_types, true ) ) {
-			$post_types[]          = 'popup';
-			$settings['postTypes'] = $post_types;
-		}
-
-		return $settings;
-	}
-
-	/**
-	 * Keep the injected post type out of Bricks' stored settings.
-	 *
-	 * Only removes `popup` when it was not already saved, so a site owner who
-	 * genuinely ticked the box in Bricks' settings keeps their choice.
-	 *
-	 * @param mixed $value     Settings about to be written.
-	 * @param mixed $old_value Settings currently stored.
-	 *
-	 * @return mixed Filtered settings.
-	 */
-	public function strip_injected_post_type( $value, $old_value = null ) {
-		if ( ! is_array( $value ) || ! isset( $value['postTypes'] ) || ! is_array( $value['postTypes'] ) ) {
-			return $value;
-		}
-
-		$stored = is_array( $old_value ) && isset( $old_value['postTypes'] ) && is_array( $old_value['postTypes'] )
-			? $old_value['postTypes']
-			: [];
-
-		$owner_enabled = null !== $this->stored_popup_support
-			? $this->stored_popup_support
-			: in_array( 'popup', $stored, true );
-
-		// The owner opted in themselves, so leave the value alone.
-		if ( $owner_enabled ) {
-			return $value;
-		}
-
-		$value['postTypes'] = array_values(
-			array_filter(
-				$value['postTypes'],
-				function ( $post_type ) {
-					return 'popup' !== $post_type;
-				}
-			)
-		);
-
-		return $value;
-	}
-
-	/**
-	 * Add the popup post type to Bricks' already-loaded settings cache.
-	 *
-	 * @return void
-	 */
-	private function refresh_cached_settings() {
-		if ( ! isset( \Bricks\Database::$global_settings ) || ! is_array( \Bricks\Database::$global_settings ) ) {
-			return;
-		}
-
-		$post_types = isset( \Bricks\Database::$global_settings['postTypes'] ) &&
-			is_array( \Bricks\Database::$global_settings['postTypes'] )
-				? \Bricks\Database::$global_settings['postTypes']
-				: [];
-
-		if ( in_array( 'popup', $post_types, true ) ) {
-			return;
-		}
-
-		$post_types[] = 'popup';
-
-		\Bricks\Database::$global_settings['postTypes'] = $post_types;
 	}
 
 	/**

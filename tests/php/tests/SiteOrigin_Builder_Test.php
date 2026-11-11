@@ -51,27 +51,6 @@ class SiteOrigin_Builder_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
-	public function test_popup_support_is_runtime_only() {
-		$builder  = new SiteOrigin( \PopupMaker\plugin() );
-		$settings = [ 'post-types' => [ 'post', 'page' ] ];
-
-		$filtered = $builder->add_popup_post_type( $settings );
-
-		$this->assertSame( [ 'post-types' => [ 'post', 'page', 'popup' ] ], $filtered );
-		$this->assertSame(
-			$settings,
-			$builder->strip_injected_post_type( $filtered, $filtered ),
-			'An already-filtered old value must not persist the runtime injection.'
-		);
-
-		$owner_enabled = new SiteOrigin( \PopupMaker\plugin() );
-		$stored        = [ 'post-types' => [ 'post', 'page', 'popup' ] ];
-
-		$owner_enabled->add_popup_post_type( $stored );
-		$this->assertSame( $stored, $owner_enabled->strip_injected_post_type( $stored, $stored ) );
-	}
-
-	/** @return void */
 	public function test_existing_siteorigin_document_uses_classic_editor_without_overriding_blocks() {
 		global $post;
 

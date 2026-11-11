@@ -49,10 +49,12 @@ class Divi extends PageBuilder {
 	/**
 	 * Register Divi-specific hooks.
 	 *
+	 * Popup support itself is left to Divi's own post type integration setting,
+	 * since popups are already registered public and eligible there.
+	 *
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_filter( 'et_builder_post_types', [ $this, 'add_popup_support' ] );
 		add_filter( 'et_fb_is_enabled', [ $this, 'enable_frontend_builder' ], 10, 2 );
 		add_filter( 'post_type_link', [ $this, 'include_popup_id_in_permalink' ], 10, 2 );
 		add_action( 'et_save_post', [ $this, 'remember_saved_document' ], PHP_INT_MAX );
@@ -97,25 +99,6 @@ class Divi extends PageBuilder {
 		}
 
 		$this->remember_document_owner( absint( $post_id ) );
-	}
-
-	/**
-	 * Add popups to Divi's supported post types.
-	 *
-	 * @param mixed $post_types Supported post types.
-	 *
-	 * @return mixed
-	 */
-	public function add_popup_support( $post_types ) {
-		if ( ! is_array( $post_types ) ) {
-			return $post_types;
-		}
-
-		if ( ! in_array( 'popup', $post_types, true ) ) {
-			$post_types[] = 'popup';
-		}
-
-		return $post_types;
 	}
 
 	/**
