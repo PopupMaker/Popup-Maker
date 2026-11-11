@@ -19,10 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Used to mimic the EModal_Model_Theme_Meta class from Easy Modal plugin.
  *
  * @since 1.0
+ *
+ * @property int $theme_id
  */
 class EModal_Model_Theme_Meta extends EModal_Model {
-	/** @var int */
-	protected $theme_id;
 	protected $_class_name     = 'EModal_Model_Theme_Meta';
 	protected $_table_name     = 'em_theme_metas';
 	protected $_pk             = 'theme_id';
