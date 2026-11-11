@@ -1,0 +1,6 @@
+# Translation catalogs are generated and tracked for non-WordPress.org builds.
+# WordPress.org distributes these files through translate.wordpress.org language packs.
+/languages/*.po
+/languages/*.mo
+/languages/*.json
+/languages/*.l10n.php
