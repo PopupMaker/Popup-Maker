@@ -203,6 +203,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 			class_exists( 'SiteOrigin_Panels', false ) ||
 			defined( 'BRIZY_VERSION' ) ||
 			class_exists( 'Brizy_Editor', false ) ||
+			defined( 'WPB_VC_VERSION' ) ||
 			defined( 'VCV_VERSION' ) ||
 			function_exists( 'vchelper' ) ||
 			defined( 'ET_BUILDER_THEME' ) ||
@@ -223,6 +224,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$beaver_loaded          = class_exists( \PopupMaker\Builders\BeaverBuilder::class, false );
 		$siteorigin_loaded      = class_exists( \PopupMaker\Builders\SiteOrigin::class, false );
 		$brizy_loaded           = class_exists( \PopupMaker\Builders\Brizy::class, false );
+		$wpbakery_loaded        = class_exists( \PopupMaker\Builders\WPBakery::class, false );
 		$visual_composer_loaded = class_exists( \PopupMaker\Builders\VisualComposer::class, false );
 		$divi_loaded            = class_exists( \PopupMaker\Builders\Divi::class, false );
 		$bricks_loaded          = class_exists( \PopupMaker\Builders\Bricks::class, false );
@@ -250,6 +252,7 @@ class Page_Builders_Test extends WP_UnitTestCase {
 		$this->assertSame( $beaver_loaded, class_exists( \PopupMaker\Builders\BeaverBuilder::class, false ) );
 		$this->assertSame( $siteorigin_loaded, class_exists( \PopupMaker\Builders\SiteOrigin::class, false ) );
 		$this->assertSame( $brizy_loaded, class_exists( \PopupMaker\Builders\Brizy::class, false ) );
+		$this->assertSame( $wpbakery_loaded, class_exists( \PopupMaker\Builders\WPBakery::class, false ) );
 		$this->assertSame( $visual_composer_loaded, class_exists( \PopupMaker\Builders\VisualComposer::class, false ) );
 		$this->assertSame( $divi_loaded, class_exists( \PopupMaker\Builders\Divi::class, false ) );
 		$this->assertSame( $bricks_loaded, class_exists( \PopupMaker\Builders\Bricks::class, false ) );
