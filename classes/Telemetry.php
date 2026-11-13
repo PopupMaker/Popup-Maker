@@ -376,9 +376,13 @@ class PUM_Telemetry {
 	 * @since 1.13.0
 	 */
 	public static function get_installed_on() {
-		$installed_on = get_option( 'pum_installed_on', false );
+		$installed_on = \PopupMaker\get_current_install_info( 'installed_on' );
 		if ( ! $installed_on ) {
-			$installed_on = current_time( 'mysql' );
+			$installed_on = get_option( 'pum_installed_on', false );
+		}
+		if ( ! $installed_on ) {
+			// With no stored date, express now in UTC for the strtotime age gate.
+			$installed_on = gmdate( 'Y-m-d H:i:s' );
 		}
 		return $installed_on;
 	}
