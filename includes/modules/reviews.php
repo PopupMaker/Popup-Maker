@@ -652,6 +652,10 @@ class PUM_Modules_Reviews {
 		$installed_on = get_option( 'pum_reviews_installed_on', false );
 
 		if ( ! $installed_on ) {
+			$installed_on = \PopupMaker\get_current_install_info( 'installed_on' );
+		}
+
+		if ( ! $installed_on ) {
 			$installed_on = current_time( 'mysql' );
 			update_option( 'pum_reviews_installed_on', $installed_on );
 		}

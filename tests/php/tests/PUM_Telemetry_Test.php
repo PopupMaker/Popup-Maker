@@ -42,6 +42,9 @@ class PUM_Telemetry_Test extends WP_UnitTestCase {
 
 		wp_set_current_user( self::$admin_id );
 		update_option( 'pum_installed_on', '2020-01-01 00:00:00' );
+		$install_info                 = (array) get_option( 'popup_maker_version_info', [] );
+		$install_info['installed_on'] = '2020-01-01 00:00:00';
+		update_option( 'popup_maker_version_info', $install_info );
 		pum_delete_option( 'telemetry' );
 		delete_user_meta( self::$admin_id, '_pum_dismissed_alerts' );
 	}
