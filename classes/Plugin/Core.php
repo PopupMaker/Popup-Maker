@@ -352,9 +352,12 @@ final class Core extends \PopupMaker\Plugin\Container {
 		 * integrations) load at priority 12+ and need a window to register
 		 * their own providers and deferred trigger hooks before the Manager
 		 * resolves the provider list or registers frontend lazy boot hooks.
+		 *
+		 * How notifications actually come up — immediately in wp-admin, or
+		 * lazily on the frontend — is the Manager's decision, not ours.
 		 */
 		add_action( 'init', function () {
-			$this->get( 'notifications' )->register_lazy_boot();
+			$this->get( 'notifications' )->init();
 		}, 5 );
 	}
 
