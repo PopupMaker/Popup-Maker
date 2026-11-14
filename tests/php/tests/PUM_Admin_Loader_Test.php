@@ -408,6 +408,326 @@ class PUM_Admin_Loader_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Popup editor requests load only the popup screen component.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_popup_post_type_loads_popup_components_only() {
+		global $pagenow;
+
+		$pagenow           = 'edit.php';
+		$_GET['post_type'] = 'popup';
+		set_current_screen( 'edit-popup' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertSame( 10, has_action( 'edit_form_top', [ 'PUM_Admin_Popups', 'add_popup_id' ] ) );
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( has_action( 'add_meta_boxes', [ 'PUM_Admin_Themes', 'meta_box' ] ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Subscribers', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+		$this->assertFalse( has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Extend', false ) );
+	}
+
+	/**
+	 * Theme editor requests load only the theme screen component.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_popup_theme_post_type_loads_theme_components_only() {
+		global $pagenow;
+
+		$pagenow           = 'edit.php';
+		$_GET['post_type'] = 'popup_theme';
+		set_current_screen( 'edit-popup_theme' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertSame( 10, has_action( 'add_meta_boxes', [ 'PUM_Admin_Themes', 'meta_box' ] ) );
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( has_action( 'edit_form_top', [ 'PUM_Admin_Popups', 'add_popup_id' ] ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+		$this->assertFalse( has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+	}
+
+	/**
+	 * Tools requests load only the tools screen component.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_tools_request_loads_tools_components_only() {
+		global $pagenow;
+
+		$pagenow      = 'edit.php';
+		$_GET['page'] = 'pum-tools';
+		set_current_screen( 'popup_page_pum-tools' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertSame( 10, has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+		$this->assertFalse( has_action( 'edit_form_top', [ 'PUM_Admin_Popups', 'add_popup_id' ] ) );
+		$this->assertFalse( has_action( 'add_meta_boxes', [ 'PUM_Admin_Themes', 'meta_box' ] ) );
+	}
+
+	/**
+	 * Extend requests load only the extensions screen component.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_extensions_request_loads_extend_components_only() {
+		global $pagenow;
+
+		$pagenow      = 'edit.php';
+		$_GET['page'] = 'pum-extensions';
+		set_current_screen( 'popup_page_pum-extensions' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertTrue( class_exists( 'PUM_Admin_Extend', false ) );
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+		$this->assertFalse( has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+	}
+
+	/**
+	 * Subscribers requests load the subscribers screen once storage exists.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_subscribers_request_loads_subscribers_components() {
+		global $pagenow;
+
+		// Declare the page through the filter rather than writing the schema
+		// option, so the isolated process never re-runs the install routine.
+		add_filter(
+			'pum_admin_pages',
+			function ( $pages ) {
+				$pages['subscribers'] = [
+					'page_title' => 'Subscribers',
+					'capability' => 'manage_options',
+					'callback'   => [ 'PUM_Admin_Subscribers', 'page' ],
+				];
+
+				return $pages;
+			}
+		);
+
+		$pagenow      = 'edit.php';
+		$_GET['page'] = 'pum-subscribers';
+		set_current_screen( 'popup_page_pum-subscribers' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertTrue( class_exists( 'PUM_Admin_Subscribers', false ) );
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+	}
+
+	/**
+	 * The Call to Actions screen initializes upsells without a screen component.
+	 *
+	 * The CTA screen is registered by a controller rather than the legacy page
+	 * definitions, so it matches the upsell context by explicit slug only.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_call_to_actions_page_loads_upsell_without_screen_components() {
+		global $pagenow;
+
+		$pagenow      = 'edit.php';
+		$_GET['page'] = 'popup-maker-call-to-actions';
+		set_current_screen( 'popup_page_popup-maker-call-to-actions' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+		$this->assertFalse( has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Subscribers', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Extend', false ) );
+	}
+
+	/**
+	 * Registered pages without a screen handler still initialize upsells.
+	 *
+	 * The Support page has no entry in the component registry, but it is a
+	 * registered plugin page, so the upsell context must still match it.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_support_page_loads_upsell_without_screen_components() {
+		global $pagenow;
+
+		$pagenow      = 'edit.php';
+		$_GET['page'] = 'pum-support';
+		set_current_screen( 'popup_page_pum-support' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+		$this->assertFalse( has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Subscribers', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Extend', false ) );
+	}
+
+	/**
+	 * Third-party pages added through the filter participate in upsell context.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_filter_added_page_loads_upsell_without_screen_components() {
+		global $pagenow;
+
+		add_filter(
+			'pum_admin_pages',
+			function ( $pages ) {
+				$pages['partner_screen'] = [
+					'page_title' => 'Partner Screen',
+					'capability' => 'manage_options',
+					'menu_slug'  => 'partner-screen',
+					'callback'   => '__return_null',
+				];
+
+				return $pages;
+			}
+		);
+
+		$pagenow      = 'edit.php';
+		$_GET['page'] = 'partner-screen';
+		set_current_screen( 'popup_page_partner-screen' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+		$this->assertFalse( has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+	}
+
+	/**
+	 * Unrelated admin screens initialize no screen components and no upsell.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_unrelated_admin_page_loads_no_request_components() {
+		global $pagenow;
+
+		$pagenow      = 'edit.php';
+		$_GET['page'] = 'some-other-plugin';
+		set_current_screen( 'edit-post' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertFalse( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( has_action( 'edit_form_top', [ 'PUM_Admin_Popups', 'add_popup_id' ] ) );
+		$this->assertFalse( has_action( 'add_meta_boxes', [ 'PUM_Admin_Themes', 'meta_box' ] ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+		$this->assertFalse( has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Subscribers', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Extend', false ) );
+	}
+
+	/**
+	 * A popup editor request reached through a plugin page slug loads both.
+	 *
+	 * Post type and page matching are independent, so an overlapping request
+	 * must initialize every matching component rather than the first match.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_overlapping_post_type_and_page_loads_both_components() {
+		global $pagenow;
+
+		$pagenow           = 'edit.php';
+		$_GET['post_type'] = 'popup';
+		$_GET['page']      = 'pum-settings';
+		set_current_screen( 'popup_page_pum-settings' );
+		remove_all_actions( 'admin_menu' );
+
+		PUM_Admin::init();
+		do_action( 'admin_menu' );
+
+		$this->assertSame( 10, has_action( 'edit_form_top', [ 'PUM_Admin_Popups', 'add_popup_id' ] ) );
+		$this->assertSame( 10, has_action( 'admin_init', [ 'PUM_Admin_Settings', 'save' ] ) );
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( has_action( 'add_meta_boxes', [ 'PUM_Admin_Themes', 'meta_box' ] ) );
+		$this->assertFalse( has_action( 'admin_init', [ 'PUM_Admin_Tools', 'emodal_process_import' ] ) );
+	}
+
+	/**
+	 * Non-array page slugs degrade to post-type matching without errors.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_non_array_page_slugs_still_match_post_type_components() {
+		global $pagenow;
+
+		$pagenow           = 'edit.php';
+		$_GET['post_type'] = 'popup';
+		set_current_screen( 'edit-popup' );
+
+		PUM_Admin::init_request_components( 'not-an-array' );
+
+		$this->assertSame( 10, has_action( 'edit_form_top', [ 'PUM_Admin_Popups', 'add_popup_id' ] ) );
+		$this->assertTrue( class_exists( 'PUM_Upsell', false ) );
+		$this->assertFalse( class_exists( 'PUM_Admin_Settings', false ) );
+	}
+
+	/**
 	 * @return void
 	 */
 	public function tearDown(): void {

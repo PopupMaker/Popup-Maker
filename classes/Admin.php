@@ -70,7 +70,41 @@ class PUM_Admin {
 	}
 
 	/**
+	 * Post types whose editor screens own a legacy admin component.
+	 *
+	 * Keys are post types, values are the class initialized for that editor.
+	 *
+	 * @return array<string,class-string>
+	 */
+	private static function post_type_components() {
+		return [
+			'popup'       => 'PUM_Admin_Popups',
+			'popup_theme' => 'PUM_Admin_Themes',
+		];
+	}
+
+	/**
+	 * Plugin pages that own a legacy admin component.
+	 *
+	 * Keys are page definition keys from PUM_Admin_Pages::get_page_definitions(),
+	 * not slugs, because slugs are filterable and translated per site.
+	 *
+	 * @return array<string,class-string>
+	 */
+	private static function page_components() {
+		return [
+			'subscribers' => 'PUM_Admin_Subscribers',
+			'settings'    => 'PUM_Admin_Settings',
+			'tools'       => 'PUM_Admin_Tools',
+			'extensions'  => 'PUM_Admin_Extend',
+		];
+	}
+
+	/**
 	 * Initialize admin components used by the current request.
+	 *
+	 * Screen components load only when their post type or resolved page slug
+	 * matches, so unrelated admin requests never autoload them.
 	 *
 	 * @param array<string,string> $page_slugs Resolved admin page slugs.
 	 *
@@ -81,33 +115,49 @@ class PUM_Admin {
 		$page       = self::requested_page();
 		$page_slugs = is_array( $page_slugs ) ? $page_slugs : [];
 
-		if ( 'popup' === $post_type ) {
-			PUM_Admin_Popups::init();
+		foreach ( self::post_type_components() as $component_post_type => $component ) {
+			if ( $component_post_type === $post_type ) {
+				$component::init();
+			}
 		}
 
-		if ( 'popup_theme' === $post_type ) {
-			PUM_Admin_Themes::init();
+		foreach ( self::page_components() as $page_key => $component ) {
+			if ( isset( $page_slugs[ $page_key ] ) && $page_slugs[ $page_key ] === $page ) {
+				$component::init();
+			}
 		}
 
-		if ( isset( $page_slugs['subscribers'] ) && $page_slugs['subscribers'] === $page ) {
-			PUM_Admin_Subscribers::init();
-		}
-
-		if ( isset( $page_slugs['settings'] ) && $page_slugs['settings'] === $page ) {
-			PUM_Admin_Settings::init();
-		}
-
-		if ( isset( $page_slugs['tools'] ) && $page_slugs['tools'] === $page ) {
-			PUM_Admin_Tools::init();
-		}
-
-		if ( isset( $page_slugs['extensions'] ) && $page_slugs['extensions'] === $page ) {
-			PUM_Admin_Extend::init();
-		}
-
-		if ( in_array( $post_type, [ 'popup', 'popup_theme' ], true ) || in_array( $page, $page_slugs, true ) || 'popup-maker-call-to-actions' === $page ) {
+		if ( self::request_has_upsell_context( $post_type, $page, $page_slugs ) ) {
 			PUM_Upsell::init();
 		}
+	}
+
+	/**
+	 * Whether the current request should initialize premium upsells.
+	 *
+	 * Upsells cover every Popup Maker context, including registered pages that
+	 * have no screen component of their own, such as Help & Support and pages
+	 * added by other plugins through the pum_admin_pages filter.
+	 *
+	 * @param string               $post_type  Current post type.
+	 * @param string               $page       Requested page slug.
+	 * @param array<string,string> $page_slugs Resolved admin page slugs.
+	 *
+	 * @return bool
+	 */
+	private static function request_has_upsell_context( $post_type, $page, $page_slugs ) {
+		if (
+			is_string( $post_type ) &&
+			array_key_exists( $post_type, self::post_type_components() )
+		) {
+			return true;
+		}
+
+		if ( in_array( $page, $page_slugs, true ) ) {
+			return true;
+		}
+
+		return 'popup-maker-call-to-actions' === $page;
 	}
 
 	/**
