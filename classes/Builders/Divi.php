@@ -149,7 +149,7 @@ class Divi extends PageBuilder {
 	 */
 	public function get_requested_popup_id() {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Capability checked by the coordinator.
-		if ( ! isset( $_GET['et_fb'] ) && ! isset( $_GET['et_bfb'] ) ) {
+		if ( ! isset( $_GET['et_fb'] ) && ! isset( $_GET['et_bfb'] ) && ! isset( $_GET['et_fb_activation_nonce'] ) ) {
 			return 0;
 		}
 
@@ -160,7 +160,12 @@ class Divi extends PageBuilder {
 
 			$post_id = absint( wp_unslash( $_GET[ $param ] ) );
 
-			if ( $post_id ) {
+			$is_builder    = isset( $_GET['et_fb'] ) || isset( $_GET['et_bfb'] );
+			$is_activation = isset( $_GET['et_fb_activation_nonce'] ) &&
+				is_string( $_GET['et_fb_activation_nonce'] ) &&
+				wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['et_fb_activation_nonce'] ) ), 'et_fb_activation_nonce_' . $post_id );
+
+			if ( $post_id && ( $is_builder || $is_activation ) ) {
 				return $post_id;
 			}
 		}
@@ -182,6 +187,15 @@ class Divi extends PageBuilder {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Capability checked by the coordinator.
 		return isset( $_GET['et_fb'] ) && ! isset( $_GET['et_bfb'] );
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+	}
+
+	/**
+	 * The backend wireframe also queries the private popup, but is not a canvas.
+	 *
+	 * @return bool
+	 */
+	public function requires_popup_query() {
+		return $this->get_requested_popup_id() > 0;
 	}
 
 	/**

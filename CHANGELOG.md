@@ -6,6 +6,8 @@
 
 -   Loaded WPBakery Page Builder's generated styles when popup content is rendered outside the main page loop.
 -   Fixed the Popup Enabled toggle reverting after updating a popup in the classic editor when WordPress Custom Fields were present.
+-   Restored Divi builder activation and backend editing for popups, and prevented popup overlays from covering Divi's visual editor.
+-   Restored Elementor's editing canvas for new and existing popups.
 
 **Developers**
 
