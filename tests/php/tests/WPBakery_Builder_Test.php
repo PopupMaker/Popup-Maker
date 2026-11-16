@@ -112,15 +112,98 @@ class WPBakery_Builder_Test extends WP_UnitTestCase {
 	}
 
 	/** @return void */
+	public function test_backend_save_requires_explicit_status_nonce_and_permission() {
+		$popup_id      = $this->factory->post->create( [ 'post_type' => 'popup' ] );
+		$builder       = new class( \PopupMaker\plugin() ) extends WPBakery {
+			/** @var int[] */
+			public $remembered = [];
+
+			/** @param int $popup_id Popup ID. @return void */
+			protected function remember_document_owner( $popup_id ) {
+				$this->remembered[] = $popup_id;
+			}
+		};
+		$original_post = $_POST; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Preserve request fixture.
+		$user_id       = get_current_user_id();
+
+		try {
+			wp_set_current_user( $this->factory->user->create( [ 'role' => 'administrator' ] ) );
+			update_post_meta( $popup_id, '_wpb_vc_js_status', 'true' );
+			update_post_meta( $popup_id, \PopupMaker\Controllers\Builders::OWNER_META_KEY, 'UnavailableBuilder' );
+			$_POST = [];
+			$builder->remember_saved_document( $popup_id );
+			$this->assertSame( [], $builder->remembered );
+
+			$_POST = [
+				'wpb_vc_js_status' => 'true',
+				'_wpnonce'         => 'invalid',
+			];
+			$builder->remember_saved_document( $popup_id );
+			$this->assertSame( [], $builder->remembered );
+
+			$_POST['_wpnonce'] = wp_create_nonce( 'update-post_' . $popup_id );
+			$builder->remember_saved_document( $popup_id );
+			$this->assertSame( [ $popup_id ], $builder->remembered );
+
+			wp_set_current_user( 0 );
+			$_POST['_wpnonce'] = wp_create_nonce( 'update-post_' . $popup_id );
+			$builder->remember_saved_document( $popup_id );
+			$this->assertSame( [ $popup_id ], $builder->remembered );
+		} finally {
+			$_POST = $original_post;
+			wp_set_current_user( $user_id );
+		}
+	}
+
+	/** @return void */
+	public function test_provider_error_is_reported_without_breaking_output() {
+		$builder = new class( \PopupMaker\plugin() ) extends WPBakery {
+			/** @var array<int,int> */
+			public $failed_ids = [];
+
+			/**
+			 * @param int $popup_id Popup ID.
+			 * @return void
+			 * @throws \RuntimeException Provider failure fixture.
+			 */
+			protected function output_page_custom_css( $popup_id ) {
+				throw new \RuntimeException( 'Provider failed.' );
+			}
+
+			/** @param int $popup_id Popup ID. @return void */
+			protected function output_shortcodes_css( $popup_id ) {}
+
+			/**
+			 * @param string     $operation Failed operation.
+			 * @param \Throwable $error Provider error.
+			 * @param int        $popup_id Popup ID.
+			 * @return void
+			 */
+			protected function log_provider_error( $operation, $error, $popup_id = 0 ) {
+				$this->failed_ids[] = $popup_id;
+			}
+		};
+		$builder->collect_document_assets( 123 );
+		ob_start();
+		$builder->flush_preloaded_assets();
+		$output = ob_get_clean();
+
+		$this->assertSame( '', $output );
+		$this->assertSame( [ 123 ], $builder->failed_ids );
+	}
+
+	/** @return void */
 	public function test_builder_registers_preloaded_and_late_style_hooks() {
 		$builder = $this->make_output_builder();
 
 		$builder->register_hooks();
 
+		$this->assertSame( 100, has_action( 'wp_after_insert_post', [ $builder, 'remember_saved_document' ] ) );
 		$this->assertSame( 1000, has_action( 'wp_head', [ $builder, 'flush_preloaded_assets' ] ) );
 		$this->assertSame( 12, has_filter( 'pum_popup_content', [ $builder, 'inject_late_document_styles' ] ) );
 
 		remove_action( 'wp_head', [ $builder, 'flush_preloaded_assets' ], 1000 );
+		remove_action( 'wp_after_insert_post', [ $builder, 'remember_saved_document' ], 100 );
 		remove_filter( 'pum_popup_content', [ $builder, 'inject_late_document_styles' ], 12 );
 	}
 

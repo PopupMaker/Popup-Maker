@@ -58,7 +58,38 @@ class WPBakery extends PageBuilder {
 	 */
 	public function register_hooks() {
 		add_action( 'wp_head', [ $this, 'flush_preloaded_assets' ], 1000 );
+		add_action( 'wp_after_insert_post', [ $this, 'remember_saved_document' ], 100, 4 );
 		add_filter( 'pum_popup_content', [ $this, 'inject_late_document_styles' ], 12, 2 );
+	}
+
+	/**
+	 * Record ownership after the backend editor's post and metadata save.
+	 *
+	 * @param mixed $post_id Saved post ID.
+	 * @param mixed $post Saved post object.
+	 * @param mixed $update Whether this is an update.
+	 * @param mixed $post_before Previous post object.
+	 * @return void
+	 */
+	public function remember_saved_document( $post_id, $post = null, $update = false, $post_before = null ) {
+		if ( ! is_numeric( $post_id ) || wp_is_post_revision( (int) $post_id ) || wp_is_post_autosave( (int) $post_id ) ) {
+			return;
+		}
+
+		// Require an explicit, authenticated WPBakery backend save, not stale metadata.
+		if (
+			! isset( $_POST['wpb_vc_js_status'], $_POST['_wpnonce'] ) ||
+			! is_string( $_POST['wpb_vc_js_status'] ) ||
+			! is_string( $_POST['_wpnonce'] ) ||
+			'true' !== sanitize_text_field( wp_unslash( $_POST['wpb_vc_js_status'] ) ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'update-post_' . absint( $post_id ) ) ||
+			! current_user_can( 'edit_post', absint( $post_id ) ) ||
+			! $this->owns_document( $post_id )
+		) {
+			return;
+		}
+
+		$this->remember_document_owner( absint( $post_id ) );
 	}
 
 	/**
@@ -194,7 +225,7 @@ class WPBakery extends PageBuilder {
 		try {
 			call_user_func( $callback, $popup_id );
 		} catch ( \Throwable $error ) {
-			unset( $error );
+			$this->log_provider_error( 'capture CSS', $error, $popup_id );
 		}
 
 		$output = ob_get_clean();
@@ -265,7 +296,7 @@ class WPBakery extends PageBuilder {
 
 			return is_object( $manager ) && method_exists( $manager, 'vc' ) ? $manager->vc() : null;
 		} catch ( \Throwable $error ) {
-			unset( $error );
+			$this->log_provider_error( 'get frontend service', $error );
 
 			return null;
 		}
@@ -288,9 +319,30 @@ class WPBakery extends PageBuilder {
 				? $manager->get_module( 'vc-custom-css' )
 				: null;
 		} catch ( \Throwable $error ) {
-			unset( $error );
+			$this->log_provider_error( 'get custom CSS module', $error );
 
 			return null;
+		}
+	}
+
+	/**
+	 * Log provider failure context without exposing exception messages or traces.
+	 *
+	 * @param string     $operation Failed operation.
+	 * @param \Throwable $error Provider error.
+	 * @param int        $popup_id Popup ID when available.
+	 * @return void
+	 */
+	protected function log_provider_error( $operation, $error, $popup_id = 0 ) {
+		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG || ! defined( 'WP_DEBUG_LOG' ) || ! WP_DEBUG_LOG ) {
+			return;
+		}
+
+		// Keep diagnostics fail-open even if the host's logging handler throws.
+		try {
+			error_log( sprintf( 'Popup Maker WPBakery: %s failed (popup %d, %s).', $operation, $popup_id, get_class( $error ) ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Guarded by WordPress debug logging settings.
+		} catch ( \Throwable $logging_error ) {
+			unset( $logging_error );
 		}
 	}
 }
