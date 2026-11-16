@@ -62,7 +62,7 @@ class ToolbarNotifications extends Controller {
 	 * @return void
 	 */
 	public function print_marker_bootstrap() {
-		if ( ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
+		if ( $this->notifications_disabled() || ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
 			return;
 		}
 
@@ -134,7 +134,7 @@ class ToolbarNotifications extends Controller {
 	 * @return void
 	 */
 	public function maybe_enqueue_panel() {
-		if ( ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
+		if ( $this->notifications_disabled() || ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
 			return;
 		}
 
@@ -168,7 +168,7 @@ class ToolbarNotifications extends Controller {
 	public function inject_sidebar_marker() {
 		global $menu;
 
-		if ( ! is_array( $menu ) ) {
+		if ( $this->notifications_disabled() || ! is_array( $menu ) ) {
 			return;
 		}
 
@@ -229,6 +229,10 @@ class ToolbarNotifications extends Controller {
 	 * @return void
 	 */
 	public function inject_admin_bar_marker( $wp_admin_bar ) {
+		if ( $this->notifications_disabled() ) {
+			return;
+		}
+
 		if ( ! is_object( $wp_admin_bar ) || ! method_exists( $wp_admin_bar, 'get_node' ) ) {
 			return;
 		}
@@ -339,7 +343,7 @@ class ToolbarNotifications extends Controller {
 	 * @return void
 	 */
 	public function print_styles() {
-		if ( ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
+		if ( $this->notifications_disabled() || ! current_user_can( $this->container->get_permission( 'edit_popups' ) ) ) {
 			return;
 		}
 
@@ -432,5 +436,17 @@ class ToolbarNotifications extends Controller {
 			}
 		</style>
 		<?php
+	}
+
+	/**
+	 * Whether assistive admin notifications have been disabled.
+	 *
+	 * Blocking error and warning alerts use the legacy inline surface and are
+	 * intentionally unaffected by this preference.
+	 *
+	 * @return bool
+	 */
+	protected function notifications_disabled() {
+		return (bool) pum_get_option( 'disable_notifications', false );
 	}
 }
