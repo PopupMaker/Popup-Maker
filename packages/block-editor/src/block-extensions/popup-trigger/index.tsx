@@ -19,7 +19,7 @@ import { PopupSelectControl } from '@popup-maker/components';
 import { Mark as MarkIcon } from '@popup-maker/icons';
 // import GearIcon from '../../../../../src/block-editor/icons/gears';
 
-const { popupTriggerExcludedBlocks } = window.popupMakerBlockEditor;
+const { popupTriggerExcludedBlocks } = window.popupMakerBlockEditor || {};
 
 /**
  * Either allowedBlocks or excludedBlocks should be used, not both.
