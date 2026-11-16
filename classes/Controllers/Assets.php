@@ -383,7 +383,8 @@ class Assets extends Controller {
 
 			if ( isset( $package_data['block_styles'] ) && $package_data['block_styles'] && file_exists( $block_css_path ) ) {
 				$block_css_file = $this->container->get_url( "$path/$package-style{$rtl}.css" );
-				$block_css_deps = [ 'wp-block-editor' ];
+				// Front-end block styles must not pull in editor-only stylesheets (wp-block-editor, wp-components, wp-preferences).
+				$block_css_deps = is_admin() ? [ 'wp-block-editor' ] : [];
 
 				if ( $bundled ) {
 					pum_register_style( $handle . '-style', $block_css_file, $block_css_deps, $meta['version'] );
