@@ -372,6 +372,14 @@ class PUM_Model_Popup extends PUM_Abstract_Model_Post {
 	 *                            WP_Error when a destructive write is refused.
 	 */
 	public function update_settings( $new_settings = [], $merge = true ) {
+		// Mock popups ([popup] shortcode) have no stored record, and their ID can
+		// belong to a real post. Only update the in-memory settings.
+		if ( $this->mock ) {
+			$this->settings = $merge ? array_merge( (array) $this->get_settings(), $new_settings ) : $new_settings;
+
+			return true;
+		}
+
 		// Read the base straight from stored meta rather than the per-request
 		// cache. A cache poisoned by an earlier failed/premature read would
 		// otherwise seed a merge that silently drops everything not resubmitted.
