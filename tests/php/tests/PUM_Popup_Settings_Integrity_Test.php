@@ -304,4 +304,38 @@ class PUM_Popup_Settings_Integrity_Test extends WP_UnitTestCase {
 
 		$_POST = [];
 	}
+	// ------------------------------------------------------------------
+	// Mock popups (deprecated [popup] shortcode) have no stored meta.
+	// ------------------------------------------------------------------
+
+	/**
+	 * Resolving theme_slug on a mock popup must keep its in-memory settings
+	 * and must never write popup_settings to the post that shares its ID.
+	 */
+	public function test_mock_popup_theme_slug_does_not_write_meta_or_reset_settings() {
+		$real_post_id = self::factory()->post->create();
+
+		$post = get_post( $real_post_id );
+		$post = new WP_Post( (object) array_merge( $post->to_array(), [ 'post_type' => 'popup' ] ) );
+
+		$popup           = new PUM_Model_Popup( $post );
+		$popup->mock     = true;
+		$popup->settings = array_diff_key( $this->full_settings(), [ 'theme_slug' => true ] );
+
+		$popup->get_classes();
+
+		$this->assertSame( '', get_post_meta( $real_post_id, 'popup_settings', true ), 'A mock popup must not write popup_settings to a real post.' );
+		$this->assertNotEmpty( $popup->get_setting( 'triggers' ), 'A mock popup must keep its in-memory triggers.' );
+		$this->assertSame( 'medium', $popup->get_setting( 'size' ), 'A mock popup must keep its in-memory display settings.' );
+	}
+
+	/**
+	 * The [popup] shortcode must output its click_open trigger.
+	 */
+	public function test_popup_shortcode_keeps_click_trigger() {
+		$output = do_shortcode( '[popup id="test-inline" title="Test"]Hello[/popup]' );
+
+		$this->assertStringContainsString( 'click_open', $output, 'The [popup] shortcode must keep its click_open trigger.' );
+		$this->assertStringContainsString( '#popmake-test-inline', $output );
+	}
 }
