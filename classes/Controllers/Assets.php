@@ -367,9 +367,11 @@ class Assets extends Controller {
 
 			if ( isset( $package_data['styles'] ) && $package_data['styles'] && file_exists( $css_path ) ) {
 				$css_file = $this->container->get_url( "$path/$package{$rtl}.css" );
-				$css_deps = isset( $package_data['styleDeps'] )
+				// Bundled packages load on the front end, so they get no editor stylesheets unless they ask for them.
+				$default_css_deps = $bundled ? [] : [ 'wp-components', 'wp-block-editor', 'dashicons' ];
+				$css_deps         = isset( $package_data['styleDeps'] )
 					? (array) $package_data['styleDeps']
-					: [ 'wp-components', 'wp-block-editor', 'dashicons' ];
+					: $default_css_deps;
 
 				if ( $bundled ) {
 					pum_register_style( $handle, $css_file, $css_deps, $meta['version'] );
