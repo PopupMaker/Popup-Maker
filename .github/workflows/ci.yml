@@ -220,7 +220,7 @@ jobs:
 
             - name: Cache extensions
               if: steps.changed-files.outputs.any_changed == 'true'
-              uses: actions/cache@v5
+              uses: actions/cache@v6
               with:
                   path: ${{ steps.extcache.outputs.dir }}
                   key: ${{ steps.extcache.outputs.key }}
@@ -396,7 +396,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Cache webpack build artifacts
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: |
                       .webpack-cache
